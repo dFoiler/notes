@@ -1,0 +1,173 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Review}
+We quickly review a proof of the following fact.
+\begin{lemma}
+    Fix $A$ and $B$ nonempty sets bounded above. Then $\sup(A+B)=\sup A+\sup B.$
+\end{lemma}
+\begin{proof}
+    We show that $\sup(A+B)\le\sup A+\sup B$ and $\sup(A+B)\ge\sup A+\sup B.$
+    \begin{itemize}
+        \item To show that $\sup(A+B)\le\sup A+\sup B,$ we note that $a\in A$ and $b\in B$ implies that $a+b\le\sup A+\sup B,$ so $\sup A+\sup B$ is an upper bound for $A+B.$
+        \item Now we show that $\sup(A+B)\le\sup A+\sup B.$ Well, fix $y:=\sup(A+B)$ so that $y\ge a+b$ for each $a\in A$ and $b\in B$ and
+        \[y-a\ge b.\]
+        It follows $y-a$ is an upper bound for $B,$ so $y-a\ge\sup B,$ and so $a\le y-\sup B,$ so $y-\sup B$ is an upper bound for $A,$ and $\sup A\le y-\sup B,$ finishing.
+        \qedhere
+    \end{itemize}
+\end{proof}
+This is essentially the proof I wrote down last class; he had given a different one.
+
+\subsection{Limits, Informally}
+To establish we need rigor, consider the following question.
+\begin{ques} \label{ques:limuniq}
+    Are limits unique?
+\end{ques}
+Certainly they should be, but there is something to proven here, and we don't quite know how to prove this without good definitions.
+
+But before we jump there, let's get comfortable with some of our ideas of limits.
+\begin{example}
+    Fix $a_n:=\sin n/n.$ We show $a_n\to0$ as $n\to\infty.$
+
+    Indeed, an idea is to use the Squeeze theorem. Namely, we can bound
+    \[-\frac1n\le\frac{\sin n}n\le\frac1n,\]
+    so sending $n\to\infty$ takes $\sin n/n\to0$ because $\pm1/n$ goes to $0.$
+\end{example}
+\begin{example}
+    Fix $a_n:=\frac{2^{n+1}+5}{2^n-7}.$ Then $a_n\to2$ as $n\to\infty.$
+
+    Indeed, the trick is to write
+    \[a_n:=\frac{2^{n+1}+5}{2^n-7}\cdot\frac{2^{-n}}{2^{-n}}=\frac{2+5\cdot2^{-n}}{1-7\cdot2^{-n}}.\]
+    Then we see the numerator goes to $2$ and the denominator goes to $1,$ so we see that $a_n\to2/1=2.$
+\end{example}
+However, not everything is obvious. Consider the sequence
+\[a_n:=\begin{cases}
+    \frac n{n+1} & n\text{ is odd}, \\
+    1 & n\text{ is even}.
+\end{cases}\]
+An idea here is that, if the total sequence converges, then any subsequence must converge to the same value. So we can see that the odd case goes to $1,$ and the even case is $1$ as well, so we would like to say this is $1,$ but this is not a proof. Similarly, surely
+\[b_n:=\begin{cases}
+    \frac1n & n\text{ is odd}, \\
+    1 & n\text{ is odd},
+\end{cases}\]
+does not have a limit, but we need a definition.
+
+\subsection{Limits, Formally}
+So we move towards a definition.
+\begin{definition}[Limits]
+    Fix $\{x_k\}_{k=1}^\infty$ a sequence of $\RR.$ Then we say that
+    \[\lim_{n\to\infty}x_n=\lim x_n=L\in\RR\]
+    if and only if, for all $\varepsilon>0,$ there exists $N\in\NN$ such that $n>N$ implies $|x_n-L|<\varepsilon.$
+\end{definition}
+Roughly speaking, we are saying that, for any error bound $\varepsilon$ (such as, say $\varepsilon=10^{-10!}$), there is a bound $N$ in the sequence such that all points after $N$ are $\varepsilon$-close to $L.$
+
+Let's use this to kill one of our examples.
+\begin{exercise}
+    Fix
+    \[a_n:=\begin{cases}
+        \frac n{n+1} & n\text{ is odd}, \\
+        1 & n\text{ is even}.
+    \end{cases}\]
+    Then $a_n\to1$ as $n\to\infty.$
+\end{exercise}
+\begin{proof}
+    We claim that the limit is $L:=1.$ Well, fix any $\varepsilon$ so that we want $N$ such that
+    \[|a_n-1|<\varepsilon\]
+    for $n>N.$ Well, we can compute that
+    \[|a_n-1|\le\left|\frac n{n+1}-1\right|=\frac1{n+1}<\frac1n.\]
+    So we want $\frac1n<\varepsilon,$ for which $N>1/\varepsilon$ suffices. We can find an integer $N$ by the Archimedean property.
+\end{proof}
+\begin{remark}
+    To prove that a limit exists, we have to guess its value and then prove it. Namely, it is hopeless if you guessed the wrong number. Conversely, to prove a limit doesn't exist, we have to show that no $L$ can be a limit.
+\end{remark}
+And so let's kill our other example.
+\begin{exercise}
+    Fix
+    \[b_n:=\begin{cases}
+        \frac1n & n\text{ is odd}, \\
+        1 & n\text{ is odd},
+    \end{cases}\]
+    Then $b_n$ has no limit.
+\end{exercise}
+\begin{proof}
+    Suppose for the sake of contradiction that the limit is $L\ne1.$ Then we find an $\varepsilon:=\frac{|L-1|}2$ such that and $N$ has $n:=\max\{2,2N\}$ such that
+    \[|b_n-L|=|1-L|>\varepsilon.\]
+    Tracking our quantifiers through, we see that we have shown that the limit of $b_n$ is not $1.$
+
+    It remains to show that the limit is not $1.$ Well, fixing $\varepsilon=1/2,$ we see that any $N$ has $n=\max\{3,2N+1\}$ such that
+    \[|b_n-1|=\left|\frac1n-1\right|=\frac{n-1}n>\frac12,\]
+    where the last inequality holds by cross-multiplying.
+\end{proof}
+\begin{remark}
+    Intuitively, we can begin to see why $1_\QQ$ is nowhere continuous: no matter how close a neighborhood we look at a point, there will be rationals and irrationals around.
+\end{remark}
+And with our actual definition, we can answer \autoref{ques:limuniq}.
+\begin{proposition}
+    The limit of a sequence $a_n$ as $n\to\infty$ is unique.
+\end{proposition}
+\begin{proof}
+    Suppose that $L_1$ and $L_2$ are both limits of $a_n$ as $n\to\infty,$ and suppose $L_1\ne L_2$ for the sake of contradiction. Then set $\varepsilon:=\frac{|L_1-L_2|}3>0$ so that there exists $N_1$ and $N_2$ such that
+    \[n>N_1\implies|a_n-L_1|<\varepsilon\qquad\text{and}\qquad n>N_2\implies|a_n-L_2|<\varepsilon.\]
+    But taking $n>\max\{N_1,N_2\},$ we see that $|L_1-L_2|<|L_1-a_n|+|a_n-L_2|<2\varepsilon<|L_1-L_2|$ is our contradiction. In other words, $a_n$ has to be in $(L_1-\varepsilon,L_1+\varepsilon)\cap(L_2-\varepsilon,L_2+\varepsilon),$ which is empty.
+\end{proof}
+Let's do some more examples, for fun.
+\begin{exercise}[Ross 7.5(a)]
+    We compute
+    \[\lim_{n\to\infty}\sqrt{n^2+1}-n=0.\]
+\end{exercise}
+\begin{proof}
+    The trick is to write
+    \[\lim_{n\to\infty}\left(\sqrt{n^2+1}-n\right)\cdot\frac{\sqrt{n^2+1}+n}{\sqrt{n^2+1}+n}=\lim_{n\to\infty}\frac1{\sqrt{n^2+1}+n}.\]
+    Now the top is $1$ and the bottom goes to $\infty,$ so the limit vanishes.
+\end{proof}
+\begin{exercise}
+    We prove that
+    \[\lim_{n\to\infty}\frac{2n-1}{3n+2}=\frac23.\]
+\end{exercise}
+\begin{proof}
+    We work backwards. The trick is to first study our difference
+    \[\left|\frac{2n-1}{3n+2}-\frac23\right|=\left|\frac{3(2n-1)-2(3n+2)}{3(3n+2)}\right|=\frac7{3(3n+2)}.\]
+    We see that we can bound this by $\frac1n$ because $\frac7{3(3n+2)}<\frac1n$ is equivalent to $7n<9n+6.$ So choosing $\boxed{N:=1/\varepsilon}$ so that $n>N$ implies
+    \[\left|\frac{2n-1}{3n+2}-\frac23\right|<\frac1n<\frac1N<\varepsilon,\]
+    finishing.
+\end{proof}
+\begin{remark}[Philosophy]
+    In some deep sense, the reason that we need the precise definition of the limit is that things might get more complicated than what, say, limit laws can control. For example, limits in multiple variables are not really susceptible to limit laws when continuous.
+\end{remark}
+\begin{exercise}[Ross 8.3]
+    Fix $s_n$ a sequence of nonnegative numbers such that $a_n\to0$ as $n\to\infty.$ Then $\sqrt{a_n}\to0$ as $n\to\infty.$
+\end{exercise}
+\begin{proof}
+    Well, fix some $\varepsilon>0$ so that we want to find $N$ such that $n>N$ implies that $|\sqrt{s_n}|<\varepsilon,$ which is equivalent to $s_n<\varepsilon^2$ because $s_n$ is nonnegative.\footnote{This equivalence is nontrivial but annoying, so we ignore it.} But $s_n\to0,$ there exists $N$ such that $|s_n|<\varepsilon^2$ for $n>N,$ finishing.
+\end{proof}
+\begin{remark}
+    Our $N$ given $\varepsilon$ is in some sense ``less effective'' than in previous examples because our information about $s_n$ is less effective.
+\end{remark}
+\begin{exercise}
+    We show that
+    \[\lim_{n\to\infty}\cos\left(\frac{n\pi}3\right)\notin\RR.\]
+\end{exercise}
+\begin{proof}
+    The issue is that our sequence is periodic but nonconstant. Well, the image of the sequence lives in $\{\pm1/2,\pm1\},$ so we fix our bad $\varepsilon=1/5$ smaller than the smallest pairwise distance.
+
+    Now suppose for the sake of contradiction we have $L$ is our limit. Then there is $N$ such that $n>N$ implies $\left|\cos\left(\frac{n\pi}3\right)-L\right|<\varepsilon.$ But then all terms past $N$ live in $(L-\varepsilon,L+\varepsilon),$ which cannot contain all of the $\{\pm1/2,\pm1\}.$ Explicitly,
+    \[2=|1--1|\le|1-L|+|-1-L|=\left|\cos\left(\frac{6N\pi}3\right)-L\right|+\left|\cos\left(\frac{(6N+3)\pi}3\right)-L\right|<2\varepsilon<2,\]
+    which is a contradiction.
+\end{proof}
+\begin{remark}
+    At a high level, what is happening is that the distance between consecutive terms is not going to $0,$ and this violating convergence. This idea will return. 
+\end{remark}

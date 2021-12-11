@@ -1,0 +1,144 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Fundamental Theorem of Calculus}
+Last time we were discussing the Fundamental theorem of calculus; here is the first part.
+\begin{theorem}[Fundamental theorem of calculus, I]
+	Fix $f$ a continuous function on $[a,b]$ which is differentiable on $(a,b)$ such that $g'$ is integrable on $[a,b].$ Then
+	\[\int_a^bg'(x)\,dx=g(b)-g(a).\]
+\end{theorem}
+\begin{proof}
+	At the very least we know that
+	\[I:=\int_a^bg'(x)\,dx\in\RR.\]
+	In particular, for any fixed partition $P=\{t_k\}_{k=0}^n\subseteq[a,b]$ with sufficiently small mesh $\delta>0,$ we have that $U(g',P)-L(g',P)<\varepsilon.$
+	
+	Now, the trick is to apply the Mean value theorem on each $[t_{k-1},t_k]$ so that there exists $x_k\in(t_{k-1},t_k)$ such that
+	\[\frac{g(t_k)-g(t_{k-1})}{t_k-t_{k-1}}=g'(x_k).\]
+	This is going to be our rigorization of $g$ being ``locally linear.'' So we see
+	\[g(b)-g(a)=\sum_{k=1}^n(g(t_k)-g(t_{k-1}))=\sum_{k=1}^ng(x_k)(t_k-t_{k-1})\]
+	which is a Riemann sum for $g.$ In particular, we see that
+	\[L(g',P)\le g(b)-g(a)\le U(g',P).\]
+	So we find that
+	\[\varepsilon<L(g',P)-U(g',P)\le L(g',P)-I\le g(b)-g(a)-I\le U(g',P)-I\le U(g',P)<\varepsilon,\]
+	so sending $\varepsilon$ to $0$ will show the desired equality.
+\end{proof}
+\begin{remark}
+	It might appear strange that we are assuming $g'$ is integrable on $[a,b],$ but this is indeed necessary because there exists functions with derivatives which are not integrable. Concrete examples are difficult.
+\end{remark}
+And here is the second part of the Fundamental theorem of calculus.
+\begin{theorem}[Fundamental theorem of calculus, II]
+	Fix $f:[a,b]\to\RR$ an integrable function. Then
+	\[F(x):=\int_a^xf(t)\,dt\]
+	is a continuous function $[a,b]\to\RR.$ If $f$ is continuous at some $x\in(a,b),$ then $F$ is differentiable at $x\in(a,b)$ with derivative $F'(x)=f(x).$
+\end{theorem}
+\begin{proof}
+	We show the claims one at a time.
+	\begin{itemize}
+		\item Fix some $x_0\in[a,b]$ and some $\varepsilon>0.$ The key is that $f$ is bounded, say by some $M\in\RR$ so that $|f(x)|<M$ for each $x\in[a,b].$ In particular, we let $\delta>0$ be some variable to be set later, and we note that $|x-x_0|<\delta$ implies
+		\[\left|F(x)-F(x_0)\right|=\left|\int_a^xf(t)\,dt-\int_a^{x_0}f(t)\,dt\right|=\left|\int_{x_0}^xf(t)\,dt\right|<|x-x_0|\cdot M<\delta M\]
+		by bounding directly. (We are blatantly ignoring some details in these inequalities.) But now we can set $\delta:=\frac\varepsilon M$ to get the result.
+		\item We omit this proof.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here is an exercise.
+\begin{exe}[Ross 34.12]
+	Fix $f$ continuous on $[a,b]$ such that
+	\[\int_a^bf(x)g(x)\,dx=0\]
+	for each continuous function $g:[a,b]\to\RR.$ Then $f$ is zero.
+\end{exe}
+\begin{proof}
+	Fix $f$ a continuous function on $[a,b],$ and we suppose there exists some $c\in[a,b]$ for which $f(c)\ne0,$ and we will show there exists a $g:[a,b]\to\RR$ such that
+	\[\int_a^bf(x)g(x)\,dx\ne0.\]
+	Take $f(c)>0$ without loss of generality. Now, by continuity, there exists $\delta>0$ such that
+	\[|x-c|<\delta\implies|f(x)-f(c)|<\frac{f(c)}2\]
+	so that $|x-c|<\delta$ implies $f(x)\ge f(c)/2.$ To make life easy, we fix an interval $[a_0,b_0]\subseteq[c-\delta,c+\delta]\cap[a,b].$
+
+	The idea, now, is to make $g$ ``bump'' on $[a_0,b_0]$ and then be zero everywhere else. We won't write this out rigorously, but the point is that we will have
+	\[\int_a^bf(x)g(x)\,dx=\int_{a_0}^{b_0}f(x)g(x)\,dx\ge\frac{f(c)}2\int_{a_0}^{b_0}g(x)\,dx,\]
+	which we can make sure is positive. This finishes.
+\end{proof}
+
+\subsection{Improper Integrals}
+We are going to skip over the discussion of the Riemann-Stieltjes integral and go straight into the improper integral.
+
+Our setting for normal integrals was for bounded functions on closed intervals. For improper integrals, we will relax this condition to functions on open intervals. As an example, we might be tempted to fix
+\[I:=\int_0^1\sin\left(\frac1x\right)\,dx\]
+into a proper integral by just setting $\sin\left(\frac1x\right)$ to be something arbitrary at $0,$ but it is probably more productive to set $u:=1/x$ to make this into an improper integral
+\[\int_1^\infty\frac{\sin u}{u^2}\,du.\]
+This integral is more tractable because its absolute value has
+\[\int_1^\infty\left|\frac{\sin u}{u^2}\right|\,du\le\int_1^\infty\frac1{u^2}\,du<\infty,\]
+so we have that $I$ will converge.
+
+Another approach to $I$ is to look at
+\[\lim_{a\to0^+}\int_a^1\sin\left(\frac1x\right)\,dx,\]
+which has the benefit of us not having to do a substitution or even touch $0$ directly at all. So here is our actual definition.
+\begin{definition}[Improper integral]
+	Fix $f:\left[a,b\right)\to\RR,$ where $b\in\RR\cup\{\infty\}.$ Then, if $f$ is integrable on each $[c,d]\subseteq\left[a,b\right),$ we define
+	\[\int_a^bf(t)\,dt:=\lim_{x\to b^-}\int_a^xf(t)\,dt.\]
+	There is an analogous definition for $f:\left(a,b\right]\to\RR$ (where $a\in\RR\cup\{-\infty\}$) and even $f:(a,b)\to\RR$ (where $a\in\RR\cup\{-\infty\}$ and $b\in\RR\cup\{\infty\}$).
+\end{definition}
+Let's do some exercises; there honestly is not much theory here.
+\begin{exe}[Ross 36.3]
+	Fix $p>0.$ Then
+	\[\int_0^1x^{-p}\,dx\]
+	converges if and only if $p<1.$
+\end{exe}
+\begin{proof}
+	We simply do our cases.
+	\begin{itemize}
+		\item If $p\ne1,$ then we see
+		\[\int_0^1x^{-p}\,dx=\lim_{a\to0^+}\int_a^1x^{-p}\,dx=\lim_{a\to0^)}\frac{x^{1-p}}{1-p}\bigg|_a^1=\lim_{a\to0^+}\frac{1-a^{1-p}}{1-p}.\]
+		If $p>1,$ then $1-p<0,$ so $a^{1-p}\to\infty$ as $a\to0^+.$ If $p>1,$ then $1-p>0,$ so $a^{1-p}\to0$ as $a\to0^+.$
+		\item If $p=1,$ then we see
+		\[\int_0^1x^{-1}\,dx=\lim_{a\to0^+}\int_a^1x^{-1}\,dx=\lim_{a\to0^+}\log1-\log a,\]
+		which diverges.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{exe}
+	Fix $p>0.$ Then we claim
+	\[\int_0^\infty x^{-p}\,dx\]
+	always diverges.
+\end{exe}
+\begin{proof}
+	We have problems at $0$ and $\infty,$ so we are interested in computing
+	\[\int_0^\infty x^{-p}\,dx=\int_0^1x^{-p}\,dx+\int_1^\infty x^{-p}\,dx.\]
+	We know the original integral converges if and only if $p<1.$ The second integral is
+	\[\lim_{b\to\infty}\int_1^b x^{-p}\,dx=\lim_{b\to\infty}\frac{b^{1-p}-1}{1-p}.\]
+	We are only interested in the case where $p<1,$ where the term $b^{1-p}\to\infty$ as $b\to\infty.$ So this diverges always.
+\end{proof}
+\begin{exe}
+	We show that
+	\[\int_{-\infty}^\infty e^{-t^2}\,dt<\infty.\]
+\end{exe}
+\begin{proof}
+	It suffices to study
+	\[\int_1^\infty e^{-t^2}\,dt=\int_{-\infty}^{-1}e^{-t^2}\,dt.\]
+	But now we can say that
+	\[\int_1^\infty e^{-t^2}\,dt\le\int_1^\infty e^{-x}\,dt=e^{-1}<\infty,\]
+	which finishes.
+\end{proof}
+\begin{remark}
+	Note that we in fact know that this integral exists because the function
+	\[F(x):=\int_0^\infty e^{-t^2}\,dt\]
+	is increasing and bounded above as $x\to\infty.$ So $F$ will actually have a limit, though this is somewhat annoying to prove.
+\end{remark}
+\begin{remark}
+	One can actually show that
+	\[\int_{-\infty}^\infty e^{-x^2}\,dx=\sqrt\pi.\]
+	To see this, take a course in multi-variable calculus.
+\end{remark}
+And that covers the material of the course.

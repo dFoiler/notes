@@ -1,0 +1,160 @@
+
+
+
+
+
+
+
+
+
+\subsection{Constructing \texorpdfstring{$\RR$}{}}
+Recall the sequence of rationals
+\[1,1.4,1.141,\ldots\to\sqrt2.\]
+The point here is that we have a sequence of rational numbers which converge but not to a real number. Similarly, we can see that
+\[2^1,2^{1.4},2^{141},\ldots\to2^{\sqrt2}\]
+produces a sequence of algebraic integers which converge to a non-algebraic number. (We are taking on faith that $2^{\sqrt2}$ is not algebraic; this is hard to show.) This is sad.
+
+We would like to stop our sequences from producing new numbers. It turns out that this is a reasonable definition of $\RR.$
+\begin{defi}[Reals, I] \label{defi:real1}
+    We can define $\RR$ as the set of all numbers which have a rational sequence converging to them.
+\end{defi}
+However, this is not rigorous, and it's not even obvious if $\RR$ is closed under taking more convergent sequences.
+
+Let's begin to add rigor. We start with a field.
+\begin{defi}[Field]
+    A field a set $F$ together with two operations $+$ and $\cdot$ which can add, subtract, multiply, and divide in a way that makes sense.
+\end{defi}
+We won't be rigorous about this definition either because this is not an algebra class. It's in the book if you want it. However, the structure we do care about is that $\RR$ has an order.
+\begin{defi}[Ordered field]
+    An ordered field is a field $F$ together with a total ordering $\le$ which behaves nicely with the field operations.
+\end{defi}
+Again, this formal definition is in the book if you want it.
+\begin{warn}
+    There is danger in this definition. For example, we could try to order subsets of (say) $\RR$ by containment, but then not all subsets are comparable (e.g., $\{1\}$ and $\{2\}$). Or we could try to order subsets by cardinality, but then we lose trichotomy (e.g., $\{1\}$ and $\{2\}$).
+\end{warn}
+\begin{remark}
+    We could view all of this adding structure as ``throwing out'' fake real numbers. For example, there are lots of fields which aren't $\RR,$ so if we want to define $\RR,$ we need more structure. For example, adding in the structure of being an ordered field prevents us from confusing $\CC$ (which isn't ordered) with $\RR.$
+\end{remark}
+\begin{remark}
+    The homework will contain ``axiomatic torture.'' For example, we will have to prove $0<1$ from the ordered field axioms. On one hand, this is painful because it looks obvious; on the other hand, this is necessary because we are trying to be rigorous and hence have to be careful.
+\end{remark}
+
+\subsection{Absolute Value}
+Recall the following definition.
+\begin{defi}[Absolute value]
+    We have that, for $x\in\RR,$
+    \[|x|:=\begin{cases}
+        x & x\ge0, \\
+        -x & x<0.
+    \end{cases}\]
+\end{defi}
+We would like to know things about the absolute value, such as $|x|\ge0$ for all $x\in\RR.$ To have tools, we must prove them; here is one such tool we need.
+\begin{prop} \label{prop:babytri}
+    For $a,b\in\RR,$ we have $|a|+|b|\ge|a+b|.$
+\end{prop}
+\begin{proof}
+    We see that $a\le|a|$ and $b\le|b|$ always, so it follows $a+b\le|a|+|b|.$ We also know that $-a\le|a|$ and $-b\le|b|,$ so it again follows $-(a+b)\le|a|+|b|.$ However, $|a+b|\in\{\pm(a+b)\},$ so we get $|a+b|\le|a|+|b|.$
+\end{proof}
+\begin{cor}[Triangle inequality]
+    Given $a,b,c\in\RR,$ we have that
+    \[|x-z|\le|x-y|+|y-z|.\]
+\end{cor}
+\begin{proof}
+    Set $a=x-y$ and $b=y-z$ so that the given inequality is equivalent to
+    \[|a+b|\stackrel?\le|a|+|b|.\]
+    This is exactly \autoref{prop:babytri}.
+\end{proof}
+\begin{remark}
+    The title ``triangle inequality'' makes this sound geometric, and indeed it is geometric and will apply in larger contexts.
+\end{remark}
+Let's do an exercise, for fun.
+\begin{exercise}[Ross 3.5]
+    The following are true. Fix $a,b\in\RR.$
+    \begin{enumerate}[label=(\alph*)]
+        \item $|b|\le a$ if and only if $-a\le b\le a.$
+        \item $||a|-|b||\le|a-b|.$
+    \end{enumerate}
+\end{exercise}
+\begin{proof}
+    We take these one at a time.
+    \begin{enumerate}[label=(\alph*)]
+        \item In one direction, we first assume $|b|\le a.$ We use the same trick as in \autoref{prop:babytri}. We see that $b\le|b|$ and $-b\le|b|$ both, so it follows
+        \[b\le|b|\le a\qquad\text{and}\qquad-b\le|b|\le a.\]
+        The first inequality gives $b\le a,$ and the second inequality gives $b\ge-a,$ from which the result follows.
+        
+        In the other direction, we first assume $-a\le b\le a.$ Then it follows $b\le a$ and $-a\le b.$ This second inequality yields $-b\le a,$ so it follows $|b|\le a$ because $|b|\in\{\pm b\}.$
+        \item Note that $|a|\le|a-b|+|b|$ by \autoref{prop:babytri} and $|b|\le|b-a|+|a|$ for the same reason. It follows $\pm(|a|-|b|)\le|a-b|,$ which gives the result.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+
+\subsection{Talking Bounds}
+Let's rigorize \autoref{defi:real1}. The problem with the rationals and the algebraic numbers is that they have lots of ``gaps.'' Well, should $\RR$ have these gaps? We hope not. Proving this requires some care, and it will be critical to defining $\RR.$
+
+Our story begins by revising the idea of maximum.
+\begin{defi}[Maximum, minimum]
+    Fix $A\subseteq\RR$ a subset.
+    \begin{itemize}
+        \item We define $\max A$ to be an element of $A$ such that $a\in A$ implies $a\le\max A.$
+        \item We define $\min A$ to be an element of $A$ such that $a\in A$ implies $a\ge\min A.$
+    \end{itemize}
+\end{defi}
+We can show that every finite set has a well-defined maximum and minimum, say by induction. However, not all sets have a maximum and/or minimum: for example, $A:=\{x\in\RR:0<x<1\}$ ``should'' have $0$ and $1$ as its minimum and maximum respectively, but they are not actually elements of $A.$ To make our descriptions easier, we take the following definitions.
+\begin{defi}[Interval notation]
+    Given $a,b\in\RR,$ we define
+    \begin{align*}
+        (a,b):=\{x\in\RR:a<x<b\}, \\
+        [a,b):=\{x\in\RR:a\le x<b\}, \\
+        (a,b]:=\{x\in\RR:a<x\le b\}, \\
+        [a,b]:=\{x\in\RR:a\le x\le b\}.
+    \end{align*}
+\end{defi}
+There is something different here between $\QQ$ and $\RR.$ In $\QQ,$ the set $[0,\sqrt2)$ has no maximum, and we cannot add elements of $\QQ$ to fix its predicament. However, in $\RR,$ even though $[0,\sqrt2)$ still has no maximum, we see that we could add just $\sqrt2$ to fix it.
+
+What's going on with $\RR^+:=\{x\in\RR:x>0\}.$ It has no maximum, but it does have a minimum. The difference here is boundedness.
+\begin{defi}[Boundedness]
+    Fix a nonempty subset $A\subseteq\RR.$
+    \begin{itemize}
+        \item We say that $c\in\RR$ is an \textit{upper bound} of $A$ if and only if $a\in A$ implies $a\le c.$ We say that $A$ is \textit{upper-bounded}.
+        \item We say that $c\in\RR$ is a \textit{lower bound} of $A$ if and only if $a\in A$ implies $c\le a.$ We say that $A$ is \textit{lower-bounded}.
+    \end{itemize}
+    We say that $A$ is \textit{bounded} if it has both a lower bound and an upper bound.
+\end{defi}
+There are lots of bounded sets which don't have maximum or minimum, but all the bounded sets we can think of feel like they should.
+
+\subsection{The Completeness Axiom}
+Let's think about what ``feel like they should'' really means. Imagine $A$ is bounded above, so that we want it to have a maximum or something like it. However, there are lots of upper bounds (if $c$ is an upper bound, then $c+1$ works), and it's not clear what is the ``best'' upper bound in the same way that a maximum is clearly the ``best'' upper bound. For now, fix
+\[B:=\{x\in\RR:x\text{ is an upper bound for }A\}.\]
+How should we choose the best upper bound from $B$? It doesn't have a good maximum, but it does look like it has a minimum!
+\begin{ex}
+    For $(0,1)$ or even $[0,1],$ its upper bounds are $[1,\infty),$ which has $1$ as its minimum.
+\end{ex}
+\begin{warn}
+    This is a very special property of $\RR$! All we've said is that $\RR$ is a real number, but (say) $\QQ$ is another ordered field, and in $\QQ,$ the set $(0,\sqrt2)$ has $(\sqrt2,\infty)$ as its upper bounds, which has no minimum!
+\end{warn}
+This discussion motivates the following definition.
+\begin{defi}[Supremum, Infimum]
+    Fix a nonempty subset $A\subseteq\RR.$
+    \begin{itemize}
+        \item Let $U$ be the set of upper bounds of $A.$ If $U$ has a minimum $\sup A,$ then we say that $\sup A$ is the \textit{supremum} of $A.$
+        \item Let $L$ be the set of lower bounds of $A.$ If $L$ has a maximum $\inf A,$ then we say that $\inf A$ is the \textit{infimum} of $A.$
+    \end{itemize}
+\end{defi}
+\begin{ex}
+    If a set has a maximum, then it has a supremum (which is the maximum).
+\end{ex}
+We suspect that all sets bounded above will have a supremum (and all sets bounded below have an infimum). We literally don't have the tools to prove this (our only tool is ordered field), so we make it an axiom.
+\begin{ax}[Completeness] \label{ax:comp}
+    Any nonempty subset of $\RR$ which is bounded above has a supremum.
+\end{ax}
+As an exercise, we can show that any set bounded below has an infimum. It turns out that \autoref{ax:comp} is exactly what we need to pin down our definition of $\RR.$ For example, we have the following.
+\begin{cor}
+    An infinite series with positive terms which does not diverge to $\infty$ must converge.
+\end{cor}
+\begin{proof}
+    For completeness, let $\{a_k\}_{k=1}^\infty$ be our sequence of positive terms. The trick is to look at the set of partial sums
+    \[S:=\left\{\sum_{k=1}^na_k:n\in\NN\right\}.\]
+    This set $S$ has a supremum, which is what the series converges to. We cannot make this terribly rigorous yet because we don't have a good definition of ``converge.''
+\end{proof}
+(After this he started talking philosophy about the Intermediate value theorem, which we're not going to get to for quite some time. We would like to prove it, but we don't have a workable definition of continuous yet.)
+% salvaging IVT in Q is weird. if we want to use the limit definition of continuous, we are essentially saying that continuous means that it extends to a continuous function on R

@@ -1,0 +1,373 @@
+\usepackage[margin=1in]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{amsfonts}
+\usepackage{asymptote}
+\usepackage{cancel}
+\usepackage{enumitem}
+\usepackage{footnotebackref}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{mathdots}
+\usepackage{pgffor}
+\usepackage{subfiles}
+\usepackage{tikz-cd}
+\usepackage{todonotes}
+\usepackage{xr}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SET-UP
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{cabin}
+\usepackage[default]{cantarell}
+
+\usepackage{fancyhdr}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{contentpage}{%
+    \lhead{\textit{\rightmark}}
+    % \rhead{\textit{250A: Groups, Rings, Fields}} %
+    \cfoot{\thepage}
+}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /SET-UP
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TITLING
+\usepackage{titlesec}
+\newif\iftoc
+\titleformat
+    {\chapter} % command
+    [display] % shape
+    {\cabin\bfseries\LARGE} % format
+    {} % label
+    {0pt} % 
+    {
+        \rule{\textwidth}{1pt}
+        \vspace{1ex}
+        \centering
+        \\\vspace{-22pt}
+        \iftoc
+            \scshape
+        \else
+            \textsc{Theme}~{\cantarell\thechapter}\scshape:~ % I like the other numbers ...
+        \fi
+    } % before-code
+    [
+        \vspace{-0.5ex}%
+        \rule{\textwidth}{0.3pt}
+    ] % after-code
+\titlespacing{\chapter}
+    {0pt}
+    {
+        \iftoc
+            -103pt+1in
+        \else
+            -127pt+1in
+        \fi
+    }
+    {40pt}
+\titleformat
+    {\section}
+    {\Large\bfseries}
+    {\thesection}
+    {1em}
+    {}
+    [\label{sec:\csname thesection\endcsname}]
+\setcounter{tocdepth}{1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /TITLING
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONVENIENCE
+\renewcommand{\AA}{\mathbb A}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\e}{\varepsilon}
+\newcommand{\ball}[2]{(#1-#2,\,#1+#2)}
+
+\newcommand{\floor}[1]{\left\lfloor{#1}\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil{#1}\right\rceil}
+\newcommand{\norm}[1]{\left\lVert{#1}\right\rVert}
+\newcommand{\diff}{\operatorname{diff }}
+\newcommand{\disc}{\operatorname{disc }}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\lcm}{\operatorname{lcm}}
+\newcommand{\del}{\partial}
+\newcommand{\emp}{\varnothing}
+\newcommand{\divides}{\,|\,}
+\newcommand{\op}[1]{\operatorname{#1}}
+\newcommand{\mf}[1]{\mathfrak{#1}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+
+% Algebra
+\newcommand{\coker}{\operatorname{coker}} % why isn't this a thing?!
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\into}{\hookrightarrow}
+\newcommand{\onto}{\twoheadrightarrow}
+\newcommand{\from}{\leftarrow}
+
+\newcommand{\limit}{\varprojlim}
+\newcommand{\colimit}{\varinjlim}
+
+% Type theory
+\newcommand{\refl}{\op{refl}}
+\newcommand{\UU}{\mathcal{U}}
+
+\newenvironment{solution}{
+\begin{proof}[Solution]}{\end{proof}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /CONVENIENCE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% EPIGRAPH
+\usepackage{epigraph}
+% Thank you https://tex.stackexchange.com/a/193189
+\renewcommand\textflush{flushright}
+
+\usepackage{etoolbox}
+\makeatletter
+\newlength\epitextskip
+\pretocmd{\@epitext}{\em}{}{}
+\apptocmd{\@epitext}{\em}{}{}
+\patchcmd{\epigraph}{\@epitext{#1}\\}{\@epitext{#1}\\[\epitextskip]}{}{}
+\makeatother
+
+\setlength\epigraphrule{0pt}
+\setlength\epitextskip{2ex}
+\setlength\epigraphwidth{.8\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /EPIGRAPH
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LISTS
+% Putting these into an environment decreases clicking
+\newlist{listalph}{enumerate}{1}
+\setlist[listalph,1]{label=(\alph*)}
+\newlist{listroman}{enumerate}{1}
+\setlist[listroman,1]{label=(\roman*)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /LISTS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LISTINGS
+\usepackage{courier}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,breaklines=true}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /LISTINGS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% THM BOXES
+% See http://texdoc.net/texmf-dist/doc/latex/thmtools/thmtools.pdf
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\usepackage{thmtools,thm-restate}
+
+\usepackage[framemethod=TikZ]{mdframed}
+% Fixing mdframed skip below
+% See https://tex.stackexchange.com/a/292090/143086
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{xpatch}
+\makeatletter
+\xpatchcmd{\endmdframed}
+    {\aftergroup\endmdf@trivlist\color@endgroup}
+    {\endmdf@trivlist\color@endgroup\@doendpe}
+    {}{}
+\makeatother
+
+\definecolor{thmblue}{RGB}{225, 250, 250}
+\declaretheoremstyle[
+    mdframed={
+	    backgroundcolor=thmblue,
+	    linecolor=blue,
+	    rightline=false,
+	    topline=false,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{thmblue}
+\declaretheorem[style=thmblue,name=Theorem]{thm}
+\declaretheorem[style=thmblue,name=Theorem,sibling=thm]{theorem}
+\declaretheorem[style=thmblue,name=Proposition,sibling=thm]{prop}
+\declaretheorem[style=thmblue,name=Proposition,sibling=thm]{proposition}
+
+\definecolor{probblue}{RGB}{100, 150, 220}
+\declaretheoremstyle[
+    mdframed={
+	    backgroundcolor=thmblue,
+	    linecolor=probblue,
+	    rightline=false,
+	    topline=true,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{probblue}
+\declaretheorem[style=probblue,name=Problem,numberwithin=section]{prob}
+
+\declaretheoremstyle[
+    mdframed={
+	    backgroundcolor=thmblue,
+	    linecolor=probblue,
+	    rightline=false,
+	    topline=false,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{lemblue}
+\declaretheorem[style=lemblue,name=Lemma,sibling=thm]{lem}
+\declaretheorem[style=lemblue,name=Lemma,sibling=thm]{lemma}
+\declaretheorem[style=lemblue,name=Corollary,sibling=thm]{cor}
+\declaretheorem[style=lemblue,name=Corollary,sibling=thm]{corollary}
+\declaretheorem[style=lemblue,name=Exercise,sibling=thm]{exercise}
+\declaretheorem[style=lemblue,name=Exercise,sibling=thm]{exe}
+
+\definecolor{thmred}{RGB}{250, 220, 220}
+\declaretheoremstyle[
+	mdframed={
+	    backgroundcolor=thmred,
+	    linecolor=red,
+	    rightline=false,
+	    topline=false,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{thmred}
+\declaretheorem[style=thmred,name=Idea,sibling=thm]{idea}
+\declaretheorem[style=thmred,name=Conjecture,sibling=thm]{conj}
+\declaretheorem[style=thmred,name=Question,sibling=thm]{ques}
+\declaretheorem[style=thmred,name=Warning,sibling=thm]{warn}
+
+\definecolor{thmlightgreen}{RGB}{230, 255, 234}
+\definecolor{thmdarkgreen}{RGB}{60, 110, 60}
+\declaretheoremstyle[
+	mdframed={
+	    backgroundcolor=thmlightgreen,
+	    linecolor=thmdarkgreen,
+	    rightline=false,
+	    topline=false,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{thmgreen}
+\declaretheorem[style=thmgreen,name=Definition,sibling=thm]{defi}
+\declaretheorem[style=thmgreen,name=Definition,sibling=thm]{definition}
+\declaretheorem[style=thmgreen,name=Axiom,sibling=thm]{ax}
+\newenvironment{axiom}{\begin{ax}}{\end{ax}}
+
+\definecolor{exdarkgreen}{RGB}{120, 180, 120}
+\declaretheoremstyle[
+	mdframed={
+	    backgroundcolor=thmlightgreen,
+	    linecolor=exdarkgreen,
+	    rightline=false,
+	    topline=false,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{exgreen}
+\declaretheorem[style=exgreen,name=Example,sibling=thm]{ex}
+\declaretheorem[style=exgreen,name=Example,sibling=thm]{example}
+\declaretheorem[style=exgreen,name=Non-Example,sibling=thm]{nex}
+\declaretheorem[style=exgreen,name=Non-Definition,sibling=thm]{ndefi}
+
+\definecolor{remlightbrown}{RGB}{246, 240, 228}
+\definecolor{remdarkbrown}{RGB}{180, 133, 75}
+\declaretheoremstyle[
+	mdframed={
+	    backgroundcolor=remlightbrown,
+	    linecolor=remdarkbrown,
+	    rightline=false,
+	    topline=false,
+	    bottomline=false,
+	    linewidth=2pt,
+	    innertopmargin=5pt,
+	    innerbottommargin=8pt,
+	    innerleftmargin=8pt,
+	    leftmargin=-2pt,
+	    skipbelow=2pt,
+	    nobreak
+	}
+]{rembrown}
+\declaretheorem[style=rembrown,name=Remark,sibling=thm]{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /THM BOXES
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUIVER
+% *** quiver ***
+% A package for drawing commutative diagrams exported from https://q.uiver.app.
+%
+% This package is currently a wrapper around the `tikz-cd` package, importing necessary TikZ
+% libraries, and defining a new TikZ style for curves of a fixed height.
+%
+% Version: 1.2.0
+% Authors:
+% - varkor (https://github.com/varkor)
+% - AndréC (https://tex.stackexchange.com/users/138900/andr%C3%A9c)
+
+% NIR: this is causing errors, so I killed it
+% \NeedsTeXFormat{LaTeX2e}
+% \ProvidesPackage{quiver}[2021/01/11 quiver]
+
+% `tikz-cd` is necessary to draw commutative diagrams.
+\RequirePackage{tikz-cd}
+% `amssymb` is necessary for `\lrcorner` and `\ulcorner`.
+\RequirePackage{amssymb}
+% `calc` is necessary to draw curved arrows.
+\usetikzlibrary{calc}
+% `pathmorphing` is necessary to draw squiggly arrows.
+\usetikzlibrary{decorations.pathmorphing}
+
+% A TikZ style for curved arrows of a fixed height, due to AndréC.
+\tikzset{curve/.style={settings={#1},to path={(\tikztostart)
+    .. controls ($(\tikztostart)!\pv{pos}!(\tikztotarget)!\pv{height}!270:(\tikztotarget)$)
+    and ($(\tikztostart)!1-\pv{pos}!(\tikztotarget)!\pv{height}!270:(\tikztotarget)$)
+    .. (\tikztotarget)\tikztonodes}},
+    settings/.code={\tikzset{quiver/.cd,#1}
+        \def\pv##1{\pgfkeysvalueof{/tikz/quiver/##1}}},
+    quiver/.cd,pos/.initial=0.35,height/.initial=0}
+
+% TikZ arrowhead/tail styles.
+\tikzset{tail reversed/.code={\pgfsetarrowsstart{tikzcd to}}}
+\tikzset{2tail/.code={\pgfsetarrowsstart{Implies[reversed]}}}
+\tikzset{2tail reversed/.code={\pgfsetarrowsstart{Implies}}}
+% TikZ arrow styles.
+\tikzset{no body/.style={/tikz/dash pattern=on 0 off 1mm}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /QUIVER

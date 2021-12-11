@@ -1,0 +1,186 @@
+
+
+
+
+
+
+
+
+
+Let's have some fun today.
+
+\subsection{Quadratic Number Rings}
+Here is our situation.
+\begin{defi}[Quadratic extension]
+    Fix $D$ a squarefree integer which is not $1,$ and we fix $K=\QQ(\sqrt D),$ which we call a \textit{quadratic} extension of $\QQ$ because its degree over $\ZZ$ is two.
+\end{defi}
+We want to understand our number rings.
+\begin{prop}
+    Let $\mathcal O_K$ be the integral closure of $\ZZ$ in $K=\QQ(\sqrt D)$ a quadratic extension of $\QQ.$ The story so far is that
+    \[\mathcal O_K=\begin{cases}
+        \ZZ\left[\frac{1+\sqrt D}2\right] & D\equiv1\pmod4, \\
+        \ZZ[\sqrt D] & \text{else}.
+    \end{cases}\]
+\end{prop}
+\begin{proof}
+    Fix a $D.$ In one direction, we note that $\sqrt D\in\mathcal O_K$ always, so $\ZZ[\sqrt D]\subseteq\mathcal O_K.$ Additionally, $\frac{1+\sqrt D}2\in\mathcal O_K$ when $D\equiv1\pmod4$ because of the polynomial $x^2-x+\frac{1-D}4\in\ZZ[x].$
+    
+    We now show the reverse direction. We note that $\mathcal O_K\cap\QQ=\ZZ$ by, say, Gauss's lemma. Fix $\alpha\mathcal O_K\setminus\QQ$ so that $\alpha=a+b\sqrt D$ with $a,b\in\QQ$ and $b\ne0.$ Our monic irreducible polynomial is now
+    \[x^2-2ax+\left(a^2-Db^2\right)=0,\]
+    \todo{}so we are forced to have $2a\in\ZZ$ and $a^2-Db^2\in\ZZ.$ We have cases.
+    \begin{itemize}
+        \item We note that $a\in\ZZ$ implies $-Db^2\in\ZZ,$ which implies $b\in\ZZ$ by elementary number theory, so $\alpha\in\ZZ[\sqrt D].$
+        \item Otherwise, $a=a'+1/2$ with $a'\in\ZZ,$ so
+        \[(2a'+1)^2-4Db^2=4\left(a^2-Db^2\right)\in4\ZZ.\]
+        It follows that $4Db^2$ is an integer, and in fact it is odd because $4a^2$ is odd. It follows that $2b$ is an odd integer, so we know $\alpha-\frac{1+\sqrt D}2\in\ZZ[\sqrt D].$ Thus, $\frac{1+\sqrt D}2\in\mathcal O_K,$ and in fact $\mathcal O_K\subseteq\ZZ\left[\frac{1+\sqrt D}2\right].$
+        
+        However, this case only kicks in when $\frac{1-D}4\in\ZZ$ by taking the norm, so this case occurs if and only if $D\equiv1\pmod4.$
+    \end{itemize}
+    So the statement follows.
+\end{proof}
+
+\subsection{Discriminants}
+Let $L/K$ be a finite, separable extension of fields of degree $n:=[L:K].$ We fix a separable closure $\overline K/K$ and let $\sigma_1,\ldots,\sigma_n$ be our (distinct) embeddings $L\to\overline K.$ (Note that we do have $n$ of these because $L/K$ is separable.)
+% https://q.uiver.app/?q=WzAsMyxbMSwyLCJLIl0sWzAsMCwiTCJdLFsyLDAsIlxcb3ZlcmxpbmUgSyJdLFsxLDIsIlxcc2lnbWFfXFxidWxsZXQiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwxLCJuIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDIsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+\[\begin{tikzcd}
+	L && {\overline K} \\
+	\\
+	& K
+	\arrow["{\sigma_\bullet}", dashed, from=1-1, to=1-3]
+	\arrow["n", no head, from=3-2, to=1-1]
+	\arrow[no head, from=3-2, to=1-3]
+\end{tikzcd}\]
+We have the following definition.
+\begin{defi}[Discriminant] \label{defi:disc}
+    Let $\alpha_1,\ldots,\alpha_n$ be a basis of $L$ as a $K$-vector space. Then we define the \textit{discriminant} of our basis as
+    \[\op{disc}(\{\alpha_1,\ldots,\alpha_n\}):=\det\begin{bmatrix}
+        \sigma_1\alpha_1 & \cdots & \sigma_1\alpha_n \\
+        \vdots & \ddots & \vdots \\
+        \sigma_n\alpha_1 & \ldots & \sigma_n\alpha_n
+    \end{bmatrix}^2\]
+\end{defi}
+\begin{remark}
+    The order of the basis doesn't matter: it will change the sign of the determinant at most, but we are squaring, so this doesn't have a real effect.
+\end{remark}
+\begin{ex}
+    Take $K=\QQ$ and $L=\QQ(\sqrt D)$ a quadratic extension of $K,$ and take the basis $\{1,\sqrt D\}.$ Then we have
+    \[\op{disc}(\{1,\sqrt D\})=\det\begin{bmatrix}
+        1 & \sqrt D \\
+        1 & -\sqrt D
+    \end{bmatrix}^2=4D.\]
+    Alternatively, we can take the basis $\left\{1,\frac{1+\sqrt D}2\right\},$ which gives
+    \[\op{disc}\left(\left\{1,\frac{1+\sqrt D}2\right\}\right)=\det\begin{bmatrix}
+        1 & \frac{1+\sqrt D}2 \\
+        1 & \frac{1-\sqrt D}2
+    \end{bmatrix}=(-\sqrt D)^2=D.\]
+\end{ex}
+Note that the example and definition doesn't care about integrality. But this is a number theory class, so we do.
+\begin{prop}
+    Fix everything as above. Then we claim
+    \[\op{disc}(\{\alpha_1,\ldots,\alpha_n\})=\det\begin{bmatrix}
+        \op T_K^L(\alpha_1\alpha_1) & \cdots & \op T_K^L(\alpha_1\alpha_n) \\
+        \vdots & \ddots & \vdots \\
+        \op T_K^L(\alpha_n\alpha_1) & \cdots & \op T_K^L(\alpha_n\alpha_n)
+    \end{bmatrix}\in K.\]
+\end{prop}
+\begin{proof}
+    This follows by noting that
+    \[\begin{bmatrix}
+        \sigma_1\alpha_1 & \cdots & \sigma_n\alpha_1 \\
+        \vdots & \ddots & \vdots \\
+        \sigma_1\alpha_n & \cdots & \sigma_n\alpha_n
+    \end{bmatrix}
+    \begin{bmatrix}
+        \sigma_1\alpha_1 & \cdots & \sigma_1\alpha_n \\
+        \vdots & \ddots & \vdots \\
+        \sigma_n\alpha_1 & \cdots & \sigma_n\alpha_n
+    \end{bmatrix}=\begin{bmatrix}
+        \op T_K^L(\alpha_1\alpha_1) & \cdots & \op T_K^L(\alpha_1\alpha_n) \\
+        \vdots & \ddots & \vdots \\
+        \op T_K^L(\alpha_n\alpha_1) & \cdots & \op T_K^L(\alpha_n\alpha_n)
+    \end{bmatrix}\]
+    because the matrix multiplication at $(k,\ell)$ reads as
+    \[\sum_{k=1}^n\sigma_1(\alpha_k\alpha_\ell)=\op T_K^L(\alpha_k\alpha_\ell).\]
+    Taking determinants of this equation finishes.
+\end{proof}
+\begin{remark}
+    Note that if we don't take the square in \autoref{defi:disc}, then we don't get an element of $K$ as above. For concreteness, check the examples.
+\end{remark}
+We would also like to show that the discriminant is nonzero.
+\begin{lem} \label{lem:lem0}
+    Fix everything as above. Suppose that $\{\alpha_k\}_{k=1}^n$ and $\{\beta_\ell\}_{\ell=1}^n$ both be bases for $L$ over $K.$ We define the matrix $M$ to be our change of basis matrix: $\beta_k=\sum_\ell M_{k,\ell}\alpha_\ell.$ Then we claim that
+    \[\op{disc}(\{\beta_k\}_{k=1}^n)=(\det M)^2\op{disc}(\{\alpha_k\}_{k=1}^n).\]
+\end{lem}
+\begin{proof}
+    Observe that
+    \[\begin{bmatrix}
+        \sigma_1\beta_1 & \cdots & \sigma_n\beta_1 \\
+        \vdots & \ddots & \vdots \\
+        \sigma_1\beta_n & \cdots & \sigma_n\beta_n
+    \end{bmatrix}=\begin{bmatrix}
+        M_{11} & \cdots & M_{1n} \\
+        \vdots & \ddots & \vdots \\
+        M_{n1} & \cdots & M_{nn}
+    \end{bmatrix}\begin{bmatrix}
+        \sigma_1\alpha_1 & \cdots & \sigma_n\alpha_1 \\
+        \vdots & \ddots & \vdots \\
+        \sigma_1\alpha_n & \cdots & \sigma_n\alpha_n
+    \end{bmatrix}\]
+    because
+    \[\sum_{\ell=1}^nM_{k,\ell}\sigma_k\alpha_\ell=\sigma_k\sum_{\ell=1}^nM_{k,\ell}\alpha_\ell=\sigma_k\beta_\ell.\]
+    Taking determinants and squaring finishes.
+\end{proof}
+We also have the following.
+\begin{lem}[van der Monde]
+    Let $A$ be a ring and let $\theta_1,\ldots,\theta_n$ be in $A.$ Then
+    \[\det\begin{bmatrix}
+        \theta_1^0 & \cdots & \theta_n^0 \\
+        \vdots & \ddots & \vdots \\
+        \theta_1^{n-1} & \cdots & \theta_n^{n-1}
+    \end{bmatrix}=\prod_{k<\ell}(\theta_\ell-\theta_k).\]
+\end{lem}
+\begin{proof}
+    We show that this is true in $\ZZ[x_1,\ldots,x_n],$ which is enough because we have a map $\ZZ[x_1,\ldots,x_n]\to A$ by $x_\bullet\mapsto\theta_\bullet.$ However, we note that, for $k\ne\ell,$ the determinant is a multiple of $(x_\ell-x_k)$ because $x_k=x_\ell$ sets two columns equal, making the determinant vanish. And in fact, the $(x_\ell-x_k)$ are distinct irreducibles.
+    
+    So we use unique prime factorization to achieve
+    \[\prod_{k<\ell}(x_\ell-x_k)~\bigg|~\det\begin{bmatrix}
+        \theta_1^0 & \cdots & \theta_n^0 \\
+        \vdots & \ddots & \vdots \\
+        \theta_1^{n-1} & \cdots & \theta_n^{n-1}
+    \end{bmatrix}.\]
+    Comparing degrees, the degree of the left-hand side is $\frac{n(n-1)}2,$ and the right-hand side has degree $0+1+2\cdots+(n-1)=\frac n{n-1}2,$ so we are off by at most a constant in $\QQ.$
+    
+    However, both sides have a $\theta_n^{n-1}\cdots\theta_2^1\theta_1^0$ term with coefficient $1$: the determinant has coefficient here of $+1$ by multiplying along the diagonal, and the polynomial has coefficient here of $+1$ by taking all the positive terms of the product.
+\end{proof}
+This gives us the following corollary.
+\begin{cor}
+    Fix everything as above, and suppose that $L=K(\theta)$ so that $\left\{1,\theta,\theta^2,\ldots,\theta^{n-1}\right\}$ is a basis for $L/K.$ Then
+    \[\op{disc}\left(\left\{\theta^k\right\}_{k=1}^n\right)=\op{disc}f(x),\]
+    where $f(x)$ is the irreducible polynomial for $\theta$ over $K.$
+\end{cor}
+\begin{proof}
+    The point is that
+    \[\op{disc}\left(\left\{\theta^k\right\}_{k=1}^n\right)=\det\begin{bmatrix}
+        \sigma_1\theta^0 & \cdots & \sigma_n\theta^0 \\
+        \vdots & \ddots & \vdots \\
+        \sigma_1\theta^n & \cdots & \sigma_n\theta^n
+    \end{bmatrix}^2=\prod_{k<\ell}(\sigma_\ell\theta-\sigma_k\theta)^2=\op{disc}f(x),\]
+    where we have used the van der Monde determinant in the first equality.
+\end{proof}
+In particular, we have the following.
+\begin{thm}
+    Because $L/K$ is (finite) separable, we see that every basis has a nonzero discriminant. And in fact, the billinear form $\langle\alpha,\beta\rangle:=\op T_K^L(\alpha\beta)$ is non-degerenate. In other words, for each $\alpha\in L^\times,$ the map $\beta\mapsto\langle\alpha,\beta\rangle$ and $\beta\mapsto\langle\beta,\alpha\rangle$ are nonzero.
+\end{thm}
+\begin{proof}
+    Because $L/K$ is a finite separable extension, it has a primitive element $\theta.$ Then we see that its irreducible polynomial $f(x)\in K[x]$ has no repeated roots ($L/K$ is separable), so
+    \[\op{disc}\left(\left\{\theta^k\right\}_{k=1}^n\right)=\op{disc}f(x)\ne0.\]
+    To talk about other bases, we simply use the change of basis matrix to go from another basis $\{\alpha_k\}_{k=1}^n$ to our power basis; the change of basis matrix is invertible and hence has nonzero determinant.
+    
+    To show that the trace pairing is non-degenerate, it suffices to show that $\beta\mapsto\op T_K^L(\alpha\beta)$ is a nonzero map for $\alpha\ne0$; the other direction follows from commutativity of multiplication. Well, with $\alpha\ne0,$ we may extend $\alpha=:\alpha_1$ to a full basis $\{\alpha_k\}_{k=1}^n.$ Then we see
+    \[0\ne\op{disc}\left(\{\alpha_k\}_{k=1}^n\right)=\det\begin{bmatrix}
+        \op T_K^L(\alpha_1\alpha_1) & \cdots & \op T_K^L(\alpha_1\alpha_n) \\
+        \vdots & \ddots & \vdots \\
+        \op T_K^L(\alpha_n\alpha_1) & \cdots & \op T_K^L(\alpha_n\alpha_n)
+    \end{bmatrix}.\]
+    Because the determinant is nonzero, no particular row may be zero, and so in particular, the top row of $\op T_K^L(\alpha_1\alpha_\bullet)$ must not be identically zero. So there is some $\beta:=\alpha_k$ with $\op T_K^L(\alpha\beta)\ne0.$
+\end{proof}

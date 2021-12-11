@@ -1,0 +1,378 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Despite the severity of his injury, the child was conscious, and in terrible pain.
+
+\subsection{Algebraic Closure}
+Let's quickly finish this off so that we can talk about Galois extensions. Briefly recall that we have a notion of ``splitting field.''
+\begin{definition}[Splitting field]
+	Given a set of polynomials $\{p_\alpha\}_{\alpha\in\lambda}\in K[x],$ the \textit{splitting field} $L/K$ is a field in which all the $p_k$ split fully into linear factors, and the corresponding roots generate the field $L.$
+\end{definition}
+We saw last lecture that splitting fields exist and are unique up to (non-canonical/non-unique) isomorphism.
+\begin{remark}
+	Technically we showed that splitting fields exist for a single polynomial, but this construction can be extended to any set of polynomials by some kind of transfinite induction.
+\end{remark}
+\begin{remark}
+	The lack of uniqueness of the isomorphism here induces major headaches later in life.
+\end{remark}
+Anyways, we have the following definition.
+\begin{definition}[Algebraic closure]
+	Given a field $K,$ the \textit{algebraic closure} $\overline K$ of $K$ is an algebraic extension of $K$ such that all polynomials in $\overline K[x]$ will fully factor in $\overline K.$
+\end{definition}
+Of course, it is not immediately obvious that such a thing should exist, nor that it is unique up to some isomorphism (which justifies the use of the word ``the'' in the above definition). Let's see this.
+\begin{proposition} \label{prop:algclose}
+	Fix a field $K.$ Then an algebraic closure of $K$ exists and is unique.
+\end{proposition}
+We present two proofs of the existence, and we will use the second proof to show uniqueness.
+\begin{proof}[Lazy proof of existence in \autoref{prop:algclose}]
+	We start with a lazy proof of existence. Set $K_0:=K$ and then define $K_1$ to be the splitting field of the set of all polynomials in $K_0[x]$ over $K_0.$ However, we might have $K_1\ne\overline K$ if there is a polynomial in $K_1[x]$ without roots in $K_1,$ so we inductively define $K_{n+1}$ to be the splitting field of the set of all polynomials in $K_n[x]$ over $K_n.$ This creates the chain
+	\[K_0\subseteq K_1\subseteq K_2\subseteq\cdots.\]
+	So we claim that we can define
+	\[\overline K:=\bigcup_{n\ge0}K_n.\]
+	We can check that this is a field (closed under addition, multiplication, and inverses) by hand using the chain condition; for example, this is closed under addition because any $\alpha,\beta\in\overline K$ have some $N$ for which $\alpha,\beta\in K_N,$ so $\alpha+\beta\in K_N\subseteq\overline K.$
+	\begin{remark}
+		This is a common idea in mathematics: just inductively build up and do a big union to finish.
+	\end{remark}
+	So now we want to check that $\overline K$ is algebraically closed. Well, any polynomial
+	\[\sum_{k=0}^na_kx^k\in\overline K[x]\]
+	will have some $N$ for which $a_k\in K_N$ for each $k$ because we constructed $\overline K$ as a chain, and there are only finitely many of the $a_\bullet.$ It follows that
+	\[\sum_{k=0}^na_kx^k\in K_N[x],\]
+	so this polynomial fully splits in $K_{N+1}\subseteq\overline K,$ so indeed, this polynomial fully splits in $\overline K.$
+\end{proof}
+An issue with the above proof is that it makes uniqueness a bit difficult to prove uniqueness, and we haven't even showed that $\overline K$ defined above is actually algebraic over $K.$. To solve this, we decide to be a little less lazy.
+\begin{proof}[Proof of \autoref{prop:algclose}]
+	To be less lazy, we actually do field theory. The main idea is the following lemma, which essentially reduces the check of algebraic closure to just polynomials in $K[x].$ In the vocabulary of the previous proof, we are essentially saying that $K_1$ defined above is in fact algebraically closed, so our chain stops after one step.
+	\begin{lemma}
+		Fix a field $K.$ A field $\overline K$ is an algebraic closure of $K$ if and only if it is a splitting field of the set of all polynomials $K[x]$ over $K.$
+	\end{lemma}
+	\begin{proof}
+		Define $K_1$ to be the splitting field of all polynomials $K[x]$ over $K.$ The main point is to recall that $K_1$ is algebraically closed: for any polynomial
+		\[p(x):=\sum_{k=0}^na_kx^k\in K_1[x],\]
+		the elements $a_k$ are algebraic over $K,$ so the extension $K(a_0,\ldots,a_n)$ is of finite degree over $K.$ Intuitively, any root $\alpha$ of the above polynomial will still have $K(a_0,\ldots,a_n,\alpha)$ a finite extension, implying that $\alpha$ is algebraic over $K,$ implying $\alpha\in K_1.$ Rigorously, we may (without loss of generality) take $p$ to be irreducible so that
+		\[\frac{K_1[\alpha]}{(p(\alpha))}\]
+		is still a field. But now $\alpha$ is a root of the above polynomial, so we can use our intuitive argument so show that $\alpha$ is algebraic over $K,$ so $\alpha\in K_1.$ But then $(x-\alpha)$ is a factor of $p(x),$ so we must have $(p)=(x-\alpha),$ which makes $p$ fully factor over $K_1[x].$
+
+		So we see that $K_1$ is in fact algebraically closed, and by construction is algebraic over $K.$ So indeed, $K_1$ is an algebraic closure of $K.$ Now fix $\overline K$ any algebraic closure of $K.$ Certainly $\overline K$ must contain all the roots of polynomials in $K[x]\subseteq\overline K[x],$ so there is a subfield
+		\[\overline K_1\subseteq\overline K\]
+		generated by these roots; i.e., $\overline K_1$ is a splitting field of the set of all polynomials in $K[x].$ However, $\overline K$ is an algebraic extension of $K,$ so all elements of $K$ are roots of some polynomial in $K[x],$ so we also get $\overline K\subseteq\overline K_1.$ So we see
+		\[\overline K=\overline K_1\cong K_1,\]
+		where the isomorphism is by uniqueness of the splitting field. This finishes.
+	\end{proof}
+	So we see that uniqueness and existence of splitting fields establishes the existence and uniqueness of the algebraic closure automatically. So we are done.
+\end{proof}
+% Here is the idea behind the construction: set $k_0$ to be $k,$ and we define $k_1$ to be the field containing all the roots of polynomials in $k_0[x].$ But do all polynomials in $k_1[x]$ fully split? Well, if not we can go to $k_2$ generated by roots of polynomials in $k_1[x],$ and we can recursively build the tower
+% \[k_0\subseteq k_1\subseteq k_2\subseteq\cdots.\]
+% Now we can see that the union of these, which we name $\overline k,$ is actually algebraic closed because any polynomial in $\overline k[x]$ will have coefficients contained in one of the $k_n,$ so all the roots will be in $k_{n+1}\subseteq\overline k.$
+
+% The above argument is somewhat lazy because it doesn't do any field theory. Namely, it happens that $k_1=k_2=\cdots,$ but this requires a little bit of effort. The key observation is that $k_n$ is algebraic over $k_0$ by induction because $k_{n+1}$ is algebraic over $k_n.$ But then every element of $k_n$ is the root of some polynomial in $k_0[x],$ so the roots all live in $k_1.$ So our entire chain collapses, and we have showed $k_1$ is algebraically closed.
+
+Examples of the algebraic closure are somewhat annoying to look directly at, for example because the splitting field of so many polynomials is a bit annoying to keep track of.
+\begin{example}
+	The complex numbers $\CC$ are an algebraic closure of $\RR,$ which we'll prove later in an algebraic way.
+\end{example}
+\begin{example}
+	The field $\overline\QQ$ of algebraic numbers, which are the elements of $\CC$ algebraic over $\QQ,$ is the algebraic closure of $\QQ.$
+\end{example}
+\begin{example}
+	The field of Laurent power series $\CC((t))$ with coefficients in $\CC$ is not algebraically closed, but its algebraic closure is
+	\[\bigcup_{n\ge1}\CC((t^{1/n})).\]
+	This result is more or less due to Newton, who gave an algorithm to solve polynomials in $\CC((t))$ which implies that the above is algebraically closed.
+\end{example}
+\begin{example}
+	The algebraic closure $\overline{\FF_p}$ of $\FF_p$ is more or less the infinite union
+	\[\bigcup_{n\ge1}\FF_{p^n},\]
+	which is actually a direct limit with the embeddings $\FF_{p^k}\into\FF_{p^{k\ell}}.$ However, the non-uniqueness of these embeddings makes this description annoying to work with.
+\end{example}
+
+\subsection{Galois Advertisement}
+We're going to build towards Galois extensions.
+\begin{idea}
+	A \textit{Galois extension} of fields $L/K$ is an extension which is ``as symmetric as possible.'' For an extension $L/K,$ we may define $\op{Gal}(L/K)$ as the set of automorphisms of $L$ fixing $K,$ and it will happen that $\op{Gal}(L/K)$ ``controls'' the extension.
+\end{idea}
+As an example, subgroups of the Galois group will correspond with intermediate extensions.
+
+Anyways, let's see a definition.
+\begin{definition}[Galois extension, I] \label{defi:gali}
+	An extension $L/K$ is \textit{Galois} if and only if it is normal and separable.
+\end{definition}
+Wait, what do ``normal'' and ``separable'' mean?
+
+\subsection{Normal Extensions}
+We have the following definition.
+\begin{definition}[Normal extension]
+	An algebraic extension $L/K$ is \textit{normal} if and only if every irreducible polynomial in $K[x]$ which has a root in $L$ will fully split into linear factors in $L.$
+\end{definition}
+\begin{remark}[Nir] \label{rem:embedisauto}
+	Here is another way to state this definition: fixing some embedding $K\into\overline K,$ any embedding $\sigma:L\into\overline K$ is actually an embedding into $L.$ Indeed, any $\alpha\in L$ with irreducible polynomial $\pi\in K[x]$ will have
+	\[\pi(\sigma\alpha)=\sigma(\pi(\alpha))=0,\]
+	so $\sigma\alpha$ is another root of $\pi$ (!). But $\pi,$ with one root in $L,$ will fully split in $L$ because $L/K$ is normal, so $\sigma\alpha\in L.$ It follows that $\sigma:L\into\overline K$ does indeed restrict to $L.$
+
+	In fact, $\sigma$ is also an automorphism of $L$: it remains to check that $\sigma$ is surjective. Well, all the roots of $\pi$ live in $L$ as discussed, so $\pi$ restricts to an injective mapping of the set of roots of $\pi$ to itself, which is bijective because there are only finitely many roots. In particular, there is an element $\beta\in L$ mapping to our $\alpha\in L.$
+\end{remark}
+\begin{remark}[Nir] \label{rem:embedisautoconv}
+	In fact, the converse of the above remark is also true: suppose all embeddings $\sigma:L\into\overline K$ fixing $K$ actually output into $L.$ Now, fix any irreducible polynomial $\pi\in K[x]$ with a root $\alpha\in L$; we show that all roots of $\pi$ in $\overline K$ (where $\pi$ certainly fully splits) are in fact elements of $L.$
+
+	Well, if $\beta\in\overline K$ is a root of $\pi,$ then there is an embedding fixing $K$ given by
+	\[K(\alpha)\cong\frac{K[x]}{(\pi)}\cong K(\beta)\into\overline K.\]
+	By a Zorn's lemma argument, we can extend (!) this up to $L\into\overline K$ (even when $L$ is of infinite degree over $K$), so we have an embedding $L\into\overline K$ fixing $K$ sending $\alpha\mapsto\beta.$ However, this embedding must output into $L,$ so $\beta\in L.$
+\end{remark}
+It is hard to prove that a particular extension is normal from the above definition because checking all the irreducibles in $K[x]$ is difficult; however, here are some examples.
+\begin{example}
+	Fix $L/K$ an algebraic extension of degree $2.$ Now suppose $f\in K[x]$ is irreducible and has a root in $L.$ However, $[L:K]=2$ implies that $\deg f\le2,$ so $f$ has at most $2$ roots, and the sum of the two roots is an element of $K$ by Vieta's formulae, so the other root will still be in $L.$
+\end{example}
+\begin{nex}
+	The extension $\QQ(\sqrt[3]2)/\QQ$ is not normal because $x^3-2$ has one root in $\QQ(\sqrt[3]2)$ but not all roots. Namely, the other roots of $x^3-2$ are not real and so do not live in $\QQ(\sqrt[3]2).$
+\end{nex}
+Luckily, there is an easier classification of normal extensions.
+\begin{proposition} \label{prop:normalissplitting}
+	Fix $L/K$ an algebraic extension. Then $L/K$ is a normal extension if and only if $L$ is the splitting field of some set of polynomials.
+\end{proposition}
+\begin{proof}
+	We show the directions one at a time.
+	\begin{itemize}
+		\item Fix $L/K$ a normal extension and $\overline K$ an algebraic closure of $K$ with a chosen embedding $L\subseteq\overline K.$ (The point of doing this is so that we don't need to worry about uniqueness of isomorphisms of splitting fields anymore.) The main idea is to look at
+		\[S:=\{\pi\in K[x]:\pi\text{ is irreducible and has a root in }L\}.\]
+		Now set $L'\subseteq\overline K$ equal to the splitting field of $S$ over $K$; we claim that $L=L'.$ Because $L/K$ is an algebraic extension, all elements of $L$ are the root of some irreducible polynomial over $K,$ so $L$ is certainly a subset of $L'.$
+
+		But conversely, any irreducible polynomial $\pi\in K[x]$ with a root in $L$ will fully split in $L$ and in particular have all of its roots in $L,$ so $L$ will contain all the generators of the splitting field of $S$ over $K.$ Thus, $L$ contains $L',$ finishing.
+
+		\item Fix $L/K$ a splitting field of some set of polynomials $S.$ Additionally, fix $\overline K$ some algebraic closure of $K$ with chosen embedding $L\subseteq\overline K$; the main point is to show that any embedding $\sigma:L\into\overline K$ fixing $K$ actually embeds into $L,$ which is implies $L/K$ is normal by \autoref{rem:embedisautoconv}.
+
+		Well, fixing some polynomial $p\in S,$ we note that if $\alpha\in L$ is a root of $p,$ then
+		\[p(\sigma\alpha)=\sigma(p(\alpha))=0,\]
+		so $\sigma$ takes roots of $p$ to roots of $p.$ However, $L$ has all the roots of $p$ in its list of generators over $K,$ so $\sigma\alpha\in L.$
+
+		Thus, $\sigma:L\into\overline K$ sends the generators of $L$ into $L,$ so it follows that $\sigma$ just sends $L$ to $L$ because the fact $\sigma$ is a homomorphism means that any expression involving the generators of $L$ will still go to $L.$ So indeed, any embedding $L\into\overline K$ outputs into $L,$ finishing.
+		% , and find some $\pi\in K[x]$ which has a root $\alpha\in L.$ We want to show that $\pi$ fully splits into linear factors in $L[x].$
+		% Fix an the algebraic closure $\overline K$ with a chosen embedding $L\subseteq\overline K$ (recall $L$ is algebraic over $K$). The main idea is to study the chain of fields
+		% \[K\subseteq K(\alpha)\subseteq L\subseteq \overline K.\]
+		% Now, pick any other root $\beta\in\overline K$ of $\pi\in K[x],$ and we want to show that $\beta\in L.$ We see that any map $K(\alpha)\into\overline K$ can be extended to a map $L\to\overline K,$ which exists because $\overline K$ is algebraically closed. But now
+		% \[K(\alpha)\cong\frac{K[x]}{(\pi)}\cong K(\beta),\]
+		% so there is also an extending map $K(\beta)\into\overline K.$ However, the image of $L$ under this map must be equal to $L$ because $K$ is the splitting field of some set of polynomials. Namely, the image of $K$ in $\overline K$ is generated by the roots of its own polynomials, so $K(\beta),$ which is in the image of $L,$ which is $L,$ so $\beta\in L.$
+		\qedhere
+	\end{itemize}
+\end{proof}
+The point of the above proposition is that it lets us construct lots and lots of normal extensions: choose your favorite polynomial and then look at its splitting field.
+\begin{nex}
+	The extension $\QQ(\sqrt[4]2)/\QQ$ is not a normal extension, even though we can write down
+	\[\QQ\subseteq\QQ(\sqrt2)\subseteq\QQ(\sqrt[4]2),\]
+	which is a chain of degree-$2$ and hence normal extensions. Namely, $x^4-2$ has $i\sqrt[4]2\notin\QQ(\sqrt[4]2)\subseteq\RR$ as a root, which is a problem.
+\end{nex}
+\begin{remark}
+	The word ``normal'' in Galois theory will turn into normal subgroups of the Galois group, which is nice. For example, any degree-$2$ extension being normal corresponds to the statement that any subgroup of index $2$ is normal. And the above non-example corresponds to the statement that a chain of normal subgroups
+	\[A\subseteq B\subseteq C\]
+	does not necessarily have $A\subseteq C$ normal. For example, $\ZZ/2\ZZ\subseteq(\ZZ/2\ZZ)^2\subseteq D_8.$
+\end{remark}
+
+\subsection{Separable Extensions}
+Let's talk about separable extensions next. We have the following definition.
+\begin{definition}[Separable]
+	Fix $L/K$ an algebraic extension. Then $\alpha\in L$ is \textit{separable} if and only if its irreducible polynomial $\pi\in K[x]$ is \textit{separable}, which means $\pi$ has no multiple roots. Then $L/K$ is \textit{separable} if and only if each element $\alpha\in L$ is separable.
+\end{definition}
+The following statements show that most fields we care about will have separable extensions.
+\begin{exe}
+	If $L/K$ is algebraic extension of fields with characteristic $0,$ then $L/K$ is separable.
+\end{exe}
+\begin{proof}
+	Fix $\pi\in K[x]$ the irreducible polynomial of any $\alpha\in L.$ Then we recall that $\pi$ has multiple roots if and only if $\pi$ and $\pi'$ have a nonconstant common factor $g\mid\gcd(\pi,\pi').$ However, in characteristic zero, we have that
+	\[\deg\pi'=\deg\pi-1,\]
+	so in particular any common factor $g\mid\gcd(\pi,\pi')$ has $\deg g<\deg\pi.$ Thus, $g$ is a factor of $\pi$ of smaller degree but the irreducibility of $\pi$ forces $g$ to be constant. So indeed, $\pi$ and $\pi'$ have no nonconstant common factors, so $\pi$ has no multiple roots.
+\end{proof}
+\begin{exe}
+	If $L/K$ is an extension of finite fields, then the extension is separable.
+\end{exe}
+\begin{proof}
+	If $\#L=q,$ then we see that $L$ consists of the roots of $x^q-x=0.$ In particular, for any $\alpha\in L$ with irreducible polynomial $\pi\in K[x],$ we showed last time that $\pi(x)\mid x^q-x.$ So multiple roots of $\pi$ would induce multiple roots of $x^q-x,$ but $x^q-x$ has no multiple roots because its derivative is
+	\[qx^{q-1}-1=-1\]
+	in $L[x],$ so $x^q-x$ has no common factors with its derivative.
+\end{proof}
+In the early days of field theory, the above were our only examples, but inseparable extension do exist!
+\begin{nex}
+	Consider the field $L:=\FF_p(t)$ of rational functions over $\FF_p,$ and set $K:=\FF_p\left(t^p\right)$ so that $[L:K]=p$; in particular, we have the power basis $\left\{1,t,\ldots,t^{p-1}\right\}$ for $L/K.$ Now we see that $t$ is the root of the polynomial
+	\[x^p-t^p\in K[x],\]
+	which must be our minimal and hence irreducible polynomial because it is has the correct degree of $p.$ However,
+	\[x^p-t^p=(x-t)^p,\]
+	so $x^p-t^p$ has multiple roots at $t$ up in $L.$
+\end{nex}
+\begin{remark}
+	Essentially all problems in positive characteristic come from this example of inseparable extensions.
+\end{remark}
+Like with normal extensions, we would like a nice classification of separable extensions; here it is.
+\begin{proposition} \label{prop:sepgrabbag}
+	Fix $L/K$ a finite algebraic extension. Then the following are equivalent.
+	\begin{enumerate}[label=(\alph*)]
+		\item $L$ is generated by separable elements of $K.$
+		\item The embedding $K\into\overline K$ into the algebraic closure has exactly $[L:K]$ extensions $L\into\overline K.$
+		\item All elements of $L/K$ are separable; i.e., $L/K$ is a separable extension.
+	\end{enumerate}
+\end{proposition}
+Essentially the above shows that we can check separable extensions by only checking if a set of generating elements are separable, which is nice.
+\begin{proof}
+	We show our implications separately.
+	\begin{itemize}
+		\item That (c) implies (a) is because generators are elements.
+
+		\item For (a) implies (b), pick up some $\alpha\in L$ a separable element. We consider the chain
+		\[K\subseteq K(\alpha)\subseteq L.\]
+		Now suppose $n:=[K(\alpha):K]$ and $\pi$ is the irreducible polynomial of $\alpha.$ We see that there are exactly $n=\deg\pi$ extensions of $K\into\overline K$ to $K(\alpha)\into\overline K$: there are at most that many we can have to send $\alpha$ to some root of $\pi,$ of which there are $n,$ and each of these defines at most one mapping $K(\alpha)\into\overline K.$ But each choice of root $\beta$ of $\pi$ does indeed induce an embedding
+		\[K[\alpha]\cong\frac{K[x]}{(\pi)}\stackrel{x\mapsto\beta}\into\overline K,\]
+		where the embedding is well-defined because $x\mapsto\beta$ induces a map $K[x]\to\overline K$ with kernel $(\pi).$ So indeed, there are $n$ extensions of $K\into\overline K$ to $K(\alpha)\into\overline K,$ for any separable element $\alpha\in L.$
+
+		So we assert, as promised, that
+		\[L=K(\alpha_1,\ldots,\alpha_m),\]
+		where $\{\alpha_1,\ldots,\alpha_n\}$ are separable. Now we consider the chain of fields
+		\[K\subseteq K(\alpha_1)\subseteq K(\alpha_1,\alpha_2)\subseteq\cdots\subseteq K(\alpha_1,\ldots,\alpha_m)=L\]
+		and inductively count the number of embeddings into $\overline K.$ Simply extending automorphisms one at a time gives
+		\[[K(\alpha_1):K]\cdot[K(\alpha_1,\alpha_2):K]\cdot\ldots\cdot[L:K(\alpha_1,\ldots,\alpha_{m-1})]=[L:K]\]
+		total embeddings, where we have applied the tower law. (These embeddings are distinct because distinct extensions of $K(\alpha_1,\ldots,\alpha_\ell)\into\overline K$ to $K(\alpha_1,\ldots,\alpha_{\ell+1})\into\overline K$ will send $\alpha_{\ell+1}$ different places, so we can track our automorphisms by where they send the generators.)
+
+		But these inductively constructed embeddings are in fact all of our embeddings: any embedding $L\into\overline K$ will induce embeddings $K(\alpha_1,\ldots,\alpha_\ell)\into\overline K$ which extend into each other, so it must come from the above extending process. So indeed, there are exactly $[L:K]$ total embeddings $L\into\overline K.$
+	\end{itemize}
+	\begin{remark} \label{rem:boundextensions}
+		The above argument can more generally show that, for a given finite algebraic extension $L/K,$ there are at most $[L:K]$ extensions of $K\into\overline K$ to $L.$ Namely, for a fixed element $\alpha\in L,$ removing the condition that $\alpha$ is separable implies that there are at most $[K(\alpha):K]$ extensions of $K\into\overline K$ to $K(\alpha)\into\overline K$ because there are at most $[K(\alpha):K]$ roots for $\alpha$ to go to.
+		
+		Then the tower law argument still applies, but now it only shows there are at most
+		\[[K(\alpha_1):K]\cdot[K(\alpha_1,\alpha_2):K]\cdot\ldots\cdot[L:K(\alpha_1,\ldots,\alpha_{m-1})]=[L:K]\]
+		extensions of $K\into\overline K$ to $L\into\overline K.$
+	\end{remark}
+	\begin{itemize}
+		\item For (b) implies (c), fix $\alpha\in L$ so that we want to show $\alpha$ is separable. We again focus on the chain
+		\[K\subseteq K(\alpha)\subseteq L.\]
+		By hypothesis, there are exactly $[L:K]$ embeddings $L\into\overline K.$ Further, we see that there are at most $[L:K(\alpha)]$ extensions of a chosen embedding $K(\alpha)\into\overline K$ to $L\to\overline K$ by \autoref{rem:boundextensions}. So there are at least
+		\[\frac{[L:K]}{[L:K(\alpha)]}=[K:K(\alpha)]\]
+		embeddings $K(\alpha)\into\overline K$ if we are to able to extend these automorphisms to $[L:K]$ total embeddings $L\into\overline K.$
+		
+		However, an embedding $K(\alpha)\into\overline K$ must send $\alpha$ to some root of $\pi,$ and the embedding is completely determined by where it sends $\alpha,$ so the fact there are at least $\deg\pi=[K(\alpha):K]$ embeddings implies that there are at least $\deg\pi$ distinct roots of $\pi.$ So there are exactly $\deg\pi$ roots of $\pi$ by Lagrange's theorem on polynomials.
+		\qedhere
+	\end{itemize}
+\end{proof}
+One of the major headaches with the above proofs is that our finite extensions are often generated by many elements, which means we are forced to look at chains of fields. Life would be easier if our extensions were generated by single elements, and it turns out being separable is the correct condition.
+\begin{nex}
+	Consider the extension $L:=\FF_p(t,u)$ of rational functions of two variables over $\FF_p.$ Then we let $K:=\FF_p\left(t^p,u^p\right).$ Now, $L/K$ is an extension of degree $p^2,$ but for any $f\in L,$ we have $f^p\in K$ by the Frobenius automorphism, so the degree of $[K(x):K]$ is at most $p.$ It follows that $K(x)\ne L$ for any $x\in L.$
+\end{nex}
+The issue above is that $L/K$ is an inseparable extension, as we discussed earlier. We do get the result for separable extensions.
+\begin{theorem}[Primitive element]
+	If $L/K$ is finite and separable, then there exists $\alpha\in L$ with $L=K(\alpha).$
+\end{theorem}
+\begin{proof}
+	If $K$ is a finite field, then $[L:K]<\infty$ implies $L$ is also finite. So $L^\times$ is a cyclic group (it's a finite multiplicative subgroup of $L^\times$), so choose any generator $g$ of $L^\times$ to give $L=K[g].$
+
+	So now we may assume that $K$ is infinite.
+	\begin{remark}
+		It is very strange that we have to talk about finite fields and infinite fields differently, but we will really use that $K$ is infinite below.
+	\end{remark}
+	Because $L/K$ is a finite extension, we know that $L$ is generated by a finite number of elements. So by induction, it suffices to show that $L:=K(\alpha,\beta)$ is generated by a single element. (In particular, the induction functions because intermediate extensions of separable extensions are separable.)
+	
+	The main idea, now, is to study embeddings $K(\alpha,\beta)\into\overline K.$ For any distinct maps $\sigma,\tau:K(\alpha,\beta)\into\overline K,$ we claim that there is at most one $c\in K$ giving
+	\[\sigma(\alpha+c\beta)=\tau(\alpha+c\beta).\]
+	Indeed, this is because the previous equation implies
+	\[(\sigma\beta-\tau\beta)c=\tau\alpha-\sigma\alpha.\]
+	Now, we have two cases.
+	\begin{itemize}
+		\item If $\sigma\beta=\tau\beta,$ then we must have $\sigma\alpha\ne\tau\alpha$ if we are to have $\sigma\ne\tau,$ so in this case the given equation will have no solutions.
+		\item If $\sigma\beta\ne\tau\beta,$ then we simply solve
+		\[c=\frac{\tau\alpha-\sigma\alpha}{\sigma\beta-\tau\beta}\]
+		as our only solution for $c.$
+	\end{itemize}
+	Because there are only finitely many embeddings $K(\alpha,\beta)\into\overline K$ (in particular, at most $[K(\alpha,\beta):K]$), it follows that we can find $c\in K$ such that
+	\[\sigma(\alpha+c\beta)\ne\tau(\alpha+c\beta)\]
+	for each pair of distinct embeddings $\sigma,\tau\in K(\alpha,\beta)\into\overline K.$ Indeed, each such pair throws out at most one element of $K,$ but $K$ is infinite (!), so we must have elements $c\in K$ left over.
+
+	In particular, this implies that $\alpha+c\beta$ has at least $[K(\alpha,\beta):K]$ distinct images under embeddings into $\overline K$---here we are using the fact that $K(\alpha,\beta)/K$ is separable to imply there are $[K(\alpha,\beta):K]$ distinct embeddings $K(\alpha,\beta)\into\overline K.$ Thus, by tracking the generator there are at least $[K(\alpha,\beta):K]$ embeddings
+	\[K(\alpha+c\beta)\into\overline K.\]
+	By \autoref{rem:boundextensions}, we see that $[K(\alpha+c\beta):K]$ is at least the number of embeddings $K(\alpha+c\beta)\into\overline K,$ so $[K(\alpha+c\beta):K]\ge[K(\alpha,\beta):K]$ by chaining inequalities. But of course $K(\alpha+c\beta)\subseteq K(\alpha,\beta),$ so $K(\alpha+c\beta)=K(\alpha,\beta)$ follows. This finishes the proof.
+\end{proof}
+
+\subsection{Galois Extensions}
+So lastly let's talk about Galois extensions. We have the following definition.
+\begin{defi}[Galois group]
+	Fix $L/K$ a finite extension of fields. Then we define the \textit{Galois group} of $L/K$
+	\[\op{Gal}(L/K):=\{\sigma\in\op{Aut}(L):\sigma|_K=\id_K\}\]
+	to be automorphisms of $L$ fixing $K.$
+\end{defi}
+Checking that $\op{Gal}(L/K)$ is actually a group is as usual: we need to show that $\op{Gal}(L/K)$ is a subgroup of $\op{Aut}(L),$ for which it suffices to see that $\id_L\in\op{Gal}(L/K)$ because $\id_L|_K=\id_K$ and $\sigma,\tau\in\op{Gal}(L/K)$ implies that $(\sigma\tau^{-1})|_K=\sigma|_K\cdot(\tau|_K)^{-1}=\id_K.$
+
+Anyways, here are some examples.
+\begin{example}
+	The Galois group $\op{Gal}(\CC/\RR)$ is simply $\id_\CC$ and $z\mapsto\overline z.$ Essentially this is why complex conjugation is so important in analysis.
+\end{example}
+\begin{example}
+	The Galois group $\op{Gal}(\FF_4/\FF_2)$ has the nontrivial automorphism $x\mapsto x^p$ where $p:=2$ which is an automorphism because $(a+b)^p=a^p+b^p$ and $(ab)^p=a^pb^p,$ and we see that $\left(a^p\right)^p=a^{p^2}=a,$ so we have injectivity and hence surjectivity. It follows we have at least $2$ elements.
+\end{example}
+The above examples technically only exhibit elements of the Galois group without showing that we have found all of them; the following bound establishes that the above examples do indeed find the entire Galois group.
+\begin{proposition}
+	Fix $L/K$ a finite and hence algebraic extension. Then we have that $\#\op{Gal}(L/K)\le[L:K].$
+\end{proposition}
+\begin{proof}
+	We could apply another chain argument, where we set $L=K(\alpha_1,\ldots,\alpha_n)$ for some $\{\alpha_k\}_{k=1}^n\subseteq L$ and consider the chain
+	\[K\subseteq K(\alpha_1)\subseteq K(\alpha_1,\alpha_2)\subseteq\cdots\subseteq K(\alpha_1,\ldots,\alpha_n)=L.\]
+	Inductively considering the number of extensions, there are at most $[L:K]$ total extensions by the tower law and using the argument from earlier.
+
+	Alternatively, we could optimize out the chain argument: we start by choosing an embedding $L\into\overline K$ lifting $K\into\overline K,$ and then we note that an automorphism $\sigma\in\op{Gal}(L/K)$ will induce an embedding
+	\[\overline\sigma:L\stackrel\sigma\to L\into\overline K.\]
+	We note that $\sigma\ne\tau$ implies that $\overline\sigma\ne\overline\tau$ because $L\into\overline K$ is an injective mapping, so we see that we have found $\#\op{Gal}(L/K)$ separate embeddings $L\into\overline K$ lifting $K\into\overline K.$ However, we know there are at most $[L:K]$ of these by \autoref{rem:boundextensions}, so we are done.
+\end{proof}
+Note that we really can have less than or equal to in this bound.
+\begin{example}
+	We exhibited $2$ elements of $\op{Gal}(\CC/\RR),$ so we have found all of them.
+\end{example}
+\begin{ex}
+	The size of $\op{Gal}(\QQ(\sqrt[3]2)/\QQ)$ is $1<[\QQ(\sqrt[3]2):\QQ]$ because the root $\sqrt[3]2$ must stay fixed. Namely, an automorphism $\sigma:\QQ(\sqrt[3]2)\to\QQ(\sqrt[3]2)$ must send $\sqrt[3]2$ to a root of $X^3-2,$ but the other roots of this polynomial are
+	\[\zeta_3\sqrt[3]2,\,\zeta_3^2\sqrt[3]2\notin\RR,\]
+	which are not real and hence not in $\QQ(\sqrt[3]2).$ So $\sigma$ must fix $\sqrt[3]2,$ so $\sigma$ must be the identity on $\QQ(\sqrt[3]2).$
+\end{ex}
+The issue of the previous example is that $\QQ(\sqrt[3]2)$ cannot see the other roots of $X^3-2$; Galois extensions are defined to nullify this problem. Here is our definition.
+\begin{definition}[Galois extension, II] \label{defi:galii}
+	A finite extension of fields $L/K$ is a \textit{Galois extension} if and only if $\#\op{Gal}(L/K)=[L:K].$ Namely, there are as many symmetries as possible.
+\end{definition}
+This definition makes it difficult to tell if a particular extension is Galois. For this, we bring in our machinery.
+\begin{restatable}{proposition}{galgrabbag}\label{prop:galgrabbag}
+	Fix $L/K$ a finite extension of fields. Then the following are equivalent.
+	\begin{enumerate}[label=(\alph*)]
+		\item $L/K$ is the splitting field of some separable polynomials.
+		\item $L/K$ is normal and separable.
+		\item $L/K$ is a Galois extension: $\#\op{Gal}(L/K)=[L:K].$
+		\item $K$ is the fixed field of some subgroup $G\subseteq\op{Aut}(L).$
+	\end{enumerate}
+\end{restatable}
+All of these criteria are giving us nice ways of generating Galois extensions.
+\begin{remark}
+	Many books define Galois as being normal and separable, though this is somewhat unintuitive because the two definitions seems somewhat orthogonal. We have defined as above so that Galois means ``the most symmetric possible,'' which is a bit more motivated according to Professor Borcherds.
+\end{remark}
+\begin{proof}[Proof of \autoref{prop:galgrabbag}]
+	We take these one at a time.
+	\begin{itemize}
+		\item For (a) implies (b), we showed that splitting fields are normal, and roots of separable polynomials will generate separable extensions, so this follows.
+
+		\item For (b) implies (c), we start by seeing $\#\op{Gal}(L/K)\le[L:K]$ from the above, so we merely need to exhibit $[L:K]$ different elements of $\op{Gal}(L/K).$
+		
+		We could do a chain argument, but the fact that $L/K$ is separable implies that there is some $\alpha\in L$ such that $L=K(\alpha)$ by the Primitive element theorem, so we can optimize the chain out.
+		
+		Now, fix $\pi\in K[x]$ the minimal irreducible polynomial for $\alpha$; because $L$ is normal, $\pi$ will fully split, and because $L$ is separable, $\pi$ will fully split with distinct roots $\{\alpha_1,\ldots,\alpha_n\}\subseteq\overline K,$ where $n:=\deg\pi=[L:K].$ We see that there is an embedding fixing $K$ given by
+		\[L=K(\alpha)\cong\frac{K[x]}{(\pi)}\cong K(\alpha_k)\into\overline K\]
+		for $k\in\{1,\ldots,n\},$ which are all distinct because they send $\alpha$ different places. However, by \autoref{rem:embedisauto}, each of these embeddings makes an automorphism in $\op{Gal}(L/K),$ so we have found our $n$ needed elements of $\op{Gal}(L/K).$
+
+		\item For (c) implies (d), we set $L^G\subseteq L$ to be the elements fixed by $G:=\op{Gal}(L/K).$ The point is that $K\subseteq L^G$ by definition, and we see that we can bound
+		\[[L:K]=\#G\le\#\op{Gal}\left(L/L^G\right)\le\left[L:L^G\right],\]
+		where we have used the fact that $L/K$ is Galois in the first equality. However, $K\subseteq L^G$ gives $\left[L:L^G\right]\le\left[L:L^G\right]\left[L^G:K\right]=[L:K],$ so in fact $\left[L:L^G\right]=[L:K],$ giving $K=L^G.$
+
+		\item Lastly, we will show (d) implies (a) at the start of next lecture.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}[Nir]
+	Technically the ``natural'' definition \autoref{defi:galii} only works for finite extensions $L/K,$ if $[L:K]$ is to make sense. However, we see from \autoref{prop:galgrabbag} above that we can extend this to all extensions by way of \autoref{defi:gali}.
+\end{remark}

@@ -1,0 +1,432 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I am heartbreak.
+
+\subsection{Formal Power Series}
+By way of example, our elements of the formal power series of $\CC[[x]]$ are of the form
+\[\sum_{k=0}^\infty a_kx^k,\]
+where we don't care about convergence.
+\begin{example}
+	For example,
+	\[\sum_{k=0}^\infty k!x^k\]
+	converges nowhere except for $x=0,$ but this is okay for $\CC[[x]].$
+\end{example}
+Anyways, we have the following.
+\begin{definition}[Formal power series, I]
+	Fix $R$ a ring. A \textit{formal power series} in $R[[x]]$ is a sequence of numbers $\{a_k\}_{k\in\NN}$ represented by
+	\[\sum_{k=0}^\infty a_kx^k.\]
+	The operations of addition and multiplication are defined purely formally and work.
+\end{definition}
+We can also construct this as an inverse limit.
+\begin{definition}[Formal power series, II] \label{defi:series2}
+	We construct $R[[x]]$ as the completion of the ring of polynomials $R[x]$ at the ideal $(x).$
+\end{definition}
+Wait, what is the completion?
+\begin{definition}[Completion]
+	The \textit{completion} of a ring $R$ at an ideal $\mf p$ is the inverse limit of
+	\[\hat R:=\limit R/\mf p^\bullet.\]
+\end{definition}
+Namely, we are constructing $R[[x]]$ as a sequence of compatible elements in the system
+\[R[x]/(x)\leftarrow R[x]/\left(x^2\right)\leftarrow R[x]/\left(x^3\right)\leftarrow\cdots,\]
+where these maps are defined by projectivity. In practice, this looks like a series of polynomials $\{a_k\}_{k\in\NN}$ such that $a_k\equiv a_\ell\pmod{x^\ell}$ for each $k\ge\ell.$ If we think about the exact monomials we are adding each time, this is really a formal power series.
+\begin{remark}[Nir]
+	In practice, \autoref{defi:series2} might appear more awkward than the more physical power series, but in practice, this definition tells us that $R[[x]]$ is a ring effectively for free, which expedites a lot of our checks.
+\end{remark}
+\begin{remark}[Nir]
+	We briefly explain why this is called a ``completion.'' Using $R[[x]]$ as an example, we note that $R[x]$ has a size function given by
+	\[|f|_{(x)}:=c^{-\text{order of vanishing of }f\text{ at }x=0}.\]
+	It turns out that $d(f,g):=|f-g|_{(x)}$ forms a metric, and $R[[x]]$ is (canonically) isomorphic to this metric completion, justifying why we are calling $R[[x]]$ a completion---it is actually a metric completion.
+\end{remark}
+\begin{warn}
+	There is a natural map $R\to \hat R$ induced by the natural projections $R\onto R/\mf p^\bullet$ and the universal property of the inverse limit. However, this need not be injective; it will be injective, for example, when $R$ is a commutative, Noetherian integral domain.
+\end{warn}
+To be more explicit, the map $R\to\hat R$ is induced by the following diagram.
+% https://q.uiver.app/?q=WzAsNCxbMSwwLCJSIl0sWzAsMiwiUi9cXG1mIHBebiJdLFsyLDIsIlIvXFxtZiBwXntuKzF9Il0sWzEsMSwiXFxoYXQgUiJdLFsyLDEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFswLDIsIiIsMCx7ImN1cnZlIjotMiwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzAsMSwiIiwyLHsiY3VydmUiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFswLDMsIiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDJdLFszLDFdXQ==&macro_url=https%3A%2F%2Fgist.githubusercontent.com%2FdFoiler%2F1e12fec404cad7e185260f0c9b68977d%2Fraw%2F909cc7837a29133fb63fb0e9300d15bfe7417fc5%2Fnir.sty
+\[\begin{tikzcd}
+	& R \\
+	& {\hat R} \\
+	{R/\mf p^n} && {R/\mf p^{n+1}}
+	\arrow[two heads, from=3-3, to=3-1]
+	\arrow[curve={height=-12pt}, two heads, from=1-2, to=3-3]
+	\arrow[curve={height=12pt}, two heads, from=1-2, to=3-1]
+	\arrow[dashed, from=1-2, to=2-2]
+	\arrow[from=2-2, to=3-3]
+	\arrow[from=2-2, to=3-1]
+\end{tikzcd}\]
+Let's see some examples of the map $R\to\hat R.$
+\begin{example}
+	The map $R[x]\into R[[x]]$ is in fact injective. With respect to the inverse limit definition, this comes down to the fact that a nonzero polynomial needs to have a nonzero coefficient $c_kx^k$ somewhere, and then the map into $R/\left(x^k\right)$ will not go to $0.$
+\end{example}
+\begin{nex}
+	Consider the ring $R:=C^\infty(\RR)$ of smooth functions $\RR\to\RR$ and $I\subseteq R$ the $R$-ideal of smooth functions vanishing at $0$; this is an ideal because $0\in I,$ and, for $r,s\in S$ and $f,g\in I,$ we have $rf+sg\in I$ because
+	\[(rf+sg)(0)=r\cdot f(0)+s\cdot g(0)=0.\]
+	The main problem with the map $R\to\hat R$ is that there are nonzero functions which go to $0$ under each map $R\into R/I^\bullet,$ which roughly corresponds with having a zero of ``infinite order'' at $x=0.$ For example, $e^{-1/\left(nx^2\right)}\in I$ for each $n\in\ZZ^+,$ so
+	\[e^{-1/x^2}=\left(e^{-1/\left(nx^2\right)}\right)^n\in I^n\]
+	for each $n\in\ZZ^+.$ So the function $e^{-1/x^2}$ goes to $0$ under the canonical map $R\to\hat R.$
+\end{nex}
+\begin{nex}[Miles]
+	In the ring $\ZZ\times\ZZ,$ completing with respect to the (prime) ideal $I:=\{0\}\times\ZZ$ still has $\ZZ\times\ZZ\to\widehat{\ZZ\times\ZZ}$ not an injective map. For example, $(0,1)\in I^n$ for each $n.$
+\end{nex}
+Here is another important example of the completion.
+\begin{example}
+	Fix $p$ a rational prime. The ring $\ZZ_p$ of ``$p$-adic numbers'' is the completion of $\ZZ$ at the ideal $(p).$ Namely, $\ZZ_p$ is the inverse limit of
+	\[\ZZ/p\ZZ\leftarrow\ZZ/p^2\ZZ\leftarrow\ZZ/p^3\ZZ\leftarrow\cdots,\]
+	where the leftwards maps are the canonical projections. These look quite similar to power series: if we write out compatible system of elements in ``base $p$,'' this looks like
+	\[a_0\in\ZZ/p\ZZ,\quad a_0+a_1p\in\ZZ/p^2\ZZ,\qquad a_0+a_2p+a_2p^2\in\ZZ/p^3\ZZ,\qquad\ldots.\]
+	In base $p,$ this looks like an infinite sequence of digits going off to the left, which might look problematic but is fine as long as our addition and multiplication is purely formal.
+\end{example}
+\begin{remark}
+	Algebraic topologists have a bad habit of using $\ZZ_p$ to mean $\ZZ/p\ZZ,$ essentially adding ambiguity for no good reason.
+\end{remark}
+\begin{remark}
+	It is not advisable to let infinitely many digits go off to the left and right, then multiplication is no longer well-defined.
+\end{remark}
+\begin{remark}[Nir]
+	The intuition that $\ZZ_p$ is essentially ``power series in $p$'' can be rigorized in the isomorphism
+	\[\frac{\ZZ[[x]]}{(x-p)}\cong\ZZ_p,\]
+	where quotienting by $(x-p)$ is more or less the rigorization of plugging in $p.$
+\end{remark}
+There is an important analogy between $\ZZ_p$ and $R[[x]]$ and especially $\CC[[x]]$ or $\FF_p[[x]].$ However, there is a difference in that our ``$p$-digits'' can induce strange carries in our arithmetic. For example,
+\[1+(p-1)=0+1\cdot p\]
+is not something that can happen for formal power series. At a high level, the problem as the digits for $\ZZ_p$ are in $\{1,\ldots,p-1\}$ which has not been given a ring structure in the same way that the coefficients of $R[[x]]$ have.
+
+\subsection{Ideals of Completions}
+Now fix $k$ a field, and we will ask for the maximal ideals of $k[[x]].$
+\begin{proposition}
+	Fix $k$ a field. The only maximal ideal of $k[[x]]$ is $(x).$
+\end{proposition}
+\begin{proof}
+	Suppose we have a formal power series
+	\[f(x):=\sum_{i=0}^\infty a_ix^i.\]
+	The main point is that $a_0\ne0$ implies that $f$ has an inverse. Indeed, we may write $a_0^{-1}f(x)=1+xg(x)$ for some $g(x)\in k[[x]].$ Then we have
+	\[\frac1{a_0^{-1}f(x)}=\frac1{1+xg(x)}=\sum_{i=0}^\infty(-1)^ig(x)^ix^i,\]
+	which is a well-defined power series. Namely, we can envision $\frac1{f(x)}$ as the compatible sequence
+	\[\left\{\sum_{i=0}^n(-1)^ig(x)^ix^i\right\}_{i\in\NN}\]
+	because
+	\[\sum_{i=0}^{n+1}(-1)^ig(x)^ix^i\equiv\sum_{i=0}^n(-1)^ig(x)^ix^i\pmod{p^n}.\]
+	So we have succeeded in inverting $a_0^{-1}f,$ which tells us that $f$ is also invertible.
+	
+	The point is that $k[[x]]/\setminus(x)$ are all units, and any unit will have to live in $k[[x]]\setminus(x).$ In fact, the following is true.
+	\begin{lemma} \label{lem:uniqmax}
+		Fix $R$ a commutative ring with identity with an ideal $\mf m.$ Then $\mf m$ is the unique maximal ideal if and only if $R\setminus\mf m\subseteq R^\times.$
+	\end{lemma}
+	\begin{proof}
+		We have two claims.
+		\begin{itemize}
+			\item If $\mf m$ is the unique maximal ideal, then we show that $R\setminus\mf m=R^\times.$ On one hand, $\mf m\ne R$ implies that each $a\in\mf m$ has $(a)\ne R$ so that $a\notin R^\times,$ so $\mf m\subseteq R\setminus R^\times$ so that $R\setminus\mf m\subseteq R^\times.$
+			
+			On the other hand, if $a\in R^\times,$ then $(a)\ne R$ is an ideal and must be contained in some maximal ideal, so it follows $a\in(a)\subseteq\mf m.$ So indeed, $R^\times\subseteq R\setminus\mf m.$
+			\item Take $\mf m$ an ideal with $R\setminus\mf m\subseteq R^\times$; note each $a\in R^\times$ also has $a\notin\mf m$ because $\mf m\ne R,$ so in fact $R\setminus\mf m=R^\times.$ Now, for any other maximal ideal $\mf m',$ we see that any $a\in\mf m'$ has $a\notin R^\times$ (else $\mf m'=R$), so $a\in\mf m.$ It follows that
+			\[\mf m'\subseteq\mf m\subsetneq R.\]
+			By maximality of $\mf m',$ we see that $\mf m=\mf m'$ is forced. Note that this argument tells us that $\mf m$ is a maximal for free because there exists at least one maximal ideal $\mf m'.$
+			\qedhere
+		\end{itemize}
+	\end{proof}
+	So the above tells us that, because $k[[x]]\setminus(x)\subseteq k[[x]]^\times,$ we have that $(x)$ is the unique maximal ideal.
+\end{proof}
+In fact, stronger is true.
+\begin{proposition}
+	The only ideals of $k[[x]]$ are $(0)$ or $\left(x^\bullet\right).$
+\end{proposition}
+\begin{proof}
+	The main point is that, for any nonzero $f\in k[[x]]\setminus\{0\},$ there exists some $k$ for which the coefficient $c_ix^i$ of $f$ is nonzero, so we may set
+	\[\nu\left(\sum_{i=0}^\infty c_ix^i\right):=\min\{i\in\NN:c_i\ne\}.\]
+	With this in mind, we see that, for any $f\in k[[x]],$ we have $f/x^{\nu(f)}$ has nonzero constant term, so $f/x^{\nu(f)}$ is a unit. In particular, $\left(f/x^{\nu(f)}\right)=(1)$ so that $(f)=\left(x^{\nu(f)}\right).$
+
+	More generally, for any nonzero ideal $I,$ we have that
+	\[I=\bigcup_{f\in I\setminus\{0\}}(f)=\bigcup_{f\in I\setminus\{0\}}\left(x^{\nu(f)}\right)=\left(x^{\min\{\nu(f):f\in I\setminus\{0\}\}}\right),\]
+	so indeed, all nonzero ideals take the form $\left(x^\bullet\right).$
+\end{proof}
+There is something similar which happens for $\ZZ_p.$
+\begin{proposition}
+	Fix $p$ a rational prime. The only ideals of $\ZZ_p$ are $(0)$ or $\left(p^\bullet\right).$
+\end{proposition}
+\begin{proof}
+	This was more or less on the homework, and it is qiute similar to the case of $k[[x]]$; we take on faith that $(p)$ is the unique maximal ideal of $\ZZ_p$ because we showed it on the homework. Again, the main point is that nonzero elements $a\in\ZZ_p$ can be given a ``valuation''
+	\[\nu(a):=\min\left\{n\in\NN:a\in\left(p^n\right)\right\}.\]
+	In particular, $a/p^{\nu(a)}\notin(p),$ but $\ZZ_p\setminus(p)=\ZZ_p^\times$ because $(p)$ is the unique maximal ideal, as shown on the homework. From this it follows $a/p^{\nu(a)}$ will be a unit, so $(a)=\left(p^{\nu(a)}\right).$ Thus, for any nonzero ideal $I,$ we can write
+	\[I=\bigcup_{a\in I\setminus\{0\}}(a)=\bigcup_{a\in I\setminus\{0\}}\left(p^{\nu(a)}\right)=\left(p^{\min\{a\in I\setminus\{0\}:\nu(a)\}}\right),\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{More Variables}
+We would like to define $k[[x,y]].$ There are a couple ways to do this.
+\begin{definition}[Multivariable power series, I]
+	We can define $k[[x,y]]$ can be defined as the completion of $k[x,y]$ with respect to the (maximal) ideal $(x,y).$ Here our system of compatible elements more or less looks like
+	\[\sum_{ij,j=0}^\infty a_{i,j}x^iy^j.\]
+	More generally, we can define $k[[x_1,\ldots,x_n]]$ as the completino of $k[x_1,\ldots,x_n]$ with respect to the (maximal) ideal $(x_1,\ldots,x_n).$
+\end{definition}
+We can also do the following.
+\begin{definition}[Multivariable power series, II]
+	We can define $k[[x,y]]$ as $k[[x]][[y]],$ which is essentially the formal power series in $y$ with coefficients in $k[[x,y]].$ More generally, we can inductively define
+	\[k[[x_1,\ldots,x_n]]:=k[[x_1,\ldots,x_{n-1}]][[x_n]].\]
+\end{definition}
+I don't really care about proving that these definitions are equivalent, so we won't.
+
+We also get the similar property as before.
+\begin{prop}
+	The only maximal ideal of $k[[x_1,\ldots,x_n]]$ is $(x_1,\ldots,x_n).$
+\end{prop}
+\begin{proof}
+	The main claim is that $k[[x_1,\ldots,x_n]]\setminus(x_1,\ldots,x_n)\subseteq k[[x_1,\ldots,x_n]]^\times$ again, which will be enough by \autoref{lem:uniqmax}. To see, this we start by noting that $f\in(x_1,\ldots,x_n)$ if and only if its constant term is $0.$\footnote{If $f\in(x_1,\ldots,x_n),$ then write out a representation. If $f$ has constant term $0,$ then each monomial of $f$ with nonzero coefficient has nonzero degree, so group them in any reasonable way.} So suppose we have $f\in k[[x_1,\ldots,x_n]]$ with nonzero constant term. This means that we may write
+	\[c_0^{-1}f=1+\sum_{i=1}^nx_ig_i\]
+	for some $g_\bullet\in k[[x_1,\ldots,x_n]].$ As before, we may formally invert this as
+	\[\frac1{c_0^{-1}f}=\frac1{1--\sum_{i=1}^nx_ig_i}=\sum_{d=0}^\infty\left(-\sum_{i=1}^nx_ig_i\right)^d.\]
+	Again these partial sums form a valid compatible sequence because, for any $N,$
+	\[\sum_{d=0}^{N+1}\left(-\sum_{i=1}^nx_ig_i\right)^d=\sum_{d=0}^N\left(-\sum_{i=1}^nx_ig_i\right)^d+\left(-\sum_{i=1}^nx_ig_i\right)^{N+1},\]
+	where the second term is in $(x_1,\ldots,x_n)^N$ because each $-\sum_{i=1}^nx_ig_i\in(x_1,\ldots,x_n).$ This finishes.
+\end{proof}
+However, the other ideals are more complicated than before, essentially due to the extra dimension.
+
+\subsection{Getting Noetherian}
+Given Hilbert's basis theorem showing that $R[x]$ is Noetherian from $R$ Noetherian, we might hope that $R[[x]]$ is Noetherian. Let's see this.
+\begin{theorem}
+	If $R$ is Noetherian, then $R[[x]]$ is Noetherian.
+\end{theorem}
+\begin{proof}
+	We can essentially copy the proof for $R[x]$ by using the coefficient of least degree instead of largest degree. Namely, with $R[x]$ we looked at the leading coefficients, but $R[[x]]$ doesn't have largest coefficients. To salvage this, we look at the smallest nonzero power in some element of $R[[x]].$ Fix $I$ an ideal $R[[x]]$ which we would like to finitely generate. Then we define
+	\[I_0:=\{\text{constant terms for }f\in I\}.\]
+	More generally, we have
+	\[I_n:=\left\{a_n:\sum_{k=n}^\infty a_kx^k\in I\right\}.\]
+	Roughly the same reasoning gets us the ascending chain of $R$-ideals.
+	\[I_0\subseteq I_1\subseteq\cdots.\]
+	Indeed, we have the following checks.
+	\begin{itemize}
+		\item To see that $I_n$ is an $R$-ideal, we note that $0\in R[[x]]$ has $0x^n$ for its $x^n$ coefficient, so $0\in I_n.$ Then for any $c_n,d_n\in I$ and $r,s\in R,$ there exist $f,g\in R[[x]]$ with their $x^n$ coefficient equal to $c_n$ and $d_n$ respectively, with no terms of smaller degree. Then
+		\[rf+sg\]
+		will have leading their $x^n$ coefficient equal to $rc_n+sc_n\in I,$ again with no terms of smaller degree. So $I$ is nonempty and closed under $R$-linear combination.
+		\item To see that $I_n\subseteq I_{n+1},$ we note that if $f$ has $c_n$ for its $x^n$ coefficient and no terms of smaller degree, then $xf$ has $c_n$ for its $x^{n+1}$ coefficient and no terms of smaller degree, so $c_n\in I_{n+1}.$
+	\end{itemize}
+	Anyways, the point is that we get our ascending chain of ideals will stabilize to some $I_N$ because $R$ is Noetherian. Then each of $I_k$ for $0\le k\le N$ is finitely generated, so we say that
+	\[I_k=(c_{k,1},c_{k,2},\ldots,c_{k,n_k}).\]
+	Now, for each $c_{k,\ell}\in I_d,$ there exists a polynomial $f_{k,\ell}$ with that coefficient and no terms of smaller degree, by definition of $I_k.$ We claim that the $f_{k,\ell}$ for $0\le k\le N$ and $1\le\ell\le n_k$ (of which there are finitely many) generate $I.$
+
+	For clarity, define, for $f\in R[[x]]\setminus\{0\},$
+	\[\deg f=\deg\left(\sum_{k=0}^\infty a_kx^k\right):=\min\{k\in\NN:a_k\ne0\},\]
+	which is well-defined because $f\ne0$ requires some coefficient to be nonzero. We now show that the $f_{k,\ell}$ generate $f$ directly. There are two steps.
+	\begin{enumerate}
+		\item If $d:=\deg f<N,$ then we claim that we can find $\{r_{d,\ell}\}_{\ell=1}^{n_d}\subseteq R$ so that $\deg f<\deg\left(f-\sum_\ell r_{d,\ell} f_{d,\ell}\right).$ Indeed, write
+		\[f(x)=\sum_{k=d}^\infty c_kx^k\]
+		so that $c_d\in I_d.$ This implies that there exists $\{r_{d,\ell}\}_{\ell=1}^{n_d}\subseteq R$ such that
+		\[c_d=\sum_{\ell=1}^{n_d}r_{d,\ell} c_{d,\ell}\]
+		so that
+		\[f-\sum_{\ell=1}^{n_d}r_{d,\ell} f_{d,\ell}\]
+		has no terms of degree smaller than $x^d$ and also has the $x^d$ term vanish. This is what we wanted. (Here we have used the fact that $I_d$ is only represented by polynomials which have no term of degree smaller than $x^d.$)
+
+		Inductively repeating the above process will give us elements $r_{k,\ell}$ for $1\le k<N$ and $1\le\ell\le n_k$ such that
+		\[f-\sum_{k=1}^{N-1}\sum_{\ell=1}^{n_k}r_{k,\ell}f_{k,\ell}\]
+		has degree at least $N.$
+
+		\item So now we may take $d:=\deg f\ge N.$ We claim that there exists $\{r_{d,\ell}\}_{\ell=1}^{n_N}\subseteq R$ so that $\deg f<\deg\left(\sum_\ell r_{d,\ell}f_{N,\ell}\right)$ again. Write
+		\[f(x)=\sum_{k=d}^\infty c_kx^k\]
+		so that $c_d\in I_d=I_N.$ This implies that there exists $\{r_{d,\ell}\}_{\ell=1}^{n_N}\subseteq R$ such that
+		\[c_d=\sum_{\ell=1}^{n_N}r_{d,\ell} c_{N,\ell}\]
+		so that
+		\[f-\sum_{\ell=1}^{n_N}r_{d,\ell}x^{d-N}f_{N,\ell}\]
+		has no terms of degree smaller than $x^d$ and also has the $x^d$ term vanish. This is what we wanted.
+	\end{enumerate}
+	If we combine the two steps, we see that, for any $f\in I,$ we have found coefficients $r_{k,\ell}$ so that
+	\[f-\sum_{k=1}^{N-1}\sum_{\ell=1}^{n_k}r_{k,\ell}f_{k,\ell}-\sum_{k=N}^\infty\sum_{\ell=1}^{n_N}r_{k,\ell}x^{k-N}f_{N,\ell}\]
+	vanishes completely. (Technically, we ought truncate the second sum and show that the truncated sum vanishes as we add more terms. We will not do this because I already have a headache.) In other words,
+	\[f=\sum_{k=1}^{N-1}\sum_{\ell=1}^{n_k}r_{k,\ell}f_{k,\ell}+\sum_{\ell=1}^{n_N}\left(\sum_{k=N}^\infty r_{k,\ell}x^{k-N}\right)f_{N,\ell},\]
+	so indeed, we have represented $f$ as an $R[[x]]$-linear combination of the $f_{k,\ell}.$ Importantly, those are power series at the end sum, and they do converge.
+\end{proof}
+\begin{remark}
+	This proof does not work for polynomials because the induction at the end technically need not terminate. All that the proof required is that the induction creates a power series linear combination.
+\end{remark}
+
+\subsection{Unique Factorization}
+We would like to have unique factorization. Of course, $k[[x]]$ is safe because it is a principal ideal domain. Well, what about $k[[x,y]]$? In theory, we should be able to show that if $R$ is a unique factorization domain, then $R[[x]]$ is a unique factorization domain. However, we won't do this because it is false; the exact counterexample is relatively uninteresting.
+\begin{remark}
+	Some early versions of Lang's \textit{Algebra} claimed that this was true. Early versions are notorious for this.
+\end{remark}
+Roughly speaking, the proof for polynomials used the content of a polynomial, which makes sense because polynomials are nice finite objects. Namely, given a polynomial $f\in k[x],$ we could find some $c(f)\in k$ such that
+\[\frac f{c(f)}\in R[x]\]
+and have coprime coefficients. However, this is not possible for power series.
+\begin{example}
+	Over $\ZZ[[x]],$ the power series
+	\[1+\frac1px+\frac1p^2x^2+\cdots\in\QQ[[x]]\]
+	will have no content to get it into $\ZZ[[x]].$
+\end{example}
+The correct thing to do here is to use the Weierstrass preparation theorem.
+\begin{theorem}[Weierstrass preparation]
+	An element $f\in k[[x_1,\ldots,x_n]]$ can be made to look like a polynomial in $x_1.$ More precisely, in $k[[x,y]],$ we assert that any $f\in k[[x,y]]$ can be written as $y^\bullet ug$ where $u\in k[[x,y]]^\times,$ and $g$ has the form
+	\[\sum_{k=0}^na_ix^ki,\]
+	where $a_k\in k[[y]]$ and $a_n=1.$ We call $g$ a \textit{Weierstrass polynomial in $x$}, and it is unique.
+\end{theorem}
+\begin{remark}
+	According to Professor Borcherds, units are kind of harmless.
+\end{remark}
+\begin{proof}
+	The idea is to turn $f$ into $g$ by repeatedly multiplying by some harmless units of the form $1+x^iy^j,$ which will let us kill various coefficients of $f.$ Namely, here are the monomials for $f\in k[x,y].$
+	% https://q.uiver.app/?q=WzAsMjUsWzAsNCwiMSJdLFswLDMsIngiXSxbMSw0LCJ5Il0sWzEsMywieHkiXSxbMiw0LCJ5XjIiXSxbMiwzLCJ4eV4yIl0sWzAsMiwieF4yIl0sWzEsMiwieF4yeSJdLFswLDEsInheMyJdLFsxLDEsInheM3kiXSxbMiwxLCJ4XjN5XjIiXSxbMiwyLCJ4XjJ5XjIiXSxbMywxLCJ4XjN5XjMiXSxbMywyLCJ4XjJ5XjMiXSxbMywzLCJ4eV4zIl0sWzMsNCwieV4zIl0sWzQsNCwiXFxjZG90cyJdLFs0LDMsIlxcY2RvdHMiXSxbNCwyLCJcXGNkb3RzIl0sWzQsMSwiXFxjZG90cyJdLFs0LDAsIlxcaWRkb3RzIl0sWzAsMCwiXFx2ZG90cyJdLFsxLDAsIlxcdmRvdHMiXSxbMiwwLCJcXHZkb3RzIl0sWzMsMCwiXFx2ZG90cyJdXQ==
+	\[\begin{tikzcd}
+		\vdots & \vdots & \vdots & \vdots & \iddots \\
+		{x^3} & {x^3y} & {x^3y^2} & {x^3y^3} & \cdots \\
+		{x^2} & {x^2y} & {x^2y^2} & {x^2y^3} & \cdots \\
+		x & xy & {xy^2} & {xy^3} & \cdots \\
+		1 & y & {y^2} & {y^3} & \cdots
+	\end{tikzcd}\]
+	To begin, we write
+	\[f(x,y)=\sum_{i,j=0}^\infty c_{i,j}x^iy^j\ne0,\]
+	and we see that dividing out by some power of $y$ will eventually make one of the $x^\bullet$ coefficients nonzero, so without loss of generality take $f\notin(y).$ If the $1$ coefficient is nonzero, then $f$ is already a unit, so we are done. So suppose, by way of example, that the $1$ and $x$ have coefficients of $0,$ and we focus on $x^2.$ Without loss of generality, assert that $x^2$ has coefficient $1.$
+	
+	We now note that all of the $x^iy^j$ for $i<2$ can be thrown into our Weierstrass polynomial $g(x,y)\in k[[y]][x]$ as
+	\[f(x,y)=x^0\underbrace{\sum_{\ell=0}^\infty c_{0,\ell}y^\ell}_{a_0}+\underbrace{x^1\sum_{\ell=0}^\infty c_{1,\ell}y^\ell}_{a_1}+x^2\left(1+\cdots\right),\]
+	but now the rest of them need to be killed. We are going to kill these in column-by-column, starting with the $y^0$ column, then moving to the $y^1$ column, and so on.
+	% by weight. To be explicit, weight a monomial $x^iy^j$ by
+	% \[w\left(x^iy^j\right)=i+j\sqrt2\]
+	% so that the induced ordering on the monomials is a well-order, and no two monomials have the same weight. (We won't show that this weight satisfies this property, but that is the only thing we care about it.)
+
+	We will recursively kill our monomials.\footnote{Technically this will require a Zorn's lemma argument to show that recursively going up any column can move all the way across. But I don't want to write this out, so let's pretend we don't have to do this.} Let's say that the current smallest nonzero monomial is $cx^iy^j,$ where $c\ne0$ is some constant. Explicitly, we have found a unit $u$ such that
+	\[f-ug\]
+	has $cx^iy^j$ as its least monomial. The point here is that $ug$ also has the small $x^2$ term coming from $f$ because $u$ will have a nonzero constant coefficient. Then we observe that multiplying
+	\[f-g\cdot u\left(1+cx^{i-2}y^j\right)=\left(f-gu\right)-gu\cdot cx^{i-2}y^j\]
+	Here we see that the $cx^{i-2}y^j$ moves the $1x^2$ term in $gu$ term up to the term $cx^iy^j$ term we need to kill, so indeed, we have killed this term. Additionally, we see that multiplying all terms by $x^{i-2}y^j$ means that any other monomial in $gu$ will get moved to the upper-right of the $x^iy^j$ multiplication, meaning we have not altered any of the previously killed monomials.
+
+	There is some care here because we have infinite product for the unit $u.$ These will converge, however, because our factors are of the form $\left(1+x^iy^j\right),$ so our coefficients will converge somewhat rapidly.
+
+	Lastly, it remains to check that this $g$ is unique. Well, suppose we have that
+	\[y^au\sum_{i=0}^ma_ix^i=y^bv\sum_{j=0}^nb_jx^j,\]
+	where $u,v$ are units and $a_i,b_j\in k[[y]]$ with $a_m=b_n=1.$ We see that $a=b$ is forced by $a_m=b_n=1$ because the $y^\bullet$ here describes the largest power of $y$ dividing into either side. Then, rearranging, we have that
+	\[v^{-1}u\sum_{i=0}^ma_ix^i=\sum_{j=0}^nb_jx^j.\]
+	At this point uniqueness follows for reasons I don't really understand, but we can kind of see this because the right-hand side has limied degree in $x.$
+\end{proof}
+\begin{remark}
+	We can do this for any number of variables, but it requires tears.
+\end{remark}
+Now let's show our unique factorization.
+\begin{theorem}
+	We have that $k[[x,y]]$ is a unique factorization domain.
+\end{theorem}
+\begin{proof}
+	We know that $k[[x,y]]$ is Noetherian, so any element has an irreducible factorization. The hard part is getting uniqueness, which requires knowing that irreducibles are prime. Well, fix $f$ irreducible dividing the product $gh,$ and we want to show that $f\mid g$ or $f\mid h.$ By the Weierstrass preparation theorem, we may get rid of units, and we may also remove powers of $y$ without making our lives easier, so we assume that $f,g,h$ are Weierstrass polynomials.
+
+	Now, $f\mid gh$ lets us write
+	\[fr=gh.\]
+	But now $fr$ must be a Weierstrass polynomial, so the key point is that we may deduce that $r$ is a Weierstrass polynomial. But now the above equality lives in $k[[y]][x]$ (!), we may reduce to unique factorization here, and $f$ is irreducible in $k[[x,y]]$ gives $f$ irreducible in $k[[y]][x],$ which implies that $f$ is prime in $k[[y]][x],$ so in the above we have that $f\mid g$ or $f\mid h$ in $k[[x,y]].$
+\end{proof}
+At a high level, we have had two main steps.
+\begin{itemize}
+	\item Use Weierstrass preparation to make things a polynomial in one variable.
+	\item Use unique factorization in a polynomial ring to finish.
+\end{itemize}
+\begin{remark}
+	Here are some traps in this proof.
+	\begin{itemize}
+		\item Again, for $R$ a unique factorization domain, $R[[x]]$ is not necessarily a unique factorization domain.
+		\item If $f\mid g$ in $k[[x,y]],$ then we do not necessarily have $f\mid g$ in $k[[y]][x],$ even in $f,g\in k[[y]][x].$ For example, $g=1$ adn $f=1+x$ are both units in $k[[x,y]],$ but $f$ is not a unit in $k[[y]][x].$
+		\item Irreducible polynomials in $k[x,y]$ need not be irreducible in $k[[x,y]].$ For example, $f=1+x+y$ is irreducible in $k[x,y]$ but not in the formal power series. Or the elliptic curve $y^2-x^2-x^3$ is irreducible in $k[x,y]$ but we can write $y^2-x^2(1+x)$ as
+		\[\left(y-x\sqrt{1+x}\right)\left(x+x\sqrt{1+x}\right).\]
+		At a high level, this is because the curve $y^2-x^3-x^2$ looks reducible when we look locally at $(0,0)$; namely, it looks like $y^2-x^2$ close to $(0,0),$ which certainly reduces.
+	\end{itemize}
+\end{remark}
+
+\subsection{Hensel's lemma}
+Let's talk about {Hensel}'s lemma. There are lots of variations, but they are essentially just about factorization of polynomials in $\hat R[x],$ where $\hat R$ is some completion. At a high level, the statement is that factorization in $R/I^n$ can occasionally be lifted directly to a factorization of $\hat R[x].$
+
+The most common case, for number theory, is to take $\hat R=\ZZ_p$ the $p$-adic numbers. Here is the simplest possible case.
+\begin{theorem}[Hensel] \label{thm:hensel1}
+	Fix $f\in\ZZ_p[x].$ Suppose $f\pmod p$ has a root $f(\alpha)\equiv0\pmod p$ but $f'(\alpha)\not\equiv0\pmod p.$ Then $\alpha$ lifts to a root in $\ZZ_p.$
+\end{theorem}
+\begin{nex}
+	It is not always possible to lift roots up to $\ZZ_p.$ For example, for $x^2-1\in\ZZ_2[x],$ we cannot lift the solution $3\pmod8$: no number which is $3\pmod4$ is a solution to $x^2-1\equiv{16}.$ The issue here is that $x^2-1$ completely vanishes$\pmod2.$
+\end{nex}
+Let's see a real example of this.
+\begin{exercise}
+	We lift the root $x\equiv1\pmod3$ of $x^2=7$ in $\ZZ_3.$
+\end{exercise}
+\begin{proof}
+	We start by lifting to $\ZZ/9\ZZ.$ Well, set $x_0=1$ and then we want to find some $a$ for which $x_1:=1+3a_1$ has $x_1^2\equiv7\pmod9.$ Expanding we want
+	\[1+6a+9a_1^2\equiv7\pmod9,\]
+	which reduces to requiring $a\equiv1\pmod3.$ So we set $x_1:=1+3\cdot1.$ Continuing, we want some $b$ for which $x_2:=1+3\cdot1+9a_2$ and $x_2^2\equiv7\pmod{27}.$ Expanding, we want
+	\[7+9+2\cdot9a_2\equiv7\pmod{27}.\]
+	This rearranges to $2a_2\equiv-1\pmod3,$ or $a_2\equiv1\pmod3,$ giving $x_2=1+3+9.$ We can keep doing this because the coefficient in front of the $a_\bullet$ is nonzero, which comes from the fact that the derivative of $x^2-7$ at $x_0=1$ is nonzero.
+
+	More explicitly, suppose by way of induction that we have $x_n$ for which $x_n^2\equiv7\pmod{3^{n+1}}$ so that we want to lift $x_n$ to $x_{n+1}\equiv x_n\pmod{3^{n+1}}$ such that $x_{n+1}^2\equiv7\pmod{3^{n+2}}.$ Well, we want $x_{n+1}=x_n+3^{n+1}a,$ so writting this out means we want
+	\[x_n^2+2\cdot3^{n+1}a\equiv7\pmod{3^{n+2}},\]
+	where we can see the derivative of $x^2-7$ at $x_0=1$ is that $2.$ Anyways, this rearranges to
+	\[a\equiv\frac{7-x_n^2}{2\cdot3^{n+1}}\pmod3,\]
+	which is perfectly valid, finishing our lifting. The point is that this induction gives us a compatible sequence\footnote{Perhaps I should mutter something about Zorn's lemma, but I won't.}
+	\[(x_0,x_1,\ldots)\in\ZZ_p,\]
+	which is the root we wanted because it squares to $7$ in every$\pmod{p^\bullet}.$
+\end{proof}
+The above can be turned into a formal proof by just continuing it by force. We're going to give a different proof.
+\begin{proof}[Proof of \autoref{thm:hensel1}]
+	We show that this is essentially a special case of Newton's method for finding roots. Recall Newton's method of finding a root of $f(x)$ by just guessing somewhere $x_n,$ drawing the tangent line, and finding where it intersects the $x$-axis, and use that for our new $x_{n+1}.$ Here is the image.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(4cm);
+			real f(real x)
+			{
+				return x*x*x - x + 0.1;
+			}
+			draw((-0.6,0)--(2,0)); draw((0,-0.6)--(0,2));
+			draw(graph(f,-0.6,1.5), blue);
+
+			real a0 = 1.3;
+			real a1 = a0 - (a0*a0*a0 - a0) / (3*a0*a0 - 1);
+
+			pair v = (a0, f(a0)) - (a1, 0);
+			draw((a1, 0) -- (a1, 0) + 1.8*v, red);
+
+			draw((a0,0) -- (a0,f(a0)), dashed);
+			draw((a1,0) -- (a1,f(a1)), dashed);
+
+			dot("$x_0$", (a0,0), S); dot("$x_1$", (a1, 0), S);
+
+			dot("$(x_0,f(x_0))$", (a0, f(a0)), WNW);
+			dot("$(x_{1},f(x_{1}))$", (a1, f(a1)), WNW);
+
+			label("\color{red}$y-f(x_0)=f'(x_0)(x-x_0)$", (a1,0) + 1.5*v, W);
+		\end{asy}
+	\end{center}
+	Writing this out, we find that our recursion should be
+	\[x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}\]
+	For concreteness, we have $f\in\ZZ_p[x]$ and have some $x_0$ for which $f(x_0)\equiv0\pmod p.$ For our induction, suppose that we have found $x_n\equiv x_0$ for which $f(x_n)\equiv0\pmod{p^n},$ and by way of induction, say that $f'(x_n)\equiv f'(x_0)\not\equiv0\pmod p.$
+
+	Now, we can expand $f(x_{n+1})$ as a Taylor series about $x_n,$ as shown in the homework. Indeed, we have
+	\[f(x_{n+1})=f(x_n)-\frac{f'(x_n)}1\left(\frac{f(x_n)}{f'(x_n)}\right)+\frac{f''(x_n)}2\left(\frac{f(x_n)}{f'(x_n)}\right)^2+\cdots.\]
+	The point here is that the first two terms will cancel, which in fact one reason Newton's method is good. So we see that
+	\[f(x_{n+1})\equiv\sum_{k=2}^\infty\frac{f^{(n)}(x_n)}{n!}\left(\frac{f(x_n)}{f'(x_n)}\right)^k\equiv0\pmod{p^{2n}}\]
+	because all later terms have at least $2n$ many powers of $p$ coming from $\left(\frac{f(x_n)}{f'(x_n)}\right)^k.$
+	
+	There is some concern that perhaps $\frac{f^{(n)}(x_n)}{n!}$ is not a well-defined element of $\ZZ_p$ because of the denominator. However, we can see that a monomial $f(x)=x^d$ for $d\ge n$ will have
+	\[\frac{f^{(n)}(x)}{n!}=\frac{d(d-1)(d-2)\cdot\ldots\cdot(d-n+1)}{n!}x^{n-d}=\binom dnx^{n-d},\]
+	so the coefficient is perfectly well-defined as an integer and hence in $\ZZ_p.$ From here we can extend lienarly out to all polynomials $f.$
+\end{proof}
+\begin{remark}
+	In the exercises above, we get approximately one digit each time. In contrast, as we showed in the proof, Newton's method will square our accuracy/double the number of digits, and we don't have any of the problems of Newton's method for real numbers.
+\end{remark}
+\begin{remark}[Nir]
+	I am under the impression that the above proof works as long as the largest power of $p$ dividing $f(\alpha)$ exceeds the largest power of $p$ dividing $f'(\alpha)^2.$ Observe that we are essentially requiring the first remainder term in our Taylor expansion
+	\[\frac{f''(x_n)}2\left(\frac{f(x_n)}{f'(x_n)}\right)^2\]
+	to be small.
+\end{remark}
+It is also true that Newton's method works for power series.
+\begin{example}
+	Consider $y^2-x^2-x^3.$ It factors in $k[[x,y]]/(x,y)^3$ as $(y-x)(y+x).$ Then Hensel's lemma for power series lets this factorization lift all the way upwards to $k[[x,y]].$
+\end{example}
+\begin{nex}
+	We have the factorization $y^2-x^3\equiv y\cdot y\pmod{(x,y)^3},$ but this factorization does not lift to $k[[x,y]].$ The reason is that the given factorization induces multiple roots, which will influence having derivative zero. Intuitively, Hensel's lemma ``doesn't know'' which root we are supposed to lift.
+\end{nex}
+\begin{remark}
+	The condition $f'(\alpha)\not\equiv0\pmod p$ more or less is telling us that we are only lifting simple roots.
+\end{remark}
+Again geometrically, the point is that $y^2-x^2-x^3$ will look like a cross, but $y^2-x^3$ has a cusp at $(0,0),$ so geometrically this does not obviously reduce.

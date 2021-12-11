@@ -1,0 +1,255 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+It's october: that unapparent summer air in early fall.
+
+\subsection{Infinite Series}
+Aside from our story into metric spaces, we have been talking about sequences: what can we say about limits, what can we say about going to infinity, etc.
+
+From talking about sequences, we are now going to talk about infinite series. Per usual, we need to start by defining what we mean.
+\begin{defi}[Infinite series]
+	Fix $\{a_k\}_{k\in\NN}$ a sequence of real numbers. Define the sequence of partial sums $\{s_n\}_{n\in\NN}$ by
+	\[s_n:=\sum_{k=1}^na_k.\]
+	Then we write the \textit{infinite series}
+	\[\sum_{k=1}^\infty a_k=\lim_{n\to\infty}s_n\]
+	if the $s_k$ have a limit. Note we are allowing the series to equal $\pm\infty.$
+\end{defi}
+\begin{warn}
+	If the partial sums have no limit, then the series simply does not have a meaning. For example,
+	\[\sum_{k=1}^\infty(-1)^k\]
+	is a collection of meaningless symbols.
+\end{warn}
+Defined like this, we see that talking about infinite series is quite similar to talking about sequences. The challenges are often the same, but our tools for simple sequences tend to be more robust.
+
+At a high level, the issue here is that the partial sums are more or less defined recursively by
+\[s_{k+1}=s_k+a_{k+1},\]
+and recursive formulae are difficult to work with. For example, recall how much trouble we had showing that the sequence $\{r_k\}_{k\in\NN}$ defined by
+\[r_1=1\qquad\text{and}\qquad r_{k+1}=\sqrt{2+r_k}.\]
+We essentially had to appeal the fact that monotone, bounded sequences converge, which is much harder than it seems.
+\begin{example}
+	Consider the series
+	\[\sum_{k=1}^\infty\frac1k.\]
+	The individual terms $\{1/k\}_{k\in\NN}$ are somewhat simple, but trying to find any kind of explicit formula is difficult.
+\end{example}
+\begin{remark}[Nir]
+	We can estimate the harmonic series pretty well by
+	\[\sum_{k=1}^N\frac1k=0.577+\log N,\]
+	which is something but not everything.
+\end{remark}
+
+\subsection{Motivation}
+Let's start with the ratio test.
+\begin{proposition}[Ratio test, I]
+	Fix $\{a_k\}_{k\in\NN}$ a sequence of real numbers. Further suppose that we can find
+	\[L:=\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|.\]
+	Then we have the following.
+	\begin{itemize}
+		\item If $L<1,$ then $\sum a_n$ converges.
+		\item If $L>1,$ then $\sum a_n$ diverges.
+	\end{itemize}
+\end{proposition}
+Note that there is a really big hypothesis in this statement: we need the limit for $L$ to exist, which is potentially problematic.
+\begin{example}
+	For example,
+	\[a_n=\begin{cases}
+		2^{-n} & n\text{ is odd}, \\
+		3^{-n} & n\text{ is odd},
+	\end{cases}\]
+	certainly has $\sum a_n$ convergent (it's bounded above by $2^{-n}$), but the consecutive terms are quite bouncy.
+\end{example}
+To motivate our discussion, let's start with the following example: we define $\{a_n\}_{n\in\NN}$ by
+\[a_n:=\begin{cases}
+	1/n & n\text{ is odd}, \\
+	-2^n & n\text{ is even},
+\end{cases}\]
+which will still cause $\sum a_n$ to diverge because it's mostly $(-2)^n$s, which are huge and negative. Here, both the ratio test and the root test have limits which do not exist, but this very clearly diverges.
+
+We would like to buf our ratio and root tests to accommodate for this. The trick is to not look at $\lim$ but $\limsup$ and $\liminf$ so that we don't have non-existence problems. We will hit here later but not quite now; stay tuned.
+
+\subsection{Some Tests}
+Let's start with some basic tests.
+\begin{proposition}[Geometric series]
+	Fix $a,r\in\RR.$ Then
+	\[\sum_{k=0}^\infty ar^k=\begin{cases}
+		\frac a{1-r} & |r|<1, \\
+		\text{diverges} & |r|\ge1.
+	\end{cases}\]
+\end{proposition}
+\begin{proof}
+	Omitted. The idea is that, for any given $N,$ we have
+	\[\sum_{k=0}^Nar^k=\frac{a\left(1-r^{N+1}\right)}{1-r},\]
+	from which we can take the explicit formula as $N\to\infty.$
+\end{proof}
+\begin{proposition}[Cauchy criterion]
+	Fix $\{a_n\}_{n\in\NN}.$ Then the series $\sum a_n$ converges if and only if, for each $\varepsilon>0,$ there exists $N$ such that $n,m>N$ implies
+	\[|s_n-s_m|<\varepsilon,\]
+	where $\{s_n\}_{n\in\NN}$ is the sequence of 
+\end{proposition}
+\begin{proof}
+	This is equivalent to asserting that the partial sums form a Cauchy sequence, so they converge because $\RR$ is complete.
+\end{proof}
+\begin{proposition}[Divergence test]
+	Fix $\{a_n\}_{n\in\NN}.$ If $\lim a_n$ is nonzero, then $\sum a_n$ diverges.
+\end{proposition}
+\begin{proof}
+	This follows from the Cauchy criterion. Suppose $\sum a_n$ converges to $s.$ Then, for any $\varepsilon>0,$ there exists $N$ such that $n,m>N$ implies
+	\[|s_n-s_m|<\varepsilon/2.\]
+	But then \todo{}
+\end{proof}
+This lets us jump into the comparison test.
+\begin{prop}[Comparison test]
+	Fix $\{a_n\}_{n\in\NN}$ a sequence of nonnegative terms. Then suppose that
+	\[|b_k|\le a_k\]
+	for each $k,$ eventually.
+	\begin{enumerate}[label=(\alph*)]
+		\item If $\sum a_n$ converges, then $\sum b_n$ converges.
+		\item If $\sum a_n$ diverges to $\infty,$ then $\sum b_n$ diverges to $\infty.$
+	\end{enumerate}
+\end{prop}
+\begin{proof}
+	Here we go.
+	\begin{enumerate}[label=(\alph*)]
+		\item We use the Cauchy criterion. Fix any $\varepsilon>0.$ Then there exists $N$ such that $n>m>N$ implies
+		\[\left|\sum_{k=m}^na_k\right|=\sum_{k=m}^na_k<\varepsilon.\]
+		Then
+		\[\left|\sum_{k=m}^nb_k\right|\le\sum_{k=m}^n|b_k|\le\sum_{k=m}^na_k<\varepsilon\]
+		by the triangle inequality, so $\sum b_k$ satisfies the Cauchy criterion as well, so $\sum b_k$ converges.
+		\item Omitted.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{example}
+	We know that
+	\[\sum_{k=1}^\infty\frac1{k^2}\]
+	converges. It follows that
+	\[\sum_{k=1}^\infty\frac{(-1)^k}{k^2}\]
+	also converges by the Comparison test, though we have no idea what the actual sum is.
+\end{example}
+\begin{warn}
+	The above statements are about ``eventually'' because, in series, we only care about the long-term behavior. Note that this also means we are by design not caring very much about the actual value of a series.
+\end{warn}
+
+This lets us talk about the following.
+\begin{definition}[Absolute convergence]
+	We say that a series $\sum a_n$ is \textit{absolutely convergent} if and only if $\sum|a_n|$ is also convergent.
+\end{definition}
+We can justify the word ``convergent'' in the above definition because of the following.
+\begin{prop}
+	Suppose $\sum|a_n|$ is absolutely convergent, then $\sum a_n$ also converges.
+\end{prop}
+\begin{proof}
+	Apply the Comparison test with $a_n$ and $|a_n|$ so that we need to check $|a_n|\le|a_n|,$ which is true.
+\end{proof}
+
+\subsection{Ratio and Root Tests}
+And now we move into the harder tests.
+\begin{prop}
+	Fix $\{a_n\}_{n\in\NN}$ a sequence of real numbers, and define $s_n:=|a_{n+1}/a_n|.$ We have the following.
+	\begin{itemize}
+		\item If $\limsup s_n<1,$ then the series is absolutely converging.
+		\item If $\liminf s_n>1,$ then the series is diverging.
+	\end{itemize}
+\end{prop}
+\begin{proof}
+	Omitted. The idea is to compare with a geometric series.
+\end{proof}
+This covers the case where the limit does not exist: no matter what, we will have values to check because $\limsup$ and $\liminf$ always exist. However, it is still quite possible that
+\[\liminf s_n<1<\limsup s_n,\]
+in which case we still get no information.
+\begin{nex}
+	Consider
+	\[a_n:=\begin{cases}
+		1/n & n\text{ is odd}, \\
+		-2^n & n\text{ is odd}.
+	\end{cases}\]
+	Then $\liminf$ of the ratios is $0$ and $\limsup$ of the ratios is $\infty,$ so the Ratio test does not help us here.
+\end{nex}
+Regardless, it's nice to have the stronger conditions so that we can be sure the problem is with the Ratio test itself and not our application of it.
+
+And here is the buffed version of the Root test.
+\begin{prop}
+	Fix $\{a_n\}_{n\in\NN}$ a sequence of real numbers, and define
+	\[\alpha:=\limsup_{n\to\infty}|a_n|^{1/n}.\]
+	Then we have the following.
+	\begin{enumerate}[label=(\alph*)]
+		\item If $\alpha>1,$ then the series $\sum a_n$ diverges.
+		\item If $\alpha<1,$ then the series $\sum a_n$ is absolutely converging.
+	\end{enumerate}
+\end{prop}
+\begin{proof}
+	Again omitted. The idea is still to compare with a geometric series.
+\end{proof}
+This is quite nice because there are no gaps as seen between $\liminf$ and $\limsup$ of the Ratio test.
+\begin{example}
+	Consider
+	\[a_n:=\begin{cases}
+		1/n & n\text{ is odd}, \\
+		-2^n & n\text{ is odd}.
+	\end{cases}\]
+	Then $\limsup|a_n|^{1/n}=2,$ so $\sum a_n$ diverges. Finally we have a proof.
+\end{example}
+
+\subsection{Some Examples}
+Let's do some examples.
+\begin{exercise}[Ross 14.7]
+	Fix $\{a_n\}_{n\in\NN}$ is a sequence of nonnegative terms with $\sum a_n$ converging. The, taking $p>1,$ the series $\sum a_n^p$ also converges.
+\end{exercise}
+\begin{proof}
+	Use the comparison test. For $N$ large enough, we can say that $n>N$ implies $|a_n|<1.$ Then, after this point,
+	\[\left|a_k^p\right|<|a_k|^p<|a_k|,\]
+	so $\sum a_n^p$ is eventually smaller than $\sum a_n.$ So we are done by the Comparison test.
+\end{proof}
+The above exercise is a good example of why we want the Comparison test to have the ``eventually.'' Namely, we had to wait until a point where the terms are less than $1.$ For example, it is quite possible for $\sum a_n^p$ to have a larger sum:
+\[\sum_{k=0}^\infty\frac1{2^k}=2\qquad\text{but}\qquad\sum_{k=0}^\infty\left(\frac1{2^k}\right)^2=\frac{13}3.\]
+\begin{exercise}[Ross 14.9]
+	Fix $\{a_n\}_{n\in\NN}$ and $\{b_n\}_{n\in\NN}$ are equal aside from finitely many terms. Then $\sum a_n$ converges if and only if $\sum b_n$ converges.
+\end{exercise}
+\begin{proof}
+	Use the Cauchy criterion. (Note that we don't use the Comparison test because these need not be nonnegative.) Namely, if $n>N$ has $a_n=b_n,$ then $\sum a_n$ satisfies the Cauchy criterion after $N$ if and only if $\sum b_n$ satisfies the Cauchy criterion after $N.$
+\end{proof}
+
+\subsection{Integral Test}
+We have the following.
+\begin{prop}
+	Fix $\{a_n\}_{n\in\NN}$ a decreasing sequence of terms such that $f(n)=a_n$ is a decreasing function. Then $\sum a_n$ has the same convergence/divergence as
+	\[\int_1^\infty f(x)\,dx.\]
+\end{prop}
+\begin{proof}
+	The book has a nice geometric proof. The main idea is that, because $f(x)$ is decreasing, we have
+	\[\int_n^{n+1}f(x)\,dx\le f(n)\le\int_{n-1}^nf(x)\,dx\]
+	for $n\in\NN.$ Summing over $n\in\NN,$ we find that
+	\[\int_1^\infty f(x)\,dx\le\sum_{n=1}^\infty f(n)\le f(1)+\int_2^\infty f(x)\,dx\]
+	which gives the result after some pushing.
+\end{proof}
+The prototypical example is the harmonic series.
+\begin{example}
+	The series $\sum1/n$ diverges because
+	\[\int_1^\infty\frac1x\,dx=\log x\bigg|_1^\infty=\infty.\]
+\end{example}
+\begin{example}
+	The series $\sum1/n^{1.01}$ converges because
+	\[\int_1^{\infty}\frac1{x^{1.01}}\,dx=\frac{x^{-0.01}}{-0.01}\bigg|_1^\infty=100<\infty\]
+	even though the series is very close to the harmonic series. In fact, the value of the integral is a good first-order approximation of the series.
+\end{example}
+
+\subsection{Logistics}
+The final exam has the following properties.
+\begin{itemize}
+	\item It will be in-class, for 90 minutes.
+	\item It will be six questions. Questions will have one or two parts.
+	\item It will cover the section that we have had homework over by the time the exam occurs. Namely, we will cover Chapters 1 and 2.
+	\item It will be completely closed-book.
+	\item Be prepared.
+\end{itemize}

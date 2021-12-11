@@ -1,0 +1,512 @@
+% \externaldocument{../notes}
+
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+It knows no fear, possibly because it has no brain.
+
+\subsection{Polynomials Over Fields}
+So we're talking about polynomials today. Let's review polynomials over a field.
+\begin{theorem}
+	Fix $k$ a field. Then $k[x]$ is Euclidean by using degree for the Euclidean metric.
+\end{theorem}
+This has some nice consequences, as usual.
+\begin{proposition}
+	Fix $k$ a field. Then $k[x]$ is a principal ideal domain and hence a unique factorization domain.
+\end{proposition}
+\begin{proof}
+	All Euclidean domains are principal ideal domains. And we showed that principal ideal domains are unique factorization domains.
+\end{proof}
+We also saw the following directly.
+\begin{proposition}
+	Fix $k$ a field. Any finitely generated $k[x]$-module is a direct sum of cyclic modules.
+\end{proposition}
+\begin{proof}
+	We showed that this holds because $k[x]$ is a Euclidean domain, though we technically only need to know that $k[x]$ is a principal ideal domain.
+\end{proof}
+We saw that the above proposition implied the Jordan normal form for $k$ algebraically closed.
+\begin{example}
+	Let's look for irreducible polynomials over $\FF_2.$ Finding irreducible polynomials over $\FF_2$ is somewhat similar as finding primes for $\ZZ$; for example, we can imitate the Sieve of Eratosthenes. We start by writing out all polynomials over $\FF_2[x],$ writing them in order of degree.
+	\[0,\quad1.\quad x,\quad x+1,\quad x^2,\quad x^2+1,\quad x^2+x,\quad x^2+x+1,\quad x^3,\quad\ldots.\]
+	We ignore $0$ and $1,$ and then we have $\boxed{x}$ and cross out multiples of $x$ (which are elements of zero constant term) giving
+	\[\boxed{x},\quad x+1,\quad x^2+1,\quad x^2+x+1,\quad x^3+1,\quad x^3+x+1,\quad\ldots.\]
+	Now we find that $x+1$ is irreducible, and so we can cross our multiples of $x+1,$ which are polynomials whose coefficients sum to $0.$ 
+	\[\boxed{x},\quad\boxed{x+1},\quad x^2+x+1,\quad x^3+x+1,\quad x^3+x^2+1,\quad\ldots.\]
+	Now we see that $\boxed{x^2+x+1}$ is irreducible, and it is the only irreducible of degree $2.$ So the primes $\{x,x+1,x^2+x+1\}$ are enough to determine if any given polynomial of degree at most $4$ is irreducible.
+\end{example}
+We also recall the following statement.
+\begin{lemma}
+	Fix $R$ a commutative ring. If $f\in R[x]$ has $a\in R$ with $f(a)=0,$ then $(x-a)\mid f(x).$
+\end{lemma}
+\begin{proof}
+	For $R$ a field, we can do Euclidean division to write
+	\[f(x)=(x-a)g(x)+r(x)\]
+	where $r(x)\in R$ because $r=0$ or $0\le\deg r<\deg(x-a)=1.$ But plugging in $x=a$ forces $r=0,$ so conclude $f(x)=(x-a)g(x).$
+
+	However, technically this holds for general rings. Indeed, write
+	\[f(x)=\sum_{k=0}^{\deg f}a_kx^k\]
+	so that we have
+	\[f(x)-f(a)=\sum_{k=0}^{\deg f}a_k\left(x^k-a^k\right)=(x-a)\sum_{k=0}^{\deg f}\left(a_k\sum_{\ell=0}^{k-1}x^\ell a^{k-1-\ell}\right),\]
+	where the factorization of $x^k-a^k$ is purely formal and hence holds in any commutative ring. It follows that $f(a)=0$ implies $(x-a)\mid f(x).$
+\end{proof}
+When we restrict to a field, we get the following.
+\begin{proposition}[Lagrange]
+	A nonzero polynomial $f$ over a field $k$ of degree $n$ has at most $n$ roots.
+\end{proposition}
+\begin{proof}
+	This is by induction on $n.$ For $n=0,$ we note that nonzero polynomials of degree $0$ are constant and nonzero and hence have no roots.
+	
+	Then for the inductive step, take $n:=\deg f>0,$ and we note that if $f$ has no roots, then we are done. Otherwise, $f$ has a root $x_0\in k$ so that we can write
+	\[f(x)=(x-x_0)g(x).\]
+	We note that $f\ne0$ implies that $g\ne0$ as well because $k[x]$ has no zero-divisors.
+	
+	Now the key observation is that $k$ has no zero-divisors, so if $a$ is a root of $f(x),$ then $f(a)=0$ so that $a-x_0=0$ or $a$ is a root of $g(x).$ But $\deg g=\deg f-1=n-1,$ so $g$ has at most $n-1$ roots by induction, so we see that
+	\[\#\{a\in k:f(a)=0\}\le\#\{a\in k:a=x_0\}+\#\{a\in k:g(a)=0\}\le1+(n-1)=n,\]
+	which is what we wanted.
+\end{proof}
+So fields are nice, but we are obligated to note that things which are not fields are not nice.
+\begin{warn}
+	Lagrange's theorem on polynomials may fail over rings with zero-divisors or over rings which are non-commutative.
+\end{warn}
+Let's see some examples of the above warning.
+\begin{example}
+	In $R=\ZZ/8\ZZ,$ the polynomial $x^2-1$ has the four roots $1,3,5,7$ despite having degree $2.$
+\end{example}
+\begin{example}
+	In $R=\mathbb H$ the ring of quaternions as an $\RR$-algebra, the polynomial $x^2+1$ has an uncountable number of roots. At the very least, $\pm i,\pm j,\pm k$ are roots, but in fact
+	\[\left\{bi+cj+dk:b^2+c^2+d^2=1\right\}\]
+	are also roots. Indeed, we can expand and rearrange
+	\[(bi+cj+dk)^2=\left(-b^2-c^2-d^2\right)+bc(ij+ji)+cd(jk+kj)+db(ki+ik),\]
+	which evaluates to $-1+0+0+0=-1.$
+\end{example}
+Here's a nice application of Lagrange's theorem.
+\begin{theorem} \label{thm:primegen}
+	The group of units $\FF_p^\times$ is cyclic.
+\end{theorem}
+\begin{example}
+	In $\FF_7,$ we have that $3$ is a generator of $\FF_7^\times.$ Its powers are $1,3,2,6,4,5,$ which covers everything. In general, it is hard to explicitly find a generator.
+\end{example}
+In fact, we can show the following.
+\begin{proposition}
+	Fix $k$ a field and $G$ a finite subgroup of $k^\times.$ Then $G$ is cyclic.
+\end{proposition}
+Essentially this is saying that the roots of unity are our only candidate finite multiplicative groups in a field. Anyways, let's see this.
+\begin{proof}
+	For any $n\in\NN,$ note that the equation $x^n-1$ has at most $n$ roots over $k.$ In particular, this implies that $G$ has at most $n$ elements of multiplicative order dividing $n.$ Now there are a few ways to finish from this condition on $G.$
+	\begin{itemize}
+		\item Take $G$ a group with at most $n$ elements of multiplicative order dividing $n,$ and we show $G$ is cyclic. There is a clever way to do this by carefully counting the number of elements of a particular order $n.$
+		
+		Let $\varphi_G(n)$ be the number of elements of multiplicative order exactly $n$ in $G.$ It is possible that $\varphi_G(n)=0$; but if $\varphi_G(n)>0$ so that there is an element $g$ of order $n,$ then we see that
+		\[\langle g\rangle\subseteq\left\{x\in G:x^n=e\right\}\]
+		while $n=\#\langle g\rangle\le\#\left\{x\in G:x^n=e\right\}\le n.$ Thus, $\langle g\rangle=\left\{x\in G:x^n=e\right\},$ so all elements of order dividing in $n$ are in $\langle g\rangle.$ But we can count that the number of elements of order $n$ in $\langle g\rangle\cong\ZZ/n\ZZ$ is $\varphi(n).$
+
+		The point is that $\varphi_G(n)\in\{0,\varphi(n)\}.$ Now, all elements have order dividing into $n,$ so we see that
+		\[\#G=\sum_{d\mid\#G}\varphi_G(n)\le\sum_{d\mid\#G}\varphi(d)=\#G,\]
+		where the last equality is by M\"obius inversion. (Alternatively, count elements of prescribed additive order in $\ZZ/\#\ZZ.$) So we need equalities everywhere, so $\varphi_G(\#G)=\varphi(\#G)\ne0,$ meaning that there is an element of order $\#G,$ so $G$ is indeed cyclic.
+
+		\item Here take $G$ a non-cyclic abelian group, and we show that it has an $n$ with more than $n$ elements of multiplicative order dividing $n.$ We use the structure theorem for abelian groups. If $G$ is non-cyclic, then its factorization
+		\[G\cong\bigoplus_{k=1}^r\ZZ/p_k^{\nu_k}\ZZ\]
+		(with $\nu_\bullet\ge1$) must have the same prime repeated somewhere, lest the factors all be coprime and may be combined by the Chinese remainder theorem.
+		
+		So without loss of generality take $p_1=p_2.$ Then we see that, for any $a,b\in\ZZ/p\ZZ,$ we have unique elements
+		\[p\cdot\left(ap_1^{\nu_1-1},bp_2^{\nu_2-1},0,0,\ldots\right)=0\in G,\]
+		but now this gives $p^2$ elements of multiplicative order dividing $p,$ which finishes. (These elements are unique because $ap_1^{\nu_1-1}$ lives in $\ZZ/p^{\nu_1}\ZZ$ and similar for $bp_2^{\nu_2-1}.$)
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	Professor Borcherds does not care what happens for nonabelian groups.
+\end{remark}
+\begin{proof}[Proof of \autoref{thm:primegen}]
+	Because $\FF_p$ is finite, $\FF_p^\times$ is a finite cyclic group of a field, so it is cyclic.
+\end{proof}
+Anyways, we do care for fields which are not finite sometimes.
+\begin{example}
+	In $\CC,$ we now see that any finite multiplicative subgroup $G\subseteq\CC^\times$ must be cyclic and hence essentially roots of unity. Of course, we can see this somewhat directly because all $g\in G$ must have $g^{\#G}=1$ and hence be roots of unity, and then we can check for the smallest $n$ for which $g^n-1=0$ for each $g\in G.$
+\end{example}
+And naturally, this fails when $k$ is not a field.
+\begin{nex}
+	In $\ZZ/8\ZZ,$ the group of units $\{1,3,5,7\}$ is non-cyclic because it has no generator, or no ``primitive root.''
+\end{nex}
+\begin{nex}
+	The quaternions have many finite non-cyclic subgroups. For example, the subgroup $\{\pm1,\pm i,\pm j,\pm k\}$ is non-cyclic. Additionally, the binary permutation groups we found earlier in this course work as well.
+\end{nex}
+\begin{remark}
+	If the field is finite, then we can have a polynomial vanish at all points without being $0.$ For example, in $\FF_p,$ everything is a root of $x^p-x.$ The point here is that being zero as a function or a polynomial are different here. (However, this is ``essentially'' the only counterexample: if $f(x)=g(x)$ on $\FF_p,$ then $x^p-x=x(x-1)(x-2)\cdots(x-p+1)\mid f(x)-g(x).$)
+\end{remark}
+Regardless, if the field is infinite, then $f(a)=g(a)$ on each $a\in k$ does imply $f=g$ as polynomials because $f-g$ would have infinitely many roots and hence must be the zero polynomial.
+
+\subsection{Polynomials Over Unique Factorization Domains}
+Now let's move to polynomials over $\ZZ[x].$ Note that $\ZZ[x]$ is not a principal ideal domain and hence not Euclidean.
+\begin{example}
+	The ideal $(2,x)\subseteq\ZZ[x],$ which consists of the polynomials of even constant term, is not principal.
+\end{example}
+However, $\ZZ[x]$ does have unique prime factorization!
+\begin{theorem} \label{thm:zxufd}
+	The ring $\ZZ[x]$ has unique factorization.
+\end{theorem}
+\begin{remark}[Nir]
+	Those familiar with this proof already are encouraged to think of $\ZZ$ in the following proof as a general unique factorization domain. I will not write this proof out explicitly in this generality for psychological reasons, but we will not use anything of $\ZZ$ beyond that it is a unique factorization domain anyways.
+\end{remark}
+\begin{proof}
+	The idea here is to reduce to $\QQ[x],$ which we know has unique factorization. What is annoying here is that
+	\[3x^2+6\]
+	is irreducible over $\QQ[x]$ because $3$ is a unit in $\QQ,$ but $3$ is a prime in $\ZZ[x],$ so $3\cdot\left(x^2+2\right)$ is a nontrivial factorization in $\ZZ[x].$
+
+	To deal with this, we have the following definition.
+	\begin{definition}[Content]
+		Given nonzero $f\in\ZZ[x],$ we define the \textit{content} $c(f)$ to be the greatest common divisor of the coefficients of $f.$ (In general, for $R$ a unique factorization domain, we may set $c(f)$ to be the ideal generated by the greatest common divisor, to avoid unit problems.)
+	\end{definition}
+	\begin{example}
+		The content of $3x^2+6$ is $3.$
+	\end{example}
+	It follows that, for any $f\in\ZZ[x],$ we have that $f/c(f)$ is a polynomial in $\ZZ[x],$ where the coefficients are coprime.
+
+	We also note that an integer $n$ divides into $f$ if and only if $n\mid c(f).$\footnote{This is more or less why we care about the content: it is extracting out the ``non-field'' part of an irreducible.} Indeed, setting
+	\[f(x)=\sum_{k=0}^{\deg f}a_kx^k,\]
+	we have that $n\mid c(f)$ implies $n\mid a_k$ for each $k$ implies that $\frac1nf(x)=\sum_{k=0}^{\deg f}\frac{a_K}nx^k\in\ZZ[x].$ Conversely, if $n\mid f,$ then $f=gn$ for some $g\in\ZZ[x],$ but writing out the coefficients of $g$ shows that $a_k=nb_k$ for some $b_k,$ for each $k.$ This finishes.
+
+	The main result is as follows.
+	\begin{lemma}[Gauss's] \label{lem:gauss}
+		Fix $f,g\in\ZZ[x]$ nonzero. Then $c(f)c(g)=c(fg).$
+	\end{lemma}
+	\begin{proof}
+		The fact that $c(f)c(g)\mid c(fg)$ is not hard: it suffices to show that $c(f)c(g)\mid fg,$ but this is true because $c(f)\mid f$ and $c(g)\mid g.$ So the problem is showing equality. Because the content preserves multiplication by a constant ($n\mid f$ if and only if $n/a\mid f/a$ for some $a$), we see that we are interested in showing
+		\[c\left(\frac f{c(f)}\cdot\frac g{c(g)}\right)=\frac{c(fg)}{c(f)c(g)}\stackrel?=1.\]
+		So setting $f\leftarrow f/c(f)$ and $g\leftarrow g/c(g),$ we see that it suffices to show $c(fg)=1$ given that $c(f)=c(g)=1.$
+
+		For this we show that each irreducible $p\in\ZZ$ does not divide $c(fg),$ which will be good enough by, say, ring theory: this implies that the content is not contained in any maximal ideal and hence must be a unit. For concreteness, we set
+		\[f(x)=\sum_{k=0}^{\deg f}a_kx^k\qquad\text{and}\qquad g(x)=\sum_{k=0}^{\deg g}b_kx^k.\]
+		Because $c(f)=1,$ we know that there is some $m$ for which $p\nmid a_m,$ so there is a least $m$ for which $p\nmid a_m$; similarly, there is a least $n$ for which $p\nmid b_n.$ Multiplying, we find that
+		\[(fg)(x)=\sum_{r=0}^{\deg f+\deg g}\left(\sum_{k+\ell=r}a_kb_\ell\right)x^r.\]
+		The point is that the coefficient with degree $r=m+n$ looks like
+		\[\sum_{k+\ell=m+n}^{m+n}a_kb_\ell=\left(\sum_{k=0}^{m-1}a_kb_{m+n-k}\right)+a_mb_n+\left(\sum_{\ell=0}^{n-1}a_{m+n-\ell}b_\ell\right).\]
+		Here, each term for the left sum is divisible by $p$ because each of the $a_\bullet$ are. Similarly, each term for the right sum is divisible by $p$ because each of the $b_\bullet$ are. But $p\nmid a_mb_n,$ so we see that the coefficient has
+		\[\sum_{k+\ell=m+n}^{m+n}a_kb_\ell\equiv a_mb_n\not\equiv0\pmod p.\]
+		Thus, there is a coefficient of $fg$ not divisible by $p,$ so we conclude that $p\nmid c(fg).$ This finishes the proof, as described.
+	\end{proof}
+
+	The main use of Gauss's lemma is to classify the irreducibles over $\ZZ[x].$ Here is a technical lemma that will come up a couple of times.
+	\begin{lemma} \label{lem:technicalgauss}
+		Suppose that $f\in\ZZ[x]$ has content $c(f)=1,$ and $q\in\QQ$ gives $qf\in\ZZ[x]$ while $c(qf)=1.$ Then $q\in\ZZ^\times$ is a unit in $\ZZ.$
+	\end{lemma}
+	\begin{proof}
+		It suffices to show that $\nu_p(q)=0$ for each prime $p$ of $\ZZ.$ For concreteness, we set
+		\[f(x)=\sum_{k=0}^{\deg f}a_kx^k\]
+		so that $c(f)=\gcd_k(a_k)=1.$
+		% Now, $qf\in\ZZ[x]$ implies that $qa_k\in\ZZ$ for each $k$ implies that $\nu_p(q)\ge-\nu_p(a_k)$ for each $k.$ It follows that
+		% \[\nu_p(q)\ge\max_k\left\{-\nu_p(a_k)\right\}=-\min_k\left\{\nu_p(a_k)\right\}=0.\]
+		% Conversely, $c(qf)=1$ implies that $\gcd_k(qa_k)=1.$
+		Taking the greatest common denominator in $\ZZ$ as a unique factorization domain, we find that
+		\[0=\nu_p(c(qf))=\nu_p(\gcd_k(qa_k))=\min_k\big(\nu_p(q)+\nu_p(a_k)\big)=\nu_p(q)+\min_k\nu_p(a_k)=\nu_p(q),\]
+		where we have used that $c(f)=1$ in the last equality. This is what we wanted.
+	\end{proof}
+	And here is our classification of irreducibles.
+	\begin{lemma}
+		The irreducibles in $\ZZ[x]$ are either irreducible elements in $\ZZ$ or irreducible in $\QQ[x]$ with content a unit.
+	\end{lemma}
+	\begin{proof}
+		Fix $\pi\in\ZZ[x]$ an irreducible. We remark that $\pi$ is either a unit or irreducible in $\QQ[x]$: if $\pi$ is constant, than it is a unit. Otherwise, suppose that we have a nontrivial factorization $\pi=\alpha\beta$ for $\alpha,\beta\in\QQ[x],$ and we have to show that one of the factors is a unit.
+		
+		By clearing denominators, there exists $a'$ such that $a'\alpha\in\ZZ[x],$ and then we define $a:=a'/c(a'\alpha)$ so that $a\alpha\in\ZZ[x]$ with content $1.$ We define $b$ similarly so that $b\beta\in\ZZ[x]$ with content $1.$ The point is that
+		\[ab\pi=(a\alpha)(b\beta)\in\ZZ[x],\]
+		and by Gauss's lemma, $c(ab\pi)=1.$ So by \autoref{lem:technicalgauss}, we conclude that $ab\in\ZZ^\times$ is a unit, so $ab\pi$ is irreducible in $\ZZ[x].$ Thus, $a\alpha$ or $b\beta$ is a unit in $\ZZ[x]$ and hence a unit in $\QQ[x],$ which finishes the check that $\pi$ is irreducible.
+		
+		We turn directly to our classification. The point is that we can factor
+		\[\pi=c(\pi)\cdot\frac{\pi}{c(\pi)}.\]
+		Because $\pi$ is irreducible in $\ZZ[x],$ one of these factors is a unit in $\ZZ[x].$ We have two cases.
+		\begin{itemize}
+			\item If $c(\pi)$ is a unit, then we note that $\pi$ must be non-constant, lest it divide into its constant term and hence divide into $c(\pi)=1$ and be a unit. Thus, $\pi$ is not a unit in $\QQ[x],$ so $\pi$ is irreducible in $\QQ[x]$ with content $1.$
+			\item If $\pi/c(\pi)$ is a unit, then we note that our equation implies that $\pi$ is a unit multiplied by $c(\pi)\in\ZZ,$ so $\pi\in\ZZ.$ It remains to show that $\pi$ is irreducible in $\ZZ.$ Well, $\pi$ is not a unit in $\ZZ$ because it is not a unit in $\ZZ[x],$ and if $\pi=ab$ where $a,b\in\ZZ,$ then this factorization lifts to $\ZZ[x],$ so one of $a$ or $b$ is a unit in $\ZZ[x]$ and hence a unit in $\ZZ.$
+		\end{itemize}
+		This finishes the classification of irreducibles in $\ZZ[x].$
+
+		It remains to verify that these are all in fact irreducible. We have two cases.
+		\begin{itemize}
+			\item If $\pi$ is irreducible in $\ZZ,$ then $\pi=ab$ in $\ZZ[x]$ must have $a,b\in\ZZ$ by degree arguments, but then one of $a,b$ is a unit in $\ZZ$ and hence a unit in $\ZZ[x].$
+			\item If $\pi$ is irreducible in $\QQ[x]$ with content $1,$ then take $\pi=\alpha\beta.$ By taking this into $\QQ,$ we see that one of $\alpha$ or $\beta$ must be a unit in $\QQ[x],$ which means that one of $\alpha$ or $\beta$ is constant. But $\alpha$ and $\beta$ must have content $1$ by Gauss's lemma, so we conclude one of $\alpha$ or $\beta$ is a unit in $\ZZ[x].$
+			\qedhere
+		\end{itemize}
+	\end{proof}
+	We now attack unique factorization. Showing that every element has a factorization comes down to $\ZZ[x]$ being Noetherian, roughly speaking. We proceed along the same outline as when we showed that principal ideal domains were unique factorization domains.
+	\begin{lemma}
+		Fix $f\in\ZZ[x]$ not zero and not a unit. Then $f$ is divisible by some irreducible element of $\ZZ[x].$
+	\end{lemma}
+	\begin{proof}
+		If $f$ is constant, then this reduces to the situation in $\ZZ.$ Similarly, if $f$ has content not a unit, then $f$ has an prime factor in $\ZZ,$ which we know to be irreducible. Otherwise, $f$ is non-constant, so embedding $f$ into $\QQ[x],$ it has some irreducible factor $\alpha\in\QQ[x]$ so that $f=\alpha\beta$ for some $\beta.$
+		
+		However, we might have $\alpha\notin\ZZ[x],$ so there is still work to be done. Clear denominators to find some $a'\in\ZZ$ with $a'\alpha\in\ZZ[x],$ and then we define $a:=a'/c(a'\alpha)$ so that $a\alpha\in\ZZ[x]$ with content $1.$ We can do similar for $\beta$ to get $b\in\ZZ$ so that $b\beta\in\ZZ[x]$ with content $1.$ Then
+		\[abf=(a\alpha)(b\beta)\in\ZZ[x]\]
+		while the right-hand side has content $1.$ We conclude from \autoref{lem:technicalgauss} that $ab$ is a unit in $\ZZ[x].$ It follows $a\alpha\mid abf\mid f,$ so $a\alpha$---which is irreducible in $\QQ[x]$ with content $1$---is the irreducible we are looking for.
+	\end{proof}
+	\begin{lemma}
+		Every nonzero $f\in\ZZ[x]$ has a factorization into irreducibles.
+	\end{lemma}
+	\begin{proof}
+		The morally correct thing to do here would be to show that $\ZZ[x]$ is Noetherian using the Hilbert basis theorem, but the correct machinery is annoying to build. So we cheat.
+
+		We proceed by induction on $\deg f.$ If $\deg f=0,$ then $f\in\ZZ,$ so it has a factorization into irreducibles because all elements of $\ZZ$ do, and $\ZZ$-irreducibles are $\ZZ[x]$-irreducibles.
+
+		Now take $f$ of positive degree. We proceed by induction on the number of (not necessarily distinct) irreducible factors of $c(f).$	
+		If $c(\pi)$ has no irreducible factors, then we note that $f$ is still nonzero and not a unit, so it has some irreducible factor $\pi.$
+		
+		But now $\pi$ must be of positive degree because $\pi$ being constant would divide into the content. So we see that $f/\pi$ has degree smaller than $f,$ so $f/\pi$ has a factorization into irreducibles, so $f$ has a factorization into irreducibles.
+
+		So suppose that $c(f)$ has a positive number of irreducible factors. Let one such $\ZZ$-irreducible factor be $p.$ But then $f/p$ has the same degree as $f$ while having one fewer factor in $c(f/p)=c(f)/p,$ so we can induct downwards here.
+	\end{proof}
+	\begin{remark}[Nir]
+		I am fairly sure that the above proof still works in general unique factorization domains (namely, not assuming Noetherian), but this requires some care. I think one should do induction on $\deg f+\sum_{\pi\text{ irred.}}\nu_\pi(c(f)),$ where the sum is finite because $R$ is a unique factorization domain.
+	\end{remark}
+	We now turn to showing uniqueness of factorizations. The key is the following lemma.
+	\begin{lemma}
+		An element $\pi\in\ZZ[x]$ is irreducible if and only if it is a nonzero prime.
+	\end{lemma}
+	\begin{proof}
+		If $\pi$ is prime, it is not too hard to check that $\pi$ is irreducible. Note $\pi$ is not a unit because $\pi$ is prime. For the hard check, write $\pi=\alpha\beta$ for some $\alpha,\beta\in\ZZ[x]$ implies that $\pi\mid\alpha\beta,$ so $\pi\mid\alpha$ or $\pi\mid\beta$ because $\pi$ is prime. Without loss of generality take $\pi\mid\alpha,$ but then $\pi=\pi(\alpha/\pi)\beta,$ so $\beta$ is a unit, finishing.
+
+		The other direction is more difficult; fix $\pi$ irreducible, and we simply run through our classification to check that it is prime.
+		\begin{itemize}
+			\item Take $\pi$ a prime in $\ZZ.$ The point is that $\pi=uc(\pi)$ for some unit $u\in\ZZ.$ Now, $\pi\mid\alpha\beta$ in $\ZZ[x]$ implies that $c(\pi)\mid c(\alpha)c(\beta),$ where we are using Gauss's lemma quite liberally. But $c(\pi)$ is a prime in $\ZZ,$ so $\pi$ divides $c(\alpha)$ or $c(\beta),$ so $\pi$ divides $\alpha$ or $\beta.$
+			\item Take $\pi$ an irreducible in $\QQ[x]$ with content $1.$ Now take $\pi\mid\alpha\beta$ for some $\alpha,\beta\in\ZZ[x].$ Taking $\alpha\leftarrow\alpha/c(\alpha)$ and $\beta\leftarrow\beta/c(\beta),$ it suffices to take $\alpha$ and $\beta$ with content $1.$
+			
+			Now, the trick is to embed this into $\QQ[x]$ so that $\pi\mid\alpha$ or $\pi\mid\beta$ in $\QQ[x].$ Without loss of generality, $\pi\mid\alpha,$ so take $\gamma\in\QQ[x]$ such that
+			\[\pi\gamma=\alpha\]
+			in $\QQ[x].$ It remains to show that $\gamma\in\ZZ[x].$ Well, as usual, we can clear denominators and then divide out by the content to get $g\in\QQ$ such that $g\gamma\in\ZZ[x]$ with content $1.$ But now
+			\[g\alpha=\pi(g\gamma)\in\ZZ[x],\]
+			where the right-hand side has content $1.$ But $\alpha$ has content $1,$ so \autoref{lem:technicalgauss} shows that $g$ is a unit in $\ZZ$ and hence in $\ZZ[x].$ So $g\gamma\in\ZZ[x]$ shows $\gamma\in\ZZ[x].$
+			\qedhere
+		\end{itemize}
+	\end{proof}
+	And now we can show uniqueness of factorizations
+	\begin{lemma}
+		Factorization into irreducibles in $\ZZ[x]$ is unique.
+	\end{lemma}
+	\begin{proof}
+		This follows from \autoref{prop:uniqfact}. Yes, exactly the same proof works now.
+	\end{proof}
+	This finishes the proof of \autoref{thm:zxufd}.
+\end{proof}
+As we remarked earlier, the above argument can be pushed further to show the following.
+\begin{theorem}
+	Fix $R$ is a unique factorization domain, then $R[x]$ is also a unique factorization domain.
+\end{theorem}
+\begin{proof}
+	Copy the proof of \autoref{thm:zxufd}, replacing each occurrence of $\ZZ$ with $R$ and each occurrence of $\QQ$ with $\op{Frac}(R).$
+\end{proof}
+The main point is that \autoref{lem:gauss} used that $\ZZ$ was a unique factorization domain, but that is the only thing of $\ZZ$ that we need to make this work.
+\begin{example}
+	Inducting on the above theorem, we can say that $k[x_1,\ldots,x_n]$ is a unique factorization domain for any $n\in\NN.$
+\end{example}
+\begin{example}
+	In fact, $k[x_1,x_2,\ldots]$ going on infinitely is also a unique factorization domain because polynomials are finite, so any polynomial here must live in some finite $k[x_1,\ldots,x_n],$ which we know has unique factorization.
+\end{example}
+\begin{example}
+	Doing a similar induction shows that $\ZZ[x_1,\ldots,x_n]$ is a unique factorization domain.
+\end{example}
+
+\subsection{Effective Factorization for \texorpdfstring{$\ZZ[x]$}{}}
+We might be interested in a real factorization algorithm for $\ZZ[x].$ Of course, this is hard even for degree zero polynomials because factoring (large) integers is difficult, but what can we do?
+
+Here is a slow algorithm, due to Kronecker. Fix $f\in\ZZ[x]$ of degree $n.$
+\begin{enumerate}
+	\item Choose $n$ integers $a_1,\ldots,a_n$ and look at $f(a_1),\ldots,f(a_n).$ If any are zero, then we have a linear factor and can induct downwards.
+	\item Otherwise, we look at all factorizations of $f(a_\bullet)$ down in $\ZZ.$ The point is that $g(a_\bullet)\mid f(a_\bullet)$ always if $g\mid f,$ so there are only finitely many possibilities of the $g(a_\bullet),$ and because we have $n$ points $g(a_\bullet)$ here, our finitely many possibilities can be uniquely interpolated to $g.$ So we can check all of these possibilities.
+\end{enumerate}
+Of course, factoring the $f(a_\bullet)$ is difficult, and doing it $n$ times is somewhat annoying. Additionally, the ``finite check'' at the end is potentially very large if the $f(a_\bullet)$ have lots of factors; at the very least we will have $\pm1$ to check, which gives $2^n$ possibilities for $g.$
+
+Speeding up Kronecker's algorithm is hard. We remark that there is the Lenstra--Lenstra--Lovasz algorithm which can factor in $\QQ[x]$ in polynomial time. So the point is that we can factor after getting rid of the content, so we have ``reduced'' fast factorization of polynomials in $\ZZ[x]$ to just factoring the content of the polynomial, which of course is somewhat hard.
+\begin{remark}[Nir]
+	Get used to seeing the $L^3$ algorithm around. It comes up everywhere in computational number theory.
+\end{remark}
+\begin{remark}
+	Shor's algorithm can do fast factorization, if we have a large quantum computer (with on the order of millions of qu{}bits).
+\end{remark}
+\begin{remark}
+	Professor Borcherds seems somewhat bitter about all the quantum hype.
+\end{remark}
+We also remark that even though we can factor in $\ZZ[x_1,\ldots,x_n]$ (for example, iterate Kronecker's algorithm), there is literally no algorithm to check for $\ZZ$-roots. This is by the work down in resolving Hilbert's 10th problem by Matiyasevich and others.
+
+\subsection{Irreducibility Testing}
+If we cannot factor, the next best thing is to test if polynomials in $f\in \ZZ[x]$ are irreducible.
+
+\subsubsection{The Generic Test}
+Here is a probabilistic test.
+\begin{enumerate}
+	\item Return that the problems is irreducible.
+\end{enumerate}
+This is not terribly interesting, but generic polynomials in $\ZZ[x]$ do turn out to be irreducible.
+
+\subsubsection{Reduce\texorpdfstring{$\pmod p$}{}}
+Here is one possible test. Fix $f(x)\in\ZZ[x].$
+\begin{enumerate}
+	\item Fix $p$ a prime not dividing the leading coefficient of $f(x),$ and we check if $\overline f\in\FF_p[x]$ is irreducible. If irreducible, return that $f$ is irreducible.
+	\item If $\overline f$ is not irreducible, then check another prime.
+\end{enumerate}
+The point is that if $\overline f$ is irreducible in $\FF_p[x],$ then we can lift this to irreducibility in $\ZZ[x].$
+\begin{lemma}
+	Fix $p$ a prime. Suppose that $f(x)\in\ZZ[x]$ has leading coefficient not divisible by $p.$ If $\overline f\in\FF_p[x]$ is irreducible, then $f\in\ZZ[x]$ is irreducible.
+\end{lemma}
+\begin{proof}
+	We proceed by contraposition. Suppose we have a nontrivial factorization $f=gh$ in $\ZZ[x]$ and write it in $\FF_p[x]$ as
+	\[\overline f=\overline g\cdot\overline h.\]
+	Because $p$ does not divide the leading coefficient of $f,$ it won't divide the leading coefficients of either $g$ or $h,$ so $\deg g,\deg h\ge1$ implies that $\deg\overline g,\deg\overline h\ge1.$ Thus, $\overline f=\overline g\cdot\overline h$ is indeed a nontrivial factorization.
+\end{proof}
+Anyways, let's see some examples of this algorithm.
+\begin{example}
+	The polynomial $x^4+x+1$ is irreducible in $\FF_2[x]$ as we showed earlier: it has constant term $1,$ so it is not divisible by $x$; it's coefficient sum is $1,$ so it is not divisible by $x+1$; lastly, we see
+	\[(x+1)\left(x^2+x+1\right)=x^3-1,\]
+	so $x^4+x+1\equiv x+x+1\equiv1\pmod{x^2+x+1},$ so we are not divisible by $x^2+x+1$ either, which is enough. The point is that it follows $x^4+x+1$ is irreducible in $\ZZ[x].$
+\end{example}
+\begin{nex}
+	The polynomial $3x^3+x^2+3x+1$ reduces to $x^2+1\pmod3,$ which is irreducible in $\FF_3[x]$ (it has no roots), but we can still factor
+	\[3x^3+x^2+3x+1=(3x+1)\left(x^2+1\right).\]
+	The issue is that reducing$\pmod3$ will view $3x+1$ as a unit even though it is not a unit in $\ZZ[x].$
+\end{nex}
+\begin{remark}[Nir]
+	This algorithm is not effective: there are irreducible polynomials which factor nontrivially modulo every prime. For example,
+	\[x^4+1\]
+	factors modulo every prime even though it is irreducible in $\ZZ.$ We can show the factorization by hand (do casework on which of $\left(\frac{-1}p\right),\left(\frac2p\right),\left(\frac{-2}p\right)$ is equal to $1$).
+	% Alternatively, the algebraic number theory way to see this is to note that factoring $x^4+1\pmod p$ for $p$ odd is equivalent to factoring $(p)$ in $\QQ(\zeta_8)$ by Dedekind--Kummer, and an irreducible factorization is equivalent to $(p)$ being inert, which is equivalent to the decomposition group being all of $\op{Gal}(\QQ(\zeta_8)/\QQ)\cong(\ZZ/2\ZZ)^2.$ But the decomposition group is cyclic because $p$ odd is unramified, so the decomposition group cannot cover all of $(\ZZ/2\ZZ)^2.$
+\end{remark}
+
+\subsubsection{Eisenstein's Criterion}
+Here is Eisenstein's criterion.
+\begin{proposition}[Eisenstein]
+	Fix $f\in\ZZ[x]$ given by
+	\[f(x)=\sum_{k=0}^na_kx^k.\]
+	If prime $p$ divides all $a_\bullet$ except $a_n,$ and $p^2\nmid a_0,$ then $f$ is irreducible in $\QQ[x].$
+\end{proposition}
+\begin{remark}
+	Apparently everyone remembers this from undergrad.
+\end{remark}
+\begin{remark}[Nir]
+	Recalling from our previous work, we note that we need $c(f)=1$ in order to be sure $f$ is irreducible in $\ZZ[x].$ As a counterexample, $3x+6$ is not irreducible in $\ZZ[x]$ even though it satisfies Eisenstein's criterion for $p=2.$
+\end{remark}
+\begin{proof}
+	The idea is to take $f(x)=g(x)h(x)$ and eventually reach $p\mid a_n.$ Indeed, we proceed by contraposition, supposing that $f=gh$ is a nontrivial factorization in $\QQ[x]$ with $p\mid a_k$ with $0\le k<n$ and $p^2\nmid a_0.$ Then we claim that $p\mid a_n.$
+	
+	By using the typical content tricks, we can force $c(f)=1$ so that any nontrivial factorization $f=gh$ can be forced to have $g,h\in\ZZ[x]$ by the typical content tricks. Now set
+	\[g(x)=\sum_{k=0}^{\deg g} b_kx^k\qquad\text{and}\qquad h(x)=\sum_{\ell=0}^{\deg h} c_\ell x^\ell.\]
+	By checking the constant term, we see that $p\mid b_0c_0,$ so $p\mid b_0$ or $p\mid c_0.$ However, $p^2\nmid b_0c_0=a_0,$ so $p$ cannot divide both. So without loss of generality Then without loss of generality $p\mid b_0$ and $p\nmid c_0.$
+	
+	Now we claim that $p\mid b_m$ for each $m\le\deg g$ by induction, where we have already done our base case. Indeed, if $p\mid b_k$ for $k<m,$ then we see look at
+	\[a_m=\sum_{k+\ell=m}b_kc_\ell,\]
+	which reduces to $b_mc_0\equiv0\pmod p$; in particular, $p\mid a_m$ because $m\le\deg g<\deg f.$ But now $p\nmid c_0$ shows $p\mid b_m,$ as needed.
+
+	So to finish, we note that $p\mid g$ as a polynomial, so it follows $p\mid f,$ implying that $p\mid a_n.$ This finishes the proof.
+\end{proof}
+Here is the standard example of Eisenstein's criterion.
+\begin{example}
+	We show that $\Phi_p(x):=\frac{x^p}{x-1}=1+\cdots+x^{p-1}$ is irreducible. The trick is to plug in $x\mapsto x+1,$ for nontrivial factorizations of $\Phi_p(x)$ an be turned into nontrivial factorizations of $\Phi_p(x+1).$ Well, we can evaluate
+	\[\Phi_p(x+1)=\frac{(x+1)^p-1}{(x+1)-1}=\frac1x\left((x+1)^p-1\right)=\sum_{k=1}^p\binom pkx^{k-1}\]
+	by the binomial theorem.
+	
+	We now check Eisenstein's criterion using $p$ as our prime. The leading term is $x^{p-1},$ which is indeed not divisible by $p.$ The middle terms have coefficients of $\binom pk=\frac{p!}{k!(p-k)!}$ where $0<k<p,$ so they are all divisible by $p$ because the numerator has $p$ while the denominator does not. And lastly, the constant term is $\binom p1=p,$ so it is not divisible by $p.$
+\end{example}
+\begin{example}
+	Fix $n$ a positive integer. We can also check that $\Phi_{p^n}(x):=\left(x^{p^n}-1\right)/\left(x^{p^{n-1}}-1\right)=\sum_{k=0}^{p-1}x^{p^{n-1}k}$ is also irreducible using a similar trick. The idea is that
+	\[x^{p^n}-1\equiv\left(x^{p^{n-1}}-1\right)^p\pmod p\]
+	by the binomial theorem, so it follows
+	\[\Phi_{p^n}(x)=\frac{x^{p^n}-1}{x^{p^{n-1}}-1}\equiv\left(x^{p^{n-1}}-1\right)^{p-1}\pmod p.\]
+	Again using the binomial theorem, we have
+	\[\Phi_{p^n}(x)\equiv(x-1)^{p^{n-1}(p-1)}\pmod p.\]
+	It follows that $\Phi_{p^n}(x+1)\equiv x^{p^{n-1}(p-1)}\pmod p,$ so all terms except for the leading term of $\Phi_{p^n}(x+1).$ are divisible by $p.$ Further, the constant term of $\Phi_{p^n}(x+1)$ is $\Phi_{p^n}(1)=p$ and notably not divisible by $p^2.$ So we are done by Eisenstein's criterion on $p.$
+\end{example}
+\begin{remark}
+	The reason why Eisenstein's criterion works is roughly speaking due to totally ramified primes of $\QQ.$ For example, this works for $\Phi_p(x)$ as above because $(p)$ is totally ramified in $\QQ(\zeta_p).$
+\end{remark}
+
+\subsubsection{Intermission: Aurifeuillian Factorization}
+Before continuing, we remark that
+\[x^4+4a^4\]
+for some fixed $a\in\ZZ$ looks irreducible but isn't. Namely,
+\[x^4+4a^4=\left(x^4+4a^2x^2+4a^4\right)-(2ax)^2=\left(x^2+2xa+2a^2\right)\left(x^2-2xa+2a^2\right)\]
+by using the difference of two squares factorization. This is the Aurifeuillian factorization.
+\begin{remark}
+	In general, sums of monomials are potentially tricky. There is a page on Wikipedia for other such factorizations.
+\end{remark}
+\begin{example}
+	The number $n^4+4^n$ is never prime for $n>1.$ If $n$ is even, then $n^4+4^n$ is even. Otherwise, we take $n=2m+1$ so that we can write
+	\[n^4+4^n=n^4+4\cdot\left(2^m\right)^4=\left(n^2+2^{m+1}n+2^{2m+1}\right)\left(n^2-2^{m+1}n+2^{2m+1}\right).\]
+	It remains to show that each term is bigger than $1.$ Well,
+	\[n^2\pm2^{m+1}n+2^{2m+1}=\left(n\pm2^m\right)^2+2^{2m}\]
+	after some rearranging, and surely $2^{2m}>1$ because $m\ge1$ from $n\ge3.$
+\end{example}
+\begin{example}
+	Factoring the number $2^{58}+1$ was hard, as done by Laundry in 1869. But in 1871, Aurifeuille showed that the factorization is trivial because this is
+	\[2^{58}+1=1^4+4\left(2^{14}\right)^4.\]
+\end{example}
+
+\subsubsection{Rational Root Theorem}
+Let's continue discussing our polynomial factorization. We can also check for rational roots in hopes of finding a linear factor; we have the following two statements.
+\begin{proposition} \label{prop:rrt}
+	Fix
+	\[f(x)=\sum_{k=0}^{\deg f}a_kx^k\in\ZZ[x].\]
+	If $(ax+b)\mid f(x),$ then $a\mid a_{\deg f}$ and $b\mid a_0.$
+\end{proposition}
+\begin{proof}
+	Write
+	\[f(x)=(ax+b)\sum_{k=0}^{\deg f-1} b_kx^k,\]
+	where the $\deg f-1$ is by degree arguments. Then $a_0=bb_0$ and $a_{\deg f}=ab_{\deg f-1},$ which is what we wanted.
+\end{proof}
+\begin{proposition} \label{prop:evalrrt}
+	Fix $f(x)\in\ZZ[x].$ Then, given $a,b\in\ZZ$ with $\gcd(a,b)=1,$ we have $(ax+b)\mid f(x)$ if and only if $f(-b/a)=0.$
+\end{proposition}
+\begin{proof}
+	In one direction, if $(ax+b)\mid f(x),$ then write $f(x)=(ax+b)g(x)$ for $g\in\ZZ[x].$ Then $f\left(-\frac ba\right)=0\cdot g\left(-\frac ba\right)=0,$ which is what we wanted.
+
+	The other direction is harder. The point is that $c(ax+b)=1.$ Without loss of generality, take $f$ of content $1,$ for this does not change $f(-b/a)=0,$ and $(ax+b)\mid f(x)/c(f)$ implies $(ax+b)\mid f(x).$ Certainly $x+\frac ba\mid f(x)$ in $\QQ[x]$ because $-\frac ba$ is a root of $f$ in $\QQ[x],$ so it follows $ax+b\mid f(x)$ in $\QQ[x].$ So we get some $g(x)\in\QQ[x]$ such that
+	\[f(x)=(ax+b)g(x).\]
+	As usual, we can find some $q\in\QQ$ such that $qg\in\ZZ[x]$ with content $1,$ but then
+	\[(qf)(x)=(ax+b)(qg)(x)\in\ZZ[x].\]
+	But now \autoref{lem:technicalgauss} lets us conclude that $q\in\ZZ^\times,$ so $g=q^{-1}\cdot qg\in\ZZ[x],$ which finishes. 
+\end{proof}
+So the combination of these two give us a viable way to check for linear factors: create candidates by using \autoref{prop:rrt}, and then test the candidates using \autoref{prop:evalrrt}.
+
+This can actually be used to test irreducibility of polynomials of degree at most three can be because degree-three polynomials must factor with some linear term (by degree arguments) if they factor nontrivially at all. However, things become worse with higher degrees because we must take into account quadratic factors and so on.
+\begin{example}
+	The polynomial $x^3-3x+1$ is irreducible. Namely, if it were to factor, it would have a linear factor, so it would have a rational root, but the only candidates are $\pm1,$ which are not roots because $1$ gives $-1,$ and $-1$ gives $1.$
+\end{example}
+\begin{remark}
+	The roots of $f(x):=x^3-3x+1$ are in fact
+	\[2\cos\left(\frac{2\pi}9\right),\qquad2\cos\left(\frac{4\pi}9\right),\qquad2\cos\left(\frac{8\pi}9\right).\]
+	Indeed, the point is that $f(2x)/2=4x^3-3x+\frac12,$ which resembles the triple angle formula: we have
+	\[f(2\cos\theta)=4\cos^3\theta-3\cos\theta+\frac12=\cos3\theta+\frac12,\]
+	so we want $\theta$ with $\cos3\theta=-\frac12$; these exactly give the roots. Anyways, the roots of $f(x)$ come up when showing that the $60^\circ$ angle cannot be trisected using ruler and compass, for then we could construct a root of $x^3-3x+1.$
+\end{remark}
+\begin{remark}
+	Ruler and compass constructions Professor Borcherds might mention again for at most two seconds. It is much easier to trisect an angle using a protractor.
+\end{remark}
+
+\subsubsection{Berlekamp's Algorithm}
+Lastly, let's outline the ideas for Berlekamp's algorithm, which works at reasonable speed for factoring in $\FF_p[x].$ Fix $f\in\FF_p[x],$ and we note that we compute $\gcd(f,g)$ somewhat efficiently by Euclidean division.
+
+The key point is that
+\[\prod_{\substack{\pi\text{ monic, irred.}\\\deg\pi=1}}\pi=\prod_{k\in\FF_p}(x-k)=x^p-x,\]
+so $\gcd\left(f,x^p-x\right)$ will quickly check if $f$ has any linear factors. More generally, it is a result from the theory of finite fields that
+\[\prod_{\substack{\pi\text{ monic, irred.}\\\deg\pi\mid d}}\pi=x^{p^d}-x.\]
+For example, the factors on the left-hand side are coprime, and each divides into $x^{p^d}-x$ because the roots of any polynomial on the left-hand side will be inside of $\FF_{p^d},$ where all elements satisfy $x^{p^d}-x=0.$
+
+Anyways, the point is that we can check $f$ for having any irreducible factor of degree dividing into $d$ by computing $\gcd\left(f,x^{p^d}-x\right).$ By looping over the possible $d,$ this is able to quickly check if $f$ is irreducible, provided we can compute these $\gcd$s efficiently.
+
+But how do we compute $\gcd\left(f,x^{p^d}-x\right)$ quickly? For example, large primes $p$ might make $x^{p^d}-x$ quite large. Well, the idea is to work in $\ZZ[x]/(f),$ and then we are able to evaluate
+\[x^{p^d}\pmod{f(x)}\]
+via modular exponentiation by repeated squaring! So this reduces the computation of $\gcd\left(f,x^{p^d}-x\right)$ down to a $\gcd$ where both terms have degree at most $\deg f,$ which is about the best we could hope for. From here, Euclidean division is fast enough for our purposes.
+\begin{remark}[Nir]
+	Berlekamp's algorithm is actually for factoring polynomials in $\FF_p[x].$ In short, I am under the impression that careful choice of $g$ is able to not just tell us what degree the irreducibles dividing into $f$ are but also closer information about the irreducible.
+\end{remark}

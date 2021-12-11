@@ -1,0 +1,923 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+Overhead, without any fuss, the stars were going out.
+
+\subsection{Trace Form}
+Last lecture we had brought up the symmetric bilinear form
+\[\langle\alpha,\beta\rangle:=\op{T}(\alpha\beta)\]
+for any finite field extension $L/K.$ In particular, last time we quickly checked that $\langle\cdot,\cdot\rangle$ is in fact a symmetric bilinear form.
+
+While we're here, we bring up the following warning.
+\begin{warn}
+	If $L/K$ has degree $2,$ then we have the two natural quadratic forms $\alpha\mapsto\op N(\alpha)$ and $\alpha\mapsto\op T\left(\alpha^2\right).$
+\end{warn}
+We have not defined what a quadratic form,\footnote{One possible definition is that a function $q:V\to k$ is a quadratic form if and only if $q(cv)=c^2q(v)$ for $c\in k$ and $v\in V$ and $\langle v,w\rangle:=q(v+w)-q(v)-q(w)$ is a symmetric bilinear form.} but for those who do know, it might be somewhat concerning that there need not be an obviously ``best'' quadratic form for a field extension.
+
+Anyways, we are interested in when our trace form is non-degenerate.
+\begin{definition}[Nondegenerate]
+	A bilinear form $\langle\cdot,\cdot\rangle$ is \textit{nondegenerate} if and only if $\langle x,y\rangle=0$ for all $y$ implies $x=0.$ In other words, for each $x\ne0,$ there exists $y\ne0$ such that $\langle x,y\rangle\ne0.$
+\end{definition}
+We note that our trace form $\langle\cdot,\cdot\rangle$ will be nondegenerate if and only if there exists $\alpha\in L$ such that $\op T(\alpha)\ne0.$ Certainly if such an $\langle\cdot,\cdot\rangle$ is nondegenerate, then $1\ne0$ promises there is some $\alpha$ such that
+\[\op T(\alpha)=\langle1,\alpha\rangle\ne0.\]
+Conversely, if there is some $\alpha$ with $\op T(\alpha)\ne0,$ then for any $x\ne0,$ we see that
+\[\langle x,\alpha/x\rangle=\op T(x\cdot\alpha/x)=\op T(\alpha)\ne0.\]
+So this verifies that $\langle\cdot,\cdot\rangle$ is nondegenerate.
+
+It is tempting to believe that $\langle\cdot,\cdot\rangle$ is always nontrivial because
+\[\op T^L_K(1)=[L:K]\cdot1=[L:K]\]
+by \autoref{prop:computenormtrace} because $1\in K.$ However, $\op T^L_K$ outputs into $K,$ so we still need to check if $[L:K]$ is nonzero in $K,$ so $1$ will work to prove that $\langle\cdot,\cdot\rangle$ is nondegenerate only when $\op{char}K\nmid[L:K].$
+
+Regardless, it looks like $\langle\cdot,\cdot\rangle$ is nondegenerate most of the time. However, it is not only nondegenerate.
+\begin{ex}
+	Fix $p$ a prime and $L=\FF_p(t^p)$ with $K=\FF_p(t)$ so that $L/K$ is not a separable extension. Then the trace is $0$ on $L.$ The reasoning for this example will generalize to arbitrary inseparable extensions, so we will just show the general case below.
+\end{ex}
+As alluded to above, we do have the following criteria for being nondegenerate.
+\begin{theorem} \label{thm:nondegtrace}
+	Fix $L/K$ a finite field extension. Then there exists $\alpha\in L$ such that $\op T(\alpha)\ne0$ if and only if $L/K$ is separable. In particular, $\langle\cdot,\cdot\rangle$ is nondegenerate if and only if $L/K$ is separable.
+\end{theorem}
+We divide this proof into two pieces.
+\begin{proof}[Proof of the backwards direction in \autoref{thm:nondegtrace}]
+	Fix $L/K$ separable. Most of the work in the proof will be done assuming that $L/K$ is Galois, and we will go back at the end and do this for general separable extensions. So for now fix $G:=\op{Gal}(L/K).$
+
+	Namely, we want to find some $\alpha\in L$ such that $\op T(\alpha)\ne0.$ But by \autoref{lem:galoisnormtrace}, we know that
+	\[\op T(\alpha)=\sum_{\sigma\in G}\sigma\alpha.\]
+	Having $\op T(\alpha)=0$ always would imply that $\sum_\sigma\sigma=0,$ which would violate \autoref{lem:linindauto} because this provides a nontrivial relation among distinct automorphisms, finishing immediately. However, while we're here, we note that we can generalize \autoref{lem:linindauto} in the following way.
+	\begin{lemma}[Artin]
+		Fix $L$ a field and $M$ a monoid. Further, pick up some finite set of homomorphisms $S\subseteq\op{Hom}(M,L^\times).$ Then the set $S$ is $L$-linearly independent.
+	\end{lemma}
+	\begin{proof}
+		We essentially redo the proof from \autoref{lem:linindauto}. Suppose for the sake of contradiction that there is a nontrivial relation involving the elements of $S.$ This means we can find a nontrivial relation
+		\[\sum_{k=1}^ma_k\sigma_k=0,\tag{$*$}\]
+		where $m$ is chosen to be minimal and $\{\sigma_k\}_{k=1}^m\subseteq S.$ For example, this implies that $a_k\ne0$ for each $k$ because then we could remove the term $a_k\sigma_k$ to get a smaller relation.
+		
+		By dividing out $(*)$ by $a_1,$ we may assume that $a_1=1.$ Now, $\sigma_1\ne\sigma_2,$ so there exists some $h$ such that $\sigma_1(h)\ne\sigma_2(h),$ so plugging in $gh$ into $(*)$ gives
+		\[\sigma_1(h)\cdot\sigma_1(g)+\sum_{k=2}^ma_k\sigma_k(h)\cdot\sigma_k(g)=0\]
+		for each $g\in M.$ But multiplying $(*)$ through by $\sigma_1(h)$ gives
+		\[\sigma_1(h)\cdot\sigma_1(g)+\sum_{k=2}^ma_k\sigma_1(h)\cdot\sigma_k(g)=0\]
+		for each $g\in M.$ Subtracting our two equations, we see that
+		\[\sum_{k=2}^ma_k(\sigma_k(h)-\sigma_1(h))\sigma_k=0,\]
+		which is a nontrivial relation because $a_2(\sigma_2(h)-\sigma_1(h))\ne0.$ But this is a strictly smaller nontrivial relation than our supposed smallest one, so we have our contradiction.
+	\end{proof}
+	We now apply the lemma to our case. Here we find that the automorphisms of $G$ are homomorphisms $L^\times\to L^\times,$ so they are $L$-linearly independent, so we must have
+	\[\op T=\sum_{\sigma\in G}\sigma\ne0.\]
+	In particular, there must exist some $\alpha$ such that $\op T(\alpha)\ne0,$ which is what we wanted.
+
+	We now turn to the general case. To reduce to the Galois case, we have the following lemma.
+	\begin{lemma}
+		Fix $L/K$ a separable field extension. Then there exists a field $M\supseteq L$ such that $M/K$ is a Galois extension. If $L/K$ is finite, then we may assume $M/K$ is finite.
+	\end{lemma}
+	\begin{proof}
+		Fix $L/K$ generated by some separable elements $S\subseteq L.$ Then, for each $\alpha\in S,$ define $f_\alpha\in K[X]$ to be the monic irreducible polynomial for $\alpha.$ Then we define $M$ to be the splitting field of all these polynomials
+		\[\{f_\alpha:\alpha\in S\}.\]
+		We see that $M$ is the splitting field of some set of polynomials, so $M/K$ is normal. Additionally, $M$ will be generated by the roots of these $f_\alpha,$ which will all be separable elements because $f_\alpha$ is separable. So $M/K$ is a separable extension, so $M/K$ is Galois.
+
+		Now, when $L/K$ is a finite extension, we may assume that $S$ is finite (for example, take a basis for $L$ as a $K$-vector space), so there are only finitely many polynomials, so $M/K$ will be finite because each polynomial can only add finitely many degrees.
+	\end{proof}
+	So we may extend $L/K$ to a Galois extension $M/K,$ reducing to the Galois case. Namely, our work above promises some $\alpha\in M$ such that $\op T^M_K(\alpha)\ne0.$ To finish, we pick up the following tower law, which generalizes \autoref{prop:babytowerlaw}.
+	\begin{lemma}[Trace tower law] \label{lem:tracetower}
+		Fix $K\subseteq L\subseteq M$ a chain of finite separable field extensions. Then $\op T^M_K=\op T^L_K\circ\op T^M_L.$
+	\end{lemma}
+	\begin{proof}
+		Extend $M/K$ to a finite Galois extension $N/K.$ Further, let $\{\sigma_k\}_{k=1}^m$ be the embeddings $L\into\overline K$ fixing $L$ and $\{\tau_\ell\}_{\ell=1}^n$ be the embeddings $M\into\overline L$ fixing $L.$ Note $m=[L:K]$ and $n=[M:L].$
+		
+		Note that we can extend each embedding $\sigma_\bullet:L\into\overline K$ to some fixed embedding $\sigma_\bullet:N\into\overline K,$ but now because $N/K$ is normal, we see that $\sigma_\bullet\in\op{Gal}(N/K).$ In the same way we can extend each embedding $\tau_\bullet:M\into\overline L$ to an automorphism $\tau_\bullet\in\op{Gal}(N/L).$
+
+		Now, main technical claim is that
+		\[(k,\ell)\mapsto\sigma_k\tau_\ell|_M\]
+		is an injection; here the restriction to $M$ makes $\sigma_k\tau_\ell$ an embedding $M\into\overline K$ fixing $K.$ (The composition here is legal because we lifted these to elements of $\op{Gal}(N/K).$) Indeed, suppose that $\sigma_{k_1}\tau_{\ell_1}|_M=\sigma_{k_2}\tau_{\ell_2}|_M.$ Then we see that
+		\[\sigma_{k_2}^{-1}\sigma_{k_1}|
+		_M=\tau_{\ell_2}\tau_{\ell_1}^{-1}|_M.\]
+		Now, the right-hand side fixes $L,$ so $\sigma_{k_2}^{-1}\sigma_{k_1}|_M$ will also have to fix $L.$ So it follows that
+		\[\sigma_{k_1}|_L=\sigma_{k_2}|_L,\]
+		so because we lifted the $\sigma_\bullet$ from embeddings $L\into\overline K,$ it follows that $\sigma_{k_1}=\sigma_{k_2}.$ From this we get that $\tau_{\ell_1}=\tau_{\ell_2}$ as well because we lifted these from embeddings $M\into\overline L.$
+
+		So because $(k,\ell)\mapsto\sigma_k\tau_\ell$ is an injection, the fact that there are $[L:K]$ of the $\sigma_\bullet$ and $[M:L]$ of the $\tau_\bullet,$ we see that we have found $[M:K]$ distinct embeddings $M\into\overline K$f fixing $K,$ so this must be all of them.
+		
+		Thus, we find, for any $\alpha\in M,$
+		\[\op T^M_K(\alpha)=\sum_{k=1}^m\sum_{\ell=1}^n(\sigma_k\tau_\ell)(\alpha).\]
+		But this summation is also equal to
+		\[\op T^L_K\left(\op T^M_L(\alpha)\right)=\sum_{k=1}^m\sigma\left(\sum_{\ell=1}^n\tau_\ell(\alpha)\right)\]
+		after distributing. So indeed, $T^M_K=\op T^L_K\circ\op T^M_L.$
+	\end{proof}
+	\begin{remark}[Nir]
+		The tower law holds for the norm by using the same argument but placing the sums at the end with products. There is also an analogous statement for inseparable extensions, but I would rather avoid inseparable extensions as much as possible.
+	\end{remark}
+	The point of the tower law is that we see $\op T^M_L(\alpha)\in L$ satisfies
+	\[\op T^L_K\left(\op T^M_L(\alpha)\right)=\op T^M_K(\alpha)\ne0,\]
+	so we have indeed found an element of $L$ with nonzero trace. This finishes the proof of the backwards direction.
+\end{proof}
+\begin{proof}[Proof of the forwards direction in \autoref{thm:nondegtrace}]
+	We show the other direction by contraposition: take $L/K$ inseparable, and we show that $\op T(\alpha)=0$ for each $\alpha\in L.$ We need to know something about inseparable extensions, so we show the following.
+	\begin{lemma}
+		Fix $L/K$ an extension and $f(X)\in K[X]$ an inseparable, irreducible polynomial. Then there exists $g(X)\in\overline K[X]$ such that $f(X)=g(X)^p,$ where $p=\op{char}K.$
+	\end{lemma}
+	We remark that we do have $p>0$ above because all extensions are separable in characteristic $0$ by the derivative trick.
+	\begin{proof}
+		We see that $f(X)$ is irreducible and has a double root at some $\alpha\in L.$ This means that $f(\alpha)=0$ and $f'(\alpha)=0,$ so
+		\[(X-\alpha)\mid\gcd(f(X),f'(X)).\]
+		If $f'(X)\ne0,$ then we see that $1=\deg(X-\alpha)\le\deg\gcd(f(X),f'(X))<\deg f(X)$ while $\gcd(f(X),f'(X))\mid f(X),$ which violates $f$ being irreducible. So we must have $f'(X)=0.$
+
+		But this implies that each nonzero monomial $a_kX^k$ of $f(X)$ must have $ka_kX^k=0$ in $K,$ so $ka_k$ is $0$ in $K,$ so $k$ is $0$ in $K,$ so $\op{char}K\mid k.$ In other words, the only nonzero monomials of $f(X)$ will have degree divisible by $p,$ so we may write
+		\[f(X)=\sum_{k=0}^na_kX^{kp}\]
+		for some coefficients $a_k\in K.$ Finding some root $a_k^{1/p}\in\overline K,$ we see that
+		\[f(X)=\sum_{k=0}^n\left(a_k^{1/p}X^k\right)^p=\left(\sum_{k=0}^na_k^{1/p}X^k\right)^p,\]
+		which gives what we wanted.
+	\end{proof}
+	We now attack the result directly. Fix some $\alpha\in L.$ Then we are interested in studying
+	\[\op T^L_K(\alpha)=[L:K(\alpha)]\cdot\op T_K^{K(\alpha)}(\alpha).\]
+	Namely, we are working with the following tower of fields.
+	% https://q.uiver.app/?q=WzAsMyxbMCwyLCJLIl0sWzAsMSwiSyhcXGFscGhhKSJdLFswLDAsIkwiXSxbMiwxLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMCwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+	\[\begin{tikzcd}
+		L \\
+		{K(\alpha)} \\
+		K
+		\arrow[no head, from=1-1, to=2-1]
+		\arrow[no head, from=2-1, to=3-1]
+	\end{tikzcd}\]
+	Note that if both $L/K(\alpha)$ and $K(\alpha)/K$ are separable extensions, then it follows that $L/K$ is separable,\footnote{The main point is that separability is equivalent to any embedding $K\into\overline K$ having $[L:K]$ extensions to $L\into\overline K.$ So $L/K$ and $M/L$ separable lets us extend each of the $[L:K]$ embeddings $L\into\overline K=\overline L$ to $[M:L][L:K]=[M:K]$ embeddings $M\into\overline L=\overline K.$ So $M/K$ is separable.} which cannot be. So we can do casework on which extension in inseparable.
+	\begin{itemize}
+		\item If $L/K(\alpha)$ is inseparable, then fix $\beta$ some inseparable element with $f(X)$ its minimal polynomial. We note that $[K(\alpha)(\beta):K]=\deg f,$ but by the lemma, we see $p\mid\deg f,$ so $p$ divides $[K(\alpha)(\beta):K]$ and hence $[L:K].$ So it follows
+		\[[L:K(\alpha)]\cdot\op T_K^{K(\alpha)}(\alpha)=0.\]
+		\item If $K(\alpha)/K$ is inseparable, then we note $\alpha$ must be inseparable. So fix $f(X)$ its minimal polynomial and actually find $g(X)\in\overline K[X]$ such that $f=g^p$ by the lemma. Factoring $g$ in $\overline K[X],$ we can write
+		\[g(X)=\prod_{k=1}^n(X-\alpha_k)\]
+		for some elements $\alpha_\bullet\in\overline K,$ so it follows that
+		\[f(X)=\prod_{k=1}^n(X-\alpha_k)^p.\]
+		Thus,
+		\[\op T^{K(\alpha)}_K(\alpha)=\sum_{k=1}^np\alpha_k=0,\]
+		so we still have $\op T^L_K(\alpha)=0.$
+	\end{itemize}
+	Combining the above two cases finishes.
+\end{proof}
+
+\subsection{Discriminant: Theory}
+The trace form gives rise the following invariant.
+\begin{definition}[Discriminant]
+	The \textit{discriminant} of a bilinear form $\langle\cdot,\cdot\rangle$ on a finite-dimensional $k$-vector space $V$ is defined by taking a basis $\{v_k\}_{k=1}^n$ for $V$ and computing
+	\[\det\begin{bmatrix}
+		\langle v_1,v_1\rangle & \cdots & \langle v_1,v_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle v_n,v_1\rangle & \cdots & \langle v_n,v_n\rangle
+	\end{bmatrix}\]
+\end{definition}
+Of course, changing the basis by some change-of-basis matrix $A$ will change the discriminant, but only by a controlled factor of $(\det A)^2.$ Rigorously, we have the following.
+\begin{lemma}
+	The discriminant of a bilinear form $\langle\cdot,\cdot\rangle$ on a finite-dimensional $k$-vector space $V$ is a well-defined element of $k/k^{\times2}.$
+\end{lemma}
+Note that we are allowing the discriminant to be zero, but zero belongs to its own coset.
+\begin{proof}
+	Fix two bases $\{v_i\}_{i=1}^n$ and $\{w_j\}_{j=1}^n.$ We need to show that
+	\[\det\begin{bmatrix}
+		\langle v_1,v_1\rangle & \cdots & \langle v_1,v_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle v_n,v_1\rangle & \cdots & \langle v_n,v_n\rangle
+	\end{bmatrix}\qquad\det\begin{bmatrix}
+		\langle w_1,w_1\rangle & \cdots & \langle w_1,w_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle w_n,w_1\rangle & \cdots & \langle w_n,w_n\rangle
+	\end{bmatrix}\]
+	belong to the same coset of $k/k^{\times2}.$ Well, expanding the basis $w_j$ along the basis $v_i,$ we are promised constants $a_{ij}\in k$ such that
+	\[w_j=\sum_{i=1}^na_{ij}v_i.\]
+	Accordingly, we define the matrix
+	\[A:=\begin{bmatrix}
+		a_{11} & \cdots & a_{1n} \\
+		\vdots & \ddots & \vdots \\
+		a_{n1} & \cdots & a_{nn}
+	\end{bmatrix}.\]
+	This lets us expand
+	\[\langle w_{j_1},w_{j_2}\rangle=\left\langle\sum_{i_1=1}^na_{i_1j_1}v_{i_1},\sum_{i_2=1}^na_{i_2j_2}v_{i_2}\right\rangle=\sum_{i_1,i_2=1}^na_{i_1j_1}\langle v_{i_1},v_{i_2}\rangle a_{i_2j_2}=\sum_{i_1,i_2}^n(A^\intercal)_{j_1i_1}\langle v_{i_1},v_{i_2}\rangle A_{i_2j_2}.\]
+	It follows that
+	\[\begin{bmatrix}
+		\langle w_1,w_1\rangle & \cdots & \langle w_1,w_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle w_n,w_1\rangle & \cdots & \langle w_n,w_n\rangle
+	\end{bmatrix}=A^\intercal\begin{bmatrix}
+		\langle v_1,v_1\rangle & \cdots & \langle v_1,v_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle v_n,v_1\rangle & \cdots & \langle v_n,v_n\rangle
+	\end{bmatrix}A,\]
+	so
+	\[\det\begin{bmatrix}
+		\langle w_1,w_1\rangle & \cdots & \langle w_1,w_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle w_n,w_1\rangle & \cdots & \langle w_n,w_n\rangle
+	\end{bmatrix}=(\det A)^2\det\begin{bmatrix}
+		\langle v_1,v_1\rangle & \cdots & \langle v_1,v_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle v_n,v_1\rangle & \cdots & \langle v_n,v_n\rangle
+	\end{bmatrix}.\]
+	Noting that $\det A\ne0$ because it is a change of basis matrix (the columns are linearly independent because the $w_\bullet$ are linearly independent), we are done.
+\end{proof}
+We also note that all of our work showing that the trace form is nondegenerate is not in vain.
+\begin{lemma}
+	A bilinear form $\langle\cdot,\cdot\rangle$ on a finite-dimensional $k$-vector space $V$ is nondegenerate if and only if its discriminant is nonzero.
+\end{lemma}
+\begin{proof}
+	Fix a basis $\{v_i\}_{i=1}^n$ of $V.$ Then we see that
+	\[\det\begin{bmatrix}
+		\langle v_1,v_1\rangle & \cdots & \langle v_1,v_n\rangle \\
+		\vdots & \ddots & \vdots \\
+		\langle v_n,v_1\rangle & \cdots & \langle v_n,v_n\rangle
+	\end{bmatrix}=0\]
+	if and only if there is a linear relation among the columns. Namely, the discriminant is zero if and only if there are constants not all zero $\{a_i\}_{i=1}^n$ such that
+	\[\sum_{i=1}^na_i\langle v_i,v_j\rangle=0\]
+	for each $v_j.$ This is equivalent to having constants not all zero $\{a_i\}_{i=1}^n$ such that
+	\[\left\langle\sum_{i=1}^na_iv_i,v_j\right\rangle=0\]
+	for each $v_j.$ But because the $v_\bullet$ form a basis, this is equivalent to having some vector $v\ne0$ such that
+	\[\langle v,v_j\rangle=0\]
+	for each $v_j.$ (Having the constants $a_\bullet$ not all zero of course gives some $v\ne0,$ and conversely, some $v\ne0$ can be expanded along the basis $v_\bullet$ to give the constants $a_\bullet$ which cannot be all zero.) Continuing, having $v$ such that $\langle v,v_j\rangle=0$ for each $v_j$ implies that any vector $w=\sum_{i=1}^nb_iv_i\in V$ has
+	\[\langle v,w\rangle=\sum_{i=1}^nb_i\langle v,v_i\rangle=0.\]
+	And conversely, if $\langle v,w\rangle=0$ for each $w\in V,$ then $\langle v,v_j\rangle=0$ for each $v_j.$
+
+	Thus, the discriminant vanishes if and only if there is some $v\ne0$ such that $\langle v,w\rangle=0$ for each $w\in V,$ which is exactly the condition for $\langle\cdot,\cdot\rangle$ being degenerate.
+\end{proof}
+In particular, we showed that the trace form on $L/K$ is nondegenerate as long as $L/K$ is inseparable, so in these cases, we can compute the discriminant of the trace form and know that is is nonzero.
+
+\subsection{Discriminant: Computation}
+In practice, here is one way to compute the discriminant of a field extension.
+\begin{prop}
+	Fix $L/K$ a finite extension where $L=K(\alpha)$ for some $\alpha\in L.$ Then the discriminant of the trace form of $L/K$ is the discriminant of the monic minimal polynomial $f(X)\in K[X]$ for $\alpha.$
+\end{prop}
+\begin{proof}
+	This won't actually matter for the proof, but for psychological reasons, we note that $L/K$ being inseparable implies that the trace form is degenerate, so the discriminant of $L/K$ is $0.$ And $L/K$ being inseparable forces $\alpha$ to be inseparable, so the discriminant of $f$ vanishes.
+	
+	So now take $L/K$ separable, which will make the notation a bit easier later. Fix
+	\[f(X)=X^n+\sum_{k=0}^{n-1}a_kX^k\in K[X]\]
+	our monic irreducible polynomial for $\alpha$ over $K.$ The key to compute the discriminant will be to use the power basis
+	\[\left\{1,\alpha,\ldots,\alpha^{n-1}\right\}.\]
+	Namely, we want to compute the determinant of
+	\[\begin{bmatrix}
+		\op T(\alpha^0) & \op T(\alpha^1) & \cdots & \op T\left(\alpha^{n-1}\right) \\
+		\op T(\alpha^1) & \op T(\alpha^2) & \cdots & \op T\left(\alpha^n\right)\\
+		\vdots & \vdots & \ddots & \vdots \\
+		\op T\left(\alpha^{n-1}\right) & \op T\left(\alpha^n\right) & \cdots & \op T\left(\alpha^{2n-2}\right)
+	\end{bmatrix}.\]
+	For this, we set $\{\sigma_k\}_{k=1}^n$ our embeddings $L\into\overline K$ fixing $K.$ Because $L/K$ is separable, we are reassured $n=[L:K].$ In particular, fixing indices $i$ and $k,$
+	\[\op T\left(\alpha^{i+k}\right)=\sum_{j=1}^{n-1}\sigma_j(\alpha)^i\sigma_j(\alpha)^k.\]
+	But we can view this expansion as the matrix multiplication
+	\[\underbrace{\begin{bmatrix}
+		\sigma_1\alpha^0 & \cdots & \sigma_n\alpha^0 \\
+		\vdots & \ddots & \vdots \\
+		\sigma_1\alpha^{n-1} & \cdots & \sigma_n\alpha^{n-1}
+	\end{bmatrix}}_{M^\intercal}\underbrace{\begin{bmatrix}
+		\sigma_1\alpha^0 & \cdots & \sigma_1\alpha^{n-1} \\
+		\vdots & \ddots & \vdots \\
+		\sigma_n\alpha^0 & \cdots & \sigma_n\alpha^{n-1}
+	\end{bmatrix}}_M,\]
+	so we are interested in
+	\[\begin{bmatrix}
+		\op T(\alpha^0) & \op T(\alpha^1) & \cdots & \op T\left(\alpha^{n-1}\right) \\
+		\op T(\alpha^1) & \op T(\alpha^2) & \cdots & \op T\left(\alpha^n\right)\\
+		\vdots & \vdots & \ddots & \vdots \\
+		\op T\left(\alpha^{n-1}\right) & \op T\left(\alpha^n\right) & \cdots & \op T\left(\alpha^{2n-2}\right)
+	\end{bmatrix}=\det M^\intercal\cdot\det M=(\det M)^2.\]
+	But now we not see that $M$ is a ``Vandermonde determinant,'' for which we have the following theory.
+	\begin{lemma} \label{lem:vandermonde}
+		Working in the polynomial ring $\ZZ[X_0,\ldots,X_{n-1}],$ we have that
+		\[\det\begin{bmatrix}
+			X_0^0 & \cdots & X_0^{n-1} \\
+			\vdots & \ddots & \vdots \\
+			X_{n-1}^0 & \cdots & X_{n-1}^{n-1}
+		\end{bmatrix}=\prod_{0\le \ell<k<n}(X_k-X_\ell).\]
+	\end{lemma}
+	\begin{proof}
+		For brevity, let the determinant be $D\in\ZZ[X_0,\ldots,X_{n-1}].$
+		
+		Choosing distinct indices $X_k,X_\ell,$ we note that there is an evaluation sending $X_k$ to $X_\ell.$ But this makes the $X_k$ row equal to $X_\ell,$ so properties of the determinant implies that the entire determinant must vanish after doing this.
+	
+		So viewing the determinant a some giant polynomial where the variable $X_k,$ evaluating at $X_k=X_\ell$ for each $k\ne\ell$ gives the polynomial a root. It follows that\footnote{Formally, it is true that $f\in R[X]$ has $f(a)=0$ if and only if $X-a\mid f(X).$}
+		\[(X_k-X_\ell)\mid D\]
+		for each $k\ne\ell.$ But now we see that $(X_k-X_\ell)$ generates a prime ideal because these are the elements which vanish on setting $X_k=X_\ell,$ which is prime because polynomial rings over $\ZZ$ are integral domains.
+		
+		In particular, $X_k-X_\ell$ is irreducible, and because each of these are distinct irreducibles, we see that
+		\[\prod_{0\le \ell<k< n}(X_k-X_\ell)~\bigg|~D.\]
+		We now compare the total degrees and leading coefficients of both sides.
+		\begin{itemize}
+			\item By direct expansion, we see that
+			\[D=\sum_{\sigma\in\op{Sym}(\ZZ/n\ZZ)}(\op{sgn}\sigma)\prod_{k=0}^{n-1}X_k^{\sigma k}.\]
+			In particular, by nature of the sum on permutation, only $\sigma=\id$ will add to the
+			\[X_0^0X_1^1\cdots X_{n-1}^{n-1}\]
+			term, so this term will have coefficient $+1.$ Additionally, we note that the degree of any term in $D$ will be
+			\[\deg\prod_{k=0}^{n-1}X_k^{\sigma k}=\sum_{k=0}^{n-1}\sigma(k)=\sum_{k=0}^{n-1}k=\frac{n(n-1)}2,\]
+			for any $\sigma\in S_n.$
+			\item On the other hand, we note that the massive polynomial
+			\[\prod_{0\le \ell<k< n}(X_k-X_\ell)\]
+			is a product of $\binom n2=\frac{n(n-1)}2$ terms of degree $1,$ so the entire polynomial has degree $\frac{n(n-1)}2.$ Additionally, we claim that the coefficient of
+			\[X_0^0X_1^1\cdots X_{n-1}^{n-1}\]
+			is $+1.$ Indeed, the leading coefficient (under the lexicographic ordering) of the product
+			\[\prod_{0\le \ell<k< n}(X_k-X_\ell)\]
+			can be found by taking the leading coefficient of each of the factors \autoref{lem:multileadingcoef}. So we see that our leading coefficient is
+			\[\prod_{0\le \ell<k< n}X_k.\]
+			Here, each $X_k$ will appear $k$ times, so our leading coefficient is precisely $+1X_0^0X_1^1\cdots X_{n-1}^{n-1}.$
+		\end{itemize}
+		So to finish, we note that $D$ and the product have the same degree of $\frac{n(n-1)}2$ and have the same nonzero coefficient for $X_0^0X_1^1\cdots X_{n-1}^{n-1},$ so they must be the same polynomial because we already know that the product divides $D.$
+	\end{proof}
+	Thus, we see that
+	\[(\det M)^2=\prod_{1\le k<\ell\le n}(\sigma_k\alpha-\sigma_\ell\alpha)^2.\]
+	We now note that the $\sigma_\bullet\alpha$ will all be roots of $f,$ and they must all be distinct because $\sigma_k\alpha=\sigma_\ell\alpha$ implies that $\sigma_k=\sigma_\ell.$ So the $n$ values $\sigma_k\alpha$ will have to loop through all $\deg f$ distinct roots of $f.$ So the above product is indeed the discriminant of $f.$
+\end{proof}
+Noting that the discriminant $L/K$ only depends on data internal to the field extension, we see that it provides a fairly useful invariant, arguably the second most important after the degree.
+\begin{example}
+	Set $L_1=\QQ[X]/\left(X^3-X+1\right)$ and $L_2=\QQ[X]/\left(X^3+X+1\right).$ We can compute
+	\[\op{disc}L_1=\op{disc}\left(X^3-X+1\right)=-4(-1)^3-27=-23,\]
+	and
+	\[\op{disc}L_2=\op{disc}\left(X^3+X+1\right)=-4\cdot1^3-27=-31.\]
+	Now we see that $\op{disc}L_1/\op{disc}L_2$ are not a square in $\QQ,$ so these fields are not isomorphic.
+\end{example}
+In the case of algebraic number theory, the discriminant is even more important. We have been working with the discriminant up to a square in $K,$ but one can do better than this in the case of number fields.
+\begin{definition}[Discriminant, number fields]
+	Fix $K/\QQ$ a number field. Then the \textit{discriminant of $K/\QQ$} is the least possible (in terms of magnitude) discriminant of the trace form when we specifically choose a basis of algebraic integers.
+\end{definition}
+In particular, we note that the determinant computation for a basis $\{v_k\}_{k=1}^n$ of $K/\QQ$ will be
+\[\det\begin{bmatrix}
+	\op T(v_1v_1) & \cdots & \op T(v_1v_n) \\
+	\vdots & \ddots & \vdots \\
+	\op T(v_nv_1) & \cdots & \op T(v_nv_n)
+\end{bmatrix}\in\QQ,\]
+and when the $v_k$ are algebraic integers, we will have that the discriminant is an integer as well, so the discriminant is a rational integer and hence an integer. So it makes sense to define the discriminant as the least possible.
+\begin{remark}
+	There's a theorem due to Hermite which says that there are only finitely many algebraic number fields with a given discriminant, so the discriminant is a pretty good invariant.
+\end{remark}
+% Very quickly, we repeat the following warning.
+% \begin{warn}
+% 	If $L/K$ has degree $2,$ then we have the two quadratic forms $\alpha\mapsto\op N(\alpha)$ and $\alpha\mapsto\op T\left(\alpha^2\right).$
+% \end{warn}
+
+\subsection{Image of the Norm}
+Fix $L/K$ a finite extension. Number theorists are interested in the image of the norm map $\op N:L^\times\to K^\times.$
+\begin{example}
+	The image of $\op N^\CC_\RR:\CC^\times\to\RR^\times$ is $\RR_{>0},$ and in particular, $\RR^\times/\im\op N\cong\ZZ/2\ZZ.$ It is somewhat surprising that we are getting a finite quotient.
+\end{example}
+\begin{example}
+	The image of $\op N:\QQ(i)\to\QQ$ consists of all rationals which are the sum of two squares, which is a bit hard to classify. A little bit of elementary number theory is able to show that this image consists of all positive rationals $x$ such that $\nu_p(x)$ is even for each prime $p\equiv3\pmod4.$
+\end{example}
+However, we can at least gain some control in the easiest cases.
+\begin{exe}
+	The map $\op N:L^\times\to K^\times$ is onto when $L$ and $K$ are finite.
+\end{exe}
+\begin{proof}
+	Because $K$ is finite, define $K=\FF_q,$ where $q$ is some prime-power, and then we see that $L=\FF_{q^n}$ for some positive integer $n.$ Now, $\op{Gal}(L/K)$ is cyclic of order $n$ generated by the Frobenius automorphism $\sigma:\alpha\mapsto\alpha^q.$ So we find that
+	\[\op N(\alpha)=\prod_{\sigma\in\op{Gal}(L/K)}\sigma\alpha=\prod_{k=0}^{n-1}\sigma^k(\alpha)=\prod_{k=0}^{n-1}\alpha^{q^k}=\alpha^{\left(q^n-1\right)/(q-1)}.\]
+	We now finish with a size argument. Notice that $\ker\op N$ has at most $\frac{q^n-1}{q-1}$ elements because each element of the kernel will be a root of the polynomial
+	\[X^{\left(q^n-1\right)/(q-1)}-1=0.\]
+	But now we notice that $L$ has $q^n-1$ elements, and $K^\times$ has $q-1$ elements, so we can simply size bound by
+	\[\#L^\times=\#\im{\op N}\cdot\#\ker\op N\le\#K^\times\cdot\#\ker\op N\le(q-1)\cdot\frac{q^n-1}{q-1}=q^n-1=\#L^\times,\]
+	so equalities are forced. Namely, $\#\im\op N=\#K^\times,$ so $\im\op N=K^\times,$ finishing.
+\end{proof}
+
+\subsection{Solving a Cubic}
+Let's solve a cubic by radicals, for fun, though this is somewhat useless because we can well-approximate it other ways.
+\begin{exe}
+	We solve the cubic equation $f(X):=X^3+bX+c=X^3+X+1$ by radicals.
+\end{exe}
+\begin{proof}
+	We can check that the Galois group of $f$ is $S_3$ because we just showed that the discriminant of $f$ is $\Delta^2:=-4b^3-27c^2=-31\notin\QQ^{\times2}$ above. Regardless, we will most of the solution agnostic to $b$ and $c.$
+
+	Instead of solving $f$ over $\QQ,$ we start by throwing in all the roots of unity we could want. Because we will be making a chain from a group of order $6,$ the only possible quotients in the chain will have order $2$ or $3,$ so it suffices to include the square and cube roots of unity. So we set $\omega$ to be a primitive third root of unity and solve $f$ over $\QQ(\omega).$
+
+	As in our discussion of solving polynomials by radicals, we need a chain witnessing that $S_3$ is solvable, so we use
+	\[S_3\supseteq A_3\supseteq\langle\id\rangle.\]
+	By Galois theory, this will correspond to the chain of normal extensions
+	\[\QQ(\omega)\subseteq K\subseteq L,\]
+	where
+	\[\op{Gal}(K/\QQ(\omega))\cong S_3/A_3\cong\ZZ/2\ZZ\qquad\text{and}\qquad\op{Gal}(L/K)\cong A_2/\langle\id\rangle\cong\ZZ/3\ZZ.\]
+	In particular, these are all cyclic extensions, by our Kummer theory work, they will be generated by radicals, and in fact we can find these radicals by finding eigenvectors of the Galois groups.
+
+	We work these out one at a time.
+	\begin{listroman}
+		\item To start, we need to talk about $K,$ so we need to find an element fixed by $A_3=\langle(123)\rangle$ but not $S_3.$ Well, suppose that the roots of $f(X)$ are $\alpha,\beta,\gamma,$ and we would like an expression fixed by $A_3$ but not $S_3.$ For this, we use
+		\[\Delta:=(\alpha-\beta)(\beta-\gamma)(\gamma-\delta).\]
+		We see that the action of $A_3$ on $\Delta$ will consist of an even number of transpositions and hence an even number of signs, so $\Delta$ will be fixed by $A_3.$ But on the other hand, the transposition $(\alpha,\beta)$ sends $\Delta\mapsto-\Delta,$ so $\Delta$ is not fixed by $S_3.$
+		
+		Now, we see that $\Delta^2$ is the discriminant of $f,$ which we worked out as $\Delta^2=-31$ above. So we find that $K$ has the nontrivial element $\sqrt{-31},$ and this must fully generate because $K/\QQ(\omega)$ is quadratic. So
+		\[K=\QQ(\omega,\sqrt{-31}).\]
+
+		\item Next we need to find a generator of $L,$ where we know that $L/K$ is a cyclic extension of order $3.$ Namely, we want eigenvectors of our $A_3$-action of $L.$ Back in our work in Kummer theory, we found the eigenvectors
+		\[v+\omega^{-1}\sigma v+\omega^{-2}\sigma^2v,\]
+		for some $v\in L$ and $\sigma\in A_3.$ These will work for our purposes provided that we get out a nonzero eigenvector. With this in mind, we choose $v=\alpha$ and hope we get lucky. So we set
+		\[\begin{cases}
+			x := \alpha+\beta+\gamma, \\
+			y := \alpha+\omega^{-1}\beta+\omega^{-2}\gamma, \\
+			z := \alpha+\omega^{-2}\beta+\omega^{-1}\gamma,
+		\end{cases}\]
+		which are eigenvectors of the given type because $A_3$ cycles $\alpha,\beta,\gamma,$ meaning that there is $\sigma\in A_3$ with $\sigma=(\alpha,\beta,\gamma).$ Namely, we can see that $\sigma x=x$ and $\sigma y=\omega y$ and $\sigma z=\omega^2z.$
+	\end{listroman}
+	We now have enough tools to finish. We know that $x=0$ (by Vieta's formulae) and would like to find $y$ and $z$ explicitly. Because $y$ and $z$ are eigenvectors with eigenvalue a power of $\omega$ (by construction), we know $y^3,z^3\in L^{A_3}=K,$ so we will find $y^3$ and $z^3.$
+	
+	Now, we see that $(\beta,\gamma)$ sends $y$ to $z$ and so will send $y^3$ to $z^3.$ So the orbit of $y^3$ under $S_3$ is at least $\left\{y^3,z^3\right\},$ but because $y^3$ is fixed by $A_3,$ the orbit has size at most $2.$ So we see that $\left\{y^3,z^3\right\}$ is an orbit in $K/\QQ(\omega),$ so
+	\[y^3+z^3,\quad y^3z^3\in\QQ(\omega)\]
+	because these will both be fixed by all of $S_3.$ Using the fact that $\alpha+\beta+\gamma=0$ and the help of SageMath, we can compute
+	\[y^3+z^3=27\alpha\beta\gamma=-27c\qquad\text{and}\qquad yz=-3(\alpha\beta+\beta\gamma+\gamma\alpha)=-3b.\]
+	Thus, $y^3z^3=-27b^3,$ so $y^3$ and $z^3$ are the roots of $T^2+27cT-27b^3=0,$ which are
+	\[y^3,z^3=\frac{-27c\pm\sqrt{(-27c)^2-4\left(-27b^3\right)}}2=\frac{-27c\pm3\Delta i\sqrt3}2.\]
+	As a sanity-check, we do see that $y^3,z^3\in K=\QQ(\omega,\Delta),$ as predicted. Anyways, we can set (up to ordering of $\alpha,\beta,\gamma$),
+	\[y=\sqrt[3]{\frac{-27c+3\Delta\sqrt{-3}}2},\qquad\text{and}\qquad z=\sqrt[3]{\frac{-27c-3\Delta\sqrt{-3}}2}.\]
+	There are three possible cube roots for $y$ and $z,$ but we can choose compatible $y$ and $z$ by ensuring $yz=-3b.$ Being off by a factor of $\omega$ induces the transformation $y\mapsto y\omega^k$ and $z\mapsto z\omega^{-k},$ which will merely permute the roots $\{\alpha,\beta,\gamma\}$ in the definition of $y$ and $z,$ which is safe.
+
+	Anyways, we see that a linear-algebra inspired computation shows
+	\[\alpha=\frac{x+y+z}3,\qquad\beta=\frac{x+\omega y+\omega^2z}{3},\qquad\gamma=\frac{x+\omega^2y+\omega z}{3},\]
+	which upon seeing $x=0$ gives
+	\begin{align*}
+		\alpha &= \frac13\left(\sqrt[3]{\frac{-27c+3\Delta\sqrt{-3}}2}+\sqrt[3]{\frac{-27c-3\Delta\sqrt{-3}}2}\right) \\
+		\beta &= \frac13\left(\omega\sqrt[3]{\frac{-27c+3\Delta\sqrt{-3}}2}+\omega^2\sqrt[3]{\frac{-27c-3\Delta\sqrt{-3}}2}\right) \\
+		\gamma &= \frac13\left(\omega^2\sqrt[3]{\frac{-27c+3\Delta\sqrt{-3}}2}+\omega\sqrt[3]{\frac{-27c-3\Delta\sqrt{-3}}2}\right).
+	\end{align*}
+	Choosing the right cube roots for $y$ and $z$ does let us recover $\alpha\approx-0.682327$ and $\beta\approx0.341163+1.161541i$ and $\gamma\approx0.341163-1.161541i.$ So we are done.
+\end{proof}
+
+\subsection{Solving a Quartic}
+We can also do this for degree-$4.$ The solution in Wolfram Alpha took about a page, so we won't bother doing this fully explicitly, but we will sketch.
+\begin{exe}
+	We sketch how to solve the quartic
+	\[X^4+bX^2+cX+d=0.\]
+\end{exe}
+\begin{proof}
+	Our Galois group is at worst $S_4$ and certainly a subgroup of it, so we don't lose anything by forcing the Galois group to actually be $S_4.$ Well, we know that $S_4$ is solvable, for which we use the chain
+	\[S_4\supseteq A_4\supseteq(\ZZ/2\ZZ)^2\supseteq\langle\id\rangle.\]
+	Namely, if the Galois group is actually $G\subseteq S_4,$ then we merely have to intersect each of the above subgroups with $G$ to still have a chain witnessing the solvability of $G.$ To be explicit,
+	\[(\ZZ/2\ZZ)^2=\{\id,(12)(34),(13)(24),(14)(23)\}\]
+	is our subgroup of $A_4$ with index $3.$
+
+	But we note that $S_4/\left(\ZZ/2\ZZ\right)^2\cong S_3,$ so we should be able to reduce to the cubic case.\footnote{We have $S_3\cong S_4/\left(\ZZ/2\ZZ\right)^2$ because it has six elements and is not abelian because $(12)(13)=(132)$ and $(13)(12)=(123)$ are not in the same coset of $(\ZZ/2\ZZ)^2.$} Using our Kummer theory, we start by adding in all the roots of unity we could ever want---which are the roots of unity dividing the order of our quotient groups, namely $\{1,2,3,4\}.$ So we are looking at a chain of extensions
+	\[\QQ(i,\omega)\subseteq K\subseteq L\subseteq M,\]
+	where $\op{Gal}(L/\QQ(i,\omega))\cong S_3$ and $\op{Gal}(M/L)\cong(\ZZ/2\ZZ)^2.$ So we see that, indeed, $L/\QQ(i,\omega)$ should be the splitting field of a cubic by, say, finding a normal basis element. This is possible but quite painful.
+	\begin{remark}
+		One can try to do a similar thing to solve quintics, but the finest chain we can make is
+		\[S_5\supseteq A_5\supseteq\langle\id\rangle,\]
+		and undoing $A_5$ essentially requires a quintic.
+	\end{remark}
+	To find $L,$ we want to find expressions involving our roots $\alpha_1,\alpha_2,\alpha_3,\alpha_4$ which are fixed by $(\ZZ/2\ZZ)^2\subseteq S_4.$ Here, we let $S_4$ act on the roots by acting on the indices.
+	
+	Well, motivated by our Kummer theory, we look for eigenvectors of our elements in $(\ZZ/2\ZZ)^2,$ so we see that
+	\[z:=\alpha_1+\alpha_2-\alpha_3-\alpha_4\]
+	is fixed by $(12)(34)$ and is an eigenvector with the correct eigenvalue (of $-1$) by the $(13)(24)$ and $(14)(23),$ so this element will generate one of the quadratic subfields $M/L,$ and in particular its square will be in $L.$ Looking at the orbit of $z^2$ under $S_3,$ we find the elements
+	\[\begin{cases}
+		y_1:=(\alpha_1+\alpha_2-\alpha_3-\alpha_4)^2, \\
+		y_2:=(\alpha_1-\alpha_2+\alpha_3-\alpha_4)^2, \\
+		y_3:=(\alpha_1-\alpha_2-\alpha_3+\alpha_4)^2, \\
+	\end{cases}\]
+	which are all permuted by the Galois group $S_4,$ but they are fixed by $(\ZZ/2\ZZ)^2.$ So $y_1,y_2,y_3\in L$ will be the roots of some cubic (with coefficients in $\QQ(i,\omega)$), presumably with Galois group as large as possible inside $S_3,$ and so they will generate our $L$ for degree reasons. We can find which cubic by writing down
+	\[y^3+By^3+Cy^2+D=0\]
+	and solving for the coefficients $B,C,D$ by plugging in $y_1,y_2,y_3$ and treating this as a massive system of equations. We will not write this out, but we should get
+	\[y^3-2by^2+\left(b^2-d\right)y+c^2=0.\]
+	This lets us solve for our $y_\bullet$ by reducing to the cubic case. By choosing our square roots correctly, we can extract $\sqrt{y_1}=\alpha_1+\alpha_2-\alpha_3-\alpha_4$ and its friends.
+	\begin{remark}[Nir]
+		It is the fact that we need to solve a cubic in the middle of solving a quartic that makes the quartic formula so painful. In contrast, solving the cubic did need to solve a quadratic, but solving quadratics is significantly more automatic than cubics.
+	\end{remark}
+	
+	Lastly, we need to convert our $y_\bullet$ to $\alpha_\bullet.$ So we set $\sqrt{y_0}:=\alpha_1+\alpha_2+\alpha_3+\alpha_4=0$ and notice that
+	\[\begin{bmatrix}
+		\sqrt{y_0} \\
+		\sqrt{y_1} \\
+		\sqrt{y_2} \\
+		\sqrt{y_3}
+	\end{bmatrix}=\begin{bmatrix}
+		1 & 1 & 1 & 1 \\
+		1 & 1 & -1 & -1 \\
+		1 & -1 & 1 & -1 \\
+		1 & -1 & -1 & 1
+	\end{bmatrix}
+	\begin{bmatrix}
+		\alpha_1 \\
+		\alpha_2 \\
+		\alpha_3 \\
+		\alpha_4
+	\end{bmatrix}.\]
+	So we can solve for the $\alpha_\bullet$ by inverting the middle matrix (it is invertible). Alternatively, we can solve by hand
+	\begin{align*}
+		\alpha_1 &= {\textstyle\frac14}\left(\sqrt{y_0}+\sqrt{y_1}+\sqrt{y_2}+\sqrt{y_3}\right), \\
+		\alpha_2 &= {\textstyle\frac14}\left(\sqrt{y_0}+\sqrt{y_1}-\sqrt{y_2}-\sqrt{y_4}\right), \\
+		\alpha_3 &= {\textstyle\frac14}\left(\sqrt{y_0}-\sqrt{y_1}+\sqrt{y_2}-\sqrt{y_4}\right), \\
+		\alpha_4 &= {\textstyle\frac14}\left(\sqrt{y_0}-\sqrt{y_1}-\sqrt{y_2}+\sqrt{y_4}\right).
+	\end{align*}
+	This finishes the outline.
+\end{proof}
+
+\subsection{Infinite Galois Extensions: Advertisement}
+Let's talk a little about infinite Galois extensions $M/K.$
+\begin{example}
+	Consider $\QQ\subseteq\overline\QQ.$ This is an infinite Galois extension: $\overline\QQ$ is the splitting field of the set of polynomials $\QQ[X]$ over $\QQ,$ and because all polynomials in characteristic $0$ are separable, this makes $\overline\QQ/\QQ$ both normal and separable.
+\end{example}
+\begin{remark}[Nir]
+	Because of our careful phrasing, most of our normality and separability conditions (\autoref{rem:embedisautoconv}, \autoref{prop:normalissplitting}, and \autoref{prop:sepgrabbag}) will go through, with the exception of \autoref{prop:sepgrabbag} (b).
+	
+	The proof of \autoref{prop:sepgrabbag} does need to show (a) implies (c): if $L$ is generated by separable elements $\{\alpha_i\}_{i\in I},$ then fixing any $\alpha\in L,$ we can express $\alpha$ in terms of finitely many $\alpha_\bullet,$ so $\alpha$ is in a finite extension generated by separable elements, so $\alpha$ is separable by \autoref{prop:sepgrabbag}.
+\end{remark}
+\begin{remark}[Nir]
+	Similarly, not all of \autoref{prop:galgrabbag} will go through. We show (a) and (b) are equivalent. For this, we need (b) implies (a): normal is equivalent to being a splitting field of some $S\subseteq K[X]$; separable implies that each polynomial in $S$ is separable. Combining these observations finishes.
+\end{remark}
+However, not all of our Galois theory will go through so smoothly.
+\begin{warn}
+	When $M/K$ is an infinite extension, then subgroups of $\op{Gal}(M/K)$ do not correspond to intermediate extensions by taking fixed fields.
+\end{warn}
+
+\subsection{Krull Topology: Galois Edition}
+We continue to work with $M/K$ an infinite Galois extension. The way to fix the Galois correspondence is to give $\op{Gal}(M/K)$ a topology, and intermediate extensions will correspond to open subgroups.
+
+Here is the idea for the topology we are about to create, the ``Krull topology.''
+\begin{idea}
+	The Krull topology on $\op{Gal}(M/L)$ is the coarsest topology making restriction maps continuous.
+\end{idea}
+To be explicit, fix some intermediate extension $K\subseteq L\subseteq M$ such that $L/K$ is finite and Galois. Then we have the restriction map
+\[\varphi:\op{Gal}(M/K)\to\op{Gal}(L/K).\]
+This map is sufficiently natural, so we hope to make it continuous. Here, finite sets like $\op{Gal}(L/K)$ should get the discrete topology, so we see that, given $\sigma\in\op{Gal}(L/K),$ we would like the pre-image
+\[\varphi^{-1}(\sigma)\]
+to be an open set. Because $\ker\varphi=\op{Gal}(M/L),$ we see that we are asking for $\overline\sigma\op{Gal}(M/L)$ to be an open set, where here we are fixing $\overline\sigma\in\op{Gal}(M/L)$ to be any extension of $\sigma\in\op{Gal}(L/K).$
+
+In other words, for any $\sigma\in G$ and finite intermediate Galois extension $K\subseteq L\subseteq M,$ we are declaring that $\sigma\op{Gal}(M/L)$ should be an open set. And these are all of the open sets we ask for.
+\begin{defi}[Krull topology, I]
+	Fix $M/K$ a Galois extension. Then we define the \textit{Krull topology} on $\op{Gal}(M/K)$ as having basis given by the subsets $\sigma\op{Gal}(M/L),$ where $\sigma\in\op{Gal}(M/K)$ and $L$ is some finite Galois {sub}extension of $K.$
+\end{defi}
+We quickly check that these subsets do actually form a basis, and not just a sub-basis.
+\begin{lemma}
+	Fix $M/K$ a Galois extension. Then the subsets $\sigma\op{Gal}(M/L)\subseteq\op{Gal}(M/K),$ where $\sigma\in\op{Gal}(M/K)$ and $L$ is some finite Galois extension of $K,$ do in fact form a basis of a topology.
+\end{lemma}
+\begin{proof}
+	We have already declared $\op{Gal}(M/K)$ an open set, so we don't have to worry about covering. So fix $\sigma_1,\sigma_2\in\op{Gal}(M/K)$ and $L_1,L_2$ finite Galois sub{extensions} of $M/K.$ We would like to study
+	\[\sigma_1\op{Gal}(M/L_1)\cap\sigma_2\op{Gal}(M/L_2).\]
+	Note that any $\sigma$ in the above intersection will have $\sigma|_{L_1\cap L_2}=\sigma_1|_{L_1\cap L_2}$ and $\sigma|_{L_1\cap L_2}=\sigma_2|_{L_1\cap L_2},$ so for the above intersection to be nonempty, we must have
+	\[\sigma_1|_{L_1\cap L_2}=\sigma_2|_{L_1\cap L_2}.\]
+	So we will suppose that the above condition holds, for otherwise the empty union of basis elements will equal to the empty set that we need. Let $\sigma_0:=\sigma_1|_{L_1\cap L_2}\in\op{Gal}((L_1\cap L_2)/K).$
+
+	So we are now looking for $\sigma\in\op{Gal}(M/K)$ and $L/K$ a finite Galois {sub}extension of $M/K$ such that
+	\[\sigma\op{Gal}(M/K)\subseteq\sigma_\bullet\op{Gal}(M/L_\bullet)\]
+	for each index. At this point we recall that, as noted in our work earlier, $\sigma_\bullet\op{Gal}(M/L_\bullet)$ consists of the elements which restrict to $\sigma_\bullet|_{L_\bullet}$ on $L_\bullet.$ So now we set $L_0:=L_1\cap L_2$ and $L:=L_1L_2$ so that
+	\[\op{Gal}(L/L_0)\to\op{Gal}(L_1/L_0)\times\op{Gal}(L_2/L_0),\]
+	is an isomorphism, essentially for size reasons.\footnote{Injectivity is because $L=L_1L_2.$ Surjectivity is by size because $[L:L_0]=[L_1:L_0][L_2:L_0],$ which we show by showing $\op{Gal}(L/L_2)\to\op{Gal}(L_1/L_0)$ is an isomorphism, which is not easy but not too hard.} Now, $\sigma_1|_{L_1}\cdot\sigma_0^{-1}\in\op{Gal}(L_1/L_0)$ and $\sigma_1|_{L_2}\cdot\sigma_0^{-1}\in\op{Gal}(L_2/L_0)$ (namely, fixing $L_0$ by construction of $\sigma_0$), so we can be promised some $\tau\in\op{Gal}(L/L_0)$ such that
+	\[\tau|_{L_\bullet}=\sigma_\bullet|_{L_\bullet}\cdot\sigma_0^{-1}.\]
+	We extend $\tau$ and $\sigma_0$ up to $\op{Gal}(M/K)$ without further remark, and we see that
+	\[(\tau\sigma_0)|_{L}\op{Gal}(M/L)\]
+	will restrict to $(\tau\sigma_0)|_{L_\bullet}=\sigma_\bullet|_{L_\bullet}$ on $L_\bullet.$ This is what we needed.
+\end{proof}
+While we're here, we might as well check that our restriction maps are actually continuous.
+\begin{prop}
+	Fix $M/K$ a Galois extension. Then, given a Galois {sub}extension $L/K$ of $M$ (not necessarily finite!) the map
+	\[\cdot|_L:\op{Gal}(M/K)\to\op{Gal}(L/K)\]
+	is continuous, where the Galois groups have been given the Krull topology.
+\end{prop}
+\begin{proof}
+	It is sufficient that the pre-image of basis elements of $\op{Gal}(L/K)$ are open in $\op{Gal}(M/K).$ Well, fix $\sigma\in\op{Gal}(L/K)$ and $F$ some finite Galois subextension of $L/K$ so that we want to show that the pre-image of $\sigma\op{Gal}(L/F)$ is open in $\op{Gal}(M/K).$
+
+	Well, we note that $\sigma\op{Gal}(L/F)$ consists exactly of the $\tau\in\op{Gal}(L/K)$ which restrict as $\tau|_F=\sigma|_F.$ Now, $\tau\in\op{Gal}(M/K)$ is in the pre-image of $\sigma\op{Gal}(L/F)$ if and only if $\tau|_L$ is in $\sigma\op{Gal}(L/F)$ if and only if $\tau|_F=\sigma|_F.$ Thus, the pre-image is
+	\[\overline\sigma\op{Gal}(M/F),\]
+	where we have extended $\sigma$ to some $\overline\sigma\in\op{Gal}(M/K).$ This finishes.
+\end{proof}
+As an aside, we note that we may technically remove the Galois condition from our basis elements.
+\begin{lemma}
+	Fix $M/K$ a Galois extension. Then the subsets $\sigma\op{Gal}(M/L)\subseteq\op{Gal}(M/K),$ where $\sigma\in\op{Gal}(M/K)$ and $L$ is some finite extension of $K$ (not necessarily Galois!), form a basis for the Krull topology as well.
+\end{lemma}
+\begin{proof}
+	Set $\mathcal B$ to be the basis for the Krull topology and $\mathcal B'$ to be the set of elements defined in the lemma. It is enough to show that the elements of $\mathcal B$ are open in the topology induced by $\mathcal B'$ and conversely.
+	\begin{itemize}
+		\item The elements of $\mathcal B$ are indeed open in $\mathcal B'$ because elements of $\mathcal B$ can be written as $\sigma\op{Gal}(M/L)$ where $\sigma\in\op{Gal}(M/K),$ and $L$ is some finite (Galois) sub{extension} of $M/K.$
+		\item Fix some element $\sigma\op{Gal}(M/L)\in\mathcal B,$ where $L$ is some finite sub{extension} of $M/K.$ We may embed $L$ into some finite Galois sub{extension} $L'/K,$ and we note that
+		\[\op{Gal}(M/L')\subseteq\op{Gal}(M/L).\]
+		In particular, we notice that, for each $\tau\in\op{Gal}(M/L),$ we have $\tau\op{Gal}(M/L')\subseteq\op{Gal}(M/L),$ so we see that
+		\[\sigma\op{Gal}(M/L)=\bigcup_{\tau\in\op{Gal}(M/L)}\{\sigma\tau\}\subseteq\bigcup_{\tau\in\op{Gal}(M/L)}\underbrace{\sigma\tau\op{Gal}(M/L')}_{\in\mathcal B}\subseteq\bigcup_{\tau\in\op{Gal}(M/L)}\sigma\tau\op{Gal}(M/L)=\op{Gal}(M/L),\]
+		so we get equalities, so $\sigma\op{Gal}(M/L)$ is indeed open under the basis $\mathcal B.$
+		\qedhere
+	\end{itemize}
+\end{proof}
+So here is our second version of the Krull topology.
+\begin{defi}[Krull topology, II]
+	Fix $M/K$ a Galois extension. Then we define the \textit{Krull topology} on $\op{Gal}(M/K)$ as having basis given by the subsets $\sigma\op{Gal}(M/L),$ where $\sigma\in\op{Gal}(M/K)$ and $L$ is some finite {sub}extension of $K.$
+\end{defi}
+\begin{remark}
+	We remark here that the Krull topology on $G:=\op{Gal}(M/K)$ satisfies the following two properties, which we won't bother checking.
+	\begin{listalph}
+		\item The composition map $G\times G\to G$ is continuous.
+		\item The inversion map $G\to G$ is continuous.
+	\end{listalph}
+	These two properties makes $G$ into a ``topological group,'' a notion which we won't use directly but worth knowing about.
+\end{remark}
+
+\subsection{Krull Topology: Profinite Edition}
+As before, we work with $M/K$ a Galois extension. We will build the Krull topology in a more group-centric way. The main idea here is that some $\sigma\in\op{Gal}(M/K)$ can be tracked by its various restrictions to finite Galois {sub}extensions of $M/K.$ That is, we have a map (a homomorphism, in fact)
+\[\op{Gal}(M/K)\to\prod_{\substack{K\subseteq L\subseteq M\\L/K\text{ fin., Gal.}}}\op{Gal}(L/K)\]
+induced by gluing all of our restrictions together. Here the product is over finite Galois {sub}extensions of $M/K,$ and we will abbreviate it to $K\subseteq L\subseteq M$ in the discussion that follows.
+
+In fact, we can be more precise about the image. Namely, if we have a chain of finite Galois {sub}extensions $K\subseteq L_1\subseteq L_2\subseteq M,$ then a given $\sigma\in\op{Gal}(N/K)$ has
+\[\sigma|_{L_2}|_{L_1}=\sigma|_{L_1}\]
+by the nature of restriction. So we really have a map
+\[\op{Gal}(M/K)\to\left\{(\sigma_L)_L\in\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K):\sigma_{L_2}|_{L_1}=\sigma_{L_1}\text{ for each }L_1\subseteq L_2\right\},\]
+where it is not too hard to check that the image on the right is in fact a group by the subgroup test. Alternatively, we can turn the finite Galois subextensions $L$ of $M/K$ into a category by inclusion and note that the right-hand side above is
+\[\limit_L\op{Gal}(L/K)\cong\left\{(\sigma_L)_L\in\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K):\sigma_{L_2}|_{L_1}=\sigma_{L_1}\text{ for each }L_1\subseteq L_2\right\}\]
+by \autoref{lem:explicitlimit}. Here we are using the fact that the map $L\mapsto\op{Gal}(L/K)$ is functorial, where $L_1\subseteq L_2$ induces the restriction map $\op{Gal}(L_2/K)\to\op{Gal}(L_1/K).$
+
+However, the map we've constructed is actually quite nice.
+\begin{proposition}
+	Fix everything as above. Then the map
+	\[\op{Gal}(M/K)\to\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K)\]
+	defined above is an isomorphism of groups.
+\end{proposition}
+\begin{proof}
+	For concreteness, we immediately unravel $\limit_L\op{Gal}(L/K)$ into the given map
+	\[\varphi:\op{Gal}(M/K)\to\left\{(\sigma_L)_L\in\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K):\sigma_{L_2}|_{L_1}=\sigma_{L_1}\text{ for each }L_1\subseteq L_2\right\}\]
+	by \autoref{lem:explicitlimit}. We note that $\varphi$ is a homomorphism because restriction gives
+	\[(\sigma\tau)|_L=\sigma|_L\circ\tau|_L\]
+	for any $\sigma,\tau\in\op{Gal}(M/K)$ and finite Galois subextension $L/K.$
+
+	We now define the inverse map $\varphi^{-1}.$ Given tuple $(\sigma)_L$ of the product, we define $\sigma\in\op{Gal}(M/K)$ as follows: for some $\alpha\in M,$ find any finite Galois extension $L$ containing $\alpha$ (one exists by embedding $K(\alpha)$ into a finite Galois extension) and set
+	\[\sigma(\alpha):=\sigma_L(\alpha).\]
+	We now have the following checks.
+	\begin{itemize}
+		\item We check $\sigma(\alpha)$ is well-defined: suppose $L_1$ and $L_2$ are both finite Galois subextensions of $M/K$ containing $\alpha,$ then $L_1\cap L_2$ will also be a finite Galois subextension of $M/K.$\footnote{We see $(L_1\cap L_2)/K$ is separable because each element is in $L_1$ and hence separable. The extension is normal because any polynomial $f\in K[X]$ with a root in $L_1\cap L_2$ fully splits in both $L_1$ and $L_2$ and hence in $L_1\cap L_2.$} And now we see that
+		\[\sigma_{L_\bullet}(\alpha)=\sigma_{L_\bullet}|_{L_1\cap L_2}(\alpha)=\sigma_{L_1\cap L_2}(\alpha)\]
+		for either $L_\bullet,$ so we are done here.
+		\item We check that $\sigma\in\op{Gal}(M/K).$ Note that $\sigma$ fixes $K$ because any $\alpha\in K$ has $\sigma(\alpha)=\sigma_K(\alpha)=\alpha,$ where $\sigma_K=\id_K$ because this is the only element of $\op{Gal}(K/K).$
+		
+		And $\sigma$ is an automorphism because, for any $\alpha,\beta\in M,$ we can embed $K(\alpha,\beta)$ into a finite Galois extension $L,$ and then $\sigma|_L=\sigma_L$ is an automorphism, so
+		\[\sigma(\alpha+\beta)=\sigma\alpha+\sigma\beta\quad\text{and}\quad\sigma(\alpha\beta)=(\sigma\alpha)(\sigma\beta),\]
+		by computing with the restriction $\sigma_L.$
+		\item The map $\varphi^{-1}:(\sigma_L)_L\mapsto\sigma$ is a homomorphism. Well, fix $(\sigma_L)_L$ and $(\tau_L)_L.$ Then, for any $\alpha\in M,$ fix $L'$ a finite Galois subextension of $M/K$ so that
+		\[\varphi^{-1}\left((\sigma_L)_L\right)\varphi^{-1}\left((\tau_L)_L\right)(\alpha)=\varphi^{-1}\left((\sigma_L)_L\right)(\tau_{L'}\alpha)=(\sigma_{L'}\tau_{L'})(\alpha)=\varphi^{-1}\left((\sigma_L\tau_L)_L\right)(\alpha),\]
+		which finishes.
+	\end{itemize}
+	To finish, we need to check that $\varphi$ and $\varphi^{-1}$ are in fact inverses.
+	\begin{itemize}
+		\item Fix $\sigma\in\op{Gal}(M/K).$ Then, for any $\alpha\in M,$ place $\alpha$ into some finite Galois subextension $L'$ of $M/K$ so that
+		\[\varphi^{-1}(\varphi\sigma)(\alpha)=\varphi^{-1}\left((\sigma|_L)_L\right)(\alpha)=\sigma|_{L'}(\alpha)=\sigma(\alpha),\]
+		so indeed, $\varphi^{-1}\circ\varphi=\id.$
+		\item Fix $(\sigma_L)_L$ in the inverse limit. Then, fix some finite Galois subextension $L'$ of $M/K$ so that the $L'$ component of $\left(\varphi\circ\varphi^{-1}\right)\left((\sigma_L)_L\right)$ is $\sigma_{L'}$ because this is the restriction of $\varphi^{-1}\left((\sigma_L)_L\right)$ to $L',$ by construction.
+	\end{itemize}
+	Now that we have homomorphisms going in both directions, we have finished verifying the group isomorphism.
+\end{proof}
+\begin{remark} \label{rem:krullprofiniteintuition}
+	At a high level, we could also imagine showing the above by writing
+	\[\op{Hom}_K(M,\overline K)\simeq\op{Hom}_K\left(\colimit_LL,\overline K\right)\simeq\limit_L\op{Hom}_K(L,\overline K),\]
+	where the limits are taken over finite Galois subextensions $L$ of $M/K.$ Now, $\op{Hom}_K(L,\overline K)$ consists of the embeddings $L\into\overline K$ fixing $K,$ so because $L$ is normal, we are describing $\op{Gal}(L/K),$ so the above really shows $\op{Gal}(M/K)\simeq\limit_K\op{Gal}(L/K).$
+\end{remark}
+The reason we did not follow the above remark is because we are going to need to know what the map and its inverse are somewhat shorty.
+
+At this point we note that we have the usual embedding
+\[\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K)\subseteq\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K).\]
+If we want to add a topology to everything, then we could give the finite groups $\op{Gal}(L/K)$ the discrete topology that they deserve and then give the huge product the product topology. Lastly, the limit could be given the induced topology as a subset.
+
+And now: a miracle occurs.
+\begin{theorem}
+	Fix everything as above, with the described topologies. Then the map
+	\[\op{Gal}(M/K)\to\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K)\]
+	is in fact a homeomorphism.
+\end{theorem}
+\begin{proof}
+	Label the given map $\varphi:\op{Gal}(M/K)\to\limit_L\op{Gal}(L/K).$ We already know that $\varphi$ is a bijection, so we need to check that $\varphi$ and $\varphi^{-1}$ are continuous.
+	\begin{itemize}
+		\item We show that $\varphi$ is continuous. It suffices to show that any sub-basis element of $\limit_L\op{Gal}(L/K)$ has open pre-image. Well, the product topology will have sub-basis given by
+		\[\prod_{K\subseteq L\subseteq M}S_L\subseteq\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K),\]
+		where all but one of the $S_L$ have $S_L=\op{Gal}(L/K).$ In fact, we can restrict the $S_L$ to only be basis elements of $\op{Gal}(L/K)$ and still generate the full topology (as a sub-basis), which we means we can force $S_L$ to be a a singleton $\sigma_L\in\op{Gal}(L/K).$ Namely, we may define $\{S_L\}_{L}$ by
+		\[S_L=\begin{cases}
+			\{\sigma\} & L=L_0, \\
+			\op{Gal}(L/K) & L\ne L_0,
+		\end{cases}\]
+		for some chosen $\sigma\in\op{Gal}(L_0/K).$
+		
+		But now, checking the induced topology on the the inverse limit, we are looking at the open set
+		\[\prod_{K\subseteq L\subseteq M}S_L\cap\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K)\]
+		is
+		\[\left\{(\sigma_L)_L\in\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K):\sigma_{L_2}|_{L_1}=\sigma_{L_1}\text{ for each }L_1\subseteq L_2\text{ and }\sigma_L=\sigma\right\}.\]
+		Now, pushing this through $\varphi^{-1},$ we see that $\tau\in\op{Gal}(M/K)$ has $\varphi(\tau)$ in the above set if and only if $\tau|_L=\sigma.$ However, from our earlier discussion, this pre-image is simply $\sigma\op{Gal}(M/L_0)$ (where we choose any extension of $\sigma$ to $\op{Gal}(M/K)$) which is a basis element and therefore open.
+
+		\item We show that $\varphi^{-1}$ is continuous. It suffices to show that any basis element of $\op{Gal}(M/K)$ has open pre-image. Well, picking up a basis element $\sigma\op{Gal}(M/L_0),$ these are the elements $\tau\in\op{Gal}(M/K)$ such that $\tau|_{L_0}=\sigma|_{L_0},$ so image under $\varphi$ is
+		\[\left\{(\sigma_L)_L\in\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K):\sigma_{L_2}|_{L_1}=\sigma_{L_1}\text{ for each }L_1\subseteq L_2\text{ and }\sigma_L=\sigma|_{L_0}\right\},\]
+		which is
+		\[\prod_{K\subseteq L\subseteq M}S_L\cap\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K),\]
+		where
+		\[S_L=\begin{cases}
+			\{\sigma|_{L_0}\} & L=L_0, \\
+			\op{Gal}(L/K) & L\ne L_0.
+		\end{cases}\]
+		But this is a sub-basis element of the induced topology on the inverse limit, so we are done now.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	\autoref{rem:krullprofiniteintuition} is essentially why we would expect this in advance. Alternatively, we have more or less endowed $\limit_{L}\op{Gal}(L/K)$ with the coarsest topology such that the projection maps to each $\op{Gal}(L/K)$ are continuous, which is precisely the Krull topology.
+\end{remark}
+Namely, we see that $U\subseteq\op{Gal}(M/L)$ if and only if its image in $\limit_L\op{Gal}(L/K)$ is open, so we get the following third definition of the Krull topology.
+\begin{definition}[Krull topology, III]
+	Fix $M/K$ a Galois extension. Then we define the \textit{Krull topology} on $\op{Gal}(M/K)$ as being induced by the product topology under the embedding
+	\[\op{Gal}(M/L)\cong\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K)\subseteq\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K).\]
+\end{definition}
+
+\subsection{Fun with Topology}
+Let's actually do some fun things with our topology.
+\begin{proposition} \label{prop:limitclosed}
+	Fix $M/K$ a Galois extension. The inverse limit $\limit_L\op{Gal}(L/K)$ is closed in the product $\prod_L\op{Gal}(L/K).$
+\end{proposition}
+\begin{proof}
+	We show that the complement of $\limit_L\op{Gal}(L/K)$ is open. For this, it suffices to choose any $(\sigma_L)_L\notin\limit_L\op{Gal}(L/K)$ and find an open set of $\prod_L\op{Gal}(L/K)$ disjoint from $\limit_L\op{Gal}(L/K).$
+
+	Well, $(\sigma_L)_L\notin\limit_L\op{Gal}(L/K)$ must have subfields $L_1\subseteq L_2$ such that $\sigma_{L_2}|_{L_1}\ne\sigma_{L_1}.$ In particular, we define $\{S_L\}_L$ by
+	\[S_L=\begin{cases}
+		\{\sigma_{L_1}\} & L=L_1, \\
+		\{\sigma_{L_2}\} & L=L_2, \\
+		\op{Gal}(L/K) & \text{else},
+	\end{cases}\]
+	so that $\prod_LS_L$ contains $(\sigma_L)_L,$ but any $(\tau_L)_L\in\prod_LS_L$ has $\tau_{L_2}|_{L_1}\ne\tau_{L_1}$ so that $\prod_LS_L$ is disjoint from $\limit_L\op{Gal}(L/K).$ This finishes.
+\end{proof}
+\begin{theorem}
+	Fix $M/K$ a Galois extension. The group $\op{Gal}(M/K)$ is compact under the Krull topology.
+\end{theorem}
+\begin{proof}
+	We note that the image of $\op{Gal}(M/K)$ under the continuous embedding
+	\[\op{Gal}(M/K)\cong\limit_{K\subseteq L\subseteq M}\op{Gal}(L/K)\subseteq\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K)\]
+	is closed by the previous proposition. But the space $\prod_L\op{Gal}(L/K)$ is the product of the compact (finite discrete) spaces $\op{Gal}(L/K)$ and hence compact by Tychonoff's theorem. So it suffices that a closed subset of a compact subset is compact,\footnote{If $V$ is closed in the compact space $X,$ then any open cover of $V$ can be extended to an open cover of $X$ by adding $X\setminus V,$ which can then be refined to a finite subcover and restricted to be a finite subcover of $V.$} so we are done.
+\end{proof}
+\begin{remark}
+	In fact, it is in general true that any profinite group (i.e., inverse limit of finite groups) will be compact under some induced topology, roughly using a proof similar to the one above.
+\end{remark}
+Here is some other magic that our topology can do.
+\begin{proposition}
+	Fix $M/K$ a Galois extension. Then, given $\tau\in\op{Gal}(M/K),$ the maps $x\mapsto\tau x$ and $x\mapsto x\tau$ are both continuous.
+\end{proposition}
+\begin{proof}
+	It suffices to show that the pre-images of a basis element $\sigma\op{Gal}(M/L)$ will be open, where $\sigma\in\op{Gal}(M/K)$ and $L$ is some finite Galois subextension of $M/K.$ Well, the pre-image under $x\mapsto\tau x$ is
+	\[\tau^{-1}\sigma\op{Gal}(M/L),\]
+	which is a basis element and hence open. Similarly, the pre-image under $x\mapsto x\tau$ is
+	\[\sigma\op{Gal}(M/L)\tau^{-1}=\sigma\tau^{-1}\cdot\tau\op{Gal}(M/L)\tau^{-1}=\sigma\tau^{-1}\op{Gal}(M/\tau L),\]
+	where we are using \autoref{lem:conjugategalois}. Again, we see that we have hit a basis element and so are done.
+\end{proof}
+\begin{proposition}
+	Fix $M/K$ a Galois extension. Then the following are true.
+	\begin{listalph}
+		\item Any open subgroup of $\op{Gal}(M/K)$ is closed.
+		\item Any closed subgroup of finite index is open.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We check these one at a time. Set $G:=\op{Gal}(M/K).$
+	\begin{listalph}
+		\item Fix $U\subseteq G$ an open subgroup. Then we see that, given $\sigma\in\op{Gal}(M/K),$ $\sigma U$ is the pre-image of $U$ under the map $x\mapsto\sigma^{-1}x,$ so each $\sigma U$ will also be open. Namely, all cosets in $G/U$ are open, so the complement of $U$ is
+		\[G\setminus U=\bigcup_{\sigma\notin U}\sigma U,\]
+		which is also open, so $U$ is closed.
+		\item Fix $U\subseteq G$ a closed subgroup of finite index. As before, given $\sigma\in\op{Gal}(M/K),$ $G\setminus\sigma U$ is the pre-image of $G\setminus U$ under the map $x\mapsto\sigma^{-1}x,$ so $G\setminus\sigma U$ will also be open.
+
+		Now, choosing coset representatives $\{\sigma_1,\ldots,\sigma_n\}$ for $G/U$ such that $\sigma_1U=U,$ we see that
+		\[U=G\setminus\bigcup_{k=2}^n\sigma_kU=\bigcap_{k=2}^nG\setminus\sigma_kU\]
+		is the finite intersection of open sets and therefore is open. This finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+To finish our discussion of the Krull topology, we should actually show that it does salvage the Galois correspondence.
+\begin{theorem}[Galois correspondence]
+	Fix $M/K$ a Galois extension.
+	\begin{listalph}
+		\item Given an intermediate extension $F$ of $M/K,$ the subgroup $\op{Gal}(M/F)$ is closed in $\op{Gal}(M/K).$
+		\item Fix a subgroup $H\subseteq\op{Gal}(M/K).$ Then $\op{Gal}\left(M/M^H\right)$ is the topological closure of $H.$
+		\item In particular, if $H$ is a closed subgroup, then $H=\op{Gal}\left(M/M^H\right).$
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We take these one at a time.
+	\begin{listalph}
+		\item There is a way to do this by mostly doing topological group theory, imitating \autoref{prop:limitclosed}. Instead, we claim that
+		\[\op{Gal}(M/F)\stackrel?=\bigcap_{L\subseteq F}\op{Gal}(M/L),\]
+		where the intersection is taken over finite Galois subextensions $L$ of $M/K$ contained in $F.$ Indeed, certainly $\sigma\in\op{Gal}(M/F)$ implies that $\sigma$ fixes $L$ and hence each $L.$
+		
+		And conversely, for any $\sigma$ in the intersection and $\alpha\in F,$ we note that we can place $K(\alpha)$ in a finite Galois extension $L$ of $M/K$ so that $\sigma$ must fix $L$ and hence fix $\alpha.$ So the equality follows.
+
+		But now we see that each $\op{Gal}(M/L)$ is an open subgroup of $\op{Gal}(M/K),$ so it follows that each of these are closed as well. So $\op{Gal}(M/F)$ is some large intersection of closed sets, so $\op{Gal}(M/F)$ is also a closed set.
+		% We proceed in a similar way as in \autoref{prop:limitclosed}. Note that $\op{Gal}(M/F)$ consists exactly of the $\sigma\in\op{Gal}(M/K)$ such that $\sigma|_F=\id_F,$ so the image in $\limit_L\op{Gal}(L/K)$ will be
+		% \[V:=\left\{(\sigma_L)_L\in\prod_{K\subseteq L\subseteq M}\op{Gal}(L/K):\sigma_{L_2}|_{L_1}=\sigma_{L_1}\text{ for each }L_1\subseteq L_2\text{ and }\sigma_L|_{L\cap F}=\id_F\right\}.\]
+		% To show that $V$ is closed in $\limit_L\op{Gal}(L/K),$ it suffices to show that $V$ is closed in $\prod_L\op{Gal}(L/K).$
+		
+		% So it suffices to show that its complement in $\prod_L\op{Gal}(L/K)$ is open, for which it is enough to show that, given some $(\sigma_L)_L\notin V,$ there is an open set containing $(\sigma_L)_L$ but disjoint from $V.$ Well, $(\sigma_L)_L\notin V$ implies that there is some $L_0$ with $\sigma_{L_0}|_F\ne\id_F,$ so we set
+		% \[S_L:=\begin{cases}
+		% 	\{\sigma_{L_0}\} & L=L_0, \\
+		% 	\op{Gal}(L/K) & \text{else},
+		% \end{cases}\]
+		% so that $\prod_LS_L$ is open in $\prod_L\op{Gal}(L/K)$ and contains $(\sigma_L)_L$ while being disjoint from $S.$ This finishes.
+
+		\item Let $V$ be the topological closure of $H,$ and we claim $V=\op{Gal}\left(M/M^H\right).$ Note that $\op{Gal}\left(M/M^H\right)$ is a closed set by (a), so it follows that $V\subseteq\op{Gal}\left(M/M^H\right).$
+
+		In the other direction, we note that $V$ consists of $H$ and its limit points, so it suffices to show that each point in $\op{Gal}\left(M/M^H\right)$ is either in $H$ or a limit point. Well, pick up $\tau\in\op{Gal}\left(M/M^H\right)$; if $\tau\in H,$ we are done, and otherwise we may take $\tau\notin L.$
+
+		We need to show that $\tau$ is a limit point of $H.$ It suffices to look at basis elements. Namely, for each basis element $\sigma\op{Gal}(M/L)$ containing $\tau$ (where $\sigma\in\op{Gal}(M/K)$ and $L$ is a finite Galois subextension of $M/K$) so that $\sigma\op{Gal}(M/L)=\tau\op{Gal}(M/L)$ (by group theory), we claim
+		\[\tau\op{Gal}(M/L)\cap(H\setminus\tau)\stackrel?\ne\emp.\]
+		Because $\tau\notin H,$ it really suffices to show that $\tau\op{Gal}(M/L)\cap H\ne\emp.$
+
+		We are now ready to do Galois theory; the main idea is to reduce to the finite Galois case, where we already have control. Note that $\tau$ fixes $M^H$ implies that $\tau$ fixes
+		\[M^H\cap L=\{\alpha\in L:h\alpha=h\text{ for each }h\in H\}=\{\alpha\in L:h|_L\alpha=\alpha\text{ for each }h\in H\}=L^{H|_L},\]
+		where $H|_L\subseteq\op{Gal}(L/K)$ is $H$ restricted to $L.$ In particular, $\tau$ fixing $L^{H|_L}$ implies that $L^{H|_L}\subseteq L^{\langle\tau|_L\rangle},$ so by the Galois correspondence, we see
+		\[\langle\tau|_L\rangle\subseteq H|_L.\]
+		In particular, there exists $h\in H$ such that $h|_L=\tau|_L.$ But this is exactly what we need to witness $h\in\tau\op{Gal}(M/L).$ So we are done.
+
+		\item Because $H$ is a subgroup, $\op{Gal}\left(M/M^H\right)$ will be the topological closure of $H.$ But $H$ is closed, so this topological closure is simply $H.$
+		\qedhere
+	\end{listalph}
+\end{proof}
+
+
+% Now, the fact that intermediate extensions correspond to closed subgroups will come from finite extensions, with the added caveat that, if $H$ is a closed subgroup with $g\notin H,$ then there exists a finite extension $L$ so that $g$ restricted to $L$ is not in $H$ restricted to $L,$ which more or less comes directly from the Krull topology. This turns out to be not as hard as it looks.
+
+\subsection{Infinite Galois Extensions: Examples}
+Anyways, let's do some examples. We start with finite fields.
+\begin{exe}
+	Fix $\FF_q$ a finite field. We show that $\FF_q\subseteq\overline{\FF_q}$ is an infinite extension with Galois group isomorphic to $\widehat{\ZZ}\cong\prod_p\ZZ_p.$
+\end{exe}
+\begin{proof}
+	We already know that finite extensions of $\FF_q$ are the spitting field of $X^{q^n}-X\in\FF_q[X]$ for some $n\in\NN,$ which is a separable polynomial, so each finite extension of $\FF_q$ is a Galois extension. So each $\alpha\in\overline{\FF_q}$ lives in a finite extension $\FF_q(\alpha),$ which is separable, so $\alpha$ is separable over $\FF_p.$ Further, each $f(X)\in\FF_q[X]$ will split in $\overline{\FF_q},$ so any $f$ with a root in $\overline{\FF_q}$ will fully split.
+	
+	So $\overline{\FF_q}/\FF_q$ is normal and separable and hence Galois, and we see that
+	\[\op{Gal}\left(\overline{\FF_q}/\FF_q\right)\cong\limit\op{Gal}\left(\FF_{q^n}/\FF_q\right)\cong\limit\ZZ/n\ZZ,\]
+	where $\op{Gal}\left(\FF_{q^n}/\FF_q\right)$ is cyclic generated by the Frobenius $x\mapsto x^q.$ Technically we have to track what the maps $\ZZ/n\ZZ\to\ZZ/m\ZZ$ in the above inverse limit are, so we do so quickly. Indeed, $\limit\op{Gal}\left(\FF_{q^n}/\FF_q\right)$ only has the restriction maps
+	\[\op{Gal}\left(\FF_{q^n}/\FF_q\right)\to\op{Gal}\left(\FF_{q^m}/\FF_q\right),\]
+	which only exist when $\FF_{q^m}\subseteq\FF_{q^n},$ which is equivalent to $m\mid n.$ And when $m\mid n,$ the restriction map above will have to take the generator $x\mapsto x^q$ of $\op{Gal}\left(\FF_{q^n}/\FF_q\right)$ to its restriction $x\mapsto x^q$ on $\op{Gal}\left(\FF_{q^m}/\FF_q\right).$ Namely, tracking generators shows that the following diagram commutes, for each $m\mid n.$
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we0dhbH1cXGxlZnQoXFxGRl97cF5ufS9cXEZGX3BcXHJpZ2h0KSJdLFsxLDAsIlxcb3B7R2FsfVxcbGVmdChcXEZGX3twXm19L1xcRkZfcFxccmlnaHQpIl0sWzAsMSwiXFxaWi9uXFxaWiJdLFsxLDEsIlxcWlovbVxcWloiXSxbMCwyXSxbMCwxXSxbMSwzXSxbMiwzXV0=&macro_url=https%3A%2F%2Fgist.githubusercontent.com%2FdFoiler%2F1e12fec404cad7e185260f0c9b68977d%2Fraw%2F909cc7837a29133fb63fb0e9300d15bfe7417fc5%2Fnir.sty
+	\[\begin{tikzcd}
+		{\op{Gal}\left(\FF_{p^n}/\FF_p\right)} & {\op{Gal}\left(\FF_{p^m}/\FF_p\right)} \\
+		{\ZZ/n\ZZ} & {\ZZ/m\ZZ}
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	So we do get that
+	\[\limit\op{Gal}\left(\FF_{q^n}/\FF_q\right)\cong\limit\ZZ/n\ZZ\cong\widehat{\ZZ}.\]
+	Lastly, we note that $\widehat{\ZZ}\cong\prod_p\ZZ_p$ was shown on \autoref{lem:profinitez}, finishing.
+\end{proof}
+We can also get reasonable control of abelian extensions of $\QQ$ using the Kronecker--Weber theorem.
+\begin{exe}
+	Let $\QQ^{\op{ab}}$ be the maximal abelian extension of $\QQ.$ Assuming the Kronecker--Weber theorem, we show that $\QQ^{\op{ab}}/\QQ$ is a Galois extension with Galois group $\widehat{\ZZ}^\times\cong\prod_p\ZZ_p^\times.$
+\end{exe}
+\begin{proof}
+	Note that
+	\[\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)=\bigcup_{\op{Gal}(K/\QQ)\text{ abel.}}K,\]
+	which is well-defined as a field essentially because the composite of two abelian extensions is another abelian extension\footnote{If $K/\QQ$ and $L/\QQ$ are Galois, then $\op{Gal}(KL/\QQ)\to\op{Gal}(K/\QQ)\times\op{Gal}(L/\QQ)$ is injective, so if $K/\QQ$ and $L/\QQ$ are abelian, $KL/\QQ$ will also be abelian.} so that any $\alpha,\beta\in\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)$ can be placed in some abelian extension $KL/\QQ$ where $\alpha\in K$ and $\beta\in L,$ giving closure $\QQ^{\op{ab}}$ under addition and multiplication.
+
+	To show that $\QQ^{\op{ab}}/\QQ$ is a Galois extension, we note that it is separable because every element of $\QQ^{\op{ab}}$ comes from a separable extension and hence is separable. Further, each polynomial with a root in $\QQ^{\op{ab}}$ has a root in a abelian extension $K/\QQ$ and hence will fully split in $K$ and therefore in $\QQ^{\op{ab}}.$ So $\QQ^{\op{ab}}/\QQ$ is indeed Galois.
+
+	It remains to compute the Galois group. Well, by the Kronecker--Weber theorem, each abelian extension $K/\QQ$ can be contained in a cyclotomic extension $\QQ(\zeta)/\QQ,$ and each cyclotomic extension is abelian, so it suffices to only focus on cyclotomic extensions. Rigorously, we can start with
+	\[\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)\cong\left\{(\sigma_K)_K\in\prod_{K/\QQ\text{ abel.}}\op{Gal}(K/\QQ):\sigma_{K_2}|_{K_1}=\sigma_{K_1}\text{ for each }K_1\subseteq K_2\right\},\]
+	but placing each $K$ inside of a cyclotomic extension means that we can fully determine $(\sigma_K)_K$ by the action on on various cyclotomic fields. So we see that
+	\[\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)\cong\left\{(\sigma_n)_n\in\prod_{n=1}^\infty\op{Gal}(\QQ(\zeta_n)/\QQ):\sigma_{n}|_{m}=\sigma_{m}\text{ for each }\QQ(\zeta_m)\subseteq\QQ(\zeta_n)\right\}\cong\limit\op{Gal}\left(\QQ(\zeta_n)/\QQ\right).\]
+	Quickly, we note that the maps in the inverse limit are restrictions
+	\[\op{Ga}(\QQ(\zeta_n)/\QQ)\to\op{Gal}(\QQ(\zeta_m)/\QQ),\]
+	which exist if and only if $\QQ(\zeta_m)\subseteq\QQ(\zeta_n)$ if and only if $m\mid n.$ Further, we note that $\op{Gal}(\QQ(\zeta_n)/\QQ)\cong(\ZZ/n\ZZ)^\times,$ and this isomorphism makes the following diagram of isomorphisms commute.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we0dhbH1cXGxlZnQoXFxRUShcXHpldGFfbikvXFxRUVxccmlnaHQpIl0sWzEsMCwiXFxvcHtHYWx9XFxsZWZ0KFxcUVEoXFx6ZXRhX20pL1xcUVFcXHJpZ2h0KSJdLFswLDEsIihcXFpaL25cXFpaKV5cXHRpbWVzIl0sWzEsMSwiKFxcWlovbVxcWlopXlxcdGltZXMiXSxbMCwyXSxbMCwxXSxbMSwzXSxbMiwzXV0=&macro_url=https%3A%2F%2Fgist.githubusercontent.com%2FdFoiler%2F1e12fec404cad7e185260f0c9b68977d%2Fraw%2F909cc7837a29133fb63fb0e9300d15bfe7417fc5%2Fnir.sty
+	\[\begin{tikzcd}
+		{\op{Gal}\left(\QQ(\zeta_n)/\QQ\right)} & {\op{Gal}\left(\QQ(\zeta_m)/\QQ\right)} \\
+		{(\ZZ/n\ZZ)^\times} & {(\ZZ/m\ZZ)^\times}
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Indeed, we can track $\sigma_k\in\op{Gal}(\QQ(\zeta_n)/\QQ)$ defined by $\sigma_k:\zeta_n\mapsto\zeta_n^k$ through the diagram as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXHpldGFfblxcbWFwc3RvXFx6ZXRhX25eayJdLFsxLDAsIlxcemV0YV9tXFxtYXBzdG9cXHpldGFfbV5rIl0sWzAsMSwia1xccG1vZCBuIl0sWzEsMSwia1xccG1vZCBtIl0sWzAsMiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFswLDEsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMSwzLCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzIsMywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fgist.githubusercontent.com%2FdFoiler%2F1e12fec404cad7e185260f0c9b68977d%2Fraw%2F909cc7837a29133fb63fb0e9300d15bfe7417fc5%2Fnir.sty
+	\[\begin{tikzcd}
+		{\zeta_n\mapsto\zeta_n^k} & {\zeta_m\mapsto\zeta_m^k} \\
+		{k\pmod n} & {k\pmod m}
+		\arrow[maps to, from=1-1, to=2-1]
+		\arrow[maps to, from=1-1, to=1-2]
+		\arrow[maps to, from=1-2, to=2-2]
+		\arrow[maps to, from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Anyways, the point is that
+	\[\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)\cong\limit(\ZZ/n\ZZ)^\times\cong\left(\limit\ZZ/n\ZZ\right)^\times=\widehat{\ZZ}^\times\]
+	by tracking the isomorphisms through. Technically we should check that $R\mapsto R^\times$ preserves limits for rings $R,$ but this is because $R\mapsto R^\times$ is right adjoint to the group ring functor $G\mapsto\ZZ[G]$ and hence preserves limits. Anyways, we again see that this is
+	\[\widehat{\ZZ}^\times\cong\prod_p\ZZ_p^\times,\]
+	where taking the multiplicative group is still safe because it preserves limits (and in particular, products).
+\end{proof}
+It might not be immediately obvious, but having control over the absolute abelian Galois group of $\QQ$ is quite useful. To make our presentation more malleable, we will assert but not prove that
+\[\ZZ_p^\times\cong\begin{cases}
+	\{\pm1\}\times\ZZ_2 & p=2, \\
+	(\ZZ/(p-1)\ZZ)\times\ZZ_p & p\text{ odd}.
+\end{cases}\]
+Essentially these are true because we can build an exponential map $\exp:p\ZZ_p\to1+p\ZZ_p$ (here, $1+p\ZZ_p\subseteq\ZZ_p^\times$) by
+\[\exp(z):=\sum_{k=0}^\infty\frac{z^k}{k!}\]
+and show by hand that $\exp$ is an injective homomorphism. Anyways, we see
+\[\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)\cong\{\pm1\}\times\ZZ_2\times\prod_{p\text{ odd}}\big(\ZZ/(p-1)\ZZ\times\ZZ_p\big).\]
+At this point, we understand the group on the right pretty well, and this can translate into some cute results.
+\begin{exe}
+	We sketch why that there is exactly one chain of Galois extensions $\QQ\subseteq L_0\subseteq L_1\subseteq\cdots$ such that $\op{Gal}(L_n/\QQ)\cong\ZZ/p^n\ZZ$ for each $n.$
+\end{exe}
+\begin{proof}
+	Essentially, the infinite chain is equivalent to asking for an infinite extension $L/\QQ$ such that $L:=\bigcup_{n\in\NN}L_n=\colimit L$ such that
+	\[\op{Gal}(L/\QQ)\cong\limit\op{Gal}(L_n/\QQ)\cong\limit\ZZ/p^n\ZZ\cong\ZZ_p.\]
+	Noting that $L/\QQ$ is now an abelian extension, we see that we are looking for a surjective, continuous group (restriction) homomorphism
+	\[\{\pm1\}\times\ZZ_2\times\prod_{p\text{ odd}}\big(\ZZ/(p-1)\ZZ\times\ZZ_p\big)\cong\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)\onto\op{Gal}(L/\QQ)\cong\ZZ_p.\]
+	(Certainly $L/\QQ$ will induce this map. Conversely, for any continuous group homomorphism, we see that the kernel will be a closed subgroup and hence will induce the desired infinite extension.) But it is not too hard to believe that there is exactly one such continuous surjection.\footnote{In particular, one can show that, when $p\ne q$ are primes, the only continuous group homomorphism $\ZZ_p\to\ZZ_q$ is the trivial one, essentially by tracking where the dense set $\ZZ\subseteq\ZZ_p$ goes.}
+\end{proof}
+\begin{exe}
+	We sketch why there is no extension $L/\QQ$ with Galois group $\ZZ_2\times\ZZ_2.$
+\end{exe}
+\begin{proof}
+	As before, such an extension $L/\QQ$ will induce a surjective, continuous group (restriction) homomorphism
+	\[\{\pm1\}\times\ZZ_2\times\prod_{p\text{ odd}}\big(\ZZ/(p-1)\ZZ\times\ZZ_p\big)\cong\op{Gal}\left(\QQ^{\op{ab}}/\QQ\right)\onto\op{Gal}(L/\QQ)\cong\ZZ_2\times\ZZ_2.\]
+	However, it is again not too hard to believe that no such thing exists because the left-hand side only has one copy of $\ZZ_2.$
+\end{proof}
+This last result is quite strange because we have just shown that the inverse Galois problem fails if we push to infinite extensions and ask about all profinite extensions. The point here is to show how delicate the inverse Galois problem is.
+% \begin{remark}
+% 	The final exam will be similar to the midterms, only covering Galois theory.
+% \end{remark}

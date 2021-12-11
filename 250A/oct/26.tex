@@ -1,0 +1,532 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I am okay with being stabbed.
+
+\subsection{Symmetric Polynomials}
+We're talking about symmetric polynomials and resultants today. Recall that variables $\{\alpha_k\}_{k=1}^n$ has an $S_n$-action by permuting the indices, and a symmetric function on these variables are the $S_n$-invariants.
+\begin{example}
+	The function
+	\[e_1:=\alpha_1+\cdots+\alpha_n\qquad\text{and}\qquad e_2:=\sum_{k<\ell}\alpha_k\alpha_\ell\]
+	are elementary symmetric polynomials. More generally, we have
+	\[e_m=\sum_{k_1<\cdots<k_m}\alpha_{k_1}\cdots\alpha_{k_m}\]
+\end{example}
+We can combine these using {Vieta}'s formulae to get
+\[\prod(x-\alpha_k)=x^n-e_1x^{n-1}+e_2x^{n-2}+\cdots.\]
+Our goal for today is the following.
+\begin{theorem} \label{thm:fundsymm}
+	Fix $k$ a field. Any symmetric function in $k[\alpha_1,\ldots,\alpha_n]$ lives in $k[e_1,\ldots,e_n].$
+\end{theorem}
+\begin{proof}
+	The key idea is to order monomials and kill off the biggest, essentially forcing an induction to exist. Ordering can essentially be done in any reasonable way; Gr\"obner bases are essentially the standard way to induce an ordering, but we will use lexicographic ordering: we order two monomials by
+	\[\alpha_1^{p_1}\cdots\alpha_n^{p_n}>\alpha_1^{q_1}\cdots\alpha_n^{q_n}\]
+	if and only if the least $i$ for which $a_i\ne b_i$ has $a_i>b_i.$ For example, $\alpha_1^2>\alpha_1\alpha_2^4$ and $\alpha_1\alpha_2^2\alpha_3^3>\alpha_1\alpha_2^2\alpha_3.$ We can check that this is a total ordering because the least $k$ for which $p_i\ne q_i$ exists whenever the monomials are unequal, and at this point either $p_i>q_i$ or $p_i<q_i.$
+
+	Notation for multivariate polynomials is quite annoying, so we will write, for $v:=(v_1,\ldots,v_n)\in\NN^n,$
+	\[\alpha^v:=\alpha_1^{v_1}\cdots\alpha_n^{v_n}.\]
+	In particular, we can notate a particular $f\in k[\alpha_1,\ldots,\alpha_n]$ by
+	\[f=\sum_{v\in\NN^n}c_v\alpha^v,\]
+	which lets us avoid having to drown in indices.
+	\begin{warn}[Nir]
+		This notation is not standard.
+	\end{warn}
+	Under this notation, we note that the lexicographic ordering of monomials is the same as the lexicographic ordering of $\NN^n.$
+	
+	Before continuing, we note that the leading monomial is multiplicative.
+	\begin{lemma} \label{lem:multileadingcoef}
+		The leading monomial (using the lexicographic ordering) is multiplicative: if $f$ has leading monomial $\alpha^p$ while $g$ has leading monomial $\alpha^q,$ then $fg$ has leading monomial the product $\alpha^{p+q}.$
+	\end{lemma}
+	\begin{proof}
+		This statement comes from the fact the lexicographic is ``additive.'' In particular, fix $p\ge v$ and $q\ge w$ for $v,w\in\NN^n,$ where we are using the lexicographic ordering on $\NN^n.$ Then we claim that
+		\[p+q\stackrel?\ge v+w,\]
+		with equality if and only if $p=v$ and $q=w.$ Note that if $v=p$ or $w=q,$ then we can cancel the equal term from both sides to get the statement we want.
+		
+		Otherwise, $p>v$ and $q>w,$ and we want to show that $p+q>v+w.$ We know the least index $i$ for which $p_i\ne v_i$ has $p_i>v_i,$ and the least index $j$ for which $q_j\ne w_j$ has $q_j>v_j.$ But now we see that each index before $\min\{i,j\}$ has $p_\bullet=v_\bullet$ and $q_\bullet=w_\bullet$ so that $p_\bullet+v_\bullet=q_\bullet+w_\bullet.$ But then
+		\[p_{\min\{i,j\}}+q_{\min\{i,j\}}>v_{\min\{i,j\}}+w_{\min\{i,j\}},\]
+		so we do find that $p+q>v+w.$
+
+		For concreteness, write
+		\[f=\sum_{v\in \NN^n}c_v\alpha^v\qquad\text{and}\qquad g=\sum_{w\in\NN^n}d_w\alpha^w.\]
+		Then, distributing, we see that
+		\[fg=\sum_{x\in\NN^n}\left(\sum_{v+w=x}c_vd_w\right)\alpha^x.\]
+		We claim that the leading monomial of $fg$ is from $\alpha^{p+q}.$ Indeed, we note that if $c_vd_w\ne0$ so that $c_v\ne0$ and $d_w\ne0,$ then $v\le p$ and $w\le q.$ So by the above, it follows that
+		\[v+w\le p+q\]
+		with equality if and only if $v=p$ and $w=q.$
+
+		To finish, we see that this implies the only $x$ with any nonzero term $c_vd_w$ with $v+w=x$ will have to be $x\le p+q,$ and in fact $p+q$ exactly only has $v=p$ and $w=q$ so that the coefficient comes out to $c_vd_w\ne0.$ So it follows that $\alpha^{p+q}$ is the largest monomial with nonzero coefficient in $fg,$ which finishes.
+	\end{proof}
+
+	We now attack the proof directly. Suppose that $f\in k[\alpha_1,\ldots,\alpha_n]$ is a symmetric function, and use the lexicographic ordering to find its largest monomial $\alpha_1^{p_1}\cdots \alpha_n^{p_n}$ with nonzero coefficient. We claim that
+	\[p_1\stackrel?\ge p_2\stackrel?\ge\cdots\stackrel?\ge p_n.\]
+	Indeed, if $k<\ell$ has $p_k<p_\ell,$ then we note that the monomial
+	\[(k,\ell)\cdot \alpha_1^{p_1}\cdots \alpha_{k-1}^{p_{k-1}}\alpha_k^{p_k}\alpha_{k+1}^{p_{k+1}}\cdots \alpha_{\ell-1}^{p_{\ell-1}}\alpha_\ell^{p_\ell}\alpha_{\ell+1}^{p_{\ell+1}} \cdots \alpha_n^{p_n}=\alpha_1^{p_1}\cdots \alpha_{k-1}^{p_{k-1}}\alpha_k^{p_\ell}\alpha_{k+1}^{p_{k+1}}\cdots \alpha_{\ell-1}^{p_{\ell-1}}\alpha_\ell^{p_k}\alpha_{\ell+1}^{p_{\ell+1}} \cdots x_n^{a_n}\]
+	will have nonzero coefficient in $f$ because $f$ is symmetric. But the above monomial has exponents equal to $\alpha_1^{p_1}\cdots\alpha_n^{p_n}$ up until $\alpha_k^{p_k},$ at which point we see that the above monomial is strictly greater than our hypothesized largest monomial $\alpha_1^{p_1}\cdots \alpha_n^{p_n}$ because $p_\ell>p_k.$
+
+	Now, the main idea in the proof is to repeatedly kill off the leading term of $f.$ Indeed, we note that
+	\[s:=e_1^{p_1-p_2}e_2^{p_2-p_3}\cdots e_{n-1}^{p_{n-1}-p_n}e_n^{p_n}\]
+	is going to have the desired leading term: note that the leading term of $e_i$ is $\alpha_1\cdots\alpha_i$ by using the lexicographic ordering, but then multiplicativity of the leading coefficient tells us that the leading term of the $s$
+	\[\alpha_1^{p_1-p_2}(\alpha_1\alpha_2)^{p_2-p_3}\cdots(\alpha_1\cdots\alpha_{n-1})^{p_{n-1}-p_n}(\alpha_1\cdots\alpha_n)^{p_n}=\alpha^p.\]
+	Now we see that $f-c_ps$ will kill the leading term of $f,$ so we can more or less induct downwards to eventually kill all of $f.$
+
+	The details of the induction are actually quite annoying because we did not well-order the monomials: there are infinitely many monomials smaller than $x_1^2,$ e.g. of the form $x_1x_2^\bullet.$ But an induction still works: the process above will give a sequence of strictly decreasing monomials (which are the leading terms of the polynomial we're trying to inductively kill), and we need to show that this sequence must eventually take $f$ down to the least monomial $\alpha_1^0\cdots\alpha_n^0,$ which is immediately in $k[e_1,\ldots,e_n].$
+	
+	So we need to show that there are no infinite strictly descending chains in the lexicographic ordering of $\NN^n.$
+	\begin{lemma}
+		All descending chains in the lexicographic ordering of $\NN^n$ must stabilize.
+	\end{lemma}
+	\begin{proof}
+		We proceed by induction on $n.$ For $n=1,$ this is the assertion that $\NN$ is well-ordered. Otherwise, suppose that there are no infinite strictly descending chains in $\NN^n$ must stabilize and fix an infinite descending chain
+		\[v_1\ge v_2\ge v_3\ge\cdots\]
+		in $\NN^{n+1}.$ Projecting onto the first $n$ coordinates, we see that the first $n$ coordinates must eventually stabilize. There is an $N_1$ for which $m>N_1$ has
+		\[(v_m)_k=(v_N)_k\]
+		for each $1\le k\le n.$ But now the last coordinate past $N_1$ is a descending sequence in $\NN$ because the lexicographic ordering now has $v_m\ge v_{m+1}$ requires
+		\[(v_m)_{n+1}\ge(v_{m+1})_{n+1}.\]
+		As this is a descending sequence in $\NN,$ it must also eventually stabilize and hence must also stabilize past some $N_2,$ so the full $v_\bullet$ stabilize past $N_2.$
+	\end{proof}
+	The above lemma finishes the proof.
+\end{proof}
+\begin{remark}
+	Professor Borcherds is doing a lot of killing in this proof.
+\end{remark}
+\begin{remark}
+	We used the fact that $f$ is symmetric when we write down $p_1\ge p_2\ge p_3\ge\cdots\ge p_n,$ which is necessary to get the symmetric polynomials to kill off the leading monomial. Amazingly, this is the only place we used the symmetric condition.
+\end{remark}
+\begin{remark}[Nir] \label{rem:betterord}
+	We can avoid the annoyance at the end of the proof about infinite descending chains by using a better-behaved ordering than the lexicographic one. For example, if $p_i$ is the $i$th prime, then we can weight by
+	\[w\left(\alpha^{(v_1,\ldots,v_n)}\right):=\sum_{i=1}^nv_i\sqrt{p_i},\]
+	and it is not too hard to check that this ordering is multiplicative and again has the additive property we need. But now this ordering is in fact a well-order, so the induction is more free.
+\end{remark}
+
+\subsection{Newton's Sums}
+The algorithm suggested in \autoref{thm:fundsymm} is constructive but somewhat annoying to use because its run-time is ineffective at the end. Using a better-behaved order as described in \autoref{rem:betterord} does make the run-time effective, but the run-time is still very bad because of the large numbers of symmetric polynomial computations.
+
+As a specific case we might care about, consider the symmetric polynomial
+\[p_m:=\alpha_1^m+\cdots+\alpha_n^m\in k[\alpha_1,\ldots,\alpha_n].\]
+Here are some small examples.
+\begin{ex}
+	We see that $p_0=n$ and $p_1=e_1.$ Further,
+	\[p_2=\sum_{i=1}^n\alpha_i^2=\left(\sum_{i=1}^n\alpha_i\right)^2-2\sum_{i>j}\alpha_i\alpha_j=e_1^2-2e_1.\]
+\end{ex}
+More generally, we have Newton's sums.
+\begin{exercise}[Newton's sums]
+	Fix $k$ a field and work in $k[\alpha_1,\ldots,\alpha_n].$ Fix $p_m:=\alpha_1^m+\cdots+\alpha_n^m.$ We write $p_m$ explicitly as in $k[e_1,\ldots,e_n].$
+\end{exercise}
+\begin{proof}
+	By Vieta's formulae, we note that we can fully expand
+	\[f(x):=\prod_{i=1}^n(x-\alpha_i)=\sum_{d=0}^n\bigg(\sum_{\substack{S\subseteq\{1,\ldots,n\}\\\#S=n-d}}\prod_{i\in S}-\alpha_i\bigg)x^d=\sum_{d=0}^n(-1)^{n-d}e_dx^d=x^n-e_1x^{n-1}+\cdots\]
+	so that we want the $m$th powers of the roots of $f.$ Here we have taken $e_0=1$ by convention.
+	
+	The key trick is to take the logarithmic derivative of both sides of
+	\[f(x)=\prod_{i=1}^n(x-\alpha_i).\]
+	This might appear unmotivated, but it will greatly simplify things.
+	\begin{remark}
+		Logarithmic derivatives are good tools whenever we have products. Namely, logarithms turn bad products into awkward sums involving the logarithm, but then the logarithm gets rid of the logarithm.s.
+	\end{remark}
+	On one hand, we see that
+	\[f'(x)=\sum_{d=1}^nd(-1)^{n-d}e_dx^{d-1}=nx^{n-1}-(n-1)e_1x^{n-2}+\cdots,\]
+	and this derivative is a purely algebraic operation, definable over any field. In particular, we can check the following.
+	\begin{proposition}
+		Fix $R$ a commutative ring. Given $f(x)\in R[x]$ represented by $f(x)=\sum_{k=0}^na_kx^k,$ we formally define
+		\[f'(x)=\frac{df}{dx}:=\sum_{k=1}^nka_kx^{k-1}.\]
+		Then, for $f,g\in R[x]$ and $a,b\in R,$ we have the following.
+		\begin{itemize}
+			\item $(af+bg)'=af'+bg'.$
+			\item $(fg)'=fg'+f'g.$
+			\item $(f\circ g)'(x)=f'(g(x))g'(x).$
+		\end{itemize}
+	\end{proposition}
+	\begin{proof}
+		The first two are doable by direct force. For the chain rule, one should first show this for $f(x)=x^n$ by inducting on the multiplication rule and then extend linearly to all polynomials $f.$ We will not show the details here because I am lazy.
+	\end{proof}
+	Working in the quotient field $k(\alpha_1,\ldots,\alpha_n),$ we can verify by hand that we do have a ``formal'' logarithmic differentiation
+	\[\frac{(fg)'}{fg}=\frac{fg'+f'g}{fg}=\frac{f'}f+\frac{g'}g\]
+	by using the product rule in the numerator. So indeed, the product becomes a sum.
+	\begin{remark}
+		Importantly this logarithmic derivative rule does not require us to formally define a logarithm over arbitrary fields. Professor Borcherds in office hours said that, if we wanted to formally add a logarithm, one thing we could do was formally adjoin a function with derivative $\frac1x$ to $k[x].$ Apparently this is is somewhat standard practice in the field of differential Galois theory.
+	\end{remark}
+	Using our logarithmic differentiation, we see that
+	\[\frac{f'(x)}{f(x)}=\sum_{i=1}^n\frac1{x-\alpha_i}.\]
+	But we notice that, now upgrading once more to $k((\alpha_1,\ldots,\alpha_n)),$ we have that
+	\[\frac1{x-\alpha_i}=\frac{x^{-1}}{1-x^{-1}\alpha_i}=\sum_{m=0}^\infty x^{-m-1}\alpha_i^m\]
+	by using the geometric series formula, so
+	\[\frac{f'(x)}{f(x)}=\sum_{i=1}^n\sum_{m=0}^\infty x^{-m-1}\alpha_i^m=\sum_{m=0}^\infty x^{-m-1}\left(\sum_{i=1}^n\alpha_i^m\right)=\sum_{m=0}^\infty p_mx^{-m-1}\]
+	after exchanging the order of summation. Now we can multiply both sides by $f(x)$ and equate coefficients. Written out in summation notation, this reads as
+	\[\sum_{d=1}^nd(-1)^{n-d}e_dx^{d-1}=\left(\sum_{d=0}^ne_dx^d\right)\left(\sum_{m=0}^\infty p_mx^{-m-1}\right),\]
+	but this is a bit easier to read as
+	\begin{align*}
+		nx^{n-1}-(n-1)e_1x^{n-2}+(n-2)&e_2x^{n-3}-\cdots= \\
+		&\left(x^n-e_1x^{n-1}+e_2x^{n-2}+\cdots\right)\left(p_0x^{-1}+p_1x^{-2}+p_2x^{-3}\cdots\right).
+	\end{align*}
+	In particular, equating coefficients shows us that
+	\[\begin{array}{c|c}
+		\text{monomial} & \text{coefficients} \\\hline
+		x^{n-1} & n=p_0 \\
+		x^{n-2} & -(n-1)e_1=p_1-e_1p_0 \\
+		x^{n-3} & (n-2)e_2=p_2-e_1p_1+p_0e_2 \\
+		x^{n-3} & -(n-3)e_3=p_3-e_1p_2+e_2p_1-e_3p_0
+	\end{array}\]
+	This continues down in a recursion style. The general statement is that the coefficient of $x^{n-(d+1)}$ looks like
+	\[p_d-e_1p_{d-1}+e_2p_{d-2}-\cdots+(-1)^de_dp_0=\sum_{i=1}^d(-1)^ie_ip_{d-i}=\begin{cases}
+		(-1)^d(n-d)e_d & d\le n \\
+		0 & \text{else.}
+	\end{cases}.\]
+	Using the fact that $p_0=n,$ we can move things around to get
+	\[\boxed{p_d=(-1)^{d+1}de_d+\sum_{i=1}^{d-1}(-1)^{i+1}e_ip_{d-i}},\]
+	under the strong assumption that I have not made an error moving things around.
+\end{proof}
+\begin{example}
+	Let's find the sum of the fifth powers of the roots of $x^3+x+1.$ We have the following computations; note $e_1=0$ and $e_2=1$ and $e_3=-1$ and $e_i=0$ for $i>3.$
+	\begin{itemize}
+		\item We have that $p_0=3.$
+		\item We have that $p_1=e_1=0.$
+		\item We have that $p_2=-2e_2+e_1p_1=-2.$
+		\item We have that $p_3=3e_3+(e_1p_2-e_2p_1)=-3.$
+		\item We have that $p_4=-4e_4+(e_1p_3-e_2p_2+e_3p_1)=0+(0-1\cdot-2+0)=2.$
+		\item We have that $p_5=5e_5+(e_1p_4-e_2p_3+e_3p_2-e_4p_1)=0+(0-1\cdot-3+-1\cdot-2)=\boxed{5}.$
+	\end{itemize}
+\end{example}
+\begin{remark}
+	Professor Borcherds is not sure why you would need the sum of the fifth powers.
+\end{remark}
+
+\subsection{Adams Operations}
+Let's talk about Adams operations in representation theory/$K$-theory for a little bit. Here we take $V$ to be a finite-dimensional $k$-vector space with a linear $G$-action. Then we see that $G$ also acts on $V\otimes V$ as well by
+\[g\cdot(v_1\otimes v_2):=(g\cdot v_1)\otimes(g\cdot v_w).\tag{$*$}\]
+Indeed, we can see that $\mu_g:V\times V\to V\otimes V$ defined componentwise is a bilinear map by writing down
+\begin{align*}
+	\mu_g(v,b_1w_1+b_2w_2) &= (gv)\otimes\big(b_1(gw_1)+b_2(gw_2)\big) \\
+	&= b_1\cdot\big((gv)\otimes(gw_1)\big)+b_2\cdot\big((gv)\otimes(gw_2)\big) \\
+	&= b_1\mu_g(v,w_1)+b_2\mu_g(v,w_2)
+\end{align*}
+and similar for the other side. So we do indeed have a linear map $\mu_g:V\otimes V\to V\otimes V$ defined by extending $(*)$ linearly. 
+
+Anyways, we see that the $G$-action on $V\otimes V$ in fact splits into
+\[S^2(V)\oplus\Lambda^2(V),\]
+where $S^2(V)$ is the symmetric part generated by $a\otimes b+b\otimes a,$ and $\Lambda^2(V)$ is the antisymmetric part generated by $a\otimes b-b\otimes a.$ In reality, what is happening is that the $G$-action on $V\otimes V$ more or less induces a $G\times S_2$-action on $V\otimes V,$ where the $S_2$ swaps the two coordinates; this is legal because $G$ acts on one coordinate at a time.\footnote{I don't really feel like being more explicit about the decomposition of this representation, but one should also check that these spaces are $G$-invariant and orthogonal, which is not too hard to do.}
+\begin{remark}
+	We could generalize this to {tensor}ing $n$ copies of $V$ to get a $G\times S_n$-action. Then the action on $V^{\otimes n}$ will split into something more complicated depending on some decomposition of $S_n.$
+\end{remark}
+We now have the following definition.
+\begin{definition}[Adams operation]
+	Fix everything as above. We define the Adams operations in the ring of $G$-representations as
+	\[\psi^2(V):=S^2(V)-\Lambda^2(V).\]
+\end{definition}
+Yes, we can subtract by working in the ``formal'' representation ring. For here, what we need to know about the representation ring is that the addition is the direct sum $\oplus.$
+
+We might be interested in how $G$ acts on $\psi^2(V),$ which we can talk about via the trace. Of course, the trace on these formal representations might be poorly defined, but never fear---the trace is additive on the direct sum $\oplus,$ so we can just subtract formally! Namely, if $T\in\op{GL}(V)$ and $S\in\op{GL}(W),$ then $T\oplus S\in\op{GL}(V\oplus W)$ has
+\[\op{tr}(T\oplus S)=\op{tr}T+\op{tr}S.\]
+For example, we can see this by writing everything out as matrices so that the matrix of representation of $T\oplus S$ looks like
+\[T\oplus S=\begin{bmatrix}
+	T & 0 \\
+	0 & S
+\end{bmatrix},\]
+which makes the diagonal sum indeed $\op{tr}T+\op{tr}S.$
+
+Now, for concreteness, suppose that each $\mu_g\in\op{GL}(V)$ is diagonalizable with eigenvalues $\alpha_1,\ldots,\alpha_n$ and eigenbasis $\{v_1,\ldots,v_n\}.$ We now check the eigenvalues of $\mu_g$ for the action on each $V\otimes V$ and $S^2(V)$ and $\Lambda^2(V).$
+\begin{itemize}
+	\item On $V\otimes V,$ we have a basis given by $v_i\otimes v_j$ for each $i,j,$ so our eigenvalues on this eigenbasis look like $\alpha_i\alpha_j$ for each $i,j$ because
+	\[\mu_g(v_i\otimes v_j)=(gv_i)\otimes(gv_j)=(\alpha_iv_i)\otimes(\alpha_jv_j)=(\alpha_i\alpha_j)(v_i\otimes v_j).\]
+	\item On $S^2(V),$ we have a basis given by $v_i\otimes v_j+v_j\otimes v_i$ for each $i\ge j.$ These elements do indeed span $S^2(V)$: for any $a,b\in V,$ we can write
+	\[a=\sum_{i=1}^na_iv_i\qquad\text{and}\qquad b=\sum_{i=1}^nb_iv_i\]
+	so that
+	\[a\otimes b+b\otimes a=\sum_{i,j=1}^n(a_ib_j)(v_i\otimes v_j+v_j\otimes v_i),\]
+	so the basis hits all elements of $a\otimes b+b\otimes a.$ Thus, we have $\dim_kS^2(V)\le\binom n2+n=\frac{n^2+n}2,$ and we will check next that $\dim_k\Lambda^2(V)\le\frac{n^2-n}2,$ so the fact that $\dim_kS^2(V)+\dim_k\Lambda^2(V)=\dim V\otimes V$ means that we must have equalities.
+
+	Anyways, we see that our eigenvalue for some $v_i\otimes v_j+v_j\otimes v_i$ upon applying $\mu_g$ becomes $\alpha_i\alpha_j$ again.
+	\item Similarly, on $\Lambda^2(V),$ we have a basis given by $v_i\otimes v_j-v_j\otimes v_i$ for each $i>j.$ Again, we can check that these span: for any $a,b\in V,$ we can write
+	\[a=\sum_{i=1}^na_iv_i\qquad\text{and}\qquad b=\sum_{i=1}^nb_iv_i\]
+	so that
+	\[a\otimes b-b\otimes a=\sum_{i,j=1}^n(a_ib_j)(v_i\otimes v_j-v_j\otimes v_i).\]
+	Now we can get to the restricted basis by noting that $i=j$ causes the term to collapse, so we don't care about those elements; and if $i<j,$ then we can add a sign to make the basis element $v_j\otimes v_i-v_i\otimes v_j$ instead. So we get that $\dim_k\Lambda^2(V)\le\binom n2=\frac{n^2-n}2,$ filling in the above argument.
+
+	Anyways, we see that our eigenvalue for some $v_i\otimes v_j-v_j\otimes v_i$ upon applying $\mu_g$ becomes $\alpha_i\alpha_j$ again.
+\end{itemize}
+In particular, the eigenvalues on $\psi^2(V)$ for $\mu_g$ sum to give trace
+\[\op{tr}\mu_g=\underbrace{\sum_{\substack{i,j=1\\i\ge j}}^n\alpha_i\alpha_j}_{S^2(V)}-\underbrace{\sum_{\substack{i,j=1\\i>j}}^n\alpha_i\alpha_j}_{\Lambda^2(V)}=\sum_{i=1}^n\alpha_i^2=p_2,\]
+which is sufficiently cute. More generally, we can define $\psi^m(V)$ to have trace $p_m,$ more or less using Newton's identities in the sums directly.
+
+\subsection{Alternating Polynomials}
+Thus far we have studied invariants of $S_n$ on $k[x_1,\ldots,x_n].$ We might be interested in $A_n$-invariants.
+\begin{example}
+	On $A_3=\langle\sigma\rangle\cong\ZZ/3\ZZ,$ we have the $A_3$-action on $k[x_1,x_2,x_3]$ determined by three-cycle generated by $\sigma$ taking (say) $x_1\to x_2\to x_3\to x_1$ in a cycle. Of course, the symmetric functions are invariants, but there are more: the function
+	\[(x_1-x_2)(x_2-x_3)(x_3-x_1)\]
+	is $A_3$-invariant. It turns out that this is essentially the only other alternating polynomial, however.
+\end{example}
+Let's see this.
+\begin{exercise}
+	We describe the $A_n$-invariants of $k[x_1,\ldots,x_n],$ where $k$ has characteristic not $2.$
+\end{exercise}
+\begin{proof}
+	We briefly remark that if $f\in k[x_1,\ldots,x_n]$ is $A_n$-invariant, then for any two odd permutations $\sigma_1$ and $\sigma_2,$ we have that
+	\[\sigma_1f=\sigma_2\sigma_2^{-1}\sigma_1f=\sigma_2f\]
+	because $\sigma_2^{-1}\sigma_1\in A_n.$ The point is that the $S_n$-action on $f$ is completely determined by what a single odd permutation does.
+	
+	Now, we note that if some $\tau\in A_n$ swaps $x_i$ and $x_j,$ and if $f$ is invariant on $A_3,$ then we note we can write
+	\[f=\frac{f+\tau f}2+\frac{f-\tau f}2.\]
+	What is happening here is that the first term is $S_n$-invariant, and the second term is ``antinvariant,'' meaning that it changes sign on odd permutations. We can check that $\frac{f+\tau f}2$ is actually $S_n$-invariant because any even permutation keeps the terms in place, and an odd permutation will swap them.
+	
+	Formally, we have the following.
+	\begin{definition}[Antinvariant]
+		We say that $f\in k[x_1,\ldots,x_n]$ is \textit{antinvariant} if and only if, for each $\sigma\in S_n,$ we have that $\sigma f=(\op{sgn}\sigma)f.$
+	\end{definition}
+	So to check that $\frac{f-\tau f}2$ is antinvariant, we have the following checks.
+	\begin{itemize}
+		\item If $\sigma$ is even, then $\sigma f=f$ so that
+		\[\sigma\cdot\frac{f-\tau f}2=\frac{\sigma f-(\sigma\tau)f}2=\frac{f-\tau f}2\]
+		because $\tau$ and $\sigma\tau$ are both odd.
+		\item If $\sigma$ is odd, we see that $\sigma\tau$ is even implies that
+		\[\sigma\cdot\frac{f-\tau f}2=\frac{\sigma f-(\sigma\tau)f}2=\frac{\tau f-f}2\]
+		because $\sigma$ and $\tau$ are both odd.
+	\end{itemize}
+	So indeed, $\frac{f-\tau f}2$ is antinvariant.
+
+	The point of these computations is that we can write
+	\[k[x_1,\ldots,x_n]^{A_n}=k[x_1,\ldots,x_n]^{S_n}+\text{antinvariant polynomials}.\]
+	In fact, an element $f\in k[x_1,\ldots,x_n]$ can be uniquely written as $f=g+h$ for $g$ symmetric and $h$ antisymmetric. Indeed, we have that
+	\[\begin{cases}
+		f = g+h, \\
+		\tau f=g-h.
+	\end{cases}\]
+	which we can solve to $g=\frac{f+\tau f}2$ and $h=\frac{f-\tau f}2.$ (Here we use $\op{char}k\ne2.$)
+
+	Now, we have that
+	\[\prod_{i<j}(x_i-x_j)\]
+	is antinvariant because look at it. We then have the following sequence of observations; fix $g$ any antinvariant polynomial.
+	\begin{itemize}
+		\item For any $x_i\ne x_j,$ we see that $g$ will vanish on setting $x_i=x_j.$ If we let $\overline g$ be the polynomial after applying $x_i=x_j,$ then we see that $g=-(i,j)g$ even though $\overline{(i,j)g}=\overline g,$ so it follows that $\overline g=0.$
+		\item Now, given $g$ vanishes on $x_i=x_j,$ then ring theory lets us write $g=(x_i-x_j)h.$ So each $x_i-x_j$ divides $g,$ and we can see that these elements are irreducible (they are degree $1$) and not off by a unit, so the product of these does indeed divide $\Delta.$
+		\item Thus, we can write
+		\[g=\Delta\cdot h\]
+		for some $h\in k[x_1,\ldots,x_n],$ and in fact $h$ is symmetric: for each $\sigma\in S_n,$ we have
+		\[\sigma h=\frac{\sigma g}{\sigma\Delta}=\frac{(\op{sgn}\sigma)g}{(\op{sgn}\sigma)\Delta}=\frac\sigma\Delta=h.\]
+		The point is that the antinvariant polynomials are simply $\Delta\cdot k[x_1,\ldots,x_n]^{S_n}.$
+	\end{itemize}
+	So brining this together, we see that
+	\[k[x_1,\ldots,x_n]^{A_n}=k[x_1,\ldots,x_n]^{S_n}\oplus\Delta\cdot k[x_1,\ldots,x_n]^{S_n}.\]
+	But now if we wanted to generate $k[x_1,\ldots,x_n]^{A_n}$ as a $k$-algebra, we note that $k[x_1,\ldots,x_n]=k[e_1,\ldots,e_n]$ because the $e_\bullet$ are algebraically independent\footnote{This is present in Lang; roughly speaking, the point is to do an induction on the number of variables so that an algebraic relation becomes a polynomial in one of the $x_\bullet.$ Then the constant term must vanish by inductive hypothesis, but then we can divide out by $x_\bullet$ to force the entire relation to vanish.}, and then to add $\Delta,$ we see that
+	\[k[x,y,z]^{A_3}\cong\frac{k[e_1,\ldots,e_n,\Delta]}{\left(\Delta^2-\text{some polynomial in }k[e_1,e_2,e_3]\right)}.\]
+	where the relation in the denominator comes from that $\Delta^2\in k[e_1,\ldots,e_n]$ is symmetric. It turns out that the relation for $\Delta^2$ is quite annoying to compute; for example for $n=3$ it is
+	\[\Delta^2=18e_1e_2e_3-4e_1^3e_3+e_1^2e_2^2-4e_2^3+27e_3^2,\]
+	which is quite bad, but theoretically doable.
+\end{proof}
+
+We would like to work out $\Delta^2$ without tears.
+\begin{example}
+	In two variables, our $\Delta^2$ here is $(\alpha_1-\alpha_2)^2=e_1^2-4e_2,$ which is really the discriminant of a monic quadratic.
+\end{example}
+So we more or less want the ``discriminant'' of a cubic.
+\begin{definition}[Discriminant]
+	Fix $f(x)$ a polynomial with roots $\alpha_1,\ldots,\alpha_n$ in algebraic closure, the \textit{discriminant} is defined as
+	\[\prod_{k\ne\ell}(\alpha_k-\alpha_\ell).\]
+\end{definition}
+So how do we compute this? The answer is resultants.
+
+\subsection{Resultants}
+\subsubsection{Set-Up}
+As usual, fix a field $k$ and a polynomial
+\[f(x)=x^n-e_1x^{n-1}+\cdots\in k[x]\]
+with roots $\alpha_1,\ldots,\alpha_n.$ We would like to compute
+\[\Delta^2=\prod_{k<\ell}(\alpha_k-\alpha_\ell)^2\in k[e_1,\ldots,e_n].\]
+The main point is that $\Delta^2=0$ if and only if $f$ has a multiple root.
+\begin{remark}
+	Sylvester chose the name ``discriminant'' for this reason.
+\end{remark}
+Going further, we see that $f$ has a multiple root in the algebraic closure if and only if $\gcd(f,f')\ne1.$ We check this briefly.
+\begin{lemma}
+	Fix $k$ a field and $f\in k[x]\setminus\{0\}.$ Then $f$ has a double root in the algebraic closure of $f$ if and only if $\gcd(f,f')$ has positive degree.
+\end{lemma}
+\begin{proof}
+	We have the following checks.
+	\begin{itemize}
+		\item In one direction, $(x-\alpha)^2\mid f(x)$ implies $f(x)=(x-\alpha)^2g(x)$ for some $g$ implies $f'(x)=2(x-\alpha)g(x)+(x-\alpha)^2g(x)$ implies $(x-\alpha)\mid f,f'.$ We can show the other direction purely formally.
+		\item In the other direction, if $\gcd(f,f')\ne1,$ then checking for roots of $\gcd(f,f')$ in the algebraic closure, we get $\alpha$ such that $f(\alpha)=f'(\alpha)=0.$ Then $f(\alpha)=0$ lets us write $f(x)=(x-\alpha)g(x)$ for some $g$ so that
+		\[f'(x)=g(x)+(x-\alpha)g'(x),\]
+		and when we plug $\alpha$ one more time, we see that $g(\alpha)=0$ so that we can write $g(x)=(x-\alpha)h(x)$ for some $h.$ It follows $(x-\alpha)^2\mid f.$
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	There is a tricky thing that $f'$ might vanish with $f$ non-constant. For example, the derivative of $f(x)=x^p-a$ is $0$ in $\FF_p.$ This is okay with multiple roots because, indeed, $x^p-a$ has only one root in $\overline{\FF_p}$: if $b$ is some root with $b^p=a,$ then $x^p-a=x^p-b^p=(x-b)^p,$ so we indeed only have the root $b.$
+\end{remark}
+The point is that we are interested when $f$ and $f'$ have a root in common.
+
+\subsubsection{The Sylvester Matrix}
+Of course, there isn't much special about $f',$ so we can just ask when two polynomials $f$ and $g$ have any root in common. For concreteness, we fix
+\[f(x)=\sum_{k=0}^{\deg f}a_kx^k\qquad\text{and}\qquad g(x)=\sum_{k=0}^{\deg g}b_kx^k.\]
+Supposing that these have a common root of $\alpha,$ we write $f(x)=(x-\alpha)p(x)$ and $g(x)=(x-\alpha)q(x).$ The key equation, now is that
+\[f(x)q(x)=(x-\alpha)q(x)p(x)=g(x)p(x),\]
+where $\deg p<\deg f$ and $\deg q<\deg g.$ Indeed, the existence of such $p$ and $q$ is equivalent to $f$ and $g$ having a common root.
+\begin{lemma}
+	Fix $k$ a field and $f,g\in k[x]\setminus\{0\}.$ Then $f$ and $g$ have a common root in the algebraic closure if and only if there exist $p,q\in k[x]\setminus\{0\}$ with $\deg p<\deg f$ and $\deg q<\deg g$ such that $fq=gp.$
+\end{lemma}
+\begin{proof}
+	The above argument gave the forward direction. In the reverse direction, we note that in $fq=gp,$ we may assume $p$ and $q$ are coprime, else we could divide out by their greatest common divisor. But then $p\mid gp=fq$ implies that $p\mid g,$ and similarly $q\mid fq=gp$ implies that $q\mid f$ so that
+	\[\frac fp=\frac gq\]
+	is a valid equation in $k[x].$ Now, $\deg p<\deg f$ and $\deg g<\deg q$ implies that both sides have positive degree, so both sides have a common root in the algebraic closure of $k.$ It follows that $f$ and $g$ have a common root in the algebraic closure.
+\end{proof}
+But at this point we see that solving
+\[fq=gp\]
+with $\deg p<\deg f$ and $\deg q<\deg p$ is essentially some massive set of linear equations in $p$ and $q$ where the coefficients come from $f$ and $g.$ So we can check for nontrivial solutions for $p$ and $q$ by checking if the determinant of the corresponding coefficient matrix vanishes.
+
+Let's see this. For concreteness, fix $m:=\deg f$ and $n:=\deg g$ with the coefficients
+\[p(x)=\sum_{\ell=0}^{m-1}y_\ell x^\ell\qquad\text{and}\qquad q(x)=\sum_{\ell=0}^{n-1}z_{\ell} x^\ell.\]
+Then
+\[fq=\left(\sum_{k=0}^ma_kx^k\right)\left(\sum_{\ell=0}^{n-1}z_\ell x^\ell\right)=\sum_{d=0}^{n+m-1}\left(\sum_{k+\ell=d}a_kz_\ell\right)x^d\]
+while
+\[gp=\left(\sum_{k=0}^{\deg g}b_kx^k\right)\left(\sum_{\ell=0}^{m-1}y_\ell x^\ell\right)=\sum_{d=0}^{n+m-1}\left(\sum_{k+\ell=d}b_ky_\ell\right)x^d.\]
+Comparing coefficients, we have the system
+\[\sum_{k+\ell=d}a_kz_\ell-\sum_{k+\ell=d}b_ky_\ell=0\]
+for each $0\le d<n+m-1.$ Written out in matrix form, we get an $(n+m)\times(n+m)$ matrix which looks like
+\[\begin{array}{l}
+	d=0 \\
+    d=1 \\
+    d=2 \\
+    ~~~~\vdots \\
+    d=m \\
+    d=m+1 \\
+    d=m+2 \\
+    d=m+3 \\
+    ~~~~\vdots \\
+    d=n+m-1
+\end{array}\begin{bmatrix}
+	a_0    &         &         &        &           & -b_0 \\
+	a_1    & a_0     &         &        &           & -b_1     & -b_0 \\
+	a_2    & a_1     & a_0     &        &           & -b_2     & -b_1     & -b_0     \\
+	\vdots & \vdots  & \vdots  & \vdots & \vdots    & \vdots   & \vdots   & \vdots   & \vdots & \vdots \\
+	a_m    & a_{m-1} & a_{m-2} & \cdots & a_{m-n+1} & -b_m     & -b_{m-1} & -b_{m-2} & \cdots & -b_1 \\
+	       & a_m     & a_{m-1} & \cdots & a_{m-n+2} & -b_{m+1} & -b_{m}   & -b_{m-1} & \cdots & -b_2 \\
+           &         & a_m     & \cdots & a_{m-n+3} & -b_{m+2} & -b_{m+1} & -b_{m}   & \cdots & -b_3 \\
+		   &         &         & \cdots & a_{m-n+4} & -b_{m+3} & -b_{m+2} & -b_{m+1} & \cdots & -b_4 \\
+           &         &         & \vdots & \vdots    & \vdots   & \vdots   & \vdots   & \vdots & \vdots \\
+           &         &         &        & a_m       &          &          &          &        & -b_n \\
+\end{bmatrix}\begin{bmatrix}
+	z_0 \\
+	z_1 \\
+	z_2 \\
+	\vdots \\
+	z_{n-1} \\
+	y_0 \\
+	y_1 \\
+	y_2 \\
+	\vdots \\
+	y_{m-1}
+\end{bmatrix},\]
+where the blank spaces are zeroes. We are interested in if this matrix has determinant zero, so we note that it does not matter if we make the $b_\bullet$ columns positive and transpose the matrix. Additionally, we can flip the columns/rows and rearrange them as we please while keeping the status of being zero unchanged, possibly introducing a sign here or there.
+
+Doing all of this along with some aesthetic choices gives us the Sylvester matrix.
+\begin{definition}[Sylvester matrix]
+	Fix $f,g\in k[x]$ as above. Then the \textit{Sylvester matrix} of $f$ and $g$ is the $(n+m)\times(n+m)$ matrix
+	\[\begin{bmatrix}
+		a_m & a_{m-1} & a_{m-2} & \cdots & a_0       &           &           &           &        &     \\
+			& a_m     & a_{m-1} & \cdots & a_1       & a_0       &           &           &        &     \\
+			&         & a_m     & \cdots & a_2       & a_1       & a_0       &           &        &     \\
+			&         &         & \cdots & \vdots    & \vdots    & \vdots    & \vdots    & \cdots &     \\
+			&         &         & \cdots & a_{n-1}   & a_{n-2}   & a_{n-3}   & a_{n-4}   & \cdots & a_0 \\
+		b_n & b_{n-1} & b_{n-2} & \cdots & b_{n-m}   & b_{n-m-1} & b_{n-m-2} & b_{n-m-3} & \cdots &     \\
+			& b_n     & b_{n-1} & \cdots & b_{n-m+1} & b_{n-m}   & b_{n-m-1} & b_{n-m-2} & \cdots &     \\
+			&         & b_n     & \cdots & b_{n-m+2} & b_{n-m+1} & b_{n-m}   & b_{n-m-1} & \cdots &     \\
+			&         &         & \cdots & \vdots    & \vdots    & \vdots    & \vdots    & \cdots &     \\
+			&         &         & \cdots & b_{n-1}   & b_{n-2}   & b_{n-3}   & b_{n-4}   & \cdots & b_0 \\
+	\end{bmatrix},\]
+	where the first $n$ rows shift the $a_\bullet$ across, and the next $m$ rows shift the $b_\bullet$ across.
+\end{definition}
+\begin{definition}[Resultant]
+	Fix $f,g\in k[x]$ as above. Then the \textit{resultant} of $f$ and $g,$ notated $\op{Res}(f,g),$ is the determinant of their Sylvester matrix.
+\end{definition}
+Now we have that $f$ and $g$ have a common root if and only if the determinant is zero. In particular, we have the following.
+\begin{proposition}
+	Fix $f,g\in k[x].$ Then $f$ and $g$ have a common root in the algebraic closure of $k$ if and only if the resultant of $f$ and $g$ is zero.
+\end{proposition}
+\begin{proof}
+	This follows from the above discussion.
+\end{proof}
+\begin{remark}
+	Our choice of $m$ and $n$ to be the degrees guaranteed that $a_m\ne0$ and $a_n\ne0,$ which parts of what make the above argument work. Sometimes by convention we might take $a_m=0$ and $b_n=0$ inducing a ``common root at $\infty.$''
+\end{remark}
+
+\subsubsection{Examples}
+Now let's work out our original example: take $f\in k[x]$ of degree $m,$ and we will require $k$ to have characteristic $0$ for psychological reasons. From our work with the resultant, we see that $\Delta^2=0$ if and only if $\op{Res}(f,f')=0.$ So with the above notation, we will have
+\[f(x)=\sum_{k=0}^ma_kx^k\qquad\text{and}\qquad f'(x)=\sum_{k=0}^{m-1}\underbrace{(k+1)a_{k+1}}_{b_k:=}x^k.\]
+The point is that $\Delta^2$ and $\op{Res}(f,f')$ share the same roots, so certainly $\Delta\mid\op{Res}(f,f'),$ but in fact $\op{Res}(f,f')$ is symmetric (it is a function of the coefficients of $f,$ which are symmetric in the roots), so we get that
+\[\Delta^2\mid\op{Res}(f,f').\]
+Looking at the matrix for $\op{Res}(f,f'),$ we can look at each column of the $(2m-1)\times(2m-1)$ Sylvester matrix and note that their degrees in $k[\alpha_1,\ldots,\alpha_m]$ fill in as follows.
+\[\begin{bmatrix}
+	0 & 1 & 2 & \cdots & m-1    & m      &        &        &        &   \\
+	  & 0 & 1 & \cdots & m-2    & m-1    & m      &        &        &   \\
+	  &   & 0 & \cdots & m-3    & m-2    & m-1    & m      &        &   \\
+	  &   &   & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots &   \\
+	  &   &   &        & 0      & 1      & 2      & 3      & \cdots & m \\
+	1 & 2 & 3 & \cdots & m      &        &        &        &        &   \\
+	  & 1 & 2 & \cdots & m-1    & m      &        &        &        &   \\
+	  &   & 1 & \cdots & m-2    & m-1    & m      &        &        &   \\
+	  &   &   & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots &   \\
+	  &   &   &        &        & 1      & 2      & 2      & \cdots & m
+\end{bmatrix}\]
+The point is that when we are choosing a permutation for the determinant, one entry from each row/column, we will multiply them together and hence add these degrees.
+
+Now, we see that each degree term increases linearly across a row, so the correct thing to do is to imagine adding in terms of extraneous degrees in the blank spaces---these terms of extraneous degree will have no effect on the determinant afterwards because their coefficient is zero and hence will all vanish. Anyways, we get the following.
+\[\begin{bmatrix}
+	0      & 1      & 2      & \cdots & m-1    & m      & m+1    & m+2    & \cdots & 2m-1   \\
+	-1     & 0      & 1      & \cdots & m-2    & m-1    & m      & m+1    & \cdots & 2m-2   \\
+	-2     & -1     & 0      & \cdots & m-3    & m-2    & m-1    & m      & \cdots & 2m-3   \\
+	\vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \vdots & \ddots & \cdots \\
+	-m+1   & -m+2   & -m+3   & \cdots & 0      & 1      & 2      & 3      & \cdots & m      \\
+	1      & 2      & 3      & \cdots & m      & m+1    & m+2    & m+3    & \cdots & 2m     \\
+	0      & 1      & 2      & \cdots & m-1    & m      & m+1    & m+2    & \cdots & 2m+1   \\
+	-1     & 0      & 1      & \cdots & m-2    & m-1    & m      & m+1    & \cdots & 2m+2   \\
+	-2     & -1     & 0      & \ddots & \vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+	-m+1   & -m+2   & -m+2   & \cdots & 0      & 1      & 2      & 2      & \cdots & m  
+\end{bmatrix}\]
+The idea behind this is that each row has some specified ``shift'' from the top row, so if we imagine going vertically row-by-row to select our permutation, the accumulated degree will simply be the sum of all shifts plus the sum of the entries of the top row. In particular, the sum of degrees does not depend on our exact permutation, so $\op{Res}(f,f')$ is in fact homogeneous.
+
+We quickly note that we can compute $\deg\op{Res}(f,f')$ explicitly by just choosing some random permutation: it is $1\cdot m+m\cdot m=m(m+1)$ by choosing $m$ of the $1$s along the lower diagonal followed by all $m$ of the $m$s along the top.
+
+But now $\Delta^2$ has the same degree in $k[\alpha_1,\ldots,\alpha_n]$! So we find that $\Delta^2=c\op{Res}(f,f')$ for some nonzero $c\in k^\times.$ A more sophisticated argument (say, present in Lang) is able to pin down what the coefficient $c$ should be and can find that it ought be $\pm1,$ but getting the exact sign is somewhat annoying.
+
+Anyways, let's get to the examples.
+\begin{example}
+	We compute the discriminant of $x^3+bx+c,$ which makes things easier to look at, and this is legal in characteristic not $3.$ We can compute the Sylvester matrix as
+	\[\begin{bmatrix}
+		1 & 0 & b & c & 0 \\
+		0 & 1 & 0 & b & c \\
+		3 & 0 & b & 0 & 0 \\
+		0 & 3 & 0 & b & 0 \\
+		0 & 0 & 3 & 0 & b
+	\end{bmatrix}.\]
+	We can compute that this determinant is $4b^3+27c^2.$ So is our discriminant the positive or negative sign? Well, we can look at a particular polynomial to pin this down. For example, the discriminant of $x^3-x$ has $\prod(\alpha_k-\alpha_\ell)^2$ is positive because all the roots are positive, so $b=-1$ forces us to use the negative discriminant: $\boxed{-4b^3-27b^2}.$
+\end{example}
+\begin{example}
+	We work in $\ZZ[\alpha],$ where $\alpha^3+\alpha+1=0.$ The discriminant of the number field is the discriminant of the polynomial is $-4(1)^3-27(1)^2=-31,$ so we see that $31$ is our only ramified prime.
+\end{example}
+\begin{example}
+	We can ask when $y^2=x^3+bx+c$ is an elliptic curve. This requires testing for singularities, which happens when $x^3+bx+c$ has multiple roots. So we are interested in testing for $4b^3+27c^2\ne0.$
+\end{example}
+We close with some remarks.
+\begin{remark}
+	There is a geometric meaning for the discriminant: given two homogeneous polynomials $f,g\in k[z_1,\ldots,z_m][x,y]$ (meaning the degrees of $x^ay^b$ are stable). Then we see that the vanishing set for $f$ and $g$ are going to define hypersurfaces $H_f$ and $H_g$ in $k^m\times\PP^1$ respectively. Then the resultant is the projection of $H_f\cap H_g$ onto $k^m.$
+	
+	For example, this is a closed set by definition of our Zariski topology, so we can fun things like that the projection $X\times\PP^1\to X$ takes closed sets to closed sets. In general, these projections do not have to be closed sets.
+\end{remark}
+The discriminant is an example of a ``syzygy,'' which is a word with no vowels. More seriously, a syzygy describes a relation between invariants. Namely, the discriminant gave the relation between the $A_3$-invariants $\Delta$ and the other symmetric polynomials. More generally the syzygies can be numerous and difficult to keep track of, so we might have second-order syzygies to keep track of these. This can get quite complex.
+\begin{example}
+	Take $\langle g\rangle\cong\ZZ/n\ZZ$ acting on $\CC[x,y]$ by $g\cdot x:=\zeta x$ and $g\cdot y:=\zeta y,$ where $\zeta$ is a primitive $n$th root of unity. We saw last time that we have the invariants
+	\[x^n,\qquad x^{n-1}y,\qquad x^{n-2},\qquad\ldots.\]
+	We can label these $a_0,a_1,\ldots$ by their degree of $y,$ and we get lots of syzygies like $a_0a_2=a_1^2$ and $a_1a_3=a_2^2.$
+\end{example}
+\begin{remark}
+	Any word ending in ``-ant'' is probably an invariant, probably named by Sylvester. For example, the determinant, discriminant, bezoutiant, catalectiant, and so on.
+\end{remark}

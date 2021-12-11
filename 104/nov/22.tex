@@ -1,0 +1,184 @@
+% !TEX root = ../notes.tex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The fun continues.
+
+\subsection{Darboux Sums}
+We are going to talk about integration now.
+\begin{example}
+	It is difficult to compute the integral
+	\[\int_2^31_{\QQ}(x)\,dx.\]
+	In fact, it does not exist, but we need to know what the integral means.
+\end{example}
+The point is that are going to more rigorously define what integration is for these questions to be tractable. For now, we don't even know what being integrable means, so let's move towards that.
+
+Most of our work will be for bounded functions $f$ defined on a closed interval $[a,b].$ We have the following convenient definitions.
+\begin{definition}[Maximum and minimum]
+	Fix $f:[a,b]\to\RR$ a bounded function. Then we define
+	\[M(f,S):=\sup\{f(x):x\in S\}\qquad\text{and}\qquad m(f,S):=\inf\{f(x):x\in S\}\]
+	for any $S\subseteq[a,b].$
+\end{definition}
+Note that these exist because $f$ is bounded. Now, the idea is to ``break'' $[a,b]$ into $n$ pieces, for some $n\in\ZZ^+.$
+\begin{definition}[Partition]
+	Fix $a,b\in\RR$ with $a<b.$ Then we define a \textit{partition} of $[a,b]$ into $n$ pieces to be any increasing sequence $\mathcal P=\{t_k\}_{k=0}^n$ such that $t_0=a$ and $t_n=b$ so that
+	\[a=t_0<t_1<\cdots<t_{n-1}<t_n=b.\]
+\end{definition}
+In particular, a partition $\{t_k\}_{k=0}^n$ of $[a,b]$ creates the union
+\[[a,b]=\bigcup_{k=0}^{n-1}[t_k,t_{k+1}].\]
+This gives us the following definition.
+\begin{definition}[Darboux sums]
+	Fix $f:[a,b]\to\RR$ a bounded function and $\mathcal P=\{t_k\}_{k=0}^n$ some partition of $[a,b].$ Then we define the following.
+	\begin{itemize}
+		\item We define the \textit{upper Darboux sum} by
+		\[\mathcal U(f,\mathcal P)=\sum_{k=1}^nM(f,[t_{k-1},t_k])\cdot(t_k-t_{k-1}).\]
+		\item We define the \textit{lower Darboux sum} by
+		\[\mathcal L(f,\mathcal P)=\sum_{k=1}^nm(f,[t_{k-1},t_k])\cdot(t_k-t_{k-1}).\]
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	These are in spirit a generalization of Riemann sums to arbitrary partitions: partition and then average over values.
+\end{remark}
+Intuitively, the upper Darboux sum is the sum of the ``largest possible rectangle'' of a corresponding Riemann sum. Note that $\mathcal U(f,\mathcal P)$ is upper-bounded by
+\[\mathcal U(f,\mathcal P)\le\sum_{k=1}^nM(f,[a,b])\cdot(t_k-t_{k-1})=M(f,[a,b])\cdot(b-a).\]
+In fact, we can lower-bound this stupidly by
+\[\mathcal U(f,\mathcal P)\ge\sum_{k=1}^nm(f,[a,b])\cdot(t_k-t_{k-1})=m(f,[a,b])\cdot(b-a).\]
+Similarly, $\mathcal L(f,\mathcal P)$ is lower-bounded by
+\[\mathcal L(f,\mathcal P)\ge\sum_{k=1}^nm(f,[a,b])\cdot(t_k-t_{k-1})=m(f,[a,b])\cdot(b-a),\]
+and is upper-bounded by
+\[\mathcal L(f,\mathcal P)\le\sum_{k=1}^nM(f,[a,b])\cdot(t_k-t_{k-1})=M(f,[a,b])\cdot(b-a).\]
+This gives us the following definition.
+\begin{definition}[Darboux integrals]
+	Fix $f:[a,b]\to\RR$ a bounded function. Then we define the following.
+	\begin{itemize}
+		\item The \textit{upper Darboux integral} is
+		\[\mathcal U(f):=\inf\{\mathcal U(f,\mathcal P):\mathcal P\text{ partitions }[a,b]\}.\]
+		\item The \textit{lower Darboux integral} is
+		\[\mathcal L(f):=\sup\{\mathcal L(f,\mathcal P):\mathcal P\text{ partitions }[a,b]\}.\]
+	\end{itemize}
+\end{definition}
+Note that these numbers do exist because we showed that $\mathcal U(f,\mathcal P)$ and $\mathcal L(f,\mathcal P)$ always live in the interval $[m(f,[a,b])(b-a), M(f,[a-b])(b-a)].$
+
+\subsection{Darboux Integrability}
+We would hope that $\mathcal U(f)\ge\mathcal L(f).$ Certainly, because a supremum will be at least an infimum, we can say that $\mathcal U(f,\mathcal P)\ge\mathcal L(f,\mathcal P),$ but this does not actually imply $\mathcal U(f)\ge\mathcal L(f).$ This is not obvious. To help with this, we pick up the following technical lemma.
+\begin{lemma}
+	Fix $f:[a,b]\to\RR$ a bounded function. Suppose $\mathcal P\subseteq\mathcal Q$ are partitions of $[a,b].$ Then
+	\[\mathcal L(f,\mathcal P)\le\mathcal L(f,\mathcal Q)\qquad\text{and}\qquad\mathcal U(f,\mathcal Q)\le\mathcal U(f,\mathcal P).\]
+\end{lemma}
+\begin{proof}
+	Only the inequalities on the ends require comment, and we will only discuss one on the left because the right inequality is similar. Intuitively, this is because further subdividing an interval lets us increase an infimum on one side.
+
+	To be explicit, say $Q=\{t_k\}_{k=0}^n$ so that $P=\{t_{\sigma\ell}\}_{\ell=0}^m$ for some strictly increasing $\sigma$ with $\sigma(0)=0$ and $\sigma(m)=n.$ Then the point is that
+	\[\sum_{k=\sigma(\ell)}^{\sigma(\ell+1)}m(f,[t_{\sigma\ell},t_{\sigma(\ell+1)}])(t_{\sigma(\ell+1)}-t_{\sigma\ell})\ge\sum_{k=\sigma(\ell)}^{\sigma(\ell+1)}m(f,[t_{\sigma\ell},t_{\sigma(\ell+1)}])(t_{\sigma(\ell+1)}-t_{\sigma\ell})\]
+	by the same lower Darboux lower-bounding as before. Summing this over all $\ell$ gives the result.
+\end{proof}
+And here is our result.
+\begin{proposition}
+	We have that $\mathcal L(f)\le\mathcal U(f).$
+\end{proposition}
+\begin{proof}
+	We show that any lower Darboux sum is less or equal to any upper Darboux sum. Indeed, if $P$ and $Q$ are partitions of $[a,b],$ we get
+	\[\mathcal L(f,\mathcal P)\le L(f,\mathcal P\cup\mathcal Q)\le\mathcal U(f,\mathcal P\cup\mathcal Q)\le\mathcal U(f,\mathcal Q)\]
+	by simply applying the above lemma repeatedly.
+\end{proof}
+So what about equality?
+\begin{definition}[Integrable]
+	Fix $f:[a,b]\to\RR$ a bounded function. We say that $f$ is \textit{Darboux integrable} if and only if $\mathcal L(f)=\mathcal U(f).$
+\end{definition}
+This condition is a bit unwieldy: it's got partitions and supremum and infimum of lots of sets floating around. Let's try to reduce the number of quantifiers.
+\begin{proposition}
+	Fix $f:[a,b]\to\RR$ a bounded function. Then $f$ is Darboux integrable if and only if for all $\varepsilon>0$ there exists a partition $P$ such that
+	\[\mathcal U(f,\mathcal P)-\mathcal L(f,\mathcal P)<\varepsilon.\]
+\end{proposition}
+\begin{proof}
+	We show the directions one at a time.
+	\begin{itemize}
+		\item Suppose the conclusion. Then, for any $\varepsilon>0,$ we can find a partition $\mathcal P$ such that
+		\[\mathcal L(f,\mathcal P)\le\mathcal L(f,\mathcal P)\le\mathcal U(f)\le\mathcal U(f,\mathcal P).\]
+		Sending $\varepsilon\to0$ shows that $f$ is integrable.
+		\item Otherwise take $f$ integrable. In order to not break the supremum and infimum things, there must be partitions $\mathcal P$ and $\mathcal Q$ such that
+		\[0\le\mathcal L(f)-\mathcal L(f,\mathcal P)<\frac\varepsilon2\qquad\text{and}\qquad0\le\mathcal U(f,\mathcal Q)-\mathcal U(f)<\varepsilon2.\]
+		Taking $P\cup Q,$ we see, using the technical lemma again,
+		\[0\le\mathcal L(f)-\mathcal L(f,\mathcal P\cup\mathcal Q)<\frac\varepsilon2\qquad\text{and}\qquad0\le\mathcal U(f,\mathcal P\cup\mathcal Q)-\mathcal U(f)<\varepsilon2,\]
+		so $\mathcal P\cup\mathcal Q$ will be the needed partition.
+		\qedhere
+	\end{itemize}
+\end{proof}
+We remark that it is general somewhat hard to actually test if a function is Darboux integrable. We have a definition, but actually computing these various values is difficult because there are so many quantifiers to keep track of. This might be technically easier to work with, but it is difficult to work with.
+
+Let's try to make this more computationally feasible.
+\begin{definition}
+	For a partition $\{t_k\}_{k=0}^n\subseteq[a,b],$ then we define the \textit{mesh} of $\{t_k\}_{k=0}^n$ to be the maximum of $t_{k+1}-t_k.$
+\end{definition}
+We have the following result.
+\begin{proposition}
+	Fix $f:[a,b]\to\RR$ a bounded function. Then $f$ is integrable if and only if, for each $\varepsilon>0,$ there exists a $\delta>0$ such that any partition $\mathcal P$ with mesh less than $\delta$ with
+	\[\mathcal U(f,\mathcal P)-\mathcal L(f,\mathcal P)<\varepsilon.\]
+\end{proposition}
+\begin{proof}
+	This is technically hard to prove, so we won't give it here. The main point is that, once our partitions are close enough together, we can make the mesh smaller artificially to get the condition. In the reverse condition, we can do this by hand.
+\end{proof}
+
+\subsection{Riemann Integrability}
+Because we should, let's talk about Riemann sums.
+\begin{definition}
+	Fix $f:[a,b]\to\RR$ a bounded function. Then, given a partition $\{t_k\}_{k=0}^n$ of $[a,b],$ we define the \textit{Riemann sum} to be
+	\[\sum_{k=1}^nf(x_k)(t_k-t_{k-1}),\]
+	where $x_k\in[t_{k-1},t_k]$ is any point.
+\end{definition}
+Usually we place some conditions on $x_k$ and $t_k,$ but we don't have to. For example, we might require the $[t_{k-1},t_k]$ to have equal length, but there is no immediate reason to do this. We note quickly that the Riemann sum will have
+\[m(f,[t_k,t_{k-1}])\le f(x_k)\le M(f,[t_k,t_{k-1}]),\]
+so the Riemann sum will be upper-bounded by $\mathcal U(f)$ and lower-bounded by $\mathcal L(f).$ So intuitively, it looks like Darboux integrable will easily imply Riemann integrable.
+
+So let's define Riemann integrable.
+\begin{definition}[Riemann integrable]
+	Fix $f:[a,b]\to\RR$ a bounded function. Then $f$ is \textit{Riemann integrable} if and only if, for each $\varepsilon>0,$ there exists $\delta>0$ such that each partition $\mathcal P$ with mesh less than $\delta$ has any Riemann sum $\varepsilon$-close to some $I\in\RR.$ Note that $I\in\RR$ depends only on $f$ and $[a,b].$
+\end{definition}
+This happens to be equivalent to Darboux integrable, but we will not show it here in detail.
+\begin{theorem}
+	Fix $f:[a,b]\to\RR$ a bounded function. Then $f$ is Darboux integrable if and only if it is Riemann integrable.
+\end{theorem}
+\begin{proof}
+	We talk about these one direction at a time.
+	\begin{itemize}
+		\item Fix $f$ Darboux integrable. Then we claim that the integral needed is $I:=\mathcal U(f)=\mathcal L(f).$ Then, for any Riemann sum
+		\[\mathcal L(f,\mathcal P)\le\sum_{k=1}^nf(x_k)(t_k-t_{k-1})\le\mathcal U(f,\mathcal P),\]
+		so sending our mesh to $0$ takes $\mathcal L(f,\mathcal P),\mathcal U(f,\mathcal P)\to I.$
+		\item The reverse direction is annoying; essentially the point is that we can get a Riemann sum arbitrarily close to any particular $\mathcal L(f,\mathcal P)$ or $\mathcal U(f,\mathcal P)$ by choosing the $x_k$s to be close to the supremum and infimum of its interval. However, this is annoying because it is possible that the supremum and infimum are not actually achieved, but it is possible.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Anyways, let's do an example.
+\begin{exe}
+	We show that the function
+	\[f(x)=\begin{cases}
+		x^2 & x \in \QQ, \\
+		0 & x\notin\QQ,
+	\end{cases}\]
+	is not integrable on $[0,1]$ by computing $\mathcal L(f)$ and $\mathcal U(f).$
+\end{exe}
+\begin{proof}
+	Fix $\mathcal P=\{t_k\}_{k=0}^n$ to be some partition of $[0,1].$ Then we see that
+	\[\mathcal L(f,\mathcal P)=\sum_{k=1}^nm(f,[t_{k-1},t_k])(t_k-t_{k-1})=0\]
+	because each interval will have some irrational in it.
+
+	The upper Darboux integral is more annoying. We find that
+	\[\mathcal U(f,\mathcal P)=\sum_{k=1}^nM(f,[t_{k-1},t_k])(t_k-t_{k-1})=\sum_{k=1}^nt_k^2(t_k-t_{k-1}).\]
+	Indeed, that supremum is $t_k^2$ because this certainly upper-bounds, and it is the least upper bound by taking some sequence of rationals in $[t_{k-1},t_k]$ approaching $t_k.$
+
+	The main idea here is that $\mathcal U(f,\mathcal P)$ is going to have the same upper Darboux sum as $g(x)=x^2,$ but now $g$ is continuous and hence integrable, so we can compute it directly as, say, $\int_0^1x^2\,dx=\frac13.$ Because $\mathcal U(f)\ne\mathcal L(f),$ this is not integrable. So we are done.
+\end{proof}
+\begin{remark}
+	One could also compute the integral of $g$ by hand using some summation.
+\end{remark}
