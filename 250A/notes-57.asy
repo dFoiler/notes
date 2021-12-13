@@ -10,8 +10,8 @@ viewportmargin=(2,2);
 
 unitsize(1cm);
 pair p1=(1,0), p2=(3,0), p3=(4.1415926,0);
-pair q1=(0,2), q2=(1.5,2.5), q3=(4,3.5);
-pair r1=(1.235,1.176), r2=(1.92,1.073), r3=(3.243,0.85);
+pair q1=(0,2), q2=(1.5,2.5), q3=(4.5,3.5);
+pair r1=(1.235,1.176), r2=(2.023,1.023), r3=(3.329,0.769);
 draw(p1--p3); draw(q1--q3);
 draw(p1--q2, dotted); draw(p1--q3, dotted);
 draw(p2--q1, dotted); draw(p2--q3, dotted);
