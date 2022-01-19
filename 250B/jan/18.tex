@@ -17,24 +17,32 @@ We have the following definition.
 \begin{definition}[Irreducible, prime]
 	Fix $R$ a ring and $r\in R$ an element.
 	\begin{itemize}
-		\item We say that $r\in R$ is \textit{irreducible} if and only if $r=ab$ for $a,b\in R$ implies that one of $a$ or $b$ is a unit.
-		\item We say that $r\in R$ is \textit{prime} if and only if $r$ is not a unit, not zero, and $(r)$ is a prie ideal: $r\mid ab$ implies $r\mid a$ or $r\mid b$.
+		\item We say that $r\in R$ is \textit{irreducible} if and only if $r$ is not a unit and $r=ab$ for $a,b\in R$ implies that one of $a$ or $b$ is a unit.
+		\item We say that $r\in R$ is \textit{prime} if and only if $r$ is not a unit, not zero, and $(r)$ is a prie ideal: $ab\in(r)$ implies $a\in(r)$ or $b\in(r)$.
 	\end{itemize}
 \end{definition}
 This gives rise to the following important definition.
 \begin{definition}[Unique factorization domain]
-	Fix $R$ an integral domain. Then $R$ is a \textit{unique factorization domain} if and only if all nonzero elements of $R$ have a unique factorization into irreducible elements.
+	Fix $R$ an integral domain. Then $R$ is a \textit{unique factorization domain} if and only if all nonzero elements of $R$ have a factorization into irreducible elements, unique up to permutation and multiplication by units.
 \end{definition}
+\begin{remark}
+	Units have the ``empty'' factorization, consisting of no irreducibles.
+\end{remark}
 \begin{example}
-	The ring $\ZZ$ is a unique factorization domain.
+	The ring $\ZZ$ is a unique factorization domain. We will prove this later.
 \end{example}
-Note there are two things to check: that the factorization exists and that it exists.
-\begin{example}
-	Consider the subring $R:=k\left[x^2,xy,y^2\right]\subseteq k[x,y]$. Here $x^2,xy,y^2$ are all irreducibles because there are no linear polynomials, so the only possible decompositions must include a degree-$0$ (i.e., unit) polynomial. However, they are not prime:
+Note there are two things to check: that the factorization exists and that it is unique. Importantly, existence does not imply uniqueness.
+\begin{exe}
+	There exists an integral domain $R$ such that every element has a factorization into irreducibles but that this factorization is unique.
+\end{exe}
+\begin{proof}
+	Consider the subring $R:=k\left[x^2,xy,y^2\right]\subseteq k[x,y]$. Here $x^2,xy,y^2$ are all irreducibles because the only way to factor a quadratic nontrivially would be into linear polynomials, but $R$ has no linear polynomials.
+	
+	However, these elements are not prime:
 	\[x^2\mid xy\cdot xy\]
-	while $x^2$ does not divide $xy$.
-\end{example}
-The following condition will provide a more 
+	while $x^2$ does not divide $xy$. More concretely, $(xy)(xy)=x^2\cdot y^2$ provides non-unique factorization into irreducibles.
+\end{proof}
+The following condition will provide an easier check for the existence of factorizations.
 \begin{definition}[Ascending chain condition]
 	Given a collection of sets $\mathcal S$, we say that $\mathcal S$ \textit{has the ascendinc chain condition} (ACC) if and only every chain of sets in $\mathcal S$ must eventually stablize.
 \end{definition}
@@ -45,7 +53,7 @@ The following condition will provide a more
 \end{example}
 Now, the fact that $\ZZ$ is a unique factorization domain roughly comes from the fact that $\ZZ$ is a principal ideal domain.
 \begin{theorem}
-	Fix $R$ a ring. Then $R$ is a principal ideal domain implies that $R$ is a unique factorizatino domain.
+	Fix $R$ a ring. Then $R$ is a principal ideal domain implies that $R$ is a unique factorization domain.
 \end{theorem}
 \begin{proof}
 	We start by showing that $R$ has the ascending chain for principal ideals. Indeed, suppose that we have some ascending chain of principal ideals
@@ -54,7 +62,41 @@ Now, the fact that $\ZZ$ is a unique factorization domain roughly comes from the
 	\[\bigcup_{k=1}^\infty(a_k)=(b).\]
 	However, it follows $b\in(a_N)$ for some $N$, in which case $(a_n)=(a_N)$ for each $n\ge N$.
 
-	Next we show that all prime elements are irreducible elements. The main idea is that prime ideals correspond to maximal ideals correspond to ``irreducible ideals.'' We will not write this out; we showed this last semester.
+	We can now show that every nonzero element in $R$ has a factorization into irreducibles.
+	\begin{lemma}
+		Suppose that a ring $R$ has the ascending chain condition for principal ideals. Then every nonzero element of $R$ has a factorization into irreducibles.
+	\end{lemma}
+	\begin{proof}
+		Fix some $r\in R$. If $(r)=R$, then $r$ is a unit and hence has the empty factorization.
+	
+		Otherwise, note that every ideal can be placed inside of a maximal and hence prime ideal, so say that $(r)\subseteq\mf m$ where $\mf m_1$ is prime; because $R$ is a principal ring, we can say that $\mf m=(\pi_1)$ for some $\pi_1\in R$, so $\pi_1\mid r$. This $\pi_1$ should go into our factorization, and we have left to factor $r/\pi_1$.
+
+		The above argument can then be repeated for $r/\pi_1$, and if $r/\pi_1$ is not a unit, then we get an irreducible $\pi_2$ and consider $r/(\pi_1\pi_2)$. This process must terminate because it is giving us an ascending chain of principal ideals
+		\[(r)\subseteq\left(\frac r{\pi_1}\right)\subseteq\left(\frac r{\pi_1\pi_2}\right)\subseteq\cdots,\]
+		which must stabilize eventually and hence must be finite. Thus, there exists $N$ so that
+		\[\left(\frac r{\pi_1\pi_2\cdots\pi_N}\right)=R,\]
+		so $r=u\pi_1\pi_2\cdots\pi_N$ for some unit $u\in R^\times$.
+	\end{proof}
+	It remains to show uniqueness of the factorizations. The main idea is to show that all prime elements of $R$ are the same as irreducible ones. One direction of the implication does not need the fact that $R$ is a principal ring.
+	\begin{lemma}
+		Fix $R$ an integral domain. Then any prime $r\in R$ is also irreducible.
+	\end{lemma}
+	\begin{proof}
+		Note that $r$ is not a unit because it is prime. Now, suppose that $r=ab$ for $a,b\in R$; this implies that $r\mid ab$, so because $r$ is prime, without loss of generality we force $r\mid a$. Then, dividing by $r$ (which is legal because $R$ is an integral domain), we see that
+		\[1=(a/r)b,\]
+		so $b$ is a unit. This finishes showing that $r$ is irreducible.
+	\end{proof}
+	The other side of this is harder. Pick up some $\pi\in R$ which is irreducible, and we show that $\pi$ is prime. In fact, we will show stronger: we will show that $(\pi)$ is a maximal ideal. Note $(\pi)\ne R$ because $\pi$ is not a unit.
+	
+	Indeed, suppose that $(\pi)\subseteq(r)$ for some ideal $(r)\subseteq R$. Then
+	\[\pi=rs\]
+	for some $s\in R$. Now, one of $r$ or $s$ must be a unit ($\pi$ is irreducible). If $s$ is a unit, then $(\pi)=(r)$; if $r$ is a unit then $(r)=R$. This finishes showing that $(\pi)$ is maximal.
+
+	From here we show the uniqueness of our factorizations. We proceed inductively, noting that two empty factorizations are of course the same up to permutation and units. Now suppose we have two factorizations of irreducibles
+	\[\prod_{k=1}^mp_k=\prod_{\ell=1}^nq_\ell,\]
+	where $k+\ell\ge1$. Note that we cannot have exactly one side with no primes because this would make a product of irreducibles into $1$, and irreducibles are not units.
+
+	Now, consider $p_m$. It is irreducible and hence prime and hence divides one of the right-hand factors; without loss of generality $p_m\mid q_n$. But $(p_m)$ and $(q_n)$ are both maximal ideals, so $(p_m)\subseteq(q_n)$ forces equality, so $p_m/q_n$ is a unit. So we may cross off $p_m$ and $q_n$ and continue downwards by induction.
 \end{proof}
 
 \subsection{Digression on Gaussian Integers}
@@ -70,18 +112,25 @@ One can in fact check that $\ZZ[i]$ is a principal ideal domain, which implies t
 	where $r=0$ or $\op N(r)<\op N(\beta)$.
 \end{lemma}
 \begin{proof}
-	The main idea is to view $\ZZ[i]\subseteq\CC$ geometrically as in $\RR^2$. We may assume that $|\beta|\le|\alpha|$, and then it suffices to show that in this case we may find $q$ so that $a-bq$ has smaller norm than $a$. Well, for this it suffices to look at $a+b,a-b,a+ib,a-ib$; the proof that one of these works essentially boils down to the following image.
+	The main idea is to view $\ZZ[i]\subseteq\CC$ geometrically as in $\RR^2$. We may assume that $|\beta|\le|\alpha|$, and then it suffices to show that in this case we may find $q$ so that $a-bq$ has smaller norm than $a$ and induct.
+	
+	Well, for this it suffices to look at $a+b,a-b,a+ib,a-ib$; the proof that one of these works essentially boils down to the following image.
 	\begin{center}
 		\begin{asy}
 			unitsize(0.9cm);
-			pair a = (3,4);
+			pair a = (3,3);
 			pair b = (1,2);
+			pair ib = (-2,1);
 			draw((0,0) -- a, EndArrow);
 			draw(a -- a+b, EndArrow);
 			draw(a -- a-b, EndArrow);
-			draw(a -- a+(-2,1), EndArrow);
-			draw(a -- a-(-2,1), EndArrow);
+			draw(a -- a+ib, EndArrow);
+			draw(a -- a-ib, EndArrow);
 			dot("$a$", a, ENE);
+			dot("$a+b$", a+b, b);
+			dot("$a-b$", a-b, -b);
+			dot("$a+ib$", a+ib, ib);
+			dot("$a-ib$", a-ib, -ib);
 		\end{asy}
 	\end{center}
 	Note that at least one of the endpoints here has norm smaller than $a$.
