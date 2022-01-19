@@ -119,8 +119,8 @@ One can in fact check that $\ZZ[i]$ is a principal ideal domain, which implies t
 		\begin{asy}
 			unitsize(0.9cm);
 			pair a = (3,3);
-			pair b = (1,2);
-			pair ib = (-2,1);
+			pair b = 0.7*(1,2);
+			pair ib = 0.7*(-2,1);
 			draw((0,0) -- a, EndArrow);
 			draw(a -- a+b, EndArrow);
 			draw(a -- a-b, EndArrow);
@@ -154,7 +154,7 @@ We have the following definition.
 	A ring $R$ is said to be \textit{Noetherian} if its ideals have the ascending chain condition.
 \end{definition}
 There are some equivalent conditions to this.
-\begin{proposition}
+\begin{proposition} \label{prop:noethergrapbag}
 	Fix $R$ a ring. The following conditions are equivalent.
 	\begin{itemize}
 		\item $R$ is Noetherian.
@@ -162,32 +162,45 @@ There are some equivalent conditions to this.
 	\end{itemize}
 \end{proposition}
 \begin{proof}
-	We will show one direction, if $R$ has an infinitely generated ideal
-	\[I:=(a_1,a_2,a_3,\ldots),\]
-	then we have the non-stabilizing ascending chain
-	\[(a_1)\subseteq(a_2)\subseteq(a_3)\subseteq\cdots.\]
-	We leave the other direction as an exercise.
+	We show the directions one at a time.
+	\begin{itemize}
+		\item Suppos that $R$ has an ideal which is not finitely generated, say $J\subseteq R$. Then we may pick up any $a_1\in J$ and observe that $J\ne(a_1)$.
+
+		Then we can pick up $a_2\in J\setminus(a_1)$ and observe that $J\ne(a_1,a_2)$. So then we pick up $a_3\in J\setminus(a_1,a_2)$ and continue. This gives us a strictly ascending chain
+		\[(a_1)\subsetneq(a_1,a_2)\subsetneq(a_1,a_2,a_3)\subsetneq\cdots,\]
+		contadicting the ascending chain condition.
+		\item Suppose that every ideal is finitely generated. Then, given any ascending chain of ideals
+		\[I_1\subseteq I_2\subseteq I_3\subseteq\cdots,\]
+		we need this chain to stabilize. Well, the union
+		\[I:=\bigcup_{k=1}^\infty I_k\]
+		is also an ideal, and it must be finitely generated, so suppose $I=(a_1,a_2,\ldots,a_m)$. However, each $a_k$ must appear in some $I_\bullet$ (and then each $I_\bullet$ after that one as well); choose $N$ large enough to that $a_k\in I_N$ for each $k$. This implies that, for any $n\ge N$,
+		\[I_n\subseteq I=(a_1,a_2,\ldots,a_m)\subseteq I_N\subseteq I_n\]
+		verifying that the chain has stabilized.
+		\qedhere
+	\end{itemize}
 \end{proof}
 A large class of rings turn out to be Noetherian, and in fact oftentimes Noetherian rings can build more Noetherian rings.
-\begin{prop}
+\begin{prop} \label{prop:noetherianquot}
 	Fix $R$ a Noetherian ring and $I\subseteq R$ an ideal. Then $R/I$ is also Noetherian.
 \end{prop}
 \begin{proof}
-	Any chain of ideals in $R/I$ can be lifted to a chain in $R$ by taking pre-images along $R\onto R/I$. Then the chain must stabilize in $R$, so they will stabilize back down in $R/I$ as well.
+	Any chain of ideals in $R/I$ can be lifted to a chain in $R$ by taking pre-images along $\varphi:R\onto R/I$. Then the chain must stabilize in $R$, so they will stabilize back down in $R/I$ as well.
 \end{proof}
-However, things are not always so nice. It is not true that $R_1\subseteq R_2$ with $R_2$ Noetherian implies that $R_1$ is Noetherian.\todo{example}
-\begin{nex}
-	
-\end{nex}
+The above works because quotienting is an algeebraic operation. In contrast, merely being a subring is less algebraic, so it is not so surpsising that $R_1\subseteq R_2$ with $R_2$ Noetherian does not imply that $R_1$ is Noetherian.
+\begin{ex}
+	The ring $k[x_1,x_2,\ldots]$ is not Noetherian because we have th infinite ascending chain
+	\[(x_1)\subseteq(x_1,x_2)\subseteq(x_1,x_2,x_3)\subseteq\cdots.\]
+	Howver, $k[x_1,x_2,\ldots]\subseteq k(x_1,x_2,\ldots)$, and the latter ring is Noetherian because it is a field. (Fields are Noetherian because they have finitely many ideals and therefore satisfy the ascending chain condition automatically.)
+\end{ex}
 Here is another way to generate Noetherian rings.
 \begin{theorem}[Hilbert basis] \label{thm:hilbasis}
 	If $R$ is a Noetherian ring, then $R[x]$ is also a Noetherian ring.
 \end{theorem}
-\begin{corollary}
+\begin{corollary} \label{cor:inducthilbertbasis}
 	By induction, if $R$ is Noetherian, then $R[x_1,x_2,\ldots,x_n]$ is Notherian for any finite $n$.
 \end{corollary}
 \begin{warn}
-	It is not true that $R[x_1,x_2,\ldots]$ is Noetherian: the ideal $(x_1,x_2,\ldots)$ is not finitely generated!
+	Again, it is not true that $R[x_1,x_2,\ldots]$ is Noetherian, even though ``inducting'' with the Hilbert basis theorem might suggest that it is.
 \end{warn}
 \begin{proof}[Proof of \autoref{thm:hilbasis}]
 	The idea is to use the degree of polynomials to measure size. Fix $I\subseteq R[x]$ an ideal, and we apply the following inductive process.
@@ -204,17 +217,19 @@ Here is another way to generate Noetherian rings.
 	\[(a_1,a_2,\ldots)=(a_1,a_2,\ldots,a_N).\]
 	To finish, we claim that
 	\[I\stackrel?=(f_1,f_2,\ldots,f_N).\]
-	Well, suppose for the sake of contradiction that we can find some $g\in I\setminus(f_1,f_2,\ldots,f_N)$ of least degree. We must have $\deg g\deg f_\bullet$ for each $f_\bullet$, or else we contradict the construction of $f_\bullet$ as being least degree.
+	Well, suppose for the sake of contradiction that we had some $f_{N+1}\in I\setminus(f_1,f_2,\ldots,f_N)$ of least degree. We must have $\deg f_{N+1}\ge\deg f_\bullet$ for each $f_\bullet$, or else we contradict the construction of $f_\bullet$ as being least degree.
 
-	To finish, let $a$ be the leading coefficient of $g$, which must be an element of $(a_1,a_2,\ldots)$\todo{why?}, but then we can look at
-	\[g-\sum_{k=1}^Nc_ka_kx^{(\deg g)-(\deg f_k)}f_k,\]
-	which will have degree smaller than $g$ while not being in $I$ either, which contradicts the minimality of the degree of $g$.
+	To finish, we note $a_{N+1}\in(a_1,a_2,\ldots,a_N)$, so we are promised constants $c_1,c_2,\ldots,c_N$ such that
+	\[a_{N+1}=\sum_{k=1}^Nc_ka_k.\]
+	In particular, the polynomial
+	\[g(x):=f_{N+1}(x)-\sum_{k=1}^Nc_ka_kx^{(\deg g)-(\deg f_k)}f_k,\]
+	will be gauarnteed to kill the leading term of $f_{N+1}(x)$. But $g\equiv f_{N+1}\pmod I$, so $g$ is suddenly a polynomial also not in $I$ while of smaller degree than $f_{N+1}$, which is our needed contradiction.
 \end{proof}
 
 \subsection{Modules}
 To review, we pick up the following definition.
 \begin{definition}[Module]
-	Fix $R$ a ring. Then $M$ is an abelian group with an $R$-action. Explicitly, we have the following properties. Fix any $a,b\in R$ and $m,n\in M$.
+	Fix $R$ a ring. Then $M$ is an abelian group with an $R$-action. Explicitly, we have the following properties; fix any $a,b\in R$ and $m,n\in M$.
 	\begin{itemize}
 		\item $1_Rm=m$.
 		\item $a(bm)=(ab)m$.
@@ -226,47 +241,55 @@ To review, we pick up the following definition.
 	Any ideal $I\subseteq R$ is an $R$-module. In fact, ideals exactly correspond to the $R$-submodules of $R$.
 \end{example}
 \begin{example}
-	Given any two $R$-module $M$ with a submodule $N\subseteq M$, we can form the quotient $N\subseteq M$.
+	Given any two $R$-module $M$ with a submodule $N\subseteq M$, we can form the quotient $M/N$.
 \end{example}
 Modules also have a notion of being Noetherian.
 \begin{definition}[Noetherian module]
-	We say that an $R$-module $M$ is \textit{Noetherian} if and only if all $R$-submodules of $M$ are finitely generated. Equivalently, the submodules of $M$ have the ascending chain condition.
+	We say that an $R$-module $M$ is \textit{Noetherian} if and only if all $R$-submodules of $M$ are finitely generated.
 \end{definition}
-Modules have some interesting ways to create new Noetherian submodules. Here is one important way.
-\begin{proposition}
+\begin{remark}
+	Equivalently, $M$ is Noetherian if and only if the submodules of $M$ have the ascending chain condition. The proof of the equivalence is essentially the same as \autoref{prop:noethergrapbag}.
+\end{remark}
+Because modules are slightly better algebraic objects than rings, we have more ways to stitch modules together and hence more ways to make Noetherian modules. Here is one important way.
+\begin{proposition} \label{prop:noetherianses}
 	Fix a short exact sequence
 	\[0\to A\to B\to C\to 0\]
 	of $R$-modules. Then $B$ is Noetherian if and only if $A$ and $C$ are both Noetherian.
 \end{proposition}
 \begin{proof}
-	We will not prove this here. The forwards direction is not too hard: $A$ being a submodule of a Noetherian module implies that all of its submodules still must be finitely generated. Then for $C$, one considers the quotient in the same way we did for rings.
+	We will not show this here; it is on the homework. Nevertheless, let's sketch the forwards direction, which is easier. Take $B$ Noetherian.
+	\begin{itemize}
+		\item To show that $A$ is Noetherian, it suffices to note that any submodules $M\subseteq A$ will also be a submodule of $B$ and hence be finitely generated because $B$ is Noetherian.
+		\item To show that $C$ is Noetherian, we note that $C$ is essentially a quotient of $B$, so we can proceed as we did in \autoref{prop:noetherianquot}.\footnote{In fact, \autoref{prop:noetherianquot} is this case of where $C=R$.}
+		\qedhere
+	\end{itemize}
 \end{proof}
-Because we like Noetherian rings, the following is a reassuring way to make Noetherian modules.
+Because we like Noetherian rings, the following will be a useful way to make Noetherian modules from them.
 \begin{proposition}
 	Every finitely generated $R$-module over a Noetherian ring $R$ is Noetherian.
 \end{proposition}
 \begin{proof}
 	If $M$ is finitely generated, then there exists some $n\in\NN$ and surjective morphism
 	\[\varphi:R^n\onto M.\]
-	Now, because $R$ is Noetherian, $R^n$ will be Noetherian by an induction: the inductive step looks at the short exact sequence
+	Now, because $R$ is Noetherian, $R^n$ will be Noetherian by an induction: there is nothing to say when $n=1$. Then the inductive step looks at the short exact sequence
 	\[0\to R\to R^n\to R^{n-1}\to 0.\]
-	Thus, $M$ is the quotient of a Noetherian ring $R^n$ and hence Noetherian.
+	Here, the fact that $R$ and $R^{n-1}$ are Noetherian implies that $R^n$ is Noetherian by \autoref{prop:noetherianses}. Anyways, the point is that $M$ is the quotient of a Noetherian ring and hence Noetherian by \autoref{prop:noetherianses} (again).
 \end{proof}
 Here is the analogous result for algebras.
 \begin{definition}[Algebra]
-	A ring $S$ is an $R$-module if and only if there is an embedding $R\into S$.
+	An \textit{$R$-algebra $S$} is a ring equipped with a homomorphism $\iota:R\to S$. Equivalently, we may think of an $R$-algebra as a ring with an $R$ action.
 \end{definition}
 \begin{prop}
-	Fix $R$ a Noetherian ring. Then any finitely generated $R$-algebra is Noetherian. Equivalently, we may think of an $R$-algebra as a ring with an $R$ action.
+	Fix $R$ a Noetherian ring. Then any finitely generated $R$-algebra is Noetherian.
 \end{prop}
 \begin{proof}
-	Saying that $S$ is a finitely generated $R$-algebra is the same as saying that there is a surjective morphism
+	Saying that $S$ is a finitely generated $R$-algebra (with associated map $\iota:R\to S$) is the same as saying that there is a surjective morphism
 	\[\varphi:R[x_1,\ldots,x_n]\onto S\]
-	for some $n\in\NN$. But then $S$ is the quotient of a $R[x_1,\ldots,x_n]$, which is Noetherian by \autoref{thm:hilbasis}, so $S$ is Noetherian as well.
+	for some $n\in\NN$. (Explicitly, $\varphi|_R=\iota$, and each $x_k$ maps to one of the finitely many generating elements of $S$.) But then $S$ is the quotient of a $R[x_1,\ldots,x_n]$, which is Noetherian by \autoref{cor:inducthilbertbasis}, so $S$ is Noetherian as well.
 \end{proof}
 
 \subsection{Invariant Theory}
-In our discussion, fix $k$ a field of characteristic $0$, and let $G$ be a finite group or $\op{GL}_n(k)$ (say). Now, suppose that we have a map
+In our discussion, fix $k$ a field of characteristic $0$, and let $G$ be a finite group or $\op{GL}_n(\CC)$ (say). Now, suppose that we have a map
 \[G\to\op{GL}_n(k).\]
 Then this gives $k[x_1,\ldots,x_n]$ a $G$-action by writing $gf(\vec x):=f(g^{-1}\vec x).$ The central question of invariant theory is then as follows.
 \begin{ques}[Invariant theory]
@@ -279,26 +302,34 @@ Here is a result of Hilbert.
 	Fix everything as above. Then the ring $k[x_1,\ldots,x_n]^G$ is Noetherian.
 \end{theorem}
 \begin{proof}
-	Please read this on your time; we skipped it in class. The main ingredient is the Hilbert basis theorem.
+	Please read this on your time; we skipped it in class. The main ingredients are the Hilbert basis theorem and a Reynolds operator.\todo{include this proof}
 \end{proof}
 The main example here is as follows.
-\begin{example}
-	Consider the action of $S_n$ on $R=k[x_1,\ldots,x_n]$ by permuting the coordinates: $\sigma\in S_n$ acts by $\sigma\cdot x_m:=x_{\sigma n}$. Then the polynomials in $S=R^G$ are the \textit{homogeneous} polynomials. The fundamental theorem of symmetric polynomials tells us that
+\begin{exe}
+	Let $S_n$ act on $R:=k[x_1,\ldots,x_n]$ as follows: $\sigma\in S_n$ acts by $\sigma x_m:=x_{\sigma m}$. Then we want to describe $R^G$, the \textit{homogeneous polynonmials in $n$ letters}.
+\end{exe}
+\begin{proof}
+	We won't work this out in detail here, but the main point is that the fundamental theorem of symmetric polynomials tells us that
 	\[R^G=k[e_1,e_2,\ldots,e_n],\]
-	where the $e_\bullet$ are \textit{elementary symmetric functions}. Explicitly,
-	\[e_m:=\sum_{\substack{T\subseteq\{1,\ldots,n\}\\\#S=m}}\prod_{t\in T}x_t.\]
-\end{example}
-\begin{remark}
-	Yes, I am in fact running out of letters. Thank you for asking.
-\end{remark}
+	where the $e_\bullet$ are \textit{elementary symmetric functions}. Namely,
+	\[e_m:=\sum_{\substack{S\subseteq\{1,\ldots,n\}\\\#S=m}}\prod_{s\in S}x_s.\]
+	It is quite remarkable that $R^G$ turned out to be a freely generated $k$-algebra, just like $R$.
+\end{proof}
 Here is more esoteric example.
-\begin{example}
-	Fix $R:=k[x,y]$ and $G=\{1,g\}\cong\ZZ/2\ZZ$. Then we define our $G$-action by
-	\[g\cdot x=-x\qquad\text{and}\qquad g\cdot y=-y.\]
-	Then $R^G$ consists of all polynomials $f(x,y)$ such that $f(x,y)=f(-x,-y)$; i.e., these are the polynomials in $R$ that all have even degree. It follows after some pushing that
+\begin{exe}
+	Let $G=:\{1,g\}\cong\ZZ/2\ZZ$ act on $R:=k[x,y]$ by $g\cdot x=-x$ and $g\cdot y=-y$. Then we want to describe $R^G$.
+\end{exe}
+\begin{proof}
+	Here, $R^G$ consists of all polynomials $f(x,y)$ such that $f(x,y)=f(-x,-y)$. By checking coefficients of the various $x^my^n$ terms, we see that $f(x,y)=f(-x,-y)$ is equivalent to forcing all terms of odd degree to have coefficient zero.
+	
+	In other words, the terms of even degree are the only ones which can have nonzero coefficient. Each such term $x^ay^b$ (taking $a\ge b$ without loss of generality) can be written as
+	\[x^ay^b=x^{a-b}(xy)^b=\left(x^2\right)^{(a-b)/2}(xy)^b,\]
+	where $a-b\equiv a+b\equiv0\pmod2$ justifies the last equality. so in fact we can realize $R^G$ as
 	\[R^G=k\left[x^2,xy,y^2\right].\]
 	To see that this ring is Noetherian, we note that there is a surjection
 	\[\varphi:k[u,v,w]\to k\left[x^2,xy,y^2\right]\]
-	taking $u\mapsto x^2$ and $v\mapsto xy$ and $w\mapsto y^2$. Thus, $R$ is the quotient of a Noetherian ring and hence Noetherian itself. In fact, we can check that $\ker\varphi=\left(uw-v^2\right)$.
-\end{example}
+	taking $u\mapsto x^2$ and $v\mapsto xy$ and $w\mapsto y^2$. Thus, $R$ is the quotient of a Noetherian ring and hence Noetherian itself. In fact, we can check that\footnote{Certainly $uw-v^2\in\ker\varphi$. In the other direction, any term $u^av^bw^c$ can be written$\pmod{uw-v^2}$ as a term not having both $u$ and $w$. However, each $x^dy^e$ has a unique representation in exactly one of the ways $u^av^b\mapsto x^ay^{a+b}$ or $v^bw^c\mapsto x^{b+c}y^b$, so after applying the$\pmod{uw-v^w}$ movement, we see that the kernel is trivial.} $\ker\varphi=\left(uw-v^2\right)$ so that
+	\[R^G\cong\frac{k[u,v,w]}{\left(uw-v^2\right)}.\]
+	Even though $R^G$ is Noetherian, it is not a freely generated $k$-algebra (i.e., a polynomial ring over $k$) because it is not a unique factorization domain!
+\end{proof}
 Next class we will start talking about the Nullstellensatz, which has connections to algebraic geometry.

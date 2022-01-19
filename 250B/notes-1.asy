@@ -10,8 +10,8 @@ viewportmargin=(2,2);
 
 unitsize(0.9cm);
 pair a = (3,3);
-pair b = (1,2);
-pair ib = (-2,1);
+pair b = 0.7*(1,2);
+pair ib = 0.7*(-2,1);
 draw((0,0) -- a, EndArrow);
 draw(a -- a+b, EndArrow);
 draw(a -- a-b, EndArrow);
