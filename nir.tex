@@ -1,4 +1,4 @@
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=1in, marginparwidth=2cm]{geometry}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{amsfonts}
@@ -13,6 +13,7 @@
 \usepackage{subfiles}
 \usepackage{tikz-cd}
 \usepackage{todonotes}
+\usepackage{xparse}
 \usepackage{xr}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SET-UP
@@ -79,6 +80,24 @@
 \setcounter{tocdepth}{1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /TITLING
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% EPIGRAPH
+\usepackage{epigraph}
+% Thank you https://tex.stackexchange.com/a/193189
+\renewcommand\textflush{flushright}
+
+\usepackage{etoolbox}
+\makeatletter
+\newlength\epitextskip
+\pretocmd{\@epitext}{\em}{}{}
+\apptocmd{\@epitext}{\em}{}{}
+\patchcmd{\epigraph}{\@epitext{#1}\\}{\@epitext{#1}\\[\epitextskip]}{}{}
+\makeatother
+
+\setlength\epigraphrule{0pt}
+\setlength\epitextskip{2ex}
+\setlength\epigraphwidth{.8\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /EPIGRAPH
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONVENIENCE
 \renewcommand{\AA}{\mathbb A}
 \newcommand{\RR}{\mathbb R}
@@ -128,23 +147,100 @@
 \begin{proof}[Solution]}{\end{proof}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /CONVENIENCE
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% EPIGRAPH
-\usepackage{epigraph}
-% Thank you https://tex.stackexchange.com/a/193189
-\renewcommand\textflush{flushright}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DANGERS
+% Thank you https://tex.stackexchange.com/a/604048
+\newcommand{\nirideasymbol}{%
+	\begin{tikzpicture}[baseline=(x.base)]
+		\draw[rounded corners=.01em] (-.05em,-1.07em)rectangle(.05em,.78em);
+		\draw[fill=white,rounded corners=1.3] (0,.75em)--(.75em,0)--(0,-.75em)--(-.75em,0)--cycle;
+		\draw[line width=0.2mm, line cap=round](-.4em,-1.07em)--(.4em,-1.07em);
+		\node(x) at (0,0em) {};
+		\node at (0,0em) {{\cabin\textbf{!}}};
+	\end{tikzpicture}%
+}
+\newcommand{\nirwarnsymbol}{%
+	\begin{tikzpicture}[baseline=(x.base)]
+		\draw[rounded corners=.01em] (-.05em,-1.07em)rectangle(.05em,.78em);
+		\draw[fill=white,rounded corners=1.3] (0,.75em)--(.75em,0)--(0,-.75em)--(-.75em,0)--cycle;
+		\draw[line width=0.2mm, line cap=round](-.4em,-1.07em)--(.4em,-1.07em);
+		\node(x) at (0,0em) {};
+		% Thank you https://tex.stackexchange.com/a/262510
+		\draw[
+			line cap=but,
+			line join=round,
+			x=.5em,
+			line width=0.5mm,
+			y=1*(height("Z")-\pgflinewidth)*(1-sin(10)),
+			rotate=-10,
+			rounded corners=1.5pt,
+		](-0.57, 0.57) -- (0.57, 0.57) -- (-0.57, -0.57) -- (0.57, -0.57);
+	\end{tikzpicture}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /DANGERS
 
-\usepackage{etoolbox}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MARGINS
+\usepackage{marginnote}
+% Thank you https://tex.stackexchange.com/a/472882
+%
 \makeatletter
-\newlength\epitextskip
-\pretocmd{\@epitext}{\em}{}{}
-\apptocmd{\@epitext}{\em}{}{}
-\patchcmd{\epigraph}{\@epitext{#1}\\}{\@epitext{#1}\\[\epitextskip]}{}{}
-\makeatother
+\long\def\@mn@@@marginnote[#1]#2[#3]{%
+	\begingroup
+		\ifmmode\mn@strut\let\@tempa\mn@vadjust\else
+			\if@inlabel\leavevmode\fi
+			\ifhmode\mn@strut\let\@tempa\mn@vadjust\else\let\@tempa\mn@vlap\fi
+		\fi
+		\@tempa{%
+			\vbox to\z@{%
+				\vss
+				\@mn@margintest
+				\if@reversemargin\if@tempswa
+						\@tempswafalse
+					\else
+						\@tempswatrue
+				\fi\fi
 
-\setlength\epigraphrule{0pt}
-\setlength\epitextskip{2ex}
-\setlength\epigraphwidth{.8\textwidth}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /EPIGRAPH
+					\llap{%
+						\vbox to\z@{\kern\marginnotevadjust\kern #3
+							\vbox to\z@{%
+								\hsize\marginparwidth
+								\linewidth\hsize
+								\kern-\parskip
+								%\mn@parboxrestore
+								\marginfont\raggedleftmarginnote\strut\hspace{\z@}%
+								\ignorespaces#1\endgraf
+								\vss
+							}%
+							\vss
+						}%
+						\if@mn@verbose
+							\PackageInfo{marginnote}{xpos seems to be \@mn@currxpos}%
+						\fi
+						\begingroup
+							\ifx\@mn@currxpos\relax\else\ifx\@mn@currpos\@empty\else
+									\kern\@mn@currxpos
+							\fi\fi
+							\ifx\@mn@currpage\relax
+								\let\@mn@currpage\@ne
+							\fi
+							\if@twoside\ifodd\@mn@currpage\relax
+									\kern-\oddsidemargin
+								\else
+									\kern-\evensidemargin
+								\fi
+							\else
+								\kern-\oddsidemargin
+							\fi
+							\kern-1in
+						\endgroup
+						\kern\marginparsep
+					}%
+			}%
+		}%
+	\endgroup
+}
+\makeatother
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /MARGINS
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LISTS
 % Putting these into an environment decreases clicking
@@ -258,10 +354,36 @@
 		nobreak
 	}
 ]{thmred}
-\declaretheorem[style=thmred,name=Idea,sibling=thm]{idea}
 \declaretheorem[style=thmred,name=Conjecture,sibling=thm]{conj}
 \declaretheorem[style=thmred,name=Question,sibling=thm]{ques}
-\declaretheorem[style=thmred,name=Warning,sibling=thm]{warn}
+
+\declaretheorem[style=thmred,name=Idea,sibling=thm]{ideahelper}
+\NewDocumentEnvironment{idea}{o}
+	{
+		% See definition env for commentary on this code
+		
+		\vbox\bgroup
+			\marginnote{\nirideasymbol}[9pt]
+			\IfNoValueTF{#1}{\begin{ideahelper}}{\begin{ideahelper}[#1]}
+	}
+	{
+			\end{ideahelper}
+		\egroup
+	}
+
+\declaretheorem[style=thmred,name=Warning,sibling=thm]{warnhelper}
+\NewDocumentEnvironment{warn}{o}
+	{
+		% See definition env for commentary on this code
+		
+		\vbox\bgroup
+			\marginnote{\nirwarnsymbol}[9pt]
+			\IfNoValueTF{#1}{\begin{warnhelper}}{\begin{warnhelper}[#1]}
+	}
+	{
+			\end{warnhelper}
+		\egroup
+	}
 
 \definecolor{thmlightgreen}{RGB}{230, 255, 234}
 \definecolor{thmdarkgreen}{RGB}{60, 110, 60}
@@ -281,12 +403,29 @@
 		nobreak
 	}
 ]{thmgreen}
-\declaretheorem[style=thmgreen,name=Definition,sibling=thm]{defi}
-\declaretheorem[style=thmgreen,name=Definition,sibling=thm]{definition}
 \declaretheorem[style=thmgreen,name=Axiom,sibling=thm]{ax}
 \declaretheorem[style=thmgreen,name=Axiom,sibling=thm]{axiom}
 \declaretheorem[style=thmgreen,name=Inventory,sibling=thm]{inv}
 \declaretheorem[style=thmgreen,name=Inventory,sibling=thm]{inventory}
+\declaretheorem[style=thmgreen,name=Definition,sibling=thm]{defihelper}
+
+\NewDocumentEnvironment{definition}{o}
+	{
+		% Thank you https://tex.stackexchange.com/a/377293
+		% vbox keeps the marginnote attached
+		% marginnote is outside the definition because otherwise it will eat the first item in itemize
+		% I promise I did not summon Satan
+		
+		\vbox\bgroup
+			\IfNoValueTF{#1}{\begin{defihelper}}{\marginnote{#1}[12pt]\begin{defihelper}[#1]}
+	}
+	{
+			\end{defihelper}
+		\egroup
+	}
+\newenvironment{defi}
+	{\begin{definition}}
+	{\end{definition}}
 
 \definecolor{exdarkgreen}{RGB}{120, 180, 120}
 \declaretheoremstyle[
