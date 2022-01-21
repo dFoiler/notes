@@ -2,115 +2,176 @@
 
 We continue following the Eisenbud machine.
 
-\subsection{Nullstellensatz}
-This subsection is very important. And because it is important, its name is in German (which was the language of German).
-
+\subsection{Affine Space}
 To begin our discussion, we start with some geometry.
 \begin{definition}[Affine space]
-	Given a field $k$ and nonnegative integer $n$, we define $d$-dimensional \textit{affine space} over $k$ to be $\AA^d(k):=k^d.$
+	Given a field $k$ and positive integer $n$, we define $n$-dimensional \textit{affine space} over $k$ to be $\AA^d(k):=k^n.$
 \end{definition}
 Now, given affine space $\AA^n(k)$, we are interested in studying subsets which are solutions to some set of polynomial equations
 \[f_1,\ldots,f_n\in k[x_1,\ldots,x_d].\]
 This gives rise to the following definition.
 \begin{definition}[Algebraic]
-	A subset $X\subseteq\AA^n(k)$ is \textit{algebraic} if and only if it is the set of solutions to some system of polynomials equations $f_1,\ldots,f_n\in k[x_1,\ldots,x_d]$.
+	A subset $X\subseteq\AA^n(k)$ is (affine) \textit{algebraic} if and only if it is the set of solutions to some system of polynomials equations $f_1,\ldots,f_n\in k[x_1,\ldots,x_d]$.
 \end{definition}
 \begin{example}
 	The hyperbola
 	\[\left\{(x,y)\in\RR^2:x^2-y^2-1=0\right\}\]
-	is an algebraic set.
+	is an algebraic set. Geometrically, it looks like the following.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(0.7cm);
+			draw((-3.5,0)--(3.5,0)); draw((0,-3.5)--(0,3.5));
+			pair L(real y)
+			{
+				return (-sqrt(1+y*y), y);
+			}
+			pair R(real y)
+			{
+				return (+sqrt(1+y*y), y);
+			}
+			draw(graph(L, -2.8, 2.8), arrow=Arrows());
+			draw(graph(R, -2.8, 2.8), arrow=Arrows());
+		\end{asy}
+	\end{center}
 \end{example}
-\begin{example}
-	The set $\emp\subseteq\RR^1$ is algebraic becasue it is the set of solutions to the equation $x^2+1=0$ in $\RR$.
+\begin{example} \label{ex:notalgclosed}
+	The set $\emp\subseteq\AA^1(\RR)$ is algebraic becasue it is the set of solutions to the equation $x^2+1=0$ in $\RR$.
 \end{example}
-The above example is a little disheartening because it feels like $x^2+1$ really ought to have a solutionm, namely $i\in\CC$. So with this in mind, we make the following convention.
-\begin{warn}
-	In the following discussion, $k$ will always be an algebraically closed field.
-\end{warn}
+The above example is a little disheartening because it feels like $x^2+1$ really ought to have a solution, namely $i\in\CC$. More explicitly, there are no obvious algebraic obstructions that make $x^2+1$ not have a solution. So with this in mind, we make the following convention.
+\begin{convention}
+	In the following discussion on the Nullstellensatz, $k$ will always be an algebraically closed field.
+\end{convention}
 
-Now, the story so far is that we can take a set of polynomials and make algebraic sets. We can in fact go in the opposite direction.
+\subsection{Nullstellensatz}
+The Nullstellensatz is very important.
+\begin{remark}
+	Because the Nullstellensatz is important, its name is in German (which was the language of Hilbert).
+\end{remark}
+
+Now, the story so far is that we can take a set of polynomials and make algebraic sets as their solution set. We can in fact go in the opposite direction.
 \begin{definition}[\texorpdfstring{$I(X)$}{I(X)}]
-	If $X\subseteq$ is an algebraic set, we define
+	If $X\subseteq\AA^n(k)$ is an (affine) algebraic set, we define
 	\[I(X):=\{f\in k[x_1,\ldots,x_n]:f(X)=0\}.\]
 \end{definition}
-Notice that every ideal $I$ can arise as some $I(X)$, for if $f^m(X)=0$, then $f(X)=0$, so $I$ will satisfy the property that $f^m\in I$ implies $f\in I$. With this in mind, we have the following construction.
+It is not hard to check that $I(X)\subseteq k[x_1,\ldots,x_n]$ is in fact an ideal. Namely, if $f,g\in I(X)$ and $r,s\in k[x_1,\ldots,x_n]$, then we need to know $rf+sg\in I(X)$ as well. Well, for any $x\in X$, we see
+\[(rf+sg)(x)=rf(x)+sg(x)=0,\]
+so $rf+sg\in I(X)$ indeed.
+
+One might hope that all ideals would be able to take the form $I(X)$, but this is not the case. For example, if $f^m(X)=0$, then $f(X)=0$ because $k$ is a field. Thus, $I$ will satisfy the property that $f^m\in I$ implies $f\in I$. To keep track of this obstruction, we have the following definition.
 \begin{definition}[Radical]
-	Given an $R$-ideal $I$, we define the \textit{radical of $I$}
-	\[\op{rad}I:=\left\{x\in R:x^n\in I\text{ for some }n\ge1\right\}.\]
+	Fix $R$ a ring. Given an $R$-ideal $I$, we define the \textit{radical of $I$} to be
+	\[\op{rad}I:=\left\{x\in R:x^n\in I\text{ for some }n\ge1\right\}\supseteq I.\]
 	If $I=\op{rad}I$, then we call $I$ a \textit{radical ideal}.
 \end{definition}
-Often, $\op{rad}I$ is a larger ideal.
-\begin{remark}
-	Alternatively, an $R$-ideal $I$ is \textit{radical} if and only if $R/I$ is reduced; i.e., if and only if $R/I$ has no nonzero nilpotent elments. This is approximately as easy to show as the equivalent condition for prime ideals.
-\end{remark}
-With all of the machinery we have in place, we can now state Hilbert's Nullstellensatz.
+To make sense, this definition requires a few sanity checks.
+\begin{itemize}
+	\item We check $\rad I$ is in fact an ideal. Well, given $f,g\in\rad I$, there exists positive integers $m$ and $n$ such that $f^m,g^n\in I$. Then, for any $r,s\in R$, we see
+	\[(rf+sg)^{m+n}=\sum_{k=0}^{m+n}\left[\binom{m+n}kr^ks^{m+n-k}\cdot f^kg^{m+n-k}\right].\]
+	However, for any $k$, we see that either $k\ge m$ or $m+n-k\ge n$, so all terms of this sum contain an $f^m$ or $g^n$ factor, so the sum is in $I$. So indeed, $rf+sg\in\rad I$.
+	\item We check that $\rad I$ is a radical ideal. Well, if $f^n\in\rad I$ for some positive integer $n$, then $f^{mn}=\left(f^n\right)^m\in I$ for some positive integer $m$, from which $f\in\rad I$ follows.
+\end{itemize}
+It is not too hard to generate examples where the radical is strictly larger than the original ideal.
+\begin{example}
+	Fix $R:=\ZZ[\sqrt2]$ and $I=(2)=2\ZZ[\sqrt2]=\{2a+2b\sqrt2:a,b\in\ZZ\}$. Then $\left(\sqrt2\right)^2=2\in I$ while $\sqrt2\notin I$, so $I\subsetneq\rad I$.
+\end{example}
+Here is an alternative characterization of being radical.
+\begin{lemma}
+	Fix $R$ a ring. Then an ideal $I\subseteq R$ is radical if and only if $R/I$ is reduced.
+\end{lemma}
+\begin{proof}
+	This proof is akin to the one showing $I\subseteq R$ is prime if and only if $R/I$ is an integral domain.
+
+	Anyways, $I$ is radical if and only if $x^n\in I$ for $x\in R$ and $n\ge1$ implies $x\in I$. Translating this condition into $R/I$, we are saying that $[x]_I^n\in[0]_I$ for $[x]_I\in R/I$ and $n\ge1$ implies that $[x]_I=[0]_I$. This is exactly the condition for $R/I$ to be radical.
+\end{proof}
+With all of the machinery we have in place, we can now state the idea of Hilbert's Nullstellensatz.
 \begin{theorem}[Nullstellensatz, I]
-	Fix $k$ an algebraically closed field. Then there is a bijection between radical ideals and (affine) algebraic sets.
+	Fix $k$ an algebraically closed field. Then there is a bijection between radical ideals of $k[x_1,\ldots,x_n]$ and (affine) algebraic sets $\AA^n(k)$.
 \end{theorem}
 So far we have defined a map from algebraic sets to radical ideals by $X\mapsto I(X)$. The reverse map is as follows.
 \begin{definition}[\texorpdfstring{$Z(I)$}{Z(I)}]
-	Given a subset $S\subseteq k[x_1,\ldots,x_n]$, we define the \textbf{zero set} of $I$ by
+	Given a subset $S\subseteq k[x_1,\ldots,x_n]$, we define the \textbf{zero set} of $S$ by
 	\[Z(S):=\{x\in\AA^n(k):f(x)=0\text{ for all }f\in I\}.\]
 \end{definition}
-Note that replacing $S$ with the ideal it generates $(S)$ makes no difference to $Z(S)$, so we will mostly consider $S$ to be an ideal.
+Note that replacing $S$ with the ideal it generates $(S)$ makes no difference to $Z(S)$ (i.e., linear combinations of the constraints do not make the problem harder), so we will may focus on the case where $S$ is an ideal.
 
 With these maps in hand, we can restate the Nullstellensatz.
 \begin{theorem}[Nullstellensatz, II]
-	Fix $k$ an algebraically closed fields. Then for ideals $I\subseteq k[x_1,\ldots,x_n]$ by
+	Fix $k$ an algebraically closed field. Then for ideals $I\subseteq k[x_1,\ldots,x_n]$, we have
 	\[I(Z(I))=\op{rad}I.\]
+	In particular, if $I$ is radical, then $I(Z(I))=I$.
 \end{theorem}
 \begin{remark}
-	Yes, it is important that $k$ is algebraically closed here.
+	Yes, it is important that $k$ is algebraically closed here. Essentially this comes from \autoref{ex:notalgclosed}: the ideal $\left(x^2+1\right)$ is not of the form $Z(X)$ for any subset $X\subseteq\AA^1(\RR)$ because $x^2+1$ has no roots and would need $X=\emp$, but $Z(\emp)=\RR[x]$.
 \end{remark}
 \begin{example}
-	We have that $I(Z(R))=R$ because $Z(R)=\emp$.
+	We have that $I(Z(R))=R$ because $Z(R)=\emp$ (no points satisfy $1=0$) and $I(\emp)=R$ (all functions vanish on $\emp$).
 \end{example}
 
-\subsection{Commends on Affine Space}
-We would like to understand $\AA^n(k)$; one way to do this is by a topology, so here is one way we can do this.
+\subsection{More on Affine Space}
+Let's talk about $\AA^n(k)$ a bit more. We mentioned that this should be a geometric object, so let's give it a topology.
 \begin{definition}[Zariski topology, I]
 	Given affine space $\AA^n(k)$, we define the \textit{Zariski topology} as having closed sets which are the algebraic sets.
 \end{definition}
-There are some things to check that we actually get a topology. Here are the checks.
+\begin{remark}[Nir]
+	Here is one reason why we might do this: without immediate access to better functions (the field $k$ might have no easy geometry, like $k=\FF_p(t)$) it makes sense to at least require polynomial functions to be continuous and $k$ to be Hausdorff. In particular, given a polynomial $f$, we see that
+	\[Z(f)=f^{-1}(\{0\})\]
+	should be closed. In fact, for any subset $S\subseteq k[x_1,\ldots,x_n]$ of polynomials
+	\[Z(S)=\bigcap_{f\in S}Z(f)\]
+	will also have to be closed. In particular, all algebraic sets are closed. One can then check that polynomials do remain continuous in this topology also, as promised.
+\end{remark}
+We have the following checks to make sure that the algebraic sets do actually form a topology (of closed sets).
 \begin{itemize}
-	\item The empty set is the set of solutions to the equation $1=0$.
-	\item The full space is the set of solutions to the equation $0=0$.
-	\item Arbitrary intersection of closed sets is closed: given algebraic sets $X(I)$ for ideal $I\subseteq\mathcal I$, we note
-	\[\bigcap_{I\in\mathcal I}X(I)=X\left(\sum_{I\in\mathcal I}I\right).\]
-	\item Finite unions of closed sets are closed: given algebraic sets $X(I_1),\ldots,X(I_n)$, we note
-	\[\bigcup_{i=1}^nX(I_i)=X\left(\prod_{i=1}^nI_i\right).\]
+	\item The empty set is closed: $\emp$ is the set of solutions to the equation $1=0$.
+	\item The full space is closed: $\AA^n(k)$ is the set of solutions to the equation $0=0$.
+	\item Arbitrary intersection of closed sets is closed: given algebraic sets $X(S)$ for given subsets $S\subseteq\mathcal S$ of $k[x_1,\ldots,x_n]$, we note
+	\[\bigcap_{S\in\mathcal S}X(S)=X\left(\bigcup_{S\in\mathcal S}I\right),\]
+	so the union is in fact an algebraic set.
+	\item Finite unions of closed sets are closed: given algebraic sets $X(S_1),\ldots,X(S_n)$, we note
+	\[\bigcup_{i=1}^nX(SI_i)=X\left(\prod_{i=1}^n(S_i)\right),\]
+	where $(S_i)$ is the ideal generated by $S_i$. In particular, $\prod_i(S_i)$ is generated by elements $s_1\cdot\ldots\cdot s_n$ such that $s_i\in S_i$ for each $i$, so any point in any of the $X(S_i)$ will show up in the given algebraic set.
 \end{itemize}
-We can also understand algebraic sets $X\subseteq\AA^n(k)$ by their ring of functions. Here is the way we understand this.
-\begin{definition}
+We can also understand algebraic sets $X\subseteq\AA^n(k)$ by their ring of functions. Again, the only functions we have easy access to are polynomials, so we take the following definition.
+\begin{definition}[Coordinate ring]
 	Given an algebraic set $X\subseteq\AA^n(k)$, we define the \textit{coordinate ring} on $X$ as
 	\[A(X):=k[x_1,\ldots,x_n]/I(X).\]
+	In other words, we are looking at polynomials on $\AA^n(k)$ and identifying them whenever they are equal on $X$.
 \end{definition}
 Note that, because $I(X)$ is a radical ideal, the ring $A(X)$ will be reduced.
 
 \subsection{Corollaries of the Nullstellensatz}
-To convince us that the Nullstellensatz is important, here are some nice corollaries.
+Let's return to talking about talking about the Nullstellensatz. To convince us that the Nullstellensatz is important, here are some nice corollaries.
+
+\subsubsection{Criteria for Polynomial System Solutions}
+The following is the feature of this subsubsection.
 \begin{corollary}
-	Suppose that a system of polynomial equations
+	A system of polynomial equations
 	\[\begin{cases}
 		f_1(x_1,\ldots,x_n) = 0, \\
-		\quad\vdots \\
-		f_r(x_1,\ldots,x_n) = 0
+		\qquad\quad~\vdots \\
+		f_r(x_1,\ldots,x_n) = 0,
 	\end{cases}\]
-	has no solutions. Then there exists $p_1,\ldots,p_r\in k[x_1,\ldots,x_n]$ such that
+	has no solutions if and only if there exists $p_1,\ldots,p_r\in k[x_1,\ldots,x_n]$ such that
 	\[\sum_{i=1}^rp_if_i=1.\]
 \end{corollary}
 \begin{proof}
-	There is not much to say for the reverse direction. In the forwards direction, the main point is that $Z((f_1,\ldots,f_r))=\emp$, so
-	\[\op{rad}(f_1,\ldots,f_r)=I(Z((f_1,\ldots,f_n)))=I(\emp)=R,\]
-	so $1\in\op{rad}(f_1,\ldots,f_r)$. Then it follows $1\in(f_1,\ldots,f_r)$, so there exists $p_1,\ldots,p_r\in k[x_1,\ldots,x_n]$ such that
+	In the reverse direction, we proceed by contraposition: if there is a solution $x\in\AA^n(k)$ such that $f_i(x)=0$ for each $f_i$, then any set of polynomials $p_1,\ldots,p_n\in k[x_1,\ldots,x_n]$ will give
+	\[\sum_{i=1}^rp_i(x)f_i(x)=0\ne1,\]
+	so it follows $\sum_{o=1}^np_if_i\ne1$. Observe that we did not use the Nullstellensatz here.
+
+	The forwards direction is harder. The main point is that we are given $Z((f_1,\ldots,f_r))=\emp$, so
+	\[\rad(f_1,\ldots,f_r)=I(Z((f_1,\ldots,f_n)))=I(\emp)=R,\]
+	so $1\in\rad(f_1,\ldots,f_r)$. Then it follows $1=1^n\in(f_1,\ldots,f_r)$ for some positive integer $n$, so there exists $p_1,\ldots,p_r\in k[x_1,\ldots,x_n]$ such that
 	\[\sum_{i=1}^rp_if_i=1.\]
 	This is what we wanted.
 \end{proof}
 
+\subsubsection{Classification of Maximal Ideals}
 To set up the next corollary, we note that any point $(a_1,\ldots,a_n)\in\AA^n$ makes a closed set corresponding to the ideal
 \[I(a):=(x_1-a_1,\ldots,x_n-a_n).\]
 In fact,\todo{record this proof from Nullstellensatz} points turn out to be in bijection with maximal ideals in $\AA^n(k)$, and the same will be true for any algebraic set $X$ by looking at the ring $A(X)$, which is a quoteint of $A(\AA^n(k))$. This is nice because instead of having to look at the geometry of $X$, we can instead focus on the algebra of $A(X)$.
 
+\subsection{The Spectrum of a Ring}
 For our last corollary, we consider maps $\varphi:X\to Y$. Well, in affine space, we only have access to polynomial functions, so our only morphisms will be some (direct) product of polynomials. But then we observe that precomposition gives a function
 \[\varphi:A(X)\rightarrow A(Y).\]
 We would like to view this more geometrically, so we might want to pull back the ``point'' $\mf m\subseteq A(X)$ to $A(Y)$ by pre-imaging along $\varphi$. However, there is a problem here: $\varphi^{-1}(\mf m)$ might not be maximal.
@@ -140,7 +201,7 @@ This topology has some bad properties.
 \subsection{Projective Space}
 To define projective varities, we need to define projective space first.
 \begin{definition}[Projective space]
-	Fix $k$ a field. Then we define $n$-dimensional \textit{projective space} $\PP^n(k)$ to be the one-dimensional subspaces of $k^{n+1}$.
+	Fix $k$ a field and $n$ a positive integer. Then we define $n$-dimensional \textit{projective space} $\PP^n(k)$ to be the one-dimensional subspaces of $k^{n+1}$.
 \end{definition}
 Concretely, we will think about lines in homogeneous coordinates, in the form
 \[(a_0:a_1:\ldots:a_n)\in\PP^n(k),\]
@@ -180,10 +241,22 @@ With graded rings, it is natural to ask what other ring-theoretic constructions 
 The point of this definition is that
 \[\frac{k[x_1,\ldots,x_n]}I\]
 will also be a graded ring, which is nice.
-
-The ideal
-\[R_1\oplus R_2\oplus R_3\oplus\cdots\]
-consisting of polynomials with vanishing constant term is called the irrelevant ideal because we don't like it.
+\begin{example}
+	Given the graded ring $R=R_0\oplus R_1\oplus R_2\oplus\cdots$, the ideal
+	\[I:=R_1\oplus R_2\oplus R_3\oplus\cdots\]
+	consisting of polynomials with vanishing constant term is called the \textit{irrelevant ideal}; it is graded because look at it.
+\end{example}
+\begin{remark}
+	The above ideal is called irrelevant because, in the case where $R=k[x_0,\ldots,x_n]$,
+	\[Z(I)=\left\{(a_0:\ldots:a_n)\in\PP^n(k):f(a_0,\ldots,a_n)\text{ for each homogeneous }f\in I\right\}=\emp.\]
+	Indeed, any element of $Z(I)$ would have to satisfy $x_i=0$ for each $x_i$, which is illegal in projective space.
+\end{remark}
+Here is another ring-theoretic construction which we can grade.
+\begin{definition}[Graded module]
+	Fix $R=R_0\oplus R_1\oplus\cdots$ a graded ring. Then an $R$-module $M$ is \textit{graded} if and only if we can write
+	\[M\cong\oplus_{d\in\ZZ}M_d\]
+	such that $R_iM_j\subseteq M_{i+j}$ for any $i\in\NN$ and $j\in\ZZ$.
+\end{definition}
 
 As a quick application, here is one reason to care about graded rings.
 \begin{proposition}
@@ -193,13 +266,8 @@ As a quick application, here is one reason to care about graded rings.
 	Omitted.\todo{}
 \end{proof}
 
-\subsection{Hilbert Polynomials}
-Continuing the above discussion, let $R=R_0\oplus R_1\oplus\cdots$ be a graded ring. Here is another ring-theoretic construction which we can grade.
-\begin{definition}[Graded module]
-	Fix $R=R_0\oplus R_1\oplus\cdots$ a graded ring. Then an $R$-module $M$ is \textit{graded} if and only if we can write
-	\[M\cong\oplus_{d\in\ZZ}M_d\]
-	such that $R_iM_j\subseteq M_{i+j}$ for any $i\in\NN$ and $j\in\ZZ$.
-\end{definition}
+\subsection{The Hilbert Function}
+Continuing the above discussion, let $R=R_0\oplus R_1\oplus\cdots$ be a graded ring. 
 As usual, the ring that we care the most about is $R=k[x_0,\ldots,x_n]$, graded by degree. In this case, take $M$ to be a a finitely-generated graded $R$-module, and it follows that
 \[\dim_kM_d<\infty\]
 for each $d\in\ZZ$. This is true because $R$ is Noetherian, so $M$ is Noetherin, so $\bigoplus_{d_0\ge d}M_{d_0}$ is a finitely generated, so $M_d$ is finitely generated over $k$.
