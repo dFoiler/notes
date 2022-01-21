@@ -230,27 +230,38 @@ We have the following definition.
 	\[R\cong\bigoplus_{d=0}^\infty R_d\]
 	as abelian groups and $R_iR_j\subseteq R_{i+j}$ for any $i,j\in\NN$.
 \end{definition}
+\begin{remark}[Nir]
+	In fact, $R_0$ turns out to be a subring of $R_0$. We can check this directly, as follows.
+	\begin{itemize}
+		\item Certainly $0\in R_0$ and $R_0+R_0\subseteq R_0$ because $R_0\subseteq R$ is an additive subgroup.
+		\item If $1\in R_i$, then $R_j\subseteq R_iR_j\subseteq R_{i+j}$, so $R_j=\{0\}$ for each $j$ by disjointness or $1\in R_0$, and if $R_j=\{0\}$ for each $j$, then $R=R_0=\{0\}$ anyways. So $1\in R_0$ follows.
+		\item We see $R_0R_0\subseteq R_0$, so $R_0$ is closed under multiplication.
+	\end{itemize}
+	Alternatively, we could set $I:=\{0\}\oplus R_1\oplus R_2\cdots$, remark that $I$ is an ideal, and then we see $R_0\cong R/I$.
+\end{remark}
 \begin{example}
-	The ring $R=k[x_1,\ldots,x_n]$ is graded by setting $R_d$ to be the space of all homogeneous $n$-variable polynomials of degree $d$ (unioned with $\{0\}$).
+	The ring $R=k[x_1,\ldots,x_n]$ is ``graded by degree'' by setting $R_d$ to be the space of all homogeneous $n$-variable polynomials of degree $d$ (unioned with $\{0\}$).
 \end{example}
 With graded rings, it is natural to ask what other ring-theoretic constructions we can grade.
 \begin{definition}[Graded ideal]
 	Fix $R$ a graded ring. We say that an ideal $I$ is \textit{graded} if and only if
-	\[I=\bigoplus_{d=0}^\infty(R_d\cap I).\]
+	\[I\cong\bigoplus_{d=0}^\infty(R_d\cap I),\]
+	where the isomorphism is the natural one (i.e., $(x_0,x_1,\ldots)\mapsto x_0+x_1+\cdots$).
 \end{definition}
-The point of this definition is that
-\[\frac{k[x_1,\ldots,x_n]}I\]
-will also be a graded ring, which is nice.
 \begin{example}
 	Given the graded ring $R=R_0\oplus R_1\oplus R_2\oplus\cdots$, the ideal
 	\[I:=R_1\oplus R_2\oplus R_3\oplus\cdots\]
-	consisting of polynomials with vanishing constant term is called the \textit{irrelevant ideal}; it is graded because look at it.
+	is called the \textit{irrelevant ideal}; it is graded because look at it. To check $I$ is an ideal, it is closed under addition by construction; it is closed under multiplication by $R$ because $R_iR_j\subseteq R_{i+j}$ for $i\ge1$ implies $i+j\ge1$.
 \end{example}
 \begin{remark}
 	The above ideal is called irrelevant because, in the case where $R=k[x_0,\ldots,x_n]$,
 	\[Z(I)=\left\{(a_0:\ldots:a_n)\in\PP^n(k):f(a_0,\ldots,a_n)\text{ for each homogeneous }f\in I\right\}=\emp.\]
 	Indeed, any element of $Z(I)$ would have to satisfy $x_i=0$ for each $x_i$, which is illegal in projective space.
 \end{remark}
+The point of the definition of a graded ideal is that, when $I\subseteq R$ is a graded ideal,
+\[\frac RI\cong\bigoplus_{d=0}^\infty\frac{R_d}{R_d\cap I}\]
+will also be a graded ring, with the given grading. This isomorphism comes from combining the isomorphism $R\cong\bigoplus_dR_d$ and $I\cong\bigoplus_d(R_d\cap I)$.
+
 Here is another ring-theoretic construction which we can grade.
 \begin{definition}[Graded module]
 	Fix $R=R_0\oplus R_1\oplus\cdots$ a graded ring. Then an $R$-module $M$ is \textit{graded} if and only if we can write
@@ -258,12 +269,28 @@ Here is another ring-theoretic construction which we can grade.
 	such that $R_iM_j\subseteq M_{i+j}$ for any $i\in\NN$ and $j\in\ZZ$.
 \end{definition}
 
-As a quick application, here is one reason to care about graded rings.
+As a quick application, here is one reason to care about graded rings: they play nice with the Noetherian condition.
 \begin{proposition}
 	A graded ring $R=R_0\oplus R_1\oplus\cdots$ is Noetherian if and only if $R_0$ is Noetherian and $R$ is a finitely generated $R_0$-algebra.
 \end{proposition}
 \begin{proof}
-	Omitted.\todo{}
+	The backwards direction is \autoref{prop:fgalgebraisnoetherian}. For the forwards direction, take $R=R_0\oplus R_1\oplus\cdots$ a Noetherian, graded ring. We note that quotienting $R$ by the irrelevant ideal reveals that $R_0$ is a quotient of $R$, so $R_0$ is a Noetherian ring.
+
+	It remains to show that $R$ is a finitely generated $R_0$-algebra. The idea is to imitate the Hilbert's finiteness theorem. Before doing anything, we adopt the convention that, for an arbitrary element
+	\[f=f_0+f_1+\cdots\in R,\]
+	we let $\deg f$ equal the largest $d$ for which $f_d\ne0$.
+	
+	We now proceed with the proof. Because $R$ is Noetherian, the irrelevant ideal
+	\[I:=R_1\oplus R_2\oplus\cdots\]
+	is finitely generated over $R$, so fix $I:=(f_1,\ldots,f_N)$. We claim that
+	\[R\stackrel?=R_0[f_1,\ldots,f_N].\]
+	For $\supseteq$, there is nothing to say. For $\subseteq$, pick up some $f\in R$, and we show that $f\in R_0[f_1,\ldots,f_N]$. By decomposing $f$ into its grading $f=f_0+f_1+\cdots$, we may assume that $f$ lives in one of the $R_d$.
+
+	So now we induct on $d$. For $d=0$, we have $f\in R_0\subseteq R_0[f_1,\ldots,f_N]$ and are done immediately. So take $d>0$. Then $f\in I=(f_1,\ldots,f_N)$, so we may write
+	\[f=\sum_{i=1}^Ng_if_i\]
+	for some $g_1,\ldots,g_N\in R$. By decomposing the $g_\bullet$ into their gradings, we see that we may assume that only the $\deg f-\deg f_i$ component is nonzero because all other components will cancel anyways.
+	
+	In particular, $g_i$ is homogeneous with degree $\deg f-\deg f_i$, so $g_i\in R_i$ with $i<d$. So by our induction, $g_i\in R_0[f_1,\ldots,f_N]$, and $f\in R_0[f_1,\ldots,f_N]$ by the decomposition of $f$ in $I$. This finishes the proof.
 \end{proof}
 
 \subsection{The Hilbert Function}
