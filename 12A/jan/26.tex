@@ -1,0 +1,131 @@
+% !TEX root = ../notes.tex
+
+Welcome back everyone.
+
+\subsection{Validity and Truth Tables}
+Today we're doing some formal propositional logic. It should be fun. Last time we were discussing validity of an argument form, which means that whenever the premises are true, the conclusion will also be true.
+\begin{ex}
+	Validity can be counterintuitive. For example, the following argument form is valid.
+	\begin{enumerate}
+		\item $p$.
+		\item $\lnot p$.
+		\item Therefore, $q$.
+	\end{enumerate}
+	This argument form is in fact valid because every time that the premises are true (which happens to be never) also has the conclusion true.
+\end{ex}
+Let's also give an example of an invalid argument.
+\begin{exe}
+	The following argument is invalid.
+	\begin{enumerate}
+		\item It is not the case that ($p$ and $q$).
+		\item Therefore, it is not the case that $p$.
+	\end{enumerate}
+\end{exe}
+\begin{proof}
+	It suffices to give one row of the truth table with true premises but false conclusion. Here it is.
+	\begin{center}
+		\begin{tabular}{c|c||c|c||c}
+			$p$ & $q$ & $p$ and $q$ & not ($p$ and $q$) & not $p$ \\\hline
+			T & F & F & T & F
+		\end{tabular}
+	\end{center}
+	This finishes because we have found a way to make the premise ``not ($p$ and $q$) true but ``not $p$'' false.
+\end{proof}
+Importantly, for invalidity it suffices to give the single inconsistent row, though potentially one might have to compute all rows before finding the inconsistent one.
+\begin{warn}
+	However, for the validity check, one does need to write out the full truth table in order to be sure that one has found all cases where the premises are true.
+\end{warn}
+Note that we don't actaully care about the rows of the truth table where at least one of the premises is false, but we must include them in order to be sure that we don't care about them. Anyways, in the future we will have other ways to check validity, but for now this is all that we have.
+
+\subsection{Symbology}
+Our goal is to define a language of propositional logic. Here are the ideas.
+\begin{idea}
+	To create a formula in propositional logic, we have three ingredients:
+	\begin{enumerate}
+		\item We will work abstract propositions as ``letters'' $\{p,q,\ldots\}$.
+		\item We will change natural language connectors to symbolic ones, essentially to shorten things.
+		\item We will allow extra connections between formulae by using parantheses in cases of ambiguity.
+	\end{enumerate}
+\end{idea}
+We have already done the first step above when we moved from concrete arguments to the more abstract argument forms. For the second step, we introduce the following symbols.
+\begin{center}
+	\begin{tabular}{c|c|c}
+		English & Symbology & Name \\\hline
+		not $p$ & $\lnot p$ & \textit{negation} of $p$ \\
+		$p$ and $q$ & $p\land q$ & \textit{conjuation} of $p$ and $q$ \\
+		$p$ or $q$ & $p\lor q$ & \textit{disjunction} of $p$ or $q$ \\
+		if $p$, then $q$ & $p\to q$ & \textit{material conditional} with \textit{antecdent} $p$ and \textit{conditional} $q$ \\
+		$p$ if and only if $q$ & $p\leftrightarrow q$ & \textit{biconditional}
+	\end{tabular}
+\end{center}
+And our third step is more or less automatic after allowing parantheses into our language. For example, $p\to(q\land r)$ is a valid formula.
+
+We can translate from English to our formal language with a little bit of effort.
+\begin{example}
+	Goldbach's conjecture, that
+	\begin{center}
+		If $n$ is an integer and $n$ is even and $n$ is greater than $2$, then $n$ is the sum of two prime numbers
+	\end{center}
+	can be translated into a formula as follows: let $p$ be the proposition that $n$ is an integer, $q$ that $n$ is even, $r$ taht $n$ is greater than $2$, and $s$ is the sum of two prime numbers. Then the above becomes
+	\begin{center}
+		$(p\land q\land r)\to s$.
+	\end{center}
+\end{example}
+\begin{remark}
+	Later in life we will even be able to talk about a proposition via predicate logic, in which case we can let $E(n)$ be true if and only if $n$ is even, and $P(n)$ be true if and only if $n$ is prime. Then Goldbach's conjecture becomes
+	\[\forall n((E(n)\land(n>2))\to\exists p_1\exists p_2(P(p_1)\land P(p_2)\land(n=p_1+p_2))).\]
+\end{remark}
+Anyways, with the above discussion, we can now fix the symbols of our langauge.
+\begin{defi}[Symbols]
+	For propositional logic, we have the following propositional symbols.
+	\begin{itemize}
+		\item A set of propositional symbols $\{p_1,p_2,\ldots\}$.
+		\item A set of connectives $\{\lnot,\land,\lor,\to,\leftrightarrow\}$.
+		\item A set of parantheses $\{(,)\}$.
+	\end{itemize}
+\end{defi}
+
+\subsection{Towards Formulae}
+We will be defining our formulae by building them up inductively. This inductive process is formalized by ``expressions.''
+\begin{definition}[Expression]
+	An \textit{expression} is any finite sequence of symbols $\langle s_1,s_2,\ldots,s_n\rangle$ of our language.
+\end{definition}
+Not all of these expressions are good.
+\begin{example}
+	The sequence $\langle\to,\lnot,(p\rangle$ is an expression.
+\end{example}
+We can also ``concatenate'' expressions together by just stringing one after another. If we have three expressions $e_1$ and $e_2$ and $e_3$, then it is not too hard to see that
+\[e_1(e_2e_3)=(e_1e_2)e_3,\]
+where the implicit operation is concatenation.
+
+By convention, we will avoid writing the $\langle$ and $\rangle$ as well as commas from our expressions as much as possible.
+\begin{example}
+	We will write ``$\to\lnot p($'' for the expression $\langle\to,\lnot,(p\rangle$.
+\end{example}
+Now, again not all expressions make grammatical sense, so we would like to define which expressions actually have some meaning, and they will be our formulae.
+\begin{definition}[Formula, I]
+	A \textit{formula} is an expression with some meaning. We will define $\mathcal L(P)$ to be the set of these well-formed expressions.
+\end{definition}
+Notably we so far still have not described how we are going to build these formulae. Here is a first attempt.
+\begin{definition}[Formula, II] \label{defi:formula2}
+	The set of \textit{formulae} $\mathcal L(P)$ is defined as a subset of expressions as follows.
+	\begin{itemize}
+		\item Any propositional $p$ in $P$ makes an ``atomic'' formula ``$p$.''
+		\item Unary connective: if $\varphi\in\mathcal L(P)$ is a formula, then $\lnot\varphi$ is a formula.
+		\item Binary connectives: if $\varphi_1,\varphi_2\in\mathcal L(P)$ is a formula, then both $(\varphi_1\land\varphi_2)$ and $(\varphi_2\lor\varphi_2)$ and $(\varphi_1\to\varphi_2)$ and $(\varphi_1\leftrightarrow\varphi_2)$ are formulae.
+		\item There are no other formulae than these.
+	\end{itemize}
+\end{definition}
+\begin{example}
+	Here are some examples.
+	\begin{itemize}
+		\item All propositions are atomic formulae.
+		\item Given a proposition $p$, ``$\lnot p$'' is a formula. In fact, $\lnot\lnot p$ will also be a formula.
+		\item Given propositions $p$ and $q$, $(p\land q)$ is a formula. In fact, from here it follows that $(p\to(p\land q))$ is a formula. We can continue this process.
+	\end{itemize}
+\end{example}
+The issue with \autoref{defi:formula2} is its rigor in the last point: it is not completely clear how to reduce the set of formulae to exclude other formulae. For example, it is a bit annoying to prove that some expression is not a formula.
+\begin{example}
+	All of the rules in our definition preserve that there must be a proposition in a formula, so we can immediately say that the expression ``$\lnot()$'' is in fact not a formula.
+\end{example}
+Next time we will make precise our definition of a formula. Later on we will give them some meaning (``semantics''), but for now we are just arguing about syntax.
