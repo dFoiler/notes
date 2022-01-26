@@ -1,0 +1,223 @@
+% !TEX root = ../notes.tex
+
+In-person class should start on Monday. Homework \#2 will be released on Friday.
+
+\subsection{Topology on \texorpdfstring{$\CC$}{C}}
+So let's try to build a topology on $\CC$ today. We pick up the following definition.
+\begin{definition}[Convex]
+	A subset $X\subseteq\CC$ is \textit{convex} if and only if, for every $z,w\in X$ and $t\in[0,1]$, we have that $w+t(z-w)\in X$.
+\end{definition}
+Intuitively, ``convex'' means that $X$ contains the line segment of any two points in $X$.
+\begin{example}
+	The circle is convex: any line with endpoints in the circle lives in the circle.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			fill(circle((0,0),1), lightgray);
+			draw(circle((0,0),1));
+			draw(0.8*dir(90-72) -- 0.4*dir(90-5), red);
+			dot(0.8*dir(90-72));
+			dot(0.4*dir(90-5));
+		\end{asy}
+	\end{center}
+\end{example}
+\begin{nex}
+	The star-shape is not convex: the given line goes outside the star.
+	\begin{center}
+		\begin{asy}
+			unitsize(0.6cm);
+			path p;
+			for(int i = 0; i < 5; ++i)
+			{
+				p = p -- dir(360/5 * i+198);
+				p = p -- sqrt(5)*dir(360/5 * (i+0.5)+198);
+			}
+			fill(p -- cycle, lightgray);
+			draw(p -- cycle);
+			draw(1.3*dir(90-72) -- 1.5*dir(90-5), red);
+			dot(1.3*dir(90-72));
+			dot(1.5*dir(90-5));
+		\end{asy}
+	\end{center}
+\end{nex}
+To define our open sets, we will define balls first.
+\begin{definition}[Open ball]
+	Given some $z_0\in\CC$, then \textit{open ball} centered at $z_0$ with radius $r>0$ is
+	\[B(z_0,r):=\{z\in\CC:|z-z_0|<r\}.\]
+	Observe $z_0\in B(z_0,r)$.
+\end{definition}
+Open balls let us define all sorts of properties.
+\begin{defi}[Isolated]
+	Fix $X\subseteq\CC$. A point $z\in X$ is isolated in $X$ if and only if there exists $r>0$ such that
+	\[B(z,r)\cap X=\{z\}.\]
+\end{defi}
+\begin{definition}[Discrete]
+	A subset $X\subseteq\CC$ is \textit{discrete} if and only if every point is isolated.
+\end{definition}
+\begin{example}
+	Any finite subset of $X\subseteq\CC$ is discrete. Namely, any point $z\in X$ can take
+	\[r=\frac12\min_{w\in X\setminus\{z\}}|z-x|.\]
+\end{example}
+\begin{example}
+	The subset $\ZZ\subseteq\CC$ is isolated. Namely, take $r=\frac12$ for any given point.
+\end{example}
+\begin{definition}[Bounded]
+	A subset $X\subseteq\CC$ is \textit{bounded} if and only if there is an $M$ such that $X\subseteq B(0,M)$.
+\end{definition}
+\begin{example}
+	The star from earlier fits into a large circle and is therefore bounded.
+	\begin{center}
+		\begin{asy}
+			unitsize(0.6cm);
+			path p;
+			for(int i = 0; i < 5; ++i)
+			{
+				p = p -- dir(360/5 * i+198);
+				p = p -- sqrt(5)*dir(360/5 * (i+0.5)+198);
+			}
+			fill(p -- cycle, lightgray);
+			draw(p -- cycle);
+			draw(circle((0,0),2.5), dashed);
+		\end{asy}
+	\end{center}
+\end{example}
+And here is our fundamental definition for our topology.
+\begin{defi}[Open]
+	A subset $X\subseteq\CC$ is \textit{open} if and only if, for each $z\in X$, there exists $r>0$ such that $B(z,r)\subseteq X$.
+\end{defi}
+Open lets us define closed.
+\begin{definition}[Closed]
+	A subset $X\subseteq\CC$ is \textit{closed} if and only if $\CC\setminus X$ is open.
+\end{definition}
+\begin{remark}[Nir]
+	We should probably show that open balls are open; let $B(z,r)$ be an open ball. Well, for any $w\in B(z,r)$, set $r_w:=r-|z-w|$, which is positive because $w\in B(z,r)$ requires $|z-w|<r$. Now, $w'\in B(w,r_w)$ implies that $|w-w'|<r-|z-w|$, so by the triangle inequality,
+	\[|z-w'|\le|z-w|+|w-w'|<r,\]
+	so $w'\in B(z,r)$ follows. So indeed, each $w\in B(z,r)$ has $B(w,r_w)\subseteq B(z,r)$.
+\end{remark}
+
+\subsection{Properties of Topology}
+Here are some basic properties of our topology.
+\begin{lemma}
+	The subsets $\emp$ and $\CC$ are open and closed in $\CC$.
+\end{lemma}
+\begin{proof}
+	It suffices to show that $\emp$ and $\CC$ are both open, by definition of closed. That $\emp$ is open holds vacuously because one cannot find any $z\in\emp$ anyways. That $\CC$ is open holds because open balls are subsets of $\CC$, so any $z\in\CC$ can take $r=1$ so that
+	\[B(z,r)\subseteq\CC.\]
+	So we are done.
+\end{proof}
+\begin{lemma}
+	Fixing some $z\in\CC$, the set $\{z\}$ is closed.
+\end{lemma}
+\begin{proof}
+	We show that $U:=\CC\setminus\{z\}$ is open. Well, fix any $w\in U$, and because $w\ne z$, we note $|z-w|>0$, so we set $r:=\frac12|z-w|$. It follows that
+	\[z\notin B(w,r)\]
+	because $|z-w|>r$. But this is equivalent to $B(w,r)\subseteq\CC\setminus\{x\}=U$, so we are done.
+\end{proof}
+We would like to make new open and closed subsets from old ones. Here is one way to do so.
+\begin{lemma} \label{lem:arbitraryunionintersection}
+	The following are true.
+	\begin{listalph}
+		\item Arbitrary union: if $\mathcal U$ is any collection of open subsets of $\CC$, then the union $\bigcup_{U\in\mathcal U}U$ is also open.
+		\item Arbitrary intersection: if $\mathcal V$ is any collection of closed subsets of $\CC$, then intersection $\bigcap_{V\in\mathcal V}V$ is also closed.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We take these one at a time. 
+	\begin{listalph}
+		\item Fix $z\in\bigcup_{U\in\mathcal U}U$. We need to show there is some $r>0$ such that
+		\[B(z,r)\stackrel?\subseteq\bigcup_{U\in\mathcal U}U.\]
+		Well, we know there must be some $U_z\in\mathcal U$ such that $z\in U_z$ by definition of the union. But now $U_z$ is open, and therefore we are promised an $r>0$ such that
+		\[B(z,r)\subseteq U_z\subseteq\bigcup_{U\in\mathcal U}U,\]
+		so we are done.
+		\item Fix $\mathcal V$ a collection of closed subsets of $\CC$. We want to show that
+		\[\CC\mathbin{\bigg\backslash}\bigcap_{V\in\mathcal V}V\]
+		is open, which by de Morgan's law is equivalent to
+		\[\bigcup_{V\in\mathcal V}(\CC\setminus V)\]
+		being open. However, each $V\in\mathcal V$ is closed, so $\CC\setminus V$ will be open, so we are done by (a).
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{lemma}
+	The following are true.
+	\begin{listalph}
+		\item Finite intersection: if $\{U_k\}_{k=1}^n$ is a finite collection of open subsets of $\CC$, then the intersection $\bigcap_{k=1}^nU_k$ is also open.
+		\item Finite union: if $\{V_k\}_{k=1}^n$ is a finite collection of closed subsets of $\CC$, then $\bigcup_{k=1}^nV_k$ is also clsed.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We take these one at a time.
+	\begin{listalph}
+		\item Fix $z\in\bigcap_{k=1}^nU_k$ so that we need to find $r>0$ such that
+		\[B(z,r)\stackrel\subseteq\bigcup_{k=1}^nU_k.\]
+		Well, $z\in U_k$ for each $k$, and each $U_k$ is open, so there is an $r_k>0$ such that $B(z,r_k)\subseteq U_k$. Thus, we set $r:=\min_k\{r_k\}$; because there are only finitely many $r_k$, we are assured that $r>0$. Now, we observe that
+		\[B(z,r)\subseteq B(z,r_k)\subseteq U_k.\]
+		(Explicitly, $|w-z|<r$ implies $|w-z|<r_k$ because $r\le r_k$.) Thus, it follows that
+		\[B(z,r)\subseteq\bigcap_{k=1}^nU_k,\]
+		as desired.
+		\item We use de Morgan's laws. We want to show that
+		\[\CC\mathbin{\bigg\backslash}\bigcup_{k=1}^nV_k\]
+		is open, which by de Morgan's laws is the same thing as showing that
+		\[\bigcap_{k=1}^n(\CC\setminus V_k)\]
+		is open. However, each $\CC\setminus V_k$ is open by hypothesis on the $V_k$, so the full intersection is open by (a). This finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark}
+	The finiteness is in fact necessary. For example,
+	\[\bigcap_{n\in\NN}B(0,1/n)=\{0\}.\]
+	Then one can check that each open ball is open while singletons in $\CC$ are not.
+\end{remark}
+
+\subsection{Connectivity}
+Let's see more definitions.
+\begin{definition}[Interior]
+	Given a subset $X\subseteq\CC$, we define the \textit{interior} $X^\circ$ of $X$ to be the union of all open sets contained in $X$ (which will be open by \autoref{lem:arbitraryunionintersection}). Equivalently, this is the largest open subset of $X$.
+\end{definition}
+\begin{definition}[Closure]
+	Given a subset $X\subseteq\CC$, we define the \textit{closure} $\overline X$ of $X$ to be the intersection of all closed sets containing $X$ (which will be closed by \autoref{lem:arbitraryunionintersection}). Equivalently, this is the smallest closed subset of $X$.
+\end{definition}
+\begin{definition}[Frontier, boundary]
+	Given a subset $X\subseteq\CC$, we define the \textit{frontier} or \textit{boundary} $\del X$ of $X$ to be $\overline X\setminus X^\circ$.
+\end{definition}
+One can check that $X$ is open if and only if $X=X^\circ$, and $X$ is closed if and only if $X=\overline X$. Furthermore, by definition we can see that $X^\circ\subseteq X\subseteq\overline X$.
+\begin{definition}[Disconnected]
+	A subset $X\subseteq\CC$ is \textit{disconnected} if and only if there exists nonempty disjoint open substets $U_1$ and $U_2$ such that $X\subseteq U_1\cup U_2$ and $X\cap U_1,X_\cap U_2\ne\emp$. (In other words, the subspace of $X\subseteq\CC$ is (topologically) disconnected.) In this case, we say that $U_1$ and $U_2$ \textit{disconnect} $X$.
+
+	Lastly, we say $X$ is \textit{connected} if and only if it is not disconnected.
+\end{definition}
+\begin{example}
+	The set $\emp$ is connected.
+\end{example}
+\begin{example}
+	Any singleton $\{z\}$ is connected.
+\end{example}
+\begin{ex}
+	Any open ball $B(z,r)$ is connected.\todo{}
+\end{ex}
+\begin{example}
+	The set $\{1\}\cup\{2\}$ is disconnected by $U_1=B(1,1/2)$ and $U_2=B(2,1/2)$.
+\end{example}
+Connectivity plays nicely with the rest of our definitions as well.
+\begin{lemma}
+	A given subset $X\subseteq\CC$ is \textit{connected} if and only if the only subsets of $X$ which are both open and closed (in the subspace topology) are $\emp$ and $X$.
+\end{lemma}
+\begin{proof}
+	We take the directions independently. For the forwards direction, suppose that $U\subseteq X$ is open and closed. In ths subspace topology, we get that $X\setminus U$ will also be open, and then the subsets $U$ and $X\setminus U$ are both open, disjoint, so we require $U=\emp$ or $X\setminus U=\emp$, so $U\in\{\emp,X\}$.
+
+	We leave the reverse direction as an exercise.\todo{}
+\end{proof}
+\begin{lemma}
+	Fix $\mathcal S$ a collection of connected subsets of $\CC$. If $\bigcap_{S\in\mathcal S}S$ is nonempty, then $\bigcup_{S\in\mathcal S}S$ will be connected.
+\end{lemma}
+\begin{proof}
+	Suppose $\bigcup_{S\in\mathcal S}S$ is contained in the disjoint open subsets $U_1$ and $U_2$ of $\CC$; we claim $U_1\cap(\bigcup\mathcal S)=\emp$ or $U_2\cap(\bigcup\mathcal S)=\emp$. Now, pick up some
+	\[z\in\bigcap_{S\in\mathcal S}S,\]
+	which exists because the intersection is nonempty. Without loss of generality, we may assume that $z\in U_1$.
+
+	Now, $z\in S$ for each $S\in\mathcal S$, so $U_1\cap S\ne\emp,$ so because $(U_1\cap S)\cup(U_2\cap S)=S$, we see that $U_2\cap S=\emp$ by hypothesis on $S$'s connectivity. Thus,
+	\[U_2\cap\left(\bigcap_{S\in\mathcal S}S\right)=\emp,\]
+	which finishes the proof.
+\end{proof}
+\begin{remark}
+	The condition with nonempty intersection is necessary: $\{0\}$ and $\{1\}$ are connected, but $\{0\}\cup\{1\}$ is not.
+\end{remark}
