@@ -3,51 +3,84 @@
 Today we localize.
 
 \subsection{Geometric Motivation}
-Let's do examples from geometry.
+Let's do an example from geometry.
 
-Fix $X\subseteq\AA^n(k)$ an algebraic set. Then fix $U\subseteq X$ an open subset, and we want to define functions on $U$. Concretely, we might take $X=\AA^1(k)$ and $U=X\setminus\{0\}$. In this case, we have $A(X)=k[x]$, but we see that upon removing $0$ allows us to divide by $x$, giving
-\[A(U)=k[x,1/x].\]
-These turn out to be all the functions we care about.
-
+Fix $X\subseteq\AA^n(k)$ an algebraic set and $U\subseteq X$ an open subset. We want to define functions on $U$.
+\begin{example}
+	Concretely, we might take $X=\AA^1(k)$ and $U=X\setminus\{0\}$. In this case, we have $A(X)=k[x]$, but we see that upon removing $0$ allows $\frac1x$ to be a function, giving
+	\[A(U)=k[x,1/x].\]
+	These turn out to be all the functions ``we care about.''
+\end{example}
 An alternative way to do this construction is to simply add a new function $y$ to $A(X)$ and then mod out in the freest possile way by the requirement $xy=1$, giving
 \[A(U)=\frac{k[x,y]}{(xy-1)}.\]
-Namely, these are the functions out of the hyperbola $xy=1$ in the plane $\AA^2(k)$. This sort of construction is a little bit harder if we take $X=\AA^2(k)$ and $U=X\setminus\{(0,0)\}$. Namely, localization cannot describe these functions.
+Magically, these are the functions out of the hyperbola $xy=1$ in the plane $\AA^2(k)$, so amazingly localization has turned into functions from the open set $\AA^1(k)\setminus\{0\}$ to functions from the closed subset $\{(x,y)\in\AA^2(k):xy=1\}$. This magic, however, is special: it does not happen if we take $X=\AA^2(k)$ and $U=X\setminus\{(0,0)\}$.
 
-The point is that localization is one way we can talk about functions of spaces.
+Anyways, our point is that localization is one way we can talk about functions of spaces, especially of open sets. More generally, if we want to describe the space of functions out of the open set $\AA^n(k)\setminus Z(I)\subseteq\AA^n(k)$ for some $I\subseteq k[x_1,\ldots,x_n]$, then again ``the only functions we care about'' are
+\[A\left(\AA^n(k)\setminus Z(I)\right)=A\left(\AA^n(k)\right)[1/f\text{ for each }f\in I].\]
+In particular, we are allowed to append inverses of $I$ because the points on which $I$ vanishes are no longer in the space of interest. This process of appending inverses is ``localization.''
 
 \subsection{Localization of Rings}
 Let's build towards the definition of localization.
 \begin{definition}[Multiplicatively closed]
-	Fix $R$ a ring. Then a subset $U\subseteq R$ is \textit{multiplicatively closed} if any product of elements in $U$ also lives in $U$.
+	Fix $R$ a ring. Then a subset $U\subseteq R$ is \textit{multiplicatively closed} if any (finite) product of elements in $U$ also lives in $U$.
 \end{definition}
-Note that, by convention, the empty product $1$ will need to live in $U$. So by induction, it suffices for $1\in U$ and for $x,y\in U$ to imply $xy\in U$.
+Note that, by convention, the empty product $1$ will need to live in $U$. So, by induction, $U$ is multiplicatively closd if and only if $1\in U$ and for $x,y\in U$ to imply $xy\in U$.
 \begin{remark}
-	We do permit $U=\{0,1\}$. This tends to not be very interesting.
+	We do permit $0\in U$ and more generally zero-divisors to live in $U$. This tends to not be very interesting for localization.
 \end{remark}
-And here is our main character. In the discussion that follows, $R$ will be a ring and $U$ will always be multiplicatively closed.
+And here is our main character.
 \begin{definition}[Localization, rings]
-	Fix $R$ a ring and $U\subseteq R$ multiplicatively closed. Then we define $R\left[U^{-1}\right]$ to be the set of ordered pairs notated $\frac ru$ (with $r\in R$ and $u\in U$) modded out by the equivalence relation
+	Fix $R$ a ring and $U\subseteq R$ multiplicatively closed. Then we define $R\left[U^{-1}\right]$ to be the set of ordered pairs $(r,u)\in R\times U$ notated $\frac ru$ (with $r\in R$ and $u\in U$) modded out by the equivalence relation
 	\[\frac{r_1}{u_1}=\frac{r_2}{u_2}\iff\text{there exists }v\in U\text{ such that }v(u_2r_1-u_1r_2)=0.\]
 \end{definition}
-\begin{remark}
-	One needs the $v$ in the definition above to make $\equiv$ transitive.
+In the discussion that follows, $R$ will be a ring and $U$ will always be multiplicatively closed.
+\begin{remark}[Nir] \label{lem:localizeequiv}
+	One needs the $v$ in the definition above to make $\equiv$ transitive. We run the checks.
+	\begin{itemize}
+		\item Reflexive: $\frac ru\equiv\frac ru$ because $1(ur-ur)=0$.
+		\item Symmetric: $\frac{r_1}{u_1}\equiv\frac{r_2}{u_2}$ implies some $v\in U$ has $vu_2r_1=vu_1r_2$ implies $vu_1r_2=vu_2r_1$ implies $\frac{r_2}{u_2}=\frac{r_1}{u_1}$.
+		\item Transitive: $\frac{r_1}{u_1}\equiv\frac{r_2}{u_2}$ implies some $v_1\in U$ has $v_1u_2r_1=v_1u_1r_2$, and $\frac{r_2}{u_2}\equiv\frac{r_3}{u_3}$ implies some $v_2\in U$ has $v_2u_3r_2=v_2u_2r_3$. Thus,
+		\[(v_1v_2u_2)u_3r_1=(v_2u_3)v_1u_2r_1=(v_2u_3)v_1u_1r_2=(v_1u_1)v_2u_3r_2=(v_1u_1)v_2u_2r_3=(v_1v_2u_2)u_1r_3,\]
+		so $\frac{r_1}{u_1}\equiv\frac{r_3}{u_3}$.
+	\end{itemize}
 \end{remark}
 We can turn $R\left[U^{-1}\right]$ into a ring by using the standard addition and multiplication operations of these numbers. Namely, we define
-\[\frac{r_1}{u_1}+\frac{r_2}{u_2}:=\frac{u_2r_1+u_1r_2}{u_1u_2}\qquad\text{and}\qquad\frac{r_1}{u_1}\cdot\frac{r_2}{u_2}:=\frac{r_1r_2}{u_1u_2}.\]
-It is an exercise to check that these operations do not depend on the exact representative of the equivalence relation $\equiv$ defined above, which we do not do here. One can also show that by hand that these operations do in fact form a ring.
+\[\frac{r}{u}+\frac{s}{v}:=\frac{vr+us}{uv}\qquad\text{and}\qquad\frac ru\cdot\frac sv:=\frac{rs}{uv}.\]
+For completeness, we check that these operations do not depend the exact operation.
+\begin{itemize}
+	\item Suppose $\frac{r_1}{u_1}=\frac{r_2}{u_2}$ and $\frac{s_1}{v_1}=\frac{s_2}{v_2}$ so that we are promised $u,v\in U$ such that $uu_2r_1=uu_1r_2$ and $vv_2s_1=vv_1s_2$. Now we observe that
+	\begin{align*}
+		(uv)(u_2v_2)(v_1r_1+u_1s_1) &= (vv_1v_2)(uu_2r_1)+(uu_1u_2)(vv_2s_1) \\
+		&= (vv_1v_2)(uu_1r_2)+(uu_1u_2)(vv_1s_2) \\
+		&= (uv)(u_1v_1)(v_2r_2+u_2s_2),
+	\end{align*}
+	so it follows $\frac{r_1}{u_1}+\frac{s_1}{v_1}=\frac{v_1r_1+u_1s_1}{u_1v_1}=\frac{v_2r_2+u_2s_2}{u_2v_2}=\frac{r_1}{u_1}+\frac{s_1}{v_1}$.
+	\item Again suppose $\frac{r_1}{u_1}=\frac{r_2}{u_2}$ and $\frac{s_1}{v_1}=\frac{s_2}{v_2}$ so that we are promised $u,v\in U$ such that $uu_2r_1=uu_1r_2$ and $vv_2s_1=vv_1s_2$. But now we have
+	\[(uv)(u_2v_2)(r_1s_1) = (uu_2r_1)(vv_2s_1)=(uu_1r_2)(vv_1s_2)=(uv)(u_1v_1)(r_2s_2),\]
+	so it follows $\frac{r_1}{u_1}\cdot\frac{s_1}{v_1}=\frac{r_1s_1}{u_1v_1}=\frac{r_2s_2}{u_2v_2}=\frac{r_2}{u_2}\cdot\frac{s_2}{v_2}$.
+\end{itemize}
+Now, one can also show that by hand that these operations do in fact form a ring, but this is essentially by construction given how we already know how addition and multiplication of fractions should work. We will not do this check.
 \begin{remark}
-	Observe that because $1\in U$, there is a canonical map $R\to R\left[U^{-1}\right]$ by $r\mapsto r/1$. This need not be injective; e.g., take $U=\{0,1\}.$
+	Observe that because $1\in U$, there is a canonical map $R\to R\left[U^{-1}\right]$ by $r\mapsto r/1$. This need not be injective; e.g., take $U=\{0,1\}$, in which case $\frac r1=\frac01$ for each $r\in R$ because $0(1r-0\cdot1)=0$.
 \end{remark}
 
-We might also want to localize by sets which are not 
+We might also want to localize by sets which are not multiplicatively closed.
 \begin{definition}[Multiplicative closure]
-	Fix $R$ a ring. Then for any $U\subseteq R$, we define the \textit{multiplicative closure} $\overline U$ to be the set of all products of $U$.
+	Fix $R$ a ring. Then for any $U\subseteq R$, we define the \textit{multiplicative closure} $\overline U$ to be the set of all (finite) products of $U$.
 \end{definition}
-One can check that $\overline U$ is multiplicatively closed, so by convention we will define $R\left[U^{-1}\right]:=R\left[\overline U^{-1}\right]$ for arbitrary subsets.
+We quickly note that, for any subset $U\subseteq R$, the multiplicative closure $\overline U$ is multiplicatively closed. Indeed, any finite product in $\overline U$ is a finite product of finite products of $U$, which can be strung together into just a very large finite product of $U$. It follows that finite products in $\overline U$ stay in $\overline U$.
 
+The multiplicative closure lets us adopt the following definition.
+\begin{definition}[Localization, again]
+	Fix $R$ a ring and $U\subseteq R$ an arbitrary subset. Then we define $R\left[U^{-1}\right]:=R\big[\overline U^{-1}\big]$.
+\end{definition}
+
+\subsection{Examples of Localization}
 Here are some standard examples of localization.
+
+For our first example, we note that when $R$ is an integral domain, the subset $U=R\setminus\{0\}$ is multiplicatively closed: $a\ne0$ and $b\ne0$ implies $ab\ne0$ because $R$ is an integral domain. So we have the following.
 \begin{definition}[Field of fractions]
-	If $R$ is an integral domain, then $U:=R\setminus\{0\}$ is multiplicatively closed (and in fact this is equivalent to $R$ being an integral domain). So we define the \textit{field of fractions}
+	If $R$ is an integral domain, then $R\setminus\{0\}$ is multiplicatively closed. So we define the \textit{field of fractions}
 	\[K(R):=R\left[(R\setminus\{0\})^{-1}\right].\]
 \end{definition}
 \begin{example}
@@ -56,13 +89,14 @@ Here are some standard examples of localization.
 \begin{example}
 	We have that $K(k[x])=k(x)$.
 \end{example}
+What makes the above example work is that $(0)$ is a prime ideal of $R$ when $R$ is an integral domain (indeed, $ab\in(0)$ implies $ab=0$ implies $a=0\in(0)$ or $b=0\in(0)$).
+
+More generally, for $\mf p\subseteq R$ a prime ideal, we see that $a,b\notin\mf p$ implies $ab\notin\mf p$, so $R\setminus\mf p$ is multiplicatively closed. So we have the following.
 \begin{definition}[Localization at a prime]
-	Fix $R$ a ring and $\mf p\subseteq R$ a prime ideal. Then by definition of primality, $R\setminus\mf p$ will be multiplicatively closed, so we define the \textit{localization at a prime}
+	Fix $R$ a ring and $\mf p\subseteq R$ a prime ideal. Then $R\setminus\mf p$ is be multiplicatively closed, so we define the \textit{localization at a prime}
 	\[R_\mf p:=R\left[(R\setminus\mf p)^{-1}\right].\]
 \end{definition}
-In fact, $R_\mf p$ becomes a local ring, with its single maximal ring being
-\[\mf p:=\{a/b\in R_\mf p:a\notin\mf p\text{ and }b\in\mf p\}.\]
-It turns out that we can realize the field of fractions from this construction.
+As mentioned above, we can realize the field of fractions from this construction.
 \begin{example}
 	When $R$ is an integral domain, $(0)$ is prime, and $R_{(0)}=K(R)$.
 \end{example}
@@ -70,46 +104,118 @@ It turns out that we can realize the field of fractions from this construction.
 	We have that
 	\[\ZZ_{(p)}:=\left\{\frac ab:a,b\in\ZZ\text{ and }p\nmid b\right\}.\]
 \end{example}
-The ideal $\mf p_\mf p$ gives rise to the following definition for these local rings.
+Here are some basic properties of $R_\mf p$.
+\begin{proposition}
+	Fix $R$ a ring and $\mf p\subseteq R$ a prime ideal. Then $R_\mf p$ is a local ring; in particular, $R_\mf p$ has unique maximal ideal
+	\[\mf pR_\mf p:=\left\{\frac ru:r\in\mf p\text{ and }u\notin\mf p\right\}.\]
+\end{proposition}
+\begin{proof}
+	Very quickly, we note that $\mf pR_\mf p\ne R_\mf p$ because $\frac11\notin\mf pR_\mf p$. Indeed, for any representative $\frac11=\frac ru$, we see some $v\notin\mf p$ has $vr=vu\notin\mf p$, so $r\notin\mf p$, implying $\frac ru\notin\mf p$.
+	
+	The main point is to show that all proper ideals are contained in $\mf pR_\mf p$. Equivalently, suppose that $I\subseteq R$ is an ideal not contained in $\mf pR_\mf p$, and we show that $I=R_\mf p$. Well, we are promised some $\frac xu\in I\setminus\mf pR_\mf p$ where $x,u\notin\mf p$. But then by closure if $I$ under $R_\mf p$-multiplication, we see
+	\[\frac11=\frac ux\cdot\frac xu\in I,\]
+	so indeed, $I=R_\mf p$.
+
+	We already checked tht $\mf pR_\mf p$ is a proper ideal, so it immediately follows that $\mf pR_\mf p$ is a maximal ideal: any ideal $I$ with $\mf pR_\mf p\subsetneq I\subseteq R_\mf p$ will immediately $I=R_\mf p$ by the above. Further, $\mf pR_\mf p$ is the unique maximal ideal because any maximal ideal $\mf m$ is proper, so it follows
+	\[\mf m\subseteq\mf pR_\mf p\subseteq R_\mf p.\]
+	This gives $\mf m=\mf R_\mf p$ by the maximality of $\mf m$, so we are done.
+\end{proof}
+\begin{example}
+	When $R$ is an integral domain and $\mf p=(0)$ is the (prime) zero ideal, we see that, indeed $\mf pR_\mf p=(0)$ is the unique maximal ideal in the field of fractions $K(R)=R_\mf p$.
+\end{example}
+The uniquely special maximal ideal $\mf pR_\mf p$ gives rise to the following definition for these local rings.
 \begin{definition}[Residue field]
-	Fix $R$ a local ring with unique maximal ideal $\mf p$. Then we define the \textit{residue field} to be $R/\mf p$.
+	Fix $R$ a local ring with unique maximal ideal $\mf m$. Then we define the \textit{residue field} to be $\kappa:=R/\mf m$.
 \end{definition}
 \begin{example}
 	We have that $\ZZ_{(p)}/p\ZZ_{(p)}\cong\ZZ/p\ZZ$. In particular, observe that the characteristic has changed.
 \end{example}
-Geometrically, we view primes $\mf p$ as living in the ``space'' $\op{Spec}R$. Then here $R_\mf p$ is intended to look like a ``neighborhood'' or ``germ'' at the point $\mf p$. Hence the name localization.
+\begin{remark}
+	Geometrically, we view primes $\mf p$ as living in the ``space'' $\op{Spec}R$. Then here $R_\mf p$ is intended to look like a ``neighborhood'' or ``germ'' at the point $\mf p$. Hence the name localization.
+\end{remark}
 
-There is also a universal property for localization.
+As we hoped for in the motivation, we note that the above examples tend to feature $R\left[U^{-1}\right]$ as the ring $R$ where the elements of $U$ have become invertible. In fact, this notion can be formalized into a universal property for localization.
 \begin{proposition}
-	Fix $R$ a ring and $U\subseteq R$ a multiplicatively closed subset. Let $\varphi:R\to R\left[U^{-1}\right]$ be the canonical map. Now, suppose we are given a map $\psi:R\to S$ such that $\psi(U)\subseteq R^\times$. Then there is a unique morphism $\gamma$ making the diagram commute.
-	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJSIl0sWzEsMCwiUlxcbGVmdFtVXnstMX1cXHJpZ2h0XSJdLFsxLDEsIlMiXSxbMCwyLCJcXHBzaSIsMl0sWzAsMSwiXFx2YXJwaGkiXSxbMSwyLCJcXGdhbW1hIl1d
+	Fix $R$ a ring and $U\subseteq R$ a multiplicatively closed subset. Let $\varphi:R\to R\left[U^{-1}\right]$ be the canonical map. Now, suppose we are given a ring map $\psi:R\to S$ such that $\psi(U)\subseteq R^\times$. Then there is a unique ring morphism $\gamma$ making the diagram commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJSIl0sWzEsMCwiUlxcbGVmdFtVXnstMX1cXHJpZ2h0XSJdLFsxLDEsIlMiXSxbMCwyLCJcXHBzaSIsMl0sWzAsMSwiXFx2YXJwaGkiXSxbMSwyLCJcXGdhbW1hIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
 	\[\begin{tikzcd}
 		R & {R\left[U^{-1}\right]} \\
 		& S
 		\arrow["\psi"', from=1-1, to=2-2]
 		\arrow["\varphi", from=1-1, to=1-2]
-		\arrow["\gamma", from=1-2, to=2-2]
+		\arrow["\gamma", dashed, from=1-2, to=2-2]
 	\end{tikzcd}\]
 \end{proposition}
 \begin{proof}
-	Essentially this is because we can send fractions to fractions, and there is a unique way to do this. We omit the details.
+	We tackle uniqueness and existence separately.
+	\begin{itemize}
+		\item We show that the map $\gamma$ is unique. For any $r\in R$, observe that we are forced into
+		\[\gamma(r/1)=\gamma(\varphi(r))=\psi(r),\]
+		so $\gamma$ is forced on elements of the form $\frac r1$. Further, for any $\frac ru\in R\left[U^{-1}\right]$, we see that
+		\[\psi(u)\gamma\left(\frac ru\right)=\gamma\left(\frac u1\right)\gamma\left(\frac ru\right)=\gamma\left(\frac r1\right)=\psi(r),\]
+		so we see $\gamma\left(\frac ru\right)=\psi(u)^{-1}\psi(r)$ forces everything in $R\left[U^{-1}\right]$.
+		\item We now show that the map
+		\[\gamma\left(\frac ru\right):=\psi(u)^{-1}\psi(r)\]
+		is in fact a well-defined $R$-module homomorphism. Note that $\psi(u)\in S^\times$ by definition of $\psi$, so at the very least the above expression makes physical sense.
+		\begin{itemize}
+			\item We show $\gamma$ is well-defined. Suppose that $\frac{r_1}{u_1}=\frac{r_2}{u_2}$ so that we need to show $\gamma\left(\frac{r_1}{u_1}\right)=\gamma\left(\frac{r_2}{u_2}\right)$. In other words, we need to show
+			\[\psi(u_1)^{-1}\psi(r_1)\stackrel?=\psi(u_2)^{-1}\psi(r_2).\]
+			This is equivalent to showing that
+			\[\psi(u_2r_1)=\psi(u_2)\psi(r_1)\stackrel?=\psi(u_1)\psi(r_2)=\psi(u_1r_2).\]
+			Now, we know $\frac{r_1}{u_1}=\frac{r_2}{u_2}$, so there is $u\in U$ such that $uu_2r_1=uu_1r_2$, so it follows that
+			\[\psi(u)\psi(u_2r_1)=\psi(u)\psi(u_1r_2),\]
+			so multiplying both sides by $\psi(u)^{-1}$ finishes.
+			\item We show $\gamma$ is a ring homomorphism. Quickly, we see $\gamma\left(\frac11\right)=\psi(1)^{-1}\psi(1)=1$. Additionally, for any $\frac ru,\frac sv\in R\left[U^{-1}\right]$, we see
+			\begin{align*}
+				\gamma\left(\frac ru+\frac sv\right) &= \gamma\left(\frac{vr+us}{uv}\right) \\
+				&= \psi(uv)^{-1}\psi(vr+us) \\
+				&= \psi(v)^{-1}\psi(v)\psi(u)^{-1}\psi(r)+\psi(u)^{-1}\psi(u)\psi(v)^{-1}\psi(s) \\
+				&= \gamma\left(\frac ru\right)+\gamma\left(\frac sv\right).
+			\end{align*}
+			Similarly,
+			\begin{align*}
+				\gamma\left(\frac ru\cdot\frac sv\right) &= \gamma\left(\frac{rs}{uv}\right) \\
+				&= \psi(uv)^{-1}\psi(rs) \\
+				&= \psi(u)^{-1}\psi(r)\cdot\psi(v)^{-1}\psi(s) \\
+				&= \gamma\left(\frac ru\right)\cdot\gamma\left(\frac sv\right).
+			\end{align*}
+			This finishes our checks.
+			\qedhere
+		\end{itemize}
+	\end{itemize}
 \end{proof}
 
 \subsection{Localization of Modules}
 We can also localize modules, in essentially the same way.
 \begin{definition}[Localization, modules]
-	Fix $R$ a ring and $U\subseteq R$ multiplicatively closed. Then, given an $R$-module $M$, we define $M\left[U^{-1}\right]$ to be the set of ordered pairs notated $\frac mu$ (with $m\in M$ and $u\in U$) modded out by the equivalence relation
+	Fix $R$ a ring and $U\subseteq R$ a multiplicatively closed subset. Then, given an $R$-module $M$, we define $M\left[U^{-1}\right]$ to be the set of ordered pairs notated $\frac mu$ (with $m\in M$ and $u\in U$) modded out by the equivalence relation
 	\[\frac{m_1}{u_1}=\frac{m_2}{u_2}\iff\text{there exists }v\in U\text{ such that }v(u_2m_1-u_1m_2)=0.\]
 \end{definition}
-One can define addition by fractions in the same way, by hand, writing
+Again, the extra $v$ in the definition is to make $\equiv$ an equivalence relation; this check is the same as the check in \autoref{lem:localizeequiv} by replacing all $r$s with $m$s.
+
+One can define addition by fractions in the same by-hand way, writing
 \[\frac{m_1}{u_1}+\frac{m_2}{u_2}=\frac{u_1m_2+u_2m_1}{u_1u_2}.\]
-Again, it is not too hard to check that this is well-defined and gives an abelian group law. Further, we even have an $R\left[U^{-1}\right]$ structure by
+Again, it is not too hard to check that this is well-defined (it is essentially the same as the check we did earlier) and gives an abelian group law (which we will actively choose to not write out). Further, $M\left[U^{-1}\right]$ even has an $R\left[U^{-1}\right]$ structure by
 \[\frac rv\cdot\frac mu:=\frac{rm}{vu}.\]
 Thus, localizing at $U$ will be able to define a functor from $R$-modules to $R\left[U^{-1}\right]$-modules.
-\begin{remark}
-	Again, we even have our canonical $R$-module homomorphism $M\to M\left[U^{-1}\right]$ by $m\mapsto m/1$. This need not be injective, and in fact we can describe the kernel: $\frac m1=\frac01$ if and only if there exists $u$ such that $um=0$. In other words, the kernel is the set
-	\[U\cap\{r\in M:rm=0\}\ne\emp.\]
-\end{remark}
+
+We remark that we still have a canonical $R$-module homomorphism $\varphi:M\to M\left[U^{-1}\right]$ by $\varphi:m\mapsto m/1$: to check this is an $R$-module homomorphism, pick up $r_1,r_2\in R$ and $m_1,m_2\in M$, and we see that
+\[\varphi(r_1m_1+r_2m_2)=\frac{r_1m_1+r_2m_2}1=\frac{r_1}1\cdot\frac{m_1}1+\frac{r_2}1\cdot\frac{m_1}1=\frac{r_1}1\cdot\varphi(m_1)+\frac{r_2}1\cdot\varphi(m_2).\]
+Again, the canonical map $\varphi$ need not be injective, but we can describe its kernel.
+\begin{lemma}
+	Fix an $R$-module $M$ and $U\subseteq R$ a multiplicatively closd subset. Then the kernel of the canonical map $\varphi:M\to M\left[U^{-1}\right]$ is
+	\[\ker\varphi=\{m\in M:um=0\text{ for some }u\in U\}.\]
+\end{lemma}
+\begin{proof}
+	We see $m\in\ker\varphi$ if and only if $\frac m1=\frac01$ if and only if there exists $u\in U$ such that $um=0$.
+\end{proof}
+Concretely, viewing a ring $R$ as an $R$-module, we see the kernel of the canonical map $R\to R\left[U^{-1}\right]$ consists of the $r\in R$ such that $ru=0$ for some $u\in U$.
+\begin{example}
+	If $0\in U$, then all of $R$ lives in the kernel of the canonical map $R\to R\left[U^{-1}\right]$.
+\end{example}
+\begin{example}
+	If $R$ is an integral domain, then the map $R\to K(R)$ is injective because $ru=0$ for $r\in R$ and $u\in R\setminus\{0\}$ implies $r=0$.
+\end{example}
 
 \subsection{Localization of Ideals}
 We would like to classify ideals under localization. Recall that, given a morphism $\varphi:R\to S$, the pre-image of an ideal $J\subseteq S$ will be an ideal $\varphi^{-1}(J)\subseteq R$.\footnote{If $r_1,r_2$ and $x_1,x_2\in\varphi^{-1}(J)$, then $\varphi(r_1x_1+r_2x_2)=r_1\varphi(x_1)+r_2\varphi(x_2)\in J$ by closure, so $r_1x_1+r_2x_2\in\varphi^{-1}(J)$.}
