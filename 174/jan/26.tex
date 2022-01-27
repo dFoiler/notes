@@ -1,0 +1,139 @@
+% !TEX root = ../notes.tex
+
+We will start on new things.
+
+\subsection{Functors}
+In this class, we will repeatedly talk about the following idea.
+\begin{idea}
+	Everything is a special case of everything else.
+\end{idea}
+In other words, we will want to abstract old ideas from new ones, and this will happen a lot.
+
+The first time we are going to see this is by trying to consider categories of 
+\begin{remark}
+	Yes, Russel's paradox prevents a category of all categories. Nevertheless, we will try. One way to get around this is to do size declarations: for example, we can consider the category of all small categories, as we are about to do.
+\end{remark}
+Anyways, we would like to give some categorial structure to (say, small) categories. Well, what will be our morphisms between categories? They will be ``functors.''
+
+Before defining functors, we should describe what a functor $F:\mathcal C\to\mathcal D$ should do.
+\begin{itemize}
+	\item Viewing $\mathcal C$ as consisting of the data of objects and morphisms, an initial requirement might be that $F$ takes objects to objects and morphisms to morphisms.
+	\item We would also like $F$ to preserve the ``structure'' of our categories, which essentially means we want to preserve composition in our categories. So we will require a ``functoriality'' condition to preserve this structure.
+\end{itemize}
+Let's try to get an intuitive feeling for how functoriality should behave.
+\begin{example}
+	Fix an abelian group $A$. Then there is a map $\op{Hom}(A,-)$ sending abelian groups $\mathrm{Ab}$ to sets $\mathrm{Set}$. In fact, we get a map of morphisms as well, for a morphism $f:X\to Y$ provides a post-composition mapping
+	\[f_*:\op{Hom}(A,X)\to\op{Hom}(A,Y)\]
+	by $\varphi\mapsto f\varphi$. This association has some nice properties. For example, we have the following.
+	\begin{itemize}
+		\item We see $(\id_X)_*:\op{Hom}(A,X)\to\op{Hom}(A,X)$ sends $\varphi\mapsto\varphi$, so $(\id_X)_*=\id_{\op{Hom}(A,X)}$.
+		\item Given $f:X\to Y$ and $g:Y\to Z$, we have $gf:X\to Z$, and we can see that
+		\[(gf)_*(\varphi)=gf\varphi=g_*(f_*(\varphi))=(g_*f_*)(\varphi),\]
+		so we are ``preserving composition'' in some sense because we composed before and after.
+	\end{itemize}
+\end{example}
+\begin{example}
+	Given a topological space $X$, we can create the fundamental group $\pi_1(X)$. This mapping is nice because a continuous map $f:X\to Y$ will induce a map $\pi(f):\pi_1(X)\to\pi_1(Y)$, and in fact we can check that $\pi_1(\id_X)=\id_{\pi_1(X)}$ as well as preserving composition ($f:X\to Y$ and $g:Y\to Z$ gives $\pi_1(gf)=\pi_1(g)\pi_1(f)$).
+\end{example}
+
+With the above motivation, we are now ready to give the definition of a functor.
+\begin{definition}[Functor]
+	Fix categories $\mathcal C$ and $\mathcal D$. Then a \textit{functor} $F:\mathcal C\to\mathcal D$ is a pair of ``assignments'' $\op{Ob}\mathcal C\to\op{Ob}\mathcal D$ and $\op{Mor}\mathcal C\to\op{Mor}\mathcal D$ satisfying the following coherence laws.
+	\begin{itemize}
+		\item Morphisms make sense: if $f:x\to y$ a morphism in $\mathcal C$, then $Ff$ is a morphism with domain $Fx$ and codomain $Fy$.
+		\item Identity: given an object $c\in\mathcal C$, we require $F(\id_c)=\id_{F(c)}$.
+		\item Composition: given morphisms $f:x\to y$ and $g:y\to z$ in $\mathcal C$, we require that $F(gf)=F(g)F(f)$.
+	\end{itemize}
+\end{definition}
+
+\subsection{More Examples}
+Let's do more examples.
+\begin{ex}[Forgetful]
+	There is a functor $U:\mathrm{Grp}\to\mathrm{Set}$ which sends a group $G$ to its underlying set $G$ and a group homomorphism to the underlying function. In other words, we are simply forgetting the algebraic structure of the group. Because the composition law in groups is composition of functions, and identites in $\mathrm{Grp}$ do nothing like in $\mathrm{Set}$.
+\end{ex}
+\begin{example}[Forgetful]
+	Here are more forgetful functors.
+	\begin{itemize}
+		\item $\mathrm{Ring}\to\mathrm{Grp}$ (by $R\mapsto R^\times$) 
+		\item $\mathrm{Field}\to\mathrm{Ring}$
+		\item $\mathrm{Ring}\to\mathrm{Ab}$
+		\item $\mathrm{Grp}\to\mathrm{Set}_*$ by sending $G\mapsto(G,e_G)$; namely, we point the set of $G$ by its identity, which must be fixed by group homomorphisms anyways.
+	\end{itemize}
+\end{example}
+With all of our forgetful functors lying around, we have the following definition.
+\begin{definition}[Concrete]
+	A category $\mathcal C$ is \textit{concrete} if and only if it has a forgetful functor to $\mathrm{Set}$.
+\end{definition}
+This is not terribly formal because we haven't defined what a forgetful functor means, but hopefully this is sufficiently intuitive: $\mathcal C$ should be sets with some extra structure.
+
+Before our next example, we pick up the following example.
+\begin{definition}[Endofunctor]
+	A functor $F$ is an \textit{endofunctor} of its ``domain'' and ``codomain'' categories are the same category.
+\end{definition}
+\begin{example}
+	There is an endofunctor $\mathcal P:\mathrm{Set}\to\mathrm{Set}$ sending a set $X$ to its power set $\mathcal P(X)$. We send morphisms $f:X\to Y$ to $\mathcal P(f)$ by sending subsets $S_X\subseteq X$ in $\mathcal P(X)$ to the image $f(S_X)\in\mathcal P(Y)$. We will not check the functoriality conditions, but it can be done without too much effort.
+\end{example}
+
+And now for more examples.
+\begin{example}
+	There is a functor $\mathrm{Top}\to\mathrm{Htpy}$ by sending a topological space $X$ to the same space up to homotopy. Then we send continuous maps to continuous maps, up to homotopy.
+\end{example}
+\begin{example}
+	There is a ``free'' functor $\ZZ[-]:\mathrm{Set}\to\mathrm{Ab}$ sending a set $S$ to the abelian group
+	\[\ZZ[S]=\bigoplus_{s\in S}\ZZ s.\]
+	Essentially, this is the free $\ZZ$-module generated by $S$; formally, $\ZZ[S]$ is made of finite $\ZZ$-linear combinations of elements of $S$.
+
+	Then we can take a function $f:S\to T$ to a group homomorphism $\ZZ[S]\to\ZZ[T]$ because we have described where to send the ``basis elements'' of $S$, and hence this $f$ will uniquely determine the full map.
+\end{example}
+\begin{example}
+	Fix $\mathcal C$ a locally small category, and fix some $x\in\mathcal C$. Then there is a functor $\op{Mor}_\mathcal C(x,-):\mathcal C\to\mathrm{Set}$ by sending
+	\[y\mapsto\op{Mor}_\mathcal C(x,y)\qquad\text{and}\qquad(f:y\to z)\mapsto f_*:\op{Mor}_\mathcal C(x,y)\to\op{Mor}_\mathcal C(x,z),\]
+	where $f_*:\varphi\mapsto f\varphi$ is again post-composition.
+\end{example}
+\begin{example}
+	There is an endofunctor $\id:\mathcal C\to\mathcal C$ by sending objects and morphisms to themselves.
+\end{example}
+
+\subsection{Categories of Categories}
+While we're here, we note that we can create new functors from old ones by ``composition.''
+\begin{proposition}
+	Fix $F:\mathcal C\to\mathcal D$ and $G:\mathcal D\to\mathcal E$ functors. Then the naturally defined map $GF:\mathcal C\to\mathcal D$ is also a functor.
+\end{proposition}
+\begin{proof}
+	We do indeed send objects to objects, and a morphism $f:x\to y$ in $\mathcal C$ will be sent to $F(f):Fx\to Fy$ and then
+	\[GF(f):GFx\to GFy.\]
+	Further, we can check that $GF(\id_x)=G(\id_{Fx})=\id_{GFx}$, so $GF$ preseres identities. And then, given $f:x\to y$ and $g:y\to z$, we see that
+	\[GF(gf)=G(F(g)F(f))=GF(g)GF(f),\]
+	which finishes the composition check.
+\end{proof}
+The point of the above composition law, is that it lets us form a ``category.''
+\begin{definition}
+	We define $\mathrm{Cat}$ to be the category of small categories where morphisms are functors. We define $\mathrm{CAT}$ to be the category of locally small categories where morphisms again are functors.
+\end{definition}
+\begin{remark}
+	Fixing two small categories $\mathcal C$ and $\mathcal D$, a functor $F:\mathcal C\to\mathcal D$ can be identified with a function on merely the morphism sets $\op{Mor}\mathcal C\to\op{Mor}\mathcal D$, which is itself a set. Thus, $\mathrm{Cat}$ is a locally small category: $\mathrm{Cat}\in\mathrm{CAT}$.
+\end{remark}
+
+\subsection{Subcategories.}
+To finish out class, we have the following warning.
+\begin{warn}
+	Let $F:\mathcal C\to\mathcal D$ be a functor. We check that the naturally defined ``image'' $F(\mathcal C)$ is need not be a subcategory of $\mathcal D$.
+\end{warn}
+Here is an example. Let $\mathcal C$ be the following category.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJhIl0sWzEsMCwiYiJdLFswLDEsImEnIl0sWzEsMSwiYiciXSxbMCwxLCJmIl0sWzIsMywiZiciXV0=
+\[\begin{tikzcd}
+	a & b \\
+	{a'} & {b'}
+	\arrow["f", from=1-1, to=1-2]
+	\arrow["{f'}", from=2-1, to=2-2]
+\end{tikzcd}\]
+Then let $\mathcal D$ be the following category.
+% https://q.uiver.app/?q=WzAsMyxbMCwwLCIwIl0sWzEsMCwiMSJdLFsyLDAsIjIiXSxbMCwxLCJ4Il0sWzEsMiwieSJdXQ==
+\[\begin{tikzcd}
+	0 & 1 & 2
+	\arrow["x", from=1-1, to=1-2]
+	\arrow["y", from=1-2, to=1-3]
+\end{tikzcd}\]
+Now we define $F:\mathcal C\to\mathcal D$ by $Ff=x$ and $Ff'=y$, which will make a perfectly fine functor. However, the composition $yx:0\to2$ in $\mathcal D$ does not live in the image of $F$, so this image is not a subcategory.
+
+To fix this problem, one often says something like ``given a functor $F:\mathcal C\to\mathcal D$, consider the full subcategory of $F(\mathcal C)$'' to mean closing up $F(\mathcal C)$'s potentially unclosed composition.
