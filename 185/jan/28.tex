@@ -1,0 +1,173 @@
+% !TEX root = ../notes.tex
+
+Hopefully we'll be in-person on Monday. Homework 2 will be released later today, due next Friday.
+
+\subsection{Sequences}
+Today we're talking about sequences, building towards a theory of sequences and series. Next week we will begin studying holomorphic functions and actually doing complex analysis.
+
+Anyways, here is a series of definitions.
+\begin{definition}[Sequence]
+	A \textit{sequence} of complex numbers is a function $f:\NN\to\CC$. Often we will notate this by $\{z_n\}_{n\in\NN}$ where $z_n:=f(n)$.
+\end{definition}
+By convention, all of our sequences will be sequences of complex numbers unless otherwise stated.
+\begin{definition}[Convergence]
+	A sequence $\{w_n\}_{n\in\NN}\subseteq\CC$ is a \textit{subsequence} of a sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ if and only if there is some strictly increasing function $g:\NN\to\NN$ such that $w_n=z_{g(n)}$.
+\end{definition}
+\begin{definition}[Bounded]
+	A sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ is \textit{bounded} if and only if there exists a positive real number $M>0$ such that
+	\[\{z_n\}_{n\in\NN}\subseteq B(0,M).\]
+	In other words, $|z_n|<M$ for each $n\in\NN$.
+\end{definition}
+We are in particular interested in convergence in analysis.
+\begin{definition}[Converges]
+	A sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ \textit{converges} to some $z\in\CC$ if and only if, for each $\varepsilon>0$, there exists some $N$ such that $n>N$ implies
+	\[|z-z_n|<\varepsilon.\]
+	We will notate this by $z_n\to z$ or $\lim_{n\to\infty}z_n=z$.
+\end{definition}
+Note that the definition of the limit above says that
+\[\lim_{n\to\infty}z_n=z\iff\lim_{n\to\infty}|z_n-z|=0.\]
+Intuitively, the distance between the $z_n$ and the $z$ has to ``narrow in'' on $z$. \todo{maybe add image}
+
+We would like some real-analytic tools for our complex analysis. Here is a convergence lemma.
+\begin{lemma}
+	Fix $\{z_n\}_{n\in\NN}\subseteq\CC$ a sequence. Then, letting $z_n:=x_n+y_ni$, we have that $z_n\to z$ where $z=x+yi$ if and only if $x_n\to x$ and $y_n\to y$.
+\end{lemma}
+\begin{proof}
+	Omitted.\todo{}
+\end{proof}
+Essentially, this means that checking convergence of complex numbers is the same as checking real and imaginary parts individually, so we can turn convergence questions into ones from real analysis.
+
+Sequences themselves have an arithmetic.
+\begin{proposition}
+	Fix $\{z_n\}_{n\in\NN},\{w_n\}_{n\in\NN}\subseteq\CC$ sequences such that $z_n\to z$ and $w_n\to w$. Then the following hold.
+	\begin{listalph}
+		\item $z_n+w_n\to z+w$.
+		\item $z_nw_n\to zw$.
+		\item If $w\ne0$ and $w_n\ne0$ for each $n\in\NN$, then $\frac1{w_n}\to\frac1w$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We take these one at a time, essentially borrowing the proof from metric spaces.
+	\begin{listalph}
+		\item Fix some $\varepsilon>0$. We can find some $N_z$ such that
+		\[n>N_z\implies|z-z_n|<\varepsilon/2\]
+		and some $N_w$ such that
+		\[n>N_w\implies|w-w_n|<\varepsilon/2.\]
+		Now, taking $N:=\max\{N_z,N_w\}$ so that the triangle inequality gives
+		\[n>N\implies|(z+w)-(z_n+w_n)|\le|z-z_n|+|w-w_n|<\varepsilon,\]
+		which finishes.
+	\end{listalph}
+	We leave the other two as exercises.\todo{}
+\end{proof}
+
+\subsection{Limit Points}
+Here is our main character.
+\begin{definition}[Limit point]
+	Fix $X\subseteq\CC$ and some $z\in\CC$. Then we say that $z$ is a \textit{limit point} if and only if there exists some sequence $\{z_n\}_{n\in\NN}\subseteq X$ such that $z_n\to z$.
+\end{definition}
+\begin{definition}[Accumulation point]
+	Fix $X\subseteq\CC$ and some $z\in\CC$. Then we say that $z$ is an \textit{accumulation point} if and only if there exists some sequence $\{z_n\}_{n\in\NN}\subseteq X\setminus\{z\}$ such that $z_n\to z$.
+\end{definition}
+Essentially accumulation points do not allow isolated points while limit points do.
+\begin{lemma}
+	A subset $X\subseteq\CC$ is closed in $\CC$ if and only if $X$ contains all of its limit points.
+\end{lemma}
+\begin{proof}
+	We show one direction and leave the other as an exerise.
+	\begin{itemize}
+		\item Take $X$ closed and find $z\notin X$. Now, suppose that $\{z_n\}_{n\in\NN}\subseteq X$ and we show that $z_n$ does not converge to $z$, which will be enough. Suppose for the sake of contradiction that $z\notin X$.
+
+		Now, $U=\CC\setminus X$ is open and contains $z$, so there is some $r>0$ such that
+		\[B(z,r)\subseteq U.\]
+		In particular, if $|z-w|<r$, then $w\notin X$. It follows that the sequence $\{z_n\}_{n\in\NN}\subseteq X$ cannot $r$-close to $z$, so we are done.
+		\item \todo{}
+	\end{itemize}
+\end{proof}
+The above essentially gives a more directly topological definition of ``closed set.'' It also gives us a more directly topological definition of the closure.
+\begin{lemma}
+	Fix $X\subseteq\CC$ and $z\in\CC$. The following are equivalent.
+	\begin{listalph}
+		\item We have that $z\in\overline X$.
+		\item For all $\varepsilon>0$, we have $B(z,\varepsilon)\cap X\ne\emp$.
+		\item There exists $\{z_n\}_{n\in\NN}\subseteq X$ such that $z_n\to z$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We show our directions one at a time.
+	\begin{itemize}
+		\item We show (a) implies (b). Suppose $z\in\overline X$, and for the sake of contradiction suppose we have $\varepsilon>0$ such that $B(z,\varepsilon)\cap X=\emp$. In particular, $z\notin X$.
+
+		Now, $z\in\overline X$ implies that $z$ is contained in every closed set containing $X$ by definition of $\overline X$. But because $B(z,\varepsilon)$ is open and is disjoint from $X$, we see
+		\[z\in\CC\setminus B(z,\varepsilon),\]
+		which is a contradiction.
+		\item We show (b) implies (c). For each $n\in\NN$, we know that $B(z,1/n)\cap X\ne\emp$, so we find some $z_n\in B(z,1/n)$. Then we get that $z_n\to z$ by writing out the definition.
+
+		\item We omit the proof that (c) implies (a).\todo{}
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+While we're here, we can pick up a nice topological result.
+\begin{lemma}
+	Fix $X\subseteq\CC$ a connected subset. Then $\overline X$ is also connected.
+\end{lemma}
+\begin{proof}
+	We proceed by contraposition: suppose $\overline X$ is disconnected by $U_1,U_2\subseteq\CC$. We claim that $U_1,U_2$ disconnect $X$. Well, we already know that $A\subseteq\overline A\subseteq U_1\cup U_2$, and we already know that $U_1$ and $U_2$ are disjoint.
+
+	However, $U_1\cap\overline X\ne\emp$ and $U_2\cap\overline X\ne\emp$, so arguing about open balls in our topology force $U_1\cap X\ne\emp$ and $U_2\cap X\ne\emp$, finishing.
+\end{proof}
+
+\subsection{Cauchy Sequences}
+Just like in real analysis, we will be interested in Cauchy sequences.
+\begin{definition}
+	A sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ is a \textit{Cauchy sequence} if and only if, for each $\varepsilon>0$, there exists an $N$ such that
+	\[n,m>N\implies|z_n-z_m|<\varepsilon.\]
+\end{definition}
+We have the following results on Cauchy sequences.
+\begin{proposition}
+	Fix $\{z_n\}_{n\in\NN}\subseteq\CC$ a sequence. The following are true.
+	\begin{listalph}
+		\item If $\{z_n\}_{n\in\NN}$ converges, it is bounded.
+		\item If $\{z_n\}_{n\in\NN}$ converges, its limit is unique.
+		\item If $\{z_n\}_{n\in\NN}$ converges to $z$, every subsequence converges to $z$.
+		\item If $\{z_n\}_{n\in\NN}$ converges, it is Cauchy.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We take these one at a time.
+	\begin{listalph}
+		\item Choose some $\varepsilon=1$. Then maximize with the finitely many $z_n$ away from this.
+		\item Standard.\todo{}
+		\item Use the definition of subsequence and use the same $N$ promised by $z_n\to z$.
+		\item If $z_n\to z$, then for a given $\varepsilon>0$, there exists $N$ such that
+		\[n>N\implies|z_n-z|<\varepsilon/2.\]
+		It follows that
+		\[n,m>N\implies|z_n-z_m|<|z_n-z|+|z_m-z|<\varepsilon,\]
+		finishing.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{proposition}
+	Every Cauchy sequence in $\CC$ converges.
+\end{proposition}
+\begin{proof}
+	If $\{z_n\}_{n\in\NN}$ is Cauchy, then it follows $\{\op{Re}z_n\}_{n\in\NN}$ and $\{\op{Im}z_n\}_{n\in\NN}$ are Cauchy sequnces, so they converge in the reals to some $x$ and $y$. It follows that $z_n\to x+yi$, finishing.
+\end{proof}
+
+\subsection{A Little More Topology}
+We close with one more topological definition.
+\begin{definition}[Sequentially compact]
+	A subset $X\subseteq\CC$ is \textit{sequentially compact} if and only if every $\{z_n\}_{n\in\NN}\subseteq X$ has a convergent subsequence which converges in $X$.
+\end{definition}
+\begin{remark}
+	This happens to be equivalent to $X$ is compact because $\CC\cong\RR^2$ satisfies the fact that all compact sets are closed and bounded.
+\end{remark}
+\begin{example}
+	Every finite set is compact.
+\end{example}
+And here is a last definition.
+\begin{definition}
+	A sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ \textit{tends to infinity} (notated $z_n\to\infty$) if and only if each $M>0$ has some $N\in\NN$ such that
+	\[n>N\implies|z_n|>M.\]
+\end{definition}
+Essentially the points of $\{z_n\}_{n\in\NN}$ wander infinitely away.
