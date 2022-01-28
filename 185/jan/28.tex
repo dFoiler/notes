@@ -10,7 +10,7 @@ Anyways, here is a series of definitions.
 	A \textit{sequence} of complex numbers is a function $f:\NN\to\CC$. Often we will notate this by $\{z_n\}_{n\in\NN}$ where $z_n:=f(n)$.
 \end{definition}
 By convention, all of our sequences will be sequences of complex numbers unless otherwise stated.
-\begin{definition}[Convergence]
+\begin{definition}[Subsequence]
 	A sequence $\{w_n\}_{n\in\NN}\subseteq\CC$ is a \textit{subsequence} of a sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ if and only if there is some strictly increasing function $g:\NN\to\NN$ such that $w_n=z_{g(n)}$.
 \end{definition}
 \begin{definition}[Bounded]
@@ -26,16 +26,68 @@ We are in particular interested in convergence in analysis.
 \end{definition}
 Note that the definition of the limit above says that
 \[\lim_{n\to\infty}z_n=z\iff\lim_{n\to\infty}|z_n-z|=0.\]
-Intuitively, the distance between the $z_n$ and the $z$ has to ``narrow in'' on $z$. \todo{maybe add image}
+Intuitively, the distance between the $z_n$ and the $z$ has to ``narrow in'' on $z$. %\todo{maybe add image}
 
 We would like some real-analytic tools for our complex analysis. Here is a convergence lemma.
 \begin{lemma}
 	Fix $\{z_n\}_{n\in\NN}\subseteq\CC$ a sequence. Then, letting $z_n:=x_n+y_ni$, we have that $z_n\to z$ where $z=x+yi$ if and only if $x_n\to x$ and $y_n\to y$.
 \end{lemma}
 \begin{proof}
-	Omitted.\todo{}
+	This is essentially by definition of the metric on $\CC$. We take the directions one at a time.
+	\begin{itemize}
+		\item Suppose that $z_n\to z$ in $\CC$. Then we claim that $\op{Re}z_n\to\op{Re}z$ and $\Im z_n\to\Im z_n$ in $\RR$. Indeed, for any $\varepsilon>0$, there is $N$ such that
+		\[n>N\implies|z-z_n|<\varepsilon.\]
+		But now we see that $|\Re z_n-\Re z|,|\Im z_n-\Im z|\le\sqrt{(\Re z_n-\Re z)^2+(\Im z_n-\Im z)^2}$, so it follows
+		\[n>N\implies|\Re z_n-\Re z|,|\Im z_n-\Im z|<\varepsilon,\]
+		finishing.
+		\item Suppose that $\Re z_n\to x$ and $\Im z_n\to y$. We claim that $z_n\to x+yi$. Indeed, for any $\varepsilon>0$, there exists $N_x$ such that
+		\[n>N_x\implies|\Re z_n-x|<\varepsilon/2\]
+		and $N_y$ such that
+		\[n>N_y\implies|\Im z_n-y|<\varepsilon/2.\]
+		It follows that
+		\[n>\max\{N_x,N_y\}\implies|z_n-(x+yi)|=\sqrt{|\Re z_n-x|^2+|\Im z_n-y|^2}\le\sqrt{\left(\frac\varepsilon2\right)^2+\left(\frac\varepsilon2\right)^2}<\varepsilon.\]
+		This finishes.
+		\qedhere
+	\end{itemize}
 \end{proof}
 Essentially, this means that checking convergence of complex numbers is the same as checking real and imaginary parts individually, so we can turn convergence questions into ones from real analysis.
+
+We also have the following basic properties about convergence.
+\begin{proposition}
+	Fix $\{z_n\}_{n\in\NN}\subseteq\CC$ a convergent sequence. The following are true.
+	\begin{listalph}
+		\item $\{z_n\}_{n\in\NN}$ is bounded.
+		\item The limit of $\{z_n\}_{n\in\NN}$ is unique.
+		\item Every subsequence of $\{z_n\}_{n\in\NN}$ converges to $z$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We take the claims one at a time. Let $z\in\CC$ be so that $z_n\to z$.
+	\begin{listalph}
+		\item Fix $\varepsilon=1$ so that there exists $N$ so that $n>N$ implies $|z_n-z|<1$. Now set
+		\[M:=\max(\{|z_n|+1:n\le N\}\cup\{|z|+1\}).\]
+		We claim that $|z_n|<M$ for each $n\in\NN$. We have two cases.
+		\begin{itemize}
+			\item If $n\le N$, then $|z_n|<|z_n|+1\le M$.
+			\item Otherwise $n>N$ so that
+			\[|z_n|\le|z_n-z|+|z|<|z|+1\le M,\]
+			so we are done.
+		\end{itemize}
+
+		\item Suppose that $z_n\to z'$ for some $z'\in\CC$, and we show $z=z'$. Indeed, if $z=z'$, then we are done, so suppose that $z\ne z'$ so that $|z-z'|\ne0$. Then we set $\varepsilon:=\frac12|z-z'|>0$, and we are promised some $N,N'$ such that
+		\[n>N\implies|z-z_n|<\frac\varepsilon2\quad\text{and}\quad n>N'\implies|z'-z_n|<\frac\varepsilon2.\]
+		In particular, we see that, for $n>\max\{N,N'\}$, we have
+		\[|z-z'|\le|z-z_n|+|z_n-z'|<\frac\varepsilon2+\frac\varepsilon2=\varepsilon=\frac12|z-z'|.\]
+		But because $0\le|z-z'|$, we see that this forces $|z-z'|=0$, so $z=z'$ follows. (Technically we have hit contradiction, but we do not need to use this.)
+
+		\item Note that subsequences can be characterized by choosing a strictly increasing function $f:\NN\to\NN$ so that we want to show $z_{f(n)}\to z$. Indeed, for any $\varepsilon>0$, we are promised some $N$ so that
+		\[n>N\implies|z-z_n|<\varepsilon.\]
+		Now, for each $n\in\NN$, we have\footnote{We can show this by induction on $n$, for $f(0)\ge0$ and $f(n+1)>f(n)$ forces $f(n+1)\ge f(n)+1$.} $f(n)\ge n$, so we see that
+		\[n>N\implies f(n)>N\implies|z-z_{f(n)}|<\varepsilon,\]
+		which finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
 
 Sequences themselves have an arithmetic.
 \begin{proposition}
@@ -56,8 +108,30 @@ Sequences themselves have an arithmetic.
 		Now, taking $N:=\max\{N_z,N_w\}$ so that the triangle inequality gives
 		\[n>N\implies|(z+w)-(z_n+w_n)|\le|z-z_n|+|w-w_n|<\varepsilon,\]
 		which finishes.
+
+		\item We have to use the fact that the sequences are bounded here. Because $w_n\to w$, the sequence is bounded, so there is an $M$ so that $|w_n|<M$ for each $n\in\NN$. Now, the key inequality is that
+		\[|z_nw_n-zw|\le|z_nw_n-zw_n|+|zw_n-zw|\le M|z_n-z|+|z|\cdot|w_n-w|.\tag{$*$}\label{eq:multbound}\]
+		So with this in mind, fix any $\varepsilon>0$, and we see that we are promised $N_z$ such that
+		\[n>N_z\implies|z_n-z|<\frac\varepsilon{2M}\]
+		and some $N_w$ such that
+		\[n>N_w\implies|w_n-w|<\frac\varepsilon{2|z|}\]
+		so that \hyperref[eq:multbound]{($*$)} implies
+		\[n>\max\{N_x,N_w\}\implies|z_nw_n-zw|<\varepsilon,\]
+		finishing.
+
+		\item We begin with some motivating arithmetic. Observe that
+		\[\left|\frac1w-\frac1{w_n}\right|=\frac{|w_n-w|}{|ww_n|}.\]
+		We can upper-bound the numerator without tears, so we see the main difficulty is lower-bounding the denominator. Well, because $w\ne0$, we can set $\varepsilon=|w|/2$ so that there exists $N_0$ such that
+		\[n>N_0\implies|w_n-w|<|w|/2.\]
+		In particular, it follows that $|w_n|\ge|w|-|w-w_n|=|w|/2$ for $n>N_0$.
+
+		With this in mind, fix any $\varepsilon>0$. Then we are promised some $N_1$ such that
+		\[n>N_1\implies|w_n-w|<|w|^2\varepsilon/2\]
+		so that we see
+		\[n>\max\{N_0,N_1\}\implies\left|\frac1w-\frac1{w_n}\right|=\frac{|w_n-w|}{|w|\cdot|w_n|}\le\frac{|w|^2\varepsilon/2}{|w|\cdot|w|/2}=\varepsilon,\]
+		finishing.
+		\qedhere
 	\end{listalph}
-	We leave the other two as exercises.\todo{}
 \end{proof}
 
 \subsection{Limit Points}
@@ -69,20 +143,7 @@ Here is our main character.
 	Fix $X\subseteq\CC$ and some $z\in\CC$. Then we say that $z$ is an \textit{accumulation point} if and only if there exists some sequence $\{z_n\}_{n\in\NN}\subseteq X\setminus\{z\}$ such that $z_n\to z$.
 \end{definition}
 Essentially accumulation points do not allow isolated points while limit points do.
-\begin{lemma}
-	A subset $X\subseteq\CC$ is closed in $\CC$ if and only if $X$ contains all of its limit points.
-\end{lemma}
-\begin{proof}
-	We show one direction and leave the other as an exerise.
-	\begin{itemize}
-		\item Take $X$ closed and find $z\notin X$. Now, suppose that $\{z_n\}_{n\in\NN}\subseteq X$ and we show that $z_n$ does not converge to $z$, which will be enough. Suppose for the sake of contradiction that $z\notin X$.
 
-		Now, $U=\CC\setminus X$ is open and contains $z$, so there is some $r>0$ such that
-		\[B(z,r)\subseteq U.\]
-		In particular, if $|z-w|<r$, then $w\notin X$. It follows that the sequence $\{z_n\}_{n\in\NN}\subseteq X$ cannot $r$-close to $z$, so we are done.
-		\item \todo{}
-	\end{itemize}
-\end{proof}
 The above essentially gives a more directly topological definition of ``closed set.'' It also gives us a more directly topological definition of the closure.
 \begin{lemma}
 	Fix $X\subseteq\CC$ and $z\in\CC$. The following are equivalent.
@@ -98,13 +159,28 @@ The above essentially gives a more directly topological definition of ``closed s
 		\item We show (a) implies (b). Suppose $z\in\overline X$, and for the sake of contradiction suppose we have $\varepsilon>0$ such that $B(z,\varepsilon)\cap X=\emp$. In particular, $z\notin X$.
 
 		Now, $z\in\overline X$ implies that $z$ is contained in every closed set containing $X$ by definition of $\overline X$. But because $B(z,\varepsilon)$ is open and is disjoint from $X$, we see
-		\[z\in\CC\setminus B(z,\varepsilon),\]
+		\[z\in\overline X\subseteq\CC\setminus B(z,\varepsilon),\]
 		which is a contradiction.
-		\item We show (b) implies (c). For each $n\in\NN$, we know that $B(z,1/n)\cap X\ne\emp$, so we find some $z_n\in B(z,1/n)$. Then we get that $z_n\to z$ by writing out the definition.
+		\item We show (b) implies (c). For each $n\in\NN$, we know that $B(z,1/n)\cap X\ne\emp$, so we find some $z_n\in B(z,1/n)$. Now, for any $\varepsilon>0$, choose $N:=1/\varepsilon$ so that
+		\[n>N\implies|z_n-z|<\frac1n<\frac1N=\varepsilon,\]
+		so indeed $z_n\to z$.
 
-		\item We omit the proof that (c) implies (a).\todo{}
+		\item We show (b) implies (a). We proceed by contraposition. Suppose that $z\notin\overline X$. It follows that $z\in\CC\setminus\overline X$, which is open, so there exists an $r>0$ such that
+		\[B(z,r)\subseteq\CC\setminus\overline X\subseteq\CC\setminus X.\]
+		It follows that $B(z,r)\cap X=\emp$.
+
+		\item We show (c) implies (b). Suppose $\{z_n\}_{n\in\NN}\subseteq X$ has $z_n\to z$ for some $z\in\CC$. For any $\varepsilon>0$, there exists $N$ such that
+		\[n>N\implies|z_n-z|<\varepsilon,\]
+		so in particular, choosing any $n:=\ceil N+1$ has $z_n\in B(z,\varepsilon)\cap X$, so $B(z,\varepsilon)\cap X\ne\emp$.
 		\qedhere
 	\end{itemize}
+\end{proof}
+The above discussion can give us a more directly topological definition of ``closed.''
+\begin{lemma}
+	A subset $X\subseteq\CC$ is closed in $\CC$ if and only if $X$ contains all of its limit points.
+\end{lemma}
+\begin{proof}
+	By the previous lemma, we see that $z\in\overline X$ if and only if $z$ is a limit point of $X$, so $\overline X$ is the set of limit points of $X$. Now, $X$ is closed if and only if $X=\overline X$, so $X$ is closed if and only if all limit points of $X$ are in fact points of $X$. (Note that all points of $X$ are automatically limit points essentially because $X\subseteq\overline X$ for free.)
 \end{proof}
 
 While we're here, we can pick up a nice topological result.
@@ -112,46 +188,41 @@ While we're here, we can pick up a nice topological result.
 	Fix $X\subseteq\CC$ a connected subset. Then $\overline X$ is also connected.
 \end{lemma}
 \begin{proof}
-	We proceed by contraposition: suppose $\overline X$ is disconnected by $U_1,U_2\subseteq\CC$. We claim that $U_1,U_2$ disconnect $X$. Well, we already know that $A\subseteq\overline A\subseteq U_1\cup U_2$, and we already know that $U_1$ and $U_2$ are disjoint.
+	This argument is purely topological. We proceed by contraposition: suppose $\overline X$ is disconnected by $U_1,U_2\subseteq\CC$. We claim that $U_1,U_2$ disconnect $X$. Well, we already know that $A\subseteq\overline A\subseteq U_1\cup U_2$, and we already know that $U_1$ and $U_2$ are disjoint.
 
-	However, $U_1\cap\overline X\ne\emp$ and $U_2\cap\overline X\ne\emp$, so arguing about open balls in our topology force $U_1\cap X\ne\emp$ and $U_2\cap X\ne\emp$, finishing.
+	We claim that, for $U\subseteq\CC$ an open subsets, if $U\cap\overline X\ne\emp$, then $U\cap X\ne\emp$ as well. Indeed, we proceed by contraposition: if $U\cap X=\emp$, then $X\subseteq\CC\setminus U$, but $\CC\setminus U$ is closed, so
+	\[\overline X\subseteq\CC\setminus U,\]
+	so $\overline X\cap U=\emp$.
+
+	Thus, it follows from $U_1\cap\overline X,U_2\cap\overline X\ne\emp$ that $U_1\cap X,U_2\cap X\ne\emp$. This finishes the proof that $U_1$ and $U_2$ disconnect $X$. Indeed, 
 \end{proof}
 
 \subsection{Cauchy Sequences}
 Just like in real analysis, we will be interested in Cauchy sequences.
-\begin{definition}
+\begin{definition}[Cauchy sequence]
 	A sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ is a \textit{Cauchy sequence} if and only if, for each $\varepsilon>0$, there exists an $N$ such that
 	\[n,m>N\implies|z_n-z_m|<\varepsilon.\]
 \end{definition}
 We have the following results on Cauchy sequences.
 \begin{proposition}
-	Fix $\{z_n\}_{n\in\NN}\subseteq\CC$ a sequence. The following are true.
-	\begin{listalph}
-		\item If $\{z_n\}_{n\in\NN}$ converges, it is bounded.
-		\item If $\{z_n\}_{n\in\NN}$ converges, its limit is unique.
-		\item If $\{z_n\}_{n\in\NN}$ converges to $z$, every subsequence converges to $z$.
-		\item If $\{z_n\}_{n\in\NN}$ converges, it is Cauchy.
-	\end{listalph}
+	Fix $\{z_n\}_{n\in\NN}\subseteq\CC$ a sequence. If $\{z_n\}_{n\in\NN}$ converges, it is Cauchy.
 \end{proposition}
 \begin{proof}
-	We take these one at a time.
-	\begin{listalph}
-		\item Choose some $\varepsilon=1$. Then maximize with the finitely many $z_n$ away from this.
-		\item Standard.\todo{}
-		\item Use the definition of subsequence and use the same $N$ promised by $z_n\to z$.
-		\item If $z_n\to z$, then for a given $\varepsilon>0$, there exists $N$ such that
-		\[n>N\implies|z_n-z|<\varepsilon/2.\]
-		It follows that
-		\[n,m>N\implies|z_n-z_m|<|z_n-z|+|z_m-z|<\varepsilon,\]
-		finishing.
-		\qedhere
-	\end{listalph}
+	This proof uses no special properties of $\CC$. If $z_n\to z$, then for a given $\varepsilon>0$, there exists $N$ such that
+	\[n>N\implies|z_n-z|<\varepsilon/2.\]
+	It follows that
+	\[n,m>N\implies|z_n-z_m|<|z_n-z|+|z_m-z|<\varepsilon,\]
+	finishing.
 \end{proof}
 \begin{proposition}
 	Every Cauchy sequence in $\CC$ converges.
 \end{proposition}
 \begin{proof}
-	If $\{z_n\}_{n\in\NN}$ is Cauchy, then it follows $\{\op{Re}z_n\}_{n\in\NN}$ and $\{\op{Im}z_n\}_{n\in\NN}$ are Cauchy sequnces, so they converge in the reals to some $x$ and $y$. It follows that $z_n\to x+yi$, finishing.
+	If $\{z_n\}_{n\in\NN}$ is Cauchy, then we claim $\{\op{Re}z_n\}_{n\in\NN}$ and $\{\op{Im}z_n\}_{n\in\NN}$ are Cauchy sequnces. Indeed, for any $\varepsilon>0$, there exists $N$ so that
+	\[n,m>N\implies|z_n-z_m|<\varepsilon,\]
+	but then $|\Re z_n-\Re z_m|<|z_n-z_m|$ and $|\Im z_n-\Im z_m|<|z_n-z_m|$, so the same $N$ witnesses that $\{\Re z_n\}_{n\in\NN}$ and $\{\Im z_n\}_{n\in\NN}$ are Cauchy in $\RR$.
+
+	Now, Cauchy sequences in $\RR$ converge, so there are reals $x,y\in\RR$ such that $\Re z_n\to x$ and $\Im z_n\to w$. It follows that $z_n\to x+yi$, finishing.
 \end{proof}
 
 \subsection{A Little More Topology}
@@ -166,7 +237,7 @@ We close with one more topological definition.
 	Every finite set is compact.
 \end{example}
 And here is a last definition.
-\begin{definition}
+\begin{definition}[Tends to infinity]
 	A sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ \textit{tends to infinity} (notated $z_n\to\infty$) if and only if each $M>0$ has some $N\in\NN$ such that
 	\[n>N\implies|z_n|>M.\]
 \end{definition}
