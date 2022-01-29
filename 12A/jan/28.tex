@@ -1,0 +1,101 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Formulae}
+Our story today continues trying to define what a grammatical formula is in our language. Last time we gave an almost-precise definition of formula; today we will formalize it.
+
+The idea is that complex formulae can be built from simpler ones. Namely, we bring in the idea of ``construction sequences.''
+\begin{example}
+	We can build the formula $(\lnot p_1\to(p_2\lor p_3))$ by the construction sequence
+	\[\langle p_1,\lnot p_1,p_2,p_3,(p_2\lor p_3),(\lnot p_1\to(p_2\lor p_3))\rangle.\]
+	The point is that each formula in the list is made via some concatenation rule applied to previous formulae in the list.
+\end{example}
+Here is our definition.
+\begin{definition}
+	A \textit{construction sequence} from a set of letters $P$ is a finite sequence of expressions $\langle\varphi_1,\ldots,\varphi_n\rangle$ satisfying the following conditions.
+	\begin{listalph}
+		\item $\varphi_k$ may be an atopic formula.
+		\item If $k<\ell$, then $\varphi_\ell$ may be $\lnot\varphi_k$.
+		\item If $k,\ell<m$, then $\varphi_m$ may be $(\varphi_k\land\varphi_\ell)$ or $(\varphi_k\lor\varphi_\ell)$ or $(\varphi_k\to\varphi_\ell)$ or $(\varphi_k\leftrightarrow\varphi_\ell)$.
+	\end{listalph}
+\end{definition}
+We repeat the same example.
+\begin{example}
+	Let's build our previous construction sequence.
+	\begin{itemize}
+		\item We start with $\langle p_1\rangle$.
+		\item From here we can get $\langle p_1,\lnot p_1\rangle$.
+		\item From here we may add many atomic formulae, giving $\langle p_1,\lnot p_1,p_2,p_3\rangle$.
+		\item With $p_2$ and $p_3$, we can build to $\langle p_1,\lnot p_1,p_2,p_3,(p_2\lor p_3)\rangle$.
+		\item With $\lnot p_1$ and $(p_2\lor p_3)$, we can build the full $\langle p_1,\lnot p_1,p_2,p_3,(p_2\lor p_3),(\lnot p_1\to(p_2\lor p_3))\rangle$.
+	\end{itemize}
+	This is a contruction sequence for $(\lnot p_1\to(p_2\lor p_3))$.
+\end{example}
+The point is that constructon sequences let us define formulae.
+\begin{definition}[Formula]
+	An expression $\varphi$ is a \textit{formula} of $\mathcal L(P)$ if and only if it is it an element of some construction sequence from $P$.
+\end{definition}
+Note that there are infinitely many expressions.
+
+Here is an alternate way to think about this construction sequence: we can build it as a tree.
+% https://q.uiver.app/?q=WzAsOCxbMSwwLCIoXFxsbm90IHBfMVxcdG8ocF8yXFxsb3IgcF8zKSkiXSxbMSwxLCJcXHRvIl0sWzAsMiwiXFxsbm90IHBfMSJdLFsyLDIsIihwXzJcXGxvciBwXzMpIl0sWzAsMywicF8xIl0sWzIsMywiXFxsb3IiXSxbMSw0LCJwXzIiXSxbMyw0LCJwXzMiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDQsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsNSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs1LDYsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+\[\begin{tikzcd}
+	& {(\lnot p_1\to(p_2\lor p_3))} \\
+	& \to \\
+	{\lnot p_1} && {(p_2\lor p_3)} \\
+	{p_1} && \lor \\
+	& {p_2} && {p_3}
+	\arrow[no head, from=1-2, to=2-2]
+	\arrow[no head, from=2-2, to=3-1]
+	\arrow[no head, from=3-1, to=4-1]
+	\arrow[no head, from=2-2, to=3-3]
+	\arrow[no head, from=3-3, to=4-3]
+	\arrow[no head, from=4-3, to=5-2]
+	\arrow[no head, from=4-3, to=5-4]
+\end{tikzcd}\]
+Observe that this really does convey the same information.
+
+\subsection{Formulae, Again}
+Last time we defined what it means to ``construct'' a formula by manually describing how to construct formulae. We now provide a separate way to do this, which will be helpful for proofs later.
+
+The key here is to view construction steps as ``operations'' on $\mathcal L(P)$. For example, $o_\lnot$ is a function which takes the formula $\varphi$ and returns $\lnot\varphi$. In general, for some connector $\#$ such as in $\{\lnot,\land,\lor,\to,\leftrightarrow\}$, we can write
+\[o_\#(\varphi,\varphi'):=(\varphi\#\varphi').\]
+Now we can provide an ``inductive'' definition of our formulae.
+\begin{definition}[Formula, again] \label{def:indformula}
+	The set of formulae $\mathcal L(P)$ to be a set of expressions satisfying the following.
+	\begin{listalph}
+		\item $\mathcal L(P)$ contains all atomic formulae from $P$.
+		\item $\mathcal L(P)$ is closed under the operations $o_\lnot,o_\land,o_\lor,o_\to,o_\leftrightarrow$.
+		\item $\mathcal L(P)$ is minimal with respect to the properties (a) and (b).
+	\end{listalph}
+\end{definition}
+\begin{nex}
+	The set
+	\[S:=\{p,\lnot p,\lnot\lnot p,\ldots\}\]
+	is closed under $o_\lnot$ because appending a $\lnot$ to any element in $S$ stays in $S$. However, this set is not closed under $o_\land$ because $p\in S$ but $(p\land p)\notin S$.
+\end{nex}
+\begin{remark}
+	Closure is a nice property. For example, $\NN$ is closed under $+$ and $\times$. If we want it to be closed under $-$ (say), we should introduce $\ZZ$ instead of $\NN$.
+\end{remark}
+Note that the conditions (a) and (b) in the definition is too much.
+\begin{nex}
+	The set of all possible expressions certainly satisfies (a) and (b), but it has many expressions which we don't want to call formulae, such as $\left.\lnot\lnot\right)p$.
+\end{nex}
+One possible issue with (c) in \autoref{def:indformula} is that it is not obvious what it means, and once we agree what it means, it's not obvious that $\mathcal L(P)$ actually exists as a set. Well, we choose ``minimal'' to mean that any set $S$ satisfying the propoerties (a) and (b) immediately implies $\mathcal L(P)\subseteq S$.
+
+Thus, to verify that \autoref{def:indformula} does have some $\mathcal L(P)$ which exists, we can define
+\[\mathcal L(P)=\bigcap_{S\text{ satisfies (a), (b)}}S.\]
+Then it is not hard to check that $\mathcal L(P)$ satisfies (a)---$P$ is a subset of each set we intersect, so $P\subseteq\mathcal L(P)$---as well as satisfies (b)---if $\varphi$ and $\varphi'$ are two formulae in all sets satisfying (b), then after applying the operation they will still be in all sets satisfying (b).
+
+Anyways, \autoref{def:indformula} is called an ``inductive'' definition because it will turn out that it gives us an induction: if we want to show that some property holds for all formulae $\mathcal L(S)$, we show that the property holds for all propositions and that the property is closed under the operation.
+\begin{example}
+	The natural numbers $\NN$ are minimal with respect to $0\in\NN$ and closure under $+1$; its existence can be gauranteed via the same intersection idea. This means that any set containing $0$ and closed under $+1$ will contain $\NN$.
+\end{example}
+\begin{remark}
+	Observe that \autoref{def:indformula} is a bit weird: it's saying an expression $\varphi$ is a formula if and only if it is a member of each set satisfying (a) and (b). This makes it a little harder to prove that something is a formula because this approach is more ``top-down.''
+\end{remark}
+\begin{example}
+	We claim that $(p\land q)$ is a formula. Well, let $S$ be some set of expressions satisfying (a) and (b), and we will show $(p\land q)\in S$. Then $p,q\in S$ by (a), from which (b) implies $(p\land q)\in S$.
+\end{example}
+Notice how similar the proof in the above example is to actually giving the construction sequence $\langle p,q,(p\land q)\rangle$.
