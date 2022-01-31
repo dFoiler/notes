@@ -1,0 +1,171 @@
+% !TEX root = ../notes.tex
+
+So we are lecturing in-person today. Good morning everyone.
+\begin{quot}
+	If I don't fall off the stage, I will consider it a major accomplishment.
+\end{quot}
+Homework 2 is due Friday, the 4th of February. Office hours will occur at the usual times, but they will now occur in-person at Evans 749.
+
+\subsection{Series}
+Today we're mostly talking about series, and on Friday we'll talk about continuous functions.
+\begin{definition}[Series]
+	An \textit{infinite series} over $\CC$ is an infinite sum
+	\[S:=\sum_{n=1}^\infty z_n\]
+	where $\{z_n\}_{n\in\NN}\subseteq\CC$ is a sequence of complex numbers.
+\end{definition}
+With respect to series, we really want to know when various series converge so that the series is well-defined.
+\begin{definition}[Converge, diverge]
+	Fix a sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ of complex numbers, we define the $m$th partial sum to be
+	\[S_m:=\sum_{n=0}^mz_m.\]
+	Then we say that the infinite series \textit{converges} if and only if the sequence $\{S_m\}$ of partial sums converges. Otherwise, we say that $S$ is \textit{divergent}.
+\end{definition}
+
+As usual, we start with some basic examples.
+\begin{exe}
+	Fix some $z\in\CC$ with $|z|<1$, we define $z_n:=z^n$. Then we have
+	\[S=\sum_{k=0}^\infty z^k=\frac1{1-z}.\]
+\end{exe}
+\begin{proof}
+	Fix some partial sum
+	\[S_N:=\sum_{k=0}^Nz^k=1+z+z^2+\cdots+z^N.\]
+	Multiplying by $z$, we see that
+	\[zS_n=z+z^2+\cdots+ z^N+z^{N+1}.\]
+	It follows that
+	\[S_N-zS_N=1-z^{N+1}.\]
+	Because $|z|<1$, we have $z\ne1$, so we may write
+	\[S_N=\frac1{1-z}-\frac{z^{N+1}}{1-z}.\]
+	However, we may note that as $N\to\infty$, the bad term $z^{N+1}$ will have size
+	\[\left|z^{N+1}\right|=|z|^{N+1},\]
+	which goes to $0$ (because $|z|<1$).\footnote{This is surprisingly annoying to rigorize with a $\varepsilon$-$\delta$ proof, so we won't do so here. The interested can try to use induction to manually bound $|z|^n$ by $\frac cn$ for some $c$.} It follows that
+	\[\lim_{N\to\infty}S_N=\frac1{1-z},\]
+	which is what we wanted.
+\end{proof}
+Anyways, here are some basic lemmas.
+\begin{lemma}[Divergence test]
+	Suppose that $\{z_n\}_{n\in\NN}$ is a sequence of complex numbers such that $\sum z_n$ converges. Then $z_n\to0$ as $n\to\infty$.
+\end{lemma}
+\begin{proof}
+	Let $S_n$ be the $n$th partial sum so that we are given $S_n\to L$ for some $L\in\CC$. But now we see that
+	\[z_{n+1}=\left(\sum_{k=0}^{N+1}z_k\right)-\left(\sum_{k=0}^{N}z_k\right)=S_{n+1}-S_n.\]
+	Using limit laws, we see that
+	\[\lim_{n\to\infty}z_{n+1}=\lim_{n\to\infty}S_{n+1}-\lim_{n\to\infty}S_n=L-L=0.\]
+	Shifting the indices back gives $z_n\to0$ as $N\to\infty$.
+\end{proof}
+Here is an important example of a divergent series.
+\begin{exe}
+	We claim that
+	\[S=\sum_{k=1}^\infty\frac1k\]
+	does not converge.
+\end{exe}
+\begin{proof}
+	We will show that the sequence of partial sums $\{S_n\}_{n=1}^\infty$ is not Cauchy, which will show that the series diverges. Well, observe that
+	\[S_{2^{n+1}}-S_{2^n}=\sum_{k=2^n+1}^{2^{n+1}}\frac1k\]
+	after cancelling out all of our terms. However, each term in the sum is at least $\frac1{2^{n+1}}$, so we may bound
+	\[S_{2^{n+1}}-S_{2^n}\ge\frac1{2^{n+1}}\left(2^{n+1}-2^n\right)=\frac12.\]
+	We now show that the partial sums are not Cauchy. Fix $\varepsilon$. Supposing for the sake of contradiction that the sequence is Cauchy, there exists $N$ so that $n,m>N$ has
+	\[|S_n-S_m|<\frac12.\]
+	However, we can find some power of $2$ named $2^r$ which exceeds $N$, in which case we find $2^{r+1},2^r>N$ and
+	\[|S_{2^{r+1}}-S_{2^r}|\ge\frac12,\]
+	which is our contradiction.
+\end{proof}
+\begin{remark}
+	Because a sequence will converge if and only if its real and imaginary parts do, we can turn a convergene test into a real-number test by taking the real and imaginary parts of the sum.
+\end{remark}
+
+\subsection{The Comparison Test}
+Recall the comparison test in $\RR$.
+\begin{theorem}[Comparison test]
+	Fix $\{x_n\}_{n\in\NN},\{y_n\}_{n\in\NN}\subseteq\RR$ sequences of real numbers. Further, suppose that we there exists a positive constatnt $c>0$ such that $0\le x_n\le cy_n$. Then the following hold.
+	\begin{itemize}
+		\item If $\sum y_n$ converges, then $\sum x_n$ converges as well.
+		\item If $\sum x_n$ diverges, then $\sum y_n$ diverges as well.
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	We appeal to real analysis. The interested can see Theorem 2.1.21 in Eterovi\'c. The main point is to use the Monotone sequence theorem.
+\end{proof}
+Here is an example.
+\begin{exe}
+	Fix $s>1$ an integer. Then the series
+	\[S=\sum_{k=1}^\infty\frac1{k^s}\]
+	converges.
+\end{exe}
+\begin{proof}
+	Because $s$ is an integer, we have $s\ge2$. Namely, $\frac1{k^s}\le\frac1{k^2}$, so by the comparison test it suffices to just show the convergence of
+	\[S':=\sum_{k=1}^\infty\frac1{k^2}.\]
+	For this, we apply some trickery. In particular, for $k>1$, we can bound
+	\[\frac1{k^2}<\frac1{k(k-1)}=\frac1{k-1}-\frac1k.\]
+	In particular,
+	\[S'=1+\sum_{k=2}^\infty\frac1{k^2}<1+\sum_{k=2}^\infty\left(\frac1{k-1}-\frac1k\right).\]
+	Thus, by the comparison test, it suffices to show the convergence of
+	\[T:=\sum_{k=2}^\infty\left(\frac1{k-1}-\frac1k\right).\]
+	But the $n$th partial sum will telescope, giving
+	\[T_n:=\sum_{k=2}^n\left(\frac1{k-1}-\frac1k\right)=1-\frac1n,\]
+	so $T_n\to1$ as $n\to\infty$, and $T=1$. It follows that $S'$ is upper-bounded by $1+T\le2$.
+\end{proof}
+
+\subsection{Absolute Convergence}
+The following kind of converence is nontrivially stronger, but that makes it better.
+\begin{definition}[Absolute convergence]
+	Fix a sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ of complex numbers. Then the sum $S:=\sum z_n$ converges \textit{absolutely} if and only if the series
+	\[\sum_{n=0}^\infty|z_n|\]
+	also converges. In other words, the partial sums of the above series converges.
+\end{definition}
+We have the following quick lemma to justify naming this ``convergence.''
+\begin{lemma}
+	If a series converges absolutely, then the series also converges.
+\end{lemma}
+\begin{proof}
+	The idea is to use the triangle inequality. Fix our series
+	\[S:=\sum_{n=0}^\infty z_n\]
+	for which
+	\[T:=\sum_{n=0}^\infty|z_n|\]
+	converges. Let $S_n$ be the $n$th partial sum of $S$ and $T_n$ the $n$ the partial sum of $T$.
+	
+	Our goal is to show that $\{S_n\}_{n\in\NN}$ is Cauchy. Observe $\{T_n\}_{n\in\NN}$ is an increasing sequence of real numbers because $|z|\ge0$ always. To start off our arithmetic, we note that, for $n,m\in\NN$ with $n>mn$, we have
+	\[|S_n-S_m|=\left|\sum_{k=m+1}^nz_k\right|,\]
+	which by the triangle inequality can be bounded by
+	\[|S_n-S_m|\le\sum_{k=m+1}^n|z_k|=T_m-T_n.\]
+	But now we can use the fact that $\{T_n\}_{n\in\NN}$ must be Cauchy to finish: for any $\varepsilon>0$, there exists some $N$ such that $n>m>N$ implies $T_m-T_n<\varepsilon$. But then this same $N$ promises $n>m>N$ implies
+	\[|S_n-S_m|<T_m-T_n<\varepsilon,\]
+	which is what we wanted.
+\end{proof}
+Here is a surprise tool that will help us later.
+\begin{lemma}
+	Fix a sequence $\{a_n\}_{n\in\NN}\subseteq\CC$ of nonzero complex numbers. Further suppose that $\{a_n\}_{n\in\NN}$ tends to infinity (i.e., $|a_n|\to\infty$ as $n\to\infty$), then for any positive real number $r\in\RR^+$, the series
+	\[\sum_{k=0}^\infty\left(\frac r{|a_k|}\right)^k\]
+	converges.
+\end{lemma}
+\begin{proof}
+	We need the $a_n$ to be nonzero in order to allow division, so the real puzzle is to determine how to use the fact $|a_n|\to\infty$. Well, there exists some $N$ such that $n>N$ has
+	\[|a_n|>2r.\]
+	But then $\frac r{|a_n|}<\frac12$ for each $n>N$, so we can use the comparison test as follows: observe that
+	\[\sum_{k=0}^\infty\frac1{2^k}\]
+	will converge, and there will exist some $c>1$ so that
+	\[\frac r{|a_k|}<\frac c{2^k}\]
+	for $0\le k\le N$; and then for $n>N$, we get the above inequality anyways as discussed earlier (observe we took $c>1$).
+\end{proof}
+\begin{quot}
+	I can't break math on the first day of class. I can do it later on.
+\end{quot}
+\begin{lemma}
+	Suppose that we have two series $S:=\sum_{k\in\NN}z_k$ and $T:=\sum_{k\in\NN}w_k$ are both absolutely convergent. Then the sum
+	\[ST=\sum_{k=0}^\infty\left(\sum_{i+j=k}z_iw_j\right)\]
+	is absolutely convergent as well.
+\end{lemma}
+\begin{proof}
+	We sketch the result, and the remaining details are in Eterovi\'c. As usual, consider the partial sums
+	\[A_n:=\sum_{k=0}^n|z_k|\qquad\text{and}\qquad B_n=\sum_{k=0}^n|w_k|,\]
+	both of which will converge. It follows that $A_nB_n$ will converge as $n\to\infty$, which we can compute as
+	\[A_nB_n=\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)+R_n,\]
+	where $R_n$ is some garbage, explicitly equal to
+	\[R_n=\sum_{\substack{(i,j)\in\ZZ^2\\i,j\le n\text{ and }i+j>n}}|z_kw_\ell|.\]
+	The key claim is that $R_n\to0$, which will go to $0$ upon using the triangle inequality a few times.\todo{}
+
+	In particular, it follows that
+	\[\lim_{n\to\infty}\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)=\lim_{n\to\infty}A_nB_n-\lim_{n\to\infty}R_n,\]
+	which does indeed converge.
+\end{proof}
+% \begin{ex}
+% 	It is not the case that the product of two convergent series will be convergent.
+% \end{ex}
