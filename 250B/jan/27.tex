@@ -249,30 +249,75 @@ We need to be careful because localization need not commute with infinite inters
 	\[\left(\bigcap_{a\in k}(x-a)\right)\left[U^{-1}\right]=(0)\left[U^{-1}\right]=(0)\ne k(x)=\bigcap_{a\in k}(x-a)\left[U^{-1}\right].\]
 \end{example}
 
-\subsection{Some Homological Algebra}
-We start by discussing a particular adjuction. For the discussion here, fix a ring homomorphism $\psi:R\to S$. Now, if $M$ is an $S$-module, we can give $M$ an $R$-action by
-\[r\cdot m:=\psi(r)m,\]
-making the $R$-module $\op{Res}_RM$. In the other direction, if $N$ is an $R$-module, we can create an $S$-module $\op{Ind}_R^SN:=S\otimes_RN$, where we get an $S$-action by multiplying on the left coordinate.
-
-Here is our claim.
-\begin{proposition}
-	Let $R$ and $S$ be rings with a map $\varphi:R\to S$. Then, given an $R$-module $M$ and an $S$-module $N$, we have a canonical isomorphism
-	\[\op{Hom}_R(M,\op{Res}_RN)\cong\op{Hom}_S(S\otimes_RM,N).\]
-	In other words, tensoring is left-adjoint to restriction.
-\end{proposition}
+\subsection{Tensor--Restriction Adjunction}
+We start by discussing a particular adjuction. We have the following definition.
+\begin{definition}[Restriction]
+	Fix $S$ an $R$-algebra, which means we are promised a ring homomorphism $\psi:R\to S$. Given an $S$-module $M$, we can give $M$ an $R$-action by
+	\[r\cdot m:=\psi(r)m.\]
+	The abelian group $M$ with this $R$-action is the \textit{restriction} $\op{Res}_R^SM$.
+\end{definition}
+In other words, the $S$-action on $M$ is equivalent to a ring map $S\to\op{End}M$, so we get an $R$-action by precomposition: $R\stackrel\psi\to S\to\op{End}M$.
+\begin{lemma}
+	Fix $S$ an $R$-algebra. Then the map $\op{Res}^S_R:\textrm{Mod}_S\to\textrm{Mod}_R$ is a functor.
+\end{lemma}
 \begin{proof}
-	We simply construt the two maps manually.
-	\begin{itemize}
-		\item Fix $\varphi\in\op{Hom}_R(M,\op{Res}_RN)$. Then we define $\widetilde\varphi\in\op{Hom}_S(S\otimes_RM,S)$ by defining
-		\[\widetilde(s\otimes m)=s\varphi(m).\]
-		Again, one has to check that this is well-defined, but we will not do so here.
-
-		\item In the other direction, we notice that we havve a map $M\to S\otimes_RM$ by $m\mapsto 1\otimes m$. But composing this map with $\widetilde\varphi$ will give a map $M\to N$ which should provide us with an inverse.\todo{excuse me}
-		\qedhere
-	\end{itemize}
+	For concreteness, fix our map $\psi:R\to S$. We start by discussing how to restrict morphisms. Given an $S$-module morphism $f:M\to N$, we claim that the ``function data'' of $\varphi$ in fact makes an $R$-module morphism $\op{Res}_R^S(f):\op{Res}_S^RM\to\op{Res}_S^RN$. In other words, we define
+	\[\op{Res}_R^S(f)(m):=f(m).\]
+	Note this makes $\op{Res}_R^S(f)$ at least a morphism of abelian groups, so in particular it is additive. So to check that $\op{Res}_R^S(f)$ is an $R$-module morphism, we merely pick up $r\in R$ and $m\in M$ and note
+	\[\op{Res}_R^S(f)(rm)f(\psi(r)m)=\psi(r)f(m)=r\cdot\op{Res}_R^S(f)(m).\]
+	Now, to show functoriality, we note that $\op{Res}_R^S(\id_M)(m)=m$ for any $S$-module $M$ and $m\in M$. And for $f:A\to B$ and $g:B\to C$ morphisms of $S$-modules, we have $\op{Res}_R^S(g\circ f)(a)=(g\circ f)(a)=\left(\op{Res}_R^S(g)\circ\op{Res}_R^S(g)\right)(a)$.
 \end{proof}
 
-Next let's discuss base change. Again, fix a ring homomorphism $\varphi:R\to S$ to make $S$ into an $R$-algebra. Given two $R$-modules named $M$ and $N$, we can form $S$-modules
+In the other direction, if $N$ is an $R$-module, we can create an $S$-module the ``induced'' module $\op{Ind}_R^SN:=S\otimes_RN$, where we get an $S$-action by multiplying on the left coordinate.
+
+Because tensoring is functorial, we get that $S\otimes_R-$ is automatically a functor $\textrm{Mod}_R\to\textrm{Mod}_R$. So to check that $S\otimes_R-$ is a functor $\textrm{Mod}_R\to\textrm{Mod}_S$, it suffices to show $f:A\to B$ in $\textrm{Mod}_R$ can actually be a lifted to an $S$-module morphism $S\otimes_RA\to S\otimes_RB$. Well, $f$ is already additive, so we merely check
+\[f(s(x\otimes a))=f(sx\otimes a)=sx\otimes f(a)=s(x\otimes f(a))=s\cdot f(x\otimes a).\]
+Thus, we do indeed have a functor $\textrm{Mod}_R\to\textrm{Mod}_S$.
+
+With functors going in both directions introduced like this, they had better form an adjoint pair.
+\begin{proposition}
+	Let $S$ be an $R$-algebra. Then, given an $R$-module $M$ and an $S$-module $N$, we have a canonical isomorphism (of abelian groups)
+	\[\op{Hom}_R(M,\op{Res}_R^SN)\cong\op{Hom}_S(S\otimes_RM,N).\]
+\end{proposition}
+\begin{proof}
+	We construt forwards and backwards maps manually.
+	\begin{itemize}
+		\item Fix $f\in\op{Hom}_R(M,\op{Res}_R^SN)$. Then we define $\widetilde f\in\op{Hom}_S(S\otimes_RM,N)$ by defining
+		\[\widetilde f(s\otimes m)=sf(m).\]
+		Note the computation $sf(m)$ in the above is viewing $f(m)\in N$ as an $S$-module. We have the following checks on $f\mapsto\overline f$.
+		\begin{itemize}
+			\item Well-defined: to show there is a map $\widetilde f:S\otimes_RM\to N$ as described, we need to show that $\widetilde f:S\times R\to N$ defined by
+			\[\widetilde f(s,m):=sf(m)\]
+			is $R$-bilinear. Given $r_1,r_2\in R$ and $s_1,s_2\in S$ and $m\in M$,
+			\[\widetilde f(r_1s_1+r_2s_2,m)=(r_1s_1+r_2s_2)f(m)=r_1\widetilde f(s_1,m)+r_2\widetilde f(s_2,m).\]
+			Given $s\in S$ and $r_1,r_2\in R$ and $m\in M$,
+			\[\widetilde f(s,r_1m_1+r_2m_2)=sf(r_1m_1+r_2m_2)=r_1\widetilde f(s,m_1)+r_2\widetilde f(s,m_2).\]
+			Thus, we have an $R$-module map $\widetilde f:S\otimes_RM\to N$. To check $\widetilde f$ is an $S$-module map, we note that $\widetilde f$ is already additive, so it suffices to pick up $s\in S$ and $x\otimes m\in S\otimes_RM$ and note
+			\[\widetilde f(s(x\otimes m))=\widetilde f((sx)\otimes m)=(sx)f(m)=s\widetilde f(x\otimes m).\]
+			\item Homomorphic: we show that $f\mapsto\widetilde f$ is a homomorphism of (abelian) groups. Indeed, fix $f,g\in\op{Hom}_R(M,\op{Res}_R^SN)$ and $s\otimes m\in S\otimes_RM$ so that
+			\[\widetilde{f+g}(s\otimes m)=s(f+g)(m)=sf(m)+sg(m)=(\widetilde f+\widetilde g)(s\otimes m).\]
+			\item Injective: we show $f\mapsto\widetilde f$ has trivial kernel. Indeed, suppose $f\in\op{Hom}_R(M,\op{Res}_R^SN)$ has $\widetilde f=0$. Then, for any $m\in M$, we see
+			\[f(m)=1_Sf(m)=\widetilde f(1_S\otimes m)=0.\]
+		\end{itemize}
+
+		\item In the other direction, motivated by the above injectivity check, we notice that we have an $R$-module map $\iota:M\to S\otimes_RM$ by $m\mapsto 1_S\otimes m$. Indeed, for $r_1,r_2\in R$ and $m_1,m_2\in M$, we see
+		\[\iota(r_1m_1+r_2m_2)=1_S\otimes(r_1m_1+r_2m_2)=r_1\iota(m_1)+r_2\iota(m_2).\]
+		Now, suppose that we have some $g\in\op{Hom}_S(S\otimes_RM,N)$. Note that the same underlying function $g$ is an $R$-module map as well: $g$ is already additive, so we need to check that $r\in R$ and $s\otimes m\in S\otimes_RM$ has
+		\[r\cdot g(s\otimes m)=r1_S\cdot g(s\otimes m)=g(r1_S\cdot s\otimes m)=g(r(s\otimes m)).\]
+		Thus, we are greanted the map $g\mapsto g\circ\iota$ from $\op{Hom}_S(S\otimes_RM,N)$ to $\op{Hom}_R(M,\op{Res}_R^SN)$.
+	\end{itemize}
+	Note that it merely remains to check the surjectivity of $f\mapsto\widetilde f$, so it suffices to show that, for any $g\in\op{Hom}_S(S\otimes_RM,N)$, we have
+	\[\widetilde{g\circ\iota}=g.\]
+	Indeed, given $m\in M$,
+	\[\widetilde{g\circ\iota}(s\otimes m)=s(g\circ\iota)(m)=sg(1\otimes m)=g(s\otimes m),\]
+	where in the last step we are viewing $g$ as an $S$-module map. This finishes.
+\end{proof}
+\begin{remark}
+	One can in fact show that the exhibited isomorphism makes tensoring left-adjoint to restriction. We will not run the checks to form an adjoint pair.
+\end{remark}
+
+\subsection{Base Change}
+Next let's discuss base change. Again, fix a ring homomorphism $\psi:R\to S$ to make $S$ into an $R$-algebra. Given two $R$-modules named $M$ and $N$, we can form $S$-modules
 \[S\otimes_R\op{Hom}_R(M,N)\qquad\text{and}\qquad\op{Hom}_S(S\otimes_RM,S\otimes_RN).\]
 In general, there need not be an isomorphism between these $S$-modules, but there is a canonical map from the left to the right.
 \begin{lemma} \label{lem:basechange}
