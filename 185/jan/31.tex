@@ -132,7 +132,7 @@ We have the following quick lemma to justify naming this ``convergence.''
 \end{proof}
 Here is a surprise tool that will help us later.
 \begin{lemma}
-	Fix a sequence $\{a_n\}_{n\in\NN}\subseteq\CC$ of nonzero complex numbers. Further suppose that $\{a_n\}_{n\in\NN}$ tends to infinity (i.e., $|a_n|\to\infty$ as $n\to\infty$), then for any positive real number $r\in\RR^+$, the series
+	Fix a sequence $\{a_n\}_{n\in\NN}\subseteq\CC$ of nonzero complex numbers. Further suppose that the sequence $\{a_n\}_{n\in\NN}$ tends to infinity (i.e., $|a_n|\to\infty$ as $n\to\infty$), then for any positive real number $r\in\RR^+$, the series
 	\[\sum_{k=0}^\infty\left(\frac r{|a_k|}\right)^k\]
 	converges.
 \end{lemma}
@@ -150,21 +150,41 @@ Here is a surprise tool that will help us later.
 \end{quot}
 \begin{lemma}
 	Suppose that we have two series $S:=\sum_{k\in\NN}z_k$ and $T:=\sum_{k\in\NN}w_k$ are both absolutely convergent. Then the sum
-	\[ST=\sum_{k=0}^\infty\left(\sum_{i+j=k}z_iw_j\right)\]
-	is absolutely convergent as well.
+	\[P:=\sum_{k=0}^\infty\left(\sum_{i+j=k}z_iw_j\right)\]
+	is absolutely convergent as well. In fact, $P$ will converge to $ST$.
 \end{lemma}
 \begin{proof}
 	We sketch the result, and the remaining details are in Eterovi\'c. As usual, consider the partial sums
 	\[A_n:=\sum_{k=0}^n|z_k|\qquad\text{and}\qquad B_n=\sum_{k=0}^n|w_k|,\]
-	both of which will converge. It follows that $A_nB_n$ will converge as $n\to\infty$, which we can compute as
-	\[A_nB_n=\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)+R_n,\]
-	where $R_n$ is some garbage, explicitly equal to
-	\[R_n=\sum_{\substack{(i,j)\in\ZZ^2\\i,j\le n\text{ and }i+j>n}}|z_kw_\ell|.\]
-	The key claim is that $R_n\to0$, which will go to $0$ upon using the triangle inequality a few times.\todo{}
+	both of which will converge as $n\to\infty$. Brazenly multiplying these together, we see that
+	\[A_nB_n=\sum_{i,j=0}^n|z_iw_j|=\sum_{k=0}^n\sum_{\substack{i+j=k\\0\le i,j\le n}}|z_iw_j|+\sum_{k>n}\sum_{\substack{i+j=k\\0\le i,j\le n}}|z_iw_j|.\]
+	In the first sum, observe that any time $i+j=k$, we will automatically have $i,j\le k\le n$. It follows that
+	\[A_nB_n=\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)+\underbrace{\sum_{\substack{i+j>n\\0\le i,j\le n}}|z_iw_j|}_{R_n}.\]
+	The key claim is that $R_n\to0$. The main idea is that $i+j>n$ implies that $i\ge n/2$ or $j\ge n/2$, so we can write
+	\[|R_n|\le\sum_{i=0}^n\sum_{j=n/2}^n|z_iw_j|+\sum_{i=n/2}^n\sum_{j=0}^n|z_iw_j|=\left(\sum_{i=0}^n|z_i|\right)\left(\sum_{j=n/2}^n|w_j|\right)+\left(\sum_{i=n/2}^n|z_i|\right)\left(\sum_{j=0}^n|w_j|\right).\]
+	Now, fix any $\varepsilon>0$, and we show there exists $X$ so that $n>X$ has $|R_n|<\varepsilon$. Note $A:=\sum|z_k|$ and $B:=\sum|w_k|$ both converge and hence have Cauchy partial sums. Because the partial sums are increasing, we may bound
+	\[|R_n|\le A\left(\sum_{j=n/2}^n|w_j|\right)+B\left(\sum_{i=n/2}^n|z_i|\right)\]
+	So there exists $N$ such that $n>m>N$ has
+	\[\sum_{i=m+1}^n|z_i|<\frac\varepsilon {2B}\]
+	Similarly there exists $M$ so that $n>m>M$ has
+	\[\sum_{j=m+1}^n|w_j|<\frac\varepsilon {2A},\]
+	from which it follows that $n>n/2>\max\{N,M\}$ will have
+	\[|R_n|\le A\cdot\frac\varepsilon {2A}+B\cdot\frac\varepsilon {2B}=\varepsilon,\]
+	which finishes.
 
-	In particular, it follows that
-	\[\lim_{n\to\infty}\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)=\lim_{n\to\infty}A_nB_n-\lim_{n\to\infty}R_n,\]
-	which does indeed converge.
+	Now, because $R_n\to0$, we see
+	\[\lim_{n\to\infty}\sum_{k=0}^n\left(\sum_{i+j=k}|z_i|\cdot|w_j|\right)=\lim_{n\to\infty}A_nB_n-\lim_{n\to\infty}R_n,\]
+	which does indeed converge, so indeed the series
+	\[\sum_{k=0}^\infty\left(\sum_{i+j=k}|z_i|\cdot|w_j|\right)\]
+	will converge. By the comparison test (using the triangle inequality), it follows that
+	\[P=\sum_{k=0}^\infty\left(\sum_{i+j=k}z_iw_j\right)\]
+	will also absolutely converge.
+
+	To show that $P$ converges to $ST$, we observe that the difference of the $n$th partial sum is
+	\[P_n-S_nT_n=\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)-\sum_{i,j=0}^nz_iw_j=\sum_{k=0}^n\left(\sum_{i+j=k}z_iw_j\right)-\sum_{k=0}^n\left(\sum_{i+j=k}^nz_iw_j\right)+\sum_{\substack{0\le i,j\le n\\i+j<n}}z_iw_j,\]
+	so
+	\[P_n-S_nT_n=\sum_{\substack{0\le i,j\le n\\i+j<n}}z_iw_j.\]
+	But by the triangle inequality, we see $|P_n-S_nT_n|\le R_n$, so $P_n-S_nT_n\to0$ as $n\to\infty$. It follows $P_n$ and $S_nT_n$ have the same limit as $n\to\infty$ (which exists because $S_n$ and $T_n$ have a limit). So indeed, $P=ST$.
 \end{proof}
 % \begin{ex}
 % 	It is not the case that the product of two convergent series will be convergent.
