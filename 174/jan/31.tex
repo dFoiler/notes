@@ -1,0 +1,104 @@
+% !TEX root = ../notes.tex
+
+So class is in-person today.
+
+\subsection{Small Remark}
+A question was asked in the Discord server about dualizing. In theory, dualizing theorems should be very easy: simply state the theorem in the opposite category, provided we have shown the necessary machinery to make the theorem dualize as necessary.
+
+\subsection{Contravariance}
+Today we are talking about contravariance. A functor $F:\mathcal C\to\mathcal D$ is defined so far as what are called ``covariant'' functors. We would like to define contravariant functors. There are lots of equivalent ways to do this.
+\begin{definition}[Contravariance, I]
+	A \textit{contravariant functor} $F:\mathcal C\to\mathcal D$ is a mapping of objects and morphisms with the following coherence laws.
+	\begin{itemize}
+		\item If $f:a\to b$ in $\mathcal C$, then $Ff:Fb\to Fa$. (Note the reversal of direction!)
+		\item Identity: $F(\id_c)=\id_{F(c)}$ for each $c\in\mathcal C$.
+		\item Contravariant (!) composition: if $f:a\to b$ and $g:b\to c$ in $\mathcal C$, then $F(gf)=F(f)F(g)$.
+	\end{itemize}
+\end{definition}
+This in fact comes from dualizing.
+\begin{definition}[Contravariance, II] \label{def:contra}
+	A \textit{contravariant functor} $F:\mathcal C\to\mathcal D$ is a (covariant) functor $F:\mathcal C^\mathrm{op}\to\mathcal D$.
+\end{definition}
+To be explicit, if we are given a functor $F:\mathcal C^\mathrm{op}\to\mathcal D$, then a morphism $f:a\to b$ in $\mathcal C$ is first taken to a morphism $f^\mathrm{op}:b^\mathrm{op}\to a^\mathrm{op}$. And if we have another morphism $g:b\to c$ in $\mathcal C$, then we see the diagram
+\[a\stackrel f\to b\stackrel g\to c\]
+becomes
+\[a^\mathrm{op}\stackrel{f^\mathrm{op}}\leftarrow b^\mathrm{op}\stackrel{g^\mathrm{op}}\leftarrow c^\mathrm{op}\]
+becomes
+\[Fa^\mathrm{op}\stackrel{Ff^\mathrm{op}}\leftarrow Fb^\mathrm{op}\stackrel{Fg^\mathrm{op}}\leftarrow Fc^\mathrm{op},\]
+which gives our composition law.
+
+We can also dualize in the opposite direction.
+\begin{definition}[Contravariance, III]
+	A \textit{contravariant functor} $F:\mathcal C\to\mathcal D$ is a (covariant) functor $F:\mathcal C\to\mathcal D^\mathrm{op}$.
+\end{definition}
+\begin{warn}
+	We will use \autoref{def:contra} as our definition of contravariance.
+\end{warn}
+\begin{example}
+	We work with $\mathrm{Vec}_k$ the category whose objects are $k$-vector spaces and morphisms which are linear maps. Then we have a functor
+	\[-^*:\mathrm{Vec}_k^\mathrm{op}\to\mathrm{Vec}_k\]
+	by taking $V\mapsto V^*$. (Here, $V^*:=\op{Hom}_k(V,k)$.) As for morphisms, we need to take $f:V\to W$ to some map $f^*:W^*\to V^*$, which is
+	\[f^*:\varphi\mapsto\varphi f.\]
+\end{example}
+\begin{example}
+	We work with $\mathrm{Poset}$ the category whose objects are posets and morphisms which are order-preserving maps. I.e., a map $f:P\to Q$ is order-preserving if and only if $a\le b$ in $P$ implies $f(a)\le f(b)$ in $Q$. Now we define the contravariant functor $\mathcal O:\mathrm{Top}^\mathrm{op}\to\mathrm{Poset}$ by taking
+	\[X\mapsto\{U:\text{open }U\subseteq X\},\]
+	where the order on the right is by inclusion. Then a continuous map $f:X\to Y$ becomes the order-preserving (!) map $\mathcal O(f):\mathcal O(Y)\to\mathcal O(X)$ by
+	\[\mathcal O(f)(U_Y):=f^{-1}(U_Y).\]
+	Explicitly, open subsets $U_1\subseteq U_2$ of $Y$ have $f^{-1}(U_1)\subseteq f^{-1}(U_2)$ back in $X$.
+\end{example}
+\begin{remark}
+	We can use the above example to define a presheaf. ``Presheaf'' can have lots of meanings.
+	\begin{itemize}
+		\item A ``presheaf'' can be any contravariant functor.
+		\item A ``presheaf'' can be any contravariant functor with codomain $\mathrm{Set}$.
+		\item A ``presheaf'' can be any contravariant functor from $\mathcal O(X)^\mathrm{op}$. It is $\mathrm{Set}$-valued (respectively, $\mathcal C$-valued) if its codomain is $\mathrm{Set}$ (respectively, $\mathcal C$).
+	\end{itemize}
+\end{remark}
+
+\subsection{A Lemma}
+It's a math class, so we should probably prove something today.
+\begin{theorem}
+	A (covariant) functor $F:\mathcal C\to\mathcal D$ preserves isomorphisms.
+\end{theorem}
+\begin{remark}
+	By convention, all functors will be covariant, and if we want a contravariant functor, we will write $\mathcal C^\mathrm{op}\to\mathcal D$. In other words, I will now stop writing ``(covariant).''
+\end{remark}
+\begin{proof}
+	Let $f:a\to b$ be an isomorphism in $\mathcal C$ with inverse $g$. We want to show that $F(f)$ is an isomorphism; we claim that $F(g)$ is its inverse. Indeed,
+	\[F(f)F(g)=F(fg)=F(\id_b)=\id_{F(b)}\qquad\text{and}\qquad F(g)F(f)=F(gf)=F(\id_a)=\id_{F(a)},\]
+	so indeed, $F(g)$ is an inverse of $F(f)$. So $F(f)$ is an isomorphism, and we are done.
+\end{proof}
+This example can do things.
+\begin{example}
+	Fix groups $G,H$ and their one-object categories $\mathrm BG,\mathrm BH$. We claim that functors $F:\mathrm BG\to\mathrm BG$ contain exactly the data of a group homomorphism $G\to H$. To see that $F$ induces a group homomorphism, suppose $\sigma,\tau\in G$, we have by funtoriality
+	\[F(\sigma\tau)=F(\sigma)F(\tau),\]
+	which is exactly what we need to be a group homomorphism. Conversely, if $f:G\to H$ is a group homomorphism, then $f$ induces a functor: $f(\sigma\tau)=f(\sigma)f(\tau)$ by definition, and $f(\id_G)=\id_H$ is a result of group theory.
+\end{example}
+\begin{example}
+	A functor $F:\mathrm BG\to\mathcal C$ is precisely the data of a $G$-action of an object $c\in\mathcal C$. We send the one object $*\in\mathrm BG$ somewhere, say to an object $c\in\mathcal C$. Then each $\sigma\in G$ goes to some morphism $\sigma\in\op{Hom}_\mathcal C(c,c)$ (which is in fact an isomorphism because $\sigma$ is an isomorphism $\mathrm BG$). So in total we get a map
+	\[G\to\op{Aut}c,\]
+	which is exactly the data of a group action. This unifies group actions on all sorts of structures.
+\end{example}
+The above definition is special enough to have a name.
+\begin{definition}[Functorial group action]
+	A \textit{functorial group action} of $G$ on a category $\mathcal C$ is a functor $\mathrm BG\to\mathcal C$.
+\end{definition}
+\begin{remark}
+	Technically we will be viewing these functors as providing left actions. To get a right action, we want a functor $(\mathrm BG)^\mathrm{op}\to\mathcal C$.
+\end{remark}
+Note, as in the example, the functor contains the same data as a group homomorphism $G\to\op{Aut}c$ for some $c\in\mathcal C$.
+\begin{remark}
+	Bryce would like to make us aware that writing down $G\to\op{Aut}c$ as a group homomorphism is only legal when $\mathcal C$ is locally small.
+\end{remark}
+\begin{example}
+	Given a group $G$, a $G$-representation $V$ of $G$ is a functor $\mathrm BG\to\mathrm{Vec}_k$ where $*\in\mathrm BG$ goes to $V\in\mathrm{Vec}_k$.
+\end{example}
+
+\subsection{The \textrm{Hom} Bifucntor}
+We have a little time left, so let's do something fun. Given a (locally small) $\mathcal C$ and an object $x\in\mathcal C$, we get two functors
+\[\op{Mor}_\mathcal C(x,-):\mathcal C\to\mathrm{Set}\qquad\text{and}\qquad\op{Mor}_\mathcal C(-,x):\mathcal C\to\mathrm{Set}.\]
+The former functor sends $y\mapsto\op{Mor}_\mathcal C(x,y)$ and $\varphi:y\to z$ to $\varphi_*:\op{Mor}_\mathcal C(x,y)\to\op{Mor}_\mathcal C(x,z)$ to $\varphi_*:f\mapsto\varphi f$. We can check this functor is covariant because
+\[\varphi_*\psi_*(f)=\varphi\psi f=(\varphi\psi)_*(f).\]
+Now, the latter functor sends $y\mapsto\op{Mor}_\mathcal C(y,x)$ and $\varphi:y\to z$ to $\varphi^*:\op{Mor}_\mathcal C(z,x)\to\op{Mor}_\mathcal C(y,z)$ by $\varphi^*:f\mapsto\varphi f$. We can check this functor is contravariant because
+\[\psi^*\varphi^*f=f\varphi\psi=(\varphi\psi)*f.\]
