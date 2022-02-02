@@ -1,0 +1,113 @@
+% !TEX root = ../notes.tex
+
+Good morning everyone. Here is some house-keeping.
+\begin{itemize}
+	\item Homework \#2 is due at Friday at 11:59, on GradeScope. The assignment has just been added.
+	\item There are office hours to talk about the homework. Please come if you have questions.
+\end{itemize}
+
+\subsection{Summation Review}
+Today we finish our discussion of series, for now. We quickly recall the definitions.
+\begin{definition}[Series]
+	An \textit{infinite series} over $\CC$ is an infinite sum
+	\[S:=\sum_{n=1}^\infty z_n\]
+	where $\{z_n\}_{n\in\NN}\subseteq\CC$ is a sequence of complex numbers.
+\end{definition}
+\begin{definition}[Converge, diverge]
+	Fix a sequence $\{z_n\}_{n\in\NN}\subseteq\CC$ of complex numbers, we define the $m$th partial sum to be
+	\[S_m:=\sum_{n=0}^mz_m.\]
+	Then we say that the infinite series \textit{converges} if and only if the sequence $\{S_m\}$ of partial sums converges. Otherwise, we say that $S$ is \textit{divergent}.
+\end{definition}
+Today we are building towards proving Dirichlet's convergence theorem. We pik up the following lemmas.
+\begin{lemma}
+	Fix sequences $\{z_{k,\ell}\}_{k,\ell\in\NN}$ a collection of complex numbers satisfying the following conditions.
+	\begin{itemize}
+		\item Fixing any $k$, the sum $\sum_{\ell=0}^\infty z_{k,\ell}$ converges.
+		\item The sum $\sum_{k,\ell=0}^\infty|z_{k,\ell}|$ converges.
+	\end{itemize}
+	Then the following are true.
+	\begin{listalph}
+		\item Fix any $\ell$, the sum $\sum_{k=0}^\infty z_{k,\ell}$ converges.
+		\item We have that
+		\[\sum_{k=0}^\infty\sum_{\ell=0}^\infty z_{k,\ell}=\sum_{\ell=0}^\infty\sum_{k=0}^\infty z_{k,\ell},\]
+		and both sums converge.
+	\end{listalph}
+\end{lemma}
+Intuitively, the first condition is requiring that the series horizontally does not grow too fast. The second condition is requiring an absolute convergence condition. Then the first conclusion says we can sum vertically instead, and the second conclusion says that we can move around the order of summation.
+\begin{proof}
+	We will sketch this proof; we prove (a) and (b) simultaneously. From the assumptions, we are given a positive real number $B\in\RR^+$ such taht, for each $N$, we have
+	\[S_N:=\sum_{k=0}^N\sum_{\ell=0}^N|z_{k,\ell}|<B.\]
+	Thus, the sequence of partial sums $\{S_N\}_{N\in\NN}$ is a monotone increasing sequence of real numbers and hence it will converge to some real number we name $A$. It follows that
+	\[\lim_{N\to\infty}S_N=\sum_{\ell=0}^\infty\sum_{k=0}^\infty|z_{k,\ell}|.\]
+	We now use this to bound ``most'' of the tuples. Namely, for each $\varepsilon>0$ we get an $N$ so that
+	\[\sum_{k=N+1}^\infty\sum_{\ell=N+1}^\infty|z_{k,\ell}|<\varepsilon.\]
+	In particular, whenever we have $K,L>N$, we have
+	\[\left|\sum_{k=0}^K\sum_{\ell=0}^Lz_{k,\ell}-\sum_{k=0}^N\sum_{\ell=0}^Nz_{k,\ell}\right|\le\sum_{k=N+1}^\infty\sum_{\ell=N+1}^\infty|z_{k,\ell}|<\varepsilon\]
+	by the triangle inequality. Then at this point we may take $K\to\infty$ and $L\to\infty$ so that
+	\[\left|\sum_{k=0}^\infty\sum_{\ell=0}^\infty z_{k,\ell}-\sum_{k=0}^N\sum_{\ell=0}^Nz_{k,\ell}\right|,\]
+	so in particular this sum must actually converge. We refer, as usual, to Eterovi\'c for the details.\todo{}
+\end{proof}
+
+\subsection{Dirichlet Test}
+We now go directly for the Dirichlet test for convergence.
+\begin{lemma}[Summation by parts] \label{lem:sumparts}
+	Fix sequences $\{a_n\}_{n\in\NN}$ and $\{b_n\}_{n\in\NN}$ sequences of complex numbers. Then we define
+	\[B_n:=\sum_{k=0}^Nb_n,\]
+	and $B_{-1}=0$ to be the empty sum. It follows that, for any $n,m\in\NN$ with $n>m$,
+	\[\sum_{k=m}^na_kb_k=a_nB_n-a_mB_{m-1}+\sum_{k=m}^{n-1}B_k(a_k-a_{k+1}).\]
+\end{lemma}
+\begin{proof}
+	This comes down to a direct computation. The main point is that $b_k=B_k-B_{k-1}$, which even works with $k=0$. Indeed,
+	\begin{align*}
+		\sum_{k=m}^na_kb_k &= \sum_{k=m}^na_k(B_k-B_{k-1}) \\
+		&= \sum_{k=m}^na_kB_k-\sum_{k=m}^na_kB_{k-1} \\
+		&\stackrel*= a_nB_n+\sum_{k=m}^{n-1}a_kB_k-a_mB_{m-1}-\sum_{k=m}^na_{k+1}B_k \\
+		&= a_nB_n-a_mB_{m-1}+\sum_{k=m}^{n-1}B_k(a_k-a_{k+1}),
+	\end{align*}
+	which is what we wanted. The important step to pay attention to is the rearrangement we did in $\stackrel*=$ in order to massage the sums together.
+\end{proof}
+And here is our theorem.
+\begin{theorem}[Dirichlet's test]
+	Fix $\{a_n\}_{n\in\NN}\subseteq\RR$ a sequence of real numbers and $\{b_n\}_{n\in\NN}\subseteq\CC$ a sequence of complex numbers satisfying the following conditions.
+	\begin{itemize}
+		\item The sequence $\{a_n\}_{n\in\NN}$ is decreasing.
+		\item We have $a_n\to0$ as $n\to\infty$.
+		\item Bounded partial sums: there exists a positive real number $M$ such that
+		\[\left|\sum_{k=0}^nb_k\right|<M\]
+		for each $n\in\NN$.
+	\end{itemize}
+	Then we claim that
+	\[\sum_{k=0}^\infty a_kb_k\]
+	converges.
+\end{theorem}
+\begin{proof}
+	As usual, fix our partial sums
+	\[S_n:=\sum_{k=0}^na_kb_k\qquad\text{and}\qquad B_n:=\sum_{k=0}^nb_k.\]
+	We are given that the $B_k$ are bounded, so we are going to want to use \autoref{lem:sumparts}, which tells us that
+	\[S_n=a_nB_n+\sum_{k=0}^{n-1}B_k(a_k-a_{k+1}).\]
+	We examine the convergence of thesex terms individually.
+	\begin{itemize}
+		\item We will show that the summation term absolutely converges. We are given that the partial sums $B_n$ are bounded by $M$, so we note $|B_k(a_k-a_{k+1})|<M|a_k-a_{k+1}|$, so it suffices to show that
+		\[M\sum_{k=0}^{n-1}\left|a_k-a_{k+1}\right|\]
+		converges as $n\to\infty$. It would be great if this would telescope, and indeed it does! Because the $a_k$ are decreasing,
+		\[\sum_{k=0}^\infty|a_k-a_{k+1}|=\sum_{k=0}^\infty(a_k-a_{k+1})=a_0-a_{n+1}.\]
+		Because $a_n\to0$ as $n\to\infty$, we see that this sum will converge to $a_0$. It follows that
+		\[\sum_{k=0}^\infty|B_k(a_k-a_{k+1})|\]
+		will converge by the Comparison test, so
+		\[\sum_{k=0}^\infty B_k(a_k-a_{k+1})\]
+		converges by absolute convergence.
+		\item Note that the $B_n$ are bounded in norm by $M$, so $|a_nB_n|\le M|a_n|$, but $|a_n|\to0$ as $n\to\infty$, so $|a_nB_n|\to0$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Eterovi\'c has lots of different convergence tests in his notes, but we don't care about most of them. Here is one that we do care about.
+\begin{theorem}[Integral test]
+	Fix a decreasing function $f:\left[1,\infty\right)\to\RR^+$ and for which
+	\[\int_k^{k+1}f(x)\,dx\]
+	always exists. Then the sequence of integrals $I_n:=\int_1^nf(x)\,dx$ converges if and only if the summation
+	\[\sum_{k=1}^\infty f(k)\]
+	converges.
+\end{theorem}
+\begin{proof}
+	We omit this proof; it's a reasonably standard real-analytic test.
+\end{proof}
