@@ -97,64 +97,128 @@ Here is a technical result which we will want to use later; it is dual to the No
 The main character in our story on Artinian rings will be the ``module of finite length.''
 \begin{definition}[Composition series]
 	Fix an $R$-module $M$. Then a \textit{composition series} (or \textit{Jordan--H\"older series}) is a chain of distinct $R$-submodules
-	\[M:=M_0\supsetneq M_1\supsetneq\cdots\supsetneq M_N:=\{0\}\]
-	such that each quotient $M_i/M_{i+1}$ is a simple $R$-module. The $M_i/M_{i+1}$ are the \textit{composition factors}.
+	\[M:=M_0\supsetneq M_1\supsetneq\cdots\supsetneq M_N:=(0)\]
+	such that each quotient $M_i/M_{i+1}$ is a nonzero simple $R$-module. The $M_i/M_{i+1}$ are the \textit{composition factors}.
 \end{definition}
-\begin{lemma}
-	If an $R$-module $M$ is both Artinian and Noetherian, then it has a composition series.
+Composition series give rise to the notion of length.
+\begin{defi}[Length]
+	An $R$-module $M$ with a composition series is said to have \textit{length} $n$ if and only if the shortest composition series (of which there might be many) have $n$ factors.
+\end{defi}
+\begin{definition}[Finite length]
+	An $R$-module $M$ is \textit{of finite length} if and only if $M$ has a composition series.
+\end{definition}
+Note that we can already see the Artinian condition playing with being of finite length.
+\begin{lemma} \label{lem:artnoethimpliesfinlength}
+	If an $R$-module $M$ is both Artinian and Noetherian, then $M$ is of finite length.
 \end{lemma}
 \begin{proof}
-	Because $M$ is Noetherian, the set of all proper ideals will have a maximal element, which we call $M_1$. Observe that $M_1$ will then be both Artinian and Noetherian (as a submodule of $M$), so we can repeat the process to get a maximal submodule $M_2\subsetneq M_1$. Continuing, we get
-	\[M\supsetneq M_1\supsetneq M_2\supsetneq\cdots.\]
-	But this process must stop eventually because $M$ is Artinian, so we are done.
+	If $M=(0)$, we can use the composition series made of only $M$. Otherwise, because $M$ is Noetherian, the set of all proper ideals will have a maximal element, which we call $M_1$.
+	
+	If $M_1=(0)$, then we have a finite composition series made of $M\supseteq M_0$. Otherwise, observe that $M_1$ will then be both Artinian and Noetherian (as a submodule of $M$), so we can repeat the process to get a maximal submodule $M_2\subsetneq M_1$.
+	
+	We can continue this process inductively, which gives us the descending chain
+	\[M\supsetneq M_1\supsetneq M_2\supsetneq\cdots,\]
+	where the quotients are simple modules. But this process must stop eventually because $M$ is Artinian, and the only way to stop is when $M_n=(0)$ for some $n$, so indeed, this is a composition series. So $M$ is of finite legnth.
 \end{proof}
 \begin{nex}
 	This process does not work when $M$ is not Artinian. For example,
 	\[\ZZ\supsetneq2\ZZ\supsetneq4\ZZ\supsetneq 8\ZZ\supsetneq\cdots\]
 	creates an infinite descending chain.
 \end{nex}
+In fact, we can build composition series in short exact sequences, just like how the Noetherian and Artinian conditions build in short exact sequences.
+\begin{prop} \label{prop:finlengthses}
+	Fix a short exact sequence
+	\[0\to A\to B\to C\to 0\]
+	of $R$-modules. Then $B$ is of finite length if and only if $A$ and $C$ are of finite length. In fact, the length of $B$ upper-bounds the lengths of $A$ and $B$, and the length of $B$ is at most the sum of the lengths of $A$ and $C$.
+\end{prop}
+\begin{proof}
+	We use the embedding $A\into B$ to view $A$ as a $R$-submodule of $B$, and we use the projection $B\onto C$ to view $C\cong B/A$ as a quotient. We now take the directions independently.
+	\begin{itemize}
+		\item Suppose that $B$ is of finite length; namely, we get a composition series
+		\[B=:B_0\supsetneq B_1\supsetneq\cdots\supsetneq B_{n-1}\supsetneq B_0:=(0).\]
+		We have two parts.
+		\begin{itemize}
+			\item We show that $A$ has finite length. Indeed, set $A_k:=B_k\cap A$ so that we get the descending chain
+			\[A=A_0\supseteq A_1\supseteq\cdots\supseteq A_{n-1}\supseteq A_n=(0).\]
+			Now, we can compute the quotients as\footnote{The kernel of the composition $A\cap B_k\into(A\cap B_k)+B_{k+1}\onto((A\cap B_k)+B_{k+1})/B_{k+1}$ is $A\cap B_{k+1}$. The map is surjective because any element of $((A\cap B_k)+B_{k+1})/B_{k+1}$ will have a representative in $A\cap B_k$.}
+			\[\frac{A\cap B_k}{A\cap B_{k+1}}\cong\frac{(A\cap B_k)+B_{k+1}}{B_{k+1}},\]
+			which we can see is a submodule of the simple module $B_k/B_{k+1}$. Thus, the quotients $A_k/A_{k+1}$ are either $0$ or simple, so after removing the $A_k$ which have $A_k=A_{k+1}$, we will have a composition series of length at most $n$. 
+			\item We show that $C$ has finite length. Indeed, set $C_k:=(B_k+A)/A$ so that we get the descending chain
+			\[C=C_0\supseteq C_1\supseteq\cdots\supseteq C_{n-1}\supseteq C_n=(0).\]
+			We can compute the quotients as\footnote{The kernel of the composite of surjective maps $B_k+A\onto(B_k+A)/A\onto\frac{(B_k+A)/A}{(B_{k+1}+A)/A}$ is $B_{k+1}+A$.}
+			\[\frac{(B_k+A)/A}{(B_{k+1}+A)/A}\cong\frac{B_k+A}{B_{k+1}+A}.\]
+			But now we note that the map $B_k\into B_k+A\onto(B_k+A)/(B_{k+1}+A)$ is surjective and has kernel containing $B_{k+1}$, so there is a surjective map
+			\[\frac{B_{k+1}}{B_k}\onto\frac{C_{k+1}}{C_k}.\]
+			In particular, this kernel is a submodule of a simple module, so the quotient $C_{k+1}/C_k$ is either $B_{k+1}/B_k$ (and thereofre simple) or $(0)$. So, removing the $C_k$ such that $C_k=C_{k+1}$ will remove the $(0)$s from the composition series will give $C$ a composition series of length at most $n$.
+		\end{itemize}
+		We remark that the above arguments showed that the length of $B$ upper-bounds the lengths of $A$ and $C$ by constructing a composition series with length at most the length $B$.
+
+		\item Suppose that $A$ and $C$ both have finite length. In particular, we can conjure a composition series
+		\[C=:C_0\supsetneq C_1\supsetneq\cdots\supsetneq C_{n-1}\supseteq C_n:=(0),\]
+		and the idea is to pull this back along $\pi:B\onto C$, setting $B_k:=\pi^{-1}(C_k)$. In particular, we will get a descending chain (in fact strictly descending because $\pi$ is surjective) of submodules
+		\[B=B_0\supsetneq B_1\supsetneq\cdots\supsetneq B_{n-1}\supseteq B_n=A,\tag{$*$}\label{eq:startcompseriesb}\]
+		where $B_n=\pi^{-1}((0))=A$ by exactness. Furthermore, we see that $\pi$ restricts to a surjection $B_k\to C_k$, and upon modding out the image by $C_{k+1}$, we see that exactly $B_{k+1}$ will be in the kernel, implying that the quotient
+		\[\frac{B_k}{B_{k+1}}\cong\frac{C_k}{C_{k+1}}\]
+		will be simple. So indeed, \hyperref[eq:startcompseriesb]{($*$)} starts a composition series for $B$ with so far $n$ composition factors.
+
+		However, we can then append \hyperref[eq:startcompseriesb]{($*$)} with the composition series of $A$, thus providing a composition series for $B$ with length equal to the sum of the lengths of $A$ and $C$. It follows from the definition that the length of $B$ is at most the sum of the lengths of $A$ and $C$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}[Nir]
+	We will show below that the length of a module of finite length is unique among composition series. In this case, the second part of the argument shows that equality holds: the length of $B$ is equal to the sums of the lengths of $A$ and $C$.
+\end{remark}
+\begin{corollary} \label{cor:finlengthquotient}
+	Fix a module $M$ and a chain of submodules
+	\[M:=M_0\supseteq M_1\supseteq\cdots\supseteq M_N:=(0).\]
+	If each quotient $M_i/M_{i+1}$ is of finite length, then $M$ is of finite length.
+\end{corollary}
+\begin{proof}
+	We induct on $N$. When $N=1$, we have $M=M_0/M_1$, so there is nothing to say. Otherwise, by the induction, we may assume that $M_1$ is of finite length because of the chain of submodules
+	\[M_1\supseteq\cdots\supseteq M_N:=\{0\}\]
+	with $M_i/M_{i+1}$ always simple. But now we see we have the short exact sequence
+	\[0\to M_1\to M\to M_0/M_1\to0,\]
+	so because $M_1$ and $M_0/M_1$ both have finite length, $M=M_0$ will have finite length.
+\end{proof}
+
+\subsection{The Jordan--H\"older Theorem}
+We will now check that the length of a submodule is well-defined. Here is a follow-up result from the argument of \autoref{prop:finlengthses}; we will use it as a technical lemma in the proof.
+\begin{lemma}
+	Fix $A\subsetneq B$ a proper containment of $R$-modules, and suppose that $B$ has finite length so that $A$ also has finite length. Then the length of $A$ is strictly less than the length of $B$.
+\end{lemma}
+\begin{proof}
+	We will show that, if the lengths of $A$ and $B$ are in fact equal, then $A=B$. As in the argument for \autoref{prop:finlengthses}, fix a composition series
+	\[B=:B_0\supsetneq B_1\supsetneq\cdots\supsetneq B_{n-1}\supsetneq B_0:=(0),\]
+	where $n$ is the length of $B$. This induces a descending chain
+	\[A=A_0\supseteq A_1\supseteq\cdots\supseteq A_{n-1}\supseteq A_n=(0),\tag{$*$}\label{eq:compseriesa}\]
+	where $A_k:=A\cap B_k$. This chain for $A$ would be a composition series, but some of the composition factors might vanish, and we obtained a composition series for $A$ by removing the equal terms from the series.
+	
+	However, if the length of $A$ were equal to the length of $B$, then in the process of removing redundences from \hyperref[eq:compseriesa]{($*$)} must not do anything at all, for any removed redundancy would imply that the length of $A$ is strictly less than the length of $B$.
+	
+	It follows that we have
+	\[\frac{A_k}{A_{k+1}}=\frac{A\cap B_k}{A\cap B_{k+1}}\cong\frac{(A\cap B_k)+B_{k+1}}{B_{k+1}}\]
+	is equal to $B_k/B_{k+1}$ for each $k$. In particular, $(A\cap B_k)+B_{k+1}=B_k$ for each $k$.
+
+	Now, we claim that $A$ contains $B_k$ by inducting downwards on $k$; this will finish because it will show $A$ contains $B=B_0$ and hence equals $B$. Now, the statement is true for $k=n$ because $A_n=B_n=(0)$. Then for the inductive step, we know $A\supseteq B_{k+1}$, so it follows
+	\[B_k=(A\cap B_k)+B_{k+1}\subseteq A\]
+	as well, finishing.
+\end{proof}
+
 Here is the main result on composition series.
 \begin{theorem}[Jordan--H\"older] \label{thm:jordanholder}
-	Fix $M$ an $R$-module which has a composition series. Then all composition series of $M$ have the same length and in fact the same multiset of composition factors.
+	Fix $M$ an $R$-module which has a composition series. Then all composition series of $M$ have the same length. Namelt, any strictly descending chain of submodules of $M$ can be refined into a composition series of length equal to the length of $M$.
 \end{theorem}
 \begin{proof}
 	Omitted. This is Eisenbud and in fact essentially the same as the proof for groups if one has seen the corresponding proof for groups. % \todo{}
 \end{proof}
 
 \subsection{Modules of Finite Length}
-\autoref{thm:jordanholder} gives us the following definition.
-\begin{defi}[Length]
-	An $R$-module $M$ with a composition series is said to have \textit{length} $n$ if and only if all composition series have $n$ factors.
-\end{defi}
-\begin{definition}[Finite length]
-	An $R$-module $M$ is \textit{of finite length} if and only if $M$ has a composition series.
-\end{definition}
-Our work with Jordan--H\"older gives us the following quick, technical results.
+The Jordan--H\"older theorem gives us the following quick result about modules of finite length, which is arguably a classification of modules of finite length. (We will shortly be able to give better descriptions of modules of finite length.)
 \begin{corollary}
-	Fix $M$ an $R$-module of finite length. Then $M$ is both Artinian and Noetherian.
+	Fix $M$ an $R$-module. Them $M$ is of finite length if and only if $M$ is both Artinian and Noetherian.
 \end{corollary}
 \begin{proof}
-	We will be brief; suppose $M$ has a composition series with $n$ composition factors. The point is that composition series are maximal among all chains of distinct submodules, so any chain of submodules can have at most $n+1$ distinct submodueles. In particular, any ascending or descending chain must stabilize.
-\end{proof}
-\begin{corollary} \label{cor:finlengthses}
-	Fix a short exact sequence
-	\[0\to A\to B\to C\to 0\]
-	of $R$-modules. Then $B$ is of finite length if and only if $A$ and $C$ are of finite length.
-\end{corollary}
-\begin{proof}
-	An $R$-module $M$ is of finite length if and only if it is Noetherian and Artinian. So combine \autoref{prop:noetherianses} with \autoref{prop:artinianses} to finish.
-\end{proof}
-\begin{corollary} \label{cor:finlengthquotient}
-	Fix a module $M$ and a chain of submodules
-	\[M:=M_0\supseteq M_1\supseteq\cdots\supseteq M_N:=\{0\}.\]
-	If each quotient $M_i/M_{i+1}$ is of finite length, then $M$ is of finite length.
-\end{corollary}
-\begin{proof}
-	We induct on $N$. When $N=1$, we have $M=M_1/M_0$, so there is nothing to say. Otherwise, by the induction, we may assume that $M_1$ is of finite length because of the chain of submodules
-	\[M_1\supseteq\cdots\supseteq M_N:=\{0\}\]
-	with $M_i/M_{i+1}$ always simple. But now we see we have the short exact sequence
-	\[0\to M_1\to M\to M_0/M_1\to0,\]
-	so because $M_1$ and $M_0/M_1$ both have finite length, $M=M_0$ will have finite length.
+	We will be brief; the backwards direction is \autoref{lem:artnoethimpliesfinlength}. For the forwards direction, suppose $M$ has a composition series with $n$ composition factors. The point is that composition series are maximal among all chains of distinct submodules, so any chain of submodules can have at most $n+1$ distinct submodueles. In particular, any ascending or descending chain must stabilize.
 \end{proof}
 
 Quickly, note that the support of $M$ is particularly nice when $M$ has a composition series, which essentially comes from various facts we've already proven.
@@ -336,8 +400,8 @@ We split the proof into two parts.
 	which violates the condition that $R$ is Artinian.\footnote{Technically we ought to check that these submodules are distinct. This is because the projection map $\varphi:R\to R/\mf p_1\cdots\mf p_{k+1}$ is surjective, so the pre-image of distinct sets will remain distinct.} This finishes.
 	% But observe that we have the short exact sequences
 	% \[0\to\frac{J^i}{J^{i+1}}\to\frac{R}{J^{i+1}}\to\frac R{J^i}\to0.\tag{$*$}\label{eq:jises}\]
-	% So by \autoref{cor:finlengthses}, it suffices to check that $R/J^{i+1}$ is of finite length for each $i$.
-	% We do this by induction. For $i=0$, we have already shown that $R/J$ is of finite length above. For the inductive step, take $i>0$. We know that $R/J^i$ is of finite length, but then \autoref{cor:finlengthses} applied to \hyperref[eq:jises]{($*$)} tells us that that $R/J^{i+1}$ will be of finite length as well. This finishes.
+	% So by \autoref{prop:finlengthses}, it suffices to check that $R/J^{i+1}$ is of finite length for each $i$.
+	% We do this by induction. For $i=0$, we have already shown that $R/J$ is of finite length above. For the inductive step, take $i>0$. We know that $R/J^i$ is of finite length, but then \autoref{prop:finlengthses} applied to \hyperref[eq:jises]{($*$)} tells us that that $R/J^{i+1}$ will be of finite length as well. This finishes.
 	% has the nice property that $J^{i+1}/J^i$ is a finite direct sum of simple modules; this essentially comes from our formula for $R/J$ from the short exact sequence. % \todo{}
 	% This implies that we have given $R$ a composition series, so $R$ has finite length, so $R$ is Noetherian.
 \end{proof}
