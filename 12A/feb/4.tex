@@ -1,0 +1,131 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Validity for Argument Forms}
+Last time we left off talking about the validity of an argument form. We had the following definition.
+\begin{definition}[Valid]
+	An argument form $(\{\varphi_1,\ldots,\varphi_n\},\psi)$ is \textit{valid} if and only if each valuation $V:P\to\{0,1\}$ has
+	\[\hat V(\varphi_1)=\cdots=\hat V(\varphi_n)=1\implies\hat V(\psi)=1.\]
+	We notate this by $\varphi_1,\ldots,\varphi_n\models\psi$ and say ``$\psi$ is a \textit{consequence} of $\{\varphi_1,\ldots,\varphi_n\}$.''
+\end{definition}
+\begin{remark}
+	Importantly, a computer could always decide validity in finite time, essentially by making some huge truth table. In other words, determining validity is ``decidable.''
+\end{remark}
+Let's see an example.
+\begin{exe}
+	We show that $\{\lnot(p\land q),p\}\models\lnot q$.
+\end{exe}
+\begin{proof}
+	We reason using the equations for the connectives. Namely, suppose $V:\{p,q\}\to\{0,1\}$ is a valuation such that $\hat V(\lnot(p\land q))=\hat V(p)=1$. Now, we see
+	\[1=\hat V(\lnot(p\land q))=1-\hat V((p\land q))=1-\min\{\hat V(p),\hat V(q)\}.\]
+	Thus, $\min\{\hat V(p),\hat V(q)\}=0$, so one of $\hat V(p)=0$ or $\hat V(q)=0$. But $\hat V(p)=1$, so $\hat V(q)=0$ is forced instead. Thus,
+	\[\hat V(\lnot q)=1-\hat V(q)=1-0=1,\]
+	which is what we wanted.
+\end{proof}
+In fact, the above exercise shows the following.
+\begin{proposition} \label{prop:easysub}
+	Fix $\alpha,\beta\in\mathcal L(P)$. Then $\{\lnot(\alpha\land\beta),\beta\}\models\beta$.
+\end{proposition}
+\begin{proof}
+	Reuse the proof above.
+\end{proof}
+More generally, we have the following notion of substitution.
+\begin{proposition}[Substitution]
+	Suppose that $\{\varphi_1,\ldots,\varphi_n\}\models\psi$ in $\mathcal L(P)$, then any substitution of the atomic formulae $P$ by formulae in $\mathcal L(Q)$ (which induces a map $f:\mathcal L(P)\to\mathcal L(Q)$), then $\{f\varphi_1,\ldots,f\varphi_n\}\models\psi$.
+\end{proposition}
+\begin{proof}
+	Induction to make $f$ and then show the statement.
+\end{proof}
+\begin{example}
+	We know that
+	\[\{\lnot({\color{red}(r\lor s)}\land{\color{blue}(s\to p)}),{\color{red}(r\lor s)}\}\models\lnot{\color{blue}(s\to p)}\]
+	is valid by \autoref{prop:easysub}.
+\end{example}
+Here are some more examples.
+\begin{exe}
+	We show that $\{(p\to q),\lnot p\}\nvDash\lnot q$.
+\end{exe}
+\begin{proof}
+	We set a valuation $V$ by $V(p)=0$ and $V(q)=1$. Then
+	\[\hat V((p\to q))=1_{\hat V(p)\le\hat V(q)}=1_{0\le1}=1,\]
+	and $\hat V(\lnot p)=1-\hat V(p)=1-0=1$. Thus, our premises are true. But $\hat V(\lnot q)=1-\hat V(q)=1-1=0$ means the conclusion is true, so we are done.
+\end{proof}
+\begin{remark}
+	Propositional logic cannot see the validity of all arguments. For example, the following argument cannot be broken down into propositions in the ways that $\mathcal L(P)$ provides.
+	\begin{enumerate}
+		\item Every integer greater than $1$ is a product of prime numbers.
+		\item $999$ is an integer greater than $1$.
+		\item Therefore, $999$ is a product of prime numbers.
+	\end{enumerate}
+	The issue is that we need quantifiers: we need a way to plug in $999$ into ``every integer,'' which propositional logic does not provide. We will fix this when we talk about predicate logic later in the course.
+\end{remark}
+Let's run down some valid forms of argument. They can be proven from a similar logic to the above.
+\begin{itemize}
+	\item Modus ponens: $\{\varphi\to\psi,\varphi\}\models\psi$.
+	\item Modus teollens: $\{\varphi\to\psi,\lnot\psi\}\models\lnot\varphi$.
+	\item Contraposition: $\{\varphi\to\psi\}\models\lnot\psi\to\lnot\varphi$.
+	\item Disjunctive syllogism: $\{\varphi\lor\psi,\lnot\varphi\}\models\psi$ and $\{\varphi\lor\psi,\lnot\psi\}\models\varphi$.
+	\item Hypothetical syllgism: $\{\varphi\to\psi,\psi\to\chi\}\models\varphi\to\chi$.
+	\item Proof by cases: $\{\varphi\lor\psi,\varphi\to\chi,\psi\to\chi\}\models\chi$. The point is that either antecedant $\varphi$ or $\psi$ lead to the same conclusion $\chi$.
+\end{itemize}
+
+\subsection{Validity for Formulae}
+Here is our definition.
+\begin{definition}[Valid formula, tautology]
+	A formula $\varphi\in\mathcal L(P)$ is \textit{valid} or a \textit{tautology} if and only if each valuation $V:P\to\{0,1\}$ has $\hat V(\varphi)=1$.
+\end{definition}
+\begin{example}
+	Given any formula $\varphi\in\mathcal L(P)$, then any valuation $V$ has $\hat V(\varphi)=1$ or $\hat V(\varphi)=0$, so $\hat V(\varphi\lor\lnot\varphi)=1$ in all cases.
+\end{example}
+Here are some examples. The main point is that valid forms of arguments can turn $\models$ into $\to$ to make a tautology.
+\begin{itemize}
+	\item $\varphi\to\varphi$.
+	\item $\varphi\to(\varphi\lor\psi)$ and $\psi\to(\varphi\land\psi)$.
+	\item $\varphi\to(\varphi\lor\psi)$ and $\psi\to(\varphi\lor\psi)$.
+	\item ``Modus pollens'': $((\varphi\to\psi)\land\varphi)\to\psi$.
+	\item $((\varphi\to\psi)\land\lnot\psi)\to\lnot\varphi$.
+	\item $((\varphi\to\psi)\land(\psi\to\chi))\to(\varphi\to\chi)$.
+	\item $\varphi\to(\psi\to\varphi)$.
+	\item Peirce's Law: $((\varphi\to\psi)\to\varphi)\to\varphi$.
+\end{itemize}
+The last one is not actually a tautology, but it is. The only care we have to worry about is when $\varphi$ is true, but when $\varphi$ is true, $(\varphi\to\psi)\to\varphi$ can only be false when $\varphi\to\psi$ can only be false when $\varphi$ is false.
+\begin{remark}
+	Another way to say that $\varphi$ is a valid formula is that $\emp\models\varphi$. So we will notationally write $\models\varphi$.
+\end{remark}
+Validity of arguments can be turned into validity of formulae, as follows.
+\begin{theorem}[Deduction]
+	An argument form $\{\varphi_1,\ldots,\varphi_n\}$ with conclusion $\psi$ is valid if and only if $(\varphi_1\land\ldots\land\varphi_n)\to\psi$ is valid. In other words, $\{\varphi_1,\ldots,\varphi_n\}\models\psi$ if and only if $\psi(\varphi_1\land\cdots\land\varphi_n)\to\psi$.
+\end{theorem}
+\begin{proof}
+	By definition, $(\varphi_1\land\cdots\land\varphi_n)\to\psi$ will be valid if and only if every valuation has $V$
+	\[1=\hat V((\varphi_1\land\cdots\land\varphi_n)\to\psi),\]
+	which is equivalent to $\hat V(\varphi_1\land\dots\land\varphi_n)\le\hat V(\psi)$ which is equivalent to
+	\[\min\{\hat V(\varphi_1),\ldots,\hat V(\varphi_n)\}\le\hat V(\psi).\]
+	The only case above that we actually care about is that $\hat V(\varphi_1)=\cdots=\hat V(\varphi_n)=1$ implies $\hat V(\psi)=1$, which is exactly what $\{\varphi_1,\ldots,\varphi_n\}\models\psi$.
+\end{proof}
+
+\subsection{Equivalence}
+We have the following definition.
+\begin{definition}[Equivalence]
+	Two formulae $\varphi,\psi\in\mathcal L(P)$ are \textit{equivalent} if and only if
+	\[\hat V(\varphi)=\hat V(\psi)\]
+	for each valuation $V:P\to\{0,1\}$.
+\end{definition}
+\begin{example}
+	We have that $\lnot\lnot p$ is equivalent to $p$.
+\end{example}
+\begin{remark}
+	Saying that $\varphi$ and $\psi$ are equivalent is the same as asserting $\models\varphi\leftrightarrow\psi$. In fact, we can define $\varphi$ being equivalent if and only if $\varphi$ is equivalent to $p\lor\lnot p$.
+\end{remark}
+Here are some more examples.
+\begin{itemize}
+	\item Idempotence: $\varphi\leftrightarrow(\varphi\land\varphi)$.
+	\item Commutativity: $(\varphi\land\psi)\leftrightarrow(\psi\land\varphi)$ and $(\varphi\lor\psi)\leftrightarrow(\psi\lor\varphi)$.
+	\item Associativity: $(\varphi\land\psi)\land\chi\leftrightarrow\varphi\land(\psi\land\chi)$ and $(\varphi\lor\psi)\lor\chi\leftrightarrow\varphi\lor(\psi\lor\chi)$.
+	\item Absorption: $\varphi\leftrightarrow((\varphi\land(\varphi\lor\psi)))$, which we can see by a direct computation.
+	\item Distributivity: $(\varphi\land(\psi\lor\chi))\leftarrow((\varphi\land\psi)\lor(\varphi\land\chi))$.
+	\item Distributivity: $(\varphi\lor(\psi\land\chi))\leftarrow((\varphi\lor\psi)\land(\varphi\lor\chi))$.
+	\item De Morgan Laws: $\lnot(\psi\land\varphi)\leftarrow(\lnot\psi\lor\lnot\varphi)$.
+	\item De Morgan Laws: $\lnot(\psi\lor\varphi)\leftarrow(\lnot\psi\land\lnot\varphi)$.
+\end{itemize}
