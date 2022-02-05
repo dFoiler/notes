@@ -7,97 +7,169 @@ Fix $M$ an $R$-module. Then given $m\in M$, recall that we can look at
 \[\op{Ann}m=\{r\in R:rm=0\}.\]
 Observe that $m\ne0$ promises $\op{Ann}m\ne R$ because $1_Rm\ne0$. In particular, these ideals are proper most of the time.
 
-These annihilators give rise to the following definition.
+It will turn out to be productive to give require some structure out of these annihilators.
 \begin{definition}[Associated primes]
 	Fix $M$ an $R$-module. Then a prime ideal $\mf p\in\op{Spec}R$ is \textit{associated to $M$} if and only if $\mf p=\op{Ann}m$ for some $m\in M$. We denote $\op{Ass}M\subseteq\op{Spec}R$ to be the set of all associated primes to $M$.
 \end{definition}
 As usual, let's see some examples.
 \begin{example}
-	We have that $\op{Ass}0=\emp$ because the annihilator of any element in $0$ is $R$, which is not prime.
+	We have that $\op{Ass}(0)=\emp$ because the annihilator of any element in $(0)$ is $R$ (because all elements are $0$), which is not a prime ideal.
 \end{example}
 \begin{exe}
-	Fix $M:=\ZZ/n\ZZ$ as a $\ZZ$-module. Then we compute $\op{Ass}M$.
+	Let $n$ be a nonzero integer. Fix $M:=\ZZ/n\ZZ$ as a $\ZZ$-module. Then $\op{Ass}M=\{(p):\text{prime }p\mid n\}$.
 \end{exe}
 \begin{proof}
 	Let $(p)$ be a prime. Then $(p)$ is associated to $M$ if and only if there exists some $m\in M$ such that
 	\[\op{Ann}m=(p).\]
-	If $p\mid n$, then we note that $\op{Ann}\frac np=(p)$. Conversely, if $\op{Ann}m$ is prime, then it follows $p\mid n$ because any annihilator will have to contain $(n)$. % \todo{}
+	If $p\mid n$, then we note that $\op{Ann}\left[\frac np\right]_n=(p)$ because $n\mid\frac np\cdot k$ if and only if $p\mid k$. Thus, $\{(p):\text{prime }p\mid n\}\subseteq\op{Ass}M$.
+	
+	Conversely, if $\op{Ann}m=:(p)$ is prime, then we see that we have a $\ZZ$-module map $\varphi:\ZZ\to\ZZ/n\ZZ$ by $r\mapsto rm$, which has kernel $\op{Ann}m=(p)$. Namely, we have an injection
+	\[\ZZ/p\ZZ\into\ZZ/n\ZZ,\]
+	so $p\mid n$ by Lagrange's theorem on groups.
 \end{proof}
+We can generalize the trick at the end of the proof to give the following characterization of associated primes; this characterization will be easier to use for more element-free proofs.
+\begin{lemma} \label{lem:betterassociated}
+	Fix $M$ an $R$-module. Then a prime $\mf p\in\op{Spec}R$ is associated to $M$ if and only if there is an injective $R$-module homomorphism $R/\mf p\into M$.
+\end{lemma}
+\begin{proof}
+	We take the directions separately.
+	\begin{itemize}
+		\item Suppose that $\mf p$ is associated to $M$. Then there exists $m\in M$ such that $\mf p=\op{Ann}m$, so we consider the map $\varphi:R\to M$ by
+		\[\varphi:r\mapsto rm\]
+		If $r_1,r_2\in R$ and $x_1,x_2\in R$, then $\varphi(r_1x_1+r_2x_2)=r_1x_1m+r_2x_2m=r_1\varphi(x_1)+r_2\varphi(x_2)$, so $\varphi$ is indeed an $R$-linear map. Then, by definition of $\op{Ann}m$ we see that $\mf p=\op{Ann}m=\ker\varphi$, so there is an induced injection
+		\[\overline\varphi:R/\mf p\into M,\]
+		which is what we wanted.
+		\item Suppose that there is an embedding $\varphi:R/\mf p\into M$. Then define $m:=\varphi([1]_\mf p)$. Now, $rm=0$ if and only if $r\varphi([1]_\mf p)=\varphi([r]_\mf p)$ is equal to $0=\varphi([0]_\mf p)$, so $rm=0$ is equvalent to $r\in\mf p$. Thus, $\op{Ann}m=\mf p$, as desired.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}[Nir]
+	The embedding
+	\[\frac{\QQ[x]}{(x-2)}\cong\QQ\cong\frac{\QQ[x]}{(x)}\]
+	does not mean that $(x-2)$ is an associated prime of $\QQ[x]/(x)$ because the above embedding is of $\QQ$-modules, not $\QQ[x]$-modules. Explicitly, $[x]_{(x-2)}$ goes to $2$ goes to $[2]_{(x)}$, but $x\cdot[1]_{(x-2)}$ goes to $x\cdot1$ goes to $x\cdot[1]_{(x)}=[0]_{(x)}$.
+\end{remark}
+We close our introduction with another example.
 \begin{example}
-	Fix $\mf p$ a prime ideal and fix $M:=R/\mf p$. Certainly $\mf p\in\op{Ass}M/\mf p$ because of $[1]_\mf p$. Conversely, fix some $b\in R\setminus\mf p$, and we want to know what primes can arise as
+	Fix $\mf p\subseteq R$ a prime ideal and fix $M:=R/\mf p$. Certainly $\mf p\in\op{Ass}M$ because $\op{Ann}[1]_\mf p=\mf p$. (Alternatively, use \autoref{lem:betterassociated} and note $R/\mf p\into R/\mf p=M$.) Conversely, fix some $b\in R\setminus\mf p$, and we want to know what primes can arise as
 	\[\op{Ann}([b]_\mf p)=\{a\in R:ab\in\mf p\}.\]
-	But with $b\notin\mf p$, the primality of $\mf p$ forces $\op{Ann}([b]_\mf p)=\mf p$. So $\op{Ass}M=\{\mf p\}$.
+	But with $b\notin\mf p$, the primality of $\mf p$ means that $ab\in\mf p$ implies $a\in\mf p$. (And conversely, $a\in\mf p$ implies $ab\in\mf p$.) So $\op{Ann}([b]_\mf p)=\mf p$ for any $b\notin\mf p$, so $\op{Ass}M=\{\mf p\}$.
 \end{example}
+So indeed, any prime of $R$ can arise as an associated prime.
+
+\subsection{Associated Primes in Localization}
 In the spirit of the above example, we have the following proposition.
 \begin{proposition} \label{prop:generateass}
-	Fix $M$ an $R$-module. Suppose $I\subseteq R$ is an ideal maximal in
+	Fix $M$ an $R$-module. Suppose $\mf p\subseteq R$ is an ideal maximal in
 	\[\mathcal P:=\{\op{Ann}m:m\in M\setminus\{0\}\}.\]
-	Then we claim $I$ is prime.
+	Then we claim $\mf p$ is prime.
 \end{proposition}
 \begin{proof}
-	Because $I\in\mathcal P$, we can say $I=\op{Ann}m$, so we have a natural map
-	\[\varphi:R/I\into M\]
-	by $\varphi:[r]_I\mapsto rm$.
-
-	Now take $a\notin I$, and we show that $ab\notin I$ implies $b\in I$. Well, $ab\in I$ would imply that $ab\in\op{Ann}m$, or alternately, $a\in\op{Ann}bm$. But with $a\notin I$, the maximality of $I$ forces $bm=0$, so $b\in I$.
+	% Because $\mf p\in\mathcal P$, we can say $\mf p=\op{Ann}m$, so we have a natural map
+	% \[\varphi:R/\mf p\into M\]
+	% by $\varphi:[r]_\mf p\mapsto rm$. (This is the same map that appears in \autoref{lem:betterassociated}.)
+	Now take $ab\in\mf p$ and $a\notin\mf p$, and we show that $ab\notin I$ implies $b\in I$. Well, $ab\in\mf p$ implies that $a(bm)=(ab)m=0$, so $a\in\op{Ann}bm$. But certainly any $x\in\mf p$ will have
+	\[x(bm)=b(xm)=0,\]
+	so $x\in\op{Ann}bm$, so $\mf p\subseteq\op{Ann}bm$. However, we now see that $\op{Ann}bm$ is an annihilator strictly containing $\mf p$ (because $a\in\op{Ann}bm\setminus\mf p$). This looks like a contradiction, but it is not: instead we merely must have $bm=0$, which means $b\in\mf p$.
 \end{proof}
 We have the following corollary.
 \begin{corollary}
-	Fix $R$ a Noetherian ring and $M$ a nonzero ring. Then $\op{Ass}M$ is nonempty.
+	Fix $R$ a Noetherian ring and $M$ a nonzero $R$-module. Then $\op{Ass}M$ is nonempty.
 \end{corollary}
 \begin{proof}
-	Use the Noetherian condition to generate an ideal maximal in the sense of \autoref{prop:generateass}, which will finish.
+	As in \autoref{prop:generateass}, set
+	\[\mathcal P:=\{\op{Ann}m:m\in M\setminus\{0\}\}.\]
+	Because $R$ is Noetherian, $\mathcal P$ will contain a maximal element, which will be a prime $\mf p=\op{Ann}m$ for some $m\in M$. So $\mf p\in\op{Ass}M$, meaning $\op{Ass}M\ne\emp$.
 \end{proof}
+\begin{remark}[Nir]
+	It is possible to have a nonzero module with no associated primes; we follow the example given in \href{https://math.stackexchange.com/a/3365952/869257}{sx2931719}. Consider $R:=C(\RR,\RR)$ the ring of continuous functions $\RR\to\RR$ as a module over itself. Fix any $f\in R\setminus\{0\}$, and we show $\op{Ann}f$ is not prime.
 
-\subsection{Associateed Primes for Fun and Profit}
-For the sake of comparison, let's talk about $\op{Supp}M$ now.
-% Well, if $M$ is finitely generated, any $\mf p$ in the support of $M$ will have $\op{Ass}M\subseteq\mf p$.
-\begin{example}
-	Fix $R$ a domain. Then $\op{Ass}_RR=\{(0)\}$ by the integral domain condition. However, the support $\op{Supp}R=\op{Spec}R$, so the associated primes appear smaller.
-\end{example}
-Indeed, we will find that the associated primes will be smaller.
+	Because $f\ne0$, find $a\in\RR$ such that $f(a)\ne0$, and by contuity some $b>a$ close to $a$ also has $f(b)\ne0$. (Here we use continuity of $f$.) Then set $m:=\frac{a+b}2$ and
+	\[g(x)=\begin{cases}
+		(x-m)^2 & x \le m, \\
+		0 & x \ge m,
+	\end{cases}\qquad\text{and}\qquad h(x)=\begin{cases}
+		0 & x \le m, \\
+		(x-m)^2 & x \ge m.
+	\end{cases}\]
+	Then $g,h\in C(\RR,\RR)$ and $gh=0\in\op{Ann}f$. However, $(gf)(a)\ne0$ an $(hf)(b)\ne0$, so $g,h\notin\op{Ann}f$.
+\end{remark}
 
-Localization was able to tell us about maps by building upwards: an element was $0$ if and only if zero on all localizations.
-\begin{proposition}
-	Fix $R$ Noetherian and $M,N$ as $R$-modules. The following are true; fix $m\in M$.
-	\begin{listalph}
-		\item We have $m=0$ if and only if $\frac m1=0$ in $M_\mf p$ for each associated prime $\mf p\in\op{Ass}M$.
-		\item In fact, a submodule $N\subseteq M$ has $N=0$ if and only if $N_\mf p$ if and only if $N_\mf p=0$ for each $\mf p\in\op{Ass}M$.
-		\item A map $\varphi:N\to M$ is injective/surjective/isomorphic if and only if $\varphi:N_\mf p\to M_\mf p$ is injective/surjective if and only if $\mf p\in\op{Ass}M$.
-	\end{listalph}
-\end{proposition}
+\begin{remark}
+	For the sake of comparison, let's compare $\op{Supp}M$ with $\op{Ass}M$. For example, when $R$ is a domain, then $\op{Ass}_RR=\{(0)\}$ by the integral domain condition. However, the support $\op{Supp}R=\op{Spec}R$, so the associated primes appear smaller.
+\end{remark}
+Indeed, we will find that the associated primes will be smaller than $\op{Supp}M$.
+
+Localization was able to tell us about maps by looking locally everywhere: an element was $0$ if and only if zero on all localizations. However, it turns out that we can limit what we have to focus on.
+\begin{proposition} \label{prop:localassprimes}
+	Fix $R$ Noetherian and $M$ an $R$-module. Then, given $m\in M$, we have $m=0$ if and only if $\frac m1=0$ in $M_\mf p$ for each $\mf p\in\op{Ass}M$.
+\end{proposition}	
 \begin{proof}
-	It suffices to only prove (a), and the other two follow. For (a), the forwards direction is easy because we know that $m=0$ if and only if $\frac m1=0$ in $M_\mf p$ for each prime $\mf p$.
+	The forwards direction here is easy: if $m=0$, then $\frac m1=\frac01=0$ in $M_\mf p$ for any prime $\mf p$ and therefore for any prime $\mf p\in\op{Ass}M$.
 
-	In the other direction, suppose $m\ne0$, and we need to find an associated prime $\mf p$ for which $\frac m1\ne0$ in $M_\mf p$. But we simply take the annihilator maximal among the annihilators containing $\op{Ann}m$ by \autoref{prop:generateass} to finish.
+	In the other direction, suppose $m\ne0$, and we need to find an associated prime $\mf p\in\op{Ass}M$ for which $\frac m1\ne0$ in $M_\mf p$. But we note that $\frac m1=\frac01$ in $M_\mf p$ if and only if there exists $u\in M\setminus\mf p$ such that $um=0$ if and only if $(M\setminus\mf p)\cap\op{Ann}m\ne\emp$ if and only if
+	\[\op{Ann}m\not\subseteq\mf p.\]
+	So our goal is to construct an associated prime $\mf p$ such that $\op{Ann}m\subseteq\mf p$.
+	
+	The main idea is to use \autoref{prop:generateass} to give us our ptime. We set
+	\[\mathcal P_m:=\{\op{Ann}m':\op{Ann}m'\supseteq\op{Ann}m\text{ and }m'\ne0\}.\]
+	Note that $\mathcal P_m$ is nonempty because $\op{Ann}m\in\mathcal P_m$, so $\mathcal P_m$ will have a maximal element nameed $\mf p$. (Here we are using the condition that $R$ is Noetherian.) We now note that $\mf p$ is also maximal in
+	\[\mathcal P:=\{\op{Ann}m':m'\ne0\}.\]
+	Indeed, if $\mf p\subseteq\op{Ann}m'$, then $\op{Ann}m\subseteq\op{Ann}m'$, so $\op{Ann}m'\in\mathcal P_m$, so $\mf p=\op{Ann}m'$ by maximality of $\mf p$. It follows from \autoref{prop:generateass} that $\mf p$ is indeed prime, so it is an associated prime containing $\op{Ann}m$.
 \end{proof}
-Associated primes also behave in short exact sequences, somewhat.
+Here are some corollaries.
+\begin{corollary} \label{cor:localasssubmod}
+	Fix $R$ Noetherian and $M$ an $R$-module. Then a submodule $N\subseteq M$ has $N=0$ if and only if $N_\mf p=0$ for each $\mf p\in\op{Ass}M$.
+\end{corollary}
+\begin{proof}
+	Again, in the forwards direction, note that $N=0$ implies $N_\mf p=0$ for each prime $\mf p$.
+
+	In the reverse direction, suppose that $N_\mf p=0$ for each $\mf p\in\op{Ass}M$. Then any $m\in N$ has $\frac m1=0$ in $N_\mf p$ for each $\mf p\in\op{Ass}M$, but this means that there exists $u\in R\setminus\mf p$ such that $um=0$, which also holds in $M_\mf p$. This is to say that $\frac m1=0$ in $M_\mf p$ for each $\mf p\in\op{Ass}M$, so $m=0$ by \autoref{prop:localassprimes}.
+\end{proof}
+\begin{corollary}
+	Fix $R$ Noetherian and $M,N$ as $R$-modules. Then a map $\varphi:M\to N$ is injective if and only if $\varphi:M_\mf p\to N_\mf p$ is injective if and only if $\mf p\in\op{Ass}M$.
+\end{corollary}
+\begin{proof}
+	By \autoref{cor:localasssubmod}, $\ker\varphi\subseteq M$ vanishes if and only if $(\ker\varphi)_\mf p=0$ for each $\mf p\in\op{Ass}M$. But $(\ker\varphi)_\mf p=\ker\varphi_\mf p$ by \autoref{cor:localizekercoker}, so $\ker\varphi=0$ if and only if $\ker\varphi_\mf p$ for each $\mf p\in\op{Ass}M$, which is what we wanted.
+\end{proof}
+
+\subsection{Finding All Associated Primes}
+Let's try as hard as we can to find all associated primes. To start, we note that associated primes also behave in short exact sequences, somewhat.
 \begin{lemma} \label{lem:assses}
 	Suppose
 	\[0\to A\to B\to C\to 0\]
 	is a short exact sequence of $R$-modules. Then $\op{Ass}A\subseteq\op{Ass}B\subseteq\op{Ass}A\cup\op{Ass}C$.
 \end{lemma}
 \begin{proof}
-	We have that $\op{Ass}A\subseteq\op{Ass}B$ because any annihilator in $A$ will end up being any annihilator in $B$ as well.
+	Denote our morphisms by
+	\[\to A\stackrel\iota\to B\stackrel\pi\to C\to 0.\]
+	We have that $\op{Ass}A\subseteq\op{Ass}B$ because any annihilator in $A$ will end up being any annihilator in $B$ as well. We note that any $a\in A$ has
+	\[\op{Ann}\iota(a)=\{r\in R:r\iota(a)=0\}=\{r\in R:\iota(ra)=0\}\stackrel*=\{r\in R:ra=0\}=\op{Ann}a,\]
+	where in $\stackrel*=$ we have used the injectivity of $\iota$. So any associated prime $\mf p=\op{Ann}a$ of $A$ will also be an associated prime $\mf p=\op{Ann}\iota(a)$ of $B$.
+	\begin{remark}[Nir]
+		Alternatively, any associated prime $\mf p\in\op{Ass}A$ induces an $R$-embedding $R/\mf p\into A$ (by \autoref{lem:betterassociated}). Post-composing with $\iota$ gives an $R$-embedding $R/\mf p\into B$, so \autoref{lem:betterassociated} gives $\mf p\in\op{Ass}B$.
+	\end{remark}
 
 	It remains to show $\op{Ass}B\subseteq\op{Ass}A\cup\op{Ass}C$. Well, suppose $\mf p\in\op{Ass}B\setminus\op{Ass}A$, and we show that $\mf p\in\op{Ass}C$. Namely, we can find $b\in B$ such that
 	\[\op{Ann}b=\mf p.\]
-	Then we note that $Rb\cong R/\mf p$ by $[r]_\mf p\mapsto rb$. However, $Rb\cap A=0$ because otherwise $\mf p$ will be appear in $\op{Ass}A$ from the intersected submodule. It follows that
-	\[Rb\subseteq C\]
-	as an honest submodule (upon modding out by $A$), which gives us the result.
+	To make some of our language easier, we note that this $b\in B$ induces $f:R/\mf p\into B$ by $f:[r]_\mf p\mapsto rb$ (as in \autoref{lem:betterassociated}); note $\im f=Rb$. It will be enough to show that $\pi f:R/\mf p\to C$ is injective to show that $\mf p\in\op{Ass}C$ by \autoref{lem:betterassociated}.
+	
+	We compute
+	\[\ker(\pi f)=\{[r]_\mf p\in R/\mf p:\pi f([r]_\mf p)=0\}=\{[r]_\mf p\in R/\mf p:rb\in\ker\pi=\im\iota\}.\]
+	In particular, because $f:R/\mf p\to Rb$ is an isomorphism, $\ker(\pi f)$ will vanish if and only if each $rb\in Rb$ with $rb\in\im\iota$ has $rb=0$. That is, we want to show that
+	\[Rb\cap\im\iota\stackrel?=\{0\}.\]
+	Indeed, each $rb\in Rb\setminus\{0\}$ (so that $r\notin\mf p$) has $s\in\op{Ann}rb$ if and only if $sr\in\mf p$ if and only if $s\in\mf p$, so any nontrivial intersection above would induce an annihilator $\mf p\in\op{Ass}A$, which we assumed is not the case.
 \end{proof}
 \begin{corollary} \label{cor:dirsumass}
-	Suppose $B=A\oplus C$ as $R$-modules. Then $\subseteq\op{Ass}B=\op{Ass}A\cup\op{Ass}C$.
+	Suppose $B=A\oplus C$ as $R$-modules. Then $\op{Ass}B=\op{Ass}A\cup\op{Ass}C$.
 \end{corollary}
 \begin{proof}
-	Use \autoref{lem:assses} on the split short exact sequences
+	Note the split short exact sequences
 	\[0\to A\to B\to C\to 0\]
 	and
 	\[0\to C\to B\to A\to 0\]
-	to finish.
+	give that $\op{Ass}A,\op{Ass}C\subseteq\op{Ass}B$ by \autoref{lem:assses}. In particular, $\op{Ass}A\cup\op{Ass}C\subseteq\op{Ass}B$, but \autoref{lem:assses} implies $\op{Ass}B\subseteq\op{Ass}A\cup\op{Ass}C$ already, so equality follows.
 \end{proof}
 
-\subsection{Finitely Many Associated Primes}
 Let's build towards the statement that the associated primes are finite. Before this, let's do an example.
 \begin{ex}
 	We work with $\ZZ$-modules. Then $\op{Ass}\ZZ=\{(0)\}$ and $\op{Ass}\ZZ/p^\bullet\ZZ=\{(p)\}$. Then from here we can build all finitely generated abelian groups as a direct sum of these and get our associated primes by \autoref{cor:dirsumass}.
@@ -129,7 +201,7 @@ Now here is our main lemma.
 \begin{proof}
 	Here we go.
 	\begin{listalph}
-		\item Decompose the filtration for $M$ from \autoref{lem:fingenfiltration} and use \autoref{lem:assses} to upper-bound $\op{Ass}M$. Namely, if the factors of the filtration as $R/\mf p_k$ for primes $\{\mf p_k\}_{k=0}^{n-1}$, then
+		\item Decompose the filtration for $M$ from \autoref{lem:fingenfiltration} and use \autoref{lem:assses} to upper-bound $\op{Ass}M$. In particular, if the factors of the filtration as $R/\mf p_k$ for primes $\{\mf p_k\}_{k=0}^{n-1}$, then
 		\[\op{Ass}M\subseteq\{\mf p_0,\ldots,\mf p_{n-1}\}.\]
 		\item In one direction, suppose that $\mf p\in\op{Ass}M$ and $\mf p\cap U=\emp$. We already know that $\mf p\left[U^{-1}\right]$ is prime. Because $\mf p\in\op{Ass}M$, we are promised some $m\in M$ such that
 		\[R/\mf p\cong Rm\subseteq M,\]
