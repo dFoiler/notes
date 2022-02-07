@@ -1,0 +1,137 @@
+% !TEX root = ../notes.tex
+
+Good morning everyone. A few announcements.
+\begin{itemize}
+	\item Homework \#3 is due on Friday.
+	\item There will be no in-person class on Wednesday or Friday.
+	\item Office hours this week are today (1:00PM--2:30PM) and tomorrow (2:00PM--3:30PM).
+\end{itemize}
+
+\subsection{Connectedness}
+Today we're going to talk more about continuous functions.
+
+Last time we ended with the following proposition.
+\begin{proposition}
+	A space $X$ is path-connected implies that $X$ is connected. If $X$ is open and connected, then $X$ is path-connected.
+\end{proposition}
+\begin{proof}
+	We do these separately.
+	\begin{itemize}
+		\item Suppose that $X=U_1\sqcup U_2$ is disconnected, and we show that $X$ is not path-connected. Namely, we have $U_1,U_2\subseteq X$ open subsets (in $X$) which are disjoint and nonempty. Because $U_1$ and $U_2$ are nonempty, find $x_1\in U_1$ and $x_2\in U_2$.
+
+		However, we claim there is no continuous path $\gamma:[0,1]\to X$ with $\gamma(0)=x_1$ and $\gamma(1)=x_2$. Indeed, the image of $\gamma([0,1])$ must be connected, but then we can disconnect $\gamma([0,1])$ by $U_1$ and $U_2$: $\gamma([0,1])\subseteq U_1\cup U_2$ and $U_\bullet\cap\gamma([0,1])=\{x_\bullet\}$ and $U_1\cap U_2=\emp$.
+
+		At a high level, here is the image that a disconnected $X$ cannot have a path between any two pair points: there is no possible red path below which stays in the gray region.
+		\begin{center}
+			\begin{asy}
+				unitsize(1cm);
+				draw(circle((-1,0),1), dashed);
+				draw(circle((2,0), 1.7), dashed);
+				fill((-1.5,0) .. (-0.7,0.3) .. (-1, -0.7) .. cycle, lightgray);
+				fill((2,-1.3) .. (3.5,-0.5) .. (1, 0.7) .. cycle, lightgray);
+
+				pair u1 = (-1,0) + 0.3*dir(200);
+				pair u2 = (2,0) + 1*dir(30);
+				dot("$u_1$", u1, W);
+				dot("$u_2$", u2, E);
+				label("$U_1$", (-1,-1), S);
+				label("$U_2$", (2,-1.7), S);
+				draw(u1 -- u2, red);
+			\end{asy}
+		\end{center}
+
+		\item Suppose we have a point $z\in X$, and we set
+		\[C(z):=\{w\in X:\text{there is a path from }z\text{ to }w\}.\]
+		We claim that $C(z)$ is closed and open in $X$, which will force $C(z)=X$ because $X$ is connected and $C(z)$ is nonempty ($z\in C(z)$ by the trivial path $\gamma:t\mapsto z$).
+
+		We start by showing $C(z)$ is open: because $X$ is open, there exists $r>0$ such that $B(w,r)\subseteq X$. But with $w\in C(z)$, there will be a path between any point in $p\in B(z,w)$ and $w$, so there is a path from $z$ to $w$ to $p$. Here is the image.
+		\begin{center}
+			\begin{asy}
+				unitsize(1cm);
+				dot("$z$", (-5,0), W);
+				dot("$w$", (0,0), S);
+				dot("$p$", dir(40), dir(40));
+				draw((-5,0) .. (-4,-0.3) .. (-1,0.1) .. (0,0));
+				draw(circle((0,0), 1.7), dashed);
+				draw((0,0) -- dir(40));
+			\end{asy}
+		\end{center}
+
+		Now we show that $C(z)$ is closed. Suppose that $w\in X\setminus C(z)$, and we have to show that there is an open ball around $w$ in $X\setminus C(z)$. To see this, fix an open ball $B(w,r)\subseteq X$ for $r>0$, but now there can be no path from $z$ to anywhere in $B(w,r)$, for then we could just run the above argument again to show that $w\in C(z)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	The proof for the second part merely needs $X$ to be locally path-connected, not a metric space.
+\end{remark}
+\begin{corollary}
+	We have that $\CC$ is path-connected and therefore connected.
+\end{corollary}
+\begin{proof}
+	Given any two points $z,w\in\CC$, we choose the path $\gamma:[0,1]\to\CC$ by
+	\[\gamma(t)=tz+(1-t)w.\]
+	Indeed, $\gamma(0)=w$ and $\gamma(1)=z$, and $\gamma$ is somewhat clearly continuous by, say, checking componentwise.
+\end{proof}
+
+\subsection{Compactness}
+Let's do compactness better this time.
+\begin{lemma}
+	Fix $X\subseteq\CC$ (sequentially) compact. Then $X$ is both closed and bounded.
+\end{lemma}
+\begin{proof}
+	We start by showing $X$ is closed. For this, we show that $X$ contains all of its limit points.
+	
+	Well, suppose that $z\in X$ is a limit point so that we have a sequence $\{z_n\}_{n\in\NN}\subseteq X$ such that $z_n\to z$. But by the (sequential) compactness of $X$, this sequence has a convergent subsequence $\{z_{\sigma n}\}_{n\in\NN}$ which does converge in $X$. But any subsequence will converge to the same limit (!), so $z_{\sigma n}\to z$ as well, so $z\in X$ is forced.
+
+	We now show that $X$ is bounded. We proceed by contraposition: if $X$ is unbounded, then for any $n\in\NN$, then we can find some $z_n\in X\setminus B(0,n)$. But then we can check that $\{z_n\}_{n\in\NN}$ has no convergent subsequence, essentially because it tends off to infinity.
+\end{proof}
+
+Our goal for the rest of class is to prove the following two results.
+\begin{restatable}{prop}{closedbounded}
+	A subset $X\subseteq\CC$ is (sequentially) compact if and only if it is closed and bounded.
+\end{restatable}
+\begin{theorem}[Heine--Borel] \label{thm:hb}
+	A subset $X\subseteq\CC$ is (sequentially) compact if and only if every open cover of $X$ has a finite subcover.
+\end{theorem}
+On the homework, we showed the backward direction of \autoref{thm:hb}.
+\begin{remark}
+	Our hope is to have lots of equivalent characterizations of compactness so that we can have easier proofs of statements about compact sets.
+\end{remark}
+To start off, here are some lemmas we will need.
+\begin{lemma}
+	Fix $X\subseteq\CC$ (sequentially) compact. For any $\varepsilon>0$, there exist only finitely many points $z_1,\ldots,z_n$ such that
+	\[X\subseteq\bigcup_{k=1}^nB(z_k,\varepsilon).\]
+\end{lemma}
+\begin{proof}
+	The point is to build some inductive argument: one fixes an $\varepsilon>0$ and then continues choosing random points out of $X$ until we cover $X$. Indeed, if the process does not terminate, then the sequence we generate has no convergent subsequence.
+\end{proof}
+\begin{lemma}
+	Fix $X\subseteq\CC$ (sequentially) compact with some open cover $\mathcal U$ of $X$. Then there is an $\varepsilon>0$ such that, for every $z\in X$, there is $U\in\mathcal U$ such that $B(z,\varepsilon)\subseteq U$.
+\end{lemma}
+This is saying that there is a universal $\varepsilon$ that we can find for our open cover.
+\begin{lemma}
+	Fix $X$ a bounded set. Then, for any $\varepsilon>0$, there exist finitely many points $z_1,\ldots,z_n$ such that
+	\[X\subseteq\bigcup_{k=1}^nB(z_k,\varepsilon).\]
+\end{lemma}
+\begin{proof}
+	The point is to reduce this to the case of $[-M,M]^2$ which can cover $X$ by boundedness, and then we can create the cover for $X$ by hand.
+\end{proof}
+Now let's attack our statements directly.
+\closedbounded*
+\begin{proof}
+	The forwards direction we have already done.
+
+	In the backwards direction, suppose that $\{z_n\}_{n\in\NN}\subseteq X$ is some sequence. By boundedness, we can choose $w_{1,1},\ldots,w_{1,\ell_1}$ such that
+	\[X\subseteq\bigcup_{k=1}^{\ell_1}B(w_{1,k},1/2).\]
+	Now, because $\{z_n\}_{n\in\NN}$ is infinite, there must be some index $k_1$ such that
+	\[L_1=\{n\in\NN:z_n\in B(w_{1,k},1/2)\}\]
+	is infinite. The important point is that $\{z_n\}_{n\in L_1}$ has formed a subsequence which lives inside of a ball of radius $1/2$. We can continue this process: by boundedness, we can find some $w_{2,1},\ldots,w_{2,\ell_2}\in B(w_{1,k_1},1/2)$ such that
+	\[B(w_{1,k_1},1/2)\subseteq\bigcup_{k=1}^{\ell_2}B(w_{2,k},1/4).\]
+	Then we can choose $L_2$ from here by choosing one of the $w_{w,k}$ with infinitely many indices. Continuing this process forces our sequence to converge.
+
+	To more explicitly appeal to choice, we note that we can always find some sequence $\{w_{i,n}\}\subseteq X$ such that
+	\[L_i:=\{n\in\NN:|z_i-w_{i,j}|<2^{-j}\}\]
+	is infinite. To fix this problem, we define a choice function over our indices: define $\varphi:\NN\to\NN$ such that $\varphi(k+1)$ is the smallest number exceeding $\varphi(k)$ with $\varphi(k+1)\in L_{k+1}$. Then we know that
+	\[|z_{\varphi(k)}-w_{i,j}|<2^{-j}\]
+	for each $1\le j\le k$. Then with geometric error, the $z_{\varphi(k)}$ will be Cauchy and hence must converge. But $X$ is closed, so the limit must be lie in $X$, finishing.
+\end{proof}
