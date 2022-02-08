@@ -5,9 +5,9 @@ Hopefully we finish localizing today.
 \subsection{A Little On Tensor Products}
 Let's start with some review exercises.
 \begin{prop}
-	Fix $R$ a ring and $M$ an $R$-module and $I\subseteq R$ an $R$-ideal. This gives the $R$-module $R/I$, and we claim that
-	\[(R/I)\otimes_RM\cong M/IM.\]
-	canonically.
+	Fix $R$ a ring and $M$ an $R$-module and $I\subseteq R$ an $R$-ideal. This gives the $R$-module $R/I$, and we claim that we have a canonical isomorphism
+	\[(R/I)\otimes_RM\cong M/IM\]
+	by $[r]_I\otimes m\mapsto[rm]_{IM}$.
 \end{prop}
 \begin{proof}
 	We will use a few facts about the tensor product here. To start off, we use the short exact sequence
@@ -15,21 +15,48 @@ Let's start with some review exercises.
 	and then tensor by $\otimes_RM$. This gives the right-exact sequence
 	\[I\otimes_RM\to R\otimes_RM\to (R/I)\otimes_RM\to0.\]
 	We know that $R\otimes_RM\cong M$ (canonically) by $r\otimes m\mapsto rm$, and then tracking the image of $I\otimes_RM$ through the isomorphism $R\otimes_RM\cong M$, we see that
-	\[I\otimes_RM\cong\{rm:r\in I\text{ and }m\in M\}=IM.\]
-	So we are promised the right-exact sequence
-	\[IM\to M\to(R/I)\otimes_RM\to0,\]
-	which gives the desired isomorphism.
+	\[I\otimes_RM=\{r\otimes m:r\in R\text{ and }m\in M\}\cong\{rm:r\in I\text{ and }m\in M\}=IM.\]
+	So we are promised the following commutative diagram with (right) exact rows, where the dashed arrow is induced by the rest of the diagram.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJJXFxvdGltZXNfUk0iXSxbMSwwLCJSXFxvdGltZXNfUk0iXSxbMiwwLCIoUi9JKVxcb3RpbWVzX1JNIl0sWzMsMCwiMCJdLFswLDEsIklNIl0sWzEsMSwiTSJdLFsyLDEsIk0vSU0iXSxbMywxLCIwIl0sWzAsNF0sWzAsMV0sWzQsNV0sWzEsNV0sWzEsMl0sWzUsNl0sWzIsM10sWzYsN10sWzIsNiwiIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+	\[\begin{tikzcd}
+		{I\otimes_RM} & {R\otimes_RM} & {(R/I)\otimes_RM} & 0 \\
+		IM & M & {M/IM} & 0
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=2-3, to=2-4]
+		\arrow[dashed, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	To be explicit, the induced arrow is creaeted by pulling back $(R/I)\otimes_RM$ to $R\otimes_RM$, then pushing forward through to $M$ and then $M/IM$. Explicitly, we take
+	\[[r]_I\otimes m\mapsfrom r\otimes m\mapsto rm\mapsto[rm]_{IM}.\]
+	Well-definedness is by the commutativity and exactness of the diagram: if $r\equiv s\pmod I$, then $r\otimes m$ and $s\otimes m$, but $(r-s)\otimes m$ is in the kernel of $R\otimes_RM\to(R/I)\otimes_RM$, so $(r-s)m$ is in the kernel of $M\to M/IM$, so $[rm]_{IM}=[sm]_{IM}$.
+	
+	The fact that the left two vertical morphisms are isomorphisms forces the rightmost induced morphism to be an isomorphism. Formally, we should replace $I\otimes_RM$ and $IM$ with their images in $R\otimes_RM$ and $M$ to ensure that we have short exact sequences, and then we can finish by applying the snake lemma.
 \end{proof}
 \begin{remark}[Nir]
-	As usual, this isomorphism is functorial in $M$.
+	As usual, this isomorphism is functorial in $M$ in the following sense: if we have $\varphi:M\to N$, then the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCIoUi9JKVxcb3RpbWVzX1JNIl0sWzEsMCwiKFIvSSlcXG90aW1lc19STiJdLFswLDEsIk0vSU0iXSxbMSwxLCJOL0lOIl0sWzAsMSwiXFx2YXJwaGkiXSxbMiwzLCJcXHZhcnBoaSJdLFswLDIsIlxcY29uZyIsMl0sWzEsMywiXFxjb25nIl1d
+	\[\begin{tikzcd}
+		{(R/I)\otimes_RM} & {(R/I)\otimes_RN} \\
+		{M/IM} & {N/IN}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow["\cong"', from=1-1, to=2-1]
+		\arrow["\cong", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Here, the $\varphi$ arrows are all induced. To see the commutativity, we track $[r]_I\otimes m\mapsto[r]_I\otimes\varphi(n)\mapsto[r\varphi(n)]_{IM}$ along the top, and similarly $[r]_I\otimes m\mapsto[r]_I\otimes\varphi(m)\mapsto[r\varphi(m)]_{IM}$ along the bottom.
 \end{remark}
 \begin{corollary}
 	Fix $R$ a ring and $I,J\subseteq R$ ideals. Then $(R/I)\otimes_R(R/J)\cong R/(I+J)$.
 \end{corollary}
 \begin{proof}
-	From the above we can conclude
-	\[(R/I)\otimes_R(R/J)\cong\frac{R/J}{I(R/J)}\cong\frac{R/J}{(I+J)/J}\cong\frac R{I+J}.\]
-	This finishes.
+	From the above we can compute
+	\[(R/I)\otimes_R(R/J)\cong\frac{R/J}{I(R/J)}=\frac{R/J}{(I+J)/J}\cong\frac R{I+J}.\]
+	Here, $I(R/J)=(I+J)/J$ is set-theoretic: $I(R/J)$ is $\{[x]_J:x\in I\}$, but in fact $[x]_J=[x+y]_J$ for any $y\in J$, so we can write this as $\{[x]_J:x\in I+J\}$. Additionally, $R/(I+J)\cong(R/J)/((I+J)/J)$ is by tracking the kernel of the (surjective) composite $R\onto R/J\onto(R/J)/((I+J)/J)$.
 \end{proof}
 The above result could be used for fun and profit on the homework.
 \begin{remark}
@@ -37,14 +64,14 @@ The above result could be used for fun and profit on the homework.
 \end{remark}
 
 We also have the following ``change of constants'' results.
-\begin{proposition}
-	Fix $S$ an $R$-algebra. Then, given $S$-modules $A$ and $B$ and $C$, we have
-	\[(A\otimes_RB)\otimes_SC\simeq A\otimes_R(B\otimes_SC).\]
+\begin{proposition} \label{prop:tensorassociate}
+	Fix $S$ an $R$-algebra. Then, given an $R$-module $A$ as well as $S$-modules $B$ and $C$, we have
+	\[(A\otimes_RB)\otimes_SC\cong A\otimes_R(B\otimes_SC).\]
 \end{proposition}
 \begin{proof}
-	The isomorphism is by $(a\otimes b)\otimes c\mapsto a\otimes(b\otimes c)$.
+	The isomorphism is by $(a\otimes b)\otimes c\mapsto a\otimes(b\otimes c)$. Doing this proof rigorously would induce a lot of pain, so we won't bother.
 \end{proof}
-\begin{proposition}
+\begin{proposition} \label{prop:tensordistrib}
 	Fix $S$ an $R$-algebra. Then, given $R$-modules $M$ and $N$, we have
 	\[S\otimes_R(M\otimes_RN)\cong(S\otimes_RM)\otimes_S(S\otimes_RN),\]
 	where $S\otimes_RM$ is given an $S$-module structure by multiplying the left coordinate.
@@ -54,11 +81,20 @@ We also have the following ``change of constants'' results.
 	\begin{align*}
 		(S\otimes_RM)\otimes_S(S\otimes_RN) &\cong (M\otimes_RS)\otimes_S
 		(S\otimes_RN) \\
-		&\cong (M\otimes_R(S\otimes_S(S\otimes_RN))) \\
-		&\cong (M\otimes_R((S\otimes_SS)\otimes_RN)) \\
+		&\stackrel*\cong (M\otimes_R(S\otimes_S(S\otimes_RN))) \\
+		&\stackrel*\cong (M\otimes_R((S\otimes_SS)\otimes_RN)) \\
 		&\cong (M\otimes_R(S\otimes_RN)),
 	\end{align*}
-	which becomes $S\otimes_R(M\otimes_RN)$ after more association.
+	which becomes $S\otimes_R(M\otimes_RN)$ after more association. Note we have used \autoref{prop:tensorassociate} (carefully!) on the isomorphisms denoted $\stackrel*\cong$.
+\end{proof}
+\begin{corollary}
+	Fix $R$ a ring and $U\subseteq R$ a multiplicatively closed subset. Then, given $R$-modules $M$ and $N$, we have
+	\[(M\otimes_RN)\left[U^{-1}\right]\cong M\left[U^{-1}\right]\cong_{R\left[U^{-1}\right]}N\left[U^{-1}\right].\]
+\end{corollary}
+\begin{proof}
+	After noting that $M\left[U^{-1}\right]\cong M\otimes_RR\left[U^{-1}\right]$, we see that we are trying to show
+	\[(M\otimes_RN)\otimes_RR\left[U^{-1}\right]\cong(M\otimes_RR\left[U^{-1}\right])\otimes_R{\left[U^{-1}\right]}(N\otimes_RR\left[U^{-1}\right]),\]
+	which is exactly \autoref{prop:tensordistrib}.
 \end{proof}
 
 \subsection{Artinian Rings}
@@ -417,14 +453,26 @@ While we're here, we provide some more nice facts.
 We can even give a geometric view to what we are doing.
 \begin{proposition}
 	Fix $I\subseteq k[x_1,\ldots,x_n]$. Then the following are equivalent.
-	\begin{itemize}
+	\begin{listalph}
 		\item The ring $R:=k[x_1,\ldots,x_n]/I$ is Artinian.
 		\item The set $Z(I)\subseteq\AA^n(k)$ is finite.
 		\item The ring $R$ is a finite-dimensional $k$-algebra.
-	\end{itemize}
+	\end{listalph}
 \end{proposition}
 \begin{proof}
-	Omitted. See Eisenbud.
+	We follow Eisenbud. We take our implications in sequence.
+	\begin{itemize}
+		\item We show (a) implies (b). Suppose that the ring $R:=k[x_1,\ldots,x_n]/I$ is Artinian. Then $R$ has finitely many maximal ideals by \autoref{lem:artinianfinmaxes}, which are in bijection to points in $Z(I)$, so $Z(I)$ is finite.
+
+		\item We show (b) implies (c). Suppose that $Z(I)$ is finite. Then $R=k[x_1,\ldots,x_n]/I$ is in bijection with $k$-valued (polynomial) functions on $Z(I)$, but as $Z(I)$ is finite, we can build any function as a polynomial function by (say) Lagrange interpolation.
+
+		Rigorously, two polynomials $f,g\in k[x_1,\ldots,x_n]$ has $[f]_I=[g]_I$ if and only if $[f-g]_I=[0]_I$ if and only if $f-g\in I$ if and only if $f-g$ vanishes on $Z(I)$ if and only if $f$ and $g$ agree on $Z(I)$. So $[f]_I$ can indeed be viewed as a function on $Z(I)$.
+		
+		Thus, $R$ is in bijection with $k$-valued functions on finitely many points, but this space is simply $k^{Z(I)}$, which is a finite-dimensional vector space. Adding in the ring structure to $R$ makes $R$ into a finite-dimensional $k$-algebra.
+
+		\item We show (c) implies (a). Indeed, any strictly descending chain of submodules of a finite-dimensional $k$-vector space must terminate, so $R$ is Artinian as a $k$-vector space. Any $R$-submodule of $R$ will also be a $k$-vector space, so we see that any strictly descending chain of $R$-submodules of $R$ must terminate as well. Thus, $R$ is Artinian.
+		\qedhere
+	\end{itemize}
 \end{proof}
 
 \subsection{The Radical, Returned}
