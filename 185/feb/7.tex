@@ -122,6 +122,15 @@ To start off, here are some lemmas we will need.
 \begin{lemma}
 	Fix $X\subseteq\CC$ (sequentially) compact with some open cover $\mathcal U$ of $X$. Then there is an $\varepsilon>0$ such that, for every $z\in X$, there is $U\in\mathcal U$ such that $B(z,\varepsilon)\subseteq U$.
 \end{lemma}
+\begin{proof}
+	Suppose that, for all $\varepsilon>0$, there exists some $z\in X$ such that no $U\in\mathcal U$ has $B(z,\varepsilon)\subseteq U$. We construct a sequence in $X$ with no subsequence converging in $X$. Indeed, for any $n\in\NN$, we find $z_n\in X$ such that no $U\in\mathcal U$ has $B(z_n,1/n)\subseteq U$. We claim that $\{z_n\}_{n\in\NN}$ has no subsequence converging in $X$.
+
+	Indeed, suppose that we have $z\in X$ and strictly increasing $\sigma:\NN\to\NN$ such that $z_{\sigma n}\to z$. We will then be able to find some $z_n$ such that $B(z_n,1/n)\subseteq U$ for some $U\in\mathcal U$, which will be a contradiction. Indeed, $z\in X$, and $\mathcal U$ covers $z$, so there is some $U\in\mathcal U$ with $z\in U$. In fact, $U$ is open, so there is an $\varepsilon>0$ such that
+	\[B(z,\varepsilon)\subseteq U.\]
+	Now, there is $N$ such that for $n>N$, we can gaurantee that $|z-z_n|<\varepsilon/2$. Further, for $n>2/\varepsilon$, we have $1/n<\varepsilon/2$. So $n>\max\{N,2/\varepsilon\}$ will have $\sigma n>\max\{N,2/\varepsilon\}$, implying
+	\[|w-z_n|<1/n<\varepsilon/2\implies|w-z|<|w-z_n|+|z-z_n|=\varepsilon\implies w\in B(z,\varepsilon)\subseteq U,\]
+	so $B(z_n,1/n)\subseteq U$. This contradiction finishes.
+\end{proof}
 This is saying that there is a universal $\varepsilon$ that we can find for our open cover.
 \begin{lemma}
 	Fix $X$ a bounded set. Then, for any $\varepsilon>0$, there exist finitely many points $z_1,\ldots,z_n$ such that
@@ -130,22 +139,28 @@ This is saying that there is a universal $\varepsilon$ that we can find for our 
 \begin{proof}
 	The point is to reduce this to the case of $[-M,M]^2$ which can cover $X$ by boundedness, and then we can create the cover for $X$ by hand.
 \end{proof}
-Now let's attack our statements directly.
+Now let's attack one of our equivalent conditions for compactness.
 \closedbounded*
 \begin{proof}
 	The forwards direction we have already done.
 
-	In the backwards direction, suppose that $\{z_n\}_{n\in\NN}\subseteq X$ is some sequence. By boundedness, we can choose $w_{1,1},\ldots,w_{1,\ell_1}$ such that
+	In the backwards direction, suppose that $\{z_n\}_{n\in\NN}\subseteq X$ is some sequence. Our main goal is to construct a convergent subsequence. By boundedness, we can choose $w_{1,1},\ldots,w_{1,\ell_1}$ such that
 	\[X\subseteq\bigcup_{k=1}^{\ell_1}B(w_{1,k},1/2).\]
-	Now, because $\{z_n\}_{n\in\NN}$ is infinite, there must be some index $k_1$ such that
-	\[L_1=\{n\in\NN:z_n\in B(w_{1,k},1/2)\}\]
+	Now, because $\{z_n\}_{n\in\NN}$ is infinite, there must be some index $w_1:=w_{1,k_1}$ such that
+	\[L_1=\{n\in\NN:z_n\in B(w_{1,k_1},1/2)\}\]
 	is infinite. The important point is that $\{z_n\}_{n\in L_1}$ has formed a subsequence which lives inside of a ball of radius $1/2$. We can continue this process: by boundedness, we can find some $w_{2,1},\ldots,w_{2,\ell_2}\in B(w_{1,k_1},1/2)$ such that
 	\[B(w_{1,k_1},1/2)\subseteq\bigcup_{k=1}^{\ell_2}B(w_{2,k},1/4).\]
-	Then we can choose $L_2$ from here by choosing one of the $w_{w,k}$ with infinitely many indices. Continuing this process forces our sequence to converge.
+	Then we can choose $L_2$ from here by choosing one of the $w_{2,k}$ with infinitely many indices. Continuing this process forces our sequence to converge.
 
-	To more explicitly appeal to choice, we note that we can always find some sequence $\{w_{i,n}\}\subseteq X$ such that
-	\[L_i:=\{n\in\NN:|z_i-w_{i,j}|<2^{-j}\}\]
-	is infinite. To fix this problem, we define a choice function over our indices: define $\varphi:\NN\to\NN$ such that $\varphi(k+1)$ is the smallest number exceeding $\varphi(k)$ with $\varphi(k+1)\in L_{k+1}$. Then we know that
-	\[|z_{\varphi(k)}-w_{i,j}|<2^{-j}\]
-	for each $1\le j\le k$. Then with geometric error, the $z_{\varphi(k)}$ will be Cauchy and hence must converge. But $X$ is closed, so the limit must be lie in $X$, finishing.
+	To more explicitly appeal to choice, we note that we can always find some sequence $\{w_{k,i}\}\subseteq X$ such that
+	\[X\subseteq\bigcup_{k=1}^{\ell_n}B(w_{k,i},1/2^k),\]
+	but $L_{i-1}$ is infinite, so there is a specific $w_k:=w_{k,i}$ such that
+	\[L_i:=\{n\in L_{i-1}:|z_n-w_{k}|<2^{-k}\}\]
+	is infinite. To actually construct our sequence from these infinite subsets, we define a choice function over our indices: define $\varphi:\NN\to\NN$ such that $\varphi(n+1)$ is the smallest number exceeding $\varphi(n)$ with $\varphi(n+1)\in L_{n+1}$. Then we know that
+	\[|z_{\varphi(n)}-w_{k}|<2^{-n}\]
+	for each $1\le k\le n$. Thus, for $n\ge m>N$, we have
+	\[|z_{\varphi(n)}-z_{\varphi(m)}|\le|z_{\varphi(n)}-w_m|+|z_{\varphi(n)}-w_m|<2\cdot2^{-m}<2^{-N+1},\]
+	so for any $\varepsilon>0$, we can choose $N:=1-\log_2\varepsilon$ sufficiently large so that $n,m>N$ implies
+	\[|z_{\varphi(n)}-z_{\varphi(m)}|<2^{-N+1}=\varepsilon.\]
+	It follows that the subsequence defined by $\varphi$ is Cauchy and hence converges. But because $X$ is closed, any convergent sequence in $X$ will be in $X$, so our sequence in $X$ has a convergent subsequence.
 \end{proof}
