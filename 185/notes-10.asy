@@ -8,16 +8,11 @@ settings.embed=true;
 settings.toolbar=false;
 viewportmargin=(2,2);
 
-unitsize(1cm);
-draw(circle((-1,0),1), dashed);
-draw(circle((2,0), 1.7), dashed);
-fill((-1.5,0) .. (-0.7,0.3) .. (-1, -0.7) .. cycle, lightgray);
-fill((2,-1.3) .. (3.5,-0.5) .. (1, 0.7) .. cycle, lightgray);
-
-pair u1 = (-1,0) + 0.3*dir(200);
-pair u2 = (2,0) + 1*dir(30);
-dot("$u_1$", u1, W);
-dot("$u_2$", u2, E);
-label("$U_1$", (-1,-1), S);
-label("$U_2$", (2,-1.7), S);
-draw(u1 -- u2, red);
+unitsize(0.7cm);
+draw((0,0) .. (1,0.3) .. (1.7,-0.5) .. (4,0.1) .. (6,0), arrow=EndArrow, p=red);
+draw((6,0) .. (6,-1) .. (8,0) .. (10,-1) .. (9,1), arrow=EndArrow, p=blue);
+dot("$t=0$", (0,0), W);
+dot("$t=1$", (6,0), NE);
+dot("$t=2$", (9,1), NW);
+label("$\gamma_1$", (4,0.1), NNW, red);
+label("$\gamma_2$", (11,0.1), E, blue);

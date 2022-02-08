@@ -9,9 +9,15 @@ settings.toolbar=false;
 viewportmargin=(2,2);
 
 unitsize(1cm);
-dot("$z$", (-5,0), W);
-dot("$w$", (0,0), S);
-dot("$p$", dir(40), dir(40));
-draw((-5,0) .. (-4,-0.3) .. (-1,0.1) .. (0,0));
-draw(circle((0,0), 1.7), dashed);
-draw((0,0) -- dir(40));
+draw(circle((-1,0),1), dashed);
+draw(circle((2,0), 1.7), dashed);
+fill((-1.5,0) .. (-0.7,0.3) .. (-1, -0.7) .. cycle, lightgray);
+fill((2,-1.3) .. (3.5,-0.5) .. (1, 0.7) .. cycle, lightgray);
+
+pair u1 = (-1,0) + 0.3*dir(200);
+pair u2 = (2,0) + 1*dir(30);
+dot("$u_1$", u1, W);
+dot("$u_2$", u2, E);
+label("$U_1$", (-1,-1), S);
+label("$U_2$", (2,-1.7), S);
+draw(u1 -- u2, red);
