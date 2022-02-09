@@ -1,0 +1,135 @@
+% !TEX root = ../notes.tex
+
+Welcome back everybody.
+
+\subsection{Defining Translation}
+As a fun exercise, for the next few lectures we will be reducing the number of connectives we really have to talk about. Recall that two formulae $\varphi,\psi\in\mathcal L(P)$ are equivalent if and only if each valuation $V:P\to\{0,1\}$ has $\hat V(\varphi)=\hat V(\psi)$.
+
+Our main goal for today is to show that any formula in our language is equivalent to a formula whose only connectives are $\lnot$ and $\land$.
+\begin{remark}
+	One reason we might care is that this reduces the number of logic gates that we would need. Another reason we might care is that, for proofs on truth values, it reduces our headaches in checking if something is true for any connective if we simply get rid of all connectives.
+\end{remark}
+The main idea in the proof is to define a translation function $T:\mathcal L(P)\to\mathcal L(P)$, where the output should only use the connectives $\lnot,\land,\lor$ and be equivalent to the original input formula. We define $T$ recursively, as follows; fix $\varphi,\psi\in\mathcal L(P)$.
+\begin{itemize}
+	\item We define $T(p):=p$ for any atomic formula $p\in P$.
+	\item We define $T(\lnot\varphi):=\lnot T(\varphi)$. Note that this does not mean we output $\lnot\varphi$: we still need to translate $\varphi$, but the negation in front of $\varphi$ is safe.
+	\item We define $T((\varphi\land\psi)):=(T(\varphi)\land T(\psi))$. Again, the point is that we don't care about the connective, but we still need to translate $\varphi$ and $\psi$.
+\end{itemize}
+The next three clauses are more difficult.
+\begin{itemize}
+	\item We define $T((\varphi\lor\psi)):=\lnot(\lnot T(\varphi)\land\lnot T(\psi))$. The equivalence is de Morgan's laws: saying that ``we are going to the beach or hiking'' is the same as ``it is not the case that we are neither going to the beach nor going hiking.''
+	\item We define $T((\varphi\to\psi)):=\lnot(T(\varphi)\land\lnot T(\psi))$. The equivalence is by noting $(\varphi\to\psi)$ simply means $(\lnot\varphi\lor\psi)$, so we get this by applying de Morganls laws.
+	\item We define $T((\varphi\leftrightarrow\psi))=\big(\lnot(T(\varphi)\land\lnot T(\psi))\land\lnot(T(\psi)\land\lnot T(\varphi))\big)$. The idea here is that $(\varphi\leftrightarrow\psi)$ means $(\varphi\to\psi)\land(\psi\to\varphi)$.
+\end{itemize}
+\begin{exe}
+	We compute $T(\lnot(p\to(q\lor r)))$.
+\end{exe}
+\begin{proof}
+	We mindlessly apply our translation rules. This gives
+	\begin{align*}
+		T(\lnot(p\to(q\lor r))) &= \lnot {\color{red}T((p\to(q\lor r)))} \\
+		&= \lnot\lnot(T(p)\land\lnot {\color{red}T(q\lor r)}) \\
+		&= \lnot\lnot({\color{red}T(p)}\land\lnot\lnot(\lnot {\color{red}T(q)}\land\lnot {\color{red}T(r)})) \\
+		&= \boxed{\lnot\lnot(p\land\lnot\lnot(\lnot q\land\lnot r))},
+	\end{align*}
+	which finishes. This formula might look worse (it's longer), but it only involves only $\lnot$ and $\land$. We remark that we can get rid of $\lnot\lnot$ to get an equivalent formula, which gives $p\land\lnot q\land\lnot r$.
+\end{proof}
+
+\subsection{Rigorizing Translation}
+Now let's actually prove that we translated correctly.
+\begin{theorem}
+	Any formula $\varphi\in\mathcal L(P)$ is equivalent to a formula whose only connectives are $\lnot$ and $\land$.
+\end{theorem}
+\begin{proof}
+	The main idea is to use our translation $T$ defined above. We have two different main claims.
+	\begin{lemma}
+		Any formula $\varphi\in\mathcal L(P)$ only uses $\lnot$ and $\land$ as its connectivs.
+	\end{lemma}
+	\begin{proof}
+		This is an induction which we can see directly. Let $S\subseteq\mathcal L(P)$ be the set of formula such that $\varphi\in S$ if and only if $T(\varphi)$ only uses the connectives $\lnot$ and $\land$. We have the following checks.
+		\begin{itemize}
+			\item We see that each $p\in P$ has $T(p)=p$ has no connectives at all.
+			\item For the inductive step, suppose $\varphi,\psi\in S$. Then we have the following checks.
+			\begin{itemize}
+				\item We see $T(\lnot\varphi)=\lnot T(\varphi)$ will only use $\lnot$ and $\land$ because $T(\varphi)$ will only use $\lnot$ and $\varphi$.
+				\item We see $T((\varphi\land\psi)):=(T(\varphi)\land T(\psi))$ will only use $\lnot$ and $\land$ because $T(\varphi)$ and $T(\psi)$ will only use $\lnot$ and $\varphi$.
+				\item We see $T((\varphi\lor\psi)):=\lnot(\lnot T(\varphi)\land\lnot T(\psi))$ will only use $\lnot$ and $\land$ because $T(\varphi)$ and $T(\psi)$ will only use $\lnot$ and $\varphi$.
+				\item We see $T((\varphi\to\psi)):=\lnot(T(\varphi)\land\lnot T(\psi))$ will only use $\lnot$ and $\land$ because $T(\varphi)$ and $T(\psi)$ will only use $\lnot$ and $\varphi$.
+				\item We see $T((\varphi\leftrightarrow\psi))=\big(\lnot(T(\varphi)\land\lnot T(\psi))\land\lnot(T(\psi)\land\lnot T(\varphi))\big)$ will only use $\lnot$ and $\land$ because $T(\varphi)$ and $T(\psi)$ will only use $\lnot$ and $\varphi$.
+			\end{itemize}
+		\end{itemize}
+		From all these checks, we see that $S$ must contain $\mathcal L(P)$, so $S=\mathcal L(P)$, so we are done.
+	\end{proof}
+	\begin{lemma}
+		Any formula $\varphi\in\mathcal L(P)$ is equivalent to $T(\varphi)$.
+	\end{lemma}
+	\begin{proof}
+		We proceed by induction. For our base case, we are saying that $p\in P$ is equivalent to $T(p)=p$, which is clear.
+
+		For the inductive step, fix $\varphi$ and $\psi$ which are equivalent to their translation. We have the following checks.
+		\begin{itemize}
+			\item We show $(\varphi\lor\psi)$ is equivalent to $T((\varphi\lor\psi))$. Well, fix any valuation $V$, and we see that
+			\begin{align*}
+				\hat V((\varphi\lor\psi)) &= \max\{\hat V(\varphi),\hat V(\psi)\} \\
+				&\stackrel*= 1-\min\{1-\hat V(\varphi),1-\hat V(\psi)\}.
+			\end{align*}
+			The point is that we can check $\stackrel*=$ is true by a computation. Here is the table.
+			\[\begin{array}{c|c||c||c|c|c}
+				x & y & \max\{x,y\} & 1-x & 1-y & 1-\min\{1-x,1-y\} \\
+				\hline
+				1 & 1 & 1 & 0 & 0 & 1 \\
+				1 & 0 & 1 & 0 & 1 & 1 \\
+				0 & 1 & 1 & 1 & 0 & 1 \\
+				0 & 0 & 0 & 1 & 1 & 0
+			\end{array}\]
+			We continue. We see, because $\varphi$ is equivalent to $\hat V(\varphi)$ and similar for $\psi$, we see
+			\begin{align*}
+				\hat V((\varphi\lor\psi)) &= 1-\min\{1-\hat V(\varphi),1-\hat V(\psi)\} \\
+				&= 1-\min\{1-\hat V(T(\varphi)),1-\hat V(T(\psi))\} \\
+				&= 1-\min\{\hat V(\lnot T(\varphi)),\hat V(\lnot T(\psi))\} \\
+				&= 1-\hat V((\lnot T(\varphi)\land\lnot T(\psi))) \\
+				&= \hat V(\lnot(\lnot T(\varphi)\land\lnot T(\psi))).
+			\end{align*}
+			Thus, $(\varphi\lor\psi)$ is equivalent to $\lnot(\lnot T(\varphi)\land\lnot T(\psi))=T((\varphi\lor\psi))$, so we are done.
+			\item The cases of $\to$ and $\leftrightarrow$ are similar, so we will omit them.
+			\item We show $(\varphi\land\psi)$ is equivalent to $T((\varphi\land\psi))=(T(\varphi)\land T(\psi))$. But we can compute, for any valuation $V$,
+			\begin{align*}
+				\hat V((\varphi\land\psi)) &= \min\{\hat V(\varphi),\hat V(\psi)\} \\
+				&= \min\{\hat V(T(\varphi)),\hat V(T(\psi))\} \\
+				&= \hat V((T\varphi)\land T(\psi)),
+			\end{align*}
+			which finishes.
+			\item We show $\lnot\varphi$ is equivalent to $T(\lnot\varphi)=\lnot T(\varphi)$. But we can compute, for any valuation $V$,
+			\begin{align*}
+				\hat V(\lnot\varphi) &= 1-\hat V(\varphi) \\
+				&= 1-\hat V(T(\varphi)) \\
+				&= \hat V(\lnot T(\varphi)),
+			\end{align*}
+			which finishes.
+		\end{itemize}
+		The above checks complete our induction.
+	\end{proof}
+	The above two claims show that a formula $\varphi\in\mathcal L(P)$ is equivalent to some formula $T(\varphi)$, where $T(\varphi)$ only uses the connectives $\lnot$ and $\land$.
+\end{proof}
+\begin{remark}
+	We might want to optimize the check for, say, $(\varphi\lor\psi)$ being equivalent to $T((\varphi\lor\psi))$ by avoiding the table. However, this cannot really be done because we must deal with what $\lnot(\lnot T(\varphi)\land\lnot T(\psi))$ means sometime in the proof, which is where the $\stackrel*=$ equality comes from.
+\end{remark}
+\begin{remark}
+	The above checks were pretty annoying. But for any proof about truth in the future will now only have to check $\lnot$ and $\land$ in an inductive step.
+\end{remark}
+Explicitly, if we are trying to prove some property about formulae which is preserved by equivalence (namely, one that really only cares about formulae as truth functions), then our inductive step only has to deal with formulae which use $\land$ and $\lnot$.
+\begin{nex}
+	The property that a formula only contains one $\lnot$ connector is not preserved by equivalence. For example, $p$ is equivalent to $\lnot\lnot p$.
+\end{nex}
+
+\subsection{More Economy}
+There are other ways we can be ecnomical about our connectives. For example, we could only use $\lnot$ and $\lor$ using a translation function $S:\mathcal L(P)\to\mathcal L(P)$ as follows.
+\begin{itemize}
+	\item We define $S(p):=p$ for any $p\in P$.
+	\item We define $S(\lnot\varphi):=\lnot S(\varphi)$.
+	\item We define $S((\varphi\land\psi)):=\lnot(\lnot S(\varphi)\lor\lnot S(\psi))$.
+	\item We define $S((\varphi\land\psi)):=\lnot(\lnot S(\varphi)\lor\lnot S(\psi))$.
+	\item We define $S((\varphi\to\psi)):=(\lnot S(\varphi)\lor S(\psi))$.
+	\item We define $S((\varphi\leftrightarrow\psi)):=(\lnot(\lnot S(\varphi)\lor S(\psi))\lor\lnot(\lnot S(\psi)\lor S(\varphi)))$. Again, this comes from noting $(\varphi\leftrightarrow\psi)$ is the same as $((\varphi\to\psi)\land(\psi\to\varphi))$.
+\end{itemize}
+We will omit the checks that this is a valid translation.
