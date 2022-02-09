@@ -16,5 +16,5 @@ return x*x;
 }
 draw(graph(f,-1.5,1.5), red);
 label("$\left(y-x^2\right)$", (1,1), SE, red);
-draw((0,2.25)--(0,-1), blue);
-label("$(x)$", (0,-0.7), E, blue);
+draw((0,2.25)--(0,-0.5), blue);
+label("$(x)$", (0,1.8), E, blue);

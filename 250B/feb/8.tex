@@ -1,36 +1,92 @@
 % !TEX root = ../notes.tex
 
-Here we go.
+Today we discuss primary decomposition.
 
 \subsection{Minimal Primes}
 
 Let's talk a little bit about minimal prime ideals. In particular, suppose that we have a striclty descending chain of prime ideals
 \[\mf p_1\supseteq\mf p_2\supseteq\cdots.\]
-Because prime ideals are closed under intersection in the chain, Zorn's lemma now promises us a minimal prime ideal. In fact, for any ideal $I$, there will be a minimal prime contained in $I$; indeed, there is a maximal ideal over $I$ which will show that some prime exists, and Zorn's lemma lets us find a minimal ideal.
-We might call such a prime ideal a minimal prime ideal over $I$.
+Because prime ideals are closed under intersection in the chain, Zorn's lemma now promises us a minimal prime ideal.
+
+More generally, we have the following definition.
+\begin{definition}[Minimal prime]
+	Fix $R$ a ring and $I\subseteq R$ an ideal. Then a prime $\mf p\subseteq R$ is a \textit{minimal prime ideal over $I$} if $\mf p$ is a minimal element of the set of prime ideals containing $I$.
+\end{definition}
+The above Zorn's lemma argument shows that these minimal primes actually exist.
+\begin{proposition}
+	Fix $R$ a ring and $I\subsetneq R$ a proper ideal. Then there is a minimal prime $\mf p$ over $I$.
+\end{proposition}
+\begin{proof}
+	We will be a little more careful than the above discussion. Let $\mathcal P$ be the set of primes containing $I$, and we partial order $\mathcal P$ by inclusion. Note that $I$, being a proper ideal, is contained in some maximal ideal $\mf m$, so $\mf m\in\mathcal P$. Thus, $\mathcal P$ is nonempty.
+
+	To apply Zorn's lemma to get out a minimal element, we need to show that any descending chain in $\mathcal P$ is bounded below. Well, suppose that we have a chain
+	\[\mf p_1\supseteq\mf p_2\supseteq\mf p_3\supseteq\cdots\]
+	of prime ideals containing $I$. Then we set
+	\[\mf p:=\bigcap_{k=1}^\infty\mf p_k.\]
+	We claim that $\mf p\in S$, which will finish by Zorn's lemma. Because $I\subseteq\mf p_k$ for each $\mf p_k$, we have $I\subseteq\mf p$. Because each $\mf p_k$ is an ideal, the intersection $\mf p$ will be an ideal.
+	
+	Lastly, to see that $\mf p$ is prime, suppose that $xy\in\mf p$ so that we need to show $x\in\mf p$ or $y\in\mf p$. If $x\in\mf p_k$ for each $\mf p_k$, then $x\in\mf p$, and we are done. Otherwise there exists $\mf p_N$ such that $x\notin\mf p_N$, but then for any $n\ge N$, we have $\mf p_n\subseteq\mf p_N$, so $x\notin\mf p_n$ as well. But because $xy\in\mf p_n$, we see that
+	\[y\in\mf p_n\]
+	for each $n\ge N$. Because $\mf p_N\subseteq\mf p_m$ for each $m\le N$, we see that in fact $y\in\mf p_k$ for each $k$. Thus $y\in\mf p$.
+\end{proof}
 
 In the Noetherian case, our minimal primes are somewhat controlled.
-\begin{lemma}
-	Fix $R$ a Noetherian ring. Then there are only finitely many minimal prime ideals over a fixed ideal $I\subseteq R$.
-\end{lemma}
-\begin{proof}
-	Suppose for the sake of contradiction we have an ideal for which there are infinitely many prime ideals. Then by the Noetherian condition, we may find a maximal such ideal, and we name it $I$. But then we can look at $R/I$, so it suffices to consider $I=(0)$.
-
-	Now, $I$ cannot itself be prime, so there are $a,b\in R$ such that $a,b\notin I$ while $ab\in I$. But now, for any minimal prime $\mf p$ over $I$, we have $ab\in\mf p$, so $a\in\mf p$ or $b\in\mf p$, so in fact $\mf p$ is minimal over either $I+(a)$ or $I+(b)$. But $I+(a)$ and $I+(b)$ are strictly larger than $I$, so they have only finitely many minimal prime ideals, so it follows $I$ will only have finitely minimal prime ideals.
-\end{proof}
-\begin{remark}
-	Last time we showed that a finitely generated module $M$ over a Noetherian ring $R$ has $\op{Ass}M$ is finite. But in fact \autoref{prop:minassprimes} shows that any minimal prime over $\op{Ann}M$ will be associated, so there will be finitely many of these. This provides an alternate proof of the result upon taking $M:=R/I$ so that $\op{Ann}M=I$.
-\end{remark}
-To set up an application, we have the following definition.
-\begin{defi}
-	Fix $X\subseteq\AA^n(k)$ an affine algebraic set. Then $X$ is \textit{irreducible} if and only if $I(X)\subseteq k[x_1,\ldots,x_n]$ is prime; i.e., $A(X)$ is an integral domain.
-\end{defi}
-As an application, consider any algebraic set $X\subseteq\AA^n(k)$. Then a minimal prime $\mf p$ over $I(X)$, of which we know there are finitely many, so we call them
-\[\{\mf p_1,\ldots,\mf p_n\}.\]
-However, the intersection of all these primes will be the intersection of all the primes containing $I(X)$, which is the radical of $I(X)$, which is $I(X)$. Speaking geometrically, this means that any algebraic set is a finite union of maximal irreducible algebraic set.
-\begin{prop}
-	Fix $I:=\left(yx-x^3\right)$, and we decompose $Z(I)$.
+\begin{prop} \label{prop:finminprimes}
+	Fix $R$ a Noetherian ring and $I\subseteq R$ an ideal. Then there are only finitely many minimal prime ideals over $I$.
 \end{prop}
+\begin{proof}[Proof 1]
+	Note $I=R$ has no minimal prime ideals over $R$, so we only consider proper ideals. Suppose for the sake of contradiction we have a proper ideal $J$ for which there are infinitely many minimal prime ideals over $J$. Then, because $R$ is Noetherian, we may find a maximal such ideal, and we name it $I$.
+	
+	Note that if $I$ is prime, then $I$ is the unique minimal prime over $I$, for any minimal prime over $I$ which is contained in $I$ must equal $I$. Thus, $I$ cannot be prime, so there exist $a,b\in R$ such that $a,b\notin I$ while $ab\in I$. Now we look at
+	\[I+(a)\qquad\text{and}\qquad I+(b).\]
+	In particular, $I$ is a strict subset of both $I+(a)$ and $I+(b)$, so maximality of $I$ forces $I+(a)$ and $I+(b)$ to have only finitely many minimal prime ideals over them. Let $\mathcal P_a$ and $\mathcal P_b$ be the finite sets of minimal primes over $I+(a)$ and $I+(b)$, respectively.
+
+	To finish, we claim that the set of minimal primes over $I$ is a subset $\mathcal P_a\cup\mathcal P_b$, which will be enough because it will show that there are only finitely many minimal primes over $I$, a contradiction. Indeed, suppose $\mf p$ is a minimal prime over $I$. Then $ab\in\mf p$, so $a\in\mf p$ or $b\in\mf p$; without loss of generality, we take
+	\[I+(a)\subseteq\mf p.\]
+	So we claim that $\mf p\in\mathcal P_a$. Indeed, if a prime $\mf q$ is contained in $\mf p$ while containing $I+(a)$, then $\mf q$ is a prime contained in $\mf p$ while containing $I$, so minimality of $\mf p$ implies $\mf p=\mf q$. This finishes.
+\end{proof}
+\begin{proof}[Proof 2]
+	We can use the machinery of associated primes we have been building. Note that $R/I$ is a finitely generated $R$-module, and $x\in\op{Ann}R/I$ if and only if $x\cdot[r]_I=[0]_I$ for all $r\in R$ if and only if $xr\in I$ for all $r\in R$ if and only if $x\in I$ (by taking $r=1$). Thus,
+	\[\op{Ann}R/I=I.\]
+	Now, any prime minimal over $I$ will be a minimal prime containing $\op{Ann}R/I$, which by \autoref{prop:minassprimes} will be a prime associated to $R/I$. Thus, the set of minimal primes over $I$ is a subset of
+	\[\op{Ass}R/I,\]
+	which is finite by \autoref{thm:finass}.
+\end{proof}
+
+\subsection{Primary Decomposition for Geometers}
+We note that \autoref{prop:finminprimes} has the following corollary.
+\begin{corollary} \label{cor:easyprimarydecomp}
+	Fix $R$ a Noetherian ring and $I\subseteq R$ an ideal. Then $\rad I$ is the intersection of finitely many prime ideals.
+\end{corollary}
+\begin{proof}
+	By \autoref{prop:radprimes}, we write
+	\[\rad I=\bigcap_{I\subseteq\mf p}\mf p.\]
+	Letting $\mathcal P$ be the set of minimal primes over $I$, we see that each $\mf p$ over $I$ has some $\mf P_\mf p\in\mathcal P$ such that $\mf P_\mf p\subseteq\mf p$ (for otherwise $\mf p$ ought be minimal). Thus,
+	\[\bigcap_{\mf p\in\mathcal P}\mf p\subseteq\bigcap_{I\subseteq\mf p}\mf p\subseteq\bigcap_{I\subseteq\mf p}\mf P_\mf p\subseteq\bigcap_{\mf p\in\mathcal P}\mf p,\]
+	so equalities follow. Thus, $\rad I$ is equal to the intersection of the primes in $\mathcal P$, of which there are finitely many by \autoref{prop:finminprimes}.
+\end{proof}
+We close with a geometric interpretation of \autoref{cor:easyprimarydecomp}. We have the following definition.
+\begin{defi}[Irreducible]
+	Fix $X\subseteq\AA^n(k)$ an affine algebraic set. Then $X$ is \textit{irreducible} if and only if $I(X)\subseteq k[x_1,\ldots,x_n]$ is prime; i.e., $A(X)$ is an integral domain. We might call $X$ a \textit{variety} in this case.
+\end{defi}
+As an application, consider any algebraic set $X\subseteq\AA^n(k)$. Then we know that $I(X)$ is radical, so \autoref{cor:easyprimarydecomp} is saying that we can decompose
+\[I(X)=\bigcap_{\mf p\in\mathcal P}\mf p,\]
+where $\mathcal P$ is the finite collection of minimal primes over $I(X)$. Taking zero-sets everywhere, we see that\footnote{If $x\in Z(I\cap J)$ while $x\notin Z(J)$, then there is $g\in J$ such that $g(x)\ne0$; but $x\in Z(I\cap J)$ means that each $f\in I$ has $(fg)(x)=0$, forcing $f(x)=0$. Conversely, if $x\in Z(I)$ (without loss of generality), $x$ will also vanish on $I\cap J$.} $Z(I\cap J)=Z(I)\cup Z(J)$, so
+\[X=Z(I(X))=Z\left(\bigcap_{\mf p\in\mathcal P}\mf p\right)=\bigcup_{\mf p\in\mathcal P}Z(\mf p).\]
+Now, $I(Z(\mf p))=\rad\mf p$ by the Nullstellensatz, and $\rad\mf p=\mf p$ be primality, so the point of the above is that we have written an arbitrary algebraic set $X$ as a union of finitely many irreducible algebraic sets $Z(\mf p)$.
+\begin{corollary}
+	Fix $X\subseteq\AA^n(k)$ an algeraic set. Then $X$ can be written as the union of finitely many irreducible algebraic sets.
+\end{corollary}
+\begin{proof}
+	This follows from the above discussin.
+\end{proof}
+And now let's see a physical example.
+% a minimal prime $\mf p$ over $I(X)$, of which we know there are finitely many, so we call them
+% \[\{\mf p_1,\ldots,\mf p_n\}.\]
+% However, the intersection of all these primes will be the intersection of all the primes containing $I(X)$, which is the radical of $I(X)$, which is $I(X)$. Speaking geometrically, this means that any algebraic set is a finite union of maximal irreducible algebraic set.
+\begin{exe}
+	Fix $I:=\left(yx-x^3\right)\subseteq k[x_1,x_2]$, and we decompose $Z(I)\subseteq\AA^2(k)$ into irreducibles.
+\end{exe}
 \begin{proof}
 	Well, $yx-x^3=0$ if and only if $x=0$ or $y-x^2=0$, so
 	\[I=(x)\cap\left(y-x^2\right).\]
@@ -45,17 +101,17 @@ However, the intersection of all these primes will be the intersection of all th
 			}
 			draw(graph(f,-1.5,1.5), red);
 			label("$\left(y-x^2\right)$", (1,1), SE, red);
-			draw((0,2.25)--(0,-1), blue);
-			label("$(x)$", (0,-0.7), E, blue);
+			draw((0,2.25)--(0,-0.5), blue);
+			label("$(x)$", (0,1.8), E, blue);
 		\end{asy}
 	\end{center}
-	Now we note $(x)$ and $\left(y-x^2\right)$.
+	Now we note $(x)$ and $\left(y-x^2\right)$ are prime ideals.
 \end{proof}
 
 \subsection{Primary Grab-Bag}
-We saw that, in the case where $I$ was a radical ideal, we could write it as a finite intersection of prime ideals. Primary decomposition provides us with a general theory for non-radical ideals; let's start building towards that.
+In \autoref{cor:easyprimarydecomp}, we saw that when $I$ was a radical ideal, we could write it as a finite intersection of prime ideals. Primary decomposition provides us with a general theory to do something similar for arbitrary modules. Let's start building towards that.
 
-We recall the following definition.
+We pick up the following definitions.
 \begin{definition}[\texorpdfstring{$\mf p$}{p}-primary]
 	Fix $M$ a finitely generated module over $R$ a Noetherian ring. Then a submodle $N\subseteq M$ is \textit{$\mf p$-primary} if and only if $\op{Ass}M/N=\{\mf p\}$.
 \end{definition}
