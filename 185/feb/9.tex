@@ -1,0 +1,182 @@
+% !TEX root = ../notes.tex
+
+\subsection{More Compactness}
+To wrap up from last class, we show the following.
+\heineborel*
+\begin{proof}
+	The direction that sequentially compact implies closed and bounded was done on the homework.
+	
+	We focus on the other direction. Fix $\mathcal U$ an open cover of $X$. By \autoref{lem:singleepsilon}, we know there exists $\varepsilon>0$ suchthat, for each $z\in X$, there is some $U\in\mathcal U$ such that $B(z,\varepsilon)\subseteq U$. But in fact, with this $\varepsilon>0$, \autoref{lem:easycover} tells us that there exists finitely many pointsWe many $z_1,\ldots,z_\ell$ such that
+	\[X\subseteq\bigcup_{k=1}^\ell B(z_k,\varepsilon).\]
+	But now, finding $U_k$ such that $B(z_k,\varepsilon)\subseteq U_k$ (possible by construction of $\varepsilon$), we see that $\{U_k\}_{k=1}^\ell$ will be our finite subcover.
+\end{proof}
+\begin{remark}
+	The conclusion of the above theorem is the usual notion of compactness, so I will stop writing ``(sequentially)'' whenever I say ``copmact.''
+\end{remark}
+Let's see a use for our definitions of compactness.
+\begin{corollary}
+	Let $X\subseteq\CC$ be a compact space and $f:X\to\CC$ continuous. Then $f(X)$ is compact.
+\end{corollary}
+\begin{proof}
+	Give $f(X)$ some open cover $\mathcal U$. Because $f$ is continuous, we see that
+	\[\left\{f^{-1}(U)\right\}_{U\in\mathcal U}\]
+	is an open cover for $X$. But $X$ is compact, so we can find some finite subcover $\{U_k\}_{k=1}^n\subseteq\mathcal U$ so that $\left\{f^{-1}(U_k)\right\}_{k=1}^n$ covers $X$. But then the $\{U_k\}_{k=1}^n$ will cover $X$ by unioning over our open subcover.
+\end{proof}
+
+\subsection{Uniform Continuity}
+The point of uniform convergence is to make fewer choices in our notion of continuity.
+\begin{definition}[Uniform continuity]
+	Fix $X\subseteq\CC$ a nonempty subset. Then a function $f:X\to\CC$ is \textit{uniformly continuous} if and only if, for each $\varepsilon>0$, there exists a single $\delta>0$ so that $z,w\in X$ have
+	\[|z-w|<\delta\implies|f(z)-f(w)|<\varepsilon.\]
+\end{definition}
+Importantly, this definition has $\delta$ not depend on either $z$ nor $w$, where continuity would allow $\delta$ to depende on one of them.
+
+Here is a nice result.
+\begin{proposition}
+	Fix $X$ a nonempty, compact subset. Then any continuous function $f:X\to\CC$ is uniformly continuous.
+\end{proposition}
+\begin{proof}
+	The point is to let $\delta\to0$ until we can fit some prescribed $\varepsilon$ bound. Choose $\delta=1/n$ as $n$ varies over positive integers, and we imagine fixing sequences $\{z_n\}_{n=1}^\infty$ and $\{w_n\}_{n=1}^\infty$ such that
+	\[|z_n-w_n|<1/n.\]
+	Now we use the sequential compactness of $X$, which forces $\{z_n\}_{n=1}^\infty$ to have a convergent subsequence, so we conjure $\alpha\in X$ and a strictly increasing $\sigma:\NN\to\NN$ such that $z_{\sigma n}\to\alpha$ as $n\to\infty$.
+
+	We now claim that $w_{\sigma n}\to\alpha$ as well. In particular, for any $\delta>0$, there is some $N_1$ so that $n>N_1$ implies
+	\[|z_{\sigma n}-\alpha|<\delta/2.\]
+	Choosing $N$ to be larger than $N_1$ and $2/\delta$, we see that $n>N$ will have
+	\[|w_{\sigma n}-\alpha|\le|z_{\sigma n}-w_{\sigma n}|+|z_{\sigma n}-\alpha|<\frac1{\sigma n}+\frac\delta2\le\frac1n+\frac\delta2<\frac\delta2+\frac\delta2=\delta,\]
+	so indeed $w_{\sigma n}\to\alpha$ as $n\to\infty$.
+
+	Only now we suppose for the sake of contradiction we have some $\varepsilon>0$ such that any $\delta>0$ has some $z$ and $w$ such that $|z-w|<\delta$ actually has $|f(z)-f(w)|\ge\varepsilon$. Taking $\delta:=1/n$, we are promised some sequences $\{z_n\}_{n=1}^\infty$ and $\{w_n\}_{n=1}^\infty$ so that
+	\[|z_n-w_n|<\delta\qquad\text{and}\qquad|f(z_n)-f(w_n)|\ge\varepsilon.\]
+	Using the above machinery, we see that $z_{\sigma n}\to\alpha$ and $w_{\sigma n}\to\alpha$ force $f(z_{\sigma n})\to f(\alpha)$ and $f(w_{\sigma n})\to f(\alpha)$ by continuity of $f$, but the sequences $f(z_{\sigma n})$ and $f(w_{\sigma n})$ are supposed to be $\varepsilon$ far apart! Explicitly, we can find sufficiently large $N_1$ and $N_2$ such that
+	\begin{align*}
+		n>N_1&\implies|f(z_{\sigma n})-\alpha|<\varepsilon/4, \\
+		n>N_2&\implies|f(w_{\sigma n})-\alpha|<\varepsilon/4,
+	\end{align*}
+	which by the triangle inequality means that any $n>\max\{N_1,N_2\}$ will give
+	\[|f(z_{\sigma n})-f(w_{\sigma n})|\le|f(z_{\sigma n})-\alpha|+|f(w_{\sigma n})-\alpha|\le\frac\varepsilon4+\frac\varepsilon4<\varepsilon,\]
+	which is a contradiction to the construction of $z_{\sigma n}$ and $w_{\sigma n}$.
+\end{proof}
+
+\subsection{Uniform Convergence}
+We next talk about uniform convergence for functions. Here is our starter pack.
+\begin{definition}[Sequence of functions]
+	Fix $X\subseteq\CC$ a nonempmty subset. Then a sequence of functions $\{f_n\}_{n\in\NN}$ is a function $\varphi:\NN\to(X\to\CC)$. Namely, for each $n\in\NN$, we are given a function $\varphi(n):X\to\CC$.
+\end{definition}
+\begin{definition}[Pointwise convergence]
+	Fix $\{f_n\}_{n\in\NN}$ a sequence of functions $X\to\CC$. Then \textit{$\{f_n\}$ converges to some $g:X\to\CC$ pointwise} if and only if, for each $z\in X$, we have $f_n(z)\to g(z)$ as $n\to\infty$. We write this as $f_n\to g$.
+\end{definition}
+This is called pointwise convergence because we are only checking convergence at each individual point $z\in X$, without caring about the larger sttructure of the function. This will cause problems later but not now.
+\begin{definition}[Bounded]
+	We say that a function $f:X\to\CC$ is \textit{bounded} if and only if $f(X)\subseteq\CC$ is bounded. In other words, there is some $M>0$ so that $f(X)\subseteq B(0,M)$.
+\end{definition}
+\begin{definition}[Uniform convergence]
+	Fix $\{f_n\}_{n\in\NN}$ a sequence of functions $X\to\CC$. Then \textit{$\{f_n\}$ converges to some $g:X\to\CC$ pointwise} if and only if, for each $\varepsilon>0$, there is some $N$ so that
+	\[n>N\implies|f_n(z)-g(z)|<\varepsilon\]
+	for each $z\in X$.
+\end{definition}
+The uniformity here is that the value of $N$ is no longer allowed to depend on $z$. Here is an alternate definition.
+\begin{proposition} \label{prop:definefuncdist}
+	Fix $\{f_n\}_{n\in\NN}$ a sequence of functions $X\to\CC$ and $g:X\to\CC$ some function. Then $\{f_n\}_{n\in\NN}$ converges uniformly to $g$ if and only if
+	\[\lim_{n\to\infty}\sup_{z\in X}\{|f_n(z)-g(z)|\}=0.\]
+\end{proposition}
+\begin{proof}
+	We take the directions independently.
+	\begin{itemize}
+		\item In the forward direction, we know that there is an $N_1$ so that $n>N_1$ implies each $z\in X$ has
+		\[|f_n(z)-g(z)|<1.\]
+		In particular, for $n>N_1$, the set $\{|f_n(z)-g(z)|:z\in X\}$ is bounded above by $1$, so the supremum will exist; set $y_n:=\sup\{|f_n(z)-g(z)|:z\in X\}$ so that we want to show $y_n\to0$ as $n\to\infty$.
+	
+		More generally, for any $\varepsilon>0$, there exists some $N$ so that $n>N_0$ implies
+		\[|f_n(z)-g(z)|<\varepsilon/2.\]
+		So $n>\max\{N_0,N_1\}$, we will have that $y_n=\sup\{|f_n(z)-g(z)|:z\in X\}$ both exists and has $y_n\le\varepsilon/2<\varepsilon$. So we do get $y_n\to0$ as $n\to\infty$.
+
+		\item In the reverse direction, set $y_n:=\sup\{|f_n(x)-g(x)|:x\in X\}$ so that $y_n\to0$ as $n\to\infty$. Namely, for each $\varepsilon>0$, there exists some $N$ so that $n>N$ has $y_n<\varepsilon$. In particular, we see $n>N$ has
+		\[|f_n(x_0)-g(x_0)|\le\sup\{|f_n(x)-g(x)|:x\in X\}=y_n<\varepsilon\]
+		for each $x_0\in X$. So indeed, $f_n$ converges to $g$ uniformly.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Distances Between Functions}
+Later in life it will be nice to view functions as forming a metric under $d(f,g):=\sup\{|f(x)-g(x)|\}$. However, this supremum need not only exist; here is one condition in which it does.
+\begin{lemma} \label{lem:distdefined}
+	Fix $f,g:X\to\CC$ bounded functions. Then $\sup\{|f(x)-g(x)|:x\in X\}$ exists.
+\end{lemma}
+\begin{proof}
+	Because $f$ is bounded, there exists $M_f$ so that each $x\in X$ has $|f(x)|<M_f$. Similarly, because $g$ is bounded, there exists $M_g$ so that each $x\in X$ has $|g(x)|<M_g$. It follows that, for each $x\in X$,
+	\[|f(x)-g(x)|\le|f(x)|+|g(x)|\le M_f+M_g,\]
+	so the set $\{|f(x)-g(x)|:x\in X\}$ is bounded above and in particular has a supremum.
+\end{proof}
+\begin{proposition}
+	Fix $f,g,h:X\to\CC$ all bounded functions. Then
+	\[\sup_{x\in X}\{|f(x)-h(x)|\}\le\sup_{x\in X}\{|f(x)-g(x)|\}+\sup_{x\in X}\{|g(x)-h(x)|\}.\]
+\end{proposition}
+Note that all the supremums above exist by \autoref{lem:distdefined}
+\begin{proof}
+	The point is to reduce to the typical triangle inequality. Indeed, for any $x\in X$, we see that
+	\[|f(x)-h(x)|\le|f(x)-g(x)|+|g(x)-h(x)|.\]
+	Thus,
+	\begin{align*}
+		\sup_{x\in X}\{|f(x)-h(x)|\} &\le \sup_{x\in X}\{|f(x)-g(x)|+|g(x)-h(x)|\} \\
+		&\le \sup_{x\in X}\{|f(x)-g(x)|\}+\sup_{x\in X}\{|g(x)-h(x)|\}.
+	\end{align*}
+	which is what we wanted. We have used the fact that $\sup(A+B)\le\sup A+\sup B$ for $A,B\subseteq\RR$, which is not hard to show: if $a+b\in A+B$, then $a\le\sup A$ and $b\le\sup B$, so $a+b\le\sup A+\sup B$; thus, $\sup(A+B)\le\sup A+\sup B$.\footnote{In fact, $\sup A+\sup B\le\sup(A+B)$ as well. We show $\sup A\le\sup(A+B)-\sup B$. Fixing $a\in A$, we need $a\le\sup(A+B)-\sup B$, so we show $\sup B\le\sup(A+B)-a$. Fixing $b\in B$, we need $b\le\sup(A+B)-a$, which is clear.}
+\end{proof}
+\begin{remark}[Nir]
+	Viewing \autoref{lem:distdefined} as providing a distance metric, the above proposition proves the triangle inequality for this metric.
+\end{remark}
+We can also build a Cauchy criterion for uniform convergence.
+\begin{prop}
+	A sequence of functions $\{f_n\}_{n\in\NN}$ a sequence of functions $X\to\CC$. Then $\{f_n\}_{n\in\NN}$ converges to some function uniformly if and only if, for any $\varepsilon>0$, there exists some $N$ so that $n,m>N$ implies
+	\[\sup_{x\in X}\{|f_n(x)-f_m(x)|\}<\varepsilon\]
+	for any $x\in X$.
+\end{prop}
+\begin{proof}
+	We again take the directions independently.
+	\begin{itemize}
+		\item Suppose that the sequence of functions $\{f_n\}_{n\in\NN}$ converges to a function $g$ uniformly. Then, for any $\varepsilon>0$, we are promised some $N$ so that $n>N$ will have
+		\[|f_n(x)-g(x)|<\varepsilon/4\]
+		for any $x\in X$. In particular, for any $n,m>N$, we see
+		\[|f_n(x)-f_m(x)|<|f_n(x)-g(x)|+|f_m(x)-g(x)|<\frac\varepsilon4+\frac\varepsilon4=\frac\varepsilon2,\]
+		so
+		\[\sup_{x\in X}\{|f_n(x)-f_m(x)|\}\le\frac\varepsilon2<\varepsilon,\]
+		which is what we wanted.
+		\item There are two steps.
+		\begin{itemize}
+			\item We begin by constructing $g$. Well, for each $x\in X$, we note that any $\varepsilon>0$ will have some $N$ so that $n,m>N$ implies
+			\[|f_n(x)-f_m(x)|\le\sup_{x\in X}\{|f_n(x)-f_m(x)|\}<\varepsilon,\]
+			so the sequence $\{f_n(x)\}_{n\in\NN}$ is a Cauchy sequence and hence converges in $\CC$. We define $g(x)$ to be the limit of $f_n(x)$ as $n\to\infty$.
+			\item Next we show the uniform convergence. Fix some $\varepsilon>0$. Then we are promised some $N$ so that $n,m>N$ has
+			\[\sup_{x\in X}\{|f_n(x)-f_m(x)|\}<\varepsilon.\]
+			In particular, for any $x\in X$
+			\[f_n(x)-g(x)=\lim_{m\to\infty}(f_n(x)-f_m(x)),\]
+			so because $z\mapsto|z|$ is continuous, any $n>N$ will have
+			\[|f_n(x)-g(x)|=\lim_{m\to\infty}|f_n(x)-f_m(x)|\le\lim_{m\to\infty}\sup_{z\in X}\{|f_n(x)-f_m(x)|\}<\lim_{m\to\infty}\varepsilon=\varepsilon,\]
+			where the last inequality holds by taking $m$ sufficiently large (that is, $m>N$). So we have been provided uniform convergence.
+			\qedhere
+		\end{itemize}
+	\end{itemize}
+\end{proof}
+\begin{remark}[Nir]
+	In the language of metric topology, the above proposition asserts that the space of (bounded) functions is metrically complete. For this, one must technically show that $\{f_n\}_{n\in\NN}$ being bounded implies that the convergent $g$ is bounded, but this is not hard: there is $N$ so that $n>N$ has $|f_n(x)-g(x)|<1$ for each $x\in X$.
+\end{remark}
+\begin{remark}
+	In lecture, Professor Morrow asserted that we require these functions to be bounded. I do not think this is the case; indeed, the above proof never uses this hypothesis.
+\end{remark}
+We close with one result which shows that uniform continuity is nice.
+\begin{proposition}
+	Fix $\{f_n\}_{n\in\NN}$ a sequence of functions $X\to\CC$ all continuous at some $x\in X$. If $\{f_n\}_{n\in\NN}$ converges uniformly to some function $g:X\to\CC$, then $g$ is also continuous.
+\end{proposition}
+\begin{proof}
+	The idea is to well-approximate $g$ by $f_n$s. Fix any $\varepsilon>0$. By the uniform convergence, there will be some $N$ so that
+	\[|f_n(z)-g(z)|<\varepsilon/3\]
+	for any $n>N$ and $z\in X$; fix some $n>N$. Because $f_n$ is continuous, we are promised some $\delta>0$ (allowed to vary with our chosen $x\in X$) so that
+	\[|z-x|<\delta\implies|f_n(z)-f_n(x)|<\varepsilon/3\]
+	for any $z\in X$. Well, if $|z-x|<\delta$, then the triangle inequality gives
+	\[|g(z)-g(x)|\le|g(z)-f_n(z)|+|f_n(z)-f_n(x)|+|f_n(x)-g(x)|<\frac\varepsilon3+\frac\varepsilon3+\frac\varepsilon3=\varepsilon,\]
+	which is what we needed.
+\end{proof}
+\begin{remark}[Nir]
+	In fact, if the $\{f_n\}_{n\in\NN}$ are uniformly continuous, then $g$ will also be uniformly continuous. The argument is similar.
+\end{remark}
