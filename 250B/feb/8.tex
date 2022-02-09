@@ -1,0 +1,220 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Minimal Primes}
+
+Let's talk a little bit about minimal prime ideals. In particular, suppose that we have a striclty descending chain of prime ideals
+\[\mf p_1\supseteq\mf p_2\supseteq\cdots.\]
+Because prime ideals are closed under intersection in the chain, Zorn's lemma now promises us a minimal prime ideal. In fact, for any ideal $I$, there will be a minimal prime contained in $I$; indeed, there is a maximal ideal over $I$ which will show that some prime exists, and Zorn's lemma lets us find a minimal ideal.
+We might call such a prime ideal a minimal prime ideal over $I$.
+
+In the Noetherian case, our minimal primes are somewhat controlled.
+\begin{lemma}
+	Fix $R$ a Noetherian ring. Then there are only finitely many minimal prime ideals over a fixed ideal $I\subseteq R$.
+\end{lemma}
+\begin{proof}
+	Suppose for the sake of contradiction we have an ideal for which there are infinitely many prime ideals. Then by the Noetherian condition, we may find a maximal such ideal, and we name it $I$. But then we can look at $R/I$, so it suffices to consider $I=(0)$.
+
+	Now, $I$ cannot itself be prime, so there are $a,b\in R$ such that $a,b\notin I$ while $ab\in I$. But now, for any minimal prime $\mf p$ over $I$, we have $ab\in\mf p$, so $a\in\mf p$ or $b\in\mf p$, so in fact $\mf p$ is minimal over either $I+(a)$ or $I+(b)$. But $I+(a)$ and $I+(b)$ are strictly larger than $I$, so they have only finitely many minimal prime ideals, so it follows $I$ will only have finitely minimal prime ideals.
+\end{proof}
+\begin{remark}
+	Last time we showed that a finitely generated module $M$ over a Noetherian ring $R$ has $\op{Ass}M$ is finite. But in fact \autoref{prop:minassprimes} shows that any minimal prime over $\op{Ann}M$ will be associated, so there will be finitely many of these. This provides an alternate proof of the result upon taking $M:=R/I$ so that $\op{Ann}M=I$.
+\end{remark}
+To set up an application, we have the following definition.
+\begin{defi}
+	Fix $X\subseteq\AA^n(k)$ an affine algebraic set. Then $X$ is \textit{irreducible} if and only if $I(X)\subseteq k[x_1,\ldots,x_n]$ is prime; i.e., $A(X)$ is an integral domain.
+\end{defi}
+As an application, consider any algebraic set $X\subseteq\AA^n(k)$. Then a minimal prime $\mf p$ over $I(X)$, of which we know there are finitely many, so we call them
+\[\{\mf p_1,\ldots,\mf p_n\}.\]
+However, the intersection of all these primes will be the intersection of all the primes containing $I(X)$, which is the radical of $I(X)$, which is $I(X)$. Speaking geometrically, this means that any algebraic set is a finite union of maximal irreducible algebraic set.
+\begin{prop}
+	Fix $I:=\left(yx-x^3\right)$, and we decompose $Z(I)$.
+\end{prop}
+\begin{proof}
+	Well, $yx-x^3=0$ if and only if $x=0$ or $y-x^2=0$, so
+	\[I=(x)\cap\left(y-x^2\right).\]
+	So here is the image of $Z(I)$.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			import graph;
+			real f(real x)
+			{
+				return x*x;
+			}
+			draw(graph(f,-1.5,1.5), red);
+			label("$\left(y-x^2\right)$", (1,1), SE, red);
+			draw((0,2.25)--(0,-1), blue);
+			label("$(x)$", (0,-0.7), E, blue);
+		\end{asy}
+	\end{center}
+	Now we note $(x)$ and $\left(y-x^2\right)$.
+\end{proof}
+
+\subsection{Primary Grab-Bag}
+We saw that, in the case where $I$ was a radical ideal, we could write it as a finite intersection of prime ideals. Primary decomposition provides us with a general theory for non-radical ideals; let's start building towards that.
+
+We recall the following definition.
+\begin{definition}[\texorpdfstring{$\mf p$}{p}-primary]
+	Fix $M$ a finitely generated module over $R$ a Noetherian ring. Then a submodle $N\subseteq M$ is \textit{$\mf p$-primary} if and only if $\op{Ass}M/N=\{\mf p\}$.
+\end{definition}
+\begin{definition}[\texorpdfstring{$\mf p$}{p}-coprimary]
+	Fix $M$ a finitely generated module over $R$ a Noetherian ring. Then $M$ is \textit{$\mf p$-coprimary} if and only if $\op{Ass}M=\{\mf p\}$.
+\end{definition}
+In other words, $N\subseteq M$ is $\mf p$-primary if and only if $M/N$ is $\mf p$-coprimary.
+
+We would like some more concrete conditions for being $\mf p$-primary.
+\begin{proposition}
+	Fix $M$ a finitely generated module over $R$ a Noetherian ring. Then the following are equivalent.
+	\begin{listalph}
+		\item $M$ is $\mf p$-coprimary.
+		\item $\mf p$ is the unique minimal prime over $\op{Ann}M$, and $\mf p$ contains $\op{Ann}m$ for each $m\in M$. % \todo{I don't think we have to assume that p is unique?}
+		\item $\mf p^n\subseteq\op{Ann}M$ for some positive integer $n$, and $\mf p$ contains $\op{Ann}m$ for each $m\in M$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We take our implications one at a time.
+	\begin{itemize}
+		\item We show that (a) implies (b). We are given that $\op{Ass}M=\{\mf p\}$. But we know that any prime minimal containing $\op{Ann}M$ will be associated (by \autoref{prop:minassprimes}), so $\mf p$ must be a minimal prime over $\op{Ann}M$.
+
+		Additionally, we recall from \autoref{prop:unionass} that
+		\[\bigcup_{m\in M\setminus\{0\}}\op{Ann}m=\bigcup_{\mf q\in\op{Ass}M}\mf q,\]
+		but $\op{Ass}M=\{\mf p\}$, so the result follows.
+
+		\item Recall that $\rad\op{Ann}M$ is the intersection of all primes containing $\op{Ann}M$, so $\mf p=\rad\op{Ann}M$, so $\mf p^n\subseteq\op{Ann}M$ for some positive integer $n$.
+
+		% Technically we must check that $\mf p$ is the unique minimal prime, so suppose 
+		\item We show that (c) implies (a). If $\mf p^n\subseteq\mf q\subseteq\mf p$ for some prime $\mf q$ containing $\op{Ann}M$, then $\mf q=\mf p$. So $\mf p$ is the unique minimal prime over $\op{Ann}M$, and the hypothesis implies that there are no other minimal primes.
+		% \todo{}
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary}
+	An ideal $I\subseteq R$ is $\mf p$-primary if and only if $\mf p^n\subseteq I$ and, for all $a\notin\mf p$, we have $ab\in I$ implies $b\in\mf p$.
+\end{corollary}
+\begin{proof}
+	This follows directly from the proposition.
+\end{proof}
+
+\subsection{Primary Decompositon}
+And here is our main result.
+\begin{theorem}[Primary decomposition, I]
+	Fix $M$ a finitely generated module over a Noetherian ring $R$. Then every submodule $N\subseteq M$ is the intersection of finitely many primary submodules.
+\end{theorem}
+\begin{proof}
+	The key to this result is to instead talk about irreducible decomposition.
+	\begin{definition}[Irreducible]
+		Fix $M$ a module over a ring $R$. Then a submodule $N\subseteq M$ is \textit{irreducible} if and only if $N=N_1\cap N_2$ implies $N=N_1$ or $N=N_2$.
+	\end{definition}
+	It will turn out that irreducible implies primary, but we do not know this.
+
+	Here is the key claim.
+	\begin{lemma}
+		Fix $M$ a finitely generated module over a Noetherian ring $R$. Then every submodule $N\subseteq M$ is the intersection of finitely many irreducible submodules.
+	\end{lemma}
+	\begin{proof}
+		Suppose for the sake of contradiction that the statement is false. Because $M$ is a Noetherian module, we can find a maximal such submodule $N$. Note that $N\ne M$ because $M$ is irreducible.
+
+		However, $N$ is not irreducible, so we can write $N=N_1\cap N_2$ for $N\subsetneq N_1,N_2$. But by hypothesis on $N$, we can write $N_1$ and $N_2$ as intersections of irreducible modules, so $N$ is also the intersection of irreducible modules, so we are done.
+	\end{proof}
+	\begin{remark}[Nir]
+		If you squint really hard, this is essentially the proof of existence of prime factorizatins.
+	\end{remark}
+	And now we can finish up.
+	\begin{lemma}
+		Fix $M$ a finitely generated module over a Noetherian ring $R$. Then any irreducible submodule $N\subsetneq M$ is primary.
+	\end{lemma}
+	\begin{proof}
+		We know that $\op{Ass}M/N$ is nonempty because $M\ne N$, so we need to show that there is exactly one prime; we proceed by contrapositin. So suppose $\mf p,\mf q\in\op{Ass}M/N$ which are distinct. But then by \autoref{lem:betterassociated}, we get embeddings
+		\[\iota_\mf p:R/\mf p\into M/N\qquad\text{and}\qquad \iota_\mf q:R/\mf p\into M/N.\]
+		However, the annihilator of any nonzero element in $\im\iota_\mf p$ and $\im\iota_\mf q$ will be $\mf p$ and $\mf q$ respectively, so $\im\iota_\mf p\cap\im\iota_\mf q=0$. So we can write
+		\[N=(\im\iota_\mf p+N)\cap(\im\iota_\mf q+N)\]
+		to break that $N$ is irreducible. (These are strictly larger because of where $\im\iota_\mf p$ and $\im\iota_\mf q$ are supposed to map to.)
+	\end{proof}
+	The above two lemmas finish the theorem.
+\end{proof}
+Let's try to make primary decomposition a little more canonical.
+\begin{theorem}[Primary decomposition, II]
+	Fix $M$ a finitely generated module over a Noetherian ring $R$. Then write some submodule $N\subseteq M$ as
+	\[N=\bigcap_{i=1}^nN_i\]
+	such that $N_i$ is $\mf p_i$-primary. Then the following are true.
+	\begin{listalph}
+		\item We have $\op{Ass}M/N\subseteq\{\mf p_1,\ldots,\mf p_n\}$.
+		\item If we cannot remove any $N_i$ from the decomposition, then equality in (a) holds.
+		\item If $n$ is as small as possible, then each $\mf p_i$ is unique.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We show these one at a time. For psychological reasons, we note that we may swap $M$ and $N$ with $M/N$ and $(0)$ to assume that $N=(0)$ (without loss of generality).
+	\begin{listalph}
+		\item Note that we have the sequence
+		\[M\into\bigoplus_{i=1}^nM/N_i\to 0\]
+		with kernel $N=(0)$. It follows that $\op{Ass}M$ is contained in $\bigcup_{i=1}^n\op{Ass}M/N_i=\{\mf p_1,\ldots,\mf p_n\}$.
+		\item We are given that, for each $j$, we have
+		\[K_j:=\bigcap_{i\ne j}N_i\ne0.\]
+		Now, $N_j\cap K=0$, so we can embed $K_j$ into $M/N_j$, so $\op{Ass}M/K_j=\{\mf p_j\}$, making $K_j$ into a $\mf p_j$-primary module. It follows that $\mf p_j\in\op{Ass}M$.
+		\item If there are any redundancies, then we intersect all of the redundancies for some prime $\mf p$ to remove the redundancies, so there will be at most one $\mf p$-primary ideal for any prime $\mf p$ when $N$ is minimal.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Primary decomposition also behaves with localization.
+\begin{theorem}[Primary decomposition, III]
+	Fix $M$ a finitely generated module over a Noetherian ring $R$. Then write some submodule $N\subseteq M$ as
+	\[N=\bigcap_{i=1}^nN_i\]
+	such that $N_i$ is $\mf p_i$-primary. If $U\subseteq R$ is some multiplicatively closed subset, then
+	\[N\left[U^{-1}\right]=\bigcap_{\substack{i=1\\\mf p_i\cap U=\emp}}^n\mf p_i\left[U^{-1}\right].\]
+\end{theorem}
+\begin{proof}
+	We omit this proof. The main point is that all of the primes we avoided are actually fully $M\left[U^{-1}\right]$, and localization preserves intersections.
+\end{proof}
+
+\subsection{Examples of Primary Decomposition}
+Let's do some examples.
+\begin{example}
+	For any nonzero integer $n\in\ZZ\setminus\{0\}$, we can write
+	\[(n)=\prod_{p\text{ prime}}\left(p^{\alpha_p}\right),\]
+	for some exponents $\alpha_p$. This is our primary decomposition, and it is unique.
+	% \todo{what if n=0 here?}
+\end{example}
+\begin{example}
+	In general, if $R$ is a unique factorization domain, then any $f\in R$ will have
+	\[f=up_1^{d_1}\cdots p_n^{d_n}\]
+	for some unit $u$, primes $p_\bullet$, and exponents $d_\bullet$. Then
+	\[(f)=\bigcap_{i=1}^n\left(p_i^{d_i}\right).\]
+\end{example}
+In fact, we have the following statement.
+\begin{proposition}
+	Fix $R$ a Noetherian domain. Then $R$ is a unique factorization domain if and only if every prime ideal over a principal ideal is principal.
+\end{proposition}
+\begin{proof}
+	We omit this proof. The main idea to the backwards direction is to take a minimal prime ideal $(p)$ to sufficiently high power to read off the exponent.
+\end{proof}
+
+We remark that primary decomposition is not unique, in general, however.
+\begin{example}
+	Consider $R:=k[x,y]/\left(x^2,xy\right)$. As a $k$-module, this has basis $\{1,x,y,y^2,y^3\ldots\}$. Now, we see that we can write
+	\[(x)\cap\left(y^n\right)=\left(xy^n\right)=(0)\]
+	for any $n\in\NN$. This is a primary decomposition: in particular, $R/\left(y^n\right)$ is a local ring (notably, all the basis elements other than $1$ nilpotent, so $R$ minus their $k$-span is the unique maximal ideal), and our associated prime is $(x,y)R/\left(y^n\right)$. Additionally, $R/(x)$ will have unique maximal ideal $(x,y)/(x)$, for similar reasons.
+\end{example}
+The point is that the above example provides ``lots'' of different minimal primary decompositions.
+
+\subsection{Graded Rings}
+We will want to consider primary decomposition for graded rings because later in life we will want to talk about projective space.
+\begin{proposition}
+	Fix $R=R_0\oplus R_1\oplus\cdots$ a graded ring and $M$ a graded module over $R$. Suppose that we have $m\in M$ and $\mf p:=\op{Ann}m$ a prime ideal. Then $\mf p$ is a graded ideal of $R$.
+\end{proposition}
+In other words, associated primes of a graded module are graded.
+\begin{proof}
+	We have to show that
+	\[\mf p=\bigoplus_{i=1}^\infty(R_i\cap\mf p).\]
+	So we write, for some $f\in\mf p$, that
+	\[f=\sum_{i=1}^p f_i,\]
+	where $f_i\in R_{d_i}$, and $d_1<\cdots<d_n$. By induction, it will be enough to show that $f_1\in\mf p$ and then consider $f-f_1$ to continue. 
+	
+	Well, we may write
+	\[m=\sum_{j\in\ZZ}^qm_j,\]
+	where $m_j\in R_{e_j}$. Because $fm=0$, the term of lowest degree, which is $f_1m_1$, must itself vanish, so
+	\[f_1m=\sum_{j=2}^pf_1m_j.\]
+	Thus $\mf p\subseteq\op{Ann}f_1m$, so we set $I:=\op{Ann}f_1m$. If $\mf p=\op{Ann}f_1m$, then we are done because we have effectively removed our decomposition. Otherwise, we can find $g\in I\setminus\mf p$. But then $gf_1$ annihilates $m$, so $gf_1\in\mf p$, so $f_1\in\mf p$, and we are done.
+\end{proof}
