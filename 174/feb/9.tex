@@ -1,0 +1,118 @@
+% !TEX root = ../notes.tex
+
+\subsection{Equivalence}
+We can define a category $\mathrm{Mat}_k$ to have objects which are the natural numbers and morphisms which are $\mathrm{Mat}_k(n,m)$ equal to the $m\times n$ matrices with coefficients in $k$. In linear algebra, we want to think about each natural number $n$ as a $k$-vector space of dimension $n$, and we want to think about each matrix $n\to m$ as a linear map. In other words, $\mathrm{Mat}_k$ should be ``the same'' as $\mathrm{fdVec}_k$.
+
+However, $\mathrm{fdVec}_k$ and $\mathrm{Mat}_k$ do not even have the same number of objects, so they cannot be isomorphic. We still want them to be the same, so we weaken our notion of isomorphism.
+\begin{defi}[Equivalence]
+	Fix categories $\mathcal C$ and $\mathcal D$. Then a functor $F:\mathcal C\to\mathcal D$ is an \textit{equivalence} if there exists a functor $G:\mathcal D\to\mathcal C$ if and only if $FG\simeq\id_\mathcal D$ and $GF\simeq\id_\mathcal C$. If an equivalence between $\mathcal C$ and $\mathcal D$ exists, then $\mathcal C$ and $\mathcal D$ are \textit{equivalent}, denoted $\mathcal C\simeq\mathcal D$.
+\end{defi}
+We should probably start by showing that our notion of equivalence forms what we think of as an equivalence relation.
+\begin{remark}[Bryce]
+	Equivalence does not form an equivalence relation for size reasons.
+\end{remark}
+\begin{lemma}
+	Fix categories $\mathcal C,\mathcal D,\mathcal E$. Then the following hold.
+	\begin{itemize}
+		\item Reflexive: $\mathcal C\simeq\mathcal C$.
+		\item Symmetric: $\mathcal C\simeq\mathcal D$ implies $\mathcal D\simeq\mathcal C$.
+		\item Transitive: $\mathcal C\simeq\mathcal D$ and $\mathcal D\simeq\mathcal E$ implies $\mathcal C\simeq\mathcal E$.
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	We will be brief.
+	\begin{itemize}
+		\item We have that $\id_\mathcal C$ provides the needed equivalence.
+		\item If $F:\mathcal C\to\mathcal D$ is an equivalence with $G:\mathcal D\to\mathcal C$ such that $FG\simeq\id_\mathcal D$ and $GF\simeq\id_\mathcal C$, then $G$ witnesses $\mathcal D\simeq\mathcal C$.
+		\item Fix $F:\mathcal C\to\mathcal D$ and $G:\mathcal D\to\mathcal C$ witness $C\simeq D$, and fix $F':\mathcal D\to\mathcal E$ and $G':\mathcal E\to\mathcal D$ witness $D\simeq E$.
+
+		In particular, we are promised natural isomorphisms $\varphi:G\simeq\id_\mathcal C$ and $\psi:FG\simeq\id_\mathcal D$ and $\varphi':G'F'\simeq\id_\mathcal D$ and $\psi':F'G'\simeq\id_\mathcal E$. We would like $GG'F'F\simeq\id_\mathcal C$, and then $F'FGG'\simeq\id_\mathcal E$ will follow in a very similar way.
+
+		Well, for an object $c\in\mathcal C$, we define our natural transformation $\eta_\bullet$ as having component
+		\[\eta_c:=\varphi_c\circ G\varphi'_{Fc},\]
+		which takes $GG'F'Fc$ to $GFc$ to $c$. We show naturality directly. Fix some morphism $f:x\to y$ in $\mathcal C$. We need the following diagram to commute.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJHRydGJ0Z4Il0sWzEsMCwieCJdLFswLDEsIkdHJ0YnRnkiXSxbMSwxLCJ5Il0sWzAsMSwiXFxldGFfeCJdLFswLDIsIkdHJ0YnRmYiLDJdLFsxLDMsImYiXSxbMiwzLCJcXGV0YV95IiwyXV0=
+		\[\begin{tikzcd}
+			{GG'F'Fx} & x \\
+			{GG'F'Fy} & y
+			\arrow["{\eta_x}", from=1-1, to=1-2]
+			\arrow["{GG'F'Ff}"', from=1-1, to=2-1]
+			\arrow["f", from=1-2, to=2-2]
+			\arrow["{\eta_y}"', from=2-1, to=2-2]
+		\end{tikzcd}\]
+		To see that this commutes, here is an expanded diagram.
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJHRydGJ0Z4Il0sWzEsMCwiR0Z4Il0sWzEsMSwiR0Z5Il0sWzIsMCwieCJdLFsyLDEsInkiXSxbMCwxLCJHRydGJ0Z4Il0sWzEsMywiXFx2YXJwaGlfeCJdLFswLDEsIkdcXHZhcnBoaSdfe0Z4fSJdLFszLDQsImYiXSxbMSwyLCJHRmYiXSxbNSwyLCJHXFx2YXJwaGknX3tGeX0iLDJdLFsyLDQsIlxcdmFycGhpX3kiLDJdLFswLDUsIkdHJ0YnRmYiLDJdLFswLDMsIlxcZXRhX3giLDEseyJjdXJ2ZSI6LTN9XSxbNSw0LCJcXGV0YV95IiwxLHsiY3VydmUiOjN9XV0=
+		\[\begin{tikzcd}
+			{GG'F'Fx} & GFx & x \\
+			{GG'F'Fx} & GFy & y
+			\arrow["{\varphi_x}", from=1-2, to=1-3]
+			\arrow["{G\varphi'_{Fx}}", from=1-1, to=1-2]
+			\arrow["f", from=1-3, to=2-3]
+			\arrow["GFf", from=1-2, to=2-2]
+			\arrow["{G\varphi'_{Fy}}"', from=2-1, to=2-2]
+			\arrow["{\varphi_y}"', from=2-2, to=2-3]
+			\arrow["{GG'F'Ff}"', from=1-1, to=2-1]
+			\arrow["{\eta_x}"{description}, curve={height=-18pt}, from=1-1, to=1-3]
+			\arrow["{\eta_y}"{description}, curve={height=18pt}, from=2-1, to=2-3]
+		\end{tikzcd}\]
+		By definition of $\eta_\bullet$, it now suffices to show that the left and right squares commute. The right square commutes by naturality of $\varphi_x$. To see that the left square commutes, we note that it is what we get after applying $G$ to the naturality square for $\varphi'$ on the morphism $GFf:GFx\to GFy$.
+
+		Lastly, to see to see that $\eta$ is a natural isomorphism, we note that each component $\eta_c=\varphi_c\circ G\varphi'_{Fc}$ is the composite of isomorphisms, where we are using that $\varphi$ and $\varphi'$ are natural isomorphisms and that functors preserve isomorphisms.
+		\qedhere
+	\end{itemize}
+\end{proof}
+This is nice because oftentimes showing that two categories are equivalent is easier by showing a chain of equivalences instead of doing it directly. For example, in our proof that $\mathrm{Mat}_k\simeq\mathrm{fdVec}_k$, we will instead show that both of these categories are equivalent to $\mathrm{fdVec}_k^{\mathrm{basis}}$ of vector spaces with given basis.
+
+\subsection{Lazy Equivalence}
+We want to provide a tool for constructing equivalences without having to actually write down a natural transformation. By way of analogy, when showing an ``isomorphism of sets'' we often show that a given map is both injective and surjective. We will do something similar.
+\begin{definition}[Adjectives for Functors]
+	Fix categories $\mathcal C$ and $\mathcal D$ with a functor $F:\mathcal C\to\mathcal D$. We consider the map $F^\circ:F:\op{Mor}_\mathcal C(x,y)\to\op{Mor}_\mathcal C(Fx,Fy)$. Then
+	\begin{itemize}
+		\item $F$ is \textit{full} if and only if $F^\circ$ is surjective.
+		\item $F$ is \textit{faithful} if and only if $F^\circ$ is injective.
+		\item $F$ is \textit{fully faithful} if and only if $F$ is full and faithful.
+		\item $F$ is \textit{essentially surjective} on objects if and only if each $d\in\mathcal D$ has some $c\in\mathcal C$ such that $Fc\cong d$ in $\mathcal D$.
+		\item $F$ is an \textit{embedding} if and only if $F$ is faithful and and injective on objects.
+		\item $F$ is a \textit{full embedding} if and only if $F$ is an embedding and full.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	Technically we might want to require that $\mathcal C$ and $\mathcal D$ be locally small, but there are ways of stating ``surjective'' and ``injective'' to note require the underlying domain and codomain to be sets.
+\end{remark}
+\begin{remark}
+	Being ``essentially surjective'' will give problems with the axiom of choice later in life because we are not requiring any notion of uniqueness.
+\end{remark}
+We note that a functor being ``full'' or ``faithful'' are both local conditions on particular sets of homsets. For example, if a functor doesn't even hit an object outside of the image of $F$, then we can't touch those homsets.
+\begin{example}
+	Full and faithful does not imply injective on objects. For example, consider the natural functor $F$ from the left category to the right category, which causes full-on collisions but not locally on the homsets.
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJhXzEiXSxbMSwwLCJhXzIiXSxbMCwxLCJiXzEiXSxbMSwxLCJiXzIiXSxbMiwwLCJhIl0sWzIsMSwiYiJdLFswLDJdLFsxLDNdLFs0LDVdLFs3LDgsIkYiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+	\[\begin{tikzcd}
+		{a_1} & {a_2} & a \\
+		{b_1} & {b_2} & b
+		\arrow[from=1-1, to=2-1]
+		\arrow[""{name=0, anchor=center, inner sep=0}, from=1-2, to=2-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, from=1-3, to=2-3]
+		\arrow["F", shorten <=6pt, shorten >=6pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	Namely, the maps $\op{Mor}_\mathcal C(a_\bullet,b_\bullet)\to\op{Mor}_\mathcal C(a,b)$.
+\end{example}
+Let's finish class by proving something.
+\begin{prop}
+	The following are closed under composition.
+	\begin{itemize}
+		\item Full functors.
+		\item Faithful functors.
+		\item Essentially surjective functors.
+	\end{itemize}
+\end{prop}
+\begin{proof}
+	We will be very brief.
+	\begin{itemize}
+		\item Read the proof of the below and replace all instances of the word ``surjective'' with ``injective.''
+		\item Suppose that $F:\mathcal C\to\mathcal D$ and $G:\mathcal D\to\mathcal E$ are faithful functors. Then fix $x,y\in\mathcal C$, and we know that the induced maps
+		\[F^\circ:\op{Mor}_\mathcal C(x,y)\to\op{Mor}_\mathcal D(Fx,Fy)\qquad\text{and}\qquad G^\circ:\op{Mor}_\mathcal D(Fx,Fy)\to\op{Mor}_\mathcal D(GFx,GFy)\]
+		are both injective, so their composite is injective. To be explicit, if $f$ and $g$ have $(GF)f=(GF)g$, then $G(Ff)=G(Fg)$, so $Ff=Fg$ by injectivity of $G^\circ$, so $f=g$ by 
+		\item Suppose that $F:\mathcal C\to\mathcal D$ and $G:\mathcal D\to\mathcal E$ are essentially surjective functors. Well, fix any $e\in\mathcal E$, and we are promised an object $d\in\mathcal D$ such that $Gd\cong e$. But now we are promised an object $c\in\mathcal C$ such that $Fc\cong d$, so $GFc\cong Fd\cong e$, which shows that $GF$ is essentially surjective.
+		\qedhere
+	\end{itemize}
+\end{proof}
