@@ -1,0 +1,215 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{A Little More Economy}
+Let's continue with our translation. We will again note that every formula in a language is equivalent to one in which the only connectives are $\{\lnot,\to\}$. Here is our translation.
+\begin{itemize}
+	\item We define $U(p):=p$ for each atomic formula $p\in P$.
+	\item We define $U(\lnot\varphi):=\lnot U(\varphi)$.
+	\item We define $U(\varphi\land\psi):=\lnot(U(\varphi)\to\lnot U(\psi))$.
+	\item We define $U(\varphi\lor\psi):=$
+	\item We define $U(\varphi\to\psi):=(U(\varphi)\to U(\psi))$.
+	\item We define $U(\varphi\leftrightarrow\psi):=(U(\varphi)\to U(\psi))\land(U(\psi)\to U(\varphi))$.
+\end{itemize}
+
+\subsection{Too Much Economy}
+We quickly remark that we cannot be too callous. For example, we claim that the connectives $\{\land,\lor,\to,\leftrightarrow\}$ are not enough. Here is the main claim.
+\begin{lemma}
+	Any formula $\varphi\in L(\{p_1,\ldots,p_n\})$ where $\varphi$ has only the connectives $\{\land,\lor,\to,\leftrightarrow\}$ will have $p_1,\ldots,p_n\models\varphi$.
+\end{lemma}
+This will be enough because it means any such formula $\varphi$ cannot be equivalent to $\lnot p_1$ because $\{p_1,\ldots,p_n\}\nvDash\varphi$.
+\begin{proof}
+	We induct. For our base case, we note that any of the propositions $p_i$ will have $\{p_1,\ldots,p_n\}\models p_i$ for free. Now for our inductive hypothesis, suppose $\{p_1,\ldots,p_n\}\models\varphi,\psi$. Then for any $\#\in\{\land,\lor,\to,\leftrightarrow\}$ will have
+	\[\hat V(\varphi)=\hat V(\psi)=1\implies\hat V((\varphi\#\psi))=1\]
+	by hand. So $\hat V(p_i)=1$ for each $p_i$ implies $\hat V(\varphi)=\hat V(\psi)=1$ (by hypothesis), so $\hat V((\varphi\#\psi))=1$, finishing.
+\end{proof}
+\begin{remark}
+	Intuitively, when we set everything to be true, all of the given connectives will send true to true.
+\end{remark}
+We close with a question.
+\begin{ques}
+	Is any formula equivalent to $\{\lnot,\leftrightarrow\}$?
+\end{ques}
+
+\subsection{The Most Economy}
+We start by defining a new connective.
+\begin{definition}[Sheffer stroke, NAND]
+	Given two formulae $\varphi,\psi$, we define $(\varphi\uparrow\psi)$ by the following truth table.
+	\[\begin{array}{c|c||c}
+		\hat V(\varphi) & \hat V(\psi) & \hat V((\varphi\uparrow\psi)) \\
+		\hline
+		1 & 1 & 0 \\
+		1 & 0 & 1 \\
+		0 & 1 & 1 \\
+		0 & 0 & 1 \\
+	\end{array}\]
+	Intuitively, $\hat V((\varphi\uparrow\psi))$ is true if and only if at least one of $\varphi$ or $\psi$ is false. In symbols, $\hat V((\varphi\uparrow\psi))=1-\hat V(\varphi)\hat V(\psi)$.
+\end{definition}
+We note that $\lnot\varphi$ is equivalent to $(\varphi\uparrow\varphi)$ because
+\[\hat V((\varphi\uparrow\varphi))=1-\hat V(\varphi)^2=1-\hat V(\varphi)=\hat V(\lnot\varphi),\]
+where $\hat V(\varphi)^2=\hat V(\varphi)$.
+
+Further, $(\varphi\lor\psi)$ is equivalent to $\lnot(\lnot\varphi\land\lnot\psi)$ is equivalent to $(\lnot\varphi\uparrow\lnot\psi)$ is equivalent to
+\[((\varphi\uparrow\varphi)\uparrow(\psi\uparrow\psi)).\]
+Thus, we note that any formula is equivalent to one involving only the connectives $\lor$ or $\lnot$, which we can then translate to a formula only involving only the connectives.
+
+Of course, there are other translations.
+\begin{example}
+	We note $(\varphi\land\psi)$ is equivalent to $\lnot\lnot(\varphi\land\psi)$ is equivalent to $\lnot(\varphi\uparrow\psi)$ is equivalent to $(\varphi\uparrow\psi)\uparrow(\varphi\uparrow\psi)$.
+\end{example}
+\begin{remark}
+	Any formula is also equivalent to one which only uses the connective ``nt,'' which has the following truth table.
+	\[\begin{array}{c|c||c}
+		\hat V(\varphi) & \hat V(\psi) & \hat V((\varphi\downarrow\psi)) \\
+		\hline
+		1 & 1 & 0 \\
+		1 & 0 & 0 \\
+		0 & 1 & 0 \\
+		0 & 0 & 1 \\
+	\end{array}\]
+\end{remark}
+To see the above remark, we note that the top row must be false (or else we preserve truth), and the bottom row must be true (or else we preserve false). But the truth table
+\[\begin{array}{c|c||c}
+	\hat V(\varphi) & \hat V(\psi) & \hat V((\varphi\#\psi)) \\
+	\hline
+	1 & 1 & 0 \\
+	1 & 0 & 1 \\
+	0 & 1 & 0 \\
+	0 & 0 & 1 \\
+\end{array}\]
+does not work because it does not depend on $\hat V(\varphi)$. Similarly,
+\[\begin{array}{c|c||c}
+	\hat V(\varphi) & \hat V(\psi) & \hat V((\varphi\#\psi)) \\
+	\hline
+	1 & 1 & 0 \\
+	1 & 0 & 0 \\
+	0 & 1 & 1 \\
+	0 & 0 & 1 \\
+\end{array}\]
+does not work because it does not depend on $\hat V(\psi)$.
+
+\subsection{Truth Functions}
+We should probably go back and show that any function on truth can be achieved by our language.
+\begin{definition}
+	Fix a positive integer $n$. Then an \textit{$n$-ary truth function} is a function $f:\{0,1\}^n\to\{0,1\}$.
+\end{definition}
+\begin{ex}
+	The function $f(x)=1-x$ corresponds to $\lnot$. The function $f(x,y)=\min\{x,y\}$ corresponds to $\land$.
+\end{ex}
+\begin{example}
+	The function
+	\[f(x,y,z,w)=\min\{x,y,z,1-w,xy,\max\{x,y\}\}\]
+	is a truth function.
+\end{example}
+We note that, because there are only finitely many inputs in $\{0,1\}^n$, we can simply tabulate to give the function. For example, here is a truth function.
+\[\begin{array}{c|c|c||c}
+	p & q & r & f(p,q,r) \\
+	\hline
+	1 & 1 & 1 & 1 \\
+	1 & 1 & 0 & 1 \\
+	1 & 0 & 1 & 0 \\
+	1 & 0 & 0 & 0 \\
+	0 & 1 & 1 & 1 \\
+	0 & 1 & 0 & 0 \\
+	0 & 0 & 1 & 1 \\
+	0 & 0 & 0 & 0
+\end{array}\]
+This might look like a mess, but it is perfectly reasonable.
+\begin{remark}
+	Note that, among the $2^n$ inputs for an $n$-ary truth function, we have two choices for inputs, so there are $2^{2^n}$ total possible truth functions. That's a lot.
+\end{remark}
+So far we have been noting that formulae in our language correspond to truth functions.
+\begin{ex}
+	The formula $\lnot(p\leftrightarrow q)$ corresponds to the truth function described by the following table.
+	\[\begin{array}{c|c||c}
+		p & q & f(p,q) \\
+		\hline
+		1 & 1 & 0 \\
+		1 & 0 & 1 \\
+		0 & 1 & 1 \\
+		0 & 0 & 0
+	\end{array}\]
+	This is not unique: we could also do $(p\leftrightarrow\lnot q)$.
+\end{ex}
+Let's make this rigorous.
+\begin{definition}[Truth functions from formulae]
+	Fix $\varphi\in\mathcal L(\{p_1,\ldots,p_n\})$. We then say $\varphi$ \textit{defines the $n$-ary truth function} $f_\varphi^n$ defined as follows: any $(x_1,\ldots,x_n)\in\{0,1\}^n$ defines a valuation $V(p_k):=x_k$, from which we define
+	\[f_\varphi^n(x_1,\ldots,x_n):=\hat V(\varphi).\]
+\end{definition}
+Intuitively, the truth tables for $f^n_\varphi$ and $\hat V(\varphi)$ ``match up'' in the way that the row for some $(x_1,\ldots,x_n)\in\{0,1\}^n$ corresponds to the row $V(p_1)=x_1,\ldots,V(p_n)=1$.
+
+Let's see some examples.
+\begin{example}
+	The following truth tables match up.
+	\[\begin{array}{c|c}
+		p & \lnot p\\
+		\hline
+		1 & 0 \\
+		0 & 1
+	\end{array}\qquad\begin{array}{c|c}
+		x & f(x) \\
+		\hline
+		1 & 0 \\
+		0 & 1
+	\end{array}\]
+	So $\lnot p$ defines the function $f$.
+\end{example}
+\begin{ex}
+	We find a formula to define the following truth function.
+	\[\begin{array}{c|c|c||c}
+		p & q & r & f(p,q,r) \\
+		\hline
+		1 & 1 & 1 & 1 \\
+		1 & 1 & 0 & 1 \\
+		1 & 0 & 1 & 0 \\
+		1 & 0 & 0 & 0 \\
+		0 & 1 & 1 & 1 \\
+		0 & 1 & 0 & 0 \\
+		0 & 0 & 1 & 1 \\
+		0 & 0 & 0 & 0
+	\end{array}\]
+	We claim that $((p\to q)\land(\lnot p\to r))$ will do the trick. Checking this is a matter of writing out the truth table, but we won't do the work here.
+\end{ex}
+
+\subsection{Defining Truth Functions}
+There is actually an algorithm which will always be able to produce a truth table. Let's work with the following example.
+\[\begin{array}{c|c|c||c}
+	p & q & r & f(p,q,r) \\
+	\hline
+	\color{red}1 & \color{red}1 & \color{red}1 & \color{red}1 \\
+	\color{red}1 & \color{red}1 & \color{red}0 & \color{red}1 \\
+	1 & 0 & 1 & 0 \\
+	1 & 0 & 0 & 0 \\
+	\color{red}0 & \color{red}1 & \color{red}1 & \color{red}1 \\
+	0 & 1 & 0 & 0 \\
+	\color{red}0 & \color{red}0 & \color{red}1 & \color{red}1 \\
+	0 & 0 & 0 & 0
+\end{array}\]
+(In the following discussion, we will drop parantheses when the meaning is clear or the parantheses do not matter.)
+
+Above we have highlighted all the cases which are true. To create a formula for this, we simply hard-code in all possible cases where are true. To be explicit, the top highlighted row is $(p\land q\land r)$, the next row is $(p\land q\land\lnot r)$, and so on. Then we just need to ensure that we live in exactly one of these cases, which looks like
+\[(p\land q\land r)\lor(p\land q\land\lnot r)\lor(\lnot p\land q\land r)\lor(\lnot p\land\lnot q\land r).\]
+This is long and horrendous, but it is correct.
+\begin{remark}
+	To feel how bad this algorithm is, consider how annoying it would be to try to create a truth table for ``$f(x_1,\ldots,x_n)$ returns true if and only if at least $\floor{n/2}$ of the $x_k$ are true.''
+\end{remark}
+\begin{example}
+	The truth table
+	\[\begin{array}{c|c||c}
+		p & q & f(p,q) \\
+		\hline
+		1 & 1 & 0 \\
+		1 & 0 & 0 \\
+		0 & 1 & 0 \\
+		0 & 0 & 1 \\
+	\end{array}\]
+	can be defined by the formula $(\lnot p\land\lnot q)$.
+\end{example}
+We quickly remark that there will be lots of different formulae which can give the same truth function.
+\begin{lemma}
+	Two formula $\varphi,\psi\in\mathcal L(\{p_1,\ldots,p_n\})$ have $f^n_\varphi=f^n_\psi$ if and only if $\varphi$ and $\psi$ are logically equivalent.
+\end{lemma}
+\begin{proof}
+	To say that $\varphi$ and $\psi$ means that any valuation $V:\{0,1\}^n\to\{0,1\}$ gives $\hat V(\varphi)=\hat V(\psi)$. Translating this into discussion about truth functions, valuations correspond to inputs $(x_1,\ldots,x_n)\in\{0,1\}^n$, so being logically equivalent is saying that $f^n_\varphi$ and $f^n_\psi$ are equal on all inputs $(x_1,\ldots,x_n)\in\{0,1\}^n$.
+\end{proof}
