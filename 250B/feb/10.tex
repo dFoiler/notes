@@ -1,0 +1,241 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Unique Factorization Domains}
+
+We start with the following result; it is due to Gauss.
+\begin{theorem} \label{thm:ch}
+	Fix $R$ a unique factorization domain. Then $R[x]$ is a unique factorization domain.
+\end{theorem}
+\begin{proof}
+	The main character is as follows.
+	\begin{definition}[Content]
+		Fix $f(x)=a_0+\cdots+a_nx^n\in R[x]$. Then we define the \textit{content} of $f$ to be the ideal
+		\[\op{cont}(f):=(a_0,\ldots,a_n)\subseteq R.\]
+	\end{definition}
+	Here is the main claim.
+	\begin{lemma}
+		Fix $f,g\in R[x]$. Then $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)$.
+	\end{lemma}
+	\begin{proof}
+		That $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)$ follows from expanding out $fg$. To show the other direction, we recall from \autoref{prop:radprimes} that
+		\[\rad\op{cont}(fg)=\bigcap_{\op{cont}(fg)\subseteq\mf p}\mf p.\]
+		Now, for any $\mf p$ containing $\op{cont}(fg)$, we have to show that $\op{cont}(f)\op{cont}(g)\subseteq\mf p$. But then we note that $\overline f,\overline g\in(R/\mf p)[x]$ will have
+		\[\overline f\cdot\overline g=0\]
+		by definition of $\mf p$. Thus, either $\overline f\in\mf p$ or $\overline g\in\mf p$, so $\op{cont}(f)\subseteq\mf p$ or $\op{cont}(g)\subseteq\mf p$. This finishes the other inclusion.
+	\end{proof}
+	The key to continue is to work with the field of fractions $K:=\op{Frac}(R)$, noting that any polynomial $f\in R[x]$ will have a unique factorization in $K[x]$ (because, say, $K[x]$ is Euclidean).
+
+	Namely, our next step is to classify irreducibles in $R[x]$.
+	\begin{lemma}
+		Fix everything as above. Then $f$ is irreducible in $R[x]$ implies that $f$ is irreducible in $K[x]$.
+	\end{lemma}
+	\begin{proof}
+		We proceed by contraposition. If $f(x)$ is not irreducible (but still not zero and not a unit), then we can write $f=g_0h_0$ where $\deg g_0,\deg h_0<\deg f$. Clearing denominators, we can write
+		\[rf=gh\]
+		where $g,h\in R[x]$. So now we can talk about the content. If $r$ is a unit, then we see that $f$ is indeed not reducible. If $r$ is not a unit, then for each prime $p\mid f$, we see that $\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)\subseteq(p)$, so either $g\in(p)$ or $h\in(p)$, and then we can cancel out by $p$. In particular, we can, after enough cancelling, force $r$ to be a unit, thus finishing.
+	\end{proof}
+	To finish checking that $R[x]$ is a unique factorization domain, we recall that it suffices to show all irreducibles are prime.
+	\begin{lemma}
+		Fix everything as above. If $f$ is irreducible, in $R[x]$, then $f$ is prime.
+	\end{lemma}
+	\begin{proof}
+		Well, if $f$ is irreducible in $R[x]$, then it is irreducible and hence prime in $K[x]$. In particular, if $f\mid gh$ for $g,h\in R[x]$, then without loss of generality
+		\[g=f(q/r)\]
+		for some $q/r\in K[x]$ so that $q\in K[x]$. In particular, $fq=rg$, so arguing as above we can remove the primes dividing $r$ into $q$ because $f$ will not be divisible by any prime constant.
+	\end{proof}
+	The above lemma finishes the proof.
+\end{proof}
+\begin{corollary}
+	The ring $k[x_1,\ldots,x_n]$ is a unique factorization domain.
+\end{corollary}
+\begin{proof}
+	Induction on $n$.
+\end{proof}
+\begin{example}
+	We show that $\left(y^2-x^3\right)\subseteq k[x,y]$ is prime. It suffices to show that $y^2-x^3$ is prime in $k[x,y]$, for which it suffices to show that $y^2-x^3$ is irreducible in $k(x)[y]$. But $y^2-x^3$ is a quadratic in $k(x)[y]$ and therefore irreducible because it has no roots: there is no $y=f(x)/g(x)$ such that $f(x)^2/g(x)^2=x^3$.
+\end{example}
+\begin{example}
+	We show that $\left(y^2-x^3\right)\subseteq k[x,y]$ is prime a different way. Indeed, by sending $x\mapsto t^2$ and $y\mapsto t^3$, there is an embedding
+	\[\frac{k[x,y]}{\left(y^2-x^3\right)}\into k\left[t^2,t^3\right]\]
+	by a homework problem. So the quotient is a domain, so $\left(y^2-x^3\right)$ is prime.
+\end{example}
+
+\subsection{The Cayley--Hamilton Theorem}
+Here is the main result we are going to prove.
+\begin{theorem}
+	Fix $R$ a ring and $A\in R^{n\times n}$ a matrix. Then define $p_A(x):=\det(xI-A)\in R[x]$. Then $p_A(A)=0\in R^{n\times n}$.
+\end{theorem}
+This statement is usually stated in linear algebra over a field, but it should hold for arbitrary rings.
+\begin{proof}
+	We need to pick up the following definition.
+	\begin{definition}[Adjugate matrix]
+		Fix $A\in R^{n\times n}$. Then we define the \textit{adjugate matrix} by
+		\[C_{ij}:=(-1)^{ij}\det A_{i,j},\]
+		where $A_{i,j}$ is the matrix $A$ without the $i$th row and without the $j$th column.
+	\end{definition}
+	\begin{example}
+		Set
+		\[A=\begin{cases}
+			a_{11} & a_{12} \\
+			a_{21} & a_{22}
+		\end{cases}.\]
+		Then
+		\[C=\begin{cases}
+			a_{22} & -a_{21} \\
+			-a_{12} & a_{11}
+		\end{cases}.\]
+		We can verify by hand that $C^\intercal A=(\det A)I$.
+	\end{example}
+	The central idea behind the adjugate matrix is that it ``almost inverts'' $A$.
+	\begin{lemma}
+		Fix $A\in R^{n\times n}$ with adjugate matrix $C$. Then $C^\intercal A=(\det A)I$.
+	\end{lemma}
+	\begin{proof}
+		Omitted.
+	\end{proof}
+	To show the result, we define
+	\[A(x):=xI-A,\]
+	which vanishes upon taking $x=A$. Then we see that
+	\[C^\intercal(x)A(x)=\det(x1-A)I,\]
+	which still vanishes upon taking $x=A$.
+\end{proof}
+Our application to commutative algebra is as follows.
+\begin{theorem} \label{thm:betterch}
+	Fix $M$ a finitely generated $R$-module with $n$ generators. Further, fix $\varphi\in\op{End}_R(M)$. Then there exists some monic polynomial
+	\[p_\varphi=x^n+p_1x^{n-1}+\cdots+p_n\]
+	of degree $n$ such that $p_\varphi(\varphi)$ is zero. In fact, if there is an ideal $I\subseteq R$ such that $IM=M$, then $p_k\in I^k$.
+\end{theorem}
+\begin{proof}
+	Let $\{m_1,\ldots,m_n\}$ generate $M$ so that we can use the equations
+	\[\varphi(m_i)=\sum_{k=1}^na_{ij}m_j\]
+	to give a matrix form for $\varphi$. Then we set $p_\varphi$ to be the characteristic polynomial for $\varphi$, which finishes the first part by the Cayley--Hamilton theorem. For the second part, we note that $IM=M$ can force that $a_{ij}\in I$ for each $i,j$, which upon writing out the coefficients for the characteristic polynomial will finish.
+\end{proof}
+Let's now see some applications.
+\begin{proposition} \label{prop:epiisiso}
+	Let $M$ be a finitely generated $R$-module and $\psi\in\op{End}_R(M)$. Then if $\psi$ is surjective, then $\psi$ is an isomorphism.
+\end{proposition}
+\begin{proof}
+	The key trick is to give $M$ an $R[t]$-module structure to $M$ by defining $R[t]\mapsto\op{End}_RM$ by sending $t\mapsto\psi$.
+	In particular, using the above, we get some $p_{\id}$ such that $p_{\id}({\id})=0$.
+	Further, because $\psi$ is surjective, we see that $(t)\cdot M=M$, so when we write out
+	\[p_{\id}(x)=x^n+p_1x^{n-1}+\cdots+p_n,\]
+	we see that $p_i\in\left(t^i\right)$ for each $i$. In particular, plugging in $x=\id$, we see that
+	\[0=\id+t\cdot q(t)\]
+	for some $q\in R[t]$. In particular, $t$ is invertible with inverse $q(t)$.
+\end{proof}
+\begin{remark}
+	This need not be true even in vector spaces which are not finitely generated. For example, consider
+	\[V:=\bigoplus_{i=1}^\infty kv_i\]
+	for some vectors $\{v_i\}_{i=1}^\infty$. Then we have the surjective map defined by $v_1\mapsto0$ and $v_i\mapsto v_{i-1}$ for $i>1$, and this is not an isomorphism.
+\end{remark}
+\begin{remark}
+	This definitely need not be true for injections giving isomorphisms. For example, $\ZZ\to2\ZZ\into\ZZ$ is injective but not an isomorphism.
+\end{remark}
+\begin{corollary}
+	Fix $m$ and $n$ positive integers. Then if $R^n\cong R^m$ is an isomorphism of $R$-modules. Then $m=n$.
+\end{corollary}
+\begin{proof}
+	Without loss of generality take $n\ge m$. Then we can construct a surjective map
+	\[R^m\cong R^n\onto R^m,\]
+	which must be an isomorphism by \autoref{prop:epiisiso}. However, the map $R^n\onto R^m$ by projection has a kernel whenever $n>m$, so the composite would have a kernel, which is our contradiction. So we must have $n=m$.
+\end{proof}
+
+\subsection{Nakayama's Lemma}
+Recall the definition.
+\begin{definition}[Jacobson radical]
+	Fix a ring $R$. Then we define the \textit{Jacobson radical} by
+	\[\rad R:=\bigcap_{\mf m}\mf m.\]
+\end{definition}
+Observe that $r\in\rad R$ if and only if $1-r\in R^\times$. In particular, $r\in\rad R$ if and only if $1-r$ is not in any maximal ideal if and only if $(1-r)=R$.
+
+We have the following result.
+\begin{theorem}[Nakayama's lemma]
+	Fix $I\subseteq\op{rad}R$ and $M$ a finitely generated $R$-module. Then if $IM=M$, we have $M=0$.
+\end{theorem}
+\begin{proof}
+	The main idea is in the following lemma.
+	\begin{lemma}
+		Fix everything as above. Then $IM=M$ implies that there is some $r\in I$ such that $(1-r)M=0$.
+	\end{lemma}
+	\begin{proof}
+		The idea is, as usual, to use \autoref{thm:betterch}. We are promised some polynomial
+		\[p_{\id}(x):=x^n+p_1x^{n-1}+\cdots+p_n,\]
+		where $p_k\in I^k$. But plugging in $x=\id$ gives the result after rearranging for $\id^n=\id$.
+	\end{proof}
+	From this lemma the result directly follows because the promised $1-r$ is a unit.
+\end{proof}
+\begin{corollary}
+	Fix $I\subseteq\op{rad}R$ and $M$ a finitely generated $R$-module with elements $m_1,\ldots,m_n\in M$. Then if the images $\overline{m_1},\ldots,\overline{m_n}$ generate $M/IM$, then the original elements generate $M$.
+\end{corollary}
+\begin{proof}
+	Consider
+	\[M':=Rm_1+\cdots+Rm_n.\]
+	Then because the given elements generate $M/IM$, we note that $M/M'=I(M/M')$, so $M/M'=0$, so $M=M'$.
+\end{proof}
+
+Here is an application, to localization.
+\begin{proposition} \label{prop:localtensorintdomain}
+	Fix $R$ a local ring with $M$ and $N$ finitely generated $R$-modules. Then $M\otimes_RN=0$ if and only if $M=0$ or $N=0$.
+\end{proposition}
+\begin{proof}
+	If $M=0$ or $N=0$, then of course $M\otimes_RN=0$.
+	
+	In the reverse direction, suppose $M\ne0$. Fix $\mf m$ the maximal ideal. Then, because $M$ is finitely generated by some elements, we get a surjective map $M\onto R/\mf m$. Tensoring, we see that
+	\[M\otimes_RN\to(R/\mf m)\otimes_RN\to0\]
+	is also surjective, but then $R/\mf m\otimes_RN=N/\mf mN$. However, $M\otimes_RN=0$, so $N/\mf mN=0$ for all maximal ideals, so $N=0$.
+\end{proof}
+\begin{corollary}
+	Fix $M$ and $N$ finitely generated $R$-modules. Then $M\otimes_RN=0$ if and only if $\op{Ann}M+\op{Ann}N=R$.
+\end{corollary}
+\begin{proof}
+	If $\op{Ann}M+\op{Ann}N=R$, then $M\otimes_RN=0$ by decomposing $1=a+b$ where $a\in\op{Ann}M$ and $b\in\op{Ann}N$.
+
+	In the other direction, suppose that $I:=\op{Ann}M+\op{Ann}N\subsetneq R$. Putting $I$ in some maximal ideal $\mf m$, we note that we can localize to $R_\mf m$ and then reduce to \autoref{prop:localtensorintdomain}.
+\end{proof}
+\begin{corollary}
+	Fix $M$ and $N$ finitely generated $R$-modules. Then $\op{Supp}(M\otimes_RN)=\op{Supp}M\cap\op{Supp}N$.
+\end{corollary}
+\begin{proof}
+	Fix a prime $\mf p$. Then we see that
+	\[(M\otimes_RN)_\mf p=M_\mf p\otimes_{R_\mf p}N_\mf p\]
+	will vanish if and only if $M_\mf p=0$ or $N_\mf p=0$, which is precisely the statement after negation.
+\end{proof}
+We note that the condition that $M$ and $N$ are finitely generated is crucial.
+\begin{nex}
+	We note that $\QQ\otimes_\ZZ\ZZ/n\ZZ=0$ because $\QQ$ is divisible and $\ZZ/n\ZZ$ is torsion. But $\QQ\ne0$ and $\ZZ/n\ZZ\ne0$.
+\end{nex}
+
+\subsection{Integrality Preview}
+We will spend the rest of class on the following theorem.
+\begin{prop}
+	Fix $R$ a ring and an $R$-algebra $S:=R[s]/I$ for some ideal $I$. We have the following.
+	\begin{listalph}
+		\item $S$ is finitely generated as an $R$-module if and only if $I$ contains a monic polynomial (i.e., there is some monic $p(x)\in R[x]$ such that $p(s)=0$).
+		\item $S$ is a free, finitely generated $R$-module if $I=(p)$ for some monic polynomial $p$.
+	\end{listalph}
+\end{prop}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item If $S$ is finitely generated as an $R$-module, we apply \autoref{thm:betterch} with $\varphi=\mu_s:m\mapsto sm$ to finish.
+
+		In the other direction, suppose
+		\[p(x):=x^n+p_1x^{n-1}+\cdots+p_n\]
+		is a polynomial in $I$. Then $\{1,s,s^2,\ldots,s^{n-1}\}$ will generate $S$ over $R$: indeed, it suffices to check that each $s^k$ can be written as an $R$-linear combination of the $\{1,s,\ldots,s^{n-1}\}$, but we get this by induction after noting $p$ promises
+		\[s^{n+\ell}=-\sum_{i=0}^{n-1}p_{n-i}s^{i+\ell}.\]
+
+		\item If $S$ is a free, finitely generated $R$-module, we got some monic polynomial in $I$, so we find the nonzero polynomial of least degree. Because the generation is free, using a power basis means we can force this polynomial to be monic, which gives the result.
+
+		The other direction is similar to the other direction above.
+		\qedhere
+	\end{listalph}
+\end{proof}
+We close with some definitions.
+\begin{definition}[Finite]
+	Fix $S$ an $R$-algebra. Then $S$ is \textit{finite} over $R$ if and only if $S$ is finitely geneated over $R$.
+\end{definition}
+\begin{definition}[Integral]
+	Fix $S$ an $R$-algebra. Then $s\in S$ is \textit{integral over $R$} if and only if $s$ is a root of some monic polynomial over $R$. If all elements $s\in S$ are integral over $R$, then we say $S$ is \textit{integral over $R$}.
+\end{definition}
