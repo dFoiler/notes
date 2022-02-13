@@ -13,7 +13,7 @@ More generally, we have the following definition.
 	Fix $R$ a ring and $I\subseteq R$ an ideal. Then a prime $\mf p\subseteq R$ is a \textit{minimal prime ideal over $I$} if $\mf p$ is a minimal element of the set of prime ideals containing $I$.
 \end{definition}
 The above Zorn's lemma argument shows that these minimal primes actually exist.
-\begin{proposition}
+\begin{proposition} \label{prop:minprimeexist}
 	Fix $R$ a ring and $I\subsetneq R$ a proper ideal. Then there is a minimal prime $\mf p$ over $I$.
 \end{proposition}
 \begin{proof}
@@ -323,7 +323,7 @@ Let's do some examples.
 	It is actually legal to set $n=0\in\ZZ$, but it is not interesting: $(0)$ is a prime ideal, so it provides its own primary decomposition.
 \end{remark}
 We can generalize the above example.
-\begin{proposition}
+\begin{proposition} \label{prop:primdecompprincipals}
 	Fix $R$ a Noetherian domain. If $r\in R$ can be written as
 	\[r=u\prod_{k=1}^np_k^{\alpha_k}\]
 	where $u\in R^\times$ and $(p_k)$ are distinct nonzero prime ideals and $\alpha_k>0$ are positive integers. Then
@@ -368,37 +368,99 @@ We can generalize the above example.
 % \end{example}
 % To make the connection between factorization and primary decomposition, we have the following.
 Of course, the main power to primary decompositoin is \autoref{thm:primdecompi} in the existence of the primary decomposition, so we would like to leverage this power to talk more directly about factorizations.
-\begin{proposition}
+\begin{proposition} \label{prop:equivufd}
 	Fix $R$ a Noetherian domain. Then $R$ is a unique factorization domain if and only if every minimal prime ideal over a principal ideal is principal.
 \end{proposition}
-\begin{proof}
+\begin{proof}[Proof of the forwards direction in \autoref{prop:equivufd}]
 	We begin with the forward direction. The main technical lemma is as follows.
-	\begin{lemma}
-		Fix $R$ a ring and $\{\mf p_k\}_{k=1}^n$ and $\mf p$ some prime ideals. Then if
-		\[\bigcap_{k=1}^n\mf p_k\subseteq\mf p,\]
-		then $\mf p_k\subseteq\mf p$ for some $\mf p_k$.
+	\begin{lemma} \label{lem:primeidealsgood}
+		Fix $R$ a ring and ideals $\{I_k\}_{k=1}^n$ and a prime ideal $\mf p$. Then if
+		\[\bigcap_{k=1}^nI_k\subseteq\mf p,\]
+		then $I_k\subseteq\mf p$ for some $I_k$.
 	\end{lemma}
 	\begin{proof}
-		We prove this by contraposition. Suppose that $\mf p_k\not\subseteq\mf p$ for each $\mf p_k$ so that we can find $x_k\in\mf p\setminus\mf p_k$. \todo{}
+		We show this by contraposition: suppose that $I_k\not\subseteq\mf p$ for each $I_k$, and we show that $\bigcap_kI_k\not\subseteq\mf p$. Well, $I_k\not\subseteq\mf p$ promises us some $x_k\in I_k\setminus\mf p$. But then we set
+		\[x:=x_1\cdots x_n.\]
+		Because each of the factors $x_k$ are not in $\mf p$, the entire product $x$ is also not in $\mf p$. But $x\in(x_k)\subseteq I_k$ for each $I_k$, so
+		\[x\in\left(\bigcap_{k=1}^nI_k\right){\mathbin\bigg\backslash}~\mf p,\]
+		which finishes.
 	\end{proof}
 	\begin{remark}[Nir]
 		This result cannot be extended to allow $n$ to be infinite. For example,
 		\[\bigcap_{\substack{p\text{ prime}\\p>2}}(p)=(0)\subseteq(2),\]
 		but none of the prime ideals $(p)$ for $p>2$ are contained in $(2)$.
 	\end{remark}
-
-	We omit this proof. The main idea to the backwards direction is to take a minimal prime ideal $(p)$ to sufficiently high power to read off the exponent.
+	Now suppose that $R$ is a unique factorization domain, and we pick up some minimal prime ideal $\mf p$ over a principal ideal $(r)\subseteq R$. Very quickly, we note that if $r=0$, then $(0)$ is prime ($R$ is a domain), so $\mf p=(0)$ is the unique minimal prime over $(0)$.
+	
+	Otherwise $r$ is nonzero. Because $R$ is a unique factorization domain, we may write
+	\[r=u\prod_{k=1}^np_k^{\alpha_k}\]
+	where $u\in R^\times$ and the $(p_k)$ are distinct nonzero prime ideals and the $\alpha_k>0$ are positive integers. Then we see that, by \autoref{prop:primdecompprincipals}, we get
+	\[\bigcap_{k=1}^n\left(p_k^{\alpha_k}\right)=(r)\subseteq\mf p.\]
+	In particular, by \autoref{lem:primeidealsgood}, we have some $\left(p_\bullet^{\alpha_\bullet}\right)\subseteq\mf p$, so $p_\bullet^{\alpha_\bullet}\in\mf p$, so $p_\bullet\in\mf p$ by primality, so
+	\[(p_\bullet)\subseteq\mf p.\]
+	But $r\in(p_\bullet)$, so $(p_\bullet)$ is a prime over $(r)$. Thus, minimality of $\mf p$ forces $\mf p=(p_\bullet)$, finishing.
 \end{proof}
+\begin{proof}[Proof of the backwards direction in \autoref{prop:equivufd}]
+	By \autoref{rem:betterufd}, it suffices to show that $R$ satisfies the ascending chain condition on principal ideals and has all irreducible elements prime. Well, $R$ is Noetherian, so it satisfies the ascending chain condition on all ideals, so any ascending chain of principal ideals will also have to stabilize.
 
-We remark that primary decomposition is not unique, in general, however.
-\begin{example}
-	Consider $R:=k[x,y]/\left(x^2,xy\right)$. As a $k$-module, this has basis $\{1,x,y,y^2,y^3\ldots\}$. Now, we see that we can write
-	\[(x)\cap\left(y^n\right)=\left(xy^n\right)=(0)\]
-	for any $n\in\NN$. This is a primary decomposition: in particular, $R/\left(y^n\right)$ is a local ring (notably, all the basis elements other than $1$ nilpotent, so $R$ minus their $k$-span is the unique maximal ideal), and our associated prime is $(x,y)R/\left(y^n\right)$. Additionally, $R/(x)$ will have unique maximal ideal $(x,y)/(x)$, for similar reasons.
-\end{example}
+	So to finish, suppose we have some irreducible element $\pi\in R$, and we want to show that $(\pi)$ is a prime ideal. Note $(\pi)\ne R$ because $\pi$ is not a unit. Now, because $R$ is Noetherian, \autoref{prop:minprimeexist} promises us some minimal prime $\mf p$ over $(\pi)$.
+
+	But by hypothesis on $R$, we see $\mf p$ is principal, so $\mf p=(p)$ for some $p\in R$. In particular, $\pi\in(p)$ implies that
+	\[\pi=pu\]
+	for some $u\in R$. Because $\pi$ is irreducible, either $p\in R^\times$ or $u\ni R^\times$, but $(p)=\mf p\subsetneq R$, so $p\notin R^\times$. Namely, $u\in R^\times$, so
+	\[(\pi)=(p)=\mf p\]
+	is indeed a prime ideal.
+\end{proof}
+\begin{remark}[Nir]
+	As an example of the condition in \autoref{prop:equivufd} being sharp, we note that, in $R:=\ZZ[\sqrt{-5}]$, we have
+	\[(2)\subsetneq\left(2,1+\sqrt{-5}\right).\]
+	To be explicit, $2$, which is irreducible but not prime, has minimal prime over $(2)$ as $\left(2,1+\sqrt{-5}\right)$, which is not principal. We will not justify these claims, but they follow from norm arguments.
+\end{remark}
+
+\subsection{A Little on Uniqueness}
+We remark that primary decomposition is not unique, in general, however. Here is a particularly egregious example.
+\begin{exe}
+	Fix $R:=k[x,y]/\left(x^2,xy\right)$ a Noetherian ring. Then we claim, for any positive integer $n\ge2$,
+	\[(0)=(x)\cap\left(y^n\right)\]
+	is a minimal primary decomposition of $(0)$.
+\end{exe}
+\begin{proof}
+	We have many things to check here. We quickly note that $k[x,y]$ has $k$-basis $\{x^iy^j\}_{i,j\in\NN}$, so $R$ is spanned by
+	\[\left\{1,x,y,y^2,y^3,\ldots\right\}\]
+	because the the other monomials vanish. In fact, this is a basis: if
+	\[ax+\]
+	\begin{itemize}
+		\item We check that $(0)=(x)\cap\left(y^n\right)$. Indeed, suppose $f\in k[x,y]$ such that $f\in(x)\cap\left(y^n\right)$, and we claim that $f\in\left(x^2,xy\right)$. In fact, we will show that $f\in(x)\cap(y)\subseteq(x)\cap\left(y^n\right)$ implies that $f\in(xy)\subseteq\left(x^2,xy\right)$.
+		
+		Well, we note that $k[x,y]/(x)\cong k[y]$ (by $x\mapsto0$) and $k[x,y]/(y)\cong k[y]$ (by $y\mapsto0$), which are both integral domains, so $(x)$ and $(y)$ are both prime, and they are distinct because $x\notin(y)$. So \autoref{prop:primdecompprincipals} tells us that
+		\[(xy)=(x)\cap(y),\]
+		so $f\in(x)\cap(y)$ implies $f\in(xy)$.
+
+		\item We check that $(x)$ is $(x)$-primary. Well, we note that $x\mapsto0$ induces a surjective ring morphism
+		\[\varphi:k[x,y]\to k[y]\]
+		with kernel $(x)$.\footnote{Namely, $\varphi(f)=0$ if and only if all monomials in $f$ are divisible by $x$ if and only if $f\in(x)$.} But $x^2,xy\in(x)$, so we get an induced surjective map
+		\[R\to k[y]\]
+		which still has kernel $(x)$. So $R/(x)\cong k[y]$, so $(x)$ is prime and in particular $(x)$-primary.
+
+		\item We check that $\left(y^n\right)$ is $(x,y)$-primary. For this, we search for possible associated primes of $R/\left(y^n\right)$.
+		
+		Suppose we have $m\in R/\left(y^n\right)$ with $\mf p=\op{Ann}m\in\op{Ass}R/\left(y^n\right)$. Well, we see that
+		\[x^2\cdot m=y^n\cdot m=0,\]
+		so $x^2,y^n\in\mf p$, so primality forces $x,y\in\mf p$, so $(x,y)\subseteq\mf p$. But $(x,y)$ is a maximal ideal: $x,y\mapsto0$ induces a map $R\to k$ with kernel $(x,y)$. Thus, we must have $\mf p=(x,y)$ as our only possible associated prime.
+
+		It remains to show that $(x,y)$ is actually achievable as an annihilator. Well, consider $m:=y^{n-1}$. Indeed, $x\cdot y^{n-1}=xy\cdot y^{n-2}=0$ (here we use $n\ge2$) and $y\cdot y^{n-1}= y^n=0$, so
+		\[(x,y)\subseteq\op{Ann}m.\]
+		But $y^{n-1}\ne0$ in $R/\left(y^n\right)$: this would mean we could write $y^{n-1}=ax^2+bxy+cy^n$ for $a,b,c\in k[x,y]$, which is impossible by degree arguments. Thus, maximality of $(x,y)$ forces $(x,y)=\op{Ann}m$.
+
+		\item We check that $(0)=(x)\cap\left(y^n\right)$ is a minimal primary decomposition. Well, $x\ne0$ and $y^n\ne0$ implies that $(0)\ne(x)$ and $(0)\ne\left(y^n\right)$, so no module in this primary decomposition is removable.
+		
+		Thus, by \autoref{thm:primdecompii}, we see $\op{Ass}R=\{(x,y),(x)\}$, and \autoref{rem:findminimalprimdecomp} tells us that a minimal primary decomposition will have at least $\#\op{Ass}R=2$ terms. So indeed, we have a primary decomposition with $2$ terms, and it must be minimal.
+		\qedhere
+	\end{itemize}
+\end{proof}
 The point is that the above example provides ``lots'' of different minimal primary decompositions.
 
-\subsection{Graded Rings}
+\subsection{A Little on Graded Rings}
 We will want to consider primary decomposition for graded rings because later in life we will want to talk about projective space.
 \begin{proposition}
 	Fix $R=R_0\oplus R_1\oplus\cdots$ a graded ring and $M$ a graded module over $R$. Suppose that we have $m\in M$ and $\mf p:=\op{Ann}m$ a prime ideal. Then $\mf p$ is a graded ideal of $R$.
