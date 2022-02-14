@@ -5,56 +5,135 @@ Here we go.
 \subsection{Unique Factorization Domains}
 
 We start with the following result; it is due to Gauss.
-\begin{theorem} \label{thm:ch}
+\begin{theorem} \label{thm:rxisufd}
 	Fix $R$ a unique factorization domain. Then $R[x]$ is a unique factorization domain.
 \end{theorem}
 \begin{proof}
-	The main character is as follows.
+	The main character in our story is as follows.
 	\begin{definition}[Content]
-		Fix $f(x)=a_0+\cdots+a_nx^n\in R[x]$. Then we define the \textit{content} of $f$ to be the ideal
+		Fix $R$ a ring and $f(x)=a_0x^0+\cdots+a_nx^n\in R[x]$. Then we define the \textit{content} of $f$ to be the ideal
 		\[\op{cont}(f):=(a_0,\ldots,a_n)\subseteq R.\]
 	\end{definition}
+	\begin{remark}[Nir]
+		This definition always looked unnatural until I realized that it does in fact preserve some structure of $R[x]$. For example, for $r\in R$ and $f(x)=a_0x^0+\cdots+a_nx^n\in R[x]$, we see $(rf)(x)=ra_0x^0+\cdots+ra_nx^n$ so that
+		\[\op{cont}(rf)=(ra_0,\ldots,ra_n)=r(a_0,\ldots,a_n)=r\op{cont}(f).\]
+		Additionally, we can show $\op{cont}(f(x+r))=\op{cont}(f(x))$. By symmetry, it suffices for $\op{cont}(f(x+r))\subseteq\op{cont}(f(x))$, for which we note
+		\[f(x+r)=\sum_{k=0}^na_k(x+r)^k=\sum_{k=0}^n\left(\sum_{\ell=0}^ka_k\binom k\ell x^\ell r^k\right)=\sum_{\ell=0}^n\left(\sum_{k=\ell}^n\binom k\ell r^ka_k\right)x^\ell\]
+		has all coefficients in $\op{cont}(f)$.
+	\end{remark}
 	Here is the main claim.
-	\begin{lemma}
-		Fix $f,g\in R[x]$. Then $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)$.
+	\begin{lemma}[Gauss] \label{lem:gauss}
+		Fix $R$ a ring and $f,g\in R[x]$. Then $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)$.
 	\end{lemma}
 	\begin{proof}
-		That $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)$ follows from expanding out $fg$. To show the other direction, we recall from \autoref{prop:radprimes} that
-		\[\rad\op{cont}(fg)=\bigcap_{\op{cont}(fg)\subseteq\mf p}\mf p.\]
-		Now, for any $\mf p$ containing $\op{cont}(fg)$, we have to show that $\op{cont}(f)\op{cont}(g)\subseteq\mf p$. But then we note that $\overline f,\overline g\in(R/\mf p)[x]$ will have
-		\[\overline f\cdot\overline g=0\]
-		by definition of $\mf p$. Thus, either $\overline f\in\mf p$ or $\overline g\in\mf p$, so $\op{cont}(f)\subseteq\mf p$ or $\op{cont}(g)\subseteq\mf p$. This finishes the other inclusion.
-	\end{proof}
-	The key to continue is to work with the field of fractions $K:=\op{Frac}(R)$, noting that any polynomial $f\in R[x]$ will have a unique factorization in $K[x]$ (because, say, $K[x]$ is Euclidean).
+		We show the inclusions independently.
+		\begin{itemize}
+			\item That $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)$ is easier. We write out
+			\[f(x)=\sum_{k=0}^\infty a_kx^k\qquad\text{and}\qquad g(x)=\sum_{\ell=0}^\infty b_\ell x^\ell,\]
+			where all but finitely many of the $a_k$ and $b_\ell$ vanish. Then
+			\[(fg)(x)=\sum_{n=0}^\infty\left(\sum_{k+\ell=n}a_kb_\ell\right)x^n.\]
+			Now, by definition, each $a_k$ and $b_\ell$ will have $a_k\in\op{cont}(f)$ and $b_\ell\in\op{cont}(g)$ so that $a_kb_\ell\in\op{cont}(f)\op{cont}(g)$. In particular all coefficients of $fg$ live in $\op{cont}(f)$ and $\op{cont}(g)$, so $\op{cont}(fg)\subseteq\op{cont}(f)\op{cont}(g)$.
 
-	Namely, our next step is to classify irreducibles in $R[x]$.
-	\begin{lemma}
-		Fix everything as above. Then $f$ is irreducible in $R[x]$ implies that $f$ is irreducible in $K[x]$.
+			\item The other inclusion $\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)$ is harder. Note that, by \autoref{prop:radprimes},
+			\[\rad\op{cont}(fg)=\bigcap_{\op{cont}(fg)\subseteq\mf p}\mf p.\]
+			Thus, to show that $\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)$, we will show that $\op{cont}(f)\op{cont}(g)\subseteq\mf p$ for each prime $\mf p$ containing $\op{cont}(fg)$.
+
+			The key trick is to work in $R/\mf p$. Let $\overline p$ denote the image of some $p\in R[x]$ along $R[x]\to(R/\mf p)[x]$. (Importantly, yhe map $R[x]\to(R/\mf p)[x]$ merely mods coefficients.) Because $\op{cont}(fg)\subseteq\mf p$, all the coefficients of $fg$ live in $\mf p$, so
+			\[\overline f\cdot\overline g=\overline{fg}=0\]
+			in $(R/\mf p)[x]$. But now we see that $R/\mf p$ is an integral domain, so $(R/\mf p)[x]$ is also an integral domain!
+			
+			So without loss of generality, we take $\overline f=0$ in $(R/\mf p)[x]$, so all of the coefficients of $f$ live in $\mf p$, so $\op{cont}(f)\subseteq\mf p$, so $\op{cont}(f)\op{cont}(g)\subseteq\mf p$. This finishes.
+			\qedhere
+		\end{itemize}
+	\end{proof}
+	\begin{remark}[Nir] \label{rem:optimizegauss}
+		The above proof actually gave us something which looks a little stronger: for each $\mf p$ containing $\op{cont}(fg)$, we have $\op{cont}(f)\subseteq\mf p$ or $\op{cont}(g)\subseteq\mf p$.
+	\end{remark}
+	\begin{remark}[Nir] \label{rem:primeslift}
+		Here is one way to view Gauss's lemma: if $\mf p$ is prime ideal in $R$, then $\mf pR[x]$ remains prime in $R[x]$. Namely, if $fg\in\mf pR[x]$, then $\op{cont}(fg)\subseteq\mf p$, so the primality of $\mf p$ forces $\op{cont}(f)\subseteq\mf p$ or $\op{cont}(g)\subseteq\mf p$. In other words, $f\in\mf pR[x]$ or $g\in\mf pR[x]$.
+	\end{remark}
+	Now, the key to getting unique factorization in $R[x]$ is to get it via unique factorization in $K[x]$, where $K:=\op{Frac}(R)$ is the field of fractions. In particular, recall $K[x]$ is a unique factorization domain because it is a Euclidean domain (see \autoref{ex:fieldpolyufd}).
+
+	Our next step is to create a weak classifiaction of irreducibles in $R[x]$.
+	\begin{remark}[Nir] \label{rem:unitslift}
+		Additionally, when $R$ is an integral domain the units of $R[x]$ are precisely the units in $R[x]$. Certainly any unit in $R$ will remain a unit in $R[x]$ because the inverse lives in $R\subseteq R[x]$. However, if $u\in R[x]$ is a unit with inverse $v$, then the equation $uv=1$ forces $\deg u=\deg v=0$, so $u,v\in R$, so $u\in R^\times$.
+	\end{remark}
+	\begin{lemma} \label{lem:irredfracfield}
+		Fix $R$ a unique factorization domain. Then if $f$ is a nonconstant irreducible in $R[x]$, then $f$ is irreducible in $K[x]$.
 	\end{lemma}
 	\begin{proof}
-		We proceed by contraposition. If $f(x)$ is not irreducible (but still not zero and not a unit), then we can write $f=g_0h_0$ where $\deg g_0,\deg h_0<\deg f$. Clearing denominators, we can write
+		Fix some $f(x)$ which is not zero and not a unit. We proceed by contraposition; taking $f$ not irreducible in $K[x]$ and showing that it is not irreducible in $R[x]$. Well, in this case we can write $f=g_0h_0$ for some $g_0,h_0\in K[x]$, where $0<\deg g_0,\deg h_0<\deg f$. (Note this factorization exists because $f$ remains not a unit in $K[x]$ because the units in $K[x]$ are constants by \autoref{rem:unitslift}.)
+		
+		Now we move back to $R[x]$. Callously, let $a\in R$ (respectively, $b\in R$) be the product of all the denominators of all the coefficients of $g_0$ (respecitvely, $h_0$) so that $g:=ag_0$ and $h:=bh_0$ live in $R[x]$. Then we set $r:=ab$, which gives
 		\[rf=gh\]
-		where $g,h\in R[x]$. So now we can talk about the content. If $r$ is a unit, then we see that $f$ is indeed not reducible. If $r$ is not a unit, then for each prime $p\mid f$, we see that $\op{cont}(f)\op{cont}(g)\subseteq\rad\op{cont}(fg)\subseteq(p)$, so either $g\in(p)$ or $h\in(p)$, and then we can cancel out by $p$. In particular, we can, after enough cancelling, force $r$ to be a unit, thus finishing.
+		where $g,h\in R[x]$. Now that we're in $R[x]$, we can talk about the content. To set up our discussion, we use the fact that $R$ is a unique factorization domain to write
+		\[r=u\prod_{k=1}^n\pi_k\]
+		for some $u\in R^\times$ and some (not necessarily distinct) irreducibles $\pi_k$.
+
+		Note that if $n=0$, then $r=u$ is a unit, so we get the factorization $f=(g/u)h$ in $R[x]$, which witnesses $f$ not being irreducible. (In particular, $g/u$ and $h$ are not units by \autoref{rem:unitslift}.) So we claim that we can find some triple $(r,g,h)$ consisting of elements $r\in R$ and $g,h\in R[x]$ where $rf=gh$ and $n=0$. Because we already have such an example, we choose $r$ to have minimal $n$.
+
+		To finish, suppose for the sake of contradiction\footnote{It is possible to remove the contradiction by doing induction on $n$, showing that ``for any $n$, there exists a triple $(r,g,h)$ where $r$ is a unit.''} $n>1$ so that $r$ is divisible by the irreducible element $\pi_n$. Because $R$ is a unique factorization domain, \autoref{rem:ufdimpliesirredisprime} tells us $(\pi_n)$ is prime. So by \autoref{rem:optimizegauss}, we see $gh\in(\pi_1)R[x]$ implies $\op{cont}(gh)\in(\pi_1)$ implies
+		\[\op{cont}(g)\subseteq(\pi_n)\qquad\text{or}\qquad\op{cont}(h)\subseteq(\pi_n).\]
+		So without loss of generality, we take $\op{cont}(g)\subseteq(\pi_1)$, so all coefficients of $f$ are divisible by $\pi_n$, so $g/\pi_n\in R[x]$, so we can write
+		\[(r/\pi_n)f=(g/\pi_n)h,\]
+		so we have a triple $(r/\pi_n,g/\pi_n,h)$ where $r/\pi_n$ has strictly fewer irreducibless than $r$. This contradicts the minimality of $r$, finishing.
 	\end{proof}
-	To finish checking that $R[x]$ is a unique factorization domain, we recall that it suffices to show all irreducibles are prime.
-	\begin{lemma}
-		Fix everything as above. If $f$ is irreducible, in $R[x]$, then $f$ is prime.
+	% To finish checking that $R[x]$ is a unique factorization domain, we recall that it suffices to show all irreducibles are prime.
+	We can extend our classification to show that all irreducibles are prime in $R[x]$.
+	\begin{remark}[Nir] \label{rem:irredslift}
+		Taking $R$ to be an integral domain, we note $\pi\in R$ an irreducible in $R$ will remain irreducible in $R[x]$. Indeed, degrees add in integral domains, so if $f,g\in R[x]$ have $fg=\pi$, then $\deg f=\deg g=0$, so $f,g\in R$. In particular, $\pi=fg$ now forces one of $f$ or $g$ to be a unit in $R$ and hence a unit in $R[x]$.
+	\end{remark}
+	\begin{lemma} \label{lem:classifyirreds}
+		Fix $R$ a unique factorization domain. If $f$ is irreducible in $R[x]$, then either
+		\begin{itemize}
+			\item $f$ is a constant irreducible in $R$, or
+			\item $f$ is a (nonconstant) irreducible in $K[x]$, and $\op{cont}(f)\not\subseteq(\pi)$ for any irreducible $\pi\in R$.
+		\end{itemize}
+		In either case, $f$ is prime in $R[x]$.
 	\end{lemma}
 	\begin{proof}
-		Well, if $f$ is irreducible in $R[x]$, then it is irreducible and hence prime in $K[x]$. In particular, if $f\mid gh$ for $g,h\in R[x]$, then without loss of generality
-		\[g=f(q/r)\]
-		for some $q/r\in K[x]$ so that $q\in K[x]$. In particular, $fq=rg$, so arguing as above we can remove the primes dividing $r$ into $q$ because $f$ will not be divisible by any prime constant.
+		Observe that, if $f$ is a constant, then $f$ will be irreducible in $R$ automatically: writing $f=ab$ for any $a,b\in R$ forces one of $a$ or $b$ to be a unit in $R[x]$ and hence in $R$ (see \autoref{rem:unitslift}). So because $R$ is a unique factorization domain, \autoref{rem:ufdimpliesirredisprime} gives $(f)$ is prime in $R$, so \autoref{rem:primeslift} gives $(f)$ is prime in $R[x]$ as well.
+
+		Otherwise, $f$ is a nonconstant irreducible in $R[x]$. Thus, it is irreducible and hence prime in $K[x]$ by \autoref{lem:irredfracfield}. In particular, if $f\mid gh$ in $R[x]$ for $g,h\in R[x]$, then $f\mid gh$ in $K[x]$ as well (namely, the quotient lives in $R[x]\subseteq K[x]$), but because $f$ is prime in $K[x]$, we see $f\mid g$ or $f\mid h$ in $K[x]$.
+
+		Without loss of generality take $f\mid g$; setting $fq_0=g$, we can let $r$ be the product of the denominators of $q_0$ (note $r\ne0$) so that $q:=rq_0\in R[x]$ and gives
+		\[fq=rg.\]
+		We will now argue akin to \autoref{lem:irredfracfield} to show that $f\mid g$. In particular, we have found some pair $(r,q)\in(R\setminus\{0\})\times R[x]$ such that $fq=rg$, we can find an $r$ with minimal number of irreducible factors in its factorization into irreducibles.
+
+		Note that if $r$ is divisible by no irreducibles, then this will imply that $r$'s factorization into irreducibles merely consists of a unit, so $r\in R^\times$. In particular,
+		\[f(q/r)=g,\]
+		where $q/r\in R[x]$, implying $f\mid g$ in $R[x]$. This finishes the primality check for $f$.
+
+		Otherwise, suppose for the sake of contadiction $\pi\mid r$ for some irreducible in $\pi\in R$. Then $(\pi)$ is a prime ideal by \autoref{rem:ufdimpliesirredisprime}, so \autoref{rem:optimizegauss} tells us that $\op{cont}(fq)\subseteq(\pi)$ implies
+		\[\op{cont}(f)\subseteq(\pi)\qquad\text{or}\qquad\op{cont}(q)\subseteq(\pi).\]
+		We take the cases separately.
+		\begin{itemize}
+			\item In the case where $\op{cont}(q)\subseteq(\pi)$, we see $q/\pi\in R[x]$, so we could write
+			\[f(q/\pi)=(r/\pi)g\]
+			to create an $(r,q)$ pair with strictly fewer irreducibles in $r$, thus violating the minimality of $r$.
+			\item In the case where $\op{cont}(f)\subseteq(\pi)$, we see $f/\pi\in R[x]$, so $f=\pi\cdot f/\pi$ provides a factorization of $r$ into non-units: the only units of $R[x]$ are $R^\times$ by \autoref{rem:unitslift}, but $\pi\in R\setminus R^\times$ and $f\notin R$. So this contradicts the irreducibility of $f$.
+		\end{itemize}
+		We remark that the argument at the end of the second case actually shows that $\op{cont}(f)\not\subseteq(\pi)$ for any irreducible $\pi\in R$.
 	\end{proof}
-	The above lemma finishes the proof.
+	\begin{remark}[Nir] \label{rem:classifyirreds}
+		In fact, \autoref{lem:classifyirreds} is sharp: if $f\in R[x]$ is an irreducible in $R$, then $f$ remains irreducible in $R[x]$ by \autoref{rem:irredslift}.
+		
+		Otherwise if $f\in R[x]$ is an irreducible in $K[x]$ with $\op{cont}(f)\not\subseteq(\pi)$ for each irreducible $\pi\in R$, then if we factor $f=gh$ where $g,h\in R[x]$, irreducibility in $K[x]$ forces $\deg g=0$ or $\deg h=0$, so without loss of generality $g=0$. But no irreducible $\pi$ may divide $g$ because then it would divide $f$, giving $\op{cont}(f)\subseteq(\pi)$.
+	\end{remark}
+	The above lemma finishes the proof by \autoref{rem:betterufd}: $R[x]$ is Noetherian by \autoref{thm:hilbasis} and so satisfies the ascending chain condition on principal ideals, and all irreducibles are prime in $R[x]$ by the above lemma.
 \end{proof}
 \begin{corollary}
 	The ring $k[x_1,\ldots,x_n]$ is a unique factorization domain.
 \end{corollary}
 \begin{proof}
-	Induction on $n$.
+	We induct on $n$: when $n=0$, we note that fields vacuously have unique factorization. The inductive step is to show that $k[x_1,\ldots,x_{n-1}][x_n]$ has unique factorization from $k[x_1,\ldots,x_{n-1}]$, which is precisely \autoref{thm:rxisufd}.
 \end{proof}
 \begin{example}
-	We show that $\left(y^2-x^3\right)\subseteq k[x,y]$ is prime. It suffices to show that $y^2-x^3$ is prime in $k[x,y]$, for which it suffices to show that $y^2-x^3$ is irreducible in $k(x)[y]$. But $y^2-x^3$ is a quadratic in $k(x)[y]$ and therefore irreducible because it has no roots: there is no $y=f(x)/g(x)$ such that $f(x)^2/g(x)^2=x^3$.
+	We show that $\left(y^2-x^3\right)\subseteq k[x,y]$ is prime. Because $k[x,y]$ is a unique factorization domain, it suffices to show that $y^2-x^3$ is irreducible in $k[x,y]=k[x][y]$, for which it suffices to show that $y^2-x^3$ is irreducible in $k(x)[y]$ by \autoref{rem:classifyirreds}.
+	
+	But $y^2-x^3$ is a quadratic in $k(x)[y]$ and therefore irreducible because it has no roots: there is no $y=f(x)/g(x)$ such that $f(x)^2/g(x)^2=x^3$ because this gives
+	\[f(x)^2=x^3g(x)^2,\]
+	which fails by degree arguments. Namely, $f,g\ne0$, and $\deg\left(f(x)^2\right)$ is even while $\deg\left(x^3g(x)^2\right)$ is odd.
 \end{example}
 \begin{example}
 	We show that $\left(y^2-x^3\right)\subseteq k[x,y]$ is prime a different way. Indeed, by sending $x\mapsto t^2$ and $y\mapsto t^3$, there is an embedding
