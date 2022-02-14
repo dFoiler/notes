@@ -1,0 +1,129 @@
+% !TEX root = ../notes.tex
+
+Happy Valentine's day, I suppose. Homework \#4 is due on Sunday. Homework \#5 will be released on Friday.
+
+\subsection{Motivating Cauchy--Riemann Equations}
+Today we're talking about the Cauchy--Riemann equations.
+\begin{idea}
+	The Cauchy--Riemann equations are necessary conditions for a function to be holomorphic.
+\end{idea}
+In fact, they will be sufficient as well, but we will only see this next class.
+
+Throughout today's class, we will fix $\Omega\subseteq\CC$ a nonempty open subset. We recall that a function $f:\Omega\to\CC$ is ``differentiable'' at some $z_0\in\Omega$ if and only if
+\[\lim_{h\to0}\frac{f(z_0+h)-f(z_0)}{h}=\lim_{z\to z_0}\frac{f(z)-f(z_0)}{z-z_0}.\]
+the limit exists. If it exists, we denoted it by $f'(z_0)$, though we will not assume it exists yet. If we fix $\Delta z:=z-z_0$, then we can write the above as
+\[f'(z_0)=\lim_{z\to z_0}\frac{f(z)-f(z_0)}{\Delta z}.\]
+Now, to motivate our discussion, we recall that under the isomorphism $\CC\cong\RR^2$ with basis $\{1,i\}$, we can define $u(x,y):=\Re f(x+yi)$ and $v(x,y):=\Im f(x+yi)$ where $u,v:\RR^2\to\RR$ so that
+\[f(x+yi)=u(x,y)+iv(x,y).\]
+The point of this is to encode some geometry directly into our set-up.
+\begin{example}
+	Given $f(z)=z^2$, we can plug in
+	\[f(x+yi)=(x+yi)^2=\underbrace{x^2-y^2}_u+i\cdot\underbrace{2xy}_v.\]
+\end{example}
+Now that we're moving things to $\RR^2$, we will fix $z_0:=x_0+y_0i$ for $x_0,y_0\in\RR$ with $z=x+yi$ so that $\Delta z=(x-x_0)+(y-y_0)i=\Delta x+i\Delta y$. And for a little more convenience, we fix $\Delta w:=f(z_0+z)-f(z_0)$ so that
+\[f'(z_0)\stackrel?=\lim_{z\to z_0}\frac{\Delta w}{\Delta z},\]
+if the limit exists. Expanding out $f$ into real and imaginary parts, we find
+\[\Delta w := \big(u(x_0+\Delta x,y_0+\Delta y)-u(x_0,y_0)\big) + i\big(v(x_0+\Delta x,y_0+\Delta y)-v(x_0,y_0)\big).\]
+Now assume that $f$ is inf act differentiable at $z_0$ so that $f'(z_0)$ will actually exist. Our key idea to continue is to split up the limit into real and imaginary parts because it will exist if and only if the limits of the real and imaginary parts exist. So we note
+\begin{align*}
+	f'(z_0) &= \lim_{\Delta z\to0}\frac{\Delta w}{\Delta z} \\
+	&= \lim_{(\Delta x,\Delta y)\to0}\Re\left(\frac{\Delta w}{\Delta z}\right)+i \lim_{(\Delta x,\Delta y)\to0}\Im\left(\frac{\Delta w}{\Delta z}\right) \tag{$*$}\label{eq:almostcauchyriemann}
+\end{align*}
+We will now compute this limit in two ways to get the Cauchy--Riemann equations, as follows.
+\begin{center}
+	\begin{asy}
+		unitsize(1.5cm);
+		draw((0,2.5)--(0,-1), arrow=BeginArrow, p=linewidth(0.5));
+		draw((2.5,0)--(-1,0), arrow=BeginArrow, p=linewidth(0.5));
+		label("$\Delta x$", (2.5,0), N);
+		label("$\Delta y$", (0,2.5), E);
+		draw((1,0)--(0,0), arrow=EndArrow, p=red+linewidth(0.7));
+		label("$\Delta y=0$", (1,0), S, red);
+		draw((0,1)--(0,0), arrow=EndArrow, p=magenta+linewidth(0.7));
+		label("$\Delta x=0$", (0,1), W, magenta);
+	\end{asy}
+\end{center}
+These are probably the easiest two limits that we could think of, so it's nice that they will be so useful. % \todo{should it be obvious that these are sufficient?}
+Anyways, here is our working out.
+\begin{itemize}
+	\item We set $\Delta y=0$ so that $\Delta z=\Delta x$. This gives
+	\[\frac{\Delta w}{\Delta x}=\frac{u(x_0+\Delta x,y_0)-u(x_0,y_0)}{\Delta x}+i\cdot\frac{v(x_0+\Delta x,y_0)-v(x_0,y_0)}{\Delta x}.\]
+	On one hand, we can use \hyperref[eq:almostcauchyriemann]{($*$)} to show the real part comes out to
+	\[\Re f'(z_0)=\lim_{(\Delta x,\Delta y)\to 0}\Re\left(\frac{\Delta w}{\Delta x}\right)=\lim_{\Delta x\to0}\frac{u(x_0+\Delta x,y_0)-u(x_0,y_0)}{\Delta x}.\]
+	This limit must exist because $f$ is differentiable at $z_0$, and when this limit exists, the rightmost limit is called the partial derivative $u_x(x_0,y_0)$.
+	
+	On the other hand, the imaginary part comes out to
+	\[\Im f'(z_0)=\lim_{(\Delta x,\Delta y)\to 0}\Im\left(\frac{\Delta w}{\Delta x}\right)=\lim_{\Delta x\to0}\frac{v(x_0+\Delta x,y_0)-v(x_0,y_0)}{\Delta x},\]
+	which comes out to $v_x(x_0,y_0)$ because we know that the limit exists.
+
+	So in total, we see $f'(z_0)=u_x(x_0,y_0)+i\cdot v_x(x_0,y_0)$.
+
+	\item We set $\Delta x=0$ so that $\Delta z=i\Delta y$. Be warned that an unexpected sign is about to appear from this $i$. This time we get
+	\[\frac{\Delta w}{\Delta z}=\frac{u(x_0,y_0+\Delta y)-u(x_0,y_0)}{i\Delta y}+i\cdot\frac{v(x_0,y_0+\Delta y)-v(x_0,y_0)}{i\Delta y}.\]
+	To ``rationalize'' the deminators, we write
+	\[\frac{\Delta w}{\Delta z}=\frac{v(x_0,y_0+\Delta y)-v(x_0,y_0)}{\Delta y}-i\cdot\frac{u(x_0,y_0+\Delta y)-u(x_0,y_0)}{\Delta y},\]
+	where we are using $1/i=-i$. Note that the $u$s and $v$s have swapped from the last computation!
+
+	We now compute our limits. On one hand,
+	\[\Re f'(z_0)=\lim_{(\Delta x,\Delta y)\to0}\Re\left(\frac{\Delta w}{\Delta z}\right)=\lim_{\Delta y\to0}\frac{v(x_0,y_0+\Delta y)-v(x_0,y_0)}{\Delta y},\]
+	which is $v_y(x_0,y_0)$ because the limit exists. On the other hand,
+	\[\Im f'(z_0)=\lim_{(\Delta x,\Delta y)\to0}\Im\left(\frac{\Delta w}{\Delta z}\right)=\lim_{\Delta y\to0}-\frac{u(x_0,y_0+\Delta y)-u(x_0,y_0)}{\Delta y},\]
+	which is $-u_y(x_0,y_0)$ because the limit exists.
+
+	So in total, we see $f'(z_0)=v_y(x_0,y_0)-iu_y(x_0,y_0)$.
+\end{itemize}
+\begin{remark}
+	Either equation itself is pretty useful to actually compute formulae for the derivatives.
+\end{remark}
+Synthesizing, we see
+\[f'(z_0)=u_x(x_0,y_0)+i\cdot v_x(x_0,y_0)=v_y(x_0,y_0)-iu_y(x_0,y_0).\]
+Comparing real and imaginary parts, we get the following.
+\begin{theorem}[Cauchy--Riemann] \label{thm:crnecessary}
+	Fix $\Omega\subseteq\CC$ a nonempty open subset and $f:\Omega\to\CC$ a function differentiable at some $z_0=x_0+y_0i\in\CC$. If we write $f(x+yi)=u(x,y)+i(x,y)$, then
+	\[\begin{cases}
+		u_x(x_0,y_0)=v_y(x_0,y_0), \\
+		v_x(x_0,y_0)=-u_y(x_0,y_0).
+	\end{cases}\]
+	In fact, $f'(z_0)=u_x(x_0,y_0)+iv_x(x_0,y_0)=v_y(x_0,y_0)-iu_y(x_0,y_0)$.
+\end{theorem}
+\begin{proof}
+	This follows from the above discussion.
+\end{proof}
+
+\subsection{Examples}
+Let's see some examples to be convinced of the utility of \autoref{thm:crnecessary}. Let's start by checking that something is differentiable.
+\begin{example}
+	Take $f(z)=z^2$ so that 
+	\[(x+yi)=(x+yi)^2=\left(x^2-y^2\right)+i(2xy)\]
+	so that $u(x,y)=x^2-y^2$ and $v(x,y)=2xy$ has $f(x+yi)=u(x,y)+iv(x,y)$. We know that $f$ is entire (it's impossible), so picking up any $z=x+yi\in\CC$, we compute
+	\[u_x(x,y)=2x=v_y(x,y)\qquad\text{and}\qquad v_x(x,y)=2y=-(-2y)=-u_y(x_0,y_0),\]
+	verifying \autoref{thm:crnecessary}. In fact, we can see that $f'(z)=u_x(x,y)+v_x(x,y)=2x+2yi=2z$.
+\end{example}
+And now let's see something which isn't differentiable.
+\begin{example} \label{ex:normnotholo}
+	Takd $f(z)=|z|^2$ so that
+	\[f(x+yi)=|x+yi|^2=(x+yi)(x-yi)=x^2+y^2,\]
+	which only has a real part! Namely, we have $u(x,y)=x^2+y^2$ and $v(x,y)=0$ to make $f(x+yi)=u(x,y)+iv(x,y)$. Now suppose for the sake of contradiction that $f$ were differentiable at some $z=x+yi\in\CC$. Then we are forced into
+	\[2x=u_x(x,y)=v_x(x,y)=0\qquad\text{and}\qquad0=v_x(x,y)=-u_y(x,y)=-2y,\]
+	which means $x=y=0$. So $f$ is differentiable at nowhere outside of $\CC\setminus\{0\}$.
+\end{example}
+Observe that the above example does not show that $f$ is differentiable at $0\in\CC$, though this is true. To be explicit, \autoref{thm:crnecessary} does not tell us that satisfying the Cauchy--Riemann equations implies differentiability.
+\begin{remark}
+	Extending \autoref{ex:normnotholo}, we can show that the only entire real-valued function is constant.
+\end{remark}
+Let's also close with an application of \autoref{thm:crnecessary}.
+\begin{corollary}
+	Fix $\Omega\subseteq\CC$ a connected nonempty open subset and $f:\Omega\to\CC$ a function differentiable on all of $\Omega$ so that $f'(z)=0$ for all $z\in\Omega$. Then $f$ is constant.
+\end{corollary}
+\begin{proof}
+	By \autoref{thm:crnecessary}, we see that, for any $z=x+yi$, we see
+	\[u_x(x,y)=v_y(x,y)=\Re f'(z)=0\qquad\text{and}\qquad v_x(x,y)=-u_y(x,y)=\Im f'(z)=0.\]
+	In particular, for some function $g:C\to\RR$ for some $C\subseteq\RR^2$ connected and open, having $g_x=0$ forces $g$ to be constant as a function of $x$ on any connected horizontal line, and $g_y=0$ forces $g$ to be constant as a function of $y$.
+
+	Now, because any path between two points in an open subset can be approximated by vertical and horizontal line segments contained in neighborhoods of points, we see that the endpoints of any path in $C$ must have the same value.\footnote{Please don't ask me to rigorize this.} But $C$ is open and connected and hence path-connected, so $C$ any two points can be connected by path, so $g$ must be constant on all of $C$.
+
+	Returning to $f$, we see that $u$ and $v$ will be constant on the embedding of $\Omega$ into $\RR^2$ (recall that $\CC\cong\RR^2$ topologically, so $\Omega\subseteq\RR^2$ remains open and connected), so $f$ is constant on $\Omega$. This is what we wanted.
+\end{proof}
+\begin{remark}
+	We do need the connected hypothesis: we could take $\Omega=\CC\setminus\RR$ and with $f(z)=1_{\Re z>0}$.
+\end{remark}
