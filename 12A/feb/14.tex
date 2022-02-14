@@ -1,0 +1,171 @@
+% !TEX root = ../notes.tex
+
+We're back in action everybody.
+
+\subsection{Equivalence Classes}
+
+Recall that it is possible for two formulae to define the same truth function. For example, consider the truth table as follows.
+\[\begin{array}{c|c||c}
+	x_1 & x_2 & \max\{x_1,x_2\} \\
+	\hline
+	1 & 1 & 1 \\
+	1 & 0 & 1 \\
+	0 & 1 & 1 \\
+	0 & 0 & 0
+\end{array}\]
+This function is equal to either $f_{p\lor q}^2$ or $f_{\lnot(\lnot p\land\lnot q)}^2$. Inded, we can compute as follows.
+\[\begin{array}{c|c||c||c|c|c}
+	p & q & p \lor q & \lnot p & \lnot q & \lnot (\lnot p \and \lnot q) \\
+	\hline
+	1 & 1 & 1        & 0       & 0       & 1 \\
+	1 & 0 & 1        & 0       & 1       & 1 \\
+	0 & 1 & 1        & 1       & 0       & 1 \\
+	0 & 0 & 0        & 1       & 1       & 0
+\end{array}\]
+We also recall that we had the following lemma from last class.
+\funcequivalence*
+The above idea gives us a notion of an equivalence class of formulae.
+\begin{definition}[Eqiuvalence class]
+	Fix a formula $\varphi\in\mathcal L(P)$. Then we define the \textit{equivalence class} of $\varphi$ in $\mathcal L(P)$ to be the set of formulae which are logically equivalent to $\varphi$. We denote this set by $[\varphi]$, for which $\varphi$ is a representative.
+\end{definition}
+\begin{example}
+	We have $\lnot(\lnot p\land\lnot q)\in[p\lor q]$ by de Morgan's laws. Similarly, $\lnot\lnot(p\lor q)\in[p\lor q]$.
+\end{example}
+The point of the equivalence class is that it ignores the underlying syntax of a formula and only cares about its semantics. If the only thing that we care about is what a formula ``means'' instead of what it looks like, then it makes sense to lump together formulae which are equivalent.
+
+Our notion of equivalence class makes sense, as follows.
+\begin{prop}
+	Logical equivalence is reflexive, symmetric, and transitive. That is, for any $\alpha,\beta,\gamma\in\mathcal L(P)$, we have the following.
+	\begin{itemize}
+		\item Reflexive: $\alpha\equiv\alpha$.
+		\item Symmetric: $\alpha\equiv\beta$ implies $\beta\equiv\alpha$.
+		\item Transitive: $\alpha\equiv\beta$ and $\beta\equiv\gamma$ implies $\alpha\equiv\gamma$.
+	\end{itemize}
+\end{prop}
+\begin{proof}
+	We show the claims as follows. Fix $\alpha,\beta,\gamma\in\mathcal L(P)$. Denote equivalence by $\equiv$.
+	\begin{itemize}
+		\item Reflexive: for any valuation $V:P\to\{0,1\}$, we have $\hat V(\alpha)=\hat V(\alpha)$, so $\alpha\equiv\alpha$.
+		\item Symmetric: if $\alpha\equiv\beta$, then any valuation $V:P\to\{0,1\}$ has $\hat V(\alpha)=\hat V(\beta)$ so that $\hat V(\beta)=\hat V(\alpha)$, so $\beta\equiv\alpha$.
+		\item Transitive: if $\alpha\equiv\beta$ and $\beta\equiv\gamma$, then any valuation $V:P\to\{0,1\}$ has $\hat V(\alpha)=\hat V(\beta)$ and $\hat V(\beta)=\hat V(\gamma)$ so that $\hat V(\alpha)=\hat V(\gamma)$, so $\alpha\equiv\gamma$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	The above properties show that logical equivalence is an equivalence relation.
+\end{remark}
+\begin{corollary}
+	Two formulae $\varphi,\psi\in\mathcal L(P)$ have $\varphi$ equivalent to $\psi$ if and only if $[\varphi]=[\psi]$. So this is also equivalent to $f_\varphi^n=f_\psi^n$.
+\end{corollary}
+\begin{proof}
+	We show the directions independently.
+	\begin{itemize}
+		\item Suppose $\varphi\equiv\psi$. Then, for any $\alpha\in[\varphi]$, we have $\varphi\equiv\alpha$, so $\alpha\equiv\varphi$ and $\varphi\equiv\psi$, so $\alpha\equiv\psi$, so $\alpha\in[\psi]$. By symmetry, any $\alpha\in[\psi]$, we have $\psi\equiv\alpha$ and $\psi\equiv\varphi$, so $\alpha\equiv\varphi$, so $\alpha\in[\varphi]$.
+		\item Suppose $[\varphi]=[\psi]$. Then $\varphi\equiv\varphi$ implies $\varphi\in[\varphi]=[\psi]$, so $\varphi\equiv\psi$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Local Finiteness}
+We might be interested in counting the total number of equivalence classes, but this might be infinite if the number of propositions is infinite. Namely, each proposition $p\in P$ gives a different equivalence class $[p]$, lower-bounding the total number of formulae.
+
+However, there is a notion of local finiteness.
+\begin{proposition}[Local finiteness] \label{prop:localfiniteness}
+	Fix $P=\{p_1,\ldots,p_n\}$ a finite set. Then there are only finitely many equivalence classes in $\mathcal L(P)$. In other words, there are only finitely many non-equivalent formulae we can write with the propositions $\{p_1,\ldots,p_n\}$.
+\end{proposition}
+\begin{example}
+	There are only four different possible truth functions in $\mathcal L(\{p\})$, as follows.
+	\[\begin{array}{c|c}
+		p & p\lor\lnot p \\
+		\hline
+		1 & 1 \\
+		0 & 1
+	\end{array}\qquad\begin{array}{c|c}
+		p & p \\
+		\hline
+		1 & 1 \\
+		0 & 0
+	\end{array}\qquad\begin{array}{c|c}
+		p & \lnot p \\
+		\hline
+		1 & 0 \\
+		0 & 1
+	\end{array}\qquad\begin{array}{c|c}
+		p & p\land\lnot p \\
+		\hline
+		1 & 0 \\
+		0 & 0
+	\end{array}\]
+	Explicitly, each input $\{0,1\}$ for $V(p)$ has only two options, giving $2^2$ total possible truth tables, which we have manifest above.
+\end{example}
+\begin{remark}
+	We can tabulate equivalence classes in $\mathcal L(\{p\})$ in a Hasse diagram (moving up means logically implies) as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMSwyLCJwXFxsYW5kXFxsbm90IHAiXSxbMCwxLCJwIl0sWzIsMSwiXFxsbm90IHAiXSxbMSwwLCJwXFxsb3JcXGxub3QgcCJdLFswLDEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsMiwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDMsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+	\[\begin{tikzcd}
+		& {p\lor\lnot p} \\
+		p && {\lnot p} \\
+		& {p\land\lnot p}
+		\arrow[no head, from=3-2, to=2-1]
+		\arrow[no head, from=2-1, to=1-2]
+		\arrow[no head, from=3-2, to=2-3]
+		\arrow[no head, from=2-3, to=1-2]
+	\end{tikzcd}\]
+	For example, $p\land\lnot p\models p\models p\lor\lnot p$. As an aside, this is a boolean algebra.
+\end{remark}
+It is a good exercise to make the Hasse diagram for $\mathcal L(\{p,q\})$.
+
+Now let's prove our result.
+\begin{proof}[Proof of \autoref{prop:localfiniteness}]
+	We can inject equivalence classes $[\varphi]$ in $\mathcal L(P)$ to their associated truth function $f_\varphi^n$. Namely, the function
+	\[[\varphi]\mapsto f_\varphi^n\]
+	is well-defined and one-to-one/injective. We have the following checks.
+	\begin{itemize}
+		\item Well-defined: if $[\varphi]=[\psi]$, then $\varphi\equiv\psi$, so $f_\varphi^n=f_\psi^n$.
+		\item Injective: $f_\varphi^n=f_\psi^n$ implies $\varphi\equiv\psi$ implies $[\varphi]=[\psi]$.
+	\end{itemize}
+	This embedding implies that the number of equivalence classes is bounded above by the number of truth functions because each equivalence class yields a unique truth function.
+	\begin{remark}
+		This last step we just did is the Pigeonhole principle: if we have an injection $A\into B$, then the number of elements of $A$ is at most the number of elements of $B$. This should feel intuitively obvious to prove, and in fact it makes a pretty good way to define the size of a set to begin with, so there is nothing to prove.
+	\end{remark}
+	So to finish, we note that there are $2^{2^n}$ truth functions on $n$ variables: there are only $2^n$ different ways to set the inputs to set true and false for each $p_\bullet$ because each $p_\bullet$ has two options. But then each of these inputs has $2$ options to return true or false, so we have a total of $2^{2^n}$ different functions.
+\end{proof}
+\begin{corollary}
+	Let $P=\{p_1,\ldots,p_n\}$ be a finite set. There are at most $2^{2^n}$ different equivalence classes of formulae.
+\end{corollary}
+\begin{proof}
+	This essentially follows from the proof of \autoref{prop:localfiniteness}, where we upper-bounded the number of equivalence classes by the number of truth functions, of which there are at most $2^{2^n}$.
+\end{proof}
+\begin{remark} \label{rem:completeness}
+	It will turn out that all truth functions are achievable from formulae, so the map $[\varphi]\mapsto f_\varphi^n$ will also be onto/surjective, so the number of logical equivalence classes will be exactly the number of truth functions, which is $2^{2^n}$.
+\end{remark}
+
+\subsection{Completeness}
+Let's manifest \autoref{rem:completeness}. Given a truth function, we need to find its formula.
+\begin{example}
+	The truth table
+	\[\begin{array}{c|c||c}
+		x_1 & x_2 & f(x_1,x_2) \\
+		\hline
+		1 & 1 & 0 \\
+		1 & 0 & 1 \\
+		0 & 1 & 1 \\
+		0 & 0 & 0
+	\end{array}\]
+	is $f_{\lnot p\leftrightarrow q}^2$.
+\end{example}
+So here is the main claim.
+\begin{theorem}
+	Any truth function (with finitely many inputs) can be written by a formula in our language.
+\end{theorem}
+\begin{proof}
+	Fix $f:\{0,1\}^n\to\{0,1\}$ some truth function with $n$ inputs, and let $P=\{p_1,\ldots,p_n\}$ be our propositions. We remark that if $f$ is the zero function, then $f=f_{p_1\land\lnot p_1}^n$ will work.
+
+	Otherwise $f$ returns true somewhere. Let $S$ be the set of all inputs which return true, and because $f$ takes finitely many inputs, the input space of $f$ is finite, so $S$ is finite, so set $S=\{s_1,\ldots,s_n\}$. Now, for each $s:=(x_1,\ldots,x_n)\in S$, we create the term
+	\[\varphi_s:=\pm p_1\land\cdots\land\pm p_n,\]
+	where we choose $+p_\bullet=p_\bullet$ when $x_\bullet=1$ and $-p_\bullet=\lnot p_\bullet$ when $x_\bullet=0$. Then the formula
+	\[\varphi=\varphi_{s_1}\lor\cdots\varphi_{s_n}\]
+	will do the trick. Namely, it is true if and only if our input $s$ lives in $S$ because $\varphi_s$ will be true for the input $x$ if and only if $s=x$.
+\end{proof}
+\begin{remark}
+	Because we showed that any formula is equivalent to one that only uses the connectives $\{\lnot,\land\}$ or even $\{\uparrow\}$, any truth function can be written by a formula in $\{\lnot,\land\}$ or even $\{\uparrow\}$.
+\end{remark}
