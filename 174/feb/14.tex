@@ -1,0 +1,187 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Using Our Equivalence}
+Last time we proved the following theorem.
+\betterequiv*
+Let's use this for fun and profit.
+\begin{corollary}[Math 110]
+	The categories $\mathrm{Mat}_k$ and $\mathrm{fdVec}_k$ are equivalent.
+\end{corollary}
+\begin{proof}
+	Fix $\mathcal C:=\mathrm{fdVec}^{\mathrm{basis}}_k$ to be the category consisting of objects which are ordered pairs $(V,\mathcal B)$ of vector space equipped with a given ordered basis and morphisms which are linear transformations. I will call these based vector spaces because I can.
+
+	Observe that we have a functor $\mathcal C\to\mathrm{Mat}_k$ by sending the based vector space $(V,\mathcal B)$ to $\dim V$ and the linear transformation $T:(V,\mathcal B)\to(V',\mathcal B')$ to the corresponding matrix representation. We run the following checks.
+	\begin{itemize}
+		\item The functor $F$ is fully faithful because (based) lienar transformations $(V,\mathcal B)\to(V',\mathcal B')$ are in bijective correspondence with matrices in $k^{\dim V'\times\dim V}$, which is exactly $\op{Mor}_{\op{Mat}_k}$
+		\item This is essentially surjective because it is surjective: the vector space $k^n$ goes to $n\in\op{Mat}_k$.
+	\end{itemize}
+	Thus $F$ is an equivalence.
+
+	To continue, we use the forgetful functor $U:\mathcal C\to\mathrm{fdVec}_k$ by simply forgetting the basis. This is fully faithful because look at it, and it is essentially surjective because it is actually surjective. Thus, $U$ witnesses $\mathcal C\simeq\mathrm{fdVec}_k$. Applying transitivity, we see
+	\[\mathrm{Mat}_k\simeq\mathcal C\simeq\mathrm{fdVec}_k,\]
+	which finishes.
+\end{proof}
+We have the following definition.
+\begin{definition}[Essential image]
+	The \textit{essential image} of a functor $F:\mathcal C\to\mathcal D$ is the full subcategory of $\mathcal D$ consisting of objects $d\in\mathcal D$ such that $d\cong Fc$ for some $c\in\mathcal C$.
+\end{definition}
+We are saying ``full subcategory'' to just throw in all the morphisms so we don't have to worry about potential composition problems in $\mathcal D$.
+\begin{corollary}
+	A fully faithful functor $F:\mathcal C\to\mathcal D$ induces an equivalence of $\mathcal C$ onto the essential image of $F$.
+\end{corollary}
+\begin{proof}
+	Apply \autoref{thm:betterequiv}, where being essentially surjective follows from the definition of the essential image.
+\end{proof}
+
+\subsection{Motivating Diagram Chasing}
+
+We're going to be talking about diagram-chasing for a little while. This is the technique by which we extract large amounts of information from a commutative diagram. Namely, we will get to formally define what a commutative diagram is and so on. For this, we will want to do a little graph theory.
+
+\begin{definition}[Path]
+	Fix a category $\mathcal C$. Then a \textit{path} in $\mathcal C$ is finite sequence of the form
+	\[(A_1,f_1,A_2,f_2,\ldots,A_n,f_n,A_{n+1}),\]
+	where $A_1,\ldots,A_{n+1}\in\op{Ob}\mathcal C$ and $f_k\in\op{Mor}(A_k,A_{k+1})$ for each $k$.
+\end{definition}
+\begin{remark}
+	Equivalently, we could encode this path by the sequence of morphism $f_1,\ldots,f_n$ such that $\op{cod}f_k=\op{dom}f_{k+1}$.
+\end{remark}
+Let's see an example of the power of abstracting diagams.
+\begin{definition}[Monoid]
+	A \textit{monoid in the category $\mathrm{Set}$} is a set $M$ with morphisms $\mu:M\times M\to M$ and $\eta:\{*\}\to M$ such that the following diagrams commute.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJNXFx0aW1lcyBNXFx0aW1lcyBNIl0sWzEsMCwiTVxcdGltZXMgTSJdLFswLDEsIk1cXHRpbWVzIE0iXSxbMSwxLCJNIl0sWzMsMCwiTSJdLFs0LDAsIk1cXHRpbWVzIE0iXSxbNSwwLCJNIl0sWzQsMSwiTSJdLFswLDEsIlxcbXVcXHRpbWVzXFxpZF9NIl0sWzIsMywiXFxtdSIsMl0sWzEsMywiXFxtdSJdLFs0LDcsIlxcaWRfTSIsMl0sWzQsNSwiXFxpZF9cXG11XFx0aW1lc1xcZXRhIl0sWzYsNSwiXFxldGFcXHRpbWVzXFxpZF9NIiwyXSxbNiw3LCJcXGlkX00iXSxbNSw3LCJcXG11IiwxXSxbMCwyLCJcXGlkX01cXHRpbWVzXFxtdSIsMl1d
+	\[\begin{tikzcd}
+		{M\times M\times M} & {M\times M} && M & {M\times M} & M \\
+		{M\times M} & M &&& M
+		\arrow["{\mu\times\id_M}", from=1-1, to=1-2]
+		\arrow["\mu"', from=2-1, to=2-2]
+		\arrow["\mu", from=1-2, to=2-2]
+		\arrow["{\id_M}"', from=1-4, to=2-5]
+		\arrow["{\id_M\times\eta}", from=1-4, to=1-5]
+		\arrow["{\eta\times\id_M}"', from=1-6, to=1-5]
+		\arrow["{\id_M}", from=1-6, to=2-5]
+		\arrow["\mu"{description}, from=1-5, to=2-5]
+		\arrow["{\id_M\times\mu}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+\end{definition}
+\begin{remark}
+	Our monoid is made by the binary operation $\cdot_\mu:(a,b)\mapsto\mu(a,b)$ and an identity element $e:=\eta(*)$. The left-hand diagram gives associativity in our ``monoid'' where $\mu$ is our binary operation: if $a,b,c\in M$, then we have
+	\[(a\cdot_\mu b)\cdot_\mu c=a\cdot_\mu(b\cdot_\mu c).\]
+	The right-hand diagram promises us an identity element $e:=\eta(*)$: if $m\in M$, then
+	\[m\cdot_\mu e=m=e\cdot_\mu m.\]
+\end{remark}
+\begin{remark}
+	It is not technically necessary for us to use sets $M$, but if we don't, then we need a good notion of product and one-element set. For example, $\mathrm{Top}$ can work instead of $\mathrm{Set}$ if we want to keep track of topologies.
+\end{remark}
+\begin{example}
+	A unital ring $R$ is a monoid in the category of $\mathrm{Ab}$ (where our products are tensor products and one-element set is $\ZZ$). Namely, we have morphisms $\mu:R\otimes R\to R$ and $\eta:\ZZ\to R$ with the following commutative diagrams.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJSXFxvdGltZXMgUlxcb3RpbWVzIFIiXSxbMSwwLCJSXFxvdGltZXMgUiJdLFswLDEsIlJcXG90aW1lcyBSIl0sWzEsMSwiUiJdLFszLDAsIlIiXSxbNCwwLCJSXFxvdGltZXMgUiJdLFs1LDAsIlIiXSxbNCwxLCJSIl0sWzAsMSwiXFxtdVxcdGltZXNcXGlkX1IiXSxbMiwzLCJcXG11IiwyXSxbMSwzLCJcXG11Il0sWzQsNywiXFxpZF9SIiwyXSxbNCw1LCJcXGlkX1JcXHRpbWVzXFxldGEiXSxbNiw1LCJcXGV0YVxcdGltZXNcXGlkX1IiLDJdLFs2LDcsIlxcaWRfUiJdLFs1LDcsIlxcbXUiLDFdLFswLDIsIlxcaWRfUlxcdGltZXNcXG11IiwyXV0=
+	\[\begin{tikzcd}
+		{R\otimes R\otimes R} & {R\otimes R} && R & {R\otimes R} & R \\
+		{R\otimes R} & R &&& R
+		\arrow["{\mu\times\id_R}", from=1-1, to=1-2]
+		\arrow["\mu"', from=2-1, to=2-2]
+		\arrow["\mu", from=1-2, to=2-2]
+		\arrow["{\id_R}"', from=1-4, to=2-5]
+		\arrow["{\id_R\times\eta}", from=1-4, to=1-5]
+		\arrow["{\eta\times\id_R}"', from=1-6, to=1-5]
+		\arrow["{\id_R}", from=1-6, to=2-5]
+		\arrow["\mu"{description}, from=1-5, to=2-5]
+		\arrow["{\id_R\times\mu}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	The left-hand diagram shows that multiplication is an associative bilinear map, and the right-hand diagram promises an identity. We will not be more explicit.
+\end{example}
+
+\subsection{Commutative Diagrams}
+We should probably define a diagram now.
+\begin{definition}[Diagram]
+	Fix $\mathcal J$ and $\mathcal C$ categories. A \textit{diagram} in $\mathcal C$ indexed by $\mathcal J$ is a functor $F:\mathcal J\to\mathcal C$.
+\end{definition}
+Notably, we are not requiring this functor to be an embedding.
+\begin{example}
+	A diagram of the shape $(0\to1)^2$ is a commutative square. To be explicit, our index category is as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCIoMCwwKSJdLFsxLDAsIigwLDEpIl0sWzAsMSwiKDEsMCkiXSxbMSwxLCIoMSwxKSJdLFswLDIsImZcXHRpbWVzXFxpZCIsMl0sWzIsMywiXFxpZFxcdGltZXMgZiIsMl0sWzAsMSwiXFxpZFxcdGltZXMgZiJdLFsxLDMsImZcXHRpbWVzXFxpZCJdLFswLDMsImZcXHRpbWVzIGYiLDFdXQ==
+	\[\begin{tikzcd}
+		{(0,0)} & {(0,1)} \\
+		{(1,0)} & {(1,1)}
+		\arrow["f\times\id"', from=1-1, to=2-1]
+		\arrow["{\id\times f}"', from=2-1, to=2-2]
+		\arrow["{\id\times f}", from=1-1, to=1-2]
+		\arrow["f\times\id", from=1-2, to=2-2]
+		\arrow["{f\times f}"{description}, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	Namely, if we send this to $\mathcal C$, we some diagram as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJjIl0sWzEsMCwiYyciXSxbMCwxLCJkIl0sWzEsMSwiZCciXSxbMCwyXSxbMiwzXSxbMCwxXSxbMSwzXV0=
+	\[\begin{tikzcd}
+		c & {c'} \\
+		d & {d'}
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Because we embedded by a functor, we know that $c\to c'\to d'$ is the same as $c\to d\to d'$.
+\end{example}
+\begin{example}
+	We can think about triangles as non-injetive images of squares, as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzAsMSwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFswLDJdLFsyLDNdLFswLDFdLFsxLDMsIiIsMCx7Im9mZnNldCI6MSwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDMsIiIsMSx7Im9mZnNldCI6LTEsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+	\[\begin{tikzcd}
+		\bullet & \bullet \\
+		\bullet & \bullet
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[shift right=1, no head, from=1-2, to=2-2]
+		\arrow[shift left=1, no head, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Alternatively, we could just set the index category to be $\bullet\to\bullet\to\bullet$.
+\end{example}
+\begin{definition}[Commutes]
+	A diagram $F:\mathcal J\to\mathcal C$ \textit{commutes} if and only if, given $k,k':i\to j$ in $\mathcal J$ has $Fk=Fk'$.
+\end{definition}
+The point of this definition is that we don't want composition to matter too much in our index category. For example, if we have morphisms $0\to 1$ and $1\to 2$ in $\mathcal J$ which go to $f:a\to b$ and $g:b\to c$ in $\mathcal C$, we want to be sure we have $0\to 2$ goes to $fg$ without having to look too hard at $\mathcal J$.
+\begin{example}
+	Any diagram over a preorder will commute for free because any two $i,j$ has at most one element in $\op{Mor}(i,j)$.
+\end{example}
+It's a math class, so we should probably prove something today.
+\begin{proposition}
+	Functors preserve commutative diagrams.
+\end{proposition}
+\begin{proof}
+	Fix $\mathcal J,\mathcal C,\mathcal D$ all diagrams with a commutative diagram $K:\mathcal J\to\mathcal C$ and a functor $F:\mathcal C\to\mathcal D$. Indeed, if $k,k':i\to j$ in $\mathcal J$, then $Kk=Kk'$, so $JKk=JKk'$, so $JK:\mathcal J\to\mathcal D$ is indeed a commutative diagram.
+\end{proof}
+And here is a nice result on commutative diagrams.
+\begin{lemma}
+	Fix $f_1,\ldots,f_m$ and $g_1,\ldots,g_n$ are paths in $\mathcal C$. Then if we have an equality of composites
+	\[f_kf_{k-1}\cdots f_{i+1}f_i=g_ng_{n-1}\cdots g_2g_1,\]
+	then
+	\[f_m\cdots f_1=f_m\cdots f_kg_n\cdots g_1f_{i-1}\cdots f_1.\]
+\end{lemma}
+Here is the image for the above lemma: we are allowed to take either path from $A$ to $B$, given that the $f$-parts and $g$-parts are commuting.
+% https://q.uiver.app/?q=WzAsMTUsWzAsMSwiQSJdLFs0LDMsIlxcYnVsbGV0Il0sWzEsMSwiXFxidWxsZXQiXSxbMiwxLCJcXGJ1bGxldCJdLFsyLDIsIlxcYnVsbGV0Il0sWzEsMywiXFxidWxsZXQiXSxbMiwzLCJcXGJ1bGxldCJdLFszLDMsIlxcYnVsbGV0Il0sWzQsNCwiXFxidWxsZXQiXSxbMywxLCJcXGJ1bGxldCJdLFszLDAsIlxcYnVsbGV0Il0sWzUsMSwiXFxidWxsZXQiXSxbNCwxLCJcXGJ1bGxldCJdLFs1LDIsIlxcYnVsbGV0Il0sWzUsMywiQiJdLFswLDIsImZfMSJdLFsyLDMsImZfMiJdLFszLDQsImZfMyJdLFs0LDUsImZfNCIsMl0sWzUsNiwiZl81Il0sWzYsNywiZl82Il0sWzcsOCwiZl83Il0sWzgsMV0sWzQsOSwiZ18xIl0sWzksMTAsImdfMiJdLFsxMCwxMSwiZ18zIl0sWzExLDEyLCJnXzQiXSxbMTIsMTMsImdfNSJdLFsxMywxLCJnXzYiLDJdLFsxLDE0LCJmXzgiXV0=
+\[\begin{tikzcd}
+	&&& \bullet \\
+	A & \bullet & \bullet & \bullet & \bullet & \bullet \\
+	&& \bullet &&& \bullet \\
+	& \bullet & \bullet & \bullet & \bullet & B \\
+	&&&& \bullet
+	\arrow["{f_1}", from=2-1, to=2-2]
+	\arrow["{f_2}", from=2-2, to=2-3]
+	\arrow["{f_3}", from=2-3, to=3-3]
+	\arrow["{f_4}"', from=3-3, to=4-2]
+	\arrow["{f_5}", from=4-2, to=4-3]
+	\arrow["{f_6}", from=4-3, to=4-4]
+	\arrow["{f_7}", from=4-4, to=5-5]
+	\arrow[from=5-5, to=4-5]
+	\arrow["{g_1}", from=3-3, to=2-4]
+	\arrow["{g_2}", from=2-4, to=1-4]
+	\arrow["{g_3}", from=1-4, to=2-6]
+	\arrow["{g_4}", from=2-6, to=2-5]
+	\arrow["{g_5}", from=2-5, to=3-6]
+	\arrow["{g_6}"', from=3-6, to=4-5]
+	\arrow["{f_8}", from=4-5, to=4-6]
+\end{tikzcd}\]
+\begin{proof}
+	Look at it. Namely, we have composition is well-defined, so take the given equality and add the required compositions on either end.
+\end{proof}
