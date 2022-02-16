@@ -1,0 +1,97 @@
+% !TEX root = ../notes.tex
+
+We talk more about the Cauchy--Riemann equations today. For our announcements, Homework \#4 is due on Sunday. There is a midterm next Friday; we will get a review sheet and some practice problems in the next few days. There will be no homework, and there will be extra office hours.
+
+\subsection{Introducing Necessary Conditions}
+
+The slogan for today as follows.
+\begin{idea}
+	The Cauchy--Riemann equations provide a sufficient condition for differentiability.
+\end{idea}
+Recall our theorem.
+\cauchyriemannnecessary*
+\noindent These are sufficient conditions for differentiability. Today we are discussing necessary conditions for differentiability.
+\begin{theorem} \label{thm:crsufficient}
+	Fix $\Omega\subseteq\CC$ a nonempty open subset and $f:\Omega\to\CC$ a function. Writing $f(x+yi)=u(x,y)+iv(x,y)$ and fixing some $z_0:=x_0+y_0i$, then suppose we have the following.
+	\begin{itemize}
+		\item We have $u_x,u_y,v_x,v_y$ all exist and are continuous (!).
+		\item We have
+		\[\begin{cases}
+			u_x(x_0,y_0)=v_y(x_0,y_0), \\
+			v_x(x_0,y_0)=-u_y(x_0,y_0).
+		\end{cases}\]
+	\end{itemize}
+	Then $f$ is differentiable at $z_0$.
+\end{theorem}
+\begin{remark}
+	It is possible to construct functions which are differentiable at $z_0$ but do not have continuous first partial derivatives.
+\end{remark}
+Let's do some examples of \autoref{thm:crsufficient} to see its utility.
+\begin{example}
+	Fix $f(x+yi)=x^2+y+i\left(y^2-x\right)$. Here, $u(x,y)=x^2+y$ and $v(x,y)=y^2-x$, so we see
+	\[u_x(x,y)=2x,\quad u_y(x,y)=1,\quad v_x(x,y)=-1,\quad\text{and}\quad v_y(x,y)=2y.\]
+	So all first partial derivatives are continuous. To satisfy the Cauchy--Riemann equations, we see that we need $u_x=v_y$ and $u_y=-v_x$, which is equivalent to $2x=2y$ and $1=--1$. It follows from \autoref{thm:crsufficient} that $f$ is differentiable on the line $y=x$, and $f$ is not differentiable anywhere else by \autoref{thm:crnecessary}.
+\end{example}
+\begin{remark}
+	Another type of question is to be given $u(x,y)$ and be asked for what $v(x,y)$ might be.
+\end{remark}
+
+\subsection{Proving Necessary Conditions}
+Let's go ahead and prove \autoref{thm:crsufficient}.
+\begin{proof}[Proof of \autoref{thm:crsufficient}]
+	As with last time, we fix $\Delta z:=z-z_0$ and $\Delta x=x-x_0$ and $\Delta y=y-y_0$ so that our difference quotient is
+	\[\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}=\underbrace{\frac{u(x_0+\Delta x,y_0+\Delta y)-u(x_0,y_0)}{\Delta z}}_{\Delta u/\Delta z:=}+i\cdot\underbrace{\frac{v(x_0+\Delta x,y_0+\Delta y)-v(x_0,y_0)}{\Delta z}}_{\Delta v/\Delta z:=}.\]
+	So our goal is to show that
+	\[\lim_{\Delta z\to0}\left(\frac{\Delta u}{\Delta z}+i\cdot\frac{\Delta v}{\Delta y}\right)\]
+	exists and is equal to $u_x(x_0,y_0)+iv_x(x_0,y_0)$. So we need to force our first partial derivatives into the limit.
+
+	We start with $\Delta u/\Delta z$. To make our partial derivatives appear, we write
+	\begin{align*}
+		\frac{\Delta u}{\Delta z} &= \frac{u(x_0+\Delta x,y_0+\Delta y)-u(x_0,y_0)}{\Delta z} \\
+		&= \frac{u(x_0+\Delta x,y_0+\Delta y)-{\color{red}u(x_0,y_0+\Delta y)}}{\Delta z}+\frac{{\color{red}u(x_0,y_0+\Delta y)}-u(x_0,y_0)}{\Delta z}.
+	\end{align*}
+	To get our partial derivatives, we apply the Mean value theorem (!): define
+	\[F(x):=u(x,y_0+\Delta y)\qquad\text{and}\qquad F(y):=u(x_0,y).\]
+	We do our applications one at a time.
+	\begin{itemize}
+		\item Note that $F(x)$ is differentiable everywhere from $x_0$ to $x_0+\Delta x$, so the Mean value theorem provides some $x_0^*$ between $x_0$ and $x_0+\Delta x$ such that
+		\[F(x_0+\Delta x)-F(x_0)=F'(x_0^*)\Delta x.\]
+		\item Similarly, $F(y)$ is differentiable everywhere from $y_0$ to $y_0+\Delta y$, so the Mean value theorem provides some $y_0^*$ between $y_0$ and $y_0+\Delta y$ such that
+		\[F(y_0+\Delta x)-F(y_0)=F'(y_0^*)\Delta y.\]
+	\end{itemize}
+	Synthezing and plugging in, we get
+	\[\frac{\Delta u}{\Delta z}=\frac{u_x(x_0^*,y_0)\Delta x}{\Delta z}+\frac{u_y(x_0,y_0^*)\Delta y}{\Delta z}.\]
+	We now use continuity of our first partial derivative. Our hope is that sending $\Delta z\to0$ will send $u_x(x_0^*,y_0)\to u_x(x_0,y_0)$ and $u-y(x_0,y_0^*)\to u_y(x_0,y_0)$. To show this, we show the difference will be small. We write
+	\[\frac{\Delta u}{\Delta z}=\frac{u_x(x_0,y_0)\Delta x}{\Delta z}+\frac{u_y(x_0,y_0)\Delta y}{\Delta z}+E_{ux}+E_{uy},\]
+	where
+	\[E_{ux}=\big(u_x(x_0^*,y_0)-u_x(x_0,y_0)\big)\frac{\Delta x}{\Delta z}\quad\text{and}\quad E_{uy}=\big(u_y(x_0,y_0^*)-u_y(x_0,y_0)\big)\frac{\Delta y}{\Delta z}.\]
+	We now remark that we can repeat the entire above argument for $\frac{\Delta v}{\Delta z}$. Namely, we running the above machinery lets us write
+	\[\frac{\Delta v}{\Delta z}=\frac{v_x(x_0,y_0)\Delta x}{\Delta z}+\frac{v_y(x_0,y_0)\Delta y}{\Delta z}+E_{vx}+E_{vy},\]
+	where
+	\[E_{vx}=\big(u_x(x_0^{**},y_0)-u_x(x_0,y_0)\big)\frac{\Delta x}{\Delta z}\quad\text{and}\quad E_{vy}=\big(u_y(x_0,y_0^{**})-u_y(x_0,y_0)\big)\frac{\Delta y}{\Delta z}.\]
+	We now show that the various $E_\bullet$ terms vanish as $\Delta z\to0$. Note that, as $\Delta z\to0$, the following happen.
+	\begin{itemize}
+		\item Because $x_0^*$ and $x_0^{**}$ are bounded between $x_0$ and $x_0+\Delta x$, they will approach $x_0$.
+		\item Because $y_0^*$ and $y_0^{**}$ are bounded between $y_0$ and $y_0+\Delta y$, they will approach $y_0$.
+		\item We will have $\left|\frac{\Delta x}{\Delta z}\right|\le1$ and $\left|\frac{\Delta y}{\Delta z}\right|\le1$ by direct expansion of the norm because $\Re\Delta z=\Delta x$ and $\Im\Delta z=\Delta y$.
+	\end{itemize}
+	It follows that each of the $E_\bullet$ do indeed vanish as $\Delta z\to0$. For example,
+	\[\left|\big(u_x(x_0^*,y_0)-u_x(x_0,y_0)\big)\frac{\Delta x}{\Delta z}\right|\le\big|u_x(x_0^*,y_0)-u_x(x_0,y_0)\big|\]
+	will go to $0$ as $\Delta z\to0$ by the continuity of $u_x$ at $(x_0,y_0)$.
+
+	Now we return to our difference quotient. We see
+	\begin{align*}
+		\lim_{\Delta z\to0}\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z} &= \lim_{\Delta z\to0}\frac{\Delta u}{\Delta z}+i\cdot\lim_{\Delta z\to0}\frac{\Delta v}{\Delta z} \\
+		&= \lim_{\Delta z\to0}\frac{u_x(x_0,y_0)\Delta x}{\Delta z}+\lim_{\Delta z\to0}\frac{u_y(x_0,y_0)\Delta y}{\Delta z}+\lim_{\Delta z\to0}E_{ux}+E_{uy}+ \\
+		&\qquad\quad i\left(\lim_{\Delta z\to0}\frac{v_x(x_0,y_0)\Delta x}{\Delta z}+\lim_{\Delta z\to0}\frac{v_y(x_0,y_0)\Delta y}{\Delta z}+\lim_{\Delta z\to0}E_{vx}+\lim_{\Delta z\to0}E_{vy}\right) \\
+		&= \lim_{\Delta z\to0}\frac{u_x(x_0,y_0)\Delta x}{\Delta z}+\lim_{\Delta z\to0}\frac{u_y(x_0,y_0)\Delta y}{\Delta z}+ \\
+		&\qquad\quad i\left(\lim_{\Delta z\to0}\frac{v_x(x_0,y_0)\Delta x}{\Delta z}+\lim_{\Delta z\to0}\frac{v_y(x_0,y_0)\Delta y}{\Delta z}\right),
+	\end{align*}
+	using the fact that our error terms all vanish.At this point we use the Cauchy--Riemann equations. We see
+	\begin{align*}
+		\lim_{\Delta z\to0}\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z} &= \lim_{\Delta z\to0}\frac{u_x(x_0,y_0)\Delta x}{\Delta z}-\lim_{\Delta z\to0}\frac{v_x(x_0,y_0)\Delta y}{\Delta z}+ \\
+		&\qquad\quad i\left(\lim_{\Delta z\to0}\frac{v_x(x_0,y_0)\Delta x}{\Delta z}+\lim_{\Delta z\to0}\frac{u_x(x_0,y_0)\Delta y}{\Delta z}\right) \\
+		&= \lim_{\Delta z\to0}u_x(x_0,y_0)\left(\frac{\Delta x+i\Delta y}{\Delta z}\right)+\lim_{\Delta z\to0}v_x(x_0,y_0)\frac{\Delta x+i\Delta y}{\Delta z},
+	\end{align*}
+	which finishes after evaluating our first partial derivatives.
+\end{proof}
