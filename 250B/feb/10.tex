@@ -285,7 +285,7 @@ Note in particular that the ring homomorphism $R[x]\to R^{n\times n}$ is legal b
 	\begin{warn}
 		The matrix $\varphi\mu(I)-\mu(A)$ is a matrix whose entires are endomorphisms, not elements of $R$. Explicitly, $\varphi\mu(I)-\mu(A)\in\op{End}_R\left(R^n\right)^{n\times n}$.
 	\end{warn}
-	To show that $\det(\varphi\mu(I)-\mu(A))=0$, we note that $\varphi\mu(I)-\mu(A)$ will vanish on the vector $(\pi_1,\ldots,\pi_n)\in\op{Mor}_{\mathrm{Set}}(R^n,R^n)^n$, where $\pi_k$ is the function which outputs $e_k$.\footnote{Careful readers may object that our vector $(\pi_1,\ldots,\pi_n)$ do not live in $\mu(R)[\varphi]$, and so some linear algebra might not hold. However, we do not have to fear because are still working in an $R$-module, so we just need to make sure we never do anything that would require anything commuting with the $\pi_\bullet$.} (The $\pi_\bullet$ is how we are bringing the basis vectors $e_\bullet$ into our world of functions.) Indeed, the $j$th component of the expansion of
+	To show that $\det(\varphi\mu(I)-\mu(A))=0$, we note that $\varphi\mu(I)-\mu(A)$ will vanish on the vector $(\pi_1,\ldots,\pi_n)\in\op{Mor}_{\mathrm{Set}}(R^n,R^n)^n$, where $\pi_k$ is the function which outputs $e_k$.\footnote{Careful readers may object that our vector $(\pi_1,\ldots,\pi_n)$ does not live in $\mu(R)[\varphi]$, and so some linear algebra might not hold. However, we do not have to fear because are still working in an $R$-module, so we just need to make sure we never do anything that would require anything commuting with the $\pi_\bullet$.} (The $\pi_\bullet$ is how we are bringing the basis vectors $e_\bullet$ into our world of functions.) Indeed, the $j$th component of the expansion of
 	\[\begin{bmatrix}
 		\varphi-\mu(a_{11}) & -\mu(a_{12}) & \cdots & -\mu(a_{1n}) \\
 		-\mu(a_{21}) & \varphi-\mu(a_{22}) & \cdots & -\mu(a_{2n}) \\
@@ -367,7 +367,7 @@ Let's now see an application.
 		It may look like conjuring $p_{\id}$ shouldn't do anything because the characteristic polynomial for $p_{\id}$ should be $(x-1)^n$, where $n$ is the number of generators for $M$. However, this previous sentence where we invoke \autoref{thm:betterch} to force $p_d\in\left(t^d\right)$ is where we are inputting information about $\psi$.
 	\end{remark}
 	In particular, plugging in $x=\id$, we see that
-	\[0=\id{}^n+p_1\id{}^{n-1}+\cdots+p_n=\id{}^n+t\cdot\underbrace{\left(\frac{p_1}t\id{}^{n-1}+\cdots+\frac{p_n}t\right)}_{q(t)}\]
+	\[0={\id}^n+p_1{\id}^{n-1}+\cdots+p_n={\id}+t\cdot\underbrace{\left(\frac{p_1}t{\id}^{n-1}+\cdots+\frac{p_n}t{\id}^0\right)}_{q(t)}\]
 	in $\op{End}_R(M)$. In particular, for some $q\in R[t]$. In particular, $t$ is invertible with inverse $q(t)$. Defining $\varphi:=-q(t)$, we see from the above that $\varphi\psi=\psi\varphi=\id$, so $\varphi$ and $\psi$ are inverses.
 \end{proof}
 \begin{remark}
@@ -389,39 +389,71 @@ Here is a quick corollary to \autoref{prop:epiisiso}.
 \end{proof}
 
 \subsection{Nakayama's Lemma}
-Recall the definition.
+To ready our discussion of Nakayama's lemma, we recall the following definition.
 \begin{definition}[Jacobson radical]
 	Fix a ring $R$. Then we define the \textit{Jacobson radical} by
 	\[\rad R:=\bigcap_{\mf m}\mf m.\]
 \end{definition}
-Observe that $r\in\rad R$ if and only if $1-r\in R^\times$. In particular, $r\in\rad R$ if and only if $1-r$ is not in any maximal ideal if and only if $(1-r)=R$.
+Here is the main fact about $\rad R$ that we will need.
+\begin{lemma} \label{lem:altjacobsonrad}
+	Fix $R$ a ring. Then $r\in\rad R$ if and only if $1-rs\in R^\times$ for each $s\in R$.
+\end{lemma}
+\begin{proof}
+	We take our implications separately.
+	\begin{itemize}
+		\item In one direction, suppose that $r\in R$ has $r\in\rad R$, and pick up any $s\in R$. Then, for each maximal ideal $\mf m\subseteq$, we see $r\in\mf m$ and so $rs\in\mf m$ while $1\notin\mf m$, so $1-rs\notin\mf m$. Thus, the ideal $(1-rs)$ is not contained in any maximal ideal, so we must have $(1-rs)=R$, so there exists $u\in R$ such that $(1-rs)u=(1)$, so $1-rs\in R^\times$.
+		\item In the other direction, suppose that $r\notin\rad R$ so that there exists a maximal ideal $\mf m$ such that $r\notin\mf m$. It follows that $[r]_\mf m\ne[0]_\mf m\in R/\mf m$, so because $R/\mf m$ is a field, there exists $[s]_\mf m\in R/\mf m$ with
+		\[[1-rs]_\mf m=[1]_\mf m-[r]_\mf m\cdot[s]_\mf m=[0]_\mf m.\]
+		In particular, $1-rs\in\mf m$, so $(1-rs)\subseteq\mf m$, so $1\notin(1-rs)$, so $1-rs$ is not a unit.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	We will mostly use the Jacobson radical in the context where $R$ is a local ring so that $\rad R=\mf m$, where $\mf m$ is the unique maximal ideal of $R$.
+\end{remark}
 
-We have the following result.
-\begin{theorem}[Nakayama's lemma]
-	Fix $I\subseteq\op{rad}R$ and $M$ a finitely generated $R$-module. Then if $IM=M$, we have $M=0$.
+Here is our result.
+\begin{theorem}[Nakayama's lemma] \label{thm:nakayama}
+	Fix $R$ a ring and an ideal $I\subseteq\op{rad}R$. If $M$ is a finitely generated $R$-module such that $IM=M$, then $M=0$.
 \end{theorem}
 \begin{proof}
 	The main idea is in the following lemma.
 	\begin{lemma}
-		Fix everything as above. Then $IM=M$ implies that there is some $r\in I$ such that $(1-r)M=0$.
+		Fix $R$ a ring and $I\subseteq R$ an ideal. If $M$ is a finitely generated $R$-module such that $IM=M$, then there exists $r\in I$ with $(1-r)M=0$.
 	\end{lemma}
 	\begin{proof}
-		The idea is, as usual, to use \autoref{thm:betterch}. We are promised some polynomial
-		\[p_{\id}(x):=x^n+p_1x^{n-1}+\cdots+p_n,\]
-		where $p_k\in I^k$. But plugging in $x=\id$ gives the result after rearranging for $\id^n=\id$.
+		The idea is, as usual, to use \autoref{thm:betterch}. Using $\id\in\op{End}_R(M)$, the fact that $IM=M$ (!) gives us a polynomial
+		\[p_{\id}(x):=x^n+p_1x^{n-1}+\cdots+p_n\in R[x],\]
+		such that $p_{\id}({\id})=0$ and $p_k\in I^k$ for each $p_k$. But plugging in $x=\id$, we see
+		\[0=p_{\id}({\id})={\id}^n+p_1{\id}^{n-1}+\cdots+p_n{\id}^0=\big(1-(-p_1-\cdots-p_n)\big){\id}.\]
+		In particular, we set $r:=-p_1-\cdots-p_n\in I$ so that $(1-r)m=(1-r)\id m=0$ for each $m\in M$. This finishes.
 	\end{proof}
-	From this lemma the result directly follows because the promised $1-r$ is a unit.
+	From this lemma the result directly follows because the promised $1-r$ is a unit. Indeed, $IM=M$ promises $r\in I$ with $(1-r)M=0$, and $r\in I\subseteq\rad R$ implies $1-r\in R^\times$ by \autoref{lem:altjacobsonrad}. So finding $u\in R$ with $u(1-r)=1$, we see that each $m\in M$ has
+	\[m=1m=u(1-r)m=u\cdot 0=0,\]
+	so $M=0$ is forced.
 \end{proof}
+\begin{remark}[Nir] \label{rem:fingennakayama}
+	The condition that $M$ is finitely generated is necessary: in $k[x]_{(x)}$-modules, we see $\rad k[x]_{(x)}=(x)$ because $k[x]_{(x)}$ is local, but $(x)\cdot k(x)=k(x)$ while $k(x)$ is a nonzero $k[x]_{(x)}$-module. The analogous arithmetic example is with $\ZZ_2$-modules, where $(2)\cdot\QQ_2=\QQ_2$ while $\QQ_2\ne0$.
+\end{remark}
+Let's see a quick application.
 \begin{corollary}
-	Fix $I\subseteq\op{rad}R$ and $M$ a finitely generated $R$-module with elements $m_1,\ldots,m_n\in M$. Then if the images $\overline{m_1},\ldots,\overline{m_n}$ generate $M/IM$, then the original elements generate $M$.
+	Fix a ring $R$ and an ideal $I\subseteq\op{rad}R$. Further, suppose that $M$ is a finitely generated $R$-module, and we have elements $m_1,\ldots,m_n\in M$. Then if the images $\overline{m_1},\ldots,\overline{m_n}$ generate $M/IM$, then the original elements generate $M$.
 \end{corollary}
 \begin{proof}
-	Consider
-	\[M':=Rm_1+\cdots+Rm_n.\]
-	Then because the given elements generate $M/IM$, we note that $M/M'=I(M/M')$, so $M/M'=0$, so $M=M'$. \todo{find counter: M = Q and I = (2)}
+	Consider the $R$-submodule
+	\[M':=Rm_1+\cdots+Rm_n\subseteq M.\]
+	We will show that $M=M'$ by showing $M/M'=0$, for which we will use \autoref{thm:nakayama}. Well, it suffices to show that $M/M'=I(M/M')$. To see this, fix any $m\in M$, and we want to find $x\in I$ and $m_0\in M$ such that $[m]_{M'}=x\cdot[m_0]_{M'}$. Well, $\{[m_1]_I,\ldots,[m_n]_I\}$ generates $M/IM$, so there exists $r_1,\ldots,r_n$ such that
+	\[[m]_I=r_1[m_1]_{I}+\cdots+r_n[m_n]_I.\]
+	In particular, there is $x\in I$ and $m_0\in M$ such that
+	\[m-(r_1m_1+\cdots+r_nm_n)=xm_0\in IM,\]
+	so $[m]_{M'}=[xm_0]_{M'}=x\cdot[m_0]_{M'}\in I(M/M')$, which is what we wanted.
 \end{proof}
+\begin{remark}[Nir]
+	Again, the initial hypothesis that $M$ is finitely generated is necessary. The same examples as in \autoref{rem:fingennakayama} will work because $IM=M$ means that the empty set will generate $M/IM$ but will not generte $M$ with $M\ne0$.
+\end{remark}
 
-Here is an application, to localization.
+\subsection{Support of Tensor Products}
+Let's see another application of \autoref{thm:nakayama}: we can finally close the books on \autoref{rem:supptensor}.
 \begin{proposition} \label{prop:localtensorintdomain}
 	Fix $R$ a local ring with $M$ and $N$ finitely generated $R$-modules. Then $M\otimes_RN=0$ if and only if $M=0$ or $N=0$.
 \end{proposition}
