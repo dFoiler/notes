@@ -1,0 +1,115 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{}
+Today we start talking about algoriths.
+\begin{definition}[Algorithm]
+	An \textit{algorithm} is a procedure or set of rules or instructions that will tell us how to preform successive steps, which will complete a task after a finite number of steps.
+\end{definition}
+This definition can be made more rigorous, but we will not bother for this class.
+
+We have already seen some algorithms so far.
+\begin{example}
+	To determine if a formula is satisfiable, we employ the following algorithm.
+	\begin{enumerate}
+		\item Fix a formula $\varphi\in\mathcal L(\{p_1,\ldots,p_n\})$.
+		\item Fix some order of the valuations.
+		\item Choose the first valuation $V$.
+		\item Compute $\hat V(\varphi)$ by a recursive procedure.
+		\item If $\hat V(\varphi)=1$, then $\varphi$ is satisfiable.
+		\item Otherwise, choose the next valuation $V$ and go back to step 4.
+		\item If we finish the truth table and never return satisfiable, then $\varphi$ is unsatisfiable.
+	\end{enumerate}
+\end{example}
+\begin{remark}
+	The above algorithm requires something like $2^n$ total valuations to check, making the worst-case (if unsatisfiable) requiring $2^n$ time. This makes this run in ``exponential'' time.
+\end{remark}
+\begin{remark}
+	There are other algorithms for satisfiability. The textbook uses the semantic tableaux. We will shortly talk about resolution.
+\end{remark}
+However, for resolution, we will need to start in conjunctive normal form. Recall the definition, as follows.
+\begin{definition}[Conjunctive normal form]
+	A formula $\varphi$ is in \textit{conjunctive normal form} if and only if it is a conjunction of disjunctions.
+\end{definition}
+We do already have an algorithm for this: find the disjunctive normal form $\lnot\varphi$ and then negate and apply De Morgan's laws.
+
+However, the disjunctive normal form requires us to in advance have a truth table, which needs a notion of semantics. Here is an algorithm which is more syntactic.
+\begin{prop}
+	Fix a formula $\varphi$. We put $\varphi$ into conjunctive normal form.
+	\begin{enumerate}
+		\item Remove $\leftrightarrow$s: for each $\leftrightarrow$ starting from the left, replace each subformula of the form $(\alpha\leftrightarrow\beta)$ with $((\alpha\to\beta)\land(\beta\to\alpha))$.
+		\item Remove $\to$s: for each $\to$ starting from the left, replace each subformula $(\alpha\to\beta)$ with $(\lnot\alpha\lor\beta)$.
+	\end{enumerate}
+	At this point, the only legal connectives are $\land$, $\lor$, and $\lnot$. In particular, if $\lnot\psi$ is a subformula, then $\psi$ is either of the form $(\alpha\land\beta)$ or $(\alpha\lor\beta)$ or $\lnot\alpha$.
+	\begin{enumerate}[resume]
+		\item Drive $\lnot$ inside: for each subformula of the form $\lnot(\alpha\lor\beta)$ starting from the left, replace it with $(\lnot\alpha\land\lnot\beta)$.
+		\item Drive $\lnot$ inside: for each subformula of the form $\lnot(\alpha\land\beta)$ starting from the left, replace it with $(\lnot\alpha\lor\lnot\beta)$.
+		\item Drive $\lnot$ inside: for each subformula of the form $\lnot\lnot\alpha$ starting from the left, replace it with $\alpha$.
+	\end{enumerate}
+	So now $\lnot$ only applies to propositions, so we are only applying $\land$ and $\lor$ to literals. We need to normalize to get conjunctives of disjunctions; the only way we violate being in conjunctive of normal form is if we have a subformula which is a $\lor$ of non-literals, and one of these non-literals had better have $\land$ lest we just break apart into separate disjunctive terms.
+	\begin{enumerate}[resume]
+		\item Distribute: for each subformula of the form $(\alpha\lor(\beta\land\gamma))$ starting from the left, replace it with $((\alpha\lor\beta)\land(\alpha\lor\gamma))$.
+		\item Distribute: for each subformula of the form $((\alpha\land\beta)\lor\gamma)$ starting from the left, replace it with $(((\alpha\gamma)\land(\beta\lor\gamma))$.
+		\item Go back to step 6 until done.
+	\end{enumerate}
+\end{prop}
+We will not prove that this works, but there are remarks throughout the description. More formally, we are defining a recursive function $\op{CNF}:\mathcal L(P)\to\mathcal L(P)$ with many cases. For completeness, here is the definition.
+\begin{enumerate}
+	\item $\op{CNF}(p)=p$ for each $p\in P$.
+	\item $\op{CNF}(\varphi\leftrightarrow\psi)=(\lnot\op{CNF}(\alpha)\lor\op{CNF}(\beta))\land(\lnot\op{CNF}(\beta)\lor\op{CNF}(\alpha))$.
+	\item $\op{CNF}(\varphi\to\psi)=\lnot\op{CNF}(\alpha)\lor\op{CNF}(\beta)$.
+	\item $\op{CNF}(\varphi\land\psi)=\op{CNF}(\varphi)\land\op{CNF}(\psi)$.
+	\item $\op{CNF}(\lnot(\alpha\land\lnot\beta))=\lnot\op{CNF}(\alpha)\lor\lnot\op{CNF}(\beta)$.
+	\item $\op{CNF}(\lnot(\alpha\lor\lnot\beta))=\lnot\op{CNF}(\alpha)\land\lnot\op{CNF}(\beta)$.
+	\item $\op{CNF}(\lnot\lnot\varphi)=\op{CNF}(\varphi)$.
+	\item $\op{CNF}(\alpha\lor(\beta\land\gamma))=\op{CNF}(\alpha\lor\beta)\land\op{CNF}(\alpha\lor\gamma)$.
+	\item $\op{CNF}((\alpha\land\beta)\lor\gamma)=\op{CNF}(\alpha\lor\gamma)\land\op{CNF}(\beta\lor\gamma)$.
+\end{enumerate}
+It is not obvious that the above conditions fully determine $\op{CNF}$ recurisvely (in fact, the last two steps make $\op{CNF}$ not well-defined because we might have a subformula of the form $(\alpha\land\beta)\lor(\gamma\land\delta)$), but there is a small justification present in the definition of the algorithm, and it is not too hard to imagine how to fix this. We will not fix this formally out of laziness.
+\begin{remark}
+	The above algorithm need not give the same conjunctive normal form as with the truth table approach. The above algorithm is purely syntactic.
+\end{remark}
+Let's see some examples.
+\begin{exe}
+	We put $\varphi:=\lnot(p_1\land\lnot(\lnot p_2\land(p_3\to p_4)))$ in conjunctive normal form.
+\end{exe}
+\begin{proof}
+	We have the following computation. We start by ridding of $\to$.
+	\begin{align*}
+		\varphi &\equiv\lnot(p_1\land\lnot(\lnot p_2\land(p_3\to p_4)))
+	\end{align*}
+	Next we push $\lnot$s inside and cancel out double negations.
+	\begin{align*}
+		\varphi &\equiv\lnot(p_1\land\lnot(\lnot p_2\land(\lnot p_3\lor p_4))) \\
+		&\equiv\lnot p_1\lor\lnot\lnot(\lnot p_2\land(\lnot p_3\lor p_4)) \\
+		&\equiv\lnot p_1\lor\lnot(\lnot\lnot p_2\lor\lnot(\lnot p_3\lor p_4)) \\
+		&\equiv\lnot p_1\lor(\lnot\lnot\lnot p_2\land\lnot\lnot(\lnot p_3\lor p_4)) \\
+		&\equiv\lnot p_1\lor(\lnot\lnot\lnot p_2\land\lnot(\lnot\lnot p_3\land \lnot p_4)) \\
+		&\equiv\lnot p_1\lor(\lnot\lnot\lnot p_2\land(\lnot\lnot\lnot p_3\lor \lnot\lnot p_4)) \\
+		&\equiv\lnot p_1\lor(\lnot p_2\land(\lnot\lnot\lnot p_3\lor \lnot\lnot p_4)) \\
+		&\equiv\lnot p_1\lor(\lnot p_2\land(\lnot p_3\lor \lnot\lnot p_4)) \\
+		&\equiv\lnot p_1\lor(\lnot p_2\land(\lnot p_3\lor p_4)).
+	\end{align*}
+	Now we distribute. We see
+	\begin{align*}
+		\varphi & \equiv\lnot p_1\lor(\lnot p_2\land(\lnot p_3\lor p_4)) \\
+		& \equiv(\lnot p_1\lor\lnot p_2)\land(\lnot p_1\lor(\lnot p_3\lor p_4))) \\
+		& \equiv\boxed{(\lnot p_1\lor\lnot p_2)\land(\lnot p_1\lor\lnot p_3\lor p_4)},
+	\end{align*}
+	which is what we wanted.
+\end{proof}
+\begin{exe}
+	We convert $\varphi:=(p_1\land p_2)\lor(\lnot p_1\land(\lnot p_2\land p_3))$ to conjunctive normal form using the algorithm.
+\end{exe}
+\begin{proof}
+	We only have to distribute right now. We compute
+	\begin{align*}
+		\varphi &= (p_1\land p_2)\lor(\lnot p_1\land(\lnot p_2\land p_3)) \\
+		&\equiv ((p_1\land p_2)\lor\lnot p_1)\land((p_1\land p_2)\lor(\lnot p_2\land p_3)) \\
+		&\equiv {\color{red}(}(p_1\lor\lnot p_1)\land(p_2\lor\lnot p_1){\color{red})}\land((p_1\land p_2)\lor(\lnot p_2\land p_3)) \\
+		&\equiv ((p_1\land p_2)\lor\lnot p_1)\land((p_1\lor(\lnot p_2\land p_3)\land( p_2\lor(\lnot p_2\land p_3)))) \\
+		&\equiv ((p_1\land p_2)\lor\lnot p_1)\land((((p_1\lor\lnot p_2)\land (p_1\lor p_3))\land( (p_2\lor\lnot p_2)\land(p_2\lor p_3)))),
+	\end{align*}
+	which finishes.
+\end{proof}
