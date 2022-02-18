@@ -1,0 +1,129 @@
+% !TEX root = ../notes.tex
+
+Good morning everyone. Here are some announcements.
+\begin{itemize}
+	\item Homework \#4 is due on Sunday.
+	\item Next Friday is our midterm. A review sheet has been posted. Some practice problems and a practice midterm will be released today or tomorrow.
+	\item Next week will have office hours every day.
+	\item Next Wednesday will be a review class.
+\end{itemize}
+
+\subsection{Power Series}
+Today we are building towards a discussion of analytic functions. We won't actually define what ``analytic'' means, but it will be important, so we will spend today setting up the definitions and results.
+\begin{definition}[Complex power series]
+	A \textit{complex power series} is a formal expression of the form
+	\[S(z):=\sum_{k=0}^\infty a_kx^k\]
+	where $\{a_k\}_{k\in\NN}\subseteq\CC$ and $z$ is a (formal) variable taking complex values.
+\end{definition}
+Our main goal for today is to be able to answer the following question.
+\begin{ques}
+	For which $z$ will $S(z)$ converge?
+\end{ques}
+The answer to this question is essentially the same as for real analysis: it's the radius of convergence.
+\begin{definition}[Radius of convergence]
+	The \textit{radius of convergence} of a complex power series $S(z)=\sum_{k=0}^\infty a_kz^k$ is defined to be equal to the radius of convergence of the real power series
+	\[T(x)=\sum_{k=0}^n|a_k|x^k.\]
+\end{definition}
+We should probably check convergence in the radius of convergence.
+\begin{prop} \label{prop:radconverge}
+	Fix a complex power series $S(z)=\sum_{k=0}^\infty$ with radius of convergence $R$. Then the following hold.
+	\begin{listalph}
+		\item The sequence of partial sums $\sum_{k=0}^n\left|a_kz^k\right|$ for any $z$ with $|z|<R$. In other words, $S(z)$ converges absolutely.
+		\item The series $S(z)$ will diverge for $z$ with $|z|>R$.
+	\end{listalph}
+\end{prop}
+\begin{proof}
+	We take these one at a time.
+	\begin{listalph}
+		\item Fix $z$ with $|z|<R$ so that there exists some $r\in\RR$ with $|z|<r<R$. For example, $r:=\frac{|z|+R}2$ will do. Choosing $\varepsilon=r>|z|\ge0$, we choose some $\rho$ such that $r=R-\varepsilon<\rho<R$.
+
+		Now, by real analysis, we see that $S(\rho)$ will converge because $\rho$ is a real number. Our goal is to use the comparison test to show that $S(z)$ absolutely converges. In particular, the terms $a_k\rho^k$ must go to $0$, as must $|a_k|\rho^k$, so because convergent sequences are bounded, we note
+		\[\left|a_k\rho^k\right|\le M\]
+		for each $k\in\NN$. Because $|z|<r<\rho$, we note that $|z|/\rho<1$, so we bound
+		\[\left|a_kz^k\right|=\left|a_k\rho^k\right|\cdot\left|\frac{z^n}{\rho^n}\right|\le M\left|\frac z\rho\right|^n.\]
+		However, $|z/\rho|<1$, so the series $\sum_{k=0}^\infty|z/\rho|^k$ will converge as a geometric series, so we are done by the comparison test.
+
+		\item We refer to Eterovi\'c's notes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+We have the following warning.
+\begin{warn}
+	\autoref{prop:radconverge} is agnostic to the case of $|z|=R$.
+\end{warn}
+In general, the behavior need not be uniform, as with $\sum_{k=0}^\infty z^k=\frac1{1-z}$.
+
+\subsection{Series of Functions}
+We will be interested in series of functions, which generalize power series.
+\begin{definition}[Series of functions]
+	Fix $X\subseteq\CC$ a nonempty set and $\{f_k\}_{k\in\NN}$ a sequence of functions $X\to\CC$. Then we define the \textit{series of functions}
+	\[S(z)=\sum_{k=0}^\infty f_k(z)\]
+	for each $z\in\CC$.
+\end{definition}
+Observe that the partial sums of some $S(z)=\sum_{k=0}^mf_k(z)$ will look like some finite sum
+\[S_m(z)=\sum_{k=0}^mf_k(z),\]
+which defines a sequence of functions $\{S_m\}_{m\in\NN}$ where $S_m:X\to\CC$. We are interested in the convergence of $S$ as a function.
+\begin{definition}[Uniform convergence]
+	Fix $X\subseteq\CC$ a nonempty subset and $\{f_k\}_{k\in\NN}$ a sequence of functions $X\to\CC$ defining a series of functions $S(z)=\sum_{k=0}^\infty f_k(z)$. Then $S(z)$ \textit{converges uniformly} if and only if the sequence of partial sums conveges uniformly to a function on $X$.
+\end{definition}
+Uniform convergence will be nice because (say) it will preserve continuity, but before talking about utility, we discuss a way to check uniform convergence.
+\begin{theorem}[Weierstrass \texorpdfstring{$M$}{M}-test] \label{thm:mtest}
+	Fix $X\subseteq\CC$ a nonempty subset and $\{f_k\}_{k\in\NN}$ a sequence of functions $X\to\CC$ defining a series of functions $S(z)=\sum_{k=0}^\infty f_k(z)$. Further, suppose that, for each $k\in\NN$, there exists some $M_k$ such that
+	\[|f_k(z)|<M_k\]
+	for each $z\in X$. If $\sum_{k=0}^\infty M_k$ converges, then $S(z)$ converges uniformly.
+\end{theorem}
+In other words, we can determine uniform convergence of a series of functions by bounding the functions individually.
+\begin{proof}[Proof of \autoref{thm:mtest}]
+	This is not as hard as it looks. Let $S_m$ denote the $m$th partial sum. By \autoref{prop:betteruniformconverge}, it suffices to show that, for each $\varepsilon>0$, there exists some $N$ such that $n\ge m>N$ implies
+	\[\sup_{x\in X}\{|S_n(z)-S_m(z)|\}<\varepsilon.\]
+	Well, we know that the series $\sum_{k=0}^\infty M_k$ converges, so its partial sums are Cauchy, so there exists some $N$ such that $n\ge m>N$ implies
+	\[\sum_{k=m+1}^nM_k<\varepsilon,\]
+	where the left-hand side is the difference between the $n$th and $m$th partial sums. So now we may bound
+	\[|S_n(z)-S_m(z)|=\left|\sum_{k=m+1}^nf_k(z)\right|\le\sum_{k=m+1}^n|f_k(z)|\le\sum_{k=m+1}^nM_k,\]
+	for any $z\in X$. Thus,
+	\[\sup_{z\in X}\{|S_n(z)-S_m(z)|\}\le\sum_{k=m+1}^nM_k<\varepsilon.\]
+	This finishes the proof.
+\end{proof}
+And now let's apply the Weierstrass $M$-test to power series.
+\begin{corollary}
+	Fix $S(z)=\sum_{k=0}^\infty a_kz^k$ a power series with positive radius of convegence $R>0$. We have the following.
+	\begin{listalph}
+		\item For any $r$ such that $0<r<R$, the power series $S(z)$ converges uniformly in $\overline{B(0,r)}$.
+		\item The power series $S(z)$ is continuous on $B(0,r)$.
+	\end{listalph}
+\end{corollary}
+\begin{proof}
+	Most of our work will be done in (a), which comes from the Weierstrass $M$-test.
+	\begin{listalph}
+		\item Fix some $r$ with $0<r<R$. Note that $S(r)$ converges absolutely by \autoref{prop:radconverge}. To use the Weierstrass $M$-test, we set $f_k(z):=a_kz^k$ with $M_k:=|a_k|r^k$ so that $|z|\le r$ implies
+		\[|f_k(z)|=\left|a_kz^k\right|=|a_k|\cdot|z|^k\le|a_k|r^k.\]
+		But we know that $S(r)$ converges absolutely, so
+		\[\sum_{k=0}^\infty\left|a_kr^k\right|=\sum_{k=0}^\infty M_k\]
+		converges, so now \autoref{thm:mtest} promises that $S(z)$ will converge uniformly for each $z\in\overline{B(0,r)}$.
+
+		\item Note that, for every $k$, the function $f_k(z)=a_kz^k$ is a polynomial and hence entire and hence continuous on $B(0,R)$.
+
+		The trick is to apply (a) by starting with a fixed $z_0\in B(0,R)$ with $r$ such that $|z_0|<r<R$. In particular, by restriction, it suffices to show that $S|_{B(0,r)}$ is continuous at $z_0$. (For example, $r=\frac{|z_0|+R}2$ will work.) So now we note that the continuous partial sums of $S(z)$ converge uniformly to $S(z)$ on $B(0,r)$ by (a), so \autoref{prop:uniformgoodcontinuity} forces $S(z)$ itself to be continuous on $B(0,r)$. This finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+We remark that the restriction to $S|_{B(0,r)}$ only works because $B(0,r)$ is an open set. Here is the exact lemma we just used.
+\begin{lemma} \label{lem:restrictcont}
+	Fix $f:X\to\CC$ a function and $U\subseteq\CC$ an open subset $X$ with $x\in U\cap X$. Then $f$ is continuous at $x$ if and only if the restriction $f|_{U\cap X}:U\cap X\to\CC$ is continuous at $x$.
+\end{lemma}
+An alternate way to give the hypothesis on $U$ is that $U\cap X$ is an open subset of $X$.
+\begin{proof}
+	We show the directions independently.
+	\begin{itemize}
+		\item Suppose that $f$ is continuous at $x$. We show that $f|_U$ is continuous at $x$. Well, for any $\varepsilon>0$, we are promised some $\delta>0$ so that any $z\in X$ has
+		\[|z-x|<\delta\implies|f(z)-f(x)|<\varepsilon.\]
+		In particular, any $z\in X\cap U$ has
+		\[|z-x|<\delta\implies\big|f|_{U\cap X}(z)-f|_{U\cap X}\big|=|f(z)-f(x)|<\varepsilon.\]
+		\item Suppose that $f|_{U\cap X}$ is continuous at $x$. Fix any $\varepsilon>0$. Because $x\in U$ and $U$ is open, there exists $r>0$ such that $B(x,r)\subseteq U$. Because $f|_{U\cap X}$ is continuous at $x$, there exists some $\delta_0>0$ such that
+		\[|z-x|<\delta_0\implies|f(z)-f(x)|=|f_{U\cap X}(z)-f_{U\cap X}(z)|<\varepsilon\]
+		for $z\in U\cap X$. However, taking $\delta:=\min\{r,\delta\}$, we see that any $z\in X$ with $|x-z|<\delta$ will have $z\in B(x,\delta)\subseteq U$, so $z\in U\cap X$ automatically. So $|z-x|<\delta$ will still imply
+		\[|f(z)-f(x)|<\varepsilon,\]
+		and we are done.
+		\qedhere
+	\end{itemize}
+\end{proof}
