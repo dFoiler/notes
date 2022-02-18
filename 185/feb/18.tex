@@ -23,30 +23,45 @@ The answer to this question is essentially the same as for real analysis: it's t
 \begin{definition}[Radius of convergence]
 	The \textit{radius of convergence} of a complex power series $S(z)=\sum_{k=0}^\infty a_kz^k$ is defined to be equal to the radius of convergence of the real power series
 	\[T(x)=\sum_{k=0}^n|a_k|x^k.\]
+	Concretely, we define
+	\[R:=\frac1{\limsup_{n\to\infty}\sqrt[n]{|a_n|}}.\]
 \end{definition}
 We should probably check convergence in the radius of convergence.
 \begin{prop} \label{prop:radconverge}
-	Fix a complex power series $S(z)=\sum_{k=0}^\infty$ with radius of convergence $R$. Then the following hold.
+	Fix a complex power series $S(z)=\sum_{k=0}^\infty a_kz^k$ with radius of convergence $R$. Then the following hold.
 	\begin{listalph}
-		\item The sequence of partial sums $\sum_{k=0}^n\left|a_kz^k\right|$ for any $z$ with $|z|<R$. In other words, $S(z)$ converges absolutely.
+		\item The sequence of partial sums $\sum_{k=0}^n\left|a_kz^k\right|$ converge for any $z$ with $|z|<R$. In other words, $S(z)$ converges absolutely.
 		\item The series $S(z)$ will diverge for $z$ with $|z|>R$.
 	\end{listalph}
 \end{prop}
 \begin{proof}
-	We take these one at a time.
+	We take these one at a time. The point is to imitate the proofs from real analysis.
 	\begin{listalph}
-		\item Fix $z$ with $|z|<R$ so that there exists some $r\in\RR$ with $|z|<r<R$. For example, $r:=\frac{|z|+R}2$ will do. Choosing $\varepsilon=r>|z|\ge0$, we choose some $\rho$ such that $r=R-\varepsilon<\rho<R$.
+		\item We note that, if $R=0$, there is nothing to prove here. Otherwise, fix $z$ with $|z|<R$ so that there exists some $\rho\in\RR$ with $|z|<\rho<R$. For example, $\rho:=\frac{|z|+R}2$ will do.
 
-		Now, by real analysis, we see that $S(\rho)$ will converge because $\rho$ is a real number. Our goal is to use the comparison test to show that $S(z)$ absolutely converges. In particular, the terms $a_k\rho^k$ must go to $0$, as must $|a_k|\rho^k$, so because convergent sequences are bounded, we note
-		\[\left|a_k\rho^k\right|\le M\]
-		for each $k\in\NN$. Because $|z|<r<\rho$, we note that $|z|/\rho<1$, so we bound
+		Now, because $\rho<R$, we see that $\frac1\rho>\limsup_{n\to\infty}\sqrt[n]{|a_n|}$ (this is legal because $R\ne0$), so there exists some $N$ for which any fixed $n>N$ has
+		\[\sup_{k\ge n}\sqrt[k]{|a_k|}<\frac1\rho.\]
+		In particular, each $k>N$ will have $\sqrt[k]{|a_k|}<1/\rho$, so $|a_k|\rho^k<1$. So, setting
+		\[M:=\max\big(\{1\}\cup\{|a_k|:k\le N\}\big),\]
+		we see that $|a_k|\rho^k\le M$ for each $k\in\NN$.
+		
+		But because $|z|<\rho$, we note that $|z|/\rho<1$, so we bound
 		\[\left|a_kz^k\right|=\left|a_k\rho^k\right|\cdot\left|\frac{z^n}{\rho^n}\right|\le M\left|\frac z\rho\right|^n.\]
 		However, $|z/\rho|<1$, so the series $\sum_{k=0}^\infty|z/\rho|^k$ will converge as a geometric series, so we are done by the comparison test.
 
-		\item We refer to Eterovi\'c's notes.
+		\item We proceed by contraposition. Suppose that $S(z)$ converges, so by \autoref{lem:divtest}, $a_kz^k\to0$ as $k\to\infty$. We show that $|z|\le R$. If $z=0$, there is nothing to say; otherwise, it will suffice to show that
+		\[\frac1{|z|}\stackrel?\ge\limsup_{k\to\infty}\sqrt[k]{|a_k|}.\]
+		For this, fix $\varepsilon=1$, so we are granted some $N$ for which $k>N$ has
+		\[\left|a_kz^k\right|<1.\]
+		In particular, this rearranges into $1/|z|>\sqrt[k]{|a_k|}$. So for each $n>N$, we see $1/|z|>\sqrt[k]{|a_k|}$ for $k>n$, so $1/|z|\ge\sup\{\sqrt[k]{|a_k|}:k>n\}$, so
+		\[\frac1{|z|}\ge\lim_{n\to\infty}\sup\left\{\sqrt[k]{|a_k|}:k>n\right\}=\limsup_{n\to\infty}\sqrt[n]{|a_n|},\]
+		which is what we wanted.
 		\qedhere
 	\end{listalph}
 \end{proof}
+\begin{remark}[Nir]
+	The proof of (b) might feel weird because we are not using the full power of $S(z)$ converging, just that its terms go to $0$. However, a power series will ``essentially'' converge whenever its terms go to $0$ (aside from boundary cases), so it is not too surprising that this is all that we need.
+\end{remark}
 We have the following warning.
 \begin{warn}
 	\autoref{prop:radconverge} is agnostic to the case of $|z|=R$.
@@ -115,10 +130,10 @@ An alternate way to give the hypothesis on $U$ is that $U\cap X$ is an open subs
 \begin{proof}
 	We show the directions independently.
 	\begin{itemize}
-		\item Suppose that $f$ is continuous at $x$. We show that $f|_U$ is continuous at $x$. Well, for any $\varepsilon>0$, we are promised some $\delta>0$ so that any $z\in X$ has
+		\item Suppose that $f$ is continuous at $x$. We show that $f|_{U\cap X}$ is continuous at $x$. Well, for any $\varepsilon>0$, we are promised some $\delta>0$ so that any $z\in X$ has
 		\[|z-x|<\delta\implies|f(z)-f(x)|<\varepsilon.\]
 		In particular, any $z\in X\cap U$ has
-		\[|z-x|<\delta\implies\big|f|_{U\cap X}(z)-f|_{U\cap X}\big|=|f(z)-f(x)|<\varepsilon.\]
+		\[|z-x|<\delta\implies\big|f|_{U\cap X}(z)-f|_{U\cap X}(x)\big|=|f(z)-f(x)|<\varepsilon.\]
 		\item Suppose that $f|_{U\cap X}$ is continuous at $x$. Fix any $\varepsilon>0$. Because $x\in U$ and $U$ is open, there exists $r>0$ such that $B(x,r)\subseteq U$. Because $f|_{U\cap X}$ is continuous at $x$, there exists some $\delta_0>0$ such that
 		\[|z-x|<\delta_0\implies|f(z)-f(x)|=|f_{U\cap X}(z)-f_{U\cap X}(z)|<\varepsilon\]
 		for $z\in U\cap X$. However, taking $\delta:=\min\{r,\delta\}$, we see that any $z\in X$ with $|x-z|<\delta$ will have $z\in B(x,\delta)\subseteq U$, so $z\in U\cap X$ automatically. So $|z-x|<\delta$ will still imply
