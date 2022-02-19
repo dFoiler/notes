@@ -1,0 +1,233 @@
+% !TEX root = ../notes.tex
+
+Apparently I have to take notes today.
+
+\subsection{Motivating Horizontal Composition}
+A while ago we discussed vertical composition of natural transformations: if $F,G,H:\mathcal C\to\mathcal D$ with natural transformations $\alpha:F\Rightarrow G$ and $\beta:G\Rightarrow H$, then we can define a natural transformation $(\beta\alpha):F\Rightarrow H$ by $(\beta\alpha)_c:=\beta_c\alpha_c$. To quickly review, the naturality condition can be checked by drawing the following commutative diagram.
+% https://q.uiver.app/?q=WzAsNixbMCwwLCJGYyJdLFsxLDAsIkZkIl0sWzAsMSwiR2MiXSxbMSwxLCJHZCJdLFswLDIsIkhjIl0sWzEsMiwiSGQiXSxbMCwxLCJGZiJdLFsyLDMsIkdmIl0sWzQsNSwiSGYiLDJdLFswLDIsIlxcYWxwaGFfYyIsMl0sWzEsMywiXFxhbHBoYV9kIl0sWzIsNCwiXFxiZXRhX2MiLDJdLFszLDUsIlxcYmV0YV9kIl0sWzAsNCwiXFxiZXRhX2NcXGFscGhhX2MiLDIseyJvZmZzZXQiOjIsImN1cnZlIjoyfV0sWzEsNSwiXFxiZXRhX2RcXGFscGhhX2QiLDAseyJvZmZzZXQiOi0zLCJjdXJ2ZSI6LTJ9XV0=
+\[\begin{tikzcd}
+	Fc & Fd \\
+	Gc & Gd \\
+	Hc & Hd
+	\arrow["Ff", from=1-1, to=1-2]
+	\arrow["Gf", from=2-1, to=2-2]
+	\arrow["Hf"', from=3-1, to=3-2]
+	\arrow["{\alpha_c}"', from=1-1, to=2-1]
+	\arrow["{\alpha_d}", from=1-2, to=2-2]
+	\arrow["{\beta_c}"', from=2-1, to=3-1]
+	\arrow["{\beta_d}", from=2-2, to=3-2]
+	\arrow["{\beta_c\alpha_c}"', shift right=2, curve={height=12pt}, from=1-1, to=3-1]
+	\arrow["{\beta_d\alpha_d}", shift left=3, curve={height=-12pt}, from=1-2, to=3-2]
+\end{tikzcd}\]
+We are going to discuss horizontal composition because Eckmann--Hamilton would like to know your location. The set-up is as follows: suppose that we have functors $F,G:\mathcal C\to\mathcal D$ with $\alpha:F\Rightarrow G$ and $F',G':\mathcal D\to\mathcal E$ with $\beta:F'\Rightarrow G'$. Here is the diagram.
+% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMSwyLCJGJyIsMCx7ImN1cnZlIjotMn1dLFswLDEsIkYiLDAseyJjdXJ2ZSI6LTJ9XSxbMSwyLCJHJyIsMix7ImN1cnZlIjoyfV0sWzAsMSwiRyIsMix7ImN1cnZlIjoyfV0sWzMsNSwiXFxiZXRhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dLFs0LDYsIlxcYWxwaGEiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+\[\begin{tikzcd}
+	{\mathcal C} & {\mathcal D} & {\mathcal E}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{F'}", curve={height=-12pt}, from=1-2, to=1-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "{G'}"', curve={height=12pt}, from=1-2, to=1-3]
+	\arrow[""{name=3, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-1, to=1-2]
+	\arrow["\beta", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=2]
+	\arrow["\alpha", shorten <=3pt, shorten >=3pt, Rightarrow, from=1, to=3]
+\end{tikzcd}\]
+Our goal is to define $(\beta*\alpha):F'F\Rightarrow G'G$.
+
+\subsection{Whiskering}
+To define this horizontal composition, we define ``whiskering.'' There are two kinds of whiskering.
+
+\begin{itemize}
+	\item Here is the diagram for left whiskering.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMSwyLCJGIiwwLHsiY3VydmUiOi0yfV0sWzAsMSwiSCJdLFsxLDIsIkciLDIseyJjdXJ2ZSI6Mn1dLFszLDUsIlxcYWxwaGEnIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+	\[\begin{tikzcd}
+		{\mathcal C} & {\mathcal D} & {\mathcal E}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-2, to=1-3]
+		\arrow["H", from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-2, to=1-3]
+		\arrow["{\alpha'}", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	We would like to define $\alpha H:FH\Rightarrow GH$. Well, we simply define $(\alpha H)_c:=\alpha_{Hc}$, which defines a natural transformation by noting the following diagram commutes for a morphism $f:c\to d$ in $\mathcal C$ by the naturality of $\alpha$ on $Hf:Hc\to Hd$. This gives the following commutative naturality square.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGSGMiXSxbMSwwLCJGSGQiXSxbMCwxLCJHSGMiXSxbMSwxLCJHSGQiXSxbMCwxLCJGSGYiXSxbMiwzLCJHSGYiLDJdLFswLDIsIlxcYWxwaGFfe0hjfSIsMl0sWzEsMywiXFxhbHBoYV97SGR9Il1d
+	\[\begin{tikzcd}
+		FHc & FHd \\
+		GHc & GHd
+		\arrow["FHf", from=1-1, to=1-2]
+		\arrow["GHf"', from=2-1, to=2-2]
+		\arrow["{\alpha_{Hc}}"', from=1-1, to=2-1]
+		\arrow["{\alpha_{Hd}}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	
+	\item There is also a notion of right whiskering. Here is the diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgRCJdLFsxLDAsIlxcbWF0aGNhbCBFIl0sWzIsMCwiXFxtYXRoY2FsIFgiXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzAsMSwiRyIsMix7ImN1cnZlIjoyfV0sWzEsMiwiSCciXSxbMyw0LCJcXGFscGhhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+	\[\begin{tikzcd}
+		{\mathcal D} & {\mathcal E} & {\mathcal X}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-1, to=1-2]
+		\arrow["{H'}", from=1-2, to=1-3]
+		\arrow["\alpha", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	We define $H'\alpha:H'F\Rightarrow H'G$ by $(H'\alpha)_d:=H'\alpha_d$. This is a natural transfoormation because we can pick up some morphism $f:c\to d$ in $\mathcal D$ and apply $H'$ to the naturality diagram for $\alpha$, giving the following commutative naturality square.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJIJ0ZjIl0sWzEsMCwiSCdGZCJdLFswLDEsIkgnR2MiXSxbMSwxLCJIJ0dkIl0sWzAsMSwiSCdGZiJdLFsyLDMsIkgnR2YiLDJdLFswLDIsIkgnXFxhbHBoYV9jIiwyXSxbMSwzLCJIJ1xcYWxwaGFfZCJdXQ==
+	\[\begin{tikzcd}
+		{H'Fc} & {H'Fd} \\
+		{H'Gc} & {H'Gd}
+		\arrow["{H'Ff}", from=1-1, to=1-2]
+		\arrow["{H'Gf}"', from=2-1, to=2-2]
+		\arrow["{H'\alpha_c}"', from=1-1, to=2-1]
+		\arrow["{H'\alpha_d}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+\end{itemize}
+
+\subsection{Horizontal Composition}
+From whiskering, there are two ways to define horizontal composition. To review, here is our diagram.
+% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMSwyLCJGJyIsMCx7ImN1cnZlIjotMn1dLFswLDEsIkYiLDAseyJjdXJ2ZSI6LTJ9XSxbMSwyLCJHJyIsMix7ImN1cnZlIjoyfV0sWzAsMSwiRyIsMix7ImN1cnZlIjoyfV0sWzMsNSwiXFxiZXRhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dLFs0LDYsIlxcYWxwaGEiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+\[\begin{tikzcd}
+	{\mathcal C} & {\mathcal D} & {\mathcal E}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{F'}", curve={height=-12pt}, from=1-2, to=1-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "{G'}"', curve={height=12pt}, from=1-2, to=1-3]
+	\arrow[""{name=3, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-1, to=1-2]
+	\arrow["\beta", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=2]
+	\arrow["\alpha", shorten <=3pt, shorten >=3pt, Rightarrow, from=1, to=3]
+\end{tikzcd}\]
+\begin{itemize}
+	\item We start by whiskering on the left and then whisker on the right. So we start by noting we have $\beta F:F'F\Rightarrow G'F$ induced by whiskering the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMSwyLCJGJyIsMCx7ImN1cnZlIjotMn1dLFswLDEsIkYiLDAseyJjdXJ2ZSI6LTJ9XSxbMSwyLCJHJyIsMix7ImN1cnZlIjoyfV0sWzMsNSwiXFxiZXRhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+	\[\begin{tikzcd}
+		{\mathcal C} & {\mathcal D} & {\mathcal E}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "{F'}", curve={height=-12pt}, from=1-2, to=1-3]
+		\arrow["F", curve={height=-12pt}, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{G'}"', curve={height=12pt}, from=1-2, to=1-3]
+		\arrow["\beta", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	Then we have $G'\alpha:G'F\Rightarrow G'G$ by whiskering along the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzEsMiwiRyciLDIseyJjdXJ2ZSI6Mn1dLFswLDEsIkciLDIseyJjdXJ2ZSI6Mn1dLFszLDUsIlxcYWxwaGEiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+	\[\begin{tikzcd}
+		{\mathcal C} & {\mathcal D} & {\mathcal E}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+		\arrow["{G'}"', curve={height=12pt}, from=1-2, to=1-3]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-1, to=1-2]
+		\arrow["\alpha", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	In total, we see that $(G'\alpha)(\beta F):F'F\Rightarrow G'G$. Note ths is a natural transformation by vertical composition!
+	\item We start by whiskering on the right and then whisker on the left. So we start by onting we have $F'\alpha:F'F\Rightarrow F'G$ by whiserking along the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzAsMSwiRyIsMix7ImN1cnZlIjoyfV0sWzEsMiwiRiciLDAseyJjdXJ2ZSI6LTJ9XSxbMyw0LCJcXGFscGhhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+	\[\begin{tikzcd}
+		{\mathcal C} & {\mathcal D} & {\mathcal E}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-1, to=1-2]
+		\arrow["{F'}", curve={height=-12pt}, from=1-2, to=1-3]
+		\arrow["\alpha", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	Then we have $\beta G:F'G\Rightarrow G'G$ induced by whiskering along the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMCwxLCJHIiwyLHsiY3VydmUiOjJ9XSxbMSwyLCJGJyIsMCx7ImN1cnZlIjotMn1dLFsxLDIsIkcnIiwyLHsiY3VydmUiOjJ9XSxbNCw1LCJcXGJldGEiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+	\[\begin{tikzcd}
+		{\mathcal C} & {\mathcal D} & {\mathcal E}
+		\arrow["G"', curve={height=12pt}, from=1-1, to=1-2]
+		\arrow[""{name=0, anchor=center, inner sep=0}, "{F'}", curve={height=-12pt}, from=1-2, to=1-3]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{G'}"', curve={height=12pt}, from=1-2, to=1-3]
+		\arrow["\beta", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+	\end{tikzcd}\]
+	In total, we see that $(\beta G)(F'\alpha):F'F\Rightarrow G'G$, which is a natural transformation by vertical composition.
+\end{itemize}
+We now claim that the two horizontal compositions that we just defined are the same. We could just track an element through, or we could simply note that this is the naturality of $\beta$ applied to the morphism $\alpha_c:Fc\to Gc$. Indeed, we are showing that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGJ0YiXSxbMSwwLCJGJ0ciXSxbMCwxLCJHJ0YiXSxbMSwxLCJHJ0ciXSxbMCwxLCJGJ1xcYWxwaGEiLDAseyJsZXZlbCI6Mn1dLFsxLDMsIlxcYmV0YSBHIiwwLHsibGV2ZWwiOjJ9XSxbMiwzLCJHJ1xcYWxwaGEiLDIseyJsZXZlbCI6Mn1dLFswLDIsIlxcYmV0YSBGIiwyLHsibGV2ZWwiOjJ9XV0=
+\[\begin{tikzcd}
+	{F'F} & {F'G} \\
+	{G'F} & {G'G}
+	\arrow["{F'\alpha}", Rightarrow, from=1-1, to=1-2]
+	\arrow["{\beta G}", Rightarrow, from=1-2, to=2-2]
+	\arrow["{G'\alpha}"', Rightarrow, from=2-1, to=2-2]
+	\arrow["{\beta F}"', Rightarrow, from=1-1, to=2-1]
+\end{tikzcd}\]
+Now, applying naturality of $\beta$ to $\alpha_c:Fc\to Gc$, we see that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGJ0ZjIl0sWzEsMCwiRidHYyJdLFswLDEsIkcnRmMiXSxbMSwxLCJHJ0djIl0sWzAsMSwiRidcXGFscGhhX2MiXSxbMSwzLCJcXGJldGFfe0djfSJdLFsyLDMsIkcnXFxhbHBoYV9jIiwyXSxbMCwyLCJcXGJldGFfe0ZjfSIsMl1d
+\[\begin{tikzcd}
+	{F'Fc} & {F'Gc} \\
+	{G'Fc} & {G'Gc}
+	\arrow["{F'\alpha_c}", from=1-1, to=1-2]
+	\arrow["{\beta_{Gc}}", from=1-2, to=2-2]
+	\arrow["{G'\alpha_c}"', from=2-1, to=2-2]
+	\arrow["{\beta_{Fc}}"', from=1-1, to=2-1]
+\end{tikzcd}\]
+But this diagram is exactly what we wanted, so we are done.
+
+\subsection{Horizontal and Vertical Composition}
+For our last note, we show that horizontal composition of vertical compositions is the same as vertical composition of horizontal compositions. Here is our diagram.
+% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1hdGhjYWwgQyJdLFsxLDAsIlxcbWF0aGNhbCBEIl0sWzIsMCwiXFxtYXRoY2FsIEUiXSxbMCwxLCJHIiwxXSxbMSwyLCJHJyIsMV0sWzAsMSwiRiIsMCx7ImN1cnZlIjotM31dLFsxLDIsIkYnIiwwLHsiY3VydmUiOi0zfV0sWzAsMSwiSCIsMix7ImN1cnZlIjozfV0sWzEsMiwiSCciLDIseyJjdXJ2ZSI6M31dLFs2LDQsIlxcYWxwaGEnIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dLFs1LDMsIlxcYWxwaGEiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV0sWzMsNywiXFxiZXRhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dLFs0LDgsIlxcYmV0YSciLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+\[\begin{tikzcd}
+	{\mathcal C} & {\mathcal D} & {\mathcal E}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "G"{description}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{G'}"{description}, from=1-2, to=1-3]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "F", curve={height=-18pt}, from=1-1, to=1-2]
+	\arrow[""{name=3, anchor=center, inner sep=0}, "{F'}", curve={height=-18pt}, from=1-2, to=1-3]
+	\arrow[""{name=4, anchor=center, inner sep=0}, "H"', curve={height=18pt}, from=1-1, to=1-2]
+	\arrow[""{name=5, anchor=center, inner sep=0}, "{H'}"', curve={height=18pt}, from=1-2, to=1-3]
+	\arrow["{\alpha'}", shorten <=2pt, shorten >=2pt, Rightarrow, from=3, to=1]
+	\arrow["\alpha", shorten <=2pt, shorten >=2pt, Rightarrow, from=2, to=0]
+	\arrow["\beta", shorten <=2pt, shorten >=2pt, Rightarrow, from=0, to=4]
+	\arrow["{\beta'}", shorten <=2pt, shorten >=2pt, Rightarrow, from=1, to=5]
+\end{tikzcd}\]
+We claim that
+\[(\beta'\alpha')*(\beta\alpha)\stackrel?=(\beta'*\beta)(\alpha'\alpha).\]
+The point is to draw the following giant commuting square. The ``morphisms'' are induced by various kinds of whiskering in the diagram, and they all commute by uniqueness of horizontal composition.
+% https://q.uiver.app/?q=WzAsOSxbMCwwLCJGJ0YiXSxbMSwwLCJGJ0ciXSxbMiwwLCJGJ0giXSxbMCwxLCJHJ0YiXSxbMSwxLCJHJ0ciXSxbMiwxLCJHJ0giXSxbMCwyLCJIJ0YiXSxbMSwyLCJIJ0ciXSxbMiwyLCJIJ0giXSxbMCwxLCJGJ1xcYWxwaGEiXSxbMSwyLCJGJ1xcYmV0YSJdLFswLDMsIlxcYWxwaGEnRiIsMl0sWzEsNCwiXFxhbHBoYSdHIiwyXSxbMiw1LCJcXGFscGhhJ0giXSxbMyw2LCJcXGJldGEnRiIsMl0sWzQsNywiXFxiZXRhJ0ciLDJdLFs1LDgsIlxcYmV0YSdIIl0sWzMsNCwiRydcXGFscGhhIl0sWzQsNSwiRydcXGJldGEiXSxbNiw3LCJIJ1xcYWxwaGEiLDJdLFs3LDgsIkgnXFxiZXRhIiwyXV0=
+\[\begin{tikzcd}
+	{F'F} & {F'G} & {F'H} \\
+	{G'F} & {G'G} & {G'H} \\
+	{H'F} & {H'G} & {H'H}
+	\arrow["{F'\alpha}", from=1-1, to=1-2]
+	\arrow["{F'\beta}", from=1-2, to=1-3]
+	\arrow["{\alpha'F}"', from=1-1, to=2-1]
+	\arrow["{\alpha'G}"', from=1-2, to=2-2]
+	\arrow["{\alpha'H}", from=1-3, to=2-3]
+	\arrow["{\beta'F}"', from=2-1, to=3-1]
+	\arrow["{\beta'G}"', from=2-2, to=3-2]
+	\arrow["{\beta'H}", from=2-3, to=3-3]
+	\arrow["{G'\alpha}", from=2-1, to=2-2]
+	\arrow["{G'\beta}", from=2-2, to=2-3]
+	\arrow["{H'\alpha}"', from=3-1, to=3-2]
+	\arrow["{H'\beta}"', from=3-2, to=3-3]
+\end{tikzcd}\]
+We now follow two paths. Consider the red path below.
+% https://q.uiver.app/?q=WzAsOSxbMCwwLCJGJ0YiXSxbMSwwLCJGJ0ciXSxbMiwwLCJGJ0giXSxbMCwxLCJHJ0YiXSxbMSwxLCJHJ0ciXSxbMiwxLCJHJ0giXSxbMCwyLCJIJ0YiXSxbMSwyLCJIJ0ciXSxbMiwyLCJIJ0giXSxbMCwxLCJGJ1xcYWxwaGEiLDAseyJjb2xvdXIiOlswLDYwLDYwXX0sWzAsNjAsNjAsMV1dLFsxLDIsIkYnXFxiZXRhIl0sWzAsMywiXFxhbHBoYSdGIiwyXSxbMSw0LCJcXGFscGhhJ0ciLDIseyJjb2xvdXIiOlswLDYwLDYwXX0sWzAsNjAsNjAsMV1dLFsyLDUsIlxcYWxwaGEnSCJdLFszLDYsIlxcYmV0YSdGIiwyXSxbNCw3LCJcXGJldGEnRyIsMl0sWzUsOCwiXFxiZXRhJ0giLDAseyJjb2xvdXIiOlswLDYwLDYwXX0sWzAsNjAsNjAsMV1dLFszLDQsIkcnXFxhbHBoYSJdLFs0LDUsIkcnXFxiZXRhIiwwLHsiY29sb3VyIjpbMCw2MCw2MF19LFswLDYwLDYwLDFdXSxbNiw3LCJIJ1xcYWxwaGEiLDJdLFs3LDgsIkgnXFxiZXRhIiwyXV0=
+\[\begin{tikzcd}
+	{F'F} & {F'G} & {F'H} \\
+	{G'F} & {G'G} & {G'H} \\
+	{H'F} & {H'G} & {H'H}
+	\arrow["{F'\alpha}", color={rgb,255:red,214;green,92;blue,92}, from=1-1, to=1-2]
+	\arrow["{F'\beta}", from=1-2, to=1-3]
+	\arrow["{\alpha'F}"', from=1-1, to=2-1]
+	\arrow["{\alpha'G}"', color={rgb,255:red,214;green,92;blue,92}, from=1-2, to=2-2]
+	\arrow["{\alpha'H}", from=1-3, to=2-3]
+	\arrow["{\beta'F}"', from=2-1, to=3-1]
+	\arrow["{\beta'G}"', from=2-2, to=3-2]
+	\arrow["{\beta'H}", color={rgb,255:red,214;green,92;blue,92}, from=2-3, to=3-3]
+	\arrow["{G'\alpha}", from=2-1, to=2-2]
+	\arrow["{G'\beta}", color={rgb,255:red,214;green,92;blue,92}, from=2-2, to=2-3]
+	\arrow["{H'\alpha}"', from=3-1, to=3-2]
+	\arrow["{H'\beta}"', from=3-2, to=3-3]
+\end{tikzcd}\]
+By definition of horizontal composition, this is $(\beta'*\beta)(\alpha'*\alpha)$. Now consider the different red path below.
+% https://q.uiver.app/?q=WzAsOSxbMCwwLCJGJ0YiXSxbMSwwLCJGJ0ciXSxbMiwwLCJGJ0giXSxbMCwxLCJHJ0YiXSxbMSwxLCJHJ0ciXSxbMiwxLCJHJ0giXSxbMCwyLCJIJ0YiXSxbMSwyLCJIJ0ciXSxbMiwyLCJIJ0giXSxbMCwxLCJGJ1xcYWxwaGEiLDAseyJjb2xvdXIiOlswLDYwLDYwXX0sWzAsNjAsNjAsMV1dLFsxLDIsIkYnXFxiZXRhIiwwLHsiY29sb3VyIjpbMCw2MCw2MF19LFswLDYwLDYwLDFdXSxbMCwzLCJcXGFscGhhJ0YiLDJdLFsxLDQsIlxcYWxwaGEnRyIsMl0sWzIsNSwiXFxhbHBoYSdIIiwwLHsiY29sb3VyIjpbMCw2MCw2MF19LFswLDYwLDYwLDFdXSxbMyw2LCJcXGJldGEnRiIsMl0sWzQsNywiXFxiZXRhJ0ciLDJdLFs1LDgsIlxcYmV0YSdIIiwwLHsiY29sb3VyIjpbMCw2MCw2MF19LFswLDYwLDYwLDFdXSxbMyw0LCJHJ1xcYWxwaGEiXSxbNCw1LCJHJ1xcYmV0YSJdLFs2LDcsIkgnXFxhbHBoYSIsMl0sWzcsOCwiSCdcXGJldGEiLDJdXQ==
+\[\begin{tikzcd}
+	{F'F} & {F'G} & {F'H} \\
+	{G'F} & {G'G} & {G'H} \\
+	{H'F} & {H'G} & {H'H}
+	\arrow["{F'\alpha}", color={rgb,255:red,214;green,92;blue,92}, from=1-1, to=1-2]
+	\arrow["{F'\beta}", color={rgb,255:red,214;green,92;blue,92}, from=1-2, to=1-3]
+	\arrow["{\alpha'F}"', from=1-1, to=2-1]
+	\arrow["{\alpha'G}"', from=1-2, to=2-2]
+	\arrow["{\alpha'H}", color={rgb,255:red,214;green,92;blue,92}, from=1-3, to=2-3]
+	\arrow["{\beta'F}"', from=2-1, to=3-1]
+	\arrow["{\beta'G}"', from=2-2, to=3-2]
+	\arrow["{\beta'H}", color={rgb,255:red,214;green,92;blue,92}, from=2-3, to=3-3]
+	\arrow["{G'\alpha}", from=2-1, to=2-2]
+	\arrow["{G'\beta}", from=2-2, to=2-3]
+	\arrow["{H'\alpha}"', from=3-1, to=3-2]
+	\arrow["{H'\beta}"', from=3-2, to=3-3]
+\end{tikzcd}\]
+The top leg is $\alpha'*\alpha$, and the right leg is $\beta'*\beta$, so this total red path comes out to $(\beta'*\beta)(\alpha'*\alpha)$.
+
+So comparing our two red paths, we see that
+\[(\beta'\alpha')*(\beta\alpha)=(\beta'*\beta)(\alpha'\alpha),\]
+which is what we wanetd.
