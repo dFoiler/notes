@@ -219,7 +219,7 @@ In fact, we can build composition series in short exact sequences, just like how
 
 \subsection{The Jordan--H\"older Theorem}
 We will now check that the length of a submodule is well-defined. Here is a follow-up result from the argument of \autoref{prop:finlengthses}; we will use it as a technical lemma in the proof.
-\begin{lemma}
+\begin{lemma} \label{lem:stepdownlength}
 	Fix $A\subsetneq B$ a proper containment of $R$-modules, and suppose that $B$ has finite length so that $A$ also has finite length. Then the length of $A$ is strictly less than the length of $B$.
 \end{lemma}
 \begin{proof}
@@ -245,7 +245,28 @@ Here is the main result on composition series.
 	Fix $M$ an $R$-module which has a composition series. Then all composition series of $M$ have the same length. Namely, any strictly descending chain of submodules of $M$ can be refined into a composition series of length equal to the length of $M$.
 \end{theorem}
 \begin{proof}
-	Omitted. This is Eisenbud and in fact essentially the same as the proof for groups if one has seen the corresponding proof for groups. % \todo{}
+	We follow the proof in Eisenbud. Fix $M$ of length $n$. The key claim is as follows.
+	\begin{lemma} \label{lem:boundchain}
+		Fix $M$ an $R$-module of length $n$. If we have a strictly descending chain
+		\[M=M_0\supsetneq M_1\supsetneq M_2\supsetneq\cdots\supsetneq M_k,\]
+		then $k\le n$.
+	\end{lemma}
+	\begin{proof}
+		We induct on $n$. When $n=0$, the definition of a composition series forces $M=0$, so our strictly descending chain must consist of only $0$, so $k=0$.
+
+		For the inductive step, we note that \autoref{lem:stepdownlength} forces the length of $M_1$ to be strictly less than the length of $M$, so the length of $M_1$ is at most $n-1$. So the inductive hypothesis tells us that the chain
+		\[M_1\supsetneq M_2\supsetneq\cdots\supsetneq M_k\]
+		forces $k-1\ge n-1$, so $k\ne n$ follows.
+	\end{proof}
+	It follows from \autoref{lem:boundchain} that all composition series have length at most $n$, but because $n$ is the length of the shortest composition series, we see that all composition series must have length exactly $n$.
+
+	As for the second claim, suppose that we have a strictly descending chain
+	\[M=M_0\supsetneq M_1\supsetneq M_2\supsetneq\cdots\supsetneq M_k.\]
+	If this is not a composition series, we claim that we can make it longer. Indeed, if some term $M_\ell/M_{\ell+1}$ is not simple, then we can find a proper nonzero submodule $N'\subseteq M_\ell/M_{\ell+1}$, which we can pull back along $M_\ell\onto M_\ell/M_{\ell+1}$ to a submodule $N$ strictly contained between $M_\ell$ and $M_{\ell+1}$. In particular, $N'\ne0$ forces $N\ne M_{\ell+1}$, and $N'\ne M_\ell/M_{\ell+1}$ forces $N\ne M_{\ell}$.
+	
+	Thus, we have the strictly descending chain
+	\[M=M_0\supsetneq M_1\supsetneq\cdots\supsetneq M_\ell\supsetneq N\supsetneq M_{\ell+1}\supsetneq\cdots\supsetneq M_k\]
+	of length $k+1$. We can continue this process as long as we don't have a composition series, but because all composition series have length $n$, this means that we can only add terms so long as we have length less than $n$. Namely, we have showed that the all strictly descending chains can be refined to a composition series of length $n$.
 \end{proof}
 
 \subsection{Modules of Finite Length}
@@ -254,19 +275,44 @@ The Jordan--H\"older theorem gives us the following quick result about modules o
 	Fix $M$ an $R$-module. Them $M$ is of finite length if and only if $M$ is both Artinian and Noetherian.
 \end{corollary}
 \begin{proof}
-	We will be brief; the backwards direction is \autoref{lem:artnoethimpliesfinlength}. For the forwards direction, suppose $M$ has a composition series with $n$ composition factors. The point is that composition series are maximal among all chains of distinct submodules, so any chain of submodules can have at most $n+1$ distinct submodueles. In particular, any ascending or descending chain must stabilize.
+	The backwards direction is \autoref{lem:artnoethimpliesfinlength}.
+	
+	For the forwards direction, suppose $M$ has a composition series with $n$ composition factors. We show that $M$ is Noetherian and Artinian separately. The point is that \autoref{lem:boundchain} basically says that we cannot have arbitrarily long strictly descending or ascending chains.
+	\begin{itemize}
+		\item We show that $M$ is Noetherian. For this, fix an ascending chain of submodules
+		\[N_0\subseteq N_2\subseteq N_3\subseteq\cdots.\]
+		Suppose for the sake of contradiction that this ascending chain never stabilizes. Removing equal terms from the chain, we may assume that all the submodules are distinct. But then we can create the descending chain
+		\[M\supseteq N_{n+1}\supsetneq N_n\supsetneq N_{n-1}\supsetneq\cdots\supsetneq N_1\supsetneq N_0\]
+		of length $n+1$. This violates \autoref{lem:boundchain}, which is our contradiction.
+		\item We show that $M$ is Artinian. For this, fix an descending chain of submodules
+		\[N_0\supseteq N_2\supseteq N_3\supseteq\cdots.\]
+		Suppose for the sake of contradiction that this descending chain never stabilizes. Removing equal terms from the chain, we may assume that all the submodules are distinct. But then we can create the descending chain
+		\[M\supseteq N_0\supsetneq N_1\supsetneq N_2\supsetneq\cdots\supsetneq N_n\supsetneq N_{n+1}\]
+		of length $n+1$. This violates \autoref{lem:boundchain}, which is our contradiction.
+		\qedhere
+	\end{itemize}
 \end{proof}
 
 Quickly, note that the support of $M$ is particularly nice when $M$ has a composition series, which essentially comes from various facts we've already proven.
 \begin{lemma}
 	Fix $M$ an $R$-module with a finite composition series
 	\[M:=M_0\supsetneq M_1\supsetneq\cdots\supsetneq M_n:=\{0\}.\]
-	If the composition factors are $\{R/\mf p_1,\ldots,R/\mf p_n\}$, then $\op{Supp}M=\{\mf p_1,\ldots,\mf p_n\}$.
+	If the composition factors are $R/\mf p_k\cong M_{k-1}/M_k$ for $k\in\{1,\ldots,n\}$, then $\op{Supp}M=\{\mf p_1,\ldots,\mf p_n\}$.
 \end{lemma}
 \begin{proof}
-	The point is to turn the composition series into a whole bunch of short exact sequence, from which we can read off the support. Namely, we have the short exact sequences
-	\[0\to M_i\to M_{i+1}\to M_{i+1}/M_i\to0\]
-	from which we can read off the support inductively.
+	We induct on the length $n$ of $M$, using \autoref{prop:suppses} for the induction. If $n=0$, then the composition series has no composition factors, so $M=0$ and so $\op{Supp}M=\emp$ by \autoref{ex:emptysupport}, which matches.
+
+	For the inductive step, we take $n>0$ and note that
+	\[M_1\supsetneq\cdots\supsetneq M_n=\{0\}\]
+	provides a composition series for $M_1$ of length $n-1$, where our composition factors are $R/\mf p_k\cong M_{k-1}/M_k$ for $k\in\{2,\ldots,n\}$. So the inductive hypothesis promises
+	\[\op{Supp}M_1=\{\mf p_2,\ldots,\mf p_n\}.\]
+	Now we use \autoref{prop:suppses}. Namely, we have the short exact sequences
+	\[0\to M_1\to M_0\to M_0/M_1\to0\]
+	which tells us that
+	\[\op{Supp}M=\op{Supp}M_0=\op{Supp}(M_0/M_1)\cup\op{Supp}M_1\]
+	by \autoref{prop:suppses}. But $\op{Supp}(M_0/M_1)=\op{Supp}R/\mf p_1=\{\mf p_1\}$ by \autoref{exe:classifysimple}. It follows that
+	\[\op{Supp}M=\{\mf p_1,\mf p_2,\ldots,\mf p_n\},\]
+	which is what we wanted.
 \end{proof}
 And here is a nice result which we get from this.
 \begin{theorem}
@@ -287,7 +333,7 @@ And here is a nice result which we get from this.
 		0 & \mf p\ne\mf q, \\
 		R_\mf p/\mf pR_\mf p & \mf p=\mf q.
 	\end{cases}\]
-	For (b), the point is to localize a composition series to get the result, again using the above computatin.
+	For (b), the point is to localize a composition series to get the result, again using the above computation.
 \end{proof}
 
 \subsection{Artinian Grab-Bag}
@@ -346,7 +392,7 @@ We split the proof into two parts.
 		where $\mf m$ ranges over all maximal ideals of $R$.
 	\end{definition}
 	Note that the Jacobson radical is an ideal because ideals are closed under intersection. Alternatively, we can view $J$ as the kernel of the map
-	\[R\to\prod_\mf mR,\]
+	\[R\to\prod_\mf mR/\mf m,\]
 	for any ring $R$, where the product is over maximal ideals $\mf m\subseteq R$.
 
 	In fact, in the case where $R$ is Artinian, the above map will be surjective. By the Chinese remainder theorem, it suffices to show that there are only finitely many maximal ideals of $R$.
