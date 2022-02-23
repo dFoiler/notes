@@ -18,4 +18,4 @@ real x(real t)
 {
 return cbrt(t*t);
 }
-draw(graph(x,y,-2,2));
+draw(graph(x, y,-2,2));
