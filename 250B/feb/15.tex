@@ -5,7 +5,7 @@ Here we go.
 	For today's lecture, an $S$-algebra $R$ should be thought of as providing an embedding $R\subseteq S$ (though we will not actually assume that this ring map is injective).
 \end{convention}
 
-\subsection{More on Integrality}
+\subsection{A Better Integrality}
 Last time we introduced the following proposition.
 \integralitydef*
 \noindent This gave rise to the following definition.
@@ -13,7 +13,7 @@ Last time we introduced the following proposition.
 \noindent Being integral is intended to be a generalization of having a finite extension of fields. Along these lines, we get the following definition.
 \finitedefi*
 \noindent As with fields, we know that any finite field extension must be algebraic, so we might hope that an integral extension is also finite.
-\begin{lemma}
+\begin{lemma} \label{lem:finiteimpliesintegral}
 	Every finite $R$-algebra $S$ is integral.
 \end{lemma}
 \begin{proof}
@@ -27,43 +27,95 @@ Last time we introduced the following proposition.
 \end{proof}
 In fact, we can provide a converse.
 \begin{lemma} \label{lem:betterfinite}
-	Fix $S$ an $R$-algebra. Then $S$ is finite if and only if it is finitely generated as an $R$-algebra, where the generators are integral.
+	Fix $S$ an $R$-algebra. Then $S$ is finite if and only if it is finitely generated as an $R$-algebra with integral generators.
 \end{lemma}
 \begin{proof}
-	We have two directions.
+	We show the two directions independently. The key to the backwards direction will be the following lemma.
+	\begin{lemma} \label{lem:finiteoverfinite}
+		If $A\subseteq B\subseteq C$ are rings, then if $C$ is finite over $B$ and $B$ is finite over $A$, then $C$ is finite over $A$.
+	\end{lemma}
+	\begin{proof}
+		Because $C$ is finite over $B$, we get generators $c_1,\ldots,c_n$. Similarly, because $B$ is finite over $A$, we get generators $b_1,\ldots,b_m$. We claim that the $b_ic_j$ generate $C$ as an $A$-module, which will finish the proof.
+
+		Indeed, any $c\in C$ we can write as
+		\[c=\sum_{j=1}^nr_jc_j\]
+		where $r_j\in B$. Then, expanding the $r_j$ along the generators $b_1,\ldots,b_m$, we get
+		\[r_j=\sum_{i=1}^ms_{ij}b_i.\]
+		Distributing, we see that
+		\[c=\sum_{j=1}^n\sum_{i=1}^ns_{ij}(b_ic_j),\]
+		which finishes the proof.
+	\end{proof}
+	We now attack the proof directly.
 	\begin{itemize}
-		\item In one direction, suppose that $S=R[s_1,\ldots,s_n]$, and we consider the chain
+		\item In one direction, suppose that $S=R[s_1,\ldots,s_n]$ where the elements $s_1,\ldots,s_n$ are all integral over $R$. The key is to consider the chain
 		\[R\subseteq R[s_1]\subseteq R[s_1,s_2]\subseteq\cdots\subseteq R[s_1,\ldots,s_n].\]
-		Each extension is finite because the generators are integral, and we can build a finite set of generators by multiplying the sets together.
-		\item In the other direction, take $S$ a finite $R$-algebra. Then all elements are integral over $R$, but we are only permitted finitely many generators, so we can just keep choosing until we are done.
+		We show that $R[s_1,\ldots,s_k]$ is finite over $R$ by induction on $k$; when $k=0$, there is nothing to say. For the inductive step, suppose that some $R[s_1,\ldots,s_k]$ is finite over $R$ by the elements $\{x_1,\ldots,x_m\}$, and we show $R[s_1,\ldots,s_{k+1}]$ is finite over $R$.
+		
+		Well, $s_{k+1}$ is the root of some monic polynomial which we name $p\in R[x]$. But $p\in R[s_0,\ldots,s_k]$ as well, so $s_{k+1}$ is integral over $R[s_0,\ldots,s_k]$. Thus, by\autoref{prop:integralitydef}, $R[s_1,\ldots,s_k][s_{k+1}]$ will still be finitely generated as an $R[s_1,\ldots,s_k]$-module.
+
+		It follows that $R[s_1,\ldots,s_{k+1}]$ is finitely generated as an $R$-module by \autoref{lem:finiteoverfinite}.
+
+		\item In the other direction, take $S$ a finite $R$-algebra. In particular, we see that $S=Rs_0R+\cdots+s_nR$ for some elements $s_0,\ldots,s_n\in S$. But \autoref{lem:finiteimpliesintegral} now forces the elements $s_k$ to all be integral, so we see that $S$ is finite over $R$ with generators which are integral.
 		\qedhere
 	\end{itemize}
 \end{proof}
-Sometimes we aren't integral, but we can always make one.
+\begin{remark}[Nir]
+	The real point of the above discussion is to give a better description of integral elements looks like: they generate finite algebras. (Again, note the analogy with fields: algebraic elements generate finite field extensions.) This will be more apparent in \autoref{prop:integralclosure}.
+\end{remark}
+
+\subsection{The Integral Closure}
+Sometimes an algebra isn't integral, but we can always make an integral extension out of our algebra.
 \begin{definition}[Integral closure]
-	Fix $S$ an $R$-algebra. Then the \textit{integral closure} $S'$ is the set of all elements of $S$ which are integral over $R$.
+	Fix $S$ an $R$-algebra. Then the \textit{integral closure} $S'$ of $S$ over $R$ is the set of all elements of $S$ which are integral over $R$.
 \end{definition}
 \begin{remark}
-	The integral closure depends on the choice of $S$.
+	The integral closure depends on the choice of $S$: making $S$ bigger permits more integral elements. This is analogous to the algebraic closure of a field technically depending on our choice of parent field.
 \end{remark}
-\begin{proposition}
-	Fix $S$ an $R$-algebra. Then the integral closure of $S$ is an $R$-subalgebra of $S$.
+\begin{proposition} \label{prop:integralclosure}
+	Fix $S$ an $R$-algebra. Then the integral closure $S'$ of $S$ is an $R$-subalgebra of $S$. In particular, if $s_1,s_2\in S$ are integral elements, then $s_1+s_2$ and $s_1s_2$ are also both integral elements.
 \end{proposition}
 \begin{proof}
-	The main idea is to use \autoref{lem:betterfinite}. We emulate the proof that the set of algebraic elements is a field extension. Namely, for any elements $s_1$ and $s_2$ which are integral over $R$, \autoref{lem:betterfinite} tells us that
+	The main idea is to use \autoref{lem:betterfinite}, emulating the proof that the set of algebraic elements is a (sub)field. Namely, for any elements $s_1,s_2\in S$ which are integral over $R$, \autoref{lem:betterfinite} tells us that
 	\[R[s_1,s_2]\]
-	is a finite $R$-algebra, so all of its elements are integral. Thus, $s_1s_1$ and $s_1+s_2$ are integral, showing that $S$ is closed under addition and multiplication. We are also closed under the $R$-action because elements $r\in R$ in $S$ are integral by the monic polynomial $(x-r)\in R[x]$.
+	is a finite $R$-algebra, so all of its elements are integral by \autoref{lem:finiteimpliesintegral}. Thus, $s_1s_1$ and $s_1+s_2$ are integral.
+	
+	The above argument shows that the integral closure $S'$ is closed under addition and multiplication, so $S'$ is a subring of $S$. Lastly, we note that, for any $r\in R$, the polynomial $x-r\in R[x]$ shows that each $r\in $ is integral. So closure of $S'$ under multiplication shows that $S'$ is also closed under $R$-multiplication, which is the $R$-action. Thus, $S'$ is an $R$-subalgebra of $S$.
 \end{proof}
+\begin{remark}[Nir] \label{rem:gettingintclosure}
+	Here is another corollary of \autoref{lem:betterfinite}. Suppose that $s\in S$ is the root of some monic polynomial
+	\[s^n+s_{n-1}s^{n-1}+\cdots+s_1s+s_0=0\]
+	where $s_{n-1},\ldots,s_1\in S$ are all integral elements. Then we show $s$ is integral. Indeed, $R[s_0,\ldots,s_{n-1}]$ is integral and hence finite over $R$ by \autoref{lem:betterfinite}.
+	
+	Thus, $s$ is integral over $R[s_0,\ldots,s_{n-1}]$, so it follows $R[s_0,\ldots,s_{n-1},s]$ is integral and hence finite over $R[s_0,\ldots,s_{n-1}]$ by \autoref{lem:betterfinite}. Then $R[s_0,\ldots,s_{n-1},s]$ is finite over $R$ by \autoref{lem:finiteoverfinite}, so $s$ is integral over $R$ by \autoref{lem:finiteimpliesintegral}, finishing.
+\end{remark}
+\begin{remark}[Nir]
+	The real reason we care about \autoref{rem:gettingintclosure} is to show that the integral closure $S'$ of $S$ over $R$ is ``integrally closed'': we show that any element $s\in S$ integral over $S'$ has $s'\in S$. Indeed, $s\in S$ being integral over $S'$ means that we get a monic polynomial
+	\[s^n+s_{n-1}s^{n-1}+\cdots+s_1s+s_0=0,\]
+	where $s_{n-1},\ldots,s_0\in S'$. But this means the $s_k$ are integral over $R$ by definition of $S'$, so $s$ is integral over $R$ by \autoref{rem:gettingintclosure}, so $s\in S'$. (Note the analogy between this and showing that the algebraic closure is algebraically closed.)
+\end{remark}
 We close our discussion by quickly discussing localization: localization commutes with the integral closure.
 \begin{proposition}
 	Fix $S$ an $R$-algebra with integral closure $S'$; further take $U\subseteq R$ a multiplicative subset. Then $S'\left[U^{-1}\right]$ is the integral closure of $R\left[U^{-1}\right]$ in $S\left[U^{-1}\right]$.
 \end{proposition}
 \begin{proof}
-	The direction that all elements of $S'\left[U^{-1}\right]$ are integral over $R\left[U^{-1}\right]$ is not hard because multiplication by units will not affect integrality.
-	
-	In the other direction, fix some $\frac su\in S\left[U^{-1}\right]$ is integral over $R\left[U^{-1}\right]$ so that we have some polynomial
-	\[\left(\frac su\right)^n+\frac{r_1}{u_1}\left(\frac su\right)^{n-1}+\cdots+\frac{r_n}{u_n}=0.\]
-	Multiplying through by $s(u_1\cdots u_nu)^n$ will show that $s(u_1\cdots u_n)$ is integral over $R$ and hence lives in $S'$, which finishes.
+	We will show $\frac su\in S\left[U^{-1}\right]$ is integral over $R\left[U^{-1}\right]$ if and only if $\frac su=\frac{s'}{u'}$ for some $s'\in S$ is integral over $R$. For this, we attack the directions independently.
+	\begin{itemize}
+		\item Suppose that $s\in S$ is integral over $R$. Further, fixing any $u\in U$, we show that $\frac su$ is integral over $R\left[U^{-1}\right]$. (It will follow that any $\frac tv$ equal to such a $\frac su$ is also integral.) Well, integrality of $s$ promises a monic polynomial
+		\[s^n+r_{n-1}s^{n-1}+\cdots+r_1s+r_0=0\]
+		with coefficients in $R$. Transporting to $R\left[U^{-1}\right]$, we multiply everything by $\frac1{u^n}$ to find
+		\[\left(\frac su\right)^n+\frac{r_{n-1}}u\left(\frac su\right)^{n-1}+\cdots+\frac{r_1}{u^{n-1}}\left(\frac su\right)+\frac{r_0}{u^n}=0.\]
+		So $\frac su$ is the root of a monic polynomial over $R\left[U^{-1}\right]$, finishing.
+		\item Conversely, suppose that $\frac su$ is integral over $R\left[U^{-1}\right]$. We show that $\frac su=\frac{s'}{u'}$ for some $\frac{s'}{u'}$ such that $s'$ is integral over $R$. This grants us a monic polynomial
+		\[\left(\frac su\right)^n+\frac{r_{n-1}}{u_{n-1}}\left(\frac su\right)^{n-1}+\cdots+\frac{r_1}{u_1}\left(\frac su\right)+\frac{r_0}{u_0}=0.\]
+		Now, set $v:=uu_0u_1\cdots u_{n-1}$ and multiply through by $v=u^n$ to get
+		\[(vs)^n+\left(v\cdot\frac{r_{n-1}}{u_{n-1}}\right)(vs)^{n-1}+\cdots+\left(v^{n-1}\cdot\frac{r_1}{u_1}\right)(sv)+v^n\cdot\frac{r_0}{u_0}=0.\]
+		Each of the coefficients can be made equal to $\frac{r'_\bullet}1$ for some $r'_\bullet\in R$ because $v$ contains within it a factor of each $u_\bullet$. In particular, we see that
+		\[\frac{(vs)^n+r'_{n-1}(vs)^{n-1}+\cdots+r'_1(vs)+r'_0}1=\frac01,\]
+		so there exists some $v'\in U$ such that $v'\cdot\left((vs)^n+r'_{n-1}(vs)^{n-1}+\cdots+r'_1(vs)+r'_0\right)=0$. In particular, we get
+		\[(v'vs)^n+v'r'_{n-1}(v'vs)^{n-1}+\cdots+(v')^{n-1}r'_1(v'vs)+(v')^n=0,\]
+		so $v'vs$ is the root of the monic polynomial in $R$ and hence integral over $R$. So we finish by noting $\frac su=\frac{v'vs}{v'vu}$ because $v'v\in U$.
+		\qedhere
+	\end{itemize}
 \end{proof}
 
 \subsection{Normality}
