@@ -1,0 +1,110 @@
+% !TEX root = ../notes.tex
+
+Today we are talking about resolution.
+
+\subsection{Resolution}
+The goal of resolution is to compute if a formula is satisfiable. So far we have a fairly semantic algorithm, which is the truth table algorithm: list out all possibilities and then check each.
+
+The big-picture question is ``How can we get a machine to reason?'' For example, once we know about satisfiability, we can ask the machine if $\varphi$ is valid by seeing if $\lnot\varphi$ is satisfiable. So to get a machine to reason, we can ask if a formula $\varphi$ follows from the premises $\varphi_1,\ldots,\varphi_n$ if and only if
+\[(\varphi_1\land\cdots\land\varphi_n)\to\varphi\]
+is valid if and only if
+\[\lnot\big((\varphi_1\land\cdots\land\varphi_n)\to\varphi\big)\]
+is not satisfiable.
+
+The story so far is that we already have a couple ways to convert a formula into conjunctive normal form: either run the negation of the DNF algorithm, or we had the algorithm from last class which was more syntactic and essentially massaged all the symbols in place (where the key step was to apply distribution of $\lor$ over $\land$ to group clauses together). At a high level, CNF looks like
+\[(\ell_{1,1}\land\cdots\ell_{1,m_1})\lor\cdots\lor(\ell_{n,1}\land\cdots\ell_{n,m_n}),\]
+where the $\ell_\bullet$ are literals. To make this formula true, we need one literal in each clause to be true.
+
+For resolution, the key idea is as follows.
+\begin{idea}
+	Suppose $\varphi$ contains some subformula of the form $(p\lor\psi_1)\land(\lnot p\lor\psi_2)$. Then $\psi_1\lor\psi_2$ follows.
+\end{idea}
+Here's an example of this idea in action.
+\begin{exe} \label{exe:resolutionex}
+	We do resolution on the formula
+	\[\varphi:=(p_1\lor p_3\lor p_4)\land(\lnot p_1\lor\lnot p_2\lor p_4)\land(p_1\lor\lnot p_2\lor\lnot p_3).\]
+\end{exe}
+\begin{proof}
+	Observe that the clause $(p_1\lor p_3\lor p_4)$ and $(\lnot p_1\lor\lnot p_2\lor p_4)$ contain both $p_1$ and $\lnot p_1$. So if both of these clauses are to be true, we had better not be checking the $p_1$ box, so it follows that
+	\[\psi:=p_3\lor p_4\lor\lnot p_2\lor p_4.\]
+	Explicitly, we claim $\varphi\models\psi$. We have two cases.
+	\begin{itemize}
+		\item If $V(p_1)=0$, then $\hat V(\varphi)=1$ forces $\hat V((p_1\lor p_3\lor p_4))=1$ forces $\hat V((p_3\lor p_4))$, so $\hat V(\psi)=1$.
+		\item If $V(p_1)=1$, then $\hat V(\varphi)=1$ forces $\hat V((\lnot p_1\lor\lnot p_2\lor p_4))=1$ forces $\hat V((\lnot p_2\lor p_4))$, so $\hat V(\psi)=1$.
+	\end{itemize}
+	To make our lives easier, we will take $\psi$ and remove the redundancy $p_4$ to get $\psi=p_3\lor p_3\lor\lnot p_2$.
+
+	This idea gives the following definition.
+	\begin{definition}[Resolvent]
+		Fix $\varphi$ a formula. If we have clauses $C_1=p\lor\psi_1$ and $C_2=\lnot p\lor\psi_2$ in $\varphi$ (or some rearrangement of $p$ sitting anywhere in $C_1$ and $C_2$), then we call $\psi_1\lor\psi_2$ a \textit{resolvent} of $\varphi$ by $p$.
+	\end{definition}
+	\begin{remark}
+		The argument given above generalizes to show that any resolvent $\psi$ of $\varphi$ is a logical consequence of $\varphi$.
+	\end{remark}
+	Here are the other resolvents of $\varphi$.
+	\begin{itemize}
+		\item In $(\lnot p_1\lor\lnot p_2\lor p_4)$ and $(p_1\lor\lnot p_2\lor\lnot p_3)$, we see we have $p_1$ and $\lnot p_1$, so we get the resolvent $p_1\lor\ p_4\lor\lnot p_2$.
+		\item In $(p_1\lor p_3\lor p_4)$ and $(p_1\lor\lnot p_2\lor\lnot p_3)$, we see we have $p_3$ as well as $\lnot p_3$, so we get the resolvent $\lnot p_2\lor p_4\lor\lnot p_3$.
+	\end{itemize}
+	Because all of our resolvents are logical consequences, we see that
+	\begin{align*}
+		\varphi &\equiv (p_1\lor p_3\lor p_4)\land(\lnot p_1\lor\lnot p_2\lor p_4)\land(p_1\lor\lnot p_2\lor\lnot p_3) \\
+		&\qquad (p_3\lor p_3\lor\lnot p_2)\land(p_1\lor\ p_4\lor\lnot p_2)\land(\lnot p_2\lor p_4\lor\lnot p_3).
+	\end{align*}
+	We now do more resolution on this new formula. The clauses $(p_3\lor p_3\lor\lnot p_2)$ and $(\lnot p_2\lor p_4\lor\lnot p_3)$ resolve to $p_4\lor\lnot p_2$ by $p_3$. But now, when we write
+	\begin{align*}
+		\varphi &\equiv (p_1\lor p_3\lor p_4)\land(\lnot p_1\lor\lnot p_2\lor p_4)\land(p_1\lor\lnot p_2\lor\lnot p_3) \\
+		&\qquad (p_3\lor p_3\lor\lnot p_2)\land(p_1\lor\ p_4\lor\lnot p_2)\land(\lnot p_2\lor p_4\lor\lnot p_3) \\
+		&\qquad (p_4\lor\lnot p_2),
+	\end{align*}
+	we can check that there are no more resolvents to add. We call this formula $\op{res}(\varphi)$, with the following definition.
+	\begin{definition}[Resolution]
+		Fix a formula $\varphi$. Then we define the \textit{resolution} of $\varphi$ by $\op{res}(\varphi)$ to be $\varphi$ closed under adding in resolvents.
+	\end{definition}
+	Anyways, this finishes the resolution algorithm by the following relevant theorem; in particular, we see quickly that $\varphi$ is satisfiable.
+\end{proof}
+And here is the relevant theorem.
+\begin{theorem}
+	A formula $\varphi$ is unsatisfiable if and only if some clause of $\op{res}(\varphi)$ has both $p$ and $\lnot p$ as clauses. This conclusion is called an overt contradiction.
+\end{theorem}
+\begin{proof}
+	We omit this. The easy direction is that, if $\op{res}(\varphi)$ has both $p$ and $\lnot p$ as clauses, then of course there is no way to satisfy $\op{res}(\varphi)$.
+\end{proof}
+\begin{remark}
+	One might complain that this algorithm is quite inefficient. This is essentially to make it simpler; there are many optimizations that one could make by trying to add in fewer or more useful resolvents.
+\end{remark}
+\begin{example}
+	\autoref{exe:resolutionex} provides a formula $\varphi$ with $\op{res}(\varphi)$ which has no overt contradiction and hence is satisfiable.
+\end{example}
+Le's see another example of resolution.
+\begin{exe}
+	We apply resolution to
+	\[\varphi:=(p_1\lor p_3)\land(\lnot p_1\lor p_2)\land(p_1\lor\lnot p_3)\land(\lnot p_1\lor\lnot p_2).\]
+\end{exe}
+\begin{proof}
+	We optimize with the following steps.
+	\begin{itemize}
+		\item The clauses $(\lnot p_1\lor p_3)$ and $(p_1\lor\lnot p_3)$ gives $p_1$.
+		\item From $(\lnot p_1\lor p_2)$ and $(\lnot p_1\lor\lnot p_2)$, we get $\lnot p_1$.
+	\end{itemize}
+	But earlier we had $p_1$, so we have a contradiction.
+\end{proof}
+In truth, there are likely many resolvents we would have to add in before finding the two resolvents given above, but we omitted them for brevity.
+
+\subsection{Complexity}
+It is somewhat annoying that determining if a formula $\varphi$ is satisfiable requires a lot of computation. Consider the following remarks.
+\begin{itemize}
+	\item If $\varphi$ is satisfiable, then technically the truth table method merely requires finding the correct line of the truth table instead of the whole truth table.
+	\item However, if $\varphi$ is unsatisfiable, then we have to compute everything.
+	\item If $\varphi$ is unsatisfiable, then technically we only need to compute resolvents until we actually get an overt contradiction.
+	\item However, if $\varphi$ is satisfiable, then we have to compute everything.
+\end{itemize}
+The bad news is that the worst-case performance of both resolution and creating a truth table is exponential. Essentially this is because we have to continue checking for new resolvents, and each step can potentially add lots and lots of resolvents.
+\begin{example}
+	With $10$ variables, this would require $2^{10}=1024$ rows of a truth table.
+\end{example}
+Here is the question we are interested in: can we make satisfiability faster?
+\begin{ques} \label{ques:pvsnp}
+	Is there an algorithm which runs in time bounded by a polynomial in $n$ which can determine if a formula with $n$ connectives is satisfiable?
+\end{ques}
+\autoref{ques:pvsnp} is perhaps the most famous unsolved problem in all of theoretical computer science. It is called the {P vs. NP} problem. Sadly, most people do not think that such an algorithm exists.
