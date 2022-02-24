@@ -1,0 +1,139 @@
+% !TEX root = ../notes.tex
+
+Today we begin talking about universal properties and associated fun.
+\begin{convention}
+	For today, all of our categories will be locally small. We will not care more about size issues.
+\end{convention}
+
+\subsection{A Functorial Initial and Final}
+We recall the following definition.
+\initialfinaldefi*
+\noindent The moral of our story is that being initial and terminal will encode our universal properties.
+
+Here is a nice starting proposition and corollary.
+\begin{proposition}
+	An object $c\in\mathcal C$ is initial if and only if $\#\op{Mor}(c,x)=1$ for each $x\in\mathcal C$. Similarly, $c$ is terminal if and only if $\#\op{Mor}(x,c)=1$ for each $x\in\mathcal C$.
+\end{proposition}
+\begin{proof}
+	This is a restatement of the definition. For example, $\#\op{Mor}(c,x)=1$ is asserting there is a unique morphism from $c$ to $x$ for any object $x$.
+\end{proof}
+\begin{corollary} \label{cor:representinit}
+	An object $c\in\mathcal C$ is initial if and only if the functor $\op{Mor}(c,-):\mathcal C^{\mathrm{op}}\to\mathrm{Set}$ ``represented'' by $c$ is naturally isomorphic to the (contravariant!) constant functor $\{*\}:\mathcal C^{\mathrm{op}}\to\mathrm{Set}$ sending everyone in $\mathcal C$ to $\{*\}$.
+\end{corollary}
+To be explicit, the functor $\{*\}:\mathcal C\to\mathrm{Set}$ sends objects $c\in\mathcal C$ to $c\mapsto\{*\}$ and sends morphisms $f:c\to d$ to $f\mapsto\id_{\{*\}}$.
+\begin{proof}
+	As before, we see that $c$ is initial if and only if $\#\op{Mor}(c,x)=1$ for each $x$ if and only if
+	\[\op{Mor}(c,x)\cong\{*\}\]
+	because all singletons form an isomorphism class in $\mathrm{Set}$. We label $\varphi_x$ to be $\op{Mor}(c,x)\cong\{*\}\cong\{*\}(x)$ to be the unique such isomorphism.
+
+	If $\varphi_x$ assemble to a natural isomorphism, then we get the reverse direction. For the forwards direction, we have to check that the following diagram commutes for naturality: suppose $f:x\to y$ is a morphism in $\mathcal C$, and we want
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oYyx4KSJdLFsxLDAsIlxceypcXH0oeCkiXSxbMSwxLCJcXHsqXFx9KHkpIl0sWzAsMSwiXFxvcHtNb3J9KGMseSkiXSxbMCwzLCJmXFxjaXJjLSIsMl0sWzEsMiwiXFxpZF97XFx7KlxcfX0iXSxbMCwxLCJcXHZhcnBoaV94Il0sWzMsMiwiXFx2YXJwaGlfeSJdXQ==
+	\[\begin{tikzcd}
+		{\op{Mor}(c,x)} & {\{*\}(x)} \\
+		{\op{Mor}(c,y)} & {\{*\}(y)}
+		\arrow["{f\circ-}"', from=1-1, to=2-1]
+		\arrow["{\id_{\{*\}}}", from=1-2, to=2-2]
+		\arrow["{\varphi_x}", from=1-1, to=1-2]
+		\arrow["{\varphi_y}", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	to commute. But this commutes for free because $\{*\}(y)=\{*\}$ is a terminal object, so all morphisms to it are the same.
+\end{proof}
+\begin{corollary}
+	An object $c\in\mathcal C$ is terminal if and only if the functor $\op{Mor}(-,c):\mathcal C\to\mathrm{Set}$ ``represented'' by $c$ is naturally isomorphic to the constant functor $\{*\}:\mathcal C\to\mathrm{Set}$ sending everyone in $\mathcal C$ to $\{*\}$.
+\end{corollary}
+\begin{proof}
+	This is dual to the previous corollary.
+\end{proof}
+
+\subsection{Representability}
+Here is our central definition.
+\begin{definition}[Representable]
+	Fix a category $\mathcal C$.
+	\begin{itemize}
+		\item A covariant functor $F:\mathcal C\to\mathrm{Set}$ is \textit{representable} if and only if there exists some $c\in\mathcal C$ such that $F\simeq\op{Mor}(c,-)$.
+		\item A contravariant functor $F:\mathcal C^{\mathrm{op}}\to\mathrm{Set}$ is \textit{representable} if and only if there exists some $c\in\mathcal C$ such that $F\simeq\op{Mor}(-,c)$.
+	\end{itemize}
+	In either case, we call $c$ together with the promised natural isomorphism the \textit{representation} of $F$.
+\end{definition}
+\begin{example}
+	\autoref{cor:representinit} says that $c$ is initial if and only if $\{*\}:\mathcal C\to\mathrm{Set}$ is represented by $c$. Similar holds for the terminal case.
+\end{example}
+Here is our mantra.
+\begin{idea} \label{idea:up}
+	A representable functor encodes a universal property of an object.
+\end{idea}
+\begin{remark}
+	Bryce would like you to repeat \autoref{idea:up} every day before you go to sleep. He will know if you haven't.
+\end{remark}
+Less formally, \autoref{idea:up} is saying that a universal property for an object $c$ is a description of $\op{Mor}(c,-)$ or $\op{Mor}(-,c)$.
+
+Let's see some examples.
+\begin{exe}
+	The identity functor $\id_{\mathrm{Set}}:\mathrm{Set}\to\mathrm{Set}$, is represented by singleton set $\{*\}$.
+\end{exe}
+\begin{proof}
+	To be explicit we would like to show that
+	\[\op{Mor}(\{*\},X)\cong X\]
+	naturally by taking $f\mapsto f(*)$. So we define $\eta_X:\op{Mor}(\{*\},X)\to X$ by $f\mapsto f(*)$. This is an isomorphism because we have the inverse morphism $\eta_X^{-1}:x\mapsto(*\mapsto x)$. This is natural because, with a morphism $h:X\to Y$, we draw the following diagram.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oXFx7KlxcfSxYKSJdLFswLDEsIlxcb3B7TW9yfShcXHsqXFx9LFkpIl0sWzEsMCwiWCJdLFsxLDEsIlkiXSxbMCwxLCJoXFxjaXJjLSIsMl0sWzIsMywiaCJdLFswLDIsIlxcZXRhX1giXSxbMSwzLCJcXGV0YV9ZIiwyXV0=
+	\[\begin{tikzcd}
+		{\op{Mor}(\{*\},X)} & X \\
+		{\op{Mor}(\{*\},Y)} & Y
+		\arrow["{h\circ-}"', from=1-1, to=2-1]
+		\arrow["h", from=1-2, to=2-2]
+		\arrow["{\eta_X}", from=1-1, to=1-2]
+		\arrow["{\eta_Y}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+	This is natural by tracking some $f:\{*\}\to X$ through: along the top, it goes to $h(f(*))$, and along the bottom it goes to $(hf)(*)=h(f(*))$.
+\end{proof}
+\begin{exe}
+	The forgetful functor $U:\mathrm{Grp}\to\mathrm{Set}$ is represented by $\ZZ$.
+\end{exe}
+\begin{proof}
+	The content is to construct an isomorphism
+	\[\op{Mor}(\ZZ,G)\cong G\]
+	for any group $G$. Well, to see this, we send $f\mapsto f(1)$ and more or less wave our hands to say that a group homomorphism $\ZZ\to G$ is uniquely determined by where it sends $1$ because $f(n)=n\cdot f(1)$, and any such $f(1)$ is legal because we can set $f(n)=n\cdot f(1)$.
+
+	So let $\eta_G:\op{Mor}(\ZZ,G)\to G$ be this isomorphism. For naturality, we need to show that the following diagram commutes for a given group homomorphism $\psi:G\to H$.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oXFxaWixHKSJdLFswLDEsIlxcb3B7TW9yfShcXFpaLEgpIl0sWzEsMCwiRyJdLFsxLDEsIkgiXSxbMCwxLCJcXHBzaVxcY2lyYy0iLDJdLFsyLDMsIlxccHNpIl0sWzAsMiwiXFxldGFfWCJdLFsxLDMsIlxcZXRhX1kiLDJdXQ==
+	\[\begin{tikzcd}
+		{\op{Mor}(\ZZ,G)} & G \\
+		{\op{Mor}(\ZZ,H)} & H
+		\arrow["{\psi\circ-}"', from=1-1, to=2-1]
+		\arrow["U\psi", from=1-2, to=2-2]
+		\arrow["{\eta_X}", from=1-1, to=1-2]
+		\arrow["{\eta_Y}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Well, along the top, we send $f$ to $f(1)$ to $\psi(f(1))$. Along the bottom, we send $f$ to $\psi f$ to $(\psi f)(1)$ to $\psi(f(1))$.
+\end{proof}
+\begin{exe}
+	The forgetful functor $U:\mathrm{Ring}\to\mathrm{Set}$ is represented by $\ZZ[x]$.
+\end{exe}
+\begin{proof}
+	The point is that we have an isomorphism
+	\[\op{Mor}(\ZZ[x],R)\cong R\]
+	because the image of $\ZZ$ is fixed for any morphism $\varphi:\ZZ[x]\to R$, and where we send $x$ is uniquely determined by a chosen element $r\in R$.
+\end{proof}
+\begin{remark}
+	In some sense, $\ZZ$ and $\ZZ[x]$ are the ``free'' object in their respective categories.
+\end{remark}
+And now for contravariant representable functors.
+\begin{exe}
+	The functor $\mathcal P:\mathrm{Set}^{\mathrm{op}}\to\mathrm{Set}$ by sending $X\mapsto\mathcal P(X)$ and $f:X\to Y$ to $f^{-1}:\mathcal P(Y)\to\mathcal P(X)$ is represented by $\Omega=\{0,1\}$.
+\end{exe}
+\begin{proof}
+	As usual, the content of the proof is our isomorphism
+	\[\op{Mor}(X,\Omega)\cong\mathcal P(X).\]
+	Namely, we send $f:X\to\Omega$ to $f^{-1}(1)$. Conversely, given a subset $U\subseteq X$, we can track it by the morphism $1_{x\in U}:X\to\Omega$.
+\end{proof}
+\begin{exe}
+	Fix sets $A$ and $B$. Consider the functor $\op{Mor}(-\times A,B):\mathrm{Set}^{\mathrm{op}}\to\mathrm{Set}$. We claim that this is represented by $\op{Mor}(A,B)$.
+\end{exe}
+\begin{proof}
+	Our isomorphism
+	\[\op{Mor}(\op{Mor}(A,B),C)\cong\op{Mor}(C\times A,B)\]
+	is given by currying $f\mapsto((a,b)\mapsto f(a)(b))$. The inverse mapping is $f\mapsto(a\mapsto b\mapsto f(a,b))$.
+\end{proof}
+\begin{remark}
+	Many of the above representatives are ``nice'' in that it seems like they are unique in some sense. This will tie into universal properties.
+\end{remark}
