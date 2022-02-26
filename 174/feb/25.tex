@@ -1,0 +1,142 @@
+% !TEX root = ../notes.tex
+
+We talk about the Yoneda lemma today.
+
+\subsection{The Yoneda Lemma}
+Today we discuss the following question.
+\begin{ques}
+	What information ``goes into'' a natural transformation of a representable functor?
+\end{ques}
+Today we will prove the following theorem.
+\begin{theorem}[Yoneda lemma]
+	Fix $\mathcal C$ a locally small category and $F:\mathcal C\to\mathrm{Set}$ a functor. Further, fix $c\in\mathcal C$. Then there is a ``natural'' bijection
+	\[\varphi:\op{Mor}(\op{Mor}_\mathcal C(c,-),F)\cong Fc.\]
+	Here the outer $\op{Mor}$ is in the $2$-category, talking about natural transformations $\op{Mor}_\mathcal C(c,-)\Rightarrow F$.
+\end{theorem}
+Natural here is in both $c$ and $F$: if we fix one of them, then the isomorphism is functorial in the other.
+\begin{proof}
+	We take this in parts.
+	\begin{itemize}
+		\item We construct $\varphi$. Suppose that $\alpha:\op{Mor}_\mathcal C(c,-)\Rightarrow F$ is a natural transformation. Then we can produce an element of $Fc$ by noting we have a map $\alpha_c:\op{Mor}_\mathcal C(c,c)\to Fc$, so we can set
+		\[\boxed{\varphi(\alpha):=\alpha_c(\id_c)}\in Fc.\]
+		\item We construct an inverse $\psi:Fc\to \op{Mor}(\op{Mor}_\mathcal C(c,-),F)$. Well, picking up some $x\in Fc$, then we want a natural transformation $\psi(x):\op{Mor}_\mathcal C(c,-)\Rightarrow F$. So given another $d\in\mathcal C$, we want a morphism
+		\[\psi(x)_d:\op{Mor}_\mathcal C(c,d)\to Fd.\]
+		To do this, we pick up a morphism $f:c\to d$, and we want an element of $Fd$. Without any better ideas, we note we have a morphism $Ff:Fc\to Fd$, so we define
+		\[\boxed{\psi(x)_d(f):=(Ff)(x)}.\]
+
+		We now check that $\psi(x)$ is in fact a natural transformation. Well, suppose that we have a map $g:d\to e$, we need the following square to commute.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn1fXFxtYXRoY2FsIEMoYyxkKSJdLFswLDEsIlxcb3B7TW9yfV9cXG1hdGhjYWwgQyhjLGUpIl0sWzEsMCwiRmQiXSxbMSwxLCJGZSJdLFswLDEsImZcXGNpcmMtIiwyXSxbMiwzLCJGZiJdLFswLDIsIlxccHNpKHgpX2QiXSxbMSwzLCJcXHBzaSh4KV9lIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Mor}_\mathcal C(c,d)} & Fd \\
+			{\op{Mor}_\mathcal C(c,e)} & Fe
+			\arrow["{g\circ-}"', from=1-1, to=2-1]
+			\arrow["Fg", from=1-2, to=2-2]
+			\arrow["{\psi(x)_d}", from=1-1, to=1-2]
+			\arrow["{\psi(x)_e}"', from=2-1, to=2-2]
+		\end{tikzcd}\]
+		For this, we pick up some morphism $f:c\to d$.
+		\begin{itemize}
+			\item Along the top, we go to $(Ff)(x)$ and then $(Fg\circ Ff)(x)$.
+			\item Along the bottom, we go to $gf$ and then $(F(gf))(x)=(Fg\circ Ff)(x)$.
+		\end{itemize}
+
+		\item We show that $\varphi\circ\psi$ is the identity. Well, pick up some $x\in Fc$. Then
+		\[\varphi(\psi(x))=\psi(x)_c(\id_c)=(F\id_c)(x)=\id_{Fc}(x)=x.\]
+		\item We show that $\psi\circ\varphi$ is the identity. Well, pick up some natural transformation $\alpha:\op{Mor}_\mathcal C(c,-)\Rightarrow F$ and some object $d\in\mathcal C$ and some morphism $f:c\to d$, and we compute
+		\[\psi(\varphi(\alpha))_d(f)=\psi(\alpha_c(\id_c))_d(f)=(Ff)(\alpha_c(\id_c))=(Ff\circ\alpha_c)(\id_c).\]
+		At this point we look stuck, but naturality of $\alpha:\op{Mor}_\mathcal C(c,-)\Rightarrow F$ saves us! We draw the following diagram.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn1fXFxtYXRoY2FsIEMoYyxjKSJdLFsxLDAsIkZjIl0sWzEsMSwiRmQiXSxbMCwxLCJcXG9we01vcn1fXFxtYXRoY2FsIEMoYyxkKSJdLFswLDMsImZcXGNpcmMtIiwyXSxbMCwxLCJcXGFscGhhX2MiXSxbMSwyLCJGZiJdLFszLDIsIlxcYWxwaGFfZCIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Mor}_\mathcal C(c,c)} & Fc \\
+			{\op{Mor}_\mathcal C(c,d)} & Fd
+			\arrow["{f\circ-}"', from=1-1, to=2-1]
+			\arrow["{\alpha_c}", from=1-1, to=1-2]
+			\arrow["Ff", from=1-2, to=2-2]
+			\arrow["{\alpha_d}"', from=2-1, to=2-2]
+		\end{tikzcd}\]
+		Thus, we know $Ff\circ\alpha_c=\alpha_d\circ(-\circ f)$, so the above is
+		\[\psi(\varphi(\alpha))_d(f)=(\alpha_d\circ(f\circ-))(\id_c)=\alpha_d(f\circ\id_c)=\alpha_d(f).\]
+		So $\psi(\varphi(\alpha))_d$ and $\alpha_d$ match as functions on $\op{Mor}_\mathcal C(c,d)$, so they are equal. Thus, $\psi(\varphi(\alpha))=\alpha$ as natural transformations. So we are done.
+	\end{itemize}
+	The above points establish the needed bijection.
+
+	It remains to check functoriality.
+	\begin{itemize}
+		\item We show that $\varphi$ is functorial in $c$. We write $\varphi^c$ for $\varphi$ given by $c\in\mathcal C$. Suppose that we have a morphism $f:c\to c'$, and we want to show that the following diagram commutes.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oXFxvcHtNb3J9X1xcbWF0aGNhbCBDKGMsLSksRikiXSxbMSwwLCJGYyJdLFsxLDEsIkZjJyJdLFswLDEsIlxcb3B7TW9yfShcXG9we01vcn1fXFxtYXRoY2FsIEMoYywtKSxGKSJdLFsxLDJdLFswLDEsIlxcdmFycGhpIl0sWzMsMiwiXFx2YXJwaGkiLDJdLFswLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Mor}(\op{Mor}_\mathcal C(c,-),F)} & Fc \\
+			{\op{Mor}(\op{Mor}_\mathcal C(c',-),F)} & {Fc'}
+			\arrow[from=1-2, to=2-2]
+			\arrow["\varphi^{c}", from=1-1, to=1-2]
+			\arrow["\varphi^{c'}"', from=2-1, to=2-2]
+			\arrow[from=1-1, to=2-1]
+		\end{tikzcd}\tag{$*$}\label{eq:yonedafunctorialc}\]
+		The right arrow is $Ff$. The left arrow requires some thinking: we pick up some natural transformation $\alpha:\op{Mor}_\mathcal C(c,-)\Rightarrow F$ and want to produce a natural transformation $\op{Mor}_\mathcal C(c',-)\Rightarrow F$. Visually, the map we want is moving
+		\[\big((\mathcal C\to\mathrm{Set})\to\mathcal D\big)\to\big((\mathcal C\to\mathrm{Set})\to\mathcal D\big).\]
+		Well, given an object $d\in\mathcal C$ and morphism $p:c\to d$, we can send $p':c'\to d$ to
+		\[\beta_d(p'):=\alpha_d(p'f),\]
+		which we can type-check actually lives in $Fd$.
+
+		We take a moment to verify that $\beta$ is a natural transformation. For this, we need to check the naturality of the following square, for a morphism $g:d\to e$, that the following diagram commutes.
+		\[\begin{tikzcd}
+			{\op{Mor}_\mathcal C(c',d)} & Fd \\
+			{\op{Mor}_\mathcal C(c',e)} & Fe
+			\arrow["{g\circ-}"', from=1-1, to=2-1]
+			\arrow["Fg", from=1-2, to=2-2]
+			\arrow["{\beta_d}", from=1-1, to=1-2]
+			\arrow["{\beta_e}"', from=2-1, to=2-2]
+		\end{tikzcd}\]
+		Well, we pick up a morphism $p':c'\to d$.
+		\begin{itemize}
+			\item Along the top, we go to $(Fg)(\beta_d(p'))=(Fg)(\alpha_d(p'f))=(Fg\circ\alpha_d)(p'f)$. By naturality of $\alpha$, we see $Fg\circ\alpha_d=\alpha_e\circ(g\circ-)$, so we have $\alpha_e(gp'f)$.
+			\item Along the bottom, we go to $\beta_e(gp')=\alpha_e(gp'f)$.
+		\end{itemize}
+		So indeed, $\beta$ is a natural transformation.
+
+		Finally, we check the naturality of \autoref{eq:yonedafunctorialc}.
+		\begin{itemize}
+			\item Along the top, we go to $\varphi^c(\alpha)=\alpha_c(\id_c)$ and then to $(Ff)(\alpha_c(\id_c))=(Ff\circ\alpha_c)(\id_c)$. By naturality of $\alpha$, we see $Ff\circ\alpha_c=\alpha_{c'}(f\circ-)$, so we have $(Ff\circ\alpha_c)(\id_c)=\alpha_{c'}(f\id_c)=\alpha_{c'}(f)$.
+			\item Along the bottom, we go to
+			\[\varphi^{c'}(\beta)=\beta_{c'}(\id_{c'})=\alpha_{c'}(\id_{c'}f)=\alpha_{c'}(f).\]
+		\end{itemize}
+		These match, so the diagram commutes.
+
+		\item We show $\varphi$ is functorial in $F$. We write $\varphi^F$ for $\varphi$ given by $F:\mathcal C\to\mathrm{Set}$. Now, suppose that we have some natural transformation $\eta:F\Rightarrow F'$, and we want to show that the following diagram commutes.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oXFxvcHtNb3J9X1xcbWF0aGNhbCBDKGMsLSksRikiXSxbMSwwLCJGYyJdLFsxLDEsIkdjIl0sWzAsMSwiXFxvcHtNb3J9KFxcb3B7TW9yfV9cXG1hdGhjYWwgQyhjLC0pLEcpIl0sWzEsMl0sWzAsMSwiXFx2YXJwaGleRiJdLFszLDIsIlxcdmFycGhpXkciLDJdLFswLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Mor}(\op{Mor}_\mathcal C(c,-),F)} & Fc \\
+			{\op{Mor}(\op{Mor}_\mathcal C(c,-),G)} & Gc
+			\arrow[from=1-2, to=2-2]
+			\arrow["{\varphi^F}", from=1-1, to=1-2]
+			\arrow["{\varphi^G}"', from=2-1, to=2-2]
+			\arrow[from=1-1, to=2-1]
+		\end{tikzcd}\]
+		The right arrow is $\eta_c$. The left arrow requires some thinking, as before. Fix some natural transformation $\alpha:\op{Mor}_\mathcal C(c,-)\Rightarrow F$, and we produce a natural transformation $\beta:\op{Mor}_\mathcal C(c,-)\Rightarrow G$. Well, given an object $d$ and morphism $p:c\to d$, we are given an element $\alpha_d(f)\in Fd$, and we want an element in $Gd$. So we define
+		\[\beta_d(p):=\eta_d(\alpha_d(p)).\]
+		We quickly check that this $\beta:\op{Mor}_\mathcal C(c,-)\Rightarrow G$ actually assembles into a natural transformation. Given $f:d\to e$, we need to check the commutativity of the following diagram.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn1fXFxtYXRoY2FsIEMoYyxkKSJdLFswLDEsIlxcb3B7TW9yfV9cXG1hdGhjYWwgQyhjLGUpIl0sWzEsMCwiRmQiXSxbMSwxLCJGZSJdLFswLDEsImZcXGNpcmMtIiwyXSxbMiwzLCJGZiJdLFswLDIsIlxcYmV0YV9kIl0sWzEsMywiXFxiZXRhX2UiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Mor}_\mathcal C(c,d)} & Gd \\
+			{\op{Mor}_\mathcal C(c,e)} & Ge
+			\arrow["{f\circ-}"', from=1-1, to=2-1]
+			\arrow["Gf", from=1-2, to=2-2]
+			\arrow["{\beta_d}", from=1-1, to=1-2]
+			\arrow["{\beta_e}"', from=2-1, to=2-2]
+		\end{tikzcd}\tag{$**$}\label{eq:yonedafunctorialF}\]
+		Well, pick up a morphism $p:c\to d$.
+		\begin{itemize}
+			\item Along the top, we go to $(Gf)(\beta_d(p))=(Gf)(\eta_d(\alpha_d(p)))$. By naturality of $\eta$, this is $(\eta_e\circ Fe\circ\alpha_d)(p)$. By naturality of $\alpha$, this is $(\eta_e\circ\alpha_e\circ(f\circ-))(p)=\eta_e(\alpha_e(fp))$.
+			\item Along the bottom, we go to $\beta_e(fp)=\eta_e(\alpha_e(fp))$.
+		\end{itemize}
+		So indeed, $\beta$ is a natural transformation.
+
+		Finally, we check the naturality of \autoref{eq:yonedafunctorialF}.
+		\begin{itemize}
+			\item Along the top, we go to $\varphi^F(\alpha)=\alpha_c(\id_c)$ and then to $\eta_c(\alpha_c(\id_c))$.
+			\item Along the bottom, we go to $\varphi^G(\beta)=\beta_c(\id_c)=\eta_c(\alpha_c(\id_c))$.
+		\end{itemize}
+		These match, so the diagram commute.
+	\end{itemize}
+	Thus, we have checked that $\varphi$ is functorial in both $c$ and $F$. I have a headache, so we will call it quits there.
+\end{proof}
