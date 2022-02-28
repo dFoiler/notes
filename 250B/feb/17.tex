@@ -2,62 +2,155 @@
 
 Here we go.
 
-\subsection{The Nullstellensatz, Special Case}
+\subsection{The Nullstellensatz}
 Today we prove Hilbert's Nullstellensatz. Here is the statement.
 \begin{theorem}[Nullstellensatz] \label{thm:nullstellensatz}
 	Fix $k$ an algebraically closed field.
 	\begin{listalph}
-		\item There is a bijection between algebraic sets $X\subseteq\AA^n(k)$ and radical ideals $J\subseteq k[x_1,\ldots,x_n]$ by taking
+		\item There are bijections between algebraic sets $X\subseteq\AA^n(k)$ and radical ideals $J\subseteq k[x_1,\ldots,x_n]$ by taking
 		\[X\mapsto I(X):=\{f\in k[x_1,\ldots,x_n]:f(p)=0\text{ for all }p\in X\},\]
 		and
 		\[J\mapsto Z(J):=\left\{p\in\AA^n(k):f(p)=0\text{ for all }p\in J\right\}.\]
 		In particular, $I(Z(J))=J$ and $Z(I(X))=X$.
-		\item Points $p$ of $X$ are in bijection with maximal ideals of $A(X):=k[x_1,\ldots,x_n]/I(X)$, which are in bijection with maximal ideals of $k[x_1,\ldots,x_n]$ containing $I(X)$.
+		\item Points $p$ of an algebraic set $X\subseteq\AA^n(k)$ are in bijection with maximal ideals of $k[x_1,\ldots,x_n]/I(X)$, which are in bijection with maximal ideals of $k[x_1,\ldots,x_n]$ containing $I(X)$.
 	\end{listalph}
 \end{theorem}
+Before jumping into the proof, we give some remarks on what we can show without too much effort. For example, back in \autoref{rem:othernullstellensatz}, we showed that $Z(I(X))=X$, so the harder direction is that $I(Z(J))=J$ for $J$ a radical ideal.
+
+In fact, we note that $J\subseteq I(Z(J))$ is fairly easy as well: for each $f\in J$, we note that $f$ will vanish on any $a\in Z(J)$ by definition of $Z(J)$, so $f\in I(Z(J))$ follows. Thus, the hart part of (a) is showing
+\[J\stackrel?\supseteq I(Z(J)).\]
+We also remark that the last claim of (b) is merely ring theory.
+\begin{lemma} \label{lem:pullmax}
+	Fix $R$ a ring and $I\subseteq R$ an ideal. Then maximal ideals of $R/I$ are in bijection with maximal ideals of $R$ containing $I$.
+\end{lemma}
+\begin{proof}
+	Let $\pi:R\onto R/I$ be the canonical projection. We send maximal ideals $\mf m$ of $R$ containing $I$ to the ideal $\pi(\mf m)\subseteq R/I$; conversely, we send maximal ideals $\mf m\subseteq R/I$ to the ideal $\pi^{-1}(\mf m)$. We have the following checks.
+	\begin{itemize}
+		\item Fix $J$ an ideal containing $I$. We claim $\pi^{-1}(\pi(J))=J$. To see this, we note $x\in\pi^{-1}(\pi(J))$ if and only if $\pi(x)\in\pi(J)$ if and only if $[x]_I=[y]_I$ for some $y\in J$ if and only if $x-y\in I\subseteq J$ if and only if $x\in J$.
+		\item Similarly, fix an ideal $J\subseteq R/I$. We claim $\pi\left(\pi^{-1}(J)\right)=J$. To see this, we note $\pi(y)\in\pi\left(\pi^{-1}(J)\right)$ if and only if $y\in\pi^{-1}(J)$ if and only if $\pi(y)\in J$.
+		\item Fix $\mf m\subseteq R/I$, and we show that $\pi^{-1}(\mf m)$ is a maximal ideal of $R$. Now, we know that $\pi^{-1}(\mf m)$ is proper because it is prime. Additionally, if $\pi^{-1}(\mf m)\subseteq J$ for some ideal $J$, then $\mf m\subseteq\pi(J)$, so $\pi(J)=\mf m$ or $\pi(J)=R/I$. In the former case, $\pi^{-1}(\mf m)=J$; in the latter case, $J=\pi^{-1}(R/I)=R$.
+		\item Fix $\mf m\subseteq R$ a maximal ideal containing $I$, and we show that $\pi(\mf m)$ is a maximal ideal of $R/I$. Note $[1]_I\in\pi(\mf m)$ would imply that $1+x\in\mf m$ for some $x\in I$, so $1\in\mf m$ because $I\subseteq\mf m$. But $1\in\mf m$ is false, so we see that $\pi(\mf m)$ is proper.
+
+		Now, $\pi(\mf m)\subseteq J$ for some ideal $J\subseteq R/I$ implies that $\mf m\subseteq\pi^{-1}(J)$, so $\pi^{-1}(J)=\mf m$ or $\pi^{-1}(J)=R$. Note that $[0]_I\in J$ implies $I\subseteq\pi^{-1}(J)$. So we may say that, in the former case, $J=\pi(\mf m)$; in the latter case, $J=\pi(R)=R/I$.
+	\end{itemize}
+	So we see that the described maps are mutually inverses and well-defined, so we are done.
+\end{proof}
+There is a little more that we can say about (b): it is not too hard to reduce it to the case where $X=\AA^n(k)$ and $I(X)=\emp$.
+\begin{lemma} \label{lem:nzeasierb}
+	Suppose that all maximal ideals of $k[x_1,\ldots,x_n]$ take the form $(x_1-a_1,\ldots,x_n-a_n)$ for $(a_1,\ldots,a_n)\in\AA^n(k)$. Then (b) of \autoref{thm:nullstellensatz} holds.
+\end{lemma}
+\begin{proof}
+	By the previous lemma, we only have to show the first sentence of (b). Our bijection will be by
+	\[(a_1,\ldots,a_n)\in X\longmapsto(x_1-a_1,\ldots,x_n-a_n)\subseteq k[x_1,\ldots,x_n].\]
+	We have the following checks to show (b).
+	\begin{itemize}
+		\item We check that $(x_1-a_1,\ldots,x_n-a_n)$ is maximal. To see this, we claim that $(x_1-a_1,\ldots,x_n-a_n)$ is the kernel of the surjective map
+		\[\varphi\in k[x_1,\ldots,x_n]\to k\]
+		defined by lifting $\id_k:k\to k$ by $x_i\mapsto a_i$, which will be enough. To see this, note that certainly each $x_i-a_i$ will live in the kernel. Conversely, for any $f\in k[x_1,\ldots,x_n]$, we can apply the division algorithm to $f$ by each of the $x_i-a_i$ to write
+		\[f(x_1,\ldots,x_n)=f(a_1,\ldots,a_n)+\sum_{i=1}^n(x_i-a_i)q_i(x).\]
+		Formally, one should show this by induction on $n$, but we won't bother. The point is that $f\in\ker\varphi$ implies that $f(a_1,\ldots,a_n)\in\ker\varphi$, so $f(a_1,\ldots,a_n)=0$, so $f\in(x_1-a_1,\ldots,x_n-a_n)$.
+		\item We check that $(x_1-a_1,\ldots,x_n-a_n)$ contains $I(X)$. Indeed, if $f\in I(X)$, then $f$ vanishes on $(a_1,\ldots,a_n)$, so $f$ lives in the kernel $\ker\varphi$ constructed above, so $f\in(x_1-a_1,\ldots,x_n-a_n)$.
+		\item We show the map is injective. The key claim is that
+		\[Z((x_1-a_1,\ldots,x_n-a_n))=\{(a_1,\ldots,a_n)\}.\]
+		Indeed, if $(b_1,\ldots,b_n)$ lives in this vanishing set, then $b_i-a_i=0$ for each $i$, so $(a_1,\ldots,a_n)=(b_1,\ldots,b_n)$. Of course, each $x_i-a_i$ does vanish on $(a_1,\ldots,a_n)$, so we are done.
+
+		So to finish, we note that $(x_1-a_1,\ldots,x_n-a_n)=(x_1-a_1',\ldots,x_n-a_n')$ implies that their vanishing sets match, so $(a_1,\ldots,a_n)=(a_1',\ldots,a_n')$, so we are done.
+		\item We show the map is surjective. This requires some trickery. Suppose $\mf m$ is a maximal containing $I(X)$. Because $\mf m$ is maximal, we do know that
+		\[\mf m=(x_1-a_1,\ldots,x_n-a_n)\]
+		by hypothesis. So we see that $\mf m\supseteq I(X)$ implies that
+		\[X=Z(I(X))\supseteq Z(\mf m)=\{(a_1,\ldots,a_n)\},\]
+		where we have used \autoref{rem:othernullstellensatz} in the first equality. Thus, $\mf m$ is indeed of the required form, so we are done.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{The Uncountable Case}
+Let's start with an easier special case.
 \begin{proof}[Proof of \autoref{thm:nullstellensatz} for uncountable fields]
-	We start with a proof where $k$ is an uncountable field; in other words, one should read $k=\CC$ into the following proof. We start with part (b). The following will be the way we use that $k$ is uncountable.
-	\begin{lemma}
-		Fix $k$ an uncountable field and $F/k$ a field extension with $\#[F:k]=\#\NN$. Then the extension $F/k$ is algebraic.
+	We prove \autoref{thm:nullstellensatz} where $k$ is an uncountable field; in other words, one should read $k=\CC$ into the following proof. We will actually start by showing (b) in the case where $X=\AA^n(k)$ and $I(X)=\emp$. The following will be the way we use that $k$ is uncountable.
+	\begin{lemma} \label{lem:useuncountable}
+		Fix $k$ an uncountable field and $F/k$ a field extension with $[F:k]<\#k$. Then the extension $F/k$ is algebraic.
 	\end{lemma}
 	\begin{proof}
-		The main point is that $\#k>\#[F:k]$. Indeed, we work by contrapositive. Suppose that $F/k$ is not algebraic so that we are promised some element $x\in F$ which is not algebraic over $k$, and we show $\#[F:k]\ge\#k$. But then $k(x)\subseteq F$, so the set
-		\[\left\{\frac1{x-a}:a\in k\right\}\]
-		is an uncountable $k$-linearly independent set in $F$, forcing $\#[F:k]\ge\#k$.
+		We show the contrapositive. Suppose that $F/k$ is not algebraic, and we show that $[F:k]\ge\#k$. Because $F/k$ is not algebraic, we are promised some element $x\in F$ which is not algebraic over $k$. But then $k(x)\subseteq F$ is a very large subfield, so we consider the set
+		\[S:=\left\{\frac1{x-a}:a\in k\right\}.\]
+		We quickly observe that these elements are legal: note that $x\ne a$ for each $a\in k$ because $k/k$ is an algebraic extension; thus, $\frac1{x-a}$ is a legal element of $F$.
+		
+		We claim that $S\subseteq k(x)$ is $k$-linearly independent, which will show that $[F:k]=\dim_kF\ge\dim_kk(x)\ge\#S=\#k$, which is what we want. Now, to show that $S$ is $k$-linearly independent, suppose that we have a relation
+		\[\sum_{i=1}^nr_i\cdot\frac1{x-a_i}=0\]
+		for some $r_1,\ldots,r_n\in k$ and distinct $a_1,\ldots,a_n\in k$. We need to show that $r_i=0$ for each $r_i$. For this, we note that
+		\[0=\left(\prod_{i=1}^n(x-a_i)\right)\left(\sum_{i=1}^n\frac{r_i}{x-a_i}\right)=\sum_{i=1}^n\Bigg(r_i\prod_{\substack{j=1\\j\ne i}}^n(x-a_j)\Bigg).\tag{$*$}\label{eq:readytoplug}\]
+		Now, though this equation is technically taking place in $k(x)$, we may pull it back to an equation in $k[x]$ (noting that $k[x]\into k(x)$ is injective).
+
+		But with our equation holding in $k[x]$, we note that $k[x]\subseteq F$ is a free $k$-algebra,\footnote{More formally, note there is a morphism $k[T]\to k[x]$ extending $\id_k:k\to k$ by sending $T\mapsto x$. It is not hard to see that this is surjective, and it is injective because it has trivial kernel because $x$ is transcendental. So $k[x]\cong k[T]$.} so we may apply the universal property of $k[x]$ to note there is a morphism $k[x]\to k$ extending $\id_k:k\to k$ by sending $x\mapsto a_m$ for any $a_m$. Pushing \autoref{eq:readytoplug} through this morphism, we see
+		\[\sum_{i=1}^n\Bigg(r_i\prod_{\substack{j=1\\j\ne i}}^n(a_m-a_j)\Bigg)=0.\]
+		All terms of the sum will vanish except when $i=m$ because the product will feature a $(a_m-a_m)$ term otherwise. So we see
+		\[r_m\prod_{\substack{j=1\\j\ne m}}^n(a_m-a_j)=0.\]
+		Because the $a_i$ are all distinct, we see $a_m-a_j\ne0$ for each $m\ne j$, so the entire product is nonzero ($k$ is an integral domain), so $r_m=0$. This finishes.
 	\end{proof}
-	\begin{corollary}
+	\begin{corollary} \label{cor:forcealgebraic}
 		Fix $k$ an uncountable field. Then, for any maximal ideal $\mf m\subseteq k[x_1,\ldots,x_n]$, the field extension
 		\[\frac{k[x_1,\ldots,x_n]}{\mf m}\supseteq k\]
 		is algebraic.
 	\end{corollary}
 	\begin{proof}
-		The degree of the extension is countable and hence algebraic.
+		We quickly note that $\mf m\cap k=(0)$ because otherwise $\mf m$ would contain a unit; thus, the map $k\into k[x_1,\ldots,x_n]/\mf m$ is indeed injective, so we do have a sane field extension.
+		
+		Now, recall that any element $k[x_1,\ldots,x_n]$ can be written (uniquely) in the form
+		\[\sum_{(d_1,\ldots,d_n)\in\NN^n}a_{(d_1,\ldots,d_n)}x_1^{d_1}\cdots x_n^{d_n},\]
+		where all but finitely many of the $a_\bullet\in k$ vanish. Thus, the monomials $x_1^{d_1}\cdots x_n^{d_n}$ will generate $k[x_1,\ldots,x_n]$ and hence span $k[x_1,\ldots,x_n/\mf m$. In particular,
+		\[\dim_k\frac{k[x_1,\ldots,x_n]}{\mf m}\le\#\left\{x_1^{d_1}\cdots x_n^{d_n}:(d_1,\ldots,d_n)\in\NN^n\right\}=\#\left(\NN^n\right).\]
+		However, $\NN^n$ is countable, so $\dim_k\frac{k[x_1,\ldots,x_n]}{\mf m}\le\#\NN<\#k$, so \autoref{lem:useuncountable} assures us that the extension $\frac{k[x_1,\ldots,x_n]}{\mf m}\supseteq k$ is an algebraic extension.
 	\end{proof}
-	Thus, when $k$ is algebraic and $\mf m\subseteq k[x_1,\ldots,x_n]$ is maximal, we have that
+	So now we can show the hypothesis of \autoref{lem:nzeasierb} without tears. As discussed, we need to show that all maximal ideals $\mf m\subseteq k[x_1,\ldots,x_n]$ take the form $(x_1-a_1,\ldots,x_n-a_n)$.
+	
+	Well, picking up some maximal ideal $\mf m\subseteq k[x_1,\ldots,x_n]$ is maximal, we have that
 	\[\frac{k[x_1,\ldots,x_n]}{\mf m}\]
-	is an algebraic extension of $k$, which gives part (b) because $k$ is algebraically closed. In particular, one can track where each of the $x_\bullet$ go to in the isomorphism $k[x_1,\ldots,x_n]/\mf m\cong k$ (say, $x_\bullet\mapsto a_\bullet$) and use this to describe $\mf m$ (as $(x_i-a_i)_{i=1}^n$).
+	is an algebraic extension of $k$ by \autoref{cor:forcealgebraic}, but $k$ is algebraically closed, so this field must equal $k$. In particular, we are promised an isomorphism
+	\[\varphi:\frac{k[x_1,\ldots,x_n]}{\mf m}\cong k.\]
+	We can lift this to a map
+	\[\overline\varphi:k[x_1,\ldots,x_n]\to k\]
+	with kernel $\mf m$. But $x_i-\varphi(x_i)$ must certainly live in the kernel of $\overline\varphi$, so
+	\[(x_1-\varphi(x_1),\ldots,x_n-\varphi(x_n))\subseteq\mf m.\]
+	But the left-hand ideal is maximal, so equality follows. So indeed, all maximal ideals of $k[x_1,\ldots,x_n]$ have the requested form.
 
-	Now we attack part (a).
+	Now we attack part (a). In addition to (b), we will need the following technical result.
 	\begin{lemma} \label{lem:betterjacobson}
 		Fix $k$ an algebraically closed field, and let $R:=k[x_1,\ldots,x_n]$. Then any prime ideal $\mf p\subseteq R$ is the intersection of the maximal ideals containing $\mf p$.
 	\end{lemma}
 	\begin{proof}
-		If $\mf p$ is maximal, then there is nothing to say. So take $\mf p$ prime but not maximal so that $R/\mf p$ is a domain but not a field. Of course, it is true that
-		\[\mf p\subseteq\bigcap_{\mf m\supseteq\mf p}\mf m.\]
-		The other inclusion is harder. For the other inclusion, we pick up $b\notin\mf p$, and we need to find some maximal ideal $\mf m$ containing $\mf p$ but not $b$.
+		If $\mf p$ is maximal, then there is nothing to say. Thus, we may take $\mf p$ prime but not maximal so that $R/\mf p$ is a domain but not a field. In one direction, we note that
+		\[\mf p=\bigcap_{\mf m\supseteq\mf p}\mf p\subseteq\bigcap_{\mf m\supseteq\mf p}\mf m.\]
+		The other inclusion is harder. To show it, we proceed by contraposition: pick up $b\notin\mf p$, and we find some maximal ideal $\mf m$ containing $\mf p$ but not $b$ so that $b\notin\bigcap_{\mf m\supseteq\mf p}\mf m$.
 
-		For this, we work in $R/\mf p\left[b^{-1}\right]$. We note that $R/\mf p\left[b^{-1}\right]$ is not a field: if $R/\mf p\left[b^{-1}\right]$ is a field, then because it has countable degree over $k$, we see that
-		\[k\subseteq R/\mf p\left[b^{-1}\right]\]
-		is an algebraic extension. But with $k$ algebraically closed, this implies that $b^{-1}$ is algebraic over $k$, so in particular, $b^{-1}$ is the root of some monic polynomial in $k[x]$, so $b^{-1}$ is integral over $k$ and hence over $R/\mf p$, so $R/\mf p$ is a field because $R/\mf p\left[b^{-1}\right]$ is an integral extension over $R/\mf p$. This is our contradiction.
+		For this, we work in $R/\mf p\left[[b]_\mf p^{-1}\right]$. We claim that $R/\mf p\left[[b]_\mf p^{-1}\right]$ is not a field. If $R/\mf p\left[[b]_\mf p^{-1}\right]$ is a field, then because it has countable degree over $k$ (it is spanned by products of powers of $b^{-1}$ and monomials of $R$, of which there are countably many), we see that
+		\[k\subseteq R/\mf p\left[[b]_\mf p^{-1}\right]\]
+		is an algebraic extension by \autoref{cor:forcealgebraic}. But because $k$ is algebraically closed, this extension must collapse, implying that $[b]_\mf p^{-1}$ is algebraic over $k$. Because $k$ is a field, we may give $[b]_\mf p^{-1}$ a monic polynomial in $k[x]$, which we notate by
+		\[\left([b]_\mf p^{-1}\right)^m+a_{m-1}\left([b]_\mf p^{-1}\right)^{m-1}+\cdots+a_1\left([b]_\mf p^{-1}\right)+a_0=0.\]
+		However, this polynomial also shows that $[b]_\mf p^{-1}$ is the root of some monic polynomial in $(R/\mf p)[x]$, so $[b]_\mf p^{-1}$ is integral over $R/\mf p$. But now we note $R/\mf p$ is an integral domain and $[b]_\mf p\ne0$ implies that
+		\[R/\mf p\subseteq(R/\mf p)\left[[b]_\mf p^{-1}\right]\]
+		is an embedding (\autoref{ex:intdomainlocalinject}), so $R/\mf p$ is a field by \autoref{prop:integralfields}. But we presupposed that $R/\mf p$ is not a field, so we have hit a contradiction.
 
-		So because $R/\mf p\left[b^{-1}\right]$ is not a field, we will have some maximal ideal which we can pull back to a maximal ideal $\mf m\subseteq R$ which contains $\mf p$ but not $b$.
+		So because $R/\mf p\left[b^{-1}\right]$ is not a field, we have the following movements.
+		\begin{itemize}
+			\item We will have some nonzero maximal ideal $\mf m\subseteq R/\mf p\left[[b]_\mf p^{-1}\right]$.
+			\item Because we still know
+			\[R/\mf p\subseteq(R/\mf p)\left[[b]_\mf p^{-1}\right]\]
+			is an integral extension of domains, we can use \autoref{rem:goingdownmax} to pull $\mf m$ back to a maximal ideal $\mf m'$ of $R/\mf p$. Note $\mf m'$ will not contain $[b]_\mf p$ by \autoref{thm:localizedprimes}.
+			\item Lastly, we can pull $\mf m'\subseteq R/\mf p$ to a maximal ideal $\mf m'+\mf p\subseteq R$ containing $\mf p$ by \autoref{lem:pullmax}. Because $[b]_\mf p\notin\mf m'$, we see $b\notin\mf m'+\mf p$ as well.
+		\end{itemize}
+		So we see that $\mf m'+\mf p\subseteq R$ is the maximal ideal we are looking for.
 	\end{proof}
-	Now we show part (a). Because $I$ is a radical ideal, we can use \autoref{prop:radprimes} to write
-	\[I=\bigcap_{\mf p\supseteq I}\mf p=\bigcap_{\mf p\supseteq I}\bigcap_{\mf m\supseteq\mf p}\mf m=\bigcap_{\mf m\supseteq I}\mf m,\]
-	where we have used \autoref{lem:betterjacobson}. However, we remark that we have classified our maximal ideals! A maximal ideal containing $I$ is the same as an ideal $(x_1-a_1,\ldots,x_n-a_n)$ where $(a_1,\ldots,a_n)\in Z(I)$. Thus, $I=I(Z(I))$, and we are done. (That $Z(I(X))=X$ is easier, and we have showed it before.) % \todo{}
+	Now we show part (a). Fix $J$ a radical ideal, and we will show $J\supseteq I(Z(J))$. We can use \autoref{prop:radprimes} to write
+	\[J=\bigcap_{\mf p\supseteq J}\mf p\stackrel*=\bigcap_{\mf p\supseteq J}\bigcap_{\mf m\supseteq\mf p}\mf m=\bigcap_{\mf m\supseteq J}\mf m,\]
+	where we have used \autoref{lem:betterjacobson} in $\stackrel*=$. Thus, fixing $f\in I(Z(J))$, it will suffice to show that $f\in\mf m$ for any $\mf m\supseteq J$.
+	
+	However, we classified our maximal ideals above! So we get to write $\mf m=(x_1-a_1,\ldots,x_n-a_n)$, which is the kernel of the ``evaluation at $(a_1,\ldots,a_n)$'' map by \autoref{lem:nzeasierb}. In particular, we note $\mf m\supseteq J$ tells us that
+	\[Z(J)\supseteq Z(\mf m)=\{(a_1,\ldots,a_n)\},\]
+	as computed in \autoref{lem:nzeasierb}. So $f\in I(Z(J))$ implies that $f$ vanishes on $Z(J)$, so $f$ vanishes on $(a_1,\ldots,a_n)$, so $f$ lives in the kernel of the ``evaluation at $(a_1,\ldots,a_n)$'' map, so $f\in\mf m$. This finishes.
 \end{proof}
 
-\subsection{The Nullstellensatz, General Proof}
+\subsection{The General Case}
 We now provide an alternative, more general proof.
 \begin{proof}[General proof of \autoref{thm:nullstellensatz}]
 	We have the following definition.
