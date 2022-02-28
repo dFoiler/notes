@@ -1,0 +1,106 @@
+% !TEX root = ../notes.tex
+
+Good morning, everyone. Here are some announcements.
+\begin{itemize}
+	\item Midterm grades will be posted today or tomorrow, on \texttt{bCourses}.
+	\item Class on Wednesday will be a recording. Professor Morrow will be giving a talk, at 9AM as decided by the powers that be.
+	\item There is no homework due Friday because we haven't covered anything since the midterm.
+\end{itemize}
+
+\subsection{Holomorphic Power Series}
+Today we actually talk about analytic functions. Professor Morrow promises that it is actually complex analysis today, and once we talk about analytic functions and path integration, we will prove the Cauchy integral formula, which is one of the major results of the course.
+
+We recall the following definition.
+\powerseriesdefi*
+\noindent So far we've talked about the radius of convergence of a power series as well as some properties of series of functions in general (e.g., the Weierstrass $M$-test).
+
+Today we are showing the following result.
+\begin{proposition} \label{prop:powerseriesholo}
+	Fix $S(z)=\sum_{k=0}^\infty a_kz^k$ a (complex) power series with radius of convergence $R>0$. Then $S(z)$ is holomorphic on $B(0,R)$ with derivative
+	\[S'(z)=\sum_{k=1}^\infty ka_kz^{k-1}.\]
+	Further, $S'(z)$ also has radius of convergence $R$.
+\end{proposition}
+Note that this derivative is essentially the ``term-wise'' derivative of $S(z)$, so it is more or less the best thing that we could want.
+\begin{proof}
+	We will sketch the proof because it is a bit technical. Fix $0<r<R$ a real number and $z,w\in B(0,r)$. It suffices to show that $S$ is differentiable at $w$ with the requested derivative, for which we claim
+	\[\left(\lim_{z\to w}\frac{S(z)-S(w)}{z-w}\right)-S'(w)\stackrel?=0,\]
+	where $S'(z)$ is the claimed derivative. Namely, we fix some nonnegative integer $m$, and we can compute
+	\[\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)=\sum_{k=1}^ma_k\left(\frac{z^k-w^k}{z-w}-kw^{k-1}\right)=\sum_{k=1}^ma_k\left(\sum_{a+b=k-1}w^a\left(z^b-w^b\right)\right),\]
+	where in the last step we expanded out the difference of powers. So we set
+	\[h_k(z)=\sum_{a+b=k-1}w^a\left(z^b-w^b\right)\]
+	as a polynomial in $z$ on $B(0,r)$. In particular,
+	\[\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)=\sum_{k=1}^{m-1}a_kh_k(z).\]
+	Some argument with the triangle inequality and ``other estimates'' is able to show
+	\[\sum_{m=2}^\infty a_mh_m(z)\]
+	converges uniformly on $B(0,r)$, so
+	\[\lim_{z\to w}\sum_{m=2}^\infty a_mh_m(z)=\sum_{m=2}^\infty a_mh_m(w).\]
+	But the definition of $h_m(w)$ for $m>2$ will vanish, so the above limit completely vanishes. After some care, we may switch our limits to write
+	\begin{align*}
+		\left(\lim_{z\to w}\frac{S(z)-S(w)}{z-w}\right)-S'(w) &= \lim_{z\to w}\lim_{m\to\infty}\left(\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)\right) \\
+		&= \lim_{m\to\infty}\lim_{z\to w}\left(\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)\right) \\
+		&= \lim_{m\to\infty}\sum_{k=2}^ma_mh_m(w) \\
+		&= 0,
+	\end{align*}
+	as desired.
+\end{proof}
+So indeed, power series are holomorphic. Here is nice application of this fact.
+\begin{corollary}
+	Fix
+	\[S(z)=\sum_{k=0}^\infty a_kz^k\qquad\text{and}\qquad T(z)=\sum_{k=0}^\infty b_kz^k\]
+	two complex power series with radius of convergence $R>0$. If $S(z)=T(z)$ for all $z\in B(0,R)$, then $a_k=b_k$ for each $k$.
+\end{corollary}
+\begin{proof}
+	We proceed inductively, in spirit. For example $a_0=S(0)=T(0)=b_0$, so these are equal as our base case. Further, we could take one derivative to see that
+	\[S'(z)=\sum_{k=1}^\infty ka_kz^{k-1}\qquad\text{and}\qquad T'(z)=\sum_{k=1}^\infty kb_kz^{k-1},\]
+	so $a_1=S'(0)=T'(0)=b_1$. More generally, setting $S^{(m)}$ to be the $m$th derivative, we can see that
+	\[S^{(m)}(z)=\sum_{k=m}^\infty k(k-1)\cdots(k-m+1)a_kz^{k-m}\qquad\text{and}\qquad T^{(m)}=\sum_{k=m}^\infty k(k-1)\cdots(k-m+1)a_kz^{k-m},\]
+	and both of these have the same radius of convergence. So now $a_m=\frac1{m!}S^{(m)}(0)=\frac1{m!}T^{(m)}(0)=b_m$.
+\end{proof}
+
+\subsection{Analytic Functions}
+To define analytic, we need one more definition.
+\begin{definition}[Power series expansion]
+	Fix $X\subseteq\CC$ a nonempty open subset and $f:X\to\CC$ a function. We say that $f$ has a \textit{power series expansion centered at $z_0\in X$}
+	if and only if there is a positive real number $r$ such that $B(z_0,r)\subseteq X$ and further there is a power series defined by
+	$\{a_k\}_{k\in\NN}$ which has
+	\[f(z)=\sum_{k=0}^\infty a_k(z-z_0)^k\]
+	for each $z\in B(z_0,r)$.
+\end{definition}
+And here is our definition.
+\begin{definition}[Analytic]
+	Fix $X\subseteq\CC$ a nonempty open subset and $f:X\to\CC$ a function. Then $f$ is \textit{analytic} at $z_0\in\CC$ if and only if $f$ has a power series expansion at $z_0$. Explicitly, there is a power series $S(z)=\sum_{k=0}^\infty a_kz^k$ and positive real number $r>0$ (less than the radius of convergence) such that
+	\[f(z)=S(z-z_0)=\sum_{k=0}^\infty a_k(z-z_0)^k\]
+	for any $z\in B(z_0,r)$. Then $f$ is \textit{analytic} if and only if it is analytic at each $z_0\in\CC$.
+\end{definition}
+Here is the idea.
+\begin{idea}
+	Analytic functions are locally power series.
+\end{idea}
+Being analytic is a very nice condition. For example, we have the following.
+\begin{proposition}
+	Analytic functions are holomorphic on their domain.
+\end{proposition}
+\begin{proof}
+	Use \autoref{prop:powerseriesholo}.
+\end{proof}
+\begin{remark}
+	It will turn out that the converse is also true, but this is a pretty deep result. We will prove it from the Cauchy integral formula. The main obstacle is how we should construct the power series, which the Cauchy integral formula will tell us how to do.
+\end{remark}
+Anyways, let's prove something of substance.
+\begin{lemma}
+	Fix $X\subseteq\CC$ a nonempty open subset and $f:X\to\CC$ an analytic function. Then $f'$ is also analytic.
+\end{lemma}
+\begin{proof}
+	Fix $z_0\in X$. Because $f$ is analytic, there is a positive real number $r>0$ and power series $S(z)=\sum_{k=0}^\infty a_k(z-z_0)^k$ (with radius of convergence at least $r$) such that
+	\[f(z)=S(z-z_0)=\sum_{k=0}^\infty a_k(z-z_0)^k\]
+	for each $z\in B(z_0,r)$. By \autoref{prop:powerseriesholo}, we see that
+	\[f'(z)=S'(z-z_0)=\sum_{k=1}^\infty ka_k(z-z_0)^{k-1}\]
+	for each $z\in B(0,r)$. So we see that $f'$ has a power series expansion at our arbitrarily chosen $z_0\in X$, so $f'$ is analytic at each $z_0\in X$, so $f'$ is analytic.
+\end{proof}
+\begin{remark}
+	We can iterate the above lemma to show that an analytic function is infinitely differentiable.
+\end{remark}
+\begin{remark}
+	In fact, because analytic will turn out to be equivalent to holomorphic, we will see that being once differentiable implies being analytic implies being infinitely differentiable. This is pretty nice.
+\end{remark}
+Next class we will start talking about the exponential function, a very important analytic function.
