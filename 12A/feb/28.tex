@@ -1,0 +1,66 @@
+% !TEX root = ../notes.tex
+
+And we are back on the road.
+
+\subsection{More on Complexity}
+Last time we were talking about complexity and in particular \autoref{ques:pvsnp}, complaining that determining satisfiability seems to have an exponential blow-up in steps as the number of atomic formulae increases. For example, the truth-table method to compute satisfiability requires on the order of $2^n$ steps; most researchers do not think there is a way to do this much faster.
+
+So let's talk more about this P vs. NP problem.
+\begin{definition}[P]
+	A problem is in \textit{P} if and only if there is a deterministic polynomial-time algorithm to solve the problem. Namely, the algorithm run-time is polynomial in the input size.
+\end{definition}
+\begin{example}
+	Deciding if a number is even runs in essentially constant time: simply check if the last digit is in $\{0,2,4,6,8\}$.
+\end{example}
+\begin{example}
+	There is an algorithm which can determine if a positive integer is prime in polynomial time.
+\end{example}
+\begin{definition}[NP]
+	A problem is in \textit{NP} if and only if there is a non-deterministic polynomial-time algorithm to solve the problem.
+\end{definition}
+Roughly, a non-deterministic algorithm is allowed to guess and be lucky. Here are some examples.
+\begin{example}
+	To check satisfiability of some formula $\varphi$, we can just guess a valuation and compute if $\hat V(\varphi)=1$. Doing this check only runs in polynomial (in fact, linear) time with respect to the length of $\varphi$. Because life is easy after making this guess, we call the algorithm ``non-deterministic'' polynomial-time, where the adjective non-deterministic refers to the guess.
+\end{example}
+\begin{example}
+	It is difficult to solve a Sudoku puzzle---and there is an exponential blow-up in solving Sudoku as the grid gets bigger---but checking that the Sudoku works is comparatively easy---and checking does not get much harder as the problems gets bigger. Thus, there is a non-deterministic polynomial-time algorithm (guess some filled-in grid and check).
+\end{example}
+If we wanted to make satisfiability more analogous to Sudoku, we can transform the Sudoku problem as follows: given a partially filled-in $n^2\times n^2$ Sudoku grid, determine if we can fill in the grid in some valid way. In particular, this is a binary-output and scalable problem like with satisfiability.
+\begin{remark}
+	If we could show that merely satisfiability is in P, this would in fact show that all problems of NP would live in P. In particular, any problem in NP can be ``easily'' translated (i.e., translated in polynomial-time) into a satisfiability question.
+\end{remark}
+The above remark is why satisfiability alone is enough to answer \autoref{ques:pvsnp}.
+
+\subsection{Scheduling via Satisfiability}
+Suppose we are trying to schedule lectures, so we are given a list of possible rooms and some list of lectures and some list of professor availabilities. Here would be our constraints.
+\begin{enumerate}
+	\item Each lecture should be scheduled in some room in some time slot.
+	\item No two lectures should happen in the same room at the same time.
+	\item Two lectures given by the same professor cannot be given at the same time.
+	\item A lecture should not be scheduled at a time when the professor giving the lecture is unavailable.
+\end{enumerate}
+To turn this into a satisfiability problem, we build some notation. We set $s_{i,j,k}$ to mean that lecture $i$ is to be scheduled in room $j$ during time slot $k$.
+\begin{remark}
+	Availabilities and who gives lectures is not in the control of the scheduler. The only thing the scheduler can change is when the lecture happens, so the only atomic formulae we will deal with are $s_{i,j,k}$.
+\end{remark}
+We now translate our constraints into propositional logic.
+\begin{enumerate}
+	\item ``Each lecture should be scheduled in some room in some time slot'' becomes
+	\[\bigwedge_i\Bigg(\bigvee_{j,k}s_{i,j,k}\Bigg).\]
+	Namely, for each lecture $i$, some $s_{i,j,k}$ must be true for some room $j$ and time slot $k$.
+	\item ``No two lectures should happen in the same room at the same time'' becomes
+	\[\bigwedge_{i\ne i',j,k}\lnot(s_{i,j,k}\land s_{i',j,k}).\]
+	In other words, for any two distinct lectures $i$ and $i'$, they are not both in the same room $j$ and the same time slot $k$.
+	\item ``Two lectures given by the same professor cannot be given at the same time'' becomes
+	\[\bigwedge_{\substack{i\ne i',\,i,i'\text{ have the same professor}\\j,k}}\lnot(s_{i,j,k}\land s_{i',j,k}).\]
+	\item ``A lecture should not be scheduled at a time when the professor giving the lecture is unavailable'' becomes
+	\[\bigwedge_{\substack{i,j,k\\\text{prof for }i\text{ unavailable at }k}}\lnot s_{i,j,k}.\]
+	In other words, the professor for lecture $i$ should not be lecturing when available.
+\end{enumerate}
+So to solve scheduling, we just hand over these constraints to a satisfiability solver, and it'll do it.
+\begin{remark}
+	Scheduling turns out to not be so bad in comparison to worst-case scenarios for satisfiability. In particular, satisfiability is not so bad when there are ``few enough'' letters and the formula we are testing is not so bad.
+\end{remark}
+\begin{remark}
+	Professor Holliday would like someone to use a satisfiability solver to run wedding planning (e.g., for dinner placement).
+\end{remark}
