@@ -1,0 +1,85 @@
+% !TEX root = ../notes.tex
+
+Chris is back!
+
+\subsection{Yoneda Lemma Review}
+Today is more Yoneda lemma. We recall the statement.
+\yoneda*
+\noindent As seen in the proof, the bijection is by
+\[\varphi(\eta):=\eta_c(\id_c)\qquad\text{and}\qquad\varphi^{-1}(x)_d:=\big((f\in\op{Mor}(c,d)\to Fd)\mapsto(Ff)(x)\big).\]
+We quickly remark that we can motivate the definition $\varphi^{-1}$ by drawing the following naturality square with given internal diagram; here $f:c\to d$ is some morphism.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn1fXFxtYXRoY2FsIEMoYyxjKSJdLFsxLDAsIlxcb3B7TW9yfV9cXG1hdGhjYWwgQyhjLGQpIl0sWzAsMSwiRmMiXSxbMSwxLCJGZCJdLFswLDEsImZcXGNpcmMtIl0sWzAsMiwiXFx2YXJwaGleey0xfSh4KV9jIiwyXSxbMSwzLCJcXHZhcnBoaV57LTF9KHgpX2QiXSxbMiwzLCJGZiIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\op{Mor}_\mathcal C(c,c)} & {\op{Mor}_\mathcal C(c,d)} \\
+	Fc & Fd
+	\arrow["{f\circ-}", from=1-1, to=1-2]
+	\arrow["{\varphi^{-1}(x)_c}"', from=1-1, to=2-1]
+	\arrow["{\varphi^{-1}(x)_d}", from=1-2, to=2-2]
+	\arrow["Ff"', from=2-1, to=2-2]
+\end{tikzcd}\]
+Because we want $\varphi^{-1}(x)_c(\id_c)=x$, our definition of $\varphi^{-1}(x)_d(f)$ is forced.
+
+As for naturality, we note that we can view $Fc$ as the image of the functor $F:\mathcal C\to\mathrm{Set}$ on applying $c\in\mathcal C$, or alternatively we could view $Fc$ as the image of the functor $\op{ev}_c:\mathrm{Set}^{\mathcal C}\to\mathrm{Set}$ on applying $F$.
+\begin{remark}[Contravariant Yoneda]
+	There is also a contravariant version of the Yoneda lemma as well, which provides takes a contravariant functor $F:\mathcal C\opp\to\mathrm{Set}$ a functor and some object $c\in\mathcal C$. Then there is a ``natural'' bijection (natural in both $c$ and $F$)
+	\[\varphi:\op{Mor}(\op{Mor}_\mathcal C(-,c),F)\cong Fc.\]
+	Again, this bijection is natural in $F$ and $c$.
+\end{remark}
+
+\subsection{Yoneda Embeddings}
+We are going to describe an embedding
+\[\yo:\mathcal C\to\mathrm{Set}^{\mathcal C\opp}\]
+This is defined in essentially exactly the way that we want. We define $\yo(c):=\op{Mor}(-,c)$ and send morphisms $f:c\to d$ to the natural transformation $\yo(f):\op{Mor}(-,c)\to\op{Mor}(-,d)$ by $\yo(f):g\mapsto fg$. It is not too hard to see that $\yo(f)$ is in fact a natural transformation and composes properly, so we will omit those checks now.
+
+
+Anyways, here is our theorem.
+\begin{theorem}[Yoneda embedding] \label{thm:yonedaembedding}
+	Fix $\mathcal C$ a category. The Yoneda embedding $\yo:\mathcal C\to\mathrm{Set}^{\mathcal C\opp}$ is a fully faithful embedding.
+\end{theorem}
+\begin{proof}
+	We have the following checks.
+	\begin{itemize}
+		\item We show that $\yo$ is faithful, so suppose we have objects $c,d\in\mathcal C$, and we want to show that the map
+		\[\yo:\op{Mor}_\mathcal C(c,d)\to\op{Mor}(\yo(c),\yo(d))\]
+		is injective. Namely, if $f,g:c\to d$, then $\yo(f):x\mapsto fx$ and $\yo(g):x\mapsto gx$, so $\yo(f)=\yo(g)$ forces
+		\[f=f\id_c=\yo(f)(\id_c)=\yo(g)(\id_c)=g\id_c=g.\]
+		\item We show that $\yo$ is full. We will actually use \autoref{thm:yoneda}. Well, suppose that we have a morphism
+		\[\eta:\op{Mor}_\mathcal C(-,c)\Rightarrow\op{Mor}_\mathcal C(-,d),\]
+		and we want a morphism $f:c\to d$ such that $\yo(f)=\eta$. Well, viewing $\op{Mor}(-,d)$ as just some functor $F:\mathcal C\to\mathrm{Set}$, we are promised a bijection (by the contravariant version of \autoref{thm:yoneda})
+		\[\op{Mor}\big(\op{Mor}_\mathcal C(-,c),\op{Mor}_\mathcal C(-,d)\big)\to\op{Mor}(c,d).\]
+		In particular, $\eta$ under this bijection goes to some map $f=\eta_c(\id_c)\in\op{Mor}(c,d)$. But in fact $\yo(f)=(f\circ-)$ also has $(f\circ-)(\id_c)=f$, so because the above is a bijection, we have $\eta=\yo(f)$.
+		\item We show that $\yo$ is an embedding. For this, we suppose $c\ne d$ are distinct objects, and we need to show that $\op{Mor}_\mathcal C(-,c)\ne\op{Mor}_\mathcal C(-,d)$ as natural transformations. However, morphisms should ``remember'' their codomain in the data of a morphism, so $\op{Mor}_\mathcal C(x,c)$ and $\op{Mor}_\mathcal C(x,d)$ will be distinct automatically.
+		\qedhere
+	\end{itemize}
+\end{proof}
+It might feel like cheating that we are forcing our morphisms to remember their codomain, but it is somewhat necessary: in the indiscrete category, we might accidentally try to force our morphisms to be witnessed by the same object, but then the above is not actually an embedding because all morphism sets would be equal.
+
+Just for fun, here is an application.
+\begin{corollary}[Cayley's theorem]
+	Any group $G$ is isomorphic to a subgroup of $\op{Sym}(G)=\op{Aut}_{\mathrm{Set}}(G)$.
+\end{corollary}
+\begin{proof}
+	To convert this to category theory, we use the category $\mathrm BG$. Well, \autoref{thm:yonedaembedding} provides an embedding
+	\[\yo:\mathrm BG\to\mathrm{Set}^{\mathrm BG\opp}.\]
+	Here, we can think of $\mathrm{Set}^{\mathrm BG\opp}$ as sets equipped with a right $G$-action: any such functor $\mathrm BG\opp\to\mathrm{Set}$ sends the object $*\in\mathrm BG$ to a set $S\in\mathrm Set$ as well as morphisms/elements $g\in G$ to functions $g:S\to S$ satisfying
+	\[s\cdot(gh)=(s\cdot g)\cdot h\]
+	for $s\in S$ and $g,h\in G$.
+
+	Now, to use $\yo$, we see that $*\in\mathrm BG$ goes to the functor $\yo(*)=\op{Mor}(-,*):\mathrm BG\opp\to\mathrm{Set}$. Fixing any set $\bullet\in\mathrm BG$, we see that we really have the data of a morphism $\mathrm BG\opp\to\op{Mor}(\bullet,*)$. In other words, we are giving $\op{Mor}(\bullet,*)$ a right $G$-action: each $g\in\mathrm BG$ and $x\in\op{Mor}(\bullet,*)$ will have a multiplication given by
+	\[x\cdot g:=g\opp x,\]
+	where we have composition by
+	\[(x\cdot g)\cdot h=h\opp g\opp x=(gh)\opp x=x\cdot(gh).\]
+	So indeed, $\yo(*)$ is precisely the data of this right $G$-action on $\op{Mor}(\bullet,*)$. In other words, $\yo(*)$ is providing the data of the object $\op{Mor}(\bullet,*)$ in the category of $G\opp$-sets.
+	
+	On the other hand, each morphism $g:*\to *$ of $\mathrm BG$ will go to $\yo(g):\op{Mor}(\bullet,*)\Rightarrow\op{Mor}(\bullet,*)$ by $\yo(g):x\mapsto gx$. To be explicit, our multiplication is by
+	\[\yo(g)(x):=gx.\]
+	In fact, each element $\yo(g)$ is a $G\opp$-equivariant map on $\op{Mor}(\bullet,*)$, where this object is thought of as a $G\opp$-set. Indeed,
+	\[\yo(g)(x\cdot h)=g(xh)=(gx)h=(\yo(g)x)\cdot h,\]
+	which is what we wanted. In particular, $\yo$ injects $\op{Mor}_{\mathrm BG}(*,*)$ to ``$G$-equivariant'' natural transformations $\op{Mor}_{\mathrm BG}(-,*)\Rightarrow\op{Mor}_{\mathrm BG}(-,*)$.
+
+	So to finish up, because $\yo$ is a fully faithful functor, we see that we are injective on morphism sets, so we can say
+	\[G=\op{Mor}_{\mathrm BG}(*,*)\stackrel{\yo}\into\op{Mor}_{G\opp\text{-set}}\big(\op{Mor}_{\mathrm BG}(-,*),\op{Mor}_{\mathrm BG}(-,*)\big)\stackrel*=\op{Aut}_{G\opp\text{-set}}\big(\op{Mor}_{\mathrm BG}(-,*),\op{Mor}_{\mathrm BG}(-,*)\big),\]
+	where $\stackrel*=$ holds because all elements of $G$ are invertible and hence all the morphisms we are looking at are invertible. Now, we remark that the data of $\op{Mor}(-,*)$ is really only the data of $\op{Mor}(*,*)$ because $\mathrm BG$ has only one object, so we actually get to embed
+	\[G\into\op{Aut}_{G\opp\text{-set}}\big(\op{Mor}_{\mathrm BG}(*,*),\op{Mor}_{\mathrm BG}(*,*)\big)=\op{Aut}_{G\opp\text{-set}}(G,G).\]
+	Lastly, applying the forgetful functor from $G$-sets to just sets, we have an embedding $G\into\op{Aut}_{\mathrm{Set}}(G)$, so we are done.
+\end{proof}
