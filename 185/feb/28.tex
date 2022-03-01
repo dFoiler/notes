@@ -22,26 +22,50 @@ Today we are showing the following result.
 \end{proposition}
 Note that this derivative is essentially the ``term-wise'' derivative of $S(z)$, so it is more or less the best thing that we could want.
 \begin{proof}
-	We will sketch the proof because it is a bit technical. Fix $0<r<R$ a real number and $z,w\in B(0,r)$. It suffices to show that $S$ is differentiable at $w$ with the requested derivative, for which we claim
+	We will symbolically define
+	\[S'(z):=\sum_{k=1}^\infty ka_kz^{k-1}\]
+	and show that it is equal to the requested derivative. We start by noting the radius of convergence of $S'$ is
+	\[\frac1{\lim_{k\to\infty}\sqrt[k]{|(k+1)a_k|}}=\frac1{\lim_{k\to\infty}\sqrt[k]k}\cdot\frac1{\lim_{k\to\infty}\sqrt[k]{|a_k|}}=1\cdot R=R,\]
+	so at the very least our radius of convergence matches, as claimed.
+	
+	Fix $0<r<R$ a real number (i.e., we don't want to deal with $R=+\infty$), so that it suffices to show $S$ is holomorphic with the given derivative on $B(0,r)$. (Namely, for a given $w\in B(0,R)$, choose any $r$ with $|w|<r<R$.)
+	
+	Indeed, given $w\in B(0,r)$, it suffices to show that $S$ is differentiable at $w$ with the requested derivative, for which we claim
 	\[\left(\lim_{z\to w}\frac{S(z)-S(w)}{z-w}\right)-S'(w)\stackrel?=0,\]
-	where $S'(z)$ is the claimed derivative. Namely, we fix some nonnegative integer $m$, and we can compute
-	\[\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)=\sum_{k=1}^ma_k\left(\frac{z^k-w^k}{z-w}-kw^{k-1}\right)=\sum_{k=1}^ma_k\left(\sum_{a+b=k-1}w^a\left(z^b-w^b\right)\right),\]
-	where in the last step we expanded out the difference of powers. So we set
-	\[h_k(z)=\sum_{a+b=k-1}w^a\left(z^b-w^b\right)\]
-	as a polynomial in $z$ on $B(0,r)$. In particular,
-	\[\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)=\sum_{k=1}^{m-1}a_kh_k(z).\]
-	Some argument with the triangle inequality and ``other estimates'' is able to show
-	\[\sum_{m=2}^\infty a_mh_m(z)\]
-	converges uniformly on $B(0,r)$, so
-	\[\lim_{z\to w}\sum_{m=2}^\infty a_mh_m(z)=\sum_{m=2}^\infty a_mh_m(w).\]
-	But the definition of $h_m(w)$ for $m>2$ will vanish, so the above limit completely vanishes. After some care, we may switch our limits to write
+	where $S'(z)$ is the claimed derivative. To set up our computation, we fix a positive integer $m$ and work with the $m$th partial sum, computing
 	\begin{align*}
-		\left(\lim_{z\to w}\frac{S(z)-S(w)}{z-w}\right)-S'(w) &= \lim_{z\to w}\lim_{m\to\infty}\left(\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)\right) \\
-		&= \lim_{m\to\infty}\lim_{z\to w}\left(\frac{S_m(z)-S_m(w)}{z-w}-S_m'(z)\right) \\
-		&= \lim_{m\to\infty}\sum_{k=2}^ma_mh_m(w) \\
-		&= 0,
+		\frac{S_m(z)-S_m(w)}{z-w}-S_m'(w) &= \sum_{k=0}^m\frac{a_kz^k-a_kw^k}{z-w}-\sum_{k=1}^mka_kw^{k-1} \\
+		&= (a_0-a_0)+\sum_{k=1}^ma_k\left(\frac{z^k-w^k}{z-w}-kw^{k-1}\right) \\
+		&= \sum_{k=1}^ma_k\left(\sum_{a+b=k-1}z^bw^a-\sum_{a+b=k-1}w^{k-1}\right) \\
+		&= \sum_{k=1}^ma_k\left(\sum_{a+b=k-1}\left(z^bw^a-w^{k-1}\right)\right) \\
+		&= \sum_{k=1}^ma_k\left(\sum_{a+b=k-1}w^a\left(z^b-w^b\right)\right).
 	\end{align*}
-	as desired.
+	With this in mind, we set
+	\[h_k(z)=\sum_{a+b=k-1}w^a\left(z^b-w^b\right),\]
+	which we note is a polynomial in $z\in B(0,r)$ because we fixed $w$ to be constant. In particular, we have
+	\[\frac{S_m(z)-S_m(w)}{z-w}-S_m'(w)=\sum_{k=1}^ma_kh_k(z).\]
+	We now show that this series converges uniformly as $m\to\infty$; we will use \autoref{thm:mtest}. For this, we bound
+	\[|h_k(z)|=\left|\sum_{a+b=k-1}w^a\left(z^b-w^b\right)\right|\le\sum_{a+b=k-1}|w|^a\left(|z|^b+|w|^b\right)<\sum_{a+b=k-1}r^a\left(r^b+r^b\right)=2(k-1)r^{k-1},\]
+	so we bound $|a_kh_k(z)|<|a_k|\cdot2(k-1)r^{k-1}$. Namely, by \autoref{thm:mtest}, it suffices to show that the series
+	\[\sum_{k=1}^\infty2(k-1)|a_k|r^{k-1}\]
+	converges. Well, $\sum_{k=1}^\infty2(k-1)|a_k|x^{k-1}$ is a power series with radius of convergence
+	\[\frac1{\lim_{k\to\infty}\left(\sqrt[k]{2k}\cdot\sqrt[k]{|a_{k+1}|}\right)}=\frac1{\lim_{k\to\infty}\sqrt[k]{2k}}\cdot\frac1{\lim_{k\to\infty}\sqrt[k]{|a_{k+1}|}}=R,\]
+	so indeed the power series $\sum_{k=1}^\infty2(k-1)|a_k|x^{k-1}$ converges at $x=r<R$.
+
+	So in total, we see that the series of functions
+	\[\sum_{k=1}^\infty a_kh_k(z)\]
+	uniformly converges as $m\to\infty$. Because each component function $a_kh_k(z)$ is continuous, we see that the entire series will converge to a continuous function by \autoref{rem:continuousseries}. In other words, we can evaluate
+	\[\lim_{z\to w}\lim_{m\to\infty}\left(\frac{S_m(z)-S_m(w)}{z-w}-S_m'(w)\right)=\lim_{z\to w}\sum_{k=1}^\infty a_kh_k(z)=\sum_{k=1}^\infty a_kh_k(w).\]
+	But now we notice that $h_k(w)=0$ for each $h_k$, so this sum does indeed vanish.
+
+	We are now essentially done. We compute
+	\begin{align*}
+		\lim_{z\to w}\frac{S(z)-S(w)}{z-w} &= \lim_{z\to w}\left(\frac{S(z)-S(w)}{z-w}-S'(w)\right)+\lim_{z\to w}S'(w) \\
+		&= \lim_{z\to w}\left(\frac{\lim_{m\to\infty} S_m(z)-\lim_{m\to\infty}S_m(w)}{z-w}-\lim_{m\to\infty}S_m'(w)\right)+S'(w) \\
+		&= \lim_{z\to w}\lim_{m\to\infty}\left(\frac{S_m(z)-S_m(w)}{z-w}-S_m'(w)\right)+S'(w) \\
+		&= S'(w),
+	\end{align*}
+	so we are done.
 \end{proof}
 So indeed, power series are holomorphic. Here is nice application of this fact.
 \begin{corollary}
@@ -81,7 +105,7 @@ Being analytic is a very nice condition. For example, we have the following.
 	Analytic functions are holomorphic on their domain.
 \end{proposition}
 \begin{proof}
-	Use \autoref{prop:powerseriesholo}.
+	Fix $f:X\to\CC$ an analytic function. For each $x\in X$, we note that $f$ is locally equal to a power series at $x$ (i.e., $f|_{B(x,r)}$ is a power series), which is holomorphic by \autoref{prop:powerseriesholo}. Because $f$ is locally differentiable at each point, $f$ will be actually differentiable at each point.
 \end{proof}
 \begin{remark}
 	It will turn out that the converse is also true, but this is a pretty deep result. We will prove it from the Cauchy integral formula. The main obstacle is how we should construct the power series, which the Cauchy integral formula will tell us how to do.
