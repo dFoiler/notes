@@ -1,0 +1,365 @@
+% !TEX root = ../notes.tex
+
+This lecture was recorded.
+
+\subsection{Definition of the Exponential}
+For the next couple lectures we will be discussing the very special functions $\exp$ and $\log$. For now, we will focus on $\exp$, defined as follows.
+\begin{definition}[\texorpdfstring{$\exp$}{exp}]
+	We define the \textit{complex exponential} $\exp:\CC\to\CC$ by the power series
+	\[\exp(z)=\sum_{k=0}^\infty\frac{z^k}{k!}.\]
+\end{definition}
+In particular, we are going to be building our exponentiation from scratch. Nevertheless, we promise that it will work fine.
+
+As such, we have the following checks.
+\begin{lemma}
+	We have that $\exp$ is analytic and entire with derivative $\exp'(z)=\exp(z)$.
+\end{lemma}
+\begin{proof}
+	Very quickly, we note that the radius of convergence of $\exp$ is lower-bounded by
+	\[\left(\lim_{n\to\infty}\sqrt[n]{|1/n!|}\right)^{-1}\ge\left(\lim_{n\to\infty}\sqrt[n]{n^{-n/2}}\right)^{-1}=\left(\lim_{n\to\infty}n^{-1/2}\right)^{-1}=\infty,\]
+	so our radius of convergence is actually $\infty$. As such \autoref{prop:powerseriesholo} tells us that $\exp$ is holomorphic on $B(0,\infty)=\CC$ (i.e., entire) with derivative
+	\[\exp'(z)=\sum_{k=1}^\infty\frac k{k!}z^{k-1}=\sum_{k=1}^\infty\frac1{(k-1)!}z^{k-1}=\sum_{k=0}^\infty\frac{z^k}{k!},\]
+	where we have shifted indices in the last step. So indeed, $\exp'(z)=\exp(z)$.
+
+	Lastly, to show that $\exp$ is analytic, we need to show that $\exp$ can be locally expanded as a power series. In fact, for any $z_0\in\CC$, we claim that $\exp$ can be globally expanded as a power series. In particular, we need to be able to write
+	\[\exp(z)=\sum_{k=0}^\infty a_k(z-z_0)^k,\]
+	where the series on the right converges for any $z\in\CC$. For this, we expand
+	\[\exp(z+z_0)=\sum_{n=0}^\infty\frac1{k!}(z+z_0)^n.\]
+	The short version of what we are about to do is that we will expand out this power series in terms of $z$ and then collect terms of the same degree. Making this rigorous requires some care to the uniform convergence, but everything is okay because we converge absolutely.
+
+	Heuristically, we have
+	\[\sum_{n=0}^\infty\frac1{k!}(z+z_0)^n=\sum_{n=0}^\infty\left(\sum_{k+\ell=n}\frac1{k!\ell!}z^kz_0^\ell\right)\stackrel*=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell\right)z^k,\]
+	where $\stackrel*=$ is the equality which requires attention. To rigorize $\stackrel*=$, we use \autoref{lem:doublesums}.\footnote{Yes, I, too, am impressed that this lemma is seeing use.} Indeed, to make the application clearer, we set
+	\[a_{n,k}:=\begin{cases}
+		\frac{1}{k!(n-k)!}z^kz_0^{n-k} & k\le n, \\
+		0 & k>n
+	\end{cases}\]
+	so that we are interested in exchanging the order of the summation
+	\[\sum_{n=0}^\infty\left(\sum_{k+\ell=n}\frac{1}{k!\ell!}z^kz_0^\ell\right)=\sum_{n=0}^\infty\sum_{k=0}^\infty a_{n,k}.\]
+	Well, for fixed $n$, we see that $\sum_{k=0}^\infty|a_{n,k}|$ is a finite sum and hence converges. And further, we see that
+	\[\sum_{n=0}^\infty\sum_{k=0}^\infty|a_{n,k}|=\sum_{n=0}^\infty\left(\sum_{k=0}^n\frac{\binom nk}{n!}|z|^k|z_0|^{n-k}\right)=\sum_{n=0}^\infty\frac1{n!}(|z|+|z_0|)^n=\exp(|z|+|z_0|),\]
+	which converges because $\exp$ has infinite radius of convergence. As such, \autoref{lem:doublesums} tells us that
+	\[\exp(z+z_0)=\sum_{n=0}^\infty\sum_{k=0}^\infty a_{k,\ell}=\sum_{k=0}^\infty\sum_{n=0}^\infty a_{k,\ell}=\sum_{k=0}^\infty\sum_{n=k}^\infty\frac1{k!(n-k)!}z^kz_0^{n-k}.\]
+	The inner sums we may simplify as $\sum_{n=k}^\infty\frac1{k!(n-k)!}z^kz_0^{n-k}=z^k\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell$, so we do indeed find that
+	\[\exp(z+z_0)=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell\right)z^k,\]
+	for any $z\in\CC$. In particular, plugging in $z-z_0$ tells us that
+	\[\exp(z)=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell\right)(z-z_0)^k,\]
+	which gives us our power series expansion at $z_0$.
+\end{proof}
+
+\subsection{Basic Properties of the Exponential}
+Now that we know $\exp'(z)=\exp(z)$, we can begin actually building some theory. We pick up the following nice properties of $\exp$.
+\begin{prop} \label{prop:exphom}
+	Fix $z,w\in\CC$.
+	\begin{listalph}
+		\item We have that $\exp(z+w)=\exp(z)\exp(w)$.
+		\item We have that $\exp(z)\ne0$.
+		\item We have that $\exp(-z)=1/\exp(z)$.
+	\end{listalph}
+\end{prop}
+\begin{proof}
+	Parts (b) and (c) will follow from (a), so we will focus our attention on (a). Fixing some $\alpha\in\CC$, the trick is to consider
+	\[f(z)=\exp(z)\exp(\alpha-z).\]
+	Observe that $z\mapsto z$ and so $\alpha-z$ are entire, so the chain rule promises each factor of $f$ is entire, so $f$ is entire by the product rule. Tracking all this through, we can compute the derivative as
+	\begin{align*}
+		f'(z) &= \exp'(z)\exp(\alpha-z)+\exp(z)\exp'(\alpha-z)\cdot(-1) \\
+		&= \exp(z)\exp(\alpha-z)-\exp(z)\exp(\alpha-z) \\
+		&= 0.
+	\end{align*}
+	Thus, $f'$ is constantly $0$ everywhere (and $\CC$ is connected by \autoref{cor:cconnected}), so $f$ is constant on $\CC$ by \autoref{cor:getconstant}. However, we can plug in $z=\alpha$ into $f$ to see that
+	\[f(\alpha)=\exp(\alpha)\cdot\exp(0)=\exp(\alpha),\]
+	where $\exp(0)=1$ by construction of $\exp$. In particular, we see that
+	\[\exp(z)\exp(\alpha-z)=\exp(\alpha)\]
+	for any $z,\alpha\in\CC$. Setting $\alpha:=w+z$ recovers $\exp(z+w)=\exp(z)\exp(w)$ part (a).
+
+	We now show (b) and (c). Setting $z=-w\in\CC$ in (a), we see that
+	\[1=\exp(0)=\exp(z+-z)=\exp(z)\exp(-z).\]
+	Thus, because $\CC$ is an integral domain, we see that $\exp(z)\ne0$ automatically, which is (b). So, using the field structure of $\CC$ to divide by $\exp(z)$, we conclude that
+	\[\exp(-z)=1/\exp(z),\]
+	which proves (c).
+\end{proof}
+\begin{remark}[Nir]
+	In other words, $\exp:\CC\to\CC^\times$ is a homomorphism: $\exp$ does map to $\CC^\times$ by (c) of the proposition, and $\exp$ satisfies the needed homomorphism property by (a).
+\end{remark}
+In fact, $\exp$ will behave with our complex analytic structure.
+\begin{lemma} \label{lem:expconj}
+	Fix any $z\in\CC$. Then
+	\[\overline{\exp(z)}=\exp(\overline z).\]
+\end{lemma}
+\begin{proof}
+	The main point is that $z\mapsto\overline z$ is continuous on $\CC$, say by \autoref{ex:conjcont}. Thus, we compute
+	\[\overline{\exp(z)}=\overline{\lim_{n\to\infty}\sum_{k=0}^n\frac{z^k}{k!}}\stackrel*=\lim_{n\to\infty}\overline{\sum_{k=0}^n\frac{z^k}{k!}}=\lim_{n\to\infty}\sum_{k=0}^n\frac{\overline z^k}{k!}=\exp(\overline z),\]
+	where we have used the continuity of $z\mapsto\overline z$ in $\stackrel*=$. In particular, the point is that the sequence of partial sums $S_n:=\sum_{k=0}^n\frac{z^k}{k!}$ approach $\exp(z)$, so by continuity, $\overline{S_n}$ (which goes to $\overline{\exp(z)}$ definitionally) must approach $\exp(\overline z)$.
+\end{proof}
+
+Our next goal is to study certain outputs of $\exp$. Like a good algebraist, we will particularly be interested in the ``kernel'' of $\exp$ (as a homomorphism). For now, we will avoid saying the word ``kernel'' and instead simply solve for the output $1$.
+\begin{lemma} \label{lem:expimagline}
+	Fix any $t\in\RR$. Then $|\exp(it)|=1$.
+\end{lemma}
+\begin{proof}
+	Note that
+	\[\overline{\exp(it)}=\exp(\overline{it})=\exp(-it)=1/\exp(it),\]
+	where we have used \autoref{lem:expconj} followed by \autoref{prop:exphom}. Thus,
+	\[|\exp(it)|^2=\exp(it)\cdot\overline{\exp(it)}=1,\]
+	so $|\exp(it)|=1$ follows because the norm is always a positive real number.
+\end{proof}
+In fact, we can do better than the above.
+\begin{corollary} \label{cor:expmagker}
+	Fix any $z\in\CC$. Then $|\exp(z)|=1$ if and only if $\Re(z)=0$.
+\end{corollary}
+\begin{proof}
+	We show our implications separately.
+	\begin{itemize}
+		\item Suppose that $\Re(z)=0$. Then we can write $z=it$ for some $t\in\RR$, from which \autoref{lem:expimagline} tells us that $|\exp(z)|=|\exp(it)|=1$ for free.
+		\item Suppose that $|\exp(z)|=1$. Writing $z=x+yi$ with $x,y\in\RR$, we compute
+		\[\exp(z)=\exp(x)\exp(iy)=\exp(x),\]
+		where we have used \autoref{prop:exphom} and \autoref{lem:expimagline}. Now, taking norms, we see that $|\exp(x)|=|\exp(z)|=1$.
+		
+		However, $\exp|_\RR$ is a strictly increasing function: it is differentiable with continuous nonzero derivative (using \autoref{prop:exphom}), so the Intermediate value theorem implies that the derivative must stay the same sign for all $x_0\in\RR$. So noting $\exp(0)=1$ is enough to conclude $\exp'(x_0)>0$ for any $x_0\in\RR$, so $\exp$ is strictly increasing from a Mean value theorem argument.\footnote{If $a<b$, then use the Mean value theorem to find $x\in(a,b)$ with $f(b)-f(a)=(b-a)f'(x)>0$, so $f(a)<f(b)$.}
+
+		Thus, if $x<0$, then $|\exp(x)|=\exp(x)<1$, and if $0<x$, then $1<\exp(x)=|\exp(x)|$. So we see that $x=0$ with $|\exp(x)|=1$ is our only way to hit $1$, so $\Re z=x=0$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+So far we understand $|\exp(z)|$ pretty well. It is time to turn to $\exp$.
+\begin{definition}[Kernel of \texorpdfstring{$\exp$}{exp}]
+	We define the \textit{kernel of $\exp$} as
+	\[\ker\exp:=\{z\in\CC:\exp(z)=1\}.\]
+\end{definition}
+\begin{remark}
+	This is intended to align with abstract algebra: viewing $\exp:\CC\to\CC^\times$ as a homomorphism, we see that we are asking for the values of $z\in\CC$ which go to the identity of $\CC^\times$, which is $1$.
+\end{remark}
+\begin{example}
+	We have that $\exp(0)=1$, so $0\in\ker\exp$.
+\end{example}
+To better access the kernel, we will want to talk about the real and imaginary parts of $\exp(it)$.
+\begin{definition}[{\texorpdfstring{$\sin$}{sin} and \texorpdfstring{$\cos$}{cos}}]
+	Given $z\in\CC$, we define the (complex) $\sin$ and $\cos$ functions as
+	\[\cos z:=\frac{\exp(iz)+\exp(-iz)}{2}\qquad\text{and}\qquad\sin z:=\frac{\exp(iz)-\exp(-iz)}{2i}.\]
+\end{definition}
+We can see pretty directly that
+\[\cos z+i\sin z=\frac{\exp(iz)+\exp(-iz)}2-\frac{\exp(iz)-\exp(-iz)}2=\exp(iz).\]
+In the case where $z$ is real, we get to say a little more.
+\begin{remark} \label{rem:reandimexp}
+	Using \autoref{prop:accessreandim} with \autoref{lem:expconj}, we see that, for when $t\in\RR$,
+	\[\cos t=\frac{\exp(it)+\exp(-it)}{2}=\frac{\exp(it)+\overline{\exp(it)}}2=\Re\exp(it),\]
+	and
+	\[\sin t=\frac{\exp(it)-\exp(-it)}{2i}=\frac{\exp(it)-\overline{\exp(it)}}{2i}=\Im\exp(it).\]
+	In particular $\exp(it)=\cos t+i\sin t$ is our decomposition into real and imaginary parts.
+\end{remark}
+
+\subsection{Some Trigonometry}
+Before we go any further, we do some trigonometry. We want to establish that $\exp(it)$ is periodic, but this requires a little effort; we follow \href{https://math.stackexchange.com/a/63109/869257}{sx63102}.
+\begin{lemma} \label{lem:sumsquares}
+	For each $z\in\CC$, we have $\cos^2z+\sin^2z=1$.
+\end{lemma}
+\begin{proof}
+	We directly compute
+	\[\cos^2z+\sin^2z=\frac{\exp(iz)^2+2\exp(iz)\exp(-iz)+\exp(-iz)^2}{4}+\frac{\exp(iz)^2-2\exp(iz)\exp(-iz)+\exp(-iz)^2}{-4}.\]
+	After the dust settles, we are left with
+	\[\cos^2z+\sin^2z=\exp(iz)\exp(-iz),\]
+	which is $1$ by \autoref{prop:exphom}.
+\end{proof}
+More or less by just staring at $\cos$ and $\sin$, we can see that they are entire.
+\begin{lemma} \label{lem:trigderivs}
+	For each $z\in\CC$, we have $\frac d{dz}\cos z=-\sin z$ and $\frac d{dt}\sin z=\cos z$.
+\end{lemma}
+\begin{proof}
+	We directly compute
+	\[\frac d{dz}\frac{\exp(iz)+\exp(-iz)}2=\frac{i\exp(iz)-i\exp(iz)}2=-\frac{\exp(iz)-\exp(-iz)}{2i}=-\sin z,\]
+	and
+	\[\frac d{dz}\frac{\exp(iz)-\exp(-iz)}{2i}=\frac{i\exp(iz)+i\exp(iz)}2=\frac{\exp(iz)+\exp(-iz)}{2}=\cos z,\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma}
+	For $z\in\CC$, we have
+	\[\cos z=\sum_{k=0}^\infty\frac{(-1)^k}{(2k)!}z^{2k}\qquad\text{and}\qquad\sin z=\sum_{k=0}^\infty\frac{(-1)^{k-1}}{(2k+1)!}z^{2k+1}.\]
+\end{lemma}
+\begin{proof}
+	We directly compute, for any $z\in\CC$, we have
+	\[\cos z=\frac12(\exp(iz)+\exp(-iz))=\frac12\left(\sum_{k=0}^\infty\frac{i^k}{k!}z^k+\sum_{k=0}^\infty\frac{(-i)^k}{k!}z^k\right)=\frac12\sum_{k=0}^\infty\frac{i^k+(-i)^k}{k!}z^k.\]
+	Here, we were allowed to merge the two sums because they are just limits which converge. Now, we note that
+	\[i^k+(-i)^k=\begin{cases}
+		2 & k\equiv0\pmod4, \\
+		0 & k\equiv1\pmod2, \\
+		-2 & k\equiv2\pmod4,
+	\end{cases}\]
+	so all the odd terms vanish, leaving us with
+	\[\cos z=\frac12\sum_{k=0}^\infty\frac{2(-1)^k}{(2k)!}z^{2k}=\sum_{k=0}^\infty\frac{(-1)^k}{(2k)!}z^{2k},\]
+	which is what we wanted.
+
+	On the other hand, we note that $\cos z$ is an entire function, and its power series will converge everywhere because the power series for $\exp$ also converges everywhere. In particular, \autoref{prop:powerseriesholo} tells us that
+	\[\sin z=-\frac d{dz}\cos z=\sum_{k=1}^\infty\frac{(-1)^k\cdot2k}{(2k)!}z^{2k-1}=\sum_{k=1}^\infty\frac{(-1)^k}{(2k-1)!}z^{2k-1},\]
+	which gives the power series for $\sin$ after shifting over our indices. Notably, \autoref{prop:powerseriesholo} assures us that this also has infinite radius of convergence.
+\end{proof}
+To continue, we have to do a little real analysis.
+\begin{lemma} \label{lem:babyperiod}
+	There exists the smallest positive real number $\theta$ such that $\cos\theta=0$.
+\end{lemma}
+\begin{proof}
+	On one hand, note $\cos0=1$. On the other hand, using the Alternating series bound, we note
+	\[\cos2=\sum_{k=0}^\infty\frac{(-1)^k}{(2k)!}\cdot2^{2k}\le1-\frac42+\frac{16}{24}=-\frac13<0.\]
+	Thus, there certainly exists some $t\in[0,2]$ such that $\cos t=0$, so we define
+	\[\theta:=\inf\{t>0:\cos t=0\}.\]
+	Because $\cos$ is continuous, we note that the set $\{t:\cos t=0\}$ will be closed and hence contain all of its limit points, so we do have $\cos\theta=0$.
+	
+	Further, $\cos0=1$ implies there is some $\delta$ such that $|t|<\delta$ has $|\cos t-1|<1$, meaning there is an open neighborhood around $0$ for which $\cos t\ne0$. In particular, we must have $\theta\ge\delta>0$, so $\theta$ is a positive real number. So lastly, we note that any $t>0$ for which $\cos t=0$ must have $t\ge\theta$ by construction, so $\theta$ is indeed the smallest positive real number with $\cos\theta=0$.
+\end{proof}
+And now we get to define $\pi$.
+\begin{definition}[\texorpdfstring{$\pi$}{pi}]
+	We define $\pi\in\RR$ so that $\pi/2$ is the smallest positive real number such that $\cos\pi/2=0$.
+\end{definition}
+And now let's show our periodicity.
+\begin{lemma} \label{lem:expperiod}
+	We have that $\exp(z+2\pi i)=\exp(z)$ for any $z\in\CC$. In fact, $2\pi$ is the smallest positive real number $\theta$ such that $\exp(i\theta)=1=\exp0$.
+\end{lemma}
+\begin{proof}
+	We start with the second sentence. We are given that $\cos\pi/2=0$ already, and $ \pi/2$ is the smallest such positive real number. From \autoref{lem:sumsquares}, we see that this requires $\sin \pi/2\in\{\pm1\}$. However,
+	\[\frac d{dt}\sin t=\cos t\]
+	must be positive in the interval $(0, \pi/2)$ because $\cos0=1>0$ and $\cos$ is nonzero on $(0, \pi/2)$. In particular, a Mean value theorem argument tells us that $\sin$ is strictly increasing on $(0, \pi/2)$, so we have
+	\[\sin \pi/2>\sin0=0,\]
+	so $\sin \pi/2=1$. Plugging into \autoref{rem:reandimexp}, we get that $\exp(i\pi/2)=i$, so
+	\[\exp(2\pi i)=\exp(4\cdot i\pi/2)=\exp(i\pi/2)^4=i^4=1.\]
+	It remains to show that $2\pi$ is the smallest such positive real number. Well, suppose that $\theta>0$ has $\exp(\theta i)=1$ and is the smallest such positive real number; we get for free that $\theta\le2\pi$ by the above. On the other hand, we compute
+	\[\exp(\theta/4\cdot i)^4=\exp(\theta i)=1,\]
+	but we can factor $z^4-1=(z-1)(z+1)(z-i)(z+i)$, so $\exp(\theta/4\cdot i)\in\{\pm1,\pm i\}$. Certainly if $\exp(\theta/4\cdot i)\in\{\pm1\}$, then $\exp(\theta/2\cdot i)=\exp(\theta/4\cdot i)^2=1$, but $\theta/2<\theta/4$, so this cannot be. So instead, we have that
+	\[\exp(\theta/4\cdot i)=\pm i,\]
+	so in particular, \autoref{rem:reandimexp} tells us that $\cos(\theta/4)=\Re\exp(\theta/4\cdot i)=0$. Thus, $\theta/4\ge\pi/2$ by the definition of $\pi$, so $\theta\ge2\pi$. It follows $\theta=2\pi$.
+
+	We now show the first sentence. By \autoref{prop:exphom}, we merely have to compute
+	\[\exp(z+2\pi i)=\exp(z)\exp(2\pi i)=\exp z,\]
+	so we are done.
+\end{proof}
+While we're here, we note that also get access to the kernel from our work.
+\begin{prop} \label{prop:expker}
+	We have that $\ker\exp=\{2\pi in:n\in\ZZ\}$.
+\end{prop}
+\begin{proof}
+	In one direction, certainly
+	\[\exp(2\pi in)=\exp(2\pi i)^n=1\]
+	by \autoref{lem:expperiod}. In the other direction, suppose $\exp z=1$. Then \autoref{cor:expmagker} forces $\Re z=0$, so we can write $z=it$. By the division algorithm, we can write
+	\[t=2\pi q+r,\]
+	where $q\in\ZZ$ and $r\in[0,2\pi)$, from which we see
+	\[1=\exp z=\exp(it)=\exp(2\pi i q+ir)=\exp(2\pi iq)\exp(ir)=\exp(ir).\]
+	However, $r<2\pi$ is smaller than the smallest positive real number for which $\exp(ir)=1$, so $r$ cannot be a positive real number at all. But we do know $r\ge0$, so $r=0$ is forced. Thus, $t=2\pi iq$, as needed.
+\end{proof}
+\begin{remark}[Nir] \label{rem:eipi}
+	As a last remark, it would be a crime to note say that $\exp(i\pi)=-1$. Indeed,
+	\[\exp(i\pi)^2=\exp(2\pi i)=1,\]
+	but we can factor $z^2-1=(z+1)(z-1)$, s $\exp(i\pi)\in\{\pm1\}$. But $\pi<2\pi$, so we cannot have $\exp(i\pi)=1$, so $\exp(i\pi)=-1$ is forced.
+\end{remark}
+
+\subsection{Polar Coordinates}
+We would like to talk about polar coordinates, so for this we would like to access the arctangent function. This requires a little care.
+\begin{lemma} \label{lem:negtrig}
+	We have that $\cos(-z)=\cos z$ and $\sin(-z)=-\sin z$ for any $z\in\CC$.
+\end{lemma}
+\begin{proof}
+	This comes down to computing
+	\[\cos(-z)=\frac{\exp(i(-z))+\exp(-i(-z))}2=\frac{\exp(iz)+\exp(-iz)}2=\cos z.\]
+	Similarly,
+	\[\sin(-z)==\frac{\exp(i(-z))-\exp(-i(-z))}{2i}=-\frac{\exp(iz)-\exp(-iz)}{2i}=-\sin z,\]
+	which is what we wanted.
+\end{proof}
+So now we note that $\cos$ is, by definition of $\pi/2$, nonzero on $[0,\pi/2)$. The above lemma lets us extend this nonzero region to $(-\pi/2,\pi/2)$, permitting the following definition.
+\begin{definition}
+	Given a real number $t\in(-\pi/2,\pi/2)$, we define $\tan t:=\frac{\sin t}{\cos t}$. Note that this definition is legal because $\cos t\ne0$ for $(-\pi/2,\pi/2)$.
+\end{definition}
+\begin{lemma} \label{lem:basictan}
+	The function $\tan$ is real differentiable and strictly increasing.
+\end{lemma}
+\begin{proof}
+	That $\tan$ is real differentiable follows from the quotient rule, which applies because the denominator $\cos$ is nonzero on all of $(-\pi/2,\pi/2)$.\footnote{Technically, we should extend $\tan$ to a small open strip around $(-\pi/2,\pi/2)$ in order to make the complex quotient rule work and then restrict $\tan$ afterwards. We will settle for merely saying that we should do this instead of actually doing it.} In fact, we can compute the derivative as
+	\[\frac d{dt}\tan t=\frac d{dt}\frac{\sin t}{\cos t}=\frac{(\cos t)(\cos t)-(\sin t)(-\sin t)}{(\cos t)^2},\]
+	where we have used \autoref{lem:trigderivs}. So from \autoref{lem:sumsquares}, we see that $\frac d{dt}\tan t=\frac1{(\cos t)^2}$, which is positive for real numbers $t$. Thus, $\tan t$ is in fact strictly increasing.
+\end{proof}
+We would like to show that $\tan$ surjects onto $\RR$. To start, we note $\tan0=\sin0/\cos0=0/1=0$.
+\begin{lemma} \label{lem:negtan}
+	For $t\in(-\pi/2,\pi/2)$, we have that $\tan(-z)=-\tan z$.
+\end{lemma}
+\begin{proof}
+	By brute force, \autoref{lem:negtrig} tells us that
+	\[\tan(-t)=\frac{\sin(-t)}{\cos(-t)}=\frac{-\sin t}{\cos t}=\tan t,\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:tanbiject}
+	The function $\tan:(-\pi/2,\pi/2)\to\RR$ is a bijection.
+\end{lemma}
+\begin{proof}
+	We already know that $\tan$ is injective because it is strictly increasing by \autoref{lem:basictan}, so we have left to show the surjection. Additionally, \autoref{lem:negtan} implies that we merely have to show that $\tan$ surjects onto $\RR_{\ge0}$, and because $\tan0=0$, we merely have to show that $\tan$ surjects onto $\RR^+$.
+
+	Now, $\tan$ is continuous (by \autoref{lem:basictan}), so the Intermediate value theorem means that we merely need to show $\tan$ takes on arbitrarily large values in $\RR^+$. For this, we claim that
+	\[\lim_{t\to\pi/2}\tan t=\infty,\]
+	which will be enough. So fix any $M>0$. Well, because $\cos$ is continuous, we see that
+	\[\lim_{t\to\pi/2}\cos t=\cos\pi/2=0.\]
+	Thus, for $\varepsilon=1/(2M)$, there exists some $\delta_1>0$ so that $\pi/2-\delta_1<t<\pi/2$ will have $\cos t<\varepsilon$. Because $\cos$ must be positive for $t<\pi/2$, we actually have $0<\cos t<\varepsilon$. Additionally, because $\sin$ is continuous, we see that
+	\[\lim_{t\to\pi/2}\sin t=\sin\pi/2=1.\]
+	Thus, there exists some $\delta_2>0$ so that $\pi/2-\delta_2<t<\pi/2$ will have $\sin t>1/2$. In particular, setting $\delta:=\min\{\delta_1,\delta_2\}$, we see $\pi/2-\delta<t<\pi/2$ implies that
+	\[\tan t=\frac{\sin t}{\cos t}>\frac{1/2}{\varepsilon}=\frac1{2\varepsilon}=M.\]
+	This finishes.
+\end{proof}
+The above check permits the following definition.
+\begin{definition}[\texorpdfstring{$\arctan$}{arctan}]
+	We define $\arctan:\RR\to(-\pi/2,\pi/2)$ to be the inverse function of $\tan$.
+\end{definition}
+Note that the above definition makes sense because $\tan$ is a bijection $(-\pi/2,\pi/2)\to\RR$. In fact, the proof of \autoref{lem:tanbiject} lets us say
+\[\lim_{t\to\infty}\arctan t=\frac\pi2.\]
+In fact, we see $\tan(-t)\to-\pi/2$ as $t\to\infty$, so
+\[\lim_{t\to-\infty}\arctan t=-\frac\pi2.\]
+We are now ready to give polar form.
+\begin{proposition}
+	For any $z\in\CC^\times$, there exists unique real numbers $r>0$ and $\theta\in[-\pi,\pi)$ such that $z=r\exp(i\theta)$.
+\end{proposition}
+\begin{proof}
+	We start by showing uniqueness because it is easier: if $r_1\exp(i\theta_1)=r_2\exp(i\theta_2)$, then taking magnitudes tells us that
+	\[|r_1|=|r_1\exp(i\theta_1)|=|r_2\exp(i\theta_2)|=|r_2|,\]
+	where we have used \autoref{cor:expmagker}. Because $r_1$ and $r_2$ are positive real numbers, we conclude $r_1=r_2$. So now
+	\[\exp(i(\theta_1-\theta_2))=\exp(i\theta_1)/\exp(i\theta_2)=1\]
+	using \autoref{prop:exphom}. By \autoref{prop:expker}, this forces $\theta_1-\theta_2\in2\pi i\ZZ$. However, $-\pi\le\theta_1,\theta_2<\pi$ implies that
+	\[-2\pi<\theta_1-\theta_2<2\pi,\]
+	so $\theta_1-\theta_2=0$ is forced, so $\theta_1=\theta_2$.
+
+	We now show that the $r$ and $\theta$ actually exist for any $z\in\CC^\times$. As above, we take $r=|z|$, so we need to set $\theta$. Well, we see that \autoref{rem:reandimexp} gives
+	\[r\exp(i\theta)=r\cos\theta+ir\sin\theta.\]
+	So we want a value $\theta\in[-\pi,\pi)$ such that $\Re z=r\cos\theta$ and $\Im z=r\sin\theta$. Noting that $z\ne0$ implies $r\ne0$, we want to choose $\theta$ such that
+	\[(\cos\theta,\sin\theta)\stackrel?=(\Re z/r,\Im z/r).\]
+	In particular, we set $a:=\Re z/r$ and $b:=\Im z/r$ so that $a^2+b^2=\frac{(\Re z)^2+(\Im z)^2}{r^2}1$. So, given $(a,b)\in\RR^2$ such that $a^2+b^2=1$, we need to find $\theta$ such that
+	\[(\cos\theta,\sin\theta)\stackrel?=(a,b).\]
+	We set $\theta$ by hand. We do casework.
+	\begin{itemize}
+		\item If $a=0$, then $\cos\theta=0$ and $b=\pm1$. Well, for $b=\pm1$, we set $\theta=\pm\frac\pi2$ so that $\cos\pm\frac\pi2=\cos\frac\pi2$ and $\sin\pm\frac\pi2=\pm\sin\frac\pi2=\pm1$ by \autoref{lem:negtrig}.
+		\item If $a>0$, then we choose $\theta=\arctan(b/a)\in(-\pi/2,\pi/2)$. In particular, we see that $\tan\theta=\frac ba$, so we have the system of equations
+		\[\frac{\sin\theta}{\cos\theta}=\frac ba\qquad\text{and}\qquad(\cos\theta)^2+(\sin\theta)^2=1.\]
+		In particular, $\sin\theta=\frac ba\cos\theta$, so $\left(1+\frac{b^2}{a^2}\right)(\cos\theta)^2=1$, so $\cos\theta=\pm a$ because $a^2+b^2$. But $\cos\theta$ is positive on $(-\pi/2,\pi/2)$, so we see that $\cos\theta=a$, from which we can read $\sin\theta=\frac ba\cdot a=b$.
+		\item If $a<0$, we note $-a>0$, so we use the above argument to choose $\gamma=\arctan(b/-a)\in(-\pi/2,\pi/2)$ so that
+		\[\cos\gamma=-a\qquad\text{and}\qquad\sin\gamma=b.\]
+		In particular, we see that $-\gamma$ has
+		\[\exp(i(-\gamma))=\overline{\exp(i\gamma)}=\overline{-a+bi}=-a-bi.\]
+		In particular, multiplying this through by $\exp(i\pi)=-1$, we see that $\exp(i(\pi-\gamma))=a+bi$, giving $\cos(\pi-\gamma)=a$ and $\sin(\pi-\gamma)=b$.
+
+		It remains to force $\pi-\gamma$ into $[-\pi,\pi)$. However, $\exp(it)$ is periodic with period $2\pi$, so we can callously shift $2\pi-\gamma$ into $[0,2\pi)$ via the division algorithm and then subtract $\gamma$ to get a representative of $\pi-\gamma$ in $[-\pi,\pi)$. This finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{example}
+	We take $z=-1-i$. Here, $|z|=\sqrt{1+1}=\sqrt2$; further $\Re z<0$, so we compute
+	\[\pi-\arctan(-1/-(-1))=\pi--\frac\pi4=\frac{5\pi}4,\]
+	so we take $\theta=-3\pi/4$ after shifting. So the above argument assures us that $z=\sqrt2\exp(-i\cdot3\pi/4)$. Here is the image.
+	\begin{center}
+		\begin{asy}
+			unitsize(2cm);
+			draw((-1.5,0)--(0.5,0), arrow=EndArrow);
+			draw((0,-1.5)--(0,0.5), arrow=EndArrow);
+			label("$\textrm{Re}$", (0.5,0), E);
+			label("$\textrm{Im}$", (0,0.5), N);
+			draw(arc((0,0), 0.2, 0, 180+45), magenta);
+			draw((-1,-1)--(-1,0), blue);
+			draw((0,0)--(-1,0), red);
+			draw((0,0)--(-1,-1), magenta);
+			label("$\color{blue}{-1}$", (-1,-0.5), W);
+			label("$\color{red}{-1}$", (-0.5,0), N);
+			label("$\color{magenta}\sqrt2$", (-0.5,-0.5), SE);
+			dot("$z$", (-1,-1), SW);
+		\end{asy}
+	\end{center}
+\end{example}
