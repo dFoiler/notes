@@ -21,30 +21,45 @@ As such, we have the following checks.
 	\[\exp'(z)=\sum_{k=1}^\infty\frac k{k!}z^{k-1}=\sum_{k=1}^\infty\frac1{(k-1)!}z^{k-1}=\sum_{k=0}^\infty\frac{z^k}{k!},\]
 	where we have shifted indices in the last step. So indeed, $\exp'(z)=\exp(z)$.
 
-	Lastly, to show that $\exp$ is analytic, we need to show that $\exp$ can be locally expanded as a power series. In fact, for any $z_0\in\CC$, we claim that $\exp$ can be globally expanded as a power series. In particular, we need to be able to write
-	\[\exp(z)=\sum_{k=0}^\infty a_k(z-z_0)^k,\]
-	where the series on the right converges for any $z\in\CC$. For this, we expand
-	\[\exp(z+z_0)=\sum_{n=0}^\infty\frac1{k!}(z+z_0)^n.\]
-	The short version of what we are about to do is that we will expand out this power series in terms of $z$ and then collect terms of the same degree. Making this rigorous requires some care to the uniform convergence, but everything is okay because we converge absolutely.
-
-	Heuristically, we have
-	\[\sum_{n=0}^\infty\frac1{k!}(z+z_0)^n=\sum_{n=0}^\infty\left(\sum_{k+\ell=n}\frac1{k!\ell!}z^kz_0^\ell\right)\stackrel*=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell\right)z^k,\]
-	where $\stackrel*=$ is the equality which requires attention. To rigorize $\stackrel*=$, we use \autoref{lem:doublesums}.\footnote{Yes, I, too, am impressed that this lemma is seeing use.} Indeed, to make the application clearer, we set
-	\[a_{n,k}:=\begin{cases}
-		\frac{1}{k!(n-k)!}z^kz_0^{n-k} & k\le n, \\
-		0 & k>n
-	\end{cases}\]
-	so that we are interested in exchanging the order of the summation
-	\[\sum_{n=0}^\infty\left(\sum_{k+\ell=n}\frac{1}{k!\ell!}z^kz_0^\ell\right)=\sum_{n=0}^\infty\sum_{k=0}^\infty a_{n,k}.\]
-	Well, for fixed $n$, we see that $\sum_{k=0}^\infty|a_{n,k}|$ is a finite sum and hence converges. And further, we see that
-	\[\sum_{n=0}^\infty\sum_{k=0}^\infty|a_{n,k}|=\sum_{n=0}^\infty\left(\sum_{k=0}^n\frac{\binom nk}{n!}|z|^k|z_0|^{n-k}\right)=\sum_{n=0}^\infty\frac1{n!}(|z|+|z_0|)^n=\exp(|z|+|z_0|),\]
-	which converges because $\exp$ has infinite radius of convergence. As such, \autoref{lem:doublesums} tells us that
-	\[\exp(z+z_0)=\sum_{n=0}^\infty\sum_{k=0}^\infty a_{k,\ell}=\sum_{k=0}^\infty\sum_{n=0}^\infty a_{k,\ell}=\sum_{k=0}^\infty\sum_{n=k}^\infty\frac1{k!(n-k)!}z^kz_0^{n-k}.\]
-	The inner sums we may simplify as $\sum_{n=k}^\infty\frac1{k!(n-k)!}z^kz_0^{n-k}=z^k\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell$, so we do indeed find that
-	\[\exp(z+z_0)=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell\right)z^k,\]
-	for any $z\in\CC$. In particular, plugging in $z-z_0$ tells us that
-	\[\exp(z)=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\frac1{k!\ell!}z_0^\ell\right)(z-z_0)^k,\]
-	which gives us our power series expansion at $z_0$.
+	Lastly, to show that $\exp$ is analytic, we need to show that $\exp$ can be locally expanded as a power series. For this, we appeal to the following lemma.
+	\begin{lemma}
+		Fix $S(z):=\sum_{k=0}^\infty a_kz^k$ a power series with radius of convergence $R>0$. Then $S(z)$ is analytic on $B(0,R)$.
+	\end{lemma}
+	\begin{proof}
+		There is actually something to show here: given $z_0\in\CC$, we need to expand $S(z)$ locally at a power series at $z_0$. In particular, we need to be able to write
+		\[S(z)=\sum_{k=0}^\infty b_k(z-z_0)^k,\]
+		where the series on the right converges for any $z\in B(z_0,r)$ for some $r>0$. For this, we expand
+		\[S(z+z_0)=\sum_{n=0}^\infty a_k(z+z_0)^n,\]
+		under the assumption $z,z_0,z+z_0,|z|+|z_0|\in B(0,R)$. (We will discuss how to ensure these conditions later.)
+		
+		The short version of what we are about to do is that we will expand out this power series in terms of $z$ and then collect terms of the same degree. Making this rigorous requires some care to the uniform convergence, but everything is okay because we converge absolutely.
+	
+		Heuristically, we have
+		\[\sum_{n=0}^\infty a_n(z+z_0)^n=\sum_{n=0}^\infty\left(\sum_{k+\ell=n}\binom nka_nz^kz_0^\ell\right)\stackrel*=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\binom nka_nz_0^\ell\right)z^k,\]
+		where $\stackrel*=$ is the equality which requires attention. To rigorize $\stackrel*=$, we use \autoref{lem:doublesums}.\footnote{Yes, I, too, am impressed that this lemma is seeing use.} Indeed, to make the application clearer, we set
+		\[a_{n,k}:=\begin{cases}
+			\binom nka_nz^kz_0^{n-k} & k\le n, \\
+			0 & k>n
+		\end{cases}\]
+		so that we are interested in exchanging the order of the summation
+		\[\sum_{n=0}^\infty\left(\sum_{k+\ell=n}\binom nka_nz^kz_0^\ell\right)=\sum_{n=0}^\infty\sum_{k=0}^\infty a_{n,k}.\]
+		Well, for fixed $n$, we see that $\sum_{k=0}^\infty|a_{n,k}|$ is a finite sum and hence converges. And further, we see that
+		\[\sum_{n=0}^\infty\sum_{k=0}^\infty|a_{n,k}|=\sum_{n=0}^\infty\left(\sum_{k=0}^n\binom nka_n|z|^k|z_0|^{n-k}\right)=\sum_{n=0}^\infty a_n(|z|+|z_0|)^n=S(|z|+|z_0|),\]
+		which converges because $|z|+|z_0|\in B(0,R)$. As such, \autoref{lem:doublesums} tells us that
+		\[S(z+z_0)=\sum_{n=0}^\infty\sum_{k=0}^\infty a_{k,\ell}=\sum_{k=0}^\infty\sum_{n=0}^\infty a_{k,\ell}=\sum_{k=0}^\infty\sum_{n=k}^\infty\binom nka_nz^kz_0^{n-k}.\]
+		The inner sums we may simplify as $\sum_{n=k}^\infty\binom nka_nz^kz_0^{n-k}=z^k\sum_{\ell=0}^\infty\binom nka_nz_0^\ell$, so we do indeed find that
+		\[S(z+z_0)=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\binom nka_nz_0^\ell\right)z^k,\]
+		for any $z\in\CC$. In particular, plugging in $z-z_0$ tells us that
+		\[S(z)=\sum_{k=0}^\infty\left(\sum_{\ell=0}^\infty\binom nka_nz_0^\ell\right)(z-z_0)^k,\]
+		which gives us our power series expansion at $z_0$.
+		
+		It remains to show the power series expansion will hold in some neighborhood $B(z_0,r)$. Translating back, we need to know that the power series expansion for $S(z+z_0)$ will hold in some neighborhood $S(0,r)$. To review, our hypotheses were that
+		\[z,z_0,z+z_0,|z|+|z_0|\in B(0,R).\]
+		Recalling that $z_0\in B(0,R)$ automatically, we set $r:=R-|z_0|>0$. Then $r<R$, so $z\in B(0,R)$. Similarly,
+		\[|z+z_0|\le|z|+|z_0|<r+|z_0|=R,\]
+		so we get $z+z_0,|z|+|z_0|\in B(0,R)$ as well. So we have constructed our neighborhood and have verified that $S(z)$ is analytic at $z_0$.
+	\end{proof}
+	Thus, because we defined $\exp$ as a power series with infinite radius of convergence, we see that $\exp$ is analytic everywhere on $\CC$.
 \end{proof}
 
 \subsection{Basic Properties of the Exponential}
