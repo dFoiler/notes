@@ -188,9 +188,9 @@ Let's see some examples.
 \end{remark}
 
 \subsection{Normality via Geometry}
-There is also a context for normality in algebraic geometry.
+There is also a context for normality in algebraic geometry; roughly speaking, it is about trying to make the curve smoother.
 \begin{exe}
-	We compute the integral closure of the ring $R=k[x,y]/\left(y^2-x^3\right)$.
+	We compute the integral closure of the ring $R=k[x,y]/\left(y^2-x^3\right)$ as $R[y/x]$.
 \end{exe}
 \begin{proof}
 	Here is our image.
@@ -207,39 +207,128 @@ There is also a context for normality in algebraic geometry.
 				return cbrt(t*t);
 			}
 			draw(graph(x, y,-2,2));
+			draw((-1,0) -- (2,0)); label("$x$", (2,0), E);
+			draw((0,-2) -- (0,2)); label("$y$", (0,2), N);
 		\end{asy}
 	\end{center}
-	Note that, working in the fraction field, $\left(\frac yx\right)^2=x$ because $y^2=x^3$, so $R$ is not normal because it does not include $\frac yx$.
+	The issue here is the ``cusp'' at $0$. To normalize, we need to make this curve look more like a line and normalize as a line.
 
-	To compute our integral closure, we create a map $R\to k[t]$ by $y\mapsto t^3$ and $x\mapsto t^2$ (so that $t=y/x$), and we find $R$ embeds into $k[t]$. But because $k[t]$ is now integrally closed (it's a unique factorization domain), we see that the pull-back $R[y/x]$ will in fact be integrally closed, so this is our integral closure.
+	So the main point is that there is a map $\varphi:k[x,y]\to k[t]$ by sending $x\mapsto t^2$ and $y\mapsto t^3$, and it is not too hard to check that the kernel of this map is $y^2-x^3$. Indeed, certainly
+	\[\varphi\left(y^2-x^3\right)=t^6-t^6=0,\]
+	so $\left(y^2-x^3\right)\subseteq\ker\varphi$. Conversely, if $f(x,y)\in\ker\varphi$, then we can use the fact $y^2\equiv x^3\pmod{y^2-x^3}$ to write
+	\[f(x,y):=\sum_{k,\ell\in\NN}a_{k,\ell}x^ky^\ell\equiv\sum_{k=0}^\infty b_kx^k+y\sum_{k=0}^\infty c_kx^k\pmod{y^2-x^3},\]
+	where $b_k$ and $c_k$ are some sequences which vanish for all but finitely many values. Then, passing this through $\varphi$, we see that the left- and right-hand polynomials go to the same polynomials, but the right-hand side evaluates as
+	\[\sum_{k=0}^\infty b_kt^{2k}+\sum_{k=0}^\infty c_kt^{2k+3},\]
+	which must vanish component-wise. So indeed, $f\equiv0\pmod I$, so $f\in I$.
+
+	It follows that we have an embedding $\varphi:R\into k[t]$, and in fact we can track the image as $k\left[t^2,t^3\right]\subseteq k[t]$; in the other direction, note that we can extend this to an isomorphism $K(R)\to k(t)$. So it suffices to compute the integral closure of $k\left[t^2,t^3\right]$ in $k(t)$ and then pull back.
+
+	Well, $t\in k(t)$ is the root of the polynomial $x^2-t^2=0$ in $k\left[t^2,t^3\right][x]$, so the integral closure must contain $k[t]$. However, $k[t]$ itself is integrally closed (by \autoref{prop:ufdnormal}), so it is the integral closure of $k\left[t^2,t^3\right]$; more explicitly, if $f$ is integral over $k\left[t^2,t^3\right]$, then it will be integral over $k[t]$ (because the coefficients of $f$'s polynomial also live in $k[t]$), so it will be in $k[t]$.
+
+	So to finish, we note that $\varphi(y/x)=t$, so because $\varphi:K(R)\to k(t)$ is injective, we see that we can just callously pull $t$ back to $y/x$. In particular, our integral closure is
+	\[\varphi^{-1}(k[t])=\boxed{R[y/x]},\]
+	which is our answer.
 \end{proof}
-\begin{example}
-	Consider the ring $R=k[x,y]/\left(y^2-x^2(x+1)\right)$. Then $\left(\frac yx\right)^2=x+1$, so $R$ is not normal because it does not include $\frac yx$.
-\end{example}
-More generally, suppose that we have affine algebraic sets $X$ and $Y$ with an embedding $A(X)\to A(Y)$. This corresponds to a map $Y\to X$. Normality then means that the image of $Y$ in $X$ is ``Zariski dense'' so that there is no proper closed subset of $X$ which contains $Y$.
+\begin{exe}
+	We compute the integral closure of $R=k[x,y]/\left(y^2-x^2(x+1)\right)$ as $R[y/x]$.
+\end{exe}
+\begin{proof}
+	Here is our image.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			import graph;
+			real x(real t)
+			{
+				return t*t-1;
+			}
+			real y(real t)
+			{
+				return t*(t*t-1);
+			}
+			draw(graph(x, y,-1.521,1.521));
+			draw((-1.5,0) -- (2,0)); label("$x$", (2,0), E);
+			draw((0,-2) -- (0,2)); label("$y$", (0,2), N);
+		\end{asy}
+	\end{center}
+	Once more, the issue here is the singularity at $0$. So to normalize, we will make this look more like a line and then normalize as a line.
 
-Speaking with more geometry, a map $Y\to X$ of affine varieties is proper (over $\CC$, say) essentially gives us the result that the pre-image of a compact set is compact.
-\begin{remark}
-	I did not follow the above discussion.
+	The key to effect this plan is to note that we have a map $\varphi:k[x,y]\to k[t]$ by sending
+	\[x\mapsto t^2-1\qquad\text{and}\qquad y\mapsto t\left(t^2-1\right).\]
+	We can again check that the kernel of this mapping is $y^2-x^2(x+1)$, but we will be a little sketchier. On one hand, we compute
+	\[\varphi\left(y^2-x^2(x+1)\right)=t^2\left(t^2-1\right)-\left(t^2-1\right)^2\left(t^2-1+1\right)=0.\]
+	On the other hand, if $f(x,y)\in\ker\varphi$, then we can use the fact that $y^2\equiv x^2(x+1)\pmod{y^2-x^2(x+1)}$ to reduce the exponent of $y$ and write
+	\[f(x,y)\equiv\sum_{k=0}^\infty b_kx^k+\sum_{k=0}^\infty c_kx^ky\pmod{y^2-x^2(x+1)}.\]
+	Because $\left(y^2-x^2(x+1)\right)\subseteq\ker\varphi$, both sides of this equivalence will go to the same place upon being pushed through $\varphi$. However, upon pushing through $\varphi$, we see that the left-hand sum only creates terms of even degree, and the right-hand sum only creates terms of odd degree, so it is not too hard to see that we must have $b_k=c_k=0$ for each $k$. Explicitly, the term of the largest degree in either sum must vanish by looking in $k[t]$.
+
+	The rest of the argument proceeds as before. We note that
+	\[\im\varphi=k\left[t^2-1,t\left(t^2-1\right)\right],\]
+	and we will compute the integral closure of $\im\varphi$. As before, we note that $t$ is a root of
+	\[x^2-\left(t^2-1\right)-1\in(\im\varphi)[x],\]
+	so $t$ must live in the integral closure. However, $k[t]\supseteq k\left[t^2-1,t\left(t^2-1\right)\right]$ is integrally closed, so this now must be our integral closure. Pulling back, we note that $\varphi(y/x)=t$, so our integral closure is
+	\[\varphi^{-1}(k[t])=\boxed{R[y/x]},\]
+	which is what we wanted.
+\end{proof}
+\begin{remark}[Nir]
+	Somewhere around here Professor Serganova gave a more rigorously sound discussion of normality via geometry, but I did not follow it. My notes are included in the comments on this file, but they are pretty incomprehensible.
 \end{remark}
-We have the following proposition.
+% More generally, suppose that we have affine algebraic sets $X$ and $Y$ with an embedding $A(X)\to A(Y)$. This corresponds to a map $Y\to X$. Normality then means that the image of $Y$ in $X$ is ``Zariski dense'' so that there is no proper closed subset of $X$ which contains $Y$.
+
+% Speaking with more geometry, a map $Y\to X$ of affine varieties is proper (over $\CC$, say) essentially gives us the result that the pre-image of a compact set is compact.
+% \begin{remark}
+% 	I did not follow the above discussion.
+% \end{remark}
+
+\subsection{Normality and Factorization}
+\autoref{prop:ufdnormal} suggests some connection between normality and unique factorization, but the connection is clearer when working in the polynomial ring. To start, we have the following proposition.
 \begin{proposition}
-	Fix $S$ an $R$-algebra with a monic polynomial $f\in R[x]$. If we can factor $f=gh$ for $g,h\in S[x]$. Then the coefficients of $g$ and $h$ are integral over $R$.
+	Fix $S$ an $R$-algebra by an injective map $\varphi:R\into S$. If we can factor a monic polynomial $f\in R[x]$ by $f=gh$ for monic $g,h\in S[x]$, then the coefficients of $g$ and $h$ are integral over $R$.
 \end{proposition}
 \begin{proof}
-	Imagine adding some root $\alpha_1$ of $g$ to $S$ to get a bigger $R$-algebra named $R[\alpha_1]$. So, writing $g(x)=(x-\alpha_1)g_1(x)$, we see that we can divide out to get
-	\[\frac{f(x)}{(x-\alpha_1)}=g_1(x)h(x).\]
-	Inductively removing all roots $\alpha_1,\ldots,\alpha_m$ of $g$ and $\beta_1,\ldots,\beta_n$ of $h$, we see that
-	\[f(x)=(x-\alpha_1)\cdots(x-\alpha_m)(x-\beta_1)\cdots(x-\beta_n).\]
-	Here the leading coefficients match, so we do not inherit a leading term. However, upon expansion, we see that the coefficients of $g$ and $h$ will be elementary symmetric functions of the $\alpha_\bullet$ and $\beta_\bullet$, so in particular they will all be contained in the finite extension $R[\alpha_1,\ldots,\alpha_m,\beta_1,\ldots,\beta_n]$ and hence be integral.
+	The idea is to force a factorization. To start off, we note that $g$ is monic, we can work in the ring
+	\[\frac{S[\alpha_1]}{(g(\alpha_1))},\]
+	which is a finite, free $S$-algebra generated by a power basis, from \autoref{prop:integralitydef}. In particular, there is an embedding $S\into S[\alpha_1]/(g(\alpha_1))$. The point of doing this is that $g(\alpha_1)=0$, so doing long division by $(x-\alpha_1)$ by hand gives
+	\[g(x)=(x-\alpha_1)g_1(x),\]
+	where $g_1(x)$ is again monic by comparing leading coefficients (which makes sense as long as the leading coefficients are not zero-divisors). In particular, if the leading term of $g(x)$ is $x^n$, then the leading term of $g_1(x)$ will have to be $x^{n-1}$ to be able to achieve $x^n$ and no further.
+	
+	Thus, $g_1(x)$ is monic of strictly smaller degree, so we can inductively continue this process to get
+	\[g(x)=(x-\alpha_1)(x-\alpha_2)\cdots(x-\alpha_n)\]
+	with coefficients in $S[\alpha_1,\ldots,\alpha_n]$.
+
+	Running the same process for $h$ but now starting with $S[\alpha_1,\ldots,\alpha_n]$, we see that we can factor
+	\[h(x)=(x-\beta_1)(x-\beta_2)\cdots(x-\beta_m)\]
+	with coefficients in $S[\alpha_1,\ldots,\alpha_n,\beta_1,\ldots,\beta_m]$.
+
+	The key trick, now, is to imagine working in $R[\alpha_1,\ldots,\alpha_n,\beta_1,\ldots,\beta_m]\subseteq S[\alpha_1,\ldots,\alpha_n,\beta_1,\ldots,\beta_m]$. The point is that
+	\[f(x)=g(x)h(x)=(x-\alpha_1)(x-\alpha_2)\cdots(x-\alpha_n)\cdot(x-\beta_1)(x-\beta_2)\cdots(x-\beta_m),\]
+	so each of the $\alpha_\bullet$s and $\beta_\bullet$s are in fact the roots of the monic polynomial $f(x)\in R[x]$ and therefore integral over $R$. In particular, $R[\alpha_1,\ldots,\alpha_n,\beta_1,\ldots,\beta_m]$ is generated by finitely many integral elements, so it is finite and hence integral by \autoref{lem:betterfinite}. So when we expand
+	\[g(x)=(x-\alpha_1)(x-\alpha_2)\cdots(x-\alpha_n)\qquad\text{and}\qquad h(x)=(x-\beta_1)(x-\beta_2)\cdots(x-\beta_m),\]
+	we see that their coefficients will live in $R[\alpha_1,\ldots,\alpha_n,\beta_1,\ldots,\beta_m]$ and so must be integral over $R$.
 \end{proof}
+And here is our application.
 \begin{corollary}
-	Fix $R$ a normal domain and $f(x)\in R[x]$ some monic polynomial. Then, if $f(x)$ is irreducible, then $f(x)$ is prime.
+	Fix $R$ a normal domain. Then, if $f(x)\in R[x]$ is a monic irreducible, then $f(x)$ is prime.
 \end{corollary}
 \begin{proof}
-	Fix $f(x)\in R[x]$. Then $f$ will remain irreducible in $K(R)$, which comes from the above proposition. In particular, we are promised an embedding
-	\[\frac{R[x]}{(f(x))}\into\frac{K[x]}{(f(x))},\]
-	so $R[x]/(f(x))$ is a subring of a field and hence an integral domain.
+	Fix $f(x)\in R[x]$. Then we claim $f$ will remain irreducible in $K(R)$, which comes from the above proposition: if we factor $f=g_0h_0$ in $K(R)$, comparing leading coefficients of $g_0$ and $h_0$ lets us force $g_0$ and $h_0$ to be monic. Namely, if the leading coefficient of $g_0$ is $ax^d$, and the leading coefficient of $h_0$ is $bx^e$, then the leading coefficient of $f$ is $abx^{d+e}$, which must be $ab=1\in R$. So by replacing
+	\[g=bg_0\qquad\text{and}h=ah_0,\]
+	we will have $gh=abg_0h_0=f$ while $g$ and $h$ are now monic.
+
+	The point of all this is that $f=gh$ with $g$ and $h$ monic force the coefficients of $g$ and $h$ to be integral by the above proposition. But $R$ is normal (!), so $g,h\in R[x]$, so with $f$ irreducible in $R[x]$, we have one of $g$ or $h$ a unit in $R[x]$ and hence in $K(R)[x]$. So $f$ is irreducible and hence prime in $K(R)[x]$, where we are using \autoref{rem:ufdimpliesirredisprime} on $K(R)[x]$.
+
+	So to finish, we create an embedding
+	\[\frac{R[x]}{(f(x))}\into\frac{K[x]}{(f(x))}\]
+	by lifting $R\into K(R)$ to $R[x]\to K(R)[x]/(f(x))$ and computing the kernel as $R[x]\cap f(x)K(R)[x]$, which we claim equals $f(x)R[x]$. If the kernel is in fact $f(x)R[x]$, then the above is an embedding, so we see that $R[x]/(f(x))$ embeds into an integral domain and hence is an integral domain.
+	
+	So we have left to show $R[x]\cap f(x)K(R)[x]=f(x)R[x]$. This will hold for arbitrary domains $R$. Indeed, if we have some $f(x)q_0(x)=g(x)\in R[x]\cap f(x)K(R)[x]$, then clearing deminators of $q(x)$ of lets us assume that
+	\[f(x)q(x)=c\cdot g(x)\]
+	for some $q\in R[x]$. We claim that $c\mid q(x)$, from which $q_0(x)\in R[x]$ will follow. Indeed, if $c\nmid q(x)$, then we expand
+	\[f(x)=\sum_{k=0}^Ka_kx^k\qquad\text{and}\qquad q(x)=\sum_{\ell=0}^Lb_\ell x^\ell\]
+	where $a_K=1$ and $b_L\ne0$, and we can write
+	\[f(x)q(x)=\sum_{n=0}^\infty\left(\sum_{k+\ell=n}a_kb_\ell\right)x^n\in(c).\]
+	We know show that $b_\ell\in(c)$ for each $\ell$ by inducting downwards. For example, the $n=K+L$ term above will have only the nonzero term $a_Kb_L=b_L\in(c)$. More generally speaking, if all terms above $b_\ell$ are in $(c)$, then we can look at the $n=K+\ell$ term
+	\[a_Kb_\ell+\sum_{i=0}^{K-1}a_i\underbrace{b_{K+\ell-i}}_{\in(c)}\in(c)\]
+	so that we see $b_\ell=a_Kb_\ell\in(c)$. So we are done.
 \end{proof}
 \begin{remark}
 	This generalizes the result that, if $R$ is a unique factorization domain, then $R[x]$ is also a unique factorization domain.

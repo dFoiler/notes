@@ -19,3 +19,5 @@ real x(real t)
 return cbrt(t*t);
 }
 draw(graph(x, y,-2,2));
+draw((-1,0) -- (2,0)); label("$x$", (2,0), E);
+draw((0,-2) -- (0,2)); label("$y$", (0,2), N);
