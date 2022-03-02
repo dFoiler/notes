@@ -1,0 +1,157 @@
+% !TEX root = ../notes.tex
+
+Welcome back everybody.
+
+\subsection{Proof}
+We are moving from ``semantic'' theory to more ``proof-based'' theory.
+
+Recall that we already had a way to determine if an argument $\varphi_1,\ldots\varphi_n\models\psi$ is by truth table: we simply check that the formula
+\[(\varphi_1\land\cdots\land\varphi_n)\to\psi\]
+is a tautology by truth table. However, this is pretty annoying when there are lots of propositions floating around and in fact impossible when there are infinitely many variables. So we will introduce the idea of formal proof.
+
+Here is an example of a formal proof for some simple fact.
+\begin{prop}
+	Fix $a$ and $b$ real numbers. If $0<a<b$, then $a^2<b^2$.
+\end{prop}
+\begin{proof}
+	We start by assuming $0<a<b$. Because $0<a$, we can multiply both sides of $a<b$ by $a$, which gives
+	\[a^2<ab.\]
+	Similarly, $0<a<b$ implies $0<b$, so we can multiply both sides of $a<b$ by $b$, so
+	\[ab<b^2.\]
+	It follows $a^2<ab$ and $ab<b^2$, so we do get $a^2<b^2$, which is what we wanted.
+\end{proof}
+\begin{remark}
+	In the above proof, we showed a statement of the form $\varphi\to\psi$ by assuming $\varphi$ and proving $\psi$.
+\end{remark}
+To formalize the above, we will diagram our deduction to make a ``sub-proof.'' This is called a Fitch-style formal proof, and they are pretty.
+\[
+	\fitchprf{} {
+		\subproof{ \pline[1.]{0<a<b} }{
+			\pline{~\vdots}\\
+			\pline[2.]{a^2<b^2}\\
+		}
+		\pline[3.]{(0<a<b)\lif a^2<b^2}[\lifi{1--3}]
+	}
+\]
+More generally speaking, a Fitch-style proof with premises $\varphi_1,\ldots,\varphi_n$ and proving $\psi$ looks like the following.
+\[
+	\fitchprf
+	{
+		\pline[1.]{\varphi_1} \\
+		\pline{\vdots} \\
+		\pline[$n$.]{\varphi_n} \\
+	}
+	{
+		\pline{\vdots} \\
+		\pline[$m$.]{\psi}
+	}
+\]
+The vertical dot empty spaces are to be filled with sub-proofs or formulae. Our goal is to put everything into this formal structure.
+
+Here is an example of a rule, which is what we used above.
+\begin{definition}[\texorpdfstring{$\to$}{to}Introduction]
+	If we have a sub-proof with assumption $\alpha$ and concludes $\beta$, then we can pop out of the sub-proof and add $\alpha\to\beta$ with the rule $\to$ with the named lines.
+\end{definition}
+This looks like the following.
+\[
+	\fitchprf{} {
+		\subproof{ \pline[$i$.]{\alpha} }{
+			\pline{~\vdots}\\
+			\pline[$j$.]{\beta}\\
+		}
+		\pline{~\vdots}\\
+		\pline[$k$.]{\alpha\to\beta}[\lifi{$i$--$j$}]
+	}
+\]
+
+\subsection{Elimination of Conditionals}
+We can use conditionals to prove other conditionals. For example, suppose we have proven the following lemma.
+\begin{lemma}
+	Fix $a$ and $b$ real numbers. If $0<a<b$, then $a^2<b^2$.
+\end{lemma}
+Then we can prove the following.
+\begin{lemma} \label{lem:basicmath}
+	Fix $c$ and $d$ real numbers. If $0<d<c$, then $(c-d)^2<c^2$.
+\end{lemma}
+\begin{proof}
+	As before, if $0<c-d<c$, then $(c-d)^2<c^2$ by the lemma. However, $d<c$ implies $0<c-d$, and $0<d$ then gives $0<c-d<c$. So it does follow $(c-d)^2<c^2$.
+\end{proof}
+This rule is proving the antecedent from the consequent.
+\begin{definition}[\texorpdfstring{$\to$}{to}{Eliminatino}]
+	If we have shown $\alpha\to\beta$ in some line $i$ and have shown $\alpha$ in some line $j$, then we can conclude $\beta$ from $\to$ \textit{elimination}, citing $i$ and $j$.
+\end{definition}
+This looks like the following.
+\[
+	\fitchprf{} {
+		\pline[$i$.]{\alpha\to\beta} \\
+		\pline{\vdots} \\
+		\pline[$j$.]{\beta} \\
+		\pline{\vdots} \\
+		\pline[$k$.]{\alpha\to\beta}[\life{$i$,$j$}]
+	}
+\]
+We can even reverse these as follows.
+\[
+	\fitchprf{} {
+		\pline[$i$.]{\beta} \\
+		\pline{\vdots} \\
+		\pline[$j$.]{\alpha\to\beta} \\
+		\pline{\vdots} \\
+		\pline[$k$.]{\alpha\to\beta}[\life{$i$,$j$}]
+	}
+\]
+The point is to get the computer to be able to check this.
+\begin{example}
+	This sort of reasoning is pretty intuitive: if we read ``If you received Form 1098T, you may be eligible for a tax credit or deduction'' and then we have received Form 1098T, then we can conclude that we may eligible. Here is a formalization.
+	\[
+		\fitchprf{} {
+			\pline[1.]{\text{received 1098T}\to\text{eligible for tax credit}} \\
+			\pline[2.]{\text{received 1098T}} \\
+			\pline[3.]{\text{eligible for tax credit}}[\life{1,2}]
+		}
+	\]
+\end{example}
+
+\subsection{Reiteration}
+Let's return to the proof of \autoref{lem:basicmath}. It used both $\to$ introduction and elimination. It looked like the following.
+\[
+	\fitchprf{} {
+		\pline[1.]{0<c-d<c\to(c-d)^2<c^2} \\
+		\subproof {\pline[2.]{0<d<c}}
+		{
+			\pline[3.]{\vdots} \\
+			\pline[4.]{0<c-d<c} \\
+			\pline[5.]{0<c-d<c\to(c-d)^2<c^2}[\reit{1}] \\
+			\pline[6.]{(c-d)^2<c^2}[\life{4}{5}]
+		}
+		\pline[7.]{0<d<c\to(c-d)^2<c^2}[\lifi{2--6}]
+	} \tag{$*$}\label{eq:someproof}
+\]
+The point of our discussion is our use of the reiteration rule on line 5. Logically speaking, we note that the sub-proof technically lives in a different world than the rest of the outer proof, so we have a rule that says we can pull from the outside world into a sub-proof.
+
+Here is our formal definition.
+\begin{definition}[Open]
+	A subproof is \textit{open} starting from its first assumption until the conclusion of the subproof.
+\end{definition}
+\begin{definition}[Directly]
+	A formula $\varphi$ occurs \textit{directly} in a subproof if and only if $\varphi$ occurs in the main column of $S$.
+\end{definition}
+\begin{example}
+	In \autoref{eq:someproof}, the lines 2 through 6 are open in the subproof.
+\end{example}
+\begin{definition}[Reiteration]
+	The \textit{reiteration} tells us that we may add $\varphi$ to any subproof currently in the subproof.
+\end{definition}
+\begin{nex}
+	The following is an incorrect use of reiteration.
+	\[
+		\fitchprf{} {
+			\subproof {\pline[1.]{\text{We are going to the party}}}
+			{
+				\pline[2.]{\text{We will have a good time.}}
+			}
+			\pline[3.]{\text{We will have a good time.}}
+		}
+	\]
+	Namely, this line does not live in the sub-proof, so we cannot pull it out.
+\end{nex}
