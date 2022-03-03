@@ -186,25 +186,78 @@ We will be briefer with our next example because it is similar.
 \end{example}
 
 \subsection{Initial Forms}
-We have the following warning.
+We begin with the following warning.
 \begin{warn}
-	There is no natural ring homomorphism $R\to\op{gr}_IR$.
+	There is no natural ring homomorphism $R\to\op{gr}_{\mathcal J}R$.
 \end{warn}
-However, there is a natural map of sets. Explicitly, for our filtration
-\[R\supseteq I\supseteq I^2\supseteq\cdots,\]
-we want to find an element of the associated graded ring. In analogy to picking up the ``initial'' nonzero homogeneous part of a polynomial, we pick up $f\in R$ and define
-\[\op{in}f=f+I^{n+1},\]
-where $n$ is the largest possible such that $f\in I^n$. Of course, there is something of a problem when $f$ lives in all of $I^n$, in which case we set $\op{in}f:=0$.
+This is sad because we would like to use the associated graded ring to understand the original ring, so not having a natural map significantly hinders our ability.
 
-Let's think about how this plays with our ring structure. Taking $f,g\in R$, if $R$ is a domain, then we get that $\op{in}(fg)=\op{in}(f)\op{in}(g)$. However, if $f$ and $g$ are zero-divisors, then we might be in trouble when $fg=0$.
+However, there is a natural map of sets.
+\begin{definition}[Initial form]
+	Fix $R$ a ring and $\mathcal J$ a filtration notated
+	\[R=I_0\supseteq I_1\supseteq I_2\supseteq\cdots.\]
+	Then, fix $f\in R$, and we define the \textit{initial form of $f$} $\op{in}f\in\op{gr}_IR$ as follows.
+	\begin{itemize}
+		\item If $f\in I_p$ for all $p$, then $\op{in}f=0$.
+		\item If $f\in I_p$ but $f\notin I_{p+1}$, then $\op{in}f=[f]_{I_{p+1}}$.
+	\end{itemize}
+	Intuitively, $\op{in}$ extracts the smallest ``homogeneous'' part of $f$ to put in $\op{gr}_IR$; we return $0$ when this is impossible.
+\end{definition}
+\begin{remark}[Nir]
+	To see that this is not a ring homomorphism, we see that it is not additive. Consider $R=k[x]$ given the $(x)$-adic filtration.
+	\begin{itemize}
+		\item Take $f=x$ so that $\op{in}f=[x]_{x^2}$.
+		\item Take $g=x^2$ so that $\op{in}g=\left[x^2\right]_{x^3}$.
+		\item Then $f+g=x+x^2$ so that $\op{in}(f+g)=[x]_{x^2}$.
+	\end{itemize}
+	Notably, $\op{in}f+\op{in}g$ is not even homogeneous, but the image of $\op{in}$ always is. In general, we will have $\op{in}f+\op{in}g\in\{\op{in}f,\op{in}g,\op{in}(f+g)\}$ based off of if $f$ and $g$ live in the same part of the filtration; we will prove this shortly.
+\end{remark}
+In fact, $\op{in}$ need not even be multiplicative, though it is almost multiplicative.
+\begin{proposition}
+	Fix $R$ a ring and $\mathcal J$ a filtration
+	\[R=I_0\supseteq I_1\supseteq I_2\supseteq\cdots.\]
+	Then, given $f,g\in R$, we have $\op{in}f\cdot\op{in}g\in\{\op{in}(fg),0\}$. If $\op{gr}_\mathcal JR$ is an integral domain, then $\op{in}f\cdot\op{in}g=\op{in}(fg)$.
+\end{proposition}
+\begin{proof}
+	Very quickly, suppose that one of $f$ or $g$ lives in $I_p$ for all $P$. Without loss of generality, say that $f\in I_p$ for all $I_p$, so $fg\in I_p\in I_p$ for all $p$, so
+	\[\op{in}(fg)=0=\op{in}f=\cdot\op{in}f\cdot\op{in}g,\]
+	dealing with the case of $\op{gr}_\mathcal JR$ an integral domain automatically as well.
 
-And now for some examples.
+	Otherwise, we have $f\in I_p\setminus I_{p+1}$ and $g\in I_q\setminus I_{q+1}$ for some $p$ and $q$ so that $\op{in}f=[f]_{I_{p+1}}$ and $\op{in}g=[g]_{I_{q+1}}$. Because $\mathcal J$ is a filtration, we see that
+	\[fg\in I_pI_q\subseteq I_{p+q}.\]
+	We now have two cases.
+	\begin{itemize}
+		\item If $fg\notin I_{p+q+1}$, then $\op{in}(fg)=[fg]_{I_{p+q+1}}=[f]_{I_{p+1}}\cdot[g]_{I_{q+1}}=\op{in}f\cdot\op{in}g$.
+		\item If $fg\in I_{p+q+1}$, then $\op{in}f\cdot\op{in}g=[fg]_{I_{p+q+1}}=0$.
+	\end{itemize}
+	The above casework finishes the proof of the general case. When $\op{gr}_\mathcal JR$ is an integral domain, we note that $\op{in}f,\op{in}g\ne0$ disallows the second case, so we will always have $\op{in}f\cdot\op{in}g=\op{in}(fg)$.
+\end{proof}
+
+\subsection{Tangent Cone} \todo{Figure out what is happening here}
+It turns out that the initial form has a nice geometric application.
 \begin{example}
 	Fix $X\subseteq\AA^n(k)$ a Zariski closed set with $X=Z(J)$ such that $J\subseteq k[x_1,\ldots,x_n]=:R$ is an ideal. Taking $p\in X$ to correspond to a maximal ideal $\mf m\subseteq A(X)$, we claim that
 	\[\op{gr}_IR\]
 	is the ring corresponding to the ``tangent cone to $p$ at $X$.''
 \end{example}
-As an example, consider the curve $y^2=x^2(x+1)$, which splits at $0$. % \todo{make diagram}
+As an example, consider the curve $y^2=x^2(x+1)$, which splits at $0$. Here is the image.
+\begin{center}
+	\begin{asy}
+		unitsize(1cm);
+		import graph;
+		real x(real t)
+		{
+			return t*t-1;
+		}
+		real y(real t)
+		{
+			return t*(t*t-1);
+		}
+		draw(graph(x, y,-1.521,1.521));
+		draw((-1.5,0) -- (2,0)); label("$x$", (2,0), E);
+		draw((0,-2) -- (0,2)); label("$y$", (0,2), N);
+	\end{asy}
+\end{center}
 At a point which is not $(0,0)$, we will have a line and therefore will expect to get a polynomial ring.
 
 However, let's focus on what happens at $(0,0)$. Analytically, we find that
