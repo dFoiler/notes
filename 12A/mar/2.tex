@@ -24,28 +24,27 @@ Here is an example of a formal proof for some simple fact.
 	In the above proof, we showed a statement of the form $\varphi\to\psi$ by assuming $\varphi$ and proving $\psi$.
 \end{remark}
 To formalize the above, we will diagram our deduction to make a ``sub-proof.'' This is called a Fitch-style formal proof, and they are pretty.
-\[
-	\fitchprf{} {
-		\subproof{ \pline[1.]{0<a<b} }{
-			\pline{~\vdots}\\
-			\pline[2.]{a^2<b^2}\\
-		}
-		\pline[3.]{(0<a<b)\lif a^2<b^2}[\lifi{1--3}]
-	}
-\]
+\begin{align*}
+	\begin{nd}
+		\hypo{}{}
+		\open[]
+			\hypo{start}{0<a<b}
+			\have[\vdots]{dots}{\vdots}
+			\have[n]{conclude}{a^2<b^2}
+		\close
+		\have[n+1]{done}{(0<a<b)\to a^2<b^2} \by{$\to$Intro}{start,conclude}
+	\end{nd}
+\end{align*}
 More generally speaking, a Fitch-style proof with premises $\varphi_1,\ldots,\varphi_n$ and proving $\psi$ looks like the following.
-\[
-	\fitchprf
-	{
-		\pline[1.]{\varphi_1} \\
-		\pline{\vdots} \\
-		\pline[$n$.]{\varphi_n} \\
-	}
-	{
-		\pline{\vdots} \\
-		\pline[$m$.]{\psi}
-	}
-\]
+\begin{align*}
+	\begin{nd}
+		\hypo{1}{\varphi_1}
+		\hypo[\vdots]{dots}{\vdots}
+		\hypo[n]{2}{\varphi_n}
+		\have[\vdots]{}{\vdots}
+		\have[m]{3}{\psi}
+	\end{nd}
+\end{align*}
 The vertical dot empty spaces are to be filled with sub-proofs or formulae. Our goal is to put everything into this formal structure.
 
 Here is an example of a rule, which is what we used above.
@@ -53,16 +52,18 @@ Here is an example of a rule, which is what we used above.
 	If we have a sub-proof with assumption $\alpha$ and concludes $\beta$, then we can pop out of the sub-proof and add $\alpha\to\beta$ with the rule $\to$ with the named lines.
 \end{definition}
 This looks like the following.
-\[
-	\fitchprf{} {
-		\subproof{ \pline[$i$.]{\alpha} }{
-			\pline{~\vdots}\\
-			\pline[$j$.]{\beta}\\
-		}
-		\pline{~\vdots}\\
-		\pline[$k$.]{\alpha\to\beta}[\lifi{$i$--$j$}]
-	}
-\]
+\begin{align*}
+	\begin{nd}
+		\hypo[~]{}{}
+		\open[]
+			\hypo[i]{start}{\varphi}
+			\have[\vdots]{dots}{\vdots}
+			\have[j]{end}{\psi}
+		\close
+		\have[\vdots]{moredots}{\vdots}
+		\have[k]{last}{\varphi\to\psi} \by{$\to$Intro}{start,end}
+	\end{nd}
+\end{align*}
 
 \subsection{Elimination of Conditionals}
 We can use conditionals to prove other conditionals. For example, suppose we have proven the following lemma.
@@ -77,56 +78,74 @@ Then we can prove the following.
 	As before, if $0<c-d<c$, then $(c-d)^2<c^2$ by the lemma. However, $d<c$ implies $0<c-d$, and $0<d$ then gives $0<c-d<c$. So it does follow $(c-d)^2<c^2$.
 \end{proof}
 This rule is proving the antecedent from the consequent.
-\begin{definition}[\texorpdfstring{$\to$}{to}{Eliminatino}]
+\begin{definition}[\texorpdfstring{$\to$}{to}{Elimination}]
 	If we have shown $\alpha\to\beta$ in some line $i$ and have shown $\alpha$ in some line $j$, then we can conclude $\beta$ from $\to$ \textit{elimination}, citing $i$ and $j$.
 \end{definition}
 This looks like the following.
-\[
-	\fitchprf{} {
-		\pline[$i$.]{\alpha\to\beta} \\
-		\pline{\vdots} \\
-		\pline[$j$.]{\beta} \\
-		\pline{\vdots} \\
-		\pline[$k$.]{\alpha\to\beta}[\life{$i$,$j$}]
-	}
-\]
+\begin{align*}
+	\begin{nd}
+		\hypo[~]{}{}
+		\have[\vdots]{}{\vdots}
+		\have[i]{conditional}{\alpha\to\beta}
+		\have[\vdots]{}{\vdots}
+		\have[j]{hypothesis}{\alpha}
+		\have[\vdots]{}{\vdots}
+		\have[k]{elim}{\beta} \by{$\to$Elim}{conditional,hypothesis}
+	\end{nd}
+\end{align*}
 We can even reverse these as follows.
-\[
-	\fitchprf{} {
-		\pline[$i$.]{\beta} \\
-		\pline{\vdots} \\
-		\pline[$j$.]{\alpha\to\beta} \\
-		\pline{\vdots} \\
-		\pline[$k$.]{\alpha\to\beta}[\life{$i$,$j$}]
-	}
-\]
+\begin{align*}
+	\begin{nd}
+		\hypo[~]{}{}
+		\have[\vdots]{}{\vdots}
+		\have[i]{hypothesis}{\alpha}
+		\have[\vdots]{}{\vdots}
+		\have[j]{conditional}{\alpha\to\beta}
+		\have[\vdots]{}{\vdots}
+		\have[k]{elim}{\beta} \by{$\to$Elim}{conditional,hypothesis}
+	\end{nd}
+\end{align*}
 The point is to get the computer to be able to check this.
 \begin{example}
 	This sort of reasoning is pretty intuitive: if we read ``If you received Form 1098T, you may be eligible for a tax credit or deduction'' and then we have received Form 1098T, then we can conclude that we may eligible. Here is a formalization.
-	\[
-		\fitchprf{} {
-			\pline[1.]{\text{received 1098T}\to\text{eligible for tax credit}} \\
-			\pline[2.]{\text{received 1098T}} \\
-			\pline[3.]{\text{eligible for tax credit}}[\life{1,2}]
-		}
-	\]
+	\begin{align*}
+		\begin{nd}
+			\hypo{}{}
+			\have{hypothesis}{\text{received 1098T}\to\text{may be eligible for tax credit}}
+			\have{conditional}{\text{received 1098T}}
+			\have{elim}{\text{may be eligible for tax credit}} \by{$\to$Elim}{conditional,hypothesis}
+		\end{nd}
+	\end{align*}
 \end{example}
 
 \subsection{Reiteration}
 Let's return to the proof of \autoref{lem:basicmath}. It used both $\to$ introduction and elimination. It looked like the following.
-\[
-	\fitchprf{} {
-		\pline[1.]{0<c-d<c\to(c-d)^2<c^2} \\
-		\subproof {\pline[2.]{0<d<c}}
-		{
-			\pline[3.]{\vdots} \\
-			\pline[4.]{0<c-d<c} \\
-			\pline[5.]{0<c-d<c\to(c-d)^2<c^2}[\reit{1}] \\
-			\pline[6.]{(c-d)^2<c^2}[\life{4}{5}]
-		}
-		\pline[7.]{0<d<c\to(c-d)^2<c^2}[\lifi{2--6}]
-	} \tag{$*$}\label{eq:someproof}
-\]
+% \[
+% 	\fitchprf{} {
+% 		\pline[1.]{0<c-d<c\to(c-d)^2<c^2} \\
+% 		\subproof {\pline[2.]{0<d<c}}
+% 		{
+% 			\pline[3.]{\vdots} \\
+% 			\pline[4.]{0<c-d<c} \\
+% 			\pline[5.]{0<c-d<c\to(c-d)^2<c^2}[\reit{1}] \\
+% 			\pline[6.]{(c-d)^2<c^2}[\life{4}{5}]
+% 		}
+% 		\pline[7.]{0<d<c\to(c-d)^2<c^2}[\lifi{2--6}]
+% 	} \tag{$*$}\label{eq:someproof}
+% \]
+\begin{align*}
+	\begin{nd}
+		\hypo{}{}
+		\have{lemma}{0<c-d<c\to(c-d)^2<c^2}
+		\open[]
+			\hypo{hypothesis}{0<d<c}
+			\have[\vdots]{dots}{0<c-d<c}
+			\have[n]{reiterated}{0<c-d<c\to(c-d)^2<c^2} \by{Reit}{lemma}
+			\have{done}{(c-d)^2<c^2} \by{$\to$Elim}{hypothesis,lemma}
+		\close
+		\have{}{0<d<c\to(c-d)^2<c^2} \by{$\to$Intro}{hypothesis,done}
+	\end{nd} \tag{$*$}\label{eq:someproof}
+\end{align*}
 The point of our discussion is our use of the reiteration rule on line 5. Logically speaking, we note that the sub-proof technically lives in a different world than the rest of the outer proof, so we have a rule that says we can pull from the outside world into a sub-proof.
 
 Here is our formal definition.
@@ -144,14 +163,24 @@ Here is our formal definition.
 \end{definition}
 \begin{nex}
 	The following is an incorrect use of reiteration.
-	\[
-		\fitchprf{} {
-			\subproof {\pline[1.]{\text{We are going to the party}}}
-			{
-				\pline[2.]{\text{We will have a good time.}}
-			}
-			\pline[3.]{\text{We will have a good time.}}
-		}
-	\]
+	% \[
+	% 	\fitchprf{} {
+	% 		\subproof {\pline[1.]{\text{We are going to the party}}}
+	% 		{
+	% 			\pline[2.]{\text{We will have a good time.}}
+	% 		}
+	% 		\pline[3.]{\text{We will have a good time.}}
+	% 	}
+	% \]
+	\begin{align*}
+		\begin{nd}
+			\hypo{}{}
+			\open[]
+				\hypo{}{\text{We are going to the party.}}
+				\have{goodtime}{\text{We will have a good time.}}
+			\close
+			\have{}{\text{We will have a good time.}} \by{Reit}{goodtime}
+		\end{nd}
+	\end{align*}
 	Namely, this line does not live in the sub-proof, so we cannot pull it out.
 \end{nex}
