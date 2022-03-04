@@ -1,0 +1,335 @@
+% !TEX root = ../notes.tex
+
+Welcome back everybody.
+
+\subsection{Projective Resolutions}
+Today we will discuss homological methods to determine flatness. For this, we will need to actually discuss homological methods.
+\begin{definition}[Projective resolution]
+	Given an $R$-module $M$ a \textit{projective resolution of $M$} is a complex $P$ of projective modules such that
+	\[\cdots\to P_2\to P_1\to P_0\to M\to 0\]
+	is exact.
+\end{definition}
+\begin{remark}
+	Alternatively, we can just look at the projective complex
+	\[\cdots\to P_2\to P_1\to P_0\to 0\]
+	and ask for $H_0(P)=M$.
+\end{remark}
+We would for our modules to have projective resolutions. Indeed, this is possible.
+\begin{lemma} \label{lem:enoughprojectives}
+	Every $R$-module $M$ has a free resolution.
+\end{lemma}
+\begin{proof}
+	Given any module $M$, we see that we can construct
+	\[F_0:=\bigoplus_{m\in M}Rm\]
+	to surject onto $M$ by some map $\del_0:M_0\to M$. Repeating the process, we can create a free module $F_1$ which will surject onto $\ker\del_1$ and then continue the process to create $F_2$ and so on.
+\end{proof}
+\begin{example}
+	Fix $R:=k[x]/\left(x^2\right)$. Then $k$ is an $R$-module, where the $x$ acts by $0$. To start our projective resolution, we note we have a surjection
+	\[R\to k\to 0\]
+	with kernel $(x)$. So we can project onto this kernel $x$ by $R\stackrel x\to R$, which will again have kernel $(x)$, and so on. So we see that we can create a free resolution
+	\[\cdots\stackrel x\to R\stackrel x\to R\stackrel x\to R\to F\to 0.\]
+\end{example}
+One complaint is that our proof of \autoref{lem:enoughprojectives} did not produce a unique projective resolution. However, projective resolutions are unique in the following way.
+\begin{lemma} \label{lem:uniqprojresolution}
+	Suppose that $P$ and $Q$ are projective resolutions for an $R$-module $M$. Then there are chain morphisms $\alpha:P\to Q$ and $\beta:Q\to B$ such that $\alpha\beta$ is homotopically equivalent to $\id_Q$ and $\beta\alpha$ is homotopically equivalent to $\id_P$.
+\end{lemma}
+\begin{proof}
+	We sketch the proof. We will construct one of the maps $\alpha$. Here is our starting image.
+	% https://q.uiver.app/?q=WzAsMTAsWzMsMCwiTSJdLFszLDEsIk0iXSxbNCwwLCIwIl0sWzQsMSwiMCJdLFsyLDAsIlBfMCJdLFsyLDEsIlFfMCJdLFsxLDAsIlBfMSJdLFsxLDEsIlFfMSJdLFswLDAsIlxcY2RvdHMiXSxbMCwxLCJcXGNkb3RzIl0sWzgsNl0sWzksN10sWzcsNV0sWzUsMV0sWzEsM10sWzYsNF0sWzQsMF0sWzAsMl0sWzAsMSwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+	\[\begin{tikzcd}
+		\cdots & {P_1} & {P_0} & M & 0 \\
+		\cdots & {Q_1} & {Q_0} & M & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[Rightarrow, no head, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	Now, because $P_0$ is projective, the fact that the map $M\to M$ is surjective allows us to induce a map $P_0\to Q_0$, as follows.
+	% https://q.uiver.app/?q=WzAsMTAsWzMsMCwiTSJdLFszLDEsIk0iXSxbNCwwLCIwIl0sWzQsMSwiMCJdLFsyLDAsIlBfMCJdLFsyLDEsIlFfMCJdLFsxLDAsIlBfMSJdLFsxLDEsIlFfMSJdLFswLDAsIlxcY2RvdHMiXSxbMCwxLCJcXGNkb3RzIl0sWzgsNl0sWzksN10sWzcsNV0sWzUsMV0sWzEsM10sWzYsNF0sWzQsMF0sWzAsMl0sWzAsMSwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw1XV0=
+	\[\begin{tikzcd}
+		\cdots & {P_1} & {P_0} & M & 0 \\
+		\cdots & {Q_1} & {Q_0} & M & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[Rightarrow, no head, from=1-4, to=2-4]
+		\arrow[from=1-3, to=2-3]
+	\end{tikzcd}\]
+	To construct our map $F_1\to G_1$, we note that the map $P_0\to Q_0$ by commutativity will induce a diagram that looks like the following.
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJcXGtlclxcZGVsXzAiXSxbMSwxLCJcXGtlclxcZGVsXzAnIl0sWzAsMCwiUF8xIl0sWzAsMSwiUV8xIl0sWzIsMF0sWzMsMV0sWzAsMSwiIiwxLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV1d
+	\[\begin{tikzcd}
+		{P_1} & {\ker\del_0} \\
+		{Q_1} & {\ker\del_0'}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[two heads, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Then because $P_1$ is projective, we once more get a map $P_1\to Q_1$. This process can be continued inductively to build a map $P\to Q$.
+
+	We now show the second part. By symmetry, it suffices to show that $\beta\alpha-\id_P$ is homotopically equivalent to $0$. Here is our image.
+	% https://q.uiver.app/?q=WzAsMTAsWzMsMCwiTSJdLFszLDEsIk0iXSxbMiwwLCJQXzAiXSxbMiwxLCJQXzAiXSxbMSwwLCJQXzEiXSxbMSwxLCJQXzEiXSxbMCwwLCJcXGNkb3RzIl0sWzAsMSwiXFxjZG90cyJdLFs0LDAsIjAiXSxbNCwxLCIwIl0sWzAsMSwiMCJdLFs2LDRdLFs0LDJdLFsyLDBdLFs3LDVdLFs1LDNdLFszLDFdLFsxLDldLFswLDhdXQ==
+	\[\begin{tikzcd}
+		\cdots & {P_1} & {P_0} & M & 0 \\
+		\cdots & {P_1} & {P_0} & M & 0
+		\arrow["0", from=1-4, to=2-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=1-4, to=1-5]
+	\end{tikzcd}\]
+	By the commutativity of the diagram, we see that $F_1\to F_0$ will map onto the kernel at the bottom, so we can extend the map $F_0\to F_0$ vertically to map $F_0\to F_1$ diagonally. This will be our chain homotopy.
+\end{proof}
+In fact, we can make our projective resolutions behave nicely with short exact sequences.
+\begin{lemma}
+	Suppose that we have a short exact sequence of $R$-modules by
+	\[0\to M'\to M\to M''\to 0.\]
+	Further, give $M'$ and $M''$ projective resolutions $P'$ and $P''$. Then we can form a projective resolution for $M$ by $P'\oplus P''$ making
+	\[0\to P'\to P\to P''\to 0\]
+	a short exact sequence of complexes.
+\end{lemma}
+\begin{proof}
+	This is a little technical. By the same sort of inductive kernel argument, it will suffice to only construct our map $P_0:=P_0'\oplus P_0''$ to $M$.
+	% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIk0nIl0sWzIsMCwiTSJdLFszLDAsIk0nJyJdLFs0LDAsIjAiXSxbMSwxLCJQXzAnIl0sWzIsMSwiUF8wJ1xcb3BsdXMgUF8wJyciXSxbMywxLCJQXzAnJyJdLFswLDEsIjAiXSxbNCwxLCIwIl0sWzUsMV0sWzcsM10sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzgsNV0sWzUsNl0sWzYsN10sWzcsOV1d
+	\[\begin{tikzcd}
+		0 & {M'} & M & {M''} & 0 \\
+		0 & {P_0'} & {P_0'\oplus P_0''} & {P_0''} & 0
+		\arrow[from=2-2, to=1-2]
+		\arrow[from=2-4, to=1-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	Now, we have a map $P_0'\to M$ by composition, and we have a map $P_0''\to M$ because $P_0''$ is projective. These two maps build together to a map $P_0'\oplus P_0''\to M$, which works.
+\end{proof}
+
+\subsection{Left-Derived Functors}
+For left-derived functors, we need to start with a right-exact functor $\Phi$.
+\begin{example}
+	In the discussion that follows, keeping $\Phi:=-\otimes_RM$ in mind is not a bad idea.
+\end{example}
+We define a family of functors $\{L_i\Phi\}_{i\in\NN}$ as follows. We start with some projective resolution of $M$ by
+\[\cdots\to P_2\to P_1\to P_0\to M\to 0.\]
+Applying $\Phi$, we get a new complex by
+\[\cdots\to\Phi P_2\to\Phi P_1\to\Phi P_0\to M\to 0.\]
+This complex need not be exact because $\Phi$ is not exact, but it is a complex, which is something that we can check. To test the exactness, we have the following.
+\begin{definition}[Left-derived functor]
+	In the construction above, we define $L_i\Phi:=H_i(\Phi P)$ to be the $i$th homology group of the complex $\Phi P$.
+\end{definition}
+This definition is well-defined by \autoref{lem:uniqprojresolution}. Here is the formal statement.
+\begin{lemma}
+	The left-derived functor $L_i\Phi$ does not depend on the chosen projective resolution of $M$.
+\end{lemma}
+\begin{proof}
+	Indeed, any two projective resolutions $P$ and $Q$ for $M$ will have morphisms $\alpha:P\to Q$ and $\beta:Q\to P$ such that
+	\[\beta\alpha-\id_Q\sim0.\]
+	Applying $\Phi$, we see that
+	\[\Phi(\beta)\Phi(\alpha)-\Phi(\id_Q)\sim0,\]
+	so we get isomorphisms of homology groups.
+\end{proof}
+Here are some more nice properties.
+\begin{lemma} \label{lem:lzero}
+	We have that $L_0\Phi(M)\simeq\Phi M$.
+\end{lemma}
+\begin{proof}
+	The point is that $\Phi$ is right-exact. Indeed, we send the right-exact sequence
+	\[P_1\to P_0\to M\to 0\]
+	to
+	\[\Phi P_1\to\Phi P_0\to\Phi M\to 0.\]
+	In particular, $\Phi M=H_0(\Phi P)=\coker(\Phi P_1\to\Phi P_0)=H_0(\Phi P)$, which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:leftderivles}
+	Suppose
+	\[0\to M'\to M\to M''\to 0\]
+	an exact sequence of $R$-modules. Then there is a long exact sequence of left-derived functors, given by
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiTF9pXFxQaGkoTScpIl0sWzIsMCwiTF9pXFxQaGkoTSkiXSxbMywwLCJMX2lcXFBoaShNJycpIl0sWzEsMSwiTF97aS0xfVxcUGhpKE0nKSJdLFsyLDEsIkxfe2ktMX1cXFBoaShNKSJdLFszLDEsIkxfe2ktMX1cXFBoaShNJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs0LDVdLFs1LDZdLFs2LDddXQ==
+	\[\begin{tikzcd}
+		\cdots & {L_i\Phi(M')} & {L_i\Phi(M)} & {L_i\Phi(M'')} \\
+		& {L_{i-1}\Phi(M')} & {L_{i-1}\Phi(M)} & {L_{i-1}\Phi(M'')} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+\end{lemma}
+\begin{proof}
+	Choose projective resolutions $P'$ and $P$ and $P''$ for $M'$ and $M$ and $M''$ so that we have a short exact sequence
+	\[0\to P'\to P\to P''\to 0\]
+	of projective resolutions. Then this gives rise to a long exact sequence of homology, which is what we wanted.
+\end{proof}
+\begin{remark}
+	There is an analogous theory for right-derived functors for left-exact functors by simply flipping all the arrows. For example, instead of using projective resolutions, we use injective resolutions. The only technicality is showing that all modules can be embedded into an injective module, which is not easy.
+\end{remark}
+
+\subsection{The Functor \texorpdfstring{$\op{Tor}$}{Tor}}
+We have the following definition.
+\begin{defi}[\texorpdfstring{$\op{Tor}$}{Tor}]
+	Fix $M$ an $R$-module. Then the functor $M\otimes_R-$ is a right-exact functor, so we define $\op{Tor}_i^R(M,N):=L_i(M\otimes_RN)$.
+\end{defi}
+In practice, what happens is that we take a projective resolution $P$ of $M$ written as
+\[\cdots\to P_1\to P_0\to M\to 0.\]
+Then we apply the functor $N\otimes_R-$ to get
+\[\cdots\to N\otimes_RP_1\to N\otimes_RP_0\to N\otimes_RN\to0,\]
+and $\op{Tor}_i^R(M,N)$ will be our $i$th homology group. For example, \autoref{lem:lzero} tells us that
+\[\op{Tor}_0^R(M,N)\cong M\otimes_RN.\]
+This is symmetric, which is perhaps unsurprising.
+\begin{remark}
+	It is more generally true that $\op{Tor}_i^R(M,N)\simeq\op{Tor}_i^R(N,M)$, but we will not use this. Its proof of somewhat more advanced.
+\end{remark}
+Let's continue collecting properties.
+\begin{lemma}
+	Fix $R$ a Noetherian ring and $M,N$ finitely generated $R$-modules. Then $\op{Tor}_i^R(M,N)$ is finitely generated for all $i$.
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{lemma}
+	If we have a short exact sequence
+	\[0\to M'\to M\to M''\to 0,\]
+	then we have a long exact sequence of $\op{Tor}$.
+\end{lemma}
+\begin{proof}
+	Use \autoref{lem:leftderivles}.
+\end{proof}
+\begin{lemma}
+	If $F$ is a free $R$-module, then $\op{Tor}_i^R(F,N)\simeq0$ for all $i>0$.
+\end{lemma}
+\begin{proof}
+	The projective resolution for $F$ is almost trivial and in particular trivial for $i>0$.
+\end{proof}
+\begin{lemma}
+	Fix $S$ a flat $R$-algebra. Then
+	\[S\otimes_R\op{Tor}_i^R(M,N)\simeq\op{Tor}_i^S(S\otimes_RM,S\otimes_RN).\]
+\end{lemma}
+\begin{proof}
+	Build a projective resolution by hand and apply the definitions.
+\end{proof}
+Let's see an application.
+\begin{exe}
+	Fix $a\in R$ an element which is not a zero-divisor. Further, fix $M$ an $R$-module. Then we compute $\op{Tor}_i^R(R/(a),M)$.
+\end{exe}
+\begin{proof}
+	The main point is to construct a projective resolution for $R/(a)$. Namely, we take
+	\[\cdots\to 0\to 0\to R\stackrel a\to R\to R/(a)\to 0.\]
+	Tensoring with $M$, we get the complex
+	\[\cdots0\to 0\to M\stackrel a\to M\to 0.\]
+	In particular, we vanish for $i>2$, so we have left to compute for $i=0$ and $i=1$.
+	\begin{itemize}
+		\item We see $\op{Tor}_0^R(R/(a),M)\cong R/(a)\otimes_RM\cong M/aM$.
+		\item We see $\op{Tor}_1^R(R/(a),M)=\ker(M\stackrel a\to M)=\{m\in M:am=0\}$ from the above complex.
+	\end{itemize}
+	The above computation finishes the proof.
+\end{proof}
+
+\subsection{Flatness via \texorpdfstring{$\op{Tor}$}{Tor}}
+Here is our main result for today.
+\begin{theorem}
+	Fix $M$ an $R$-module.
+	\begin{listalph}
+		\item We have $M$ is flat if and only if $\op{Tor}_1^R(M,N)=0$ for any $R$-module $N$.
+		\item If $M$ is flat, then $\op{Tor}_i^R(M,N)=0$ for all $i\ge0$ and $R$-modules $N$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We start with (a). In one direction, suppose that $\op{Tor}_1^R(M,N)=0$ for all $R$-modules $N$. Then we note we have, for any short exact sequence
+	\[0\to N'\to N\to N''\to 0,\]
+	we get a long exact sequence
+	\[\op{Tor}_1^R(M,N'')\to\op{Tor}_0^R(M,N')\to\op{Tor}_0^R(M,N)\to\op{Tor}(M,N'')\to 0.\]
+	But now we see that $\op{Tor}_1^R(M,N'')$ vanishes, so we get the short exact sequence
+	\[0\to M\otimes_R N''\to M\otimes_R N\to M\otimes_RN'\to0,\]
+	which is what we wanted.
+
+	In the other direction, let $M$ be a flat module, and fix $N$ any $R$-module. Well, fix some free module $F$ with a projection $F\onto N$, and we build the short exact sequence
+	\[0\to K\to F\to N\to 0.\]
+	Then the long exact sequence will look like
+	\[\op{Tor}_1^R(M,F)\to\op{Tor}_1^R(M,N)\to\op{Tor}_0^R(M,K)\to\op{Tor}_0^R(M,F)\to\op{Tor}_0^R(M,N)\to0.\]
+	However, $\op{Tor}_1^R(M,F)=0$, so the exactness of
+	\[0\to\op{Tor}_0^R(M,K)\to\op{Tor}_0^R(M,F)\to\op{Tor}_0^R(M,N)\to0\]
+	by $M$'s flatness forces $\op{Tor}_1^R(M,N)=0$, as desired.
+
+	We now show (b). Once more, fix $M$ flat and $F\onto M$ some projection so that we can build the short exact sequence
+	\[0\to K\to F\to M\to 0.\]
+	Our goal is to show that $K$ is flat, which will show that $\op{Tor}_2^R(M,-)=\op{Tor}_1^R(K,-)$ is zero by ``dimension-shifting.'' Well, pick up some short exact sequence
+	\[0\to N'\to N\to N''\to 0.\]
+	By using the long exact sequence of $\op{Tor}$, we are able to conclude that the following very large diagram has exact rows.
+	% https://q.uiver.app/?q=WzAsMTksWzAsMSwiMCJdLFsxLDEsIktcXG90aW1lcyBOJyJdLFsxLDIsIktcXG90aW1lcyBOIl0sWzEsMywiS1xcb3RpbWVzIE4nJyJdLFswLDIsIjAiXSxbMCwzLCIwIl0sWzIsMSwiRlxcb3RpbWVzIE4nIl0sWzIsMiwiRlxcb3RpbWVzIE4iXSxbMiwzLCJGXFxvdGltZXMgTicnIl0sWzMsMSwiTVxcb3RpbWVzIE4nIl0sWzMsMiwiTVxcb3RpbWVzIE4iXSxbMywzLCJNXFxvdGltZXMgTicnIl0sWzQsMSwiMCJdLFs0LDIsIjAiXSxbNCwzLCIwIl0sWzIsMCwiMCJdLFszLDAsIjAiXSxbMiw0LCIwIl0sWzMsNCwiMCJdLFswLDFdLFsxLDZdLFs2LDldLFs5LDEyXSxbNCwyXSxbMiw3XSxbNywxMF0sWzEwLDEzXSxbNSwzXSxbMyw4XSxbOCwxMV0sWzExLDE0XSxbMTUsNl0sWzYsN10sWzcsOF0sWzgsMTddLFsxNiw5XSxbOSwxMF0sWzEwLDExXSxbMTEsMThdLFsxLDJdLFsyLDNdXQ==
+	\[\begin{tikzcd}
+		&& 0 & 0 \\
+		0 & {K\otimes N'} & {F\otimes N'} & {M\otimes N'} & 0 \\
+		0 & {K\otimes N} & {F\otimes N} & {M\otimes N} & 0 \\
+		0 & {K\otimes N''} & {F\otimes N''} & {M\otimes N''} & 0 \\
+		&& 0 & 0
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=3-1, to=3-2]
+		\arrow[from=3-2, to=3-3]
+		\arrow[from=3-3, to=3-4]
+		\arrow[from=3-4, to=3-5]
+		\arrow[from=4-1, to=4-2]
+		\arrow[from=4-2, to=4-3]
+		\arrow[from=4-3, to=4-4]
+		\arrow[from=4-4, to=4-5]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=2-3, to=3-3]
+		\arrow[from=3-3, to=4-3]
+		\arrow[from=4-3, to=5-3]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=2-4, to=3-4]
+		\arrow[from=3-4, to=4-4]
+		\arrow[from=4-4, to=5-4]
+		\arrow[from=2-2, to=3-2]
+		\arrow[from=3-2, to=4-2]
+	\end{tikzcd}\]
+	Now, the two left rows are exact by flatness of $F$ and $M$, so we conclude that the right row is also a short exact sequence by the Nine lemma.
+
+	To finish, we note that the long exact sequence of $\op{Tor}$ tells us that
+	\[\op{Tor}_i^R(M,N)\simeq\op{Tor}_{i-1}^R(K,N),\]
+	so because both $M$ and $K$ are flat here, we can finish by induction.\footnote{This sort of induction is called dimension-shifting.}
+\end{proof}
+Here is an example of testing the condition.
+\begin{lemma}
+	Fix $R$ a ring and $I\subseteq R$ an ideal and $M$ an $R$-module. We show that $\op{Tor}_1^R(R/I,M)$ vanishes if and only if the map $I\otimes_RM\to M$ is injective.
+\end{lemma}
+\begin{proof}
+	The point is to begin with the short exact sequence
+	\[0\to I\to R\to R/I\to 0.\]
+	Writing the long exact sequence for $\op{Tor}^R_\bullet(M,-)$, we get
+	\[\underbrace{\op{Tor}_1^R(R,M)}_0\to\op{Tor}_1^R(R/I,M)\to\underbrace{\op{Tor}_0^R(I,M)}_{I\otimes M}\to\underbrace{\op{Tor}_0^R(R,M)}_M\to\op{Tor}_0^R(R/I,M).\]
+	By exactness, we see that $\op{Tor}_1^R(R/I,M)$ will vanish if and only if the map $I\otimes_RM\to M$ is injective, which is what we wanted.
+\end{proof}
+To use this, we have the following result.
+\begin{theorem}
+	An $R$-module $M$ is flat if and only if $\op{Tor}_1^R(R/I,M)=0$ for all finitely generated ideals $I\subseteq R$.
+\end{theorem}
+\begin{proof}
+	In one step, we note that checking finitely generated ideals $I$ gives all ideals $I$ because we are really checking that the map
+	\[I\otimes M\to M\]
+	has trivial kernel. Well, if we find some $\sum x\otimes m$ which goes to $0$, then this really only needs finitely many generators to be witnessed because the tensor product permits only finitely many sums.
+
+	So now we know that $\op{Tor}_1^R(R/I,M)=0$ for all ideals $I$. It remains to show that $\op{Tor}_1^R(M,N)=0$. Well, to show that $M$ is flat, we need to show that embeddings $N'\into N$ induce embeddings $M\otimes_RN'\to M\otimes_RN$. But if not, there is an element of the kernel, which allows us to reduce $N'$ to a cyclic module and $N$ to a finitely generated module. Then we can build a cyclic filtration
+	\[N'\subseteq N_1\subseteq\cdots\subseteq N_k=N\]
+	and build $\op{Tor}_1^R(M,N_\bullet)$ manually.
+\end{proof}
