@@ -1,0 +1,274 @@
+% !TEX root = ../notes.tex
+
+Today we continue with natural deduction.
+
+\subsection{More on Reiteration}
+Today we continue with our proof system, which we will use for the homework on Sunday. Recall that we have the following incorrect use of reiteration.
+\begin{align*}
+	\begin{nd}
+		\hypo{}{}
+		\open[]
+			\hypo{}{\alpha}
+			\have{goodtime}{\beta}
+		\close
+		\have{}{\beta} \by{Reit}{goodtime}
+	\end{nd}
+\end{align*}
+Namely, $\beta$ only worked on the assumption of $\alpha$, so the above is invalid. Here is a similarly bad example.
+\begin{align*}
+	\begin{nd}
+		\hypo{}{}
+		\open[]
+			\hypo{}{\alpha}
+			\have[\vdots]{}{\vdots}
+			\have[n]{goodtime}{\beta}
+		\close
+		\open[]
+			\hypo{}{\gamma}
+			\have{}{\beta} \by{Reit}{goodtime}
+		\close
+	\end{nd}
+\end{align*}
+Namely, $\beta$ only worked under the assumption of $\alpha$, not under the assumption of $\gamma$ necessarily.
+
+In contrast, here is a correct use of reiteration.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo{1}{p}
+			\open[]
+				\hypo{2}{q}
+				\have{3}{p} \by{Reit}{1}
+			\close
+			\have{4}{q\to p} \by{$\to$Intro}{1,3}
+		\close
+		\have{}{p\to(q\to p)} \by{$\to$Intro}{1,4}
+	\end{nd}
+\end{align*}
+The important point is that reiteration inside the subsubproof.
+
+\subsection{Proofs with the Conditional}
+So far we have the following rules for $\to$.
+\begin{itemize}
+	\item $\to$ Introduction.
+	\item $\to$ Elimination.
+	\item Reiteration.
+\end{itemize}
+Let's actually prove something.
+\begin{proposition}
+	We have that $(p\to q)\to((q\to r)\to(p\to r))$.
+\end{proposition}
+\begin{remark}
+	This should intuitively make sense: if $p$ implies $q$ and $q$ implies $r$, then $p$ should imply $r$.
+\end{remark}
+\begin{proof}
+	We apply brute force. We would like to end with $(p\to q)\to((q\to r)\to(p\to r))$, so we should start with a subproof. Repeating this intuition, we have the following.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{1}{p\to q}
+				\open[]
+					\hypo{2}{q\to r}
+					\open[]
+						\hypo{3}{p}
+						\have{4}{p\to q} \by{Reit}{1}
+						\have{5}{q} \by{$\to$Elim}{3,4}
+						\have{6}{q\to r} \by{Reit}{2}
+						\have{7}{r} \by{$\to$Elim}{5,6}
+					\close
+					\have{8}{p\to r} \by{$\to$Intro}{3,7}
+				\close
+				\have{9}{q\to p} \by{$\to$Intro}{2,8}
+			\close
+			\have{10}{(p\to q)\to((q\to r)\to(p\to r))} \by{$\to$Intro}{1,9}
+		\end{nd}
+	\end{align*}
+	This finishes.
+\end{proof}
+As an aside, we shouldn't really have to reiterate $p\to q$ in order to cite it because it was still up there in the hypotheses. So in the future, we will permit allowing to use elimination more liberally.
+\begin{definition}[Liberal elimination]
+	In a proof, we can add $\psi$ if we have both $\varphi$ and $\varphi\to\psi$ in the main column of the proof or directly in some subproofs that are currently open.
+\end{definition}
+Essentially the above is saying that we could apply a liberal elimination whenever we could apply reiteration followed by elimination.
+\begin{example}
+	The following proof works faster for the previous proposition.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{1}{p\to q}
+				\open[]
+					\hypo{2}{q\to r}
+					\open[]
+						\hypo{3}{p}
+						\have{5}{q} \by{L$\to$Elim}{1,3}
+						\have{7}{r} \by{L$\to$Elim}{2,5}
+					\close
+					\have{8}{p\to r} \by{$\to$Intro}{3,7}
+				\close
+				\have{9}{q\to p} \by{$\to$Intro}{2,8}
+			\close
+			\have{10}{(p\to q)\to((q\to r)\to(p\to r))} \by{$\to$Intro}{1,9}
+		\end{nd}
+	\end{align*}
+\end{example}
+\begin{nex}
+	The following argument is not valid.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{1}{\alpha}
+				\have{2}{\varphi\to\psi}
+			\close
+			\have{3}{\varphi}
+			\have{4}{\psi} \by{L$\to$Elim}{2,3}
+		\end{nd}
+	\end{align*}
+\end{nex}
+So far our proof system is pretty weak, but at least we have conditionals. As example of things that we don't have, we don't have and, or, quantifiers, etc., but we'll add them later.
+
+It turns out that our current proof system has the following nice property.
+\begin{definition}[Normal]
+	A proof is called \textit{normal} if all applications of elimination precede all applications of an introduction.
+\end{definition}
+In particular, we have the following.
+\begin{proposition}
+	Any statement with only $\to$ can be proven by a normal proof.
+\end{proposition}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{remark}
+	Of course, we can have normal proofs for statements only using $\to$. For example, we could just add the proof
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{s}
+			\have{2}{s} \by{Reit}{1}
+		\end{nd}
+	\end{align*}
+	to the beginning of some normal proof.
+\end{remark}
+Here are some more nice properties.
+\begin{definition}[Sound]
+	A proof system is \textit{sound} if and only if any proof involving hypotheses $\varphi_1,\ldots,\varphi_n$ and concluding $\psi$, we have $\varphi_1,\ldots,\varphi_n\models\psi$. In other words, we can only prove true things.
+\end{definition}
+\begin{proposition}
+	The above proof system is sound.
+\end{proposition}
+\begin{proof}
+	Omitted. We can more or less see this from our individual rules.
+\end{proof}
+\begin{definition}[Complete]
+	A proof system is \textit{complete} if and only if having $\varphi_1,\ldots,\varphi_n\models\psi$, then there exists a proof with hypotheses $\varphi_1,\ldots,\varphi_n$ and concluding $\psi$. In other words, we can prove anything true.
+\end{definition}
+Sadly, our proof system is currently not complete.
+\begin{example}
+	Our proof system cannot prove $((p\to q)\to p)\to p$, which one can check is actually a tautology. The way that we do this is by changing the semantics of $\to$ so that the proof system will still always prove things but such that $((p\to q)\to p)\to p$ is actually false. In particular, it turns out that this formula implies the law of the excluded middle.
+\end{example}
+
+\subsection{Rules for Conjunction}
+As before, we are going to have introduction and elimination rules, which answer the questions how to prove and how to use a conjunction. Here is an example.
+\begin{proposition}
+	We show $3<\sqrt{11}<4$.
+\end{proposition}
+\begin{proof}
+	Note $3<\sqrt{11}$ because $9<11$ implies $3=\sqrt9<\sqrt{11}$. Note $\sqrt{11}<4$ because $11<16$ implies $\sqrt{11}<\sqrt{16}=4$. With both, we conclude $3<\sqrt{11}<4$.
+\end{proof}
+Formally, the above proof would like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{1}{3<\sqrt{11}}
+		\have[\vdots]{}{\vdots}
+		\have[j]{2}{\sqrt{11}<4}
+		\have[\vdots]{}{\vdots}
+		\have[k]{3}{3<\sqrt{11}\land\sqrt{11}<4} \by{$\land$-Intro}{1,2}
+	\end{nd}
+\end{align*}
+And here is that rule
+\begin{defi}[\texorpdfstring{$\land$}{} Introduction]
+	If we have both $\varphi$ and $\psi$, then we can conclude $\varphi\land\psi$ and cite the relevant rules.
+\end{defi}
+Visually, this looks like one of the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{1}{\alpha}
+		\have[\vdots]{}{\vdots}
+		\have[j]{2}{\beta}
+		\have[\vdots]{}{\vdots}
+		\have[k]{3}{\alpha\land\beta} \by{$\land$-Intro}{1,2}
+	\end{nd}
+	\qquad
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{1}{\alpha}
+		\have[\vdots]{}{\vdots}
+		\have[j]{2}{\beta}
+		\have[\vdots]{}{\vdots}
+		\have[k]{3}{\beta\land\alpha} \by{$\land$-Intro}{1,2}
+	\end{nd}
+\end{align*}
+And here is an example proof.
+\begin{proposition}
+	We show that $(p\to q),(p\to r)$ can prove $p\to(q\land r)$.
+\end{proposition}
+\begin{proof}
+	We proceed by brute force.
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{p\to q}
+			\hypo{2}{p\to r}
+			\open[]
+				\hypo{3}{p}
+				\have{4}{p\to q} \by{Reit}{1}
+				\have{5}{q} \by{$\to$-Elim}{3,4}
+				\have{6}{p\to r} \by{Reit}{2}
+				\have{7}{r} \by{$\to$-Elim}{3,6}
+				\have{8}{q\land r} \by{$\land$-Elim}{5,7}
+			\have{9}{p\to(q\land r)} \by{$\to$-Intro}{3,8}
+		\end{nd}
+	\end{align*}
+\end{proof}
+As usual, there is a liberal version, which we won't write out.
+
+To prove a conjunction, we simply deduce one of the conjuncts. There was an example here which I did not have time to write out, but here is the rule.
+\begin{defi}[\texorpdfstring{$\land$}{} Elimination]
+	If we have both $\varphi\land\psi$, then we can conclude $\varphi$ or $\psi$ and cite the relevant rules.
+\end{defi}
+This looks like one of the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{1}{\alpha\land\beta}
+		\have[\vdots]{}{\vdots}
+		\have[k]{3}{\alpha} \by{$\land$-Elim}{1}
+	\end{nd}
+	\qquad
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{1}{\alpha\land\beta}
+		\have[\vdots]{}{\vdots}
+		\have[k]{3}{\beta} \by{$\land$-Elim}{1}
+	\end{nd}
+\end{align*}
+Let's see another example.
+\begin{proposition}
+	We show that from $p\to q$ we can show $(p\land r)\to(q\land r)$.
+\end{proposition}
+\begin{proof}
+	Here is our proof, which is mostly just mechanical.
+	\begin{align*}
+		\begin{nd}
+			\hypo{ptoq}{p\to q}
+			\open[]
+				\hypo{pandr}{p\land r}
+				\have{p}{p} \by{$\land$-Elim}{pandr}
+				\have{q}{q} \by{L$\to$Elim}{ptoq,p}
+				\have{r}{r} \by{$\land$-Elim}{pandr}
+				\have{qandr}{q\land r} \by{$\land$-Intro}{q,r}
+			\close
+			\have{}{(p\land r)\to(q\land r)}
+		\end{nd}
+	\end{align*}
+	This works.
+\end{proof}
