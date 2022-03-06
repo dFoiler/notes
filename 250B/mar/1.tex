@@ -250,7 +250,34 @@ And now we get to talk about projective modules.
 \begin{remark}[Nir]
 	Even though being projective has many definitions, some more concrete than others, I have chosen \autoref{def:projective} to begin with because it will be the most useful in homological algebra, which is where we are going next.
 \end{remark}
-And here is, roughly, why we introduced projective modules now.
+Because I just can't resist, here is a more geometric view of projective modules, which was not covered in class.
+\begin{proposition}
+	Fix $M$ a finitely presented $R$-module. Then $M$ is projective if and only if $M_\mf p$ is a free $R_\mf p$ for all primes $\mf p\subseteq R$. In other words, $M$ is projective if and only if $M$ is locally free.
+\end{proposition}
+\begin{proof}
+	We take our directions separately.
+	\begin{itemize}
+		\item Suppose $M$ is a finitely generated projective $R$-module. Thus, we have a projection $R^n\onto M$, so \autoref{lem:projgrabbag} grants us an isomorphism $K\oplus M\cong R^n$ for some $R$-module $K$. Localizing at some prime $\mf p$, we get
+		\[K_\mf p\oplus M_\mf p\cong R_\mf p^n.\]
+		So now we see that the localized module $M_\mf p$ is still a finitely generated projective $R_\mf p$-module by \autoref{lem:projgrabbag}, but now $R_\mf p$ is local with maximal ideal $\mf p_\mf p$.
+		
+		The main idea, now, is to extract out our dimension via \autoref{cor:quotientdimension}: note that we have an isomorphism
+		\[(K_\mf p/\mf p_\mf pK_\mf p)\oplus(M_\mf p/\mf p_\mf pM_\mf p)\cong(R_\mf p/\mf p_\mf p)\otimes_{R_\mf p}(K_\mf p\oplus M_\mf p)\cong(R_\mf p/\mf p_\mf p)\otimes_{R_\mf P}R_\mf p^n\cong(R_\mf p/\mf p_\mf pR_\mf p)^n\]
+		by repeatedly using \autoref{prop:tensorquotient}. Now, everything involved now has the $\mf p_\mf p$-action vanished, so the above exhibits an isomorphism of $R_\mf p/\mf p_\mf p$-vector spaces. In particular,
+		\[\dim_{R_\mf p/\mf p_\mf p}(K_\mf p/\mf p_\mf pK_\mf p)+\dim_{M_\mf p/\mf p_\mf p}(M_\mf p/\mf p_\mf pM_\mf p)=n,\]
+		so we provide these with bases $\{\overline{k_1},\ldots,\overline{k_a}\}$ and $\{\overline{m_1},\ldots,\overline{m_b}\}$ with $a+b=n$. By \autoref{cor:quotientdimension}, these bases extend to surjections $R_\mf p^a\onto K_\mf p$ and $R_\mf p^b\onto M_\mf p$ so that we have a big surjection
+		\[R_\mf p^n=R_\mf p^a\oplus R_\mf p^b\onto K_\mf p\oplus M_\mf p\cong R_\mf p^n.\]
+		But now \autoref{prop:epiisiso} now tells us that this is an isomorphism! In particular, the map $R_\mf p^b\onto M_\mf p$ may have no kernel, so it is an isomorphism, and we conclude that $M_\mf p$ is free.
+
+		\item Suppose $M$ is a finitely presented $R$-module such that $M_\mf p$ is a free $R_\mf p$-module for each prime $\mf p\subseteq R$. The key is to use \autoref{rem:splitsifflocallysplits}. Indeed, suppose that we have any short exact sequence
+		\[0\to A\to B\to M\to 0,\]
+		and by \autoref{lem:projgrabbag}, it suffices to show that this short exact sequence splits. Well, by \autoref{rem:splitsifflocallysplits}, this short exact sequence splits if and only if
+		\[0\to A_\mf p\to B_\mf p\to M_\mf p\to 0\]
+		splits for all prime ideals $\mf p$. But now $M_\mf p$ is free and in particular projective (e.g., use (c) of \autoref{lem:projgrabbag}), so the short exact sequence splits by (b) of \autoref{lem:projgrabbag}. So we are done.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Anyways, here is, roughly, why we introduced projective modules now.
 \begin{prop}
 	Projective modules are flat.
 \end{prop}
@@ -277,17 +304,75 @@ And here is, roughly, why we introduced projective modules now.
 \end{proof}
 
 \subsection{Flatness via Algebraic Geometry}
-In algebraic geometry, we are interested in families of affine varieties, which consists of a base $B$ for a family and a map $\varphi:X\to B$. As usual, the algebraic story will reverse, so the family in the algebraic world  becomes a function
-\[\varphi^{-1}:A(B)\to A(X).\]
-In particular, this is exactly the data of $A(X)$ being an $A(B)$-algebra. To make our notions more general, we set $S:=A(X)$ an $R:=A(B)$-algebra by $\varphi:R\to S$. As such, we have the following definition.
+In algebraic geometry, we are interested in families of affine varieties, which consists of a base $B$ and a morphism $\varphi:X\to B$; in particular, we get an affine variety ``parameterized'' by the elements of our $B$ by taking the fiber $\varphi^{-1}(b)$ for each $b\in B$.
+
+For example, here is the standard image of a M\"obius strip $X$ as a family of affine lines over $S^1$.
+\begin{center}
+	\begin{asy}
+		import graph3;
+		// thank you https://asymptote.sourceforge.io/asymptote_tutorial.pdf
+		unitsize(2cm);
+		currentprojection=orthographic(0,-2,1);
+		
+		real offset = pi;
+		triple F(pair uv) {
+			real t = uv.x;
+			real r = uv.y;
+			return (
+				cos(t+offset) + r*cos(t)*sin(t/2),
+				sin(t+offset) + r*sin(t)*sin(t/2),
+				r*cos(t/2)
+			);
+		}
+		real r = 0.2;
+		surface moeb = surface(F, (0,-r), (2pi,r), Spline);
+		draw(moeb, surfacepen=material(gray(0.7)+opacity(0.7), emissivepen=0.2 white));
+		
+		real x(real t) {return cos(2pi*t);}
+		real y(real t) {return sin(2pi*t);}
+		real z1(real t) {return 0;}
+		real z2(real t) {return -2;}
+		draw(graph(x,y,z1,0,1,operator ..));
+		draw(graph(x,y,z2,0,1,operator ..));
+	
+		label("$X$", (-1.5,0,0));
+		label("$S^1$", (-1.5,0,-2));
+		draw((-1.5,0,-0.3) -- (-1.5,0,-2+0.3), EndArrow3);
+		label("$\pi$", (-1.63,0,-1));
+		
+		real theta = -1;
+		dot((cos(theta), sin(theta), 0), red);
+		dot((cos(theta), sin(theta), -2), red);
+		draw((cos(theta), sin(theta), -2+0.3) -- (cos(theta), sin(theta), -0.3), arrow=Arrow3(DefaultHead2(),Fill,emissive(red)), p=red+dashed);
+		
+		real t0 = theta-offset;
+		real r0 = -0.4;
+		draw(F((t0,-r0)) -- F((t0,r0)), arrow=Arrow3(DefaultHead2(),Fill,emissive(red)), p=red);
+		draw(F((t0,r0)) -- F((t0,-r0)), arrow=Arrow3(DefaultHead2(),Fill,emissive(red)), p=red);
+		
+		label("$x$", (1.3*cos(theta), 1.3*sin(theta), -2), p=red);
+		label("$\pi^{-1}(x)$", (1.3*cos(theta-0.1)+0.5, 1.3*sin(theta-0.1), 0), p=red);
+	\end{asy}
+\end{center}
+In particular, the ``data'' of this family really just consists of the morphism $\pi:X\to S^1$.
+
+As usual, the algebraic story will reverse, so a family in the algebraic world should consist of the data
+\[(-\circ\varphi):A(B)\to A(X).\]
+In particular, such a map $A(B)\to A(X)$ is exactly the data of $A(X)$ being an $A(B)$-algebra. To make our notions more general, we set $S:=A(X)$ an $R:=A(B)$-algebra by $\varphi:R\to S$.
+
+Keeping track of our geometry, we would like to talk about how to move fibers into our algebraic world. We start by fixing a point $p\in B$, whose coordinate ring is $R/\mf m$, where $\mf m$ is some maximal ideal. Moving up to $S$, we note that if we want a function $f:X\to k$ to vanish on $\varphi^{-1}(p)$, then ``morally'' it should look like it factors through $\varphi$ and take the form $f\varphi$ for some $f\in\mf m$. In other words, we should modulo out by the ideal generated by
+\[(-\circ\varphi)(\mf m),\]
+which is $\mf mS$, so the coordinate ring of $\varphi^{-1}(p)$ will be
+\[S/\mf mS.\]
+To generalize this past maximal ideals, we write\footnote{For example, we are using \autoref{prop:tensorquotient} to get an isomorphism of $R$-modules, but the multiplication also matches: we have $\psi:[s]_{\mf mS}\mapsto[1]_\mf m\otimes s$, so $\psi([s]\cdot[t])=\psi([st])=[1]\otimes st=([1]\otimes s)([1]\otimes t)=\psi([s])\psi([t])$.} $S/\mf mS\simeq(R/\mf m)\otimes_RS$, so for more general primes $\mf p\subseteq R$, our coordinate ring of the fiber over $\mf p$ will be
+\[(R/\mf p)\otimes_RS.\]
+In a family, we would like the fibers to be well-behaved. One way to keep track of well-behaved families of ``algebras'' (which, as above, consists of the data of a single ring homomorphism $R\to S$) is via the flatness condition.
 \begin{definition}[Flat]
 	An $R$-algebra $S$ is \textit{flat} if and only if $S$ is flat as an $R$-module.
 \end{definition}
-To access flatness, we talk about fibers. In the algebraic world, the fiber of a ``point'' $\mf m$ should be the ring of functions in $S$ on the point $\mf m$, which means we want to look at
-\[S/\mf mS.\]
-Flatness, roughly speaking, means that $S/\mf mS$ varies continuously as the point $\mf m$ moves.
+On the geometric side, flatness (roughly speaking) means that the fiber $(R/\mf p)\otimes_RS$ varies continuously as the point $\mf p$ moves.
 
-Let's see some examples. We will take our base to be $B:=\AA^1(k)$ the affine line over an algebraically closed field $k$, which gives that $R:=k[x]$.
+Let's see some examples. We will take our base to be $B:=\AA^1(k)$ the affine line over an algebraically closed field $k$, which gives that $R:=k[t]$.
 \begin{exe}
 	We consider the flatness of $S:=R[x]/\left(x^2-t\right)$ geometrically and algebraically.
 \end{exe}

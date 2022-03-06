@@ -10,5 +10,13 @@ viewportmargin=(2,2);
 
 unitsize(0.4cm);
 import graph;
-draw((-4,1)--(4,1));
-draw((0,-4)--(0,4));
+real y(real t)
+{
+return t;
+}
+real x(real t)
+{
+return 1/t;
+}
+draw(graph(x, y,-4,-1/4));
+draw(graph(x, y, 4,1/4));
