@@ -4,36 +4,59 @@ Welcome back everyone. The average and median for the exam was 32/50.
 
 \subsection{Krull's Intersection Theorem}
 Last time we showed the following.
-\begin{restatable}[Krull intersection]{theorem}{krullintersect2}
-	Fix $R$ a Noetherian ring with an ideal $I$ and finitely generated module $M$. Then
-	\[N:=\bigcap_{s\ge0}I^sM\]
-	satisfies that there is some $x\in I$ such that $(1-r)N=0$.
-\end{restatable} % \todo{make this a restatable}
+\krullintersectii*
 \noindent The Noetherian condition is necessary here; consider the following example.
 \begin{exe}
-	Let $R$ be the germ of infinitely differentiable functions $f:\RR\to\RR$ at $0$. Namely, two functions $f,g:\RR\to\RR$ are equivalent in $R$ if and only if they coincide on an open neighborhood around $0$. Then
-	\[\bigcap_{s>0}(x)^s\]
+	Let $R$ consist of the ring of germs of infinitely differentiable functions $f:\RR\to\RR$ at $0$. Namely, two functions $f,g:\RR\to\RR$ are equivalent in $R$ if and only if they coincide on an open neighborhood around $0$. Then $R$ is local with unique maximal ideal
+	\[\mf m:=\{f\in R:f(0)=0\}.\]
+	However,
+	\[\bigcap_{s\ge0}\mf m^s\]
 	is nonzero.
 \end{exe}
 \begin{proof}
-	The point is that
-	\[I:=\bigcap_{s>0}(x)^s\]
-	is the set of germs represented by a function with all derivatives vanishing. However, it is a counterexample from real analysis that $e^{-1/x^2}$ also has all derivatives vanish but is a nonzero function.
+	We start with the checks on $R$.
+	\begin{itemize}
+		\item We describe how to check that $R$ is actually a ring, but we will not do so. To begin, the set of infinitely differentiable functions $C^\infty(\RR)$ is a ring with addition and multiplicative defined pointwise; e.g., our identity is $f\equiv1$. Then we define the ideal
+		\[I=\{f:f(x)=0\text{ for all }x\in U\text{ for some open }U\text{ containing }0\}.\]
+		It is not hard to check that $I$ is an ideal: if $f,g\in I$ and $r,s\in C^\infty(\RR)$ with $f|_U=0$ and $g|_V=0$ where $0\in U\cap V$, then $(rf+sg)|_{U\cap V}=0$.
+
+		Now, we simply define $R:=C^\infty(\RR)/I$. In particular, $[f]_I=[g]_I$ for $f,g\in C^\infty(\RR)$ if and only if $(f-g)$ vanishes on some neighborhood $U$ of $0$, which is equivalent to $f$ and $g$ agreeing on some neighborhood $U$ of $0$.
+
+		\item We check that $R$ is local with the given maximal ideal $\mf m$. For this, we show that all elements outside $\mf m$ are units, which will be enough because it will show that any proper ideal (which only contains non-units) is contained in $\mf m$.
+
+		Indeed, pick up some $u\notin\mf m$ so that $u(0)\ne1$. Because $u$ is continuous, $u(\RR\setminus\{0\})$ is open and contains $0$, so there exists an $\varepsilon>0$ such that $u$ is nonzero on the compact set $[-\varepsilon,\varepsilon]$. Then $1/u$ is an infinitely differentiable function $v$ on $(-\varepsilon,\varepsilon)$, which we can then extend to a function in $C^\infty(\RR)$.\footnote{I think some kind of uniformity condition is needed here to make sure that $1/u$ can be extended as claimed, but I won't bother making this rigorous.} So indeed, $uv$ agrees with the function $1$ on $(-\varepsilon,\varepsilon)$, so $uv\equiv1\pmod I$.
+	\end{itemize}
+	It remains to check that
+	\[\bigcap_{s\ge0}\mf m^s\ne0.\]
+	Indeed, set, for given $m$,
+	\[g_m(x):=\begin{cases}
+		e^{-1/x^2}/x^m & x\ne0, \\
+		0 & x=0.
+	\end{cases}\]
+	An induction shows that, on $\RR\setminus\{0\}$, we have $g_m^{(n)}(x)=p_n(1/x)e^{-1/x^2}$ some $p_n\in\QQ[x]$, for any $n\ge0$. Indeed, it holds for $n=0$ by taking $p_0(x)=x^m$, and the inductive step merely needs to write
+	\[g_m^{(n+1)}(x)=\frac d{dx}g^{(n)}(x)=\frac d{dx}p_n(1/x)e^{-1/x^2}=\underbrace{\left(p_n'\left(\frac1x\right)\cdot-\frac1{x^2}+\frac{-2}{x^3}\right)}_{p_{n+1}(1/x)}e^{-1/x^2}.\]
+	Thus, we can show by induction that $g^{(n)}_m(0)=0$ for each $0$. We get $n=0$ for free, and otherwise, we compute
+	\[g_m^{(n+1)}(0)=\lim_{x\to0}\frac{g_m^{(n)}(x)-g_m^{(n)}(0)}x=\lim_{h\to0}\left(\frac{p_n(1/x)}x\cdot e^{-1/x^2}\right)=\lim_{x\to\pm\infty}\frac{xp_n(x)}{e^{-x^2}},\]
+	which vanishes no matter which $\pm\infty$ we approach. So in total, we see that $g\in C^\infty(\RR)$, so it will produce a legal germ at $0$.
+	
+	It follows that $e^{-1/x^2}/x^m=g_m(x)\in C^\infty(\RR)$ for each $m$. To finish, we see that
+	\[e^{-1/x^2}=x^m\cdot e^{-1/x^2}/x^m\in\mf m^mC^\infty(\RR)\subseteq\mf m^m\]
+	for any $m$, which finishes.
 \end{proof}
+\begin{remark}[Nir]
+	The finite generation is also necessary: the module $M=\QQ$ over the integral domain $R=\ZZ$ has $I=(2)\subseteq\ZZ$ a proper ideal while $IM=(2)\QQ=\QQ$ so that $\bigcap_sI^sM=M$. We are essentially detecting a counterexample to Nakayama's lemma here.
+\end{remark}
 % Finitely generated M is also necessary: Take R = Z and M = Q and I = (2)
 
 \subsection{Flat Modules}
 Today we are talking about flatness and $\op{Tor}$. Let's start with flatness; we recall the definition.
-\begin{definition}[Flat]
-	Fix $R$ a ring. Then an $R$-module $M$ is \textit{flat} if and only if the functor $M\otimes_R-$ is exact.
-\end{definition} % \todo{make this a restatable}
-\begin{remark}
-	Because $M\otimes_R-$ is already left-exact, we merely have to check that $N\into N'$ induces an injection $M\otimes_RN\into M\otimes_RN'$.
-\end{remark}
-We also had the following examples.
+\flatdefi*
+\noindent As we discussed in \autoref{rem:easierflat}, because $M\otimes_R-$ is already left-exact, we merely have to check that $N\into N'$ induces an injection $M\otimes_RN\into M\otimes_RN'$.
+
+We now run through some examples of flat modules.
 \begin{example}
-	We showed long ago that $R$ and therefore free modules $R^n$ are flat.
-\end{example} % \todo{restatable}
+	We showed back in \autoref{ex:freeisflat} that $R^n$ is a flat $R$-module. Essentially this is because $R^n\otimes A\simeq(R\otimes A)^n\simeq M^n$ (functorially), so injections $A\into B$ remain injections $A^n\into B^n$.
+\end{example}
 For our next example, we pick up the following definition.
 \begin{definition}[Projective]
 	An $R$-module $P$ is \textit{projective} if and only if one of the following four equivalent conditions are satisfied.
