@@ -1,0 +1,221 @@
+% !TEX root = ../notes.tex
+
+We roll. As a note on the midterm, we will be given a take-home, $48$-hour midterm. It is not intended to take that long; it should be approximately a shorter problem set.
+
+\subsection{Deduction Theorem}
+We are still talking about natural deduction proofs. So far we have talked about how to introduce and eliminate the connectives $\to$ and $\land$. For example, the following proof uses all of our rules.
+\begin{align*}
+	\begin{nd}
+		\hypo{ptoq0}{p\to q}
+		\open[]
+			\hypo{pandr}{p\land r}
+			\hypo{ptoq}{p\to q} \by{Reit}{ptoq0}
+			\have{p}{p} \by{$\land$Elim}{pandr}
+			\have{q}{q} \by{L$\to$Elim}{ptoq,p}
+			\have{r}{r} \by{$\land$Elim}{pandr}
+			\have{qandr}{q\land r} \by{$\land$-Intro}{q,r}
+		\close
+		\have{}{(p\land r)\to(q\land r)} \by{$\to$Intro}{pandr-qandr}
+	\end{nd}
+\end{align*}
+In our story so far, we saw that $\{\varphi_1,\ldots,\varphi_n\}\models\psi$ if and only if the formula $(\varphi_1\land\cdots\land\varphi_n)\to\psi$ is a tautology.
+
+There is also a proof-theoretic analog of this statement.
+\begin{theorem}[Deduction]
+	There is a proof with assumptions $\{\varphi_1,\ldots,\varphi_n\}$ and conclusion $\psi$ if and only if there is a proof with no assumption $(\varphi_1\land\cdots\land\varphi_n)\to\psi$.
+\end{theorem}
+\begin{proof}
+	In one direction, suppose that we can prove $\{\varphi_1,\ldots,\varphi_n\}$ gives $\psi$. Well, simply open a subproof to place $\varphi_1\land\cdots\land\varphi_n$ into the hypotheses and use $\land$ elimination to deduce $\varphi_1,\ldots,\varphi_n$. Then the old proof to conclude $\psi$ still works. Visually, we are applying the following process.
+	\begin{align*}
+		\underbrace{\begin{nd}
+			\hypo{}{\varphi_1}
+			\hypo[\vdots]{}{\vdots}
+			\hypo[n]{}{\varphi_n}
+			\have[\vdots]{}{\vdots}
+			\have[m]{}{\psi}
+		\end{nd}}_P
+		\implies\qquad
+		\begin{nd}
+			\open[]
+				\hypo{1}{\varphi_1\land\cdots\land\varphi_n}
+				\have{}{\varphi_1} \by{$\land$Intro}{1}
+				\have[\vdots]{}{\vdots}
+				\have[n]{}{\varphi_n} \by{$\land$Intro}{1}
+				\have[\vdots]{}{P}
+				\have[m]{n}{\psi}
+			\close
+			\have{}{(\varphi_1\land\cdots\land\varphi_n)\to\psi}
+		\end{nd}
+	\end{align*}
+	In the other direction, $\{\varphi_1,\ldots,\varphi_n\}$ as assumptions lets us conclude $(\varphi_1\land\cdots\land\varphi_n)$, from which $\to$ elimination lets us conclude $\psi$.
+\end{proof}
+% \begin{example}
+% 	We ca
+% \end{example}
+
+\subsection{Biconditional}
+The biconditional $\varphi\leftrightarrow\psi$ simply means $(\varphi\to\psi)\land(\psi\to\varphi)$. As such, we introduce $\varphi\leftrightarrow\psi$ by having $\varphi\to\psi$ and $\psi\to\varphi$ and using $\land$ introduction. Formally, we have the following.
+\begin{defihelper}[\texorpdfstring{$\leftrightarrow$}{}Introduction] \nirindex{Biconditional Introduction@$\leftrightarrow$Introduction}
+	If we have a subproof hypothesizing $\varphi$ and proving $\psi$ and another subproof hypothesizing $\psi$ and proving $\varphi$, then we may conclude that $\varphi\leftrightarrow\psi$.
+\end{defihelper}
+For example, we might write this as follows.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo[i]{i}{\varphi}
+			\have[\vdots]{}{\vdots}
+			\have[j]{j}{\psi}
+		\close
+		\have[\vdots]{}{\vdots}
+		\open[]
+			\hypo[k]{k}{\psi}
+			\have[\vdots]{}{\vdots}
+			\have[\ell]{l}{\varphi}
+		\close
+		\have[\vdots]{}{\vdots}
+		\have[n]{}{\varphi\leftrightarrow\psi} \by{$\leftrightarrow$Intro}{i-j,k-l}
+	\end{nd}
+\end{align*}
+Here are some examples.
+\begin{exe}
+	We show $q\leftrightarrow q$.
+\end{exe}
+\begin{proof}
+	The proof just uses the reiteration rule.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{i}{q}
+				\have{j}{q} \by{Reit}{i}
+			\close
+			\open[]
+				\hypo{k}{q}
+				\have{l}{q} \by{Reit}{k}
+			\close
+			\have{}{q\leftrightarrow q} \by{$\leftrightarrow$Intro}{i-j,k-l}
+		\end{nd}
+	\end{align*}
+	This works.
+\end{proof}
+\begin{exe}
+	We show $(\varphi\to\psi)\land(\psi\to\varphi)$ lets us conclude $\varphi\leftrightarrow\psi$.
+\end{exe}
+\begin{proof}
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{(\varphi\to\psi)\land(\psi\to\varphi)}
+			\open[]
+				\hypo{2}{\varphi}
+				\have{3}{\varphi\to\psi} \by{$\land$Elim}{1}
+				\have{4}{\psi} \by{$\to$Elim}{2,3}
+			\close
+			\open[]
+				\hypo{5}{\psi}
+				\have{6}{\psi\to\varphi} \by{$\land$Elim}{1}
+				\have{7}{\varphi} \by{$\to$Elim}{5,6}
+			\close
+			\have{}{\varphi\leftrightarrow\psi} \by{$\leftrightarrow$Intro}{2-4,5-7}
+		\end{nd}
+	\end{align*}
+\end{proof}
+Now, to use $\leftrightarrow$, we have the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{i}{\varphi\leftrightarrow\psi}
+		\have[\vdots]{}{\vdots}
+		\have[j]{j}{\varphi}
+		\have[\vdots]{}{\vdots}
+		\have[n]{}{\psi} \by{$\leftrightarrow$Elim}{i,j}
+	\end{nd}
+\end{align*}
+Essentially, having one of them lets you conclude the other. As usual, this can be reduced to $(\varphi\to\psi)\land(\psi\to\varphi)$. We codify this as follows.
+\begin{defihelper}[$\leftrightarrow$Elimination] \nirindex{Biconditional Elimination@$\leftrightarrow$Elimination}
+	If we have $\varphi\leftrightarrow\psi$ and $\varphi$, then we can conclude $\psi$.
+\end{defihelper}
+
+\subsection{Negation Introduction}
+The idea to introduce $\lnot$, we have to use proof by contradiction: to prove $\lnot\varphi$, we assume $\varphi$ and derive a contradiction.
+
+Let's see the most famous example of a proof by contradiction.
+\begin{proposition}
+	We show $\sqrt2$ is irrational.
+\end{proposition}
+\begin{proof}
+	Suppose for the sake of contradiction that $\sqrt2$ is rational. Well, then we can write $\sqrt2=\frac ab$ for integers $a$ and $b$ such that $b\ne0$ and $a$ and $b$ cannot be reduced. Squaring, we see that $2=\frac{a^2}{b^2}$, so
+	\[a^2=2b^2.\]
+	Now, $a^2$ is even, so $a$ is even (which we will more formally justify later in the course), so we can write $a=2k$. Plugging in, we see that
+	\[4k^2=(2k)^2=a^2=2b^2,\]
+	so $b^2=2k^2$. But now $b^2$ is even, so $b$ is even! Thus, the fraction $\frac ab$ has even numerator and denominator, so it could have been reduced, which is our contradiction.
+\end{proof}
+At a high level, the proof looked like the following.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo{1}{\sqrt2\in\QQ}
+			\hypo[\vdots]{}{\vdots}
+			\have[n]{n}{\frac ab\text{ is reducible}\land\frac ab\text{ is not reducible}}
+		\close
+		\have{}{\lnot(\sqrt2\in\QQ)} \by{$\lnot$Intro}{1,n}
+	\end{nd}
+\end{align*}
+This is our introduction rule.
+\begin{defihelper}[\texorpdfstring{$\lnot$}{}Intro] \nirindex{Not Introduction@$\lnot$Intro}
+	If we have a subproof starting with $\varphi$ and concluding $\beta\land\lnot\beta$ for some formula $\beta$, then we can conclude $\lnot\varphi$.
+\end{defihelper}
+\begin{remark}
+	Many texts write $\beta\land\lnot\beta$ as $\perp$ to mean ``false.''
+\end{remark}
+In a diagram, such a proof would look as follows.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\open[]
+			\have[i]{i}{\varphi}
+			\have[\vdots]{}{\vdots}
+			\have[j]{j}{\psi\land\lnot\psi}
+		\close
+		\have[\vdots]{}{\vdots}
+		\have[n]{}{\lnot\varphi} \by{$\lnot$Intro}{i,j}
+	\end{nd}
+\end{align*}
+Here is an example.
+\begin{exe}
+	From $p\to q$ we may conclude $\lnot q\to\lnot p$.
+\end{exe}
+\begin{proof}
+	We simply use $\to$ introduction and $\lnot$ introduction for fun and profit.
+	\begin{align*}
+		\begin{nd}
+			\hypo{ptoq}{p\to q}
+			\open[]
+				\hypo{nq0}{\lnot q}
+				\open[]
+					\hypo{p}{p}
+					\have{q}{q} \by{$\to$Elim}{ptoq,p}
+					\have{nq}{\lnot q} \by{Reit}{nq0}
+					\have{false}{q\land\lnot q} \by{$\land$Intro}{q,nq}
+				\close
+				\have{np}{\lnot p} \by{$\lnot$Intro}{p-false}
+			\close
+			\have{}{\lnot q\to\lnot p} \by{$\to$Intro}{nq-np}
+		\end{nd}
+	\end{align*}
+	This works.
+\end{proof}
+\begin{remark}
+	By the deduction theorem, this also proves $(p\to q)\to(\lnot q\to\lnot p)$.
+\end{remark}
+In fact, one can try to prove that $\lnot q\to\lnot p$ can prove $p\to q$, but for this we need to know that $\lnot\lnot p\leftrightarrow p$, which we have to be careful about.
+
+Now, there are two ways to talk about ``negation elimination.'' Here is one way.
+\begin{defihelper}[\texorpdfstring{$\lnot$}{}Elimination] \nirindex{Not Elimination@$\lnot$Elimination}
+	If we are given $\lnot\varphi$, then we may infer $\varphi\to\psi$ for any $\psi$.
+\end{defihelper}
+Essentially, the idea is that the antecedent is false, so the conditional is true.
+\begin{proposition}
+	We show that the empty set $\emp$ is a subset of a set $A$.
+\end{proposition}
+\begin{proof}
+	Fix $A$ any set. Now, for any $x$, we have $x\notin\emp$. So (vacuously) $x\in\emp$ implies $x\in A$ by our elimination rule. This finishes.
+\end{proof}
