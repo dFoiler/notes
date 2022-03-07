@@ -19,3 +19,5 @@ real x(real t)
 return t*t;
 }
 draw(graph(x, y,-2,2));
+draw((-0.5,0)--(4,0), dotted); label("$t$", (4,0), E);
+draw((0,-2)--(0,2), dotted); label("$x$", (0,2), N);
