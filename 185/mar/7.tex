@@ -27,14 +27,14 @@ This is perhaps a little too strong, but it is the correct notion. Here is a sli
 The point is that we are going to want to glue $C^1$ paths together in the future, and the resulting path need not be $C^1$.
 
 This is a math class, so we should probably prove something today, so have some lemmas.
-\begin{lemma}
+\begin{lemma} \label{lem:reparameterize}
 	Fix $s:[a,b]\to[c,d]$ a function differentiable at $t_0\in[a,b]$. Further, if $\gamma:[c,d]\to\CC$ is differentiable at $\gamma(t_0)$, then $\gamma\circ s$ is differentiable at $t_0$ with
 	\[(\gamma\circ s)'(t_0)=\gamma'(s(t_0))s'(t_0).\]
 \end{lemma}
 \begin{proof}
 	As usual with compositions, we consider the difference quotient $v:[c,d]\to\CC$ defined as
 	\[v(x):=\begin{cases}
-		\frac{\gamma(x)-\gamma(s(t_0))}{t-s_0}-\gamma'(s(t_0)) & t\ne s(t_0), \\
+		\frac{\gamma(x)-\gamma(s(t_0))}{x-s(t_0)}-\gamma'(s(t_0)) & t\ne s(t_0), \\
 		0 & x=s(t_0).
 	\end{cases}\]
 	Now, by definition of the differentiability of $\gamma$ at $s(t_0)$, we know that $v(x)\to0$ as $x\to s(t_0)$. Rearranging, we see that
@@ -148,11 +148,116 @@ There might not be a nice, canonical way to define a curve. Here are two circles
 		\end{asy}
 	\end{center}
 \end{example}
+
+\subsection{Conformal Maps}
 We close with the following theorem.
-\begin{theorem}
-	Fix $\Omega\subseteq\CC$ an open and connected subset. Further, fix two paths $\gamma_1,\gamma_2:[a,b]\to\CC$ two $C^1$ paths and some holomorphic function $f:\Omega\to\CC$. Now, suppose that $t_1,t_2\in[a,b]$ have $z_0:=\gamma_1(t_1)=\gamma_2(t_2)\ne0$ with $f'(z_0)\ne0$. Then
-	\[\arg\left(\frac{\gamma_1'(t_2)}{\gamma_2'(t_1)}\right)=\arg\left(\frac{(f\circ\gamma)'(t_2)}{(f\circ\gamma)'(t_1)}\right).\]
+\begin{theorem} \label{thm:getconformal}
+	Fix $\Omega\subseteq\CC$ an open and connected subset. Further, fix two paths $\gamma_1,\gamma_2:[a,b]\to\CC$ two $C^1$ paths and some holomorphic function $f:\Omega\to\CC$. Now, suppose that $t_1,t_2\in[a,b]$ have $z_0:=\gamma_1(t_1)=\gamma_2(t_2)\ne0$ with $\gamma_1(t_1),\gamma_2(t_2)\ne0$ and $f'(z_0)\ne0$. Then
+	\[\frac{\gamma_1'(t_1)}{\gamma_2'(t_2)}=\frac{(f\circ\gamma_1)'(t_1)}{(f\circ\gamma_2)'(t_2)}.\]
 \end{theorem}
 \begin{proof}
-	We omit this proof. It is in the Eterovi\'c notes.
+	The main tool that we need is a version of \autoref{lem:reparameterize} to deal with composition.
+	\begin{lemma}
+		Fix $\gamma:[a,b]\to\CC$ a path differentiable at $t_0\in[a,b]$. Further, set a nonempty open subset $\Omega\subseteq\CC$ with $\im\gamma\subseteq\Omega$ with a function $f:[c,d]\to\CC$ differentiable at $\gamma(t_0)$. Then $f\circ\gamma$ is differentiable at $t_0$ with
+		\[(f\circ\gamma)'(t_0)=f'(\gamma(t_0))\gamma'(t_0).\]
+	\end{lemma}
+	\begin{proof}
+		We repeat the proof of \autoref{lem:reparameterize}. We consider the difference quotient $v:[c,d]\to\CC$ defined as
+		\[v(z):=\begin{cases}
+			\frac{f(z)-f(\gamma(t_0))}{z-\gamma(t_0)}-f'(s(t_0)) & z\ne\gamma(t_0), \\
+			0 & z=\gamma(t_0).
+		\end{cases}\]
+		Now, by definition of the differentiability of $f$ at $s(t_0)$, we know that $v(z)\to0$ as $z\to\gamma(t_0)$. Rearranging, we see that
+		\[f(z)-f(\gamma(t_0))=(z-\gamma(t_0))\cdot\big(f'(\gamma(t_0))+v(z)\big)\]
+		for all $z\in\Omega$, so plugging in $\gamma(t)\in\Omega$, we see that
+		\[f(\gamma(t))-f(\gamma(t_0))=(\gamma(t)-\gamma(t_0))\cdot\big(f'(\gamma(t_0))+v(\gamma(t))\big).\]
+		So now we rearrange backwards to see
+		\[\frac{f(\gamma(t))-f(\gamma(t_0))}{t-t_0}=\frac{\gamma(t)-\gamma(t_0)}{t-t_0}\cdot\big(f'(\gamma(t_0))+v(\gamma(t))\big).\]
+		Upon taking the limit as $t\to t_0$, the differentiability of $\gamma$ at $t_0$ assures us that
+		\[\lim_{t\to t_0}\frac{f(\gamma(t))-f(\gamma(t_0))}{t-t_0}=\left(\lim_{t\to t_0}\frac{\gamma(t)-\gamma(t_0)}{t-t_0}\right)\left(\lim_{t\to t_0}f'(\gamma(t_0))+v(\gamma(t))\right)=\gamma'(t_0)f'(\gamma(t_0)).\]
+		Notably, we are using the fact that $v\circ\gamma$ is continuous at $t_0$ because $\gamma$ is continuous and $v$ is continuous at $\gamma(t_0)$.
+	\end{proof}
+	Using the above lemma, we can compute
+	\[\frac{(f\circ\gamma_1)'(t_1)}{(f\circ\gamma_2)'(t_2)}=\frac{f'(\gamma(t_1))\gamma'(t_1)}{f'(\gamma(t_2))\gamma'(t_2)}=\frac{\gamma'(t_1)}{\gamma'(t_2)}.\]
+	Note that we have successfully used the hypotheses that $f'(z_0)\ne0$ and $\gamma_2'(t_2)\ne0$; the last hypothesis that $\gamma_1'(t_1)\ne0$ is added for aesthetic reasons.
 \end{proof}
+We should probably explain why we named this subsection ``conformal maps.'' We pick up the following corollary.
+\begin{corollary} \label{cor:actualconformal}
+	In the context of the \autoref{thm:getconformal}, we have that
+	\[\arg\gamma_1'(t_1)-\arg\gamma_2'(t_2)\equiv\arg(f\circ\gamma_1)'(t_1)-\arg(f\circ\gamma_2)'(t_2)\pmod{2\pi}\]
+\end{corollary}
+\begin{proof}
+	Everything involved is nonzero by hypothesis; this time $\gamma_1'(t_1)\ne0$ is not aesthetic. By taking $\arg$ of both sides of the conclusion of \autoref{thm:getconformal}, we see that it will suffice to show
+	\[\arg(z/w)-\arg z+\arg w\stackrel?\equiv0\pmod{2\pi}\]
+	for $z,w\in\CC^\times$ after some rearranging. Well, we write $z=r\exp(i\alpha)$ and $w=s\exp(i\beta)$ so that
+	\[z/w=(r/s)\exp(i(\alpha-\beta))\]
+	using \autoref{prop:exphom}. In particular, $\alpha\equiv\arg z$ and $\beta\equiv\arg w$, so
+	\[\arg(z/w)\equiv\alpha-\beta\equiv\arg z-\arg w\pmod{2\pi},\]
+	which is what we wanted.
+\end{proof}
+Now, we recall that $\arg z$ is intended to be the (counterclockwise) angle from the real axis to a complex number $z$. As such, $\arg z-\arg w$ should be the (counterclockwise) angle from $w:=s\exp(i\beta)$ to $z:=r\exp(i\alpha)$, as in the following diagram.
+\begin{center}
+	\begin{asy}
+		unitsize(1.5cm);
+		draw(arc((0,0),0.3,0,150), arrow=EndArrow, red);
+		draw(arc((0,0),0.6, 0,45), arrow=EndArrow, blue);
+		draw(arc((0,0),0.6,45,150), arrow=EndArrow, magenta);
+		draw((0,0)--(2.5,0), EndArrow); label("$\mathrm{Re}$", (2.5,0), E);
+		pair z = 2*dir(150); pair w = 3*dir(45);
+		draw(z--(0,0), red);
+		draw((0,0)--w, blue);
+		dot("$z$", z, dir(150), red); dot("$w$", w, dir(45), blue);
+		label("$\alpha$", (0,0), dir(75), red);
+		label("$\beta$", (0,0), 8.4*dir(22.5), blue);
+		label("$\alpha-\beta$", (0,0), 8*dir(75+22.5), magenta);
+		dot((0,0));
+	\end{asy}
+\end{center}
+Thus, \autoref{cor:actualconformal} is saying that, at a point $z_0\in\CC$, the angle between two tangent vectors $\gamma_1'(t_1)$ and $\gamma'_2(t_2)$ remains the same if we pass the tangent vectors through $f$. This angle-preserving property is called being ``conformal.''
+
+It would be a crime to give this description and then not actually show this for some holomorphic function, so we pass two rays from $z:=1+i$ through $f(z):=z^2$.
+\begin{center}
+	\begin{asy}
+		import graph;
+		unitsize(1cm);
+
+		pair z = (1,1.4);
+
+		pair g1(real t)
+		{
+			return z+t*(-0.1,0.5);
+		}
+		pair g2(real t)
+		{
+			return z+t*(-0.8,0.1);
+		}
+		pair f(pair z)
+		{
+			return (z.x*z.x - z.y*z.y, 2*z.x*z.y);
+		}
+		pair fg1(real t)
+		{
+			return f(g1(t));
+		}
+		pair fg2(real t)
+		{
+			return f(g2(t));
+		}
+
+		draw((-4,0)--(2,0), arrow=EndArrow, dotted);
+		draw((0,-1)--(0,4), arrow=EndArrow, dotted);
+
+		draw(graph(g1, 0, 1), arrow=EndArrow, red);
+		draw(graph(g2, 0, 1), arrow=EndArrow, blue);
+		dot("$z$", z, S);
+		label("$\gamma_1$", g1(1), N, red);
+		label("$\gamma_2$", g2(1), W, blue);
+
+		draw(graph(fg1, 0, 1), arrow=EndArrow, red);
+		draw(graph(fg2, 0, 1), arrow=EndArrow, blue);
+		dot("$f(z)$", f(z), dir(10));
+		label("$f\gamma_1$", fg1(1), W, red);
+		label("$f\gamma_2$", fg2(1), S, blue);
+	\end{asy}
+\end{center}
+Indeed, we can check visually that it looks like the angle got preserved (even though lengths are quite scaled).
