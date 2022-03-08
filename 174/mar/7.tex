@@ -1,0 +1,150 @@
+% !TEX root = ../notes.tex
+
+We continue.
+
+\subsection{Housekeeping}
+We begin by discussing a homework problem. Here is a definition.
+\begin{definition}[Divisible]
+	An abelian group $A$ is \textit{divisible} if and only if, for each $a\in A$ and $n\in\ZZ\setminus\{0\}$.
+\end{definition}
+It happens that the category of divisible abelian groups has non-injective monomorphisms. For example, we have the following.
+\begin{exe}
+	The map $\pi:\QQ\onto\QQ/\ZZ$ is a monomorphism.
+\end{exe}
+\begin{proof}
+	Suppose that we have maps $f,g:A\to\QQ$ such that $\pi f=\pi g$. We claim that $f=g$. Indeed, for any $a\in A\setminus\{0\}$, we need to show that $f(a)=g(a)$, for which so far we know that $\pi(f(a))=\pi(f(g))$, so there is an integer $n$ such that
+	\[f(a)=g(a)+n.\]
+	Suppose for the sake of contradiction that $n\ne0$. Then, because $A$ is divisible, there exists an element $b\in A$ such that $a=2nb$, so we get to write
+	\[2nf(b)=f(2nb)=f(a)=g(a)+n=2ng(b)+n,\]
+	so $f(b)=g(b)+\frac12$. Pushing this though $\pi$, we get
+	\[b=b+\frac12,\]
+	so $\frac12\in\ZZ$, which is our contradiction.
+\end{proof}
+
+And here is the attendance question.
+\begin{exe}
+	We describe $\int F$ where $F:\{*\}\to\mathrm{Set}$ is some functor.
+\end{exe}
+\begin{proof}
+	Set $X:=F(*)$. The objects in $\int F$ are pairs $(*,c)$ where $c\in X$, and the morphisms are morphisms $f:*\to*$ such that $Ff(c)=Ff(d)$, but only $f=\id_*$ is permitted. So we have objects which are elements of $X$ and only identities, so this is the discrete category on $X$.
+\end{proof}
+
+\subsection{A Representability Test}
+Last time we were showing the following result.
+\representabletest*
+\noindent Last time we showed the forwards direction.
+\begin{proof}[Proof of the backwards direction]
+	Suppose that we have a natural isomorphism $\alpha:\op{Mor}(c,-)\Rightarrow F$, and we need an object to be initial in $\int F$. Without much to do, we set
+	\[x:=\alpha_c(\id_c)\in Fc,\]
+	and we claim that $(c,x)$ is our desired initial element in $\int F$.
+
+	Well, pick up some object $(d,y)$, and we want to show that there is a unique morphism $(c,x)\to(d,y)$. To be explicit, our data consist of $d\in\mathcal C$ and $y\in Fd$. The main claim is that, for any morphism $f:c\to d$, we have
+	\[\alpha_d(f)=(Ff)(f),\]
+	as we showed in the Yoneda lemma. Here is the relevant naturality diagram.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oYyxjKSJdLFsxLDAsIkZjIl0sWzEsMSwiRmQiXSxbMCwxLCJcXG9we01vcn0oYyxkKSJdLFswLDEsIlxcYWxwaGFfYyJdLFszLDIsIlxcYWxwaGFfZCJdLFsxLDIsIkZmIl0sWzAsMywiZlxcY2lyYy0iLDJdXQ==
+	\[\begin{tikzcd}
+		{\op{Mor}(c,c)} & Fc \\
+		{\op{Mor}(c,d)} & Fd
+		\arrow["{\alpha_c}", from=1-1, to=1-2]
+		\arrow["{\alpha_d}", from=2-1, to=2-2]
+		\arrow["Ff", from=1-2, to=2-2]
+		\arrow["{f\circ-}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	Tracking through $\id_c$ in the diagram gives the result because $\alpha_c(\id_c)$ was defined to be $x$. It follows that we have a morphism $f:(c,x)\to(d,y)$ if and only if $(Ff)(x)=y$ if and only if $\alpha_d(f)=y$, which we know to be unique because $\alpha_d$ is an isomorphism.
+\end{proof}
+From the way we have proven things, we actually have the following result.
+\begin{corollary}
+	In fact, $F$ is represented by $c$ with universal element $x$ if and only if $(c,x)\in\int F$ is initial.
+\end{corollary}
+\begin{proof}
+	If $(c,x)\in\int F$ is initial, then we showed last time that $c$ represents our functor, and $x$ is actually our universal property (by staring at our proof). Conversely, if $F$ is represented by $c$, we conjured our universal element $x:=\alpha_c(\id_c)$ to create our initial element $(c,x)$.
+\end{proof}
+
+\subsection{Unique Representation}
+Because the Yoneda embedding (\autoref{thm:yonedaembedding}) creates isomorphisms, if $\op{Mor}(c,-)\simeq\op{Mor}(c',-)$, then $c\cong c'$, so our representing objects are isomorphic. We might hope for something more.
+\begin{remark}
+	There is a technical notion of ``evil'' that basically says that sometimes in category theory our notion of equality is too strong. For example, isomorphism of categories is too strong, so we had equivalence of categories to fix this.
+\end{remark}
+\begin{example}
+	``Cardinality'' of a category is not preserved by equivalence, so it is evil. For example, any two indiscrete categories are equivalent, but they have different numbers of elements.
+\end{example}
+Anyways, we have the following result.
+\begin{proposition} \label{prop:getindiscrete}
+	For a functor $F:\mathcal C\to\mathrm{Set}$, the full subcategory spanned by its representations in $\mathcal C$ is either empty or a contractible groupoid.
+\end{proposition}
+Wait, contractible groupoid?
+\begin{definition}[Contractible groupoid]
+	A \textit{contractible groupoid} is a category where all morphism sets $\op{Mor}(c,d)$ has exactly one element.
+\end{definition}
+\begin{remark}
+	The idea is that we can ``collapse'' our category inwards along unique isomorphisms.
+\end{remark}
+We showed back in \autoref{exe:indiscreteissmall} that all contractible groupoids are equivalent to $\mathrm Be$; here is the idea behind why we are bringing this up.
+\begin{idea}
+	Unique isomorphisms tend to have contractible groupoids in the background.
+\end{idea}
+So the idea behind introducing \autoref{prop:getindiscrete} is that there will be a unique morphism $f:c\to d$ that will also send the corresponding universal elements correctly in that $f:(c,x)\to(d,y)$. It is a good isomorphism.
+
+Before continuing, here is a lemma.
+\begin{lemma}
+	The full subcategory of $\mathcal C$ spanned by its final objects is either empty or a contractible groupoid.
+\end{lemma}
+\begin{proof}
+	We will be brief. If it is empty, we are done. Otherwise, for any two final objects $t_1,t_2$, there is exactly one morphism $t_1\to t_2$ because $t_2$ is final. So we are done.
+\end{proof}
+\begin{remark} \label{rem:initialscontract}
+	We can dualize the above lemma (by working in $\mathcal C\opp$) to replace the word ``final'' with ``initial'' everywhere.
+\end{remark}
+And now we prove \autoref{prop:getindiscrete}.
+\begin{proof}[Proof of \autoref{prop:getindiscrete}]
+	If $F$ is not representable, then $\int F$ has no initial objects because initial objects induce representations. Otherwise, $\int F$ will have initial objects, but they form a contractible groupoid by \autoref{rem:initialscontract}.
+\end{proof}
+
+\subsection{Typical Universal Properties}
+Because we are feeling benevolent today, here are some examples.
+\begin{exe}
+	Consider the contravariant functor $\mathcal P:\mathrm{Set}\opp\to\mathrm{Set}$, which sends maps objects by $\mathcal P:S\mapsto\mathcal P(S)$ and morphisms by taking $f:S\to T$ to $f^{-1}:\mathcal P(T)\to\mathcal P(S)$. We discuss \autoref{prop:representabletest} with this functor.
+\end{exe}
+\begin{proof}
+	Our objects are pairs $(X,A)$ where $X$ is a set and $A\subseteq X$ is a subset. Our morphisms $(X,A)\to(Y,B)$ are maps $f:X\to Y$ such that $f^{-1}(B)=A$.
+
+	Now, back in \autoref{exe:representpower}, we showed that $\Omega=\{0,1\}$ represents $\mathcal P$ with universal element $1$. Accordingly, we claim that $(\Omega,\{1\})$ is final (note $\mathcal P$ is contravariant) in $\int F$. Indeed, for any pair $(X,A)$, there is a unique map $f:X\to\Omega$ such that $f^{-1}(\{1\})=A$ which describes itself.
+\end{proof}
+\begin{exe}
+	Consider the functor $\op{Bilin}(V,W,-):\mathrm{Vec}_k$. We discuss \autoref{prop:representabletest}.
+\end{exe}
+\begin{proof}
+	To start, we note that our objects of $\int\op{Bilin}(V,W,-)$ consists of a vector space $U$ with a bilinear map $f:V\times W\to U$. A morphism $(U,f)\to(U',f')$ is a linear map $g:U\to U'$ such that $gf=f'$; i.e., the following diagram should commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJWXFx0aW1lcyBXIl0sWzEsMCwiVSJdLFsxLDEsIlUnIl0sWzAsMSwiZiJdLFswLDIsImYnIiwyXSxbMSwyLCJnIl1d
+	\[\begin{tikzcd}
+		{V\times W} & U \\
+		& {U'}
+		\arrow["f", from=1-1, to=1-2]
+		\arrow["{f'}"', from=1-1, to=2-2]
+		\arrow["g", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Explicitly, we want
+	\[\op{Bilin}(V,W,-)(g)(f)=f',\]
+	but $\op{Bilin}(V,W,-)(g)=(g\circ-)$ by definition.
+
+	On the other hand, we know that $V\otimes W$ represents $\op{Bilin}(V,W,-)$ with universal element $\otimes:V\times W\to V\otimes W$ by $(v,w)\mapsto v\otimes w$. Noting that this means $(V\otimes W,\otimes)$ ought to be initial, we are told that whenever we have a bilinear map $V\otimes W\to U$, there is a unique map $V\otimes W\to U$ such that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJWXFx0aW1lcyBXIl0sWzEsMCwiVlxcb3RpbWVzIFciXSxbMSwxLCJVJyJdLFswLDIsImYiLDJdLFsxLDIsIiIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDEsIlxcb3RpbWVzIl1d
+	\[\begin{tikzcd}
+		{V\times W} & {V\otimes W} \\
+		& {U'}
+		\arrow["f"', from=1-1, to=2-2]
+		\arrow[dashed, from=1-2, to=2-2]
+		\arrow["\otimes", from=1-1, to=1-2]
+	\end{tikzcd}\]
+	This is the typical universal property.
+\end{proof}
+\begin{exe}
+	Consider the forgetful functor $U:\mathrm{Ring}\to\mathrm{Set}$. We discuss \autoref{prop:representabletest}.
+\end{exe}
+\begin{proof}
+	Our objects in $\int R$ consists of pairs $(R,r)$ such that $r\in R$. Our morphisms $f:(R,r)\to(S,s)$ is a morphism $f:R\to S$ such that $f(r)=s$.
+
+	Now, back in \autoref{exe:freepolyrepresent}, we showed that $\ZZ[x]$ should represent this functor with universal element $x$, so we want $(\ZZ[x],x)$ to be initial in $\int F$. In other words, for any pair $(R,r)$, there is a unique morphism $\ZZ[x]\to R$ such that $x\mapsto r$. Indeed, this morphism must take $1\mapsto1$, so we are sending
+	\[\sum_{k=0}^Na_kx^k\longmapsto\sum_{k=0}^Na_kr^k,\]
+	which finishes.
+\end{proof}
