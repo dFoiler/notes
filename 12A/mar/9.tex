@@ -1,0 +1,186 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Negation Elimination}
+There are two forms of negation elimination. Here is one way.
+\notelim*
+\noindent Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[n]{a}{\lnot\alpha}
+		\have[\vdots]{}{\vdots}
+		\have{m}{b}{\alpha\to\beta} \by{$\lnot$Elim}{a}
+	\end{nd}
+\end{align*}
+Here is another form of negation elimination.
+\begin{defi}[Ex Falso Quodlibet]
+	From a contradiction that $\alpha\land\lnot\alpha$, any formula $\beta$ can be introduced.
+\end{defi}
+This looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[n]{a}{\alpha\land\lnot\alpha}
+		\have[\vdots]{}{\vdots}
+		\have{m}{b}{\beta} \by{EFQ}{a}
+	\end{nd}
+\end{align*}
+In theory, we should only introduce a contradiction in a subproof.
+\begin{remark}
+	Any application of ex falso quodlibet can be replaced with $\land$ elimination, $\lnot$ elimination, and $\to$ elimination. Conversely, $\lnot$ elimination be can be replaced with $\to$ introduction, reiteration, $\land$ introduction, and ex falso quodlibet. We will not prove this.
+\end{remark}
+To manifest this remark, we show how to get $\lnot$ elimination from the others.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[n]{hypo}{\lnot\alpha}
+		\have[\vdots]{}{\vdots}
+		\open[]
+			\hypo[m]{a}{\alpha}
+			\have{na}{\lnot\alpha} \by{Reit}{hypo}
+			\have{contra}{\alpha\land\lnot\alpha} \by{$\land$Intro}{a,na}
+			\have{b}{\beta} \by{EFQ}{contra}
+		\close
+		\have{}{\alpha\to\beta} \by{$\to$Intro}{a,b}
+	\end{nd}
+\end{align*}
+Let's see an example.
+\begin{exe}
+	We show that $\lnot p$ and $q\to p$ can prove $q\to r$.
+\end{exe}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\hypo{np0}{\lnot p}
+			\hypo{qtop0}{q\to p}
+			\open[]
+				\hypo{q}{q}
+				\have{qtop}{q\to p} \by{Reit}{qtop0}
+				\have{p}{p} \by{$\to$Elim}{q,qtop}
+				\have{np}{\lnot p} \by{Reit}{np0}
+				\have{contra}{p\land\lnot p} \by{$\land$Intro}{p,np}
+				\have{r}{r} \by{EFQ}{contra}
+			\close
+			\have{}{q\to r} \by{$\to$Intro}{q,r}
+		\end{nd}
+	\end{align*}
+	This proof is valid.
+\end{proof}
+\begin{remark}
+	Our proof system is still not complete. For example, $((p\to q)\to p)\to p$ is still a valid formula but not provable in this proof system.
+\end{remark}
+
+\subsection{Reductio Ad Absurdum}
+To complete our proof system, we need to introduce one more rule. Let's review the following proof.
+\sqrttwoirrational*
+We showed this by assuming $\varphi$, deriving a contradiction, and then concluded $\lnot\varphi$. In contrast, reductio ad absurdum assumes $\lnot\varphi$, derives a contradiction, and then gives $\varphi$. Namely, the number of $\lnot$s is decreasing.
+
+Let's give an example.
+\begin{proposition}
+	There are irrational numbers $a$ and $b$ such that $a^b$ is rational.
+\end{proposition}
+\begin{proof}
+	Assume for the sake of contradiction that there are no such irrational numbers. Now, we know that $\sqrt2$ is irrational, so $\sqrt2^{\sqrt2}$ is irrational as well (from a contraposition). But then
+	\[\left(\sqrt2^{\sqrt2}\right)^{\sqrt2}=(\sqrt2)^{\sqrt2\cdot\sqrt2}=(\sqrt2)^2=2\]
+	is also irrational, which is a contradiction. This contradicts the assumption. So instead, there must be irrational numbers $a$ and $b$ such that $a^b$ is rational.
+\end{proof}
+\begin{warn}
+	This proof is nonconstructive: we don't actually have examples of irrational numbers $a$ and $b$ such that $a^b\in\QQ$.
+\end{warn}
+To be explicit, either $(\sqrt2)^{\sqrt2}$ is our example or $\left(\sqrt2^{\sqrt2}\right)^{\sqrt2}$ is our example, and we don't know which.
+
+To see that this proof is different from what we had before, note the proof above looks like the following.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo{nconclusion}{\lnot(\text{there are }a,b\notin\QQ\text{ with }a,b\in\QQ}
+			\have[\vdots]{}{\vdots}
+			\have[n]{contra}{\bot}
+		\close
+		\have{conclusion}{\text{there are }a,b\notin\QQ\text{ with }a,b\in\QQ}
+		\have{contra}{(\text{there are }a,b\notin\QQ\text{ with }a,b\in\QQ)\land\lnot(\text{there are }a,b\notin\QQ\text{ with }a,b\in\QQ)} \by{$\land$Intro}{conclusion,nconclusion}
+	\end{nd}
+\end{align*}
+Indeed, we can see that we stripped off a $\lnot$, which is more powerful than typical $\lnot$ introduction.
+
+Formally, here is our description.
+\begin{definition}[Reductio ad absurdum]
+	If we assume $\lnot\varphi$ and derive a contradiction, then we can prove $\varphi$.
+\end{definition}
+Here's an example.
+\begin{exe}
+	From $\lnot q\to\lnot p$, we prove $p\to q$.
+\end{exe}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\hypo{hypo}{\lnot q\to\lnot p}
+			\open[]
+				\hypo{p}{p}
+					\open[]
+						\have{nq}{\lnot q}
+						\have{nqtonp}{\lnot q\to\lnot p} \by{Reit}{hypo}
+						\have{np}{\lnot p} \by{$\to$Elim}{nqtonp,nq}
+						\have{p0}{p} \by{Reit}{p}
+						\have{contra}{p\land\lnot p} \by{$\land$Intro}{p,np}
+					\close
+				\have{q}{q} \by{RAA}{nq-contra}
+			\close
+			\have{}{p\to q} \by{$\to$Intro}{p-q}
+		\end{nd}
+	\end{align*}
+	Notably, by $\lnot$ introduction, we would still be able to conclude $\lnot\lnot q$ just not the formula $q$.
+\end{proof}
+
+\subsection{Contraposition}
+Some inferences are not primitive, but they are sufficiently common to have their own names.
+\begin{definition}[Contraposition]
+	If we can prove $\lnot q\to\lnot p$, then we can prove $p\to q$ by \textit{contraposition}.
+\end{definition}
+This is not a primitive, but we can always apply this schematic.
+\begin{lemma}
+	Fix $n$ an integer. Then $n$ is odd (i.e., of the form $2k+1$) if and only if $n$ is not even (i.e., of the form $2k$).
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+Let's show the following.
+\begin{lemma}
+	Fix $n$ an integer. If $n^2$ is even, then $n$ is even.
+\end{lemma}
+\begin{proof}
+	We proceed by contraposition: suppose that $n$ is not even, and we show $n^2$ is not even. Well, because $n$ is not even, we get to say $n=2k+1$, so
+	\[n^2=(2k+1)^2=4k^2+4k+1=2\left(2k^2+2k\right)+1,\]
+	so we see that $n^2$ is odd. It follows $n^2$ is not even, so we are done.
+\end{proof}
+\begin{remark}
+	Now that we've added in reductio ad absurdum, our proof system is complete: any valid formula is provable.
+\end{remark}
+To manifest this remark, let's show Pierce's law that $((p\to q)\to p)\to p$, which is not provable without reductio ad absurdum even though it only uses $\to$.
+\begin{exe}
+	We show $((p\to q)\to p)\to p$.
+\end{exe}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\have{hypo}{(p\to q)\to p}
+				\open[]
+					\hypo{np}{\lnot p}
+					\have{ptoq}{p\to q} \by{$\lnot$Elim}{np}
+					\have{ptoqtop}{(p\to q)\to p} \by{Reit}{hypo}
+					\have{p}{p} \by{$\to$ELim}{ptoq,ptoqtop}
+					\have{contra}{p\land\lnot p} \by{$\land$Intro}{p,np}
+				\close
+				\have{p0}{p} \by{RAA}{np,contra}
+			\close
+			\have{}{((p\to q)\to p)\to p} \by{$\to$Intro}{hypo,p0}
+		\end{nd}
+	\end{align*}
+	This works.
+\end{proof}
