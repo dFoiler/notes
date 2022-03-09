@@ -1,0 +1,111 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Integrals from the Reals}
+Today we start talking about path integration.
+\begin{definition}[Integrable]
+	Fix $\psi:[a,b]\to\CC$ a function (such as a path) with $\psi(t)=u(t)+iv(t)$, where $u,v:\RR\to\RR$. Then $\psi$ is \textit{integrable} over $[a,b]$ if and only if $u$ and $v$ are both integrable over $[a,b]$ (as real functions!). In this case, we define
+	\[\int_a^b\psi(t)\,dt:=\int_a^bu(t)\,dt+i\int_a^bv(t)\,dt.\]
+\end{definition}
+% \begin{remark}[Nir]
+% 	There is an inherent appeal to real analysis in the above definition, but it can be removed if we define a measure on $\CC$ which is independent on $\RR$. We will not do this because I don't want to rebuild the somewhat hefty machinery of integrals existing.
+% \end{remark}
+We have the following sanity checks.
+\begin{lemma}
+	Fix $\psi_1,\psi_2:[a,b]\to\CC$ integrable functions with $\alpha_1,\alpha_2\in\CC$. Then
+	\[\int_a^b(\alpha_1\psi_1(t)+\alpha_2\psi_2(t))\,dt=\alpha_1\int_a^b\psi_1(t)\,dt+\alpha_2\int_a^b\psi_2(t)\,dt.\]
+\end{lemma}
+\begin{proof}
+	Expand out in terms of real and imaginary parts.
+\end{proof}
+\begin{lemma}
+	Fix $\psi:[a,b]\to\CC$ an integral function. Then
+	\[\left|\int_a^b\psi(t)\,dt\right|\le\int_a^b|\psi(t)|\,dt.\]
+\end{lemma}
+\begin{proof}
+	There is approximately one idea to this proof: the point is to create a real-valued integral equal to the norm. Note that $\int_a^b\psi(t)\,dt=0$ means we are done for free. Thus, we can put $\int_a^b\psi(t)\,dt=0$ into polar form as
+	\[r\exp(i\theta)\]
+	for $r>0$. Now, writing $\psi(t):=u(t)+iv(t)$, we change our basis as
+	\[\alpha(t)=u(t)\cos\theta+v(t)\sin\theta\qquad\text{and}\qquad\beta(t)=v(t)\cos\theta-u(t)\sin\theta.\]
+	The point of doing this is that
+	\[\psi(t)=\alpha(t)\exp(i\theta)+i\beta(t)\exp(i\theta).\]
+	In particular, $\psi(t)=\exp(i\theta)(\alpha(t)+i\beta(t))$. Thus, we can write
+	\[r\exp(i\theta)=\int_a^b\psi(t)\,dt=0\int_a^b\exp(i\theta)(\alpha(t)+i\beta(t))\,dt=\exp(i\theta)\int_a^b(\alpha(t)+i\beta(t))\,dt.\]
+	Upon cancelling out the $\exp(i\theta)$, we see that
+	\[r=\int_a^b(\alpha(t)+i\beta(t))\,dt=\int_a^b\alpha(t)\,dt+i\int_a^b\beta(t)\,dt.\]
+	Because $\beta$ is still a real function, that integral evaluates to a real number, but because we have no imaginary part, we conclude
+	\[r=\int_a^b\alpha(t)\,dt.\]
+	So now we appeal to real analysis. We see
+	\[\left|\int_a^b\psi(t)\,dt\right|=\int_a^b\alpha(t)\,dt\le\int_a^b|\psi(t)|\,dt,\]
+	where $\alpha(t)\le|\psi(t)|$ by doing some estimation.
+\end{proof}
+
+\subsection{Path Integration}
+We have the following definition.
+\begin{definition}[Integration]
+	Fix $\Omega\subseteq\CC$ an open and connected subset with a $C^1$ path $\gamma:[a,b]\to\Omega$. Now, given a function $f:\Omega\to\CC$, we define the \textit{integral}
+	\[\int_\gamma f(z)\,dz:=\int_a^bf(\gamma(t))\gamma'(t)\,dt,\]
+	if the integral exists.
+\end{definition}
+Our goal is to show that the integral itself only depends on the equivalence class of $\gamma$.
+
+We can extend this definition a little to piecewise $C^1$ paths.
+\begin{definition}[Integration]
+	Fix $\Omega\subseteq\CC$ an open and connected subset with a piecewise $C^1$ path $\gamma:[a,b]\to\Omega$, where we have the strictly increasing sequence $\{a_k\}_{k=1}^n$ such that $a=a_0$ and $b=a_n$ and $\gamma|_{a_k,a_{k+1}}$ are $C^1$. Then, given a function $f:\Omega\to\CC$, we define the \textit{integral}
+	\[\int_\gamma f(z)\,dz:=\sum_{k=0}^{n-1}\int_{a_k}^{a_{k+1}}f(\gamma(t))\gamma'(t)\,dt.\]
+\end{definition}
+\begin{example}
+	Fix $f:\CC\setminus\{0\}\to\CC$ by $f(z):=\frac1z$ and $\gamma:[0,2\pi]\to\CC$ by $\gamma(t)=\exp(it)$ so that $\gamma'(t)=i\exp(it)$. It follows
+	\[\int_\gamma f(z)\,dz=\int_0^{2\pi}\left(\frac1{\exp(it)}\cdot i\exp(it)\right)\,dt=\int_0^{2\pi}i\,dt=2\pi it.\]
+\end{example}
+Now let's show that the integral does not change on reparameterization.
+\begin{lemma}
+	Fix $\gamma_1:[a,b]\to\Omega$ and $\gamma_2:[c,d]\to\Omega$ two equivalent piecewise $C^1$ paths. Then, for any continuous function $f:\Omega\to\CC$,
+	\[\int_{\gamma_1}f(z)\,dz=\int_{\gamma_2}f(z)\,dz.\]
+\end{lemma}
+\begin{proof}
+	By equivalence, we are promised a function $s:[c,d]\to[a,b]$ which is continuously differentiable, bijection, and has positive derivative everywhere such that $\gamma_2=\gamma_1\circ s$.
+
+	We will in the case where $\gamma_1$ is $C^1$, and the general case will follow. Then we compute
+	\[\int_{\gamma_2}f(z)\,dz=\int_c^df(\gamma_1(s(t)))(\gamma_1\circ s)'(t)\,dt.\]
+	Applying \autoref{lem:reparameterize}, we see
+	\[\int_{\gamma_2}f(z)\,dz=\int_c^df(\gamma_1(s(t)))\gamma_1'(s(t))s'(t)\,dt\]
+	By applying a $u$-substitution along $s$ (notably, this is now a real integral!), we see
+	\[\int_{\gamma_2}f(z)\,dz=\int_a^bf(\gamma_1(s))\gamma_1'(s)\,ds=\int_{\gamma_1}f(z)\,dz,\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{Length}
+Here is our definition.
+\begin{definition}[Length]
+	Fix a $C^1$ path $\gamma:[a,b]\to\CC$. Then we define the \textit{length of $\gamma$} as
+	\[\ell(\gamma):=\int_a^b|\gamma'(t)|\,dt.\]
+	More generally, if $\gamma$ is piecewise $C^1$, then we are promised a strictly increasing sequence $\{a_k\}_{k=0}^n$ where $a_0=a$ and $a_n=b$ such that $\gamma|_{[a_k,a_{k+1}]}$ is $C^1$. So we define the \textit{length} as
+	\[\ell(\gamma):=\sum_{k=0}^{n-1}\int_{a_k}^{a_{k+1}}|\gamma'(t)\,dt.\]
+\end{definition}
+Let's use this definition a little.
+\begin{proposition}
+	Fix an open and connected subset $\Omega\subseteq\CC$. Then, for $\gamma,\eta:[a,b]\to\CC$ two piecewise $C^1$ paths and continuous functions $f,g:\Omega\to\CC$, we have the following.
+	\begin{listalph}
+		\item For any $\alpha,\beta\in\CC$, we have
+		\[\int_\gamma(\alpha f(z)+\beta g(z))\,dz=\alpha\int_\gamma f(z)\,dz+\beta\int_\gamma g(z)\,dz.\]
+		\item Denoting the opposite path by $\gamma^-$, we have
+		\[\int_\gamma f(z)\,dz=-\int_{\gamma^-}f(z)\,dz.\]
+		\item If $\gamma(b)=\eta(a)$, then we can concatenate as
+		\[\int_{\gamma*\eta}f(z)\,dz=\int_\gamma f(z)\,dz+\int_\eta f(z)\,dz.\]
+		\item We have
+		\[\left|\int_\gamma f(z)\,dz\right|\le\sup_{t\in[a,b]}\{|f(\gamma(t))|\}\cdot\ell(\gamma).\]
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We omit the proofs of the first three. By composition, $|f\circ\gamma|$ is a continuous function. In particular, because $[a,b]$ is a compact set, the supremum will actually exist, thus bounding $f$ on $\gamma([a,b])$.  Now, estimating, we see
+	\[\left|\int_\gamma f(z)\,dz\right|=\left|\int_a^bf(\gamma(z))\gamma'(z)\,dz\right|\le\int_a^b|f(\gamma(z))|\cdot|\gamma'(z)|\,dz.\]
+	By real analysis, we bound this last integral as
+	\[\sup_{t\in[a,b]}\{|f(\gamma(t))|\}\cdot\int_a^b|\gamma'(t)|\,dt,\]
+	which is what we wanted.
+\end{proof}
+We close with a definition, to advertise the fundamental theorem of calculus.
+\begin{definition}[Primitive]
+	Fix a nonempty, open subset $\Omega\subseteq\CC$. Then, given two continuous functions $F,f:\Omega\to\CC$, we say that $F$ is a \textit{primitive} on $f$ if and only if $F$ is holomorphic on $\Omega$ and $F'=f$.
+\end{definition}
