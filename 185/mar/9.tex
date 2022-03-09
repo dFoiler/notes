@@ -17,7 +17,23 @@ We have the following sanity checks.
 	\[\int_a^b(\alpha_1\psi_1(t)+\alpha_2\psi_2(t))\,dt=\alpha_1\int_a^b\psi_1(t)\,dt+\alpha_2\int_a^b\psi_2(t)\,dt.\]
 \end{lemma}
 \begin{proof}
-	Expand out in terms of real and imaginary parts.
+	This is by brute force. Let $\alpha_1=x_1+y_1i$ and $\alpha_2=x_2+y_2i$ and $\psi_1(t)=u_1(t)+iv_1(t)$ and $\psi_2(t)=u_2(t)+iv_2(t)$. Then we see that
+	\begin{align*}
+		\alpha_1\psi_1(t)+\alpha_2\psi_2(t) &= (x_1+y_1i)(u_1(t)+iv_1(t))+(x_2
+		+y_2i)(u_2(t)+iv_2(t)) \\
+		&= (x_1u_1(t)+x_2u_2(t)-y_1v_1(t)-y_2v_2(t))+i(x_1v_1(t)+x_2v_2(t)+y_1u_1(t)+y_2u_2(t))
+	\end{align*}
+	has integrable components because $u_1,v_1,u_2,v_2$ are all integrable by hypothesis, and the components are just $\RR$-linear combinations of these. Doing a lot of expansion, the fact that linear combinations of real-valued integrals is legal, we see
+	\begin{align*}
+		\int_a^b(\alpha_1\psi_1(t)+\alpha_2\psi_2(t))\,dt &= \int_a^b(x_1u_1(t)+x_2u_2(t)-y_1v_1(t)-y_2v_2(t))\,dt \\
+		&\qquad+i\int_a^b(x_1v_1(t)+x_2v_2(t)+y_1u_1(t)+y_2u_2(t))\,dt \\
+		&= x_1\int_a^bu_1(t)\,dt+x_2\int_a^bu_2(t)\,dt-y_1\int_a^bv_1(t)\,dt-y_2\int_a^bv_2(t)\,dt \\
+		&\qquad+ix_1\int_a^bv_1(t)\,dt+ix_2\int_a^bv_2(t)\,dt+iy_1\int_a^bu_1(t)\,dt+iy_2\int_a^bu_2(t)\,dt \\
+		&= (x_1+y_1i)\left(\int_a^bu_1(t)\,dt+i\int_a^bv_1(t)\,dt\right)\\
+		&\qquad+(x_2+y_2i)\left(\int_a^bu_2(t)\,dt+i\int_a^bv_2(t)\,dt\right) \\
+		&= \alpha_1\int_a^b\psi_1(t)\,dt+\alpha_2\int_a^b\psi_2(t)\,dt,
+	\end{align*}
+	which is what we wanted.
 \end{proof}
 \begin{lemma}
 	Fix $\psi:[a,b]\to\CC$ an integral function. Then
@@ -25,36 +41,53 @@ We have the following sanity checks.
 \end{lemma}
 \begin{proof}
 	There is approximately one idea to this proof: the point is to create a real-valued integral equal to the norm. Note that $\int_a^b\psi(t)\,dt=0$ means we are done for free. Thus, we can put $\int_a^b\psi(t)\,dt=0$ into polar form as
-	\[r\exp(i\theta)\]
-	for $r>0$. Now, writing $\psi(t):=u(t)+iv(t)$, we change our basis as
-	\[\alpha(t)=u(t)\cos\theta+v(t)\sin\theta\qquad\text{and}\qquad\beta(t)=v(t)\cos\theta-u(t)\sin\theta.\]
-	The point of doing this is that
-	\[\psi(t)=\alpha(t)\exp(i\theta)+i\beta(t)\exp(i\theta).\]
-	In particular, $\psi(t)=\exp(i\theta)(\alpha(t)+i\beta(t))$. Thus, we can write
-	\[r\exp(i\theta)=\int_a^b\psi(t)\,dt=0\int_a^b\exp(i\theta)(\alpha(t)+i\beta(t))\,dt=\exp(i\theta)\int_a^b(\alpha(t)+i\beta(t))\,dt.\]
+	\[r\exp(i\theta)=\int_a^b\psi(t)\,dt\]
+	for $r>0$. We would like to factor out a $\exp(i\theta)$ from this integral, so we compute (using $\cos(-\theta)=\cos\theta$ and $\sin(-\theta)=-\sin\theta$ from \autoref{lem:negtrig}) that
+	\begin{align*}
+		\psi(t)\exp(-i\theta) &= (u(t)+iv(t))(\cos(-\theta)+i\sin(-\theta)) \\
+		&= (u(t)+iv(t))(\cos\theta-i\sin\theta) \\
+		&= \underbrace{(u(t)\cos\theta+v(t)\sin\theta)}_{\alpha(t)}+i\cdot\underbrace{(v(t)\cos\theta-u(t)\sin\theta)}_{\beta(t)}
+	\end{align*}
+	In particular, $\alpha,\beta:\RR\to\RR$, and so by \autoref{prop:exphom}, we write
+	\[\psi(t)=\alpha(t)\exp(i\theta)+i\beta(t)\exp(i\theta)=\exp(i\theta)(\alpha(t)+i\beta(t)).\]
+	Thus, we can write
+	\[r\exp(i\theta)=\int_a^b\psi(t)\,dt=\int_a^b\exp(i\theta)(\alpha(t)+i\beta(t))\,dt=\exp(i\theta)\int_a^b(\alpha(t)+i\beta(t))\,dt.\]
 	Upon cancelling out the $\exp(i\theta)$, we see that
 	\[r=\int_a^b(\alpha(t)+i\beta(t))\,dt=\int_a^b\alpha(t)\,dt+i\int_a^b\beta(t)\,dt.\]
 	Because $\beta$ is still a real function, that integral evaluates to a real number, but because we have no imaginary part, we conclude
 	\[r=\int_a^b\alpha(t)\,dt.\]
 	So now we appeal to real analysis. We see
-	\[\left|\int_a^b\psi(t)\,dt\right|=\int_a^b\alpha(t)\,dt\le\int_a^b|\psi(t)|\,dt,\]
-	where $\alpha(t)\le|\psi(t)|$ by doing some estimation.
+	\[\left|\int_a^b\psi(t)\,dt\right|=r=\int_a^b\alpha(t)\,dt\le\int_a^b|\psi(t)|\,dt,\]
+	where $\alpha(t)\le|\psi(t)|$ is because
+	\[\alpha(t)=\Re\psi(t)\exp(-i\theta)\le|\psi(t)|\cdot|\exp(-i\theta)|=|\psi(t)|,\]
+	where $|\exp(-i\theta)|=1$ by \autoref{cor:expmagker}.
 \end{proof}
 
 \subsection{Path Integration}
 We have the following definition.
-\begin{definition}[Integration]
-	Fix $\Omega\subseteq\CC$ an open and connected subset with a $C^1$ path $\gamma:[a,b]\to\Omega$. Now, given a function $f:\Omega\to\CC$, we define the \textit{integral}
+\begin{definition}[Integration] \label{defi:integration}
+	Fix $\Omega\subseteq\CC$ an open and connected subset with a $C^1$ path $\gamma:[a,b]\to\Omega$. Now, given a continuous function $f:\Omega\to\CC$, we define the \textit{integral}
 	\[\int_\gamma f(z)\,dz:=\int_a^bf(\gamma(t))\gamma'(t)\,dt,\]
 	if the integral exists.
 \end{definition}
+\begin{lemma}
+	Under the hypotheses of \autoref{defi:integration}, the integral $\int_\gamma f(z)\,dz$ actually exists.
+\end{lemma}
+\begin{proof}
+	Note that $f$ and $\gamma$ are both continuous, so $f\circ\gamma$ is continuous. Similarly, $\gamma'$ is continuous because $\gamma$ is $C^1$. In total, we can expand
+	\[f(\gamma(t))\gamma'(t)\]
+	to be a product of continuous functions and therefore must be continuous. It follows that $\Re(f(\gamma(t))\gamma'(t))$ and $\Im(f(\gamma(t))\gamma'(t))$ is also a continuous function, so these components are integrable, so the total integral
+	\[\int_a^bf(\gamma(t))\gamma'(t)\,dt\]
+	exists.
+\end{proof}
 Our goal is to show that the integral itself only depends on the equivalence class of $\gamma$.
 
 We can extend this definition a little to piecewise $C^1$ paths.
 \begin{definition}[Integration]
-	Fix $\Omega\subseteq\CC$ an open and connected subset with a piecewise $C^1$ path $\gamma:[a,b]\to\Omega$, where we have the strictly increasing sequence $\{a_k\}_{k=1}^n$ such that $a=a_0$ and $b=a_n$ and $\gamma|_{a_k,a_{k+1}}$ are $C^1$. Then, given a function $f:\Omega\to\CC$, we define the \textit{integral}
+	Fix $\Omega\subseteq\CC$ an open and connected subset with a piecewise $C^1$ path $\gamma:[a,b]\to\Omega$, where we have the strictly increasing sequence $\{a_k\}_{k=1}^n$ such that $a=a_0$ and $b=a_n$ and $\gamma|_{a_k,a_{k+1}}$ are $C^1$. Then, given a continuous function $f:\Omega\to\CC$, we define the \textit{integral}
 	\[\int_\gamma f(z)\,dz:=\sum_{k=0}^{n-1}\int_{a_k}^{a_{k+1}}f(\gamma(t))\gamma'(t)\,dt.\]
 \end{definition}
+Note that this integral exists because each component integral exists because $\gamma|_{[a_k,a_{k+1}]}$ is in fact $C^1$.
 \begin{example}
 	Fix $f:\CC\setminus\{0\}\to\CC$ by $f(z):=\frac1z$ and $\gamma:[0,2\pi]\to\CC$ by $\gamma(t)=\exp(it)$ so that $\gamma'(t)=i\exp(it)$. It follows
 	\[\int_\gamma f(z)\,dz=\int_0^{2\pi}\left(\frac1{\exp(it)}\cdot i\exp(it)\right)\,dt=\int_0^{2\pi}i\,dt=2\pi it.\]
@@ -71,7 +104,7 @@ Now let's show that the integral does not change on reparameterization.
 	\[\int_{\gamma_2}f(z)\,dz=\int_c^df(\gamma_1(s(t)))(\gamma_1\circ s)'(t)\,dt.\]
 	Applying \autoref{lem:reparameterize}, we see
 	\[\int_{\gamma_2}f(z)\,dz=\int_c^df(\gamma_1(s(t)))\gamma_1'(s(t))s'(t)\,dt\]
-	By applying a $u$-substitution along $s$ (notably, this is now a real integral!), we see
+	By applying a $u$-substitution along $s$ (notably, this is now an integral from a real variable!),\footnote{Technically, we should expand out this integral into real and imaginary parts and then apply the $u$-substitution. Please don't make me do this.} we see
 	\[\int_{\gamma_2}f(z)\,dz=\int_a^bf(\gamma_1(s))\gamma_1'(s)\,ds=\int_{\gamma_1}f(z)\,dz,\]
 	which is what we wanted.
 \end{proof}
@@ -101,7 +134,7 @@ Let's use this definition a little.
 \begin{proof}
 	We omit the proofs of the first three. By composition, $|f\circ\gamma|$ is a continuous function. In particular, because $[a,b]$ is a compact set, the supremum will actually exist, thus bounding $f$ on $\gamma([a,b])$.  Now, estimating, we see
 	\[\left|\int_\gamma f(z)\,dz\right|=\left|\int_a^bf(\gamma(z))\gamma'(z)\,dz\right|\le\int_a^b|f(\gamma(z))|\cdot|\gamma'(z)|\,dz.\]
-	By real analysis, we bound this last integral as
+	By real analysis, we bound this last integral (from real analysis) as
 	\[\sup_{t\in[a,b]}\{|f(\gamma(t))|\}\cdot\int_a^b|\gamma'(t)|\,dt,\]
 	which is what we wanted.
 \end{proof}
