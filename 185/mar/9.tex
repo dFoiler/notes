@@ -12,7 +12,7 @@ Today we start talking about path integration.
 % 	There is an inherent appeal to real analysis in the above definition, but it can be removed if we define a measure on $\CC$ which is independent on $\RR$. We will not do this because I don't want to rebuild the somewhat hefty machinery of integrals existing.
 % \end{remark}
 We have the following sanity checks.
-\begin{lemma}
+\begin{lemma} \label{lem:integraldistribute}
 	Fix $\psi_1,\psi_2:[a,b]\to\CC$ integrable functions with $\alpha_1,\alpha_2\in\CC$. Then
 	\[\int_a^b(\alpha_1\psi_1(t)+\alpha_2\psi_2(t))\,dt=\alpha_1\int_a^b\psi_1(t)\,dt+\alpha_2\int_a^b\psi_2(t)\,dt.\]
 \end{lemma}
@@ -109,8 +109,41 @@ Now let's show that the integral does not change on reparameterization.
 	which is what we wanted.
 \end{proof}
 
-\subsection{Length}
-Here is our definition.
+\subsection{Path Arithmetic}
+Let's blast through some lemmas.
+\begin{warn}
+	In the following statements, we will merely require our paths to be piecewise $C^1$, but the proofs will deal with the $C^1$ case. This can be amended by partitioning all the intervals to make everything $C^1$, but we will not write this out formally.
+\end{warn}
+\begin{lemma}
+	Fix an open subset $\Omega\subseteq\CC$. If $\gamma:[a,b]\to\Omega$ is a piecewise $C^1$ path and $f,g:\Omega\to\CC$ are continuous functions and $\alpha,\beta\in\CC$, then we have
+	\[\int_\gamma(\alpha f(z)+\beta g(z))\,dz=\alpha\int_\gamma f(z)\,dz+\beta\int_\gamma g(z)\,dz.\]
+\end{lemma}
+\begin{proof}
+	We write
+	\[\int_\gamma(\alpha f(z)+\beta g(z))\,dz=\int_a^b(\alpha f(\gamma(t))+\beta g(\gamma(t)))\gamma'(t)\,dt\]
+	by definition, which expands by \autoref{lem:integraldistribute} into
+	\[\alpha\int_a^bf(\gamma(t))\gamma'(t)\,dt+\beta\int_a^bg(\gamma(t))\gamma'(t)\,dt=\alpha\int_\gamma f(z)\,dz+\beta\int_\gamma f(z)\,dz,\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma}
+	Fix an open subset $\Omega\subseteq\CC$. Further, fix $\gamma:[a,b]\to\Omega$ is a piecewise $C^1$ path with $\gamma^-(t):=\gamma(b+a-t)$ the opposite path. Then, for $f:\Omega\to\CC$ a continuous function,
+	\[\int_\gamma f(z)\,dz=-\int_{\gamma^-}f(z)\,dz.\]
+\end{lemma}
+\begin{proof}
+	The point is to do a $u$-substitution $t\mapsto b+a-t$. Indeed, we compute
+	\[\int_\gamma f(z)\,dz=\int_a^bf(\gamma(t))\gamma'(t)\,dt=\int_b^af(\gamma(b+a-t))\gamma'(b+a-t)\,dt,\]
+	where in the last step we have applied our $u$-substitution, legal from real analysis because our integral is from a real variable.\footnote{Again, to be formal, we should expand this into real and imaginary parts and then apply the $u$-substitution, but we won't bother.} However, we see $\gamma(b+a-t)=\gamma^-(b+a-t)$, so the right-hand integral is the desired one; notably, $(\gamma^-)'(t)=-\gamma(b+a-t)$, but this inherited minus sign reverses the order of the time to be from $t=a$ to $t=b$, as it should be.
+\end{proof}
+\begin{lemma}
+	Fix an open subset $\Omega\subseteq\CC$. Further, fix $\gamma:[a,b]\to\Omega$ and $\eta:[c,d]\to\Omega$ to be a piecewise $C^1$ paths such that $\gamma(b)=\eta(c)$. Then, for a continuous function $f:\Omega\to\CC$, we have
+	\[\int_{\gamma*\eta}f(z)\,dz=\int_\gamma f(z)\,dz+\int_\eta f(z)\,dz.\]
+\end{lemma}
+\begin{proof}
+	Note that
+	\[\int_{\gamma*\eta}f(z)\,dz=\int_a^{b+d-c}f((\gamma*\eta)(t))(\gamma*\eta)'(t)\,dt=\int_a^bf(\gamma(t))\gamma'(t)\,dt+\int_{b}^{b+d-c}f(\eta(t-b+c))\eta'(t-b+c)\,dt.\]
+	This is what we want as soon as we apply the change of variables $t-b+c\mapsto t$.
+\end{proof}
+For our last lemma, we have the following definition.
 \begin{definition}[Length]
 	Fix a $C^1$ path $\gamma:[a,b]\to\CC$. Then we define the \textit{length of $\gamma$} as
 	\[\ell(\gamma):=\int_a^b|\gamma'(t)|\,dt.\]
@@ -119,17 +152,8 @@ Here is our definition.
 \end{definition}
 Let's use this definition a little.
 \begin{proposition}
-	Fix an open and connected subset $\Omega\subseteq\CC$. Then, for $\gamma,\eta:[a,b]\to\CC$ two piecewise $C^1$ paths and continuous functions $f,g:\Omega\to\CC$, we have the following.
-	\begin{listalph}
-		\item For any $\alpha,\beta\in\CC$, we have
-		\[\int_\gamma(\alpha f(z)+\beta g(z))\,dz=\alpha\int_\gamma f(z)\,dz+\beta\int_\gamma g(z)\,dz.\]
-		\item Denoting the opposite path by $\gamma^-$, we have
-		\[\int_\gamma f(z)\,dz=-\int_{\gamma^-}f(z)\,dz.\]
-		\item If $\gamma(b)=\eta(a)$, then we can concatenate as
-		\[\int_{\gamma*\eta}f(z)\,dz=\int_\gamma f(z)\,dz+\int_\eta f(z)\,dz.\]
-		\item We have
-		\[\left|\int_\gamma f(z)\,dz\right|\le\sup_{t\in[a,b]}\{|f(\gamma(t))|\}\cdot\ell(\gamma).\]
-	\end{listalph}
+	Fix an open and connected subset $\Omega\subseteq\CC$. Then, for $\gamma:[a,b]\to\CC$ a piecewise $C^1$ path and a continuous function $f,g:\Omega\to\CC$, we have the following. Then we have
+	\[\left|\int_\gamma f(z)\,dz\right|\le\sup_{t\in[a,b]}\{|f(\gamma(t))|\}\cdot\ell(\gamma).\]
 \end{proposition}
 \begin{proof}
 	We omit the proofs of the first three. By composition, $|f\circ\gamma|$ is a continuous function. In particular, because $[a,b]$ is a compact set, the supremum will actually exist, thus bounding $f$ on $\gamma([a,b])$.  Now, estimating, we see
