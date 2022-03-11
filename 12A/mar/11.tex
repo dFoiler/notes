@@ -1,0 +1,153 @@
+% !TEX root = ../notes.tex
+
+We continue our journey in natural deduction.
+
+\subsection{Disjunction Introduction}
+The story so far as that we have given introduction and elimination rules for $\lif$ and $\land$ and $\liff$ and $\lnot$. It remains to talk about $\lor$. We have also introduced reductio ad absurdum, which made our proof system complete.
+\begin{remark}
+	A computer could theoretically use this system to prove statements. One silly way is to just list out all possible sequences of steps in a Fitch-style proof and just check until we find a well-formed proof of the conclusion.
+\end{remark}
+Here is our way to introduce disjunctions.
+\begin{defihelper}[$\lor$Introduction] \nirindex{Disjunction Introduction@$\lor$Introduction}
+	Give $\varphi$, we can introduce $\varphi\lor\psi$ or introduce $\psi\lor\varphi$.
+\end{defihelper}
+More formally, either of the following are valid uses of $\lor$ introduction.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{zeroeven}{\varphi}
+		\have[\vdots]{}{\vdots}
+		\have[j]{}{\varphi\lor\psi} \by{$\lor$Intro}{zeroeven}
+	\end{nd}
+	\qquad
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{zeroeven}{\psi}
+		\have[\vdots]{}{\vdots}
+		\have[j]{}{\varphi\lor\psi} \by{$\lor$Intro}{zeroeven}
+	\end{nd}
+\end{align*}
+A priori, it might look like we are only even weakening in this step, so let's see an example where this is useful.
+\evenorodd*
+\begin{proof}
+	Given a nonnegative integer $n$, we need to show that $n=2k$ for some integer $k$ or that $n=2k+1$ for some integer $k$. We prove this by induction on $n$.
+	\begin{itemize}
+		\item For our base case, we note that $n=0=2\cdot0$, so $n$ is even and in particular even or odd.
+
+		Note here is where we applied weakening! After all, we need to go back to our inductive step somehow.
+		\item We will do the inductive step later when we talk about disjunctive elimination.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Diagrammatically, the base case of the proof looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{zeroeven}{0\text{ is even}}
+		\have{}{(0\text{ is even})\lor(0\text{ is odd})} \by{$\lor$Intro}{zeroeven}
+	\end{nd}
+\end{align*}
+So yes, we are weakening, but we had to.
+
+There are other ways---non-constructive ways!---to prove disjunctions without $\lor$ introduction by reductio ad absurdum. Here's an example.
+\begin{exe}
+	We deduce $p\lor\lnot p$.
+\end{exe}
+\begin{proof}
+	We will never be able to prove $p$ or $\lnot p$ on its own, but we will still be able to derive $p\lor\lnot p$. Instead, we use reductio ad absurdum, proceeding as follows; the key trick is that our contradiction will be $(p\lor\lnot p)\land\lnot(p\lor\lnot p)$, from which we can work backwards, trying to prove $(p\lor\lnot p)$ and derive contradiction.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{npornp}{\lnot(p\lor\lnot p)}
+				\open[]
+					\hypo{p}{p}
+					\have{pornp0}{p\lor\lnot p} \by{$\lor$Intro}{p}
+					\have{npornp0}{\lnot(p\lor\lnot p)} \by{Reit}{npornp0}
+					\have{contra0}{(p\lor\lnot p)\land\lnot(p\lor\lnot p)} \by{$\land$Intro}{pornp0,npornp0}
+				\close
+				\have{np}{\lnot p} \by{$\lnot$Intro}{p,contra0}
+				\have{pornp}{p\lor\lnot p} \by{$\lor$Intro}{np}
+				\have{contra}{(p\lor\lnot p)\land\lnot(p\lor\lnot p)} \by{$\land$Intro}{pornp,npornp}
+			\close
+			\have{}{p\lor\lnot p} \by{RAA}{npornp-contra}
+		\end{nd}
+	\end{align*}
+	Observe that we could show $\lnot\lnot(p\lor\lnot p)$ by simply using $\lnot$ introduction at the end instead of reductio ad absurdum.
+\end{proof}
+\begin{remark}
+	Intuitionist logic bans reductio ad absurdum, essentially because it is annoying that proving $p\lor\lnot p$ doesn't actually tell you which one which is true; in fact, it is impossible to prove $p$ or $\lnot p$ from no assumptions because these formulae need not be valid, and we know that our proof system is sound.
+	
+	However, removing reductio ad absurdum is nice in some sense: for example, without reductio ad absurdum, any proof of $\varphi\lor\psi$ must actually prove $\varphi$ or prove $\psi$.
+\end{remark}
+\begin{remark}
+	Any theorem $\varphi$ provable with reductio ad absurdum, one can prove $\lnot\lnot\varphi$ without reductio ad absurdum.
+\end{remark}
+
+\subsection{Proof by Cases}
+So how do we use $\alpha\lor\beta$? After all, we don't know which one is true. But never fear---if we have some $\varphi$ with both $\alpha\to\varphi$ and $\beta\to\varphi$, then surely we can conclude $\varphi$. This is called ``proof by cases,'' where we try $\alpha$ and then try $\beta$, and we see that both of them go the conclusion.
+
+Let's see an example.
+\begin{lemma}
+	Let $n$ be a nonnegative integer. Then the remainder when $n^2$ is divided by $4$ is either $0$ or $1$.
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:evenorodd}, we know that $n$ is even or odd. So we proceed by cases.
+	\begin{itemize}
+		\item Suppose that $n$ is even so that $n=2k$. Then $n^2=(2k)^2=4k^2$, so the remainder when $n$ is divided by $4$ is $0$, so we can introduce a disjunction and assert that the remainder is $0$ or $1$.
+		\item Suppose that $n$ is odd so that $n=2k+1$. Then
+		\[n^2=(2k+1)^2=4k^2+4k+1=4\left(k^2+k\right)+1,\]
+		so the remainder when $n$ is divided by $4$ is $0$, so we can introduce a disjunction and assert that the remainder is $0$ or $1$.
+	\end{itemize}
+	Thus, both cases were able to derive the conclusion, so we are done.
+\end{proof}
+In a Fitch style proof, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have{hypo}{(n\text{ is even})\lor(n\text{ is odd})}
+		\open[]
+			\hypo{hypo0}{n\text{ is even}}
+			\have[\vdots]{}{\vdots}
+			\have[i]{}{n^2\text{ has remainder }0}
+			\have{}{(n^2\text{ has remainder }0)\lor(n^2\text{ has remainder }1)}
+		\close
+		\open[]
+			\hypo{hypo0}{n\text{ is odd}}
+			\have[\vdots]{}{\vdots}
+			\have[j]{}{n^2\text{ has remainder }1}
+			\have{}{(n^2\text{ has remainder }0)\lor(n^2\text{ has remainder }1)}
+		\close
+		\have{}{(n^2\text{ has remainder }0)\lor(n^2\text{ has remainder }1)}
+	\end{nd}
+\end{align*}
+Formally, we have the following.
+\begin{defihelper}[\texorpdfstring{$\lor$}{}Elimination] \nirindex{Disjunction Elimination@$\lor$Elimination}
+	Given $\alpha\lor\beta$ and two subproofs deducing $\varphi$ from $\alpha$ and $\varphi$ from $\beta$, then we can deduce $\varphi$.
+\end{defihelper}
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[a]{a}{\alpha\lor\beta}
+		\open[]
+			\hypo[b]{b}{\alpha}
+			\have[\vdots]{}{\vdots}
+			\have[c]{c}{\varphi}
+		\close
+		\have[\vdots]{}{\vdots}
+		\open[]
+			\hypo[d]{d}{\beta}
+			\have[\vdots]{}{\vdots}
+			\have[e]{e}{\varphi}
+		\close
+		\have[\vdots]{}{\vdots}
+		\have[n]{}{\varphi} \by{$\lor$Elim}{a,b-c,d-e}
+	\end{nd}
+\end{align*}
+We now close by discussing the inductive step for \autoref{lem:evenorodd}.
+\begin{proof}[Proof of the inductive step in \autoref{lem:evenorodd}]
+	We know that $n$ is even or odd, so we have the following two case.
+	\begin{itemize}
+		\item If $n$ is even, then set $n=2k$, so $n+1=2k+1$, so $n$ is odd.
+		\item If $n$ is odd, then set $n=2k+1$, so $n+1=(2k+1)$, so $n$ is even.
+	\end{itemize}
+	It follows that $n+1$ is even or odd, finishing our inductive step.
+\end{proof}
