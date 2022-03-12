@@ -492,48 +492,174 @@ Let's see some examples. We will take our base to be $B:=\AA^1(k)$ the affine li
 	Now, using the above lemma, we note that $t(x-1)=tx-t=0$ in $S$ while $t\in k[t]=R$ is not a zero-divisor and $x-1\ne0$, so $S$ is not flat. Technically, some argument is required to verify that $x-1\ne0$, but we can see this because $S/(t)S\cong k[x]$ computed above takes $x\mapsto x$, so $x$ is transcendental over $k$, so $x\ne1$.
 \end{proof}
 
-\subsection{Homological Algebra}
-We will want to talk about $\op{Tor}$ for our discussion, so we will want to talk about homological algebra.
+\subsection{Complexes and Homology}
+We will want to talk about $\op{Tor}$ in our discussion of flatness, so we will introduce the necessary homological algebra.
+
+In homological algebra, there are dual discussions of homology and cohomology, but we will choose to focus on homology because that is where $\op{Tor}$ arises from, though we will make occasionally comments about how the cohomological story works.
 \begin{quot}
 	The difference between homology and cohomology is that homology indexes like $H_i$, and cohomology indexes like $H^i$.
 \end{quot}
-We will want to talk about chains in homological algebra, so we will start with complexes.
-\begin{definition}[Complex]
-	Fix $C:=\oplus_{i\ge0}C_i$ a $\NN$-graded $R$-module. Then $C$ is a \textit{chain} if and only if it is equipped with a (graded) morphism $\del\in\op{End}_R(C)$ such that $\del^2=0$. If $\deg\del=-1$, this is homology, and if $\deg\del=+1$, this is cohomology.
+The purpose of homological algebra is to create derived functors, which we will talk about tomorrow. Derived functors, roughly speaking, are a useful way to start with a short exact sequence and get out a long exact sequence. However, we will want to be able to talk about long sequences which are a little less than exact, so we have the following definition.
+\begin{definition}[Chain complex]
+	Fix a ring $R$ with the trivial grading. An \textit{$R$-complex} $(C,\del)$ is a $\ZZ$-graded module $C:=\oplus_{i\in\ZZ}C_i$ (i.e., $RC_i\subseteq C_i$) that is equipped with a (graded) morphism $\del\in\op{End}_R(C)$ such that $\del^2=0$.
+	\begin{itemize}
+		\item If $\deg\del=-1$ (i.e., $\del|_{C_i}:C_i\to C_{i-1}$), we will call this an $R$-chain complex.
+		\item If $\deg\del=+1$ (i.e., $\del|_{C_i}:C_i\to C_{i+1}$), we will call this an $R$-cochain complex.
+	\end{itemize}
+	As much as possible, we will omit the ambient ring $R$ and say ``(co)chain complex.''
 \end{definition}
-In the homology case, we can view this like
-\[\cdots\stackrel\del\to C_2\stackrel\del\to C_1\stackrel\del\to C_0\stackrel\del\to 0.\]
-If we wanted, we could index the arrows as $\del_i:C_i\to C_{i-1}$, but it makes things a little harder to keep track of.
-\begin{definition}[Homology]
-	Given a chain $(C,\del)$, we define the \textit{homology groups} as
-	\[H_i(C):=\ker\del_i/\im\del_{i+1}\]
-\end{definition}
-Note this is well-defined because $\del^2=0$.
-
-As usual in algebra, we will want morphisms between our objects.
-\begin{definition}[Chain morphism]
-	Fix chain complexes $(C,\del)$ and $(C',\del')$, we define a morphism $\varphi$ as a degree-$0$ morphism $\varphi:C\to C'$ preserving $\del$ as in the following diagram.
-	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJDX2kiXSxbMSwwLCJDX3tpLTF9Il0sWzEsMSwiQydfe2ktMX0iXSxbMCwxLCJDJ19pIl0sWzAsMSwiXFxkZWwiXSxbMywyLCJcXGRlbCciLDJdLFswLDMsIlxcdmFycGhpIiwyXSxbMSwyLCJcXHZhcnBoaSJdXQ==
+One often views a chain complex $C$ as some large chain which looks like
+\[\cdots\stackrel\del\to C_2\stackrel\del\to C_1\stackrel\del\to C_0\stackrel\del\to C_{-1}\stackrel\del\to\cdots.\]
+For bookkeeping reasons, we might define $\del_i:=\del|_{C_i}:C_i\to C_{i-1}$ to be more specific about our domain. Dually, a cochain complex can be viewed as a large chain
+\[\cdots\stackrel\del\to C_{-1}\stackrel\del\to C^0\stackrel\del\to C^1\stackrel\del\to C^2\stackrel\del\to\cdots.\]
+Again, we can index our arrows as $\del^i:=\del|_{C^i}:C^i\to C^{i-1}$.
+\begin{remark}[Nir] \label{rem:cochaintochain}
+	Given a cochain complex $(D^\bullet,\del^\bullet)$, we can set $C_i:=D^{-i}$ to make a chain complex. Formally, $\del^i:D^i\to D^{i+1}$ becomes $\del_{-i}:C_{-i}\to C_{-i-1}$, giving our chain complex. Pictorially, we are applying the following process.
+	% https://q.uiver.app/?q=WzAsMTAsWzEsMCwiRF57LTF9Il0sWzIsMCwiRF4wIl0sWzMsMCwiRF4xIl0sWzEsMSwiQ18xIl0sWzIsMSwiQ18wIl0sWzMsMSwiQ197LTF9Il0sWzAsMCwiXFxjZG90cyJdLFs0LDAsIlxcY2RvdHMiXSxbMCwxLCJcXGNkb3RzIl0sWzQsMSwiXFxjZG90cyJdLFswLDMsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsNCwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw1LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs2LDAsIlxcZGVsXnstMn0iXSxbMCwxLCJcXGRlbF57LTF9Il0sWzEsMiwiXFxkZWxeMCJdLFsyLDcsIlxcZGVsXjEiXSxbOCwzLCJcXGRlbF4yIiwyXSxbMyw0LCJcXGRlbF4xIiwyXSxbNCw1LCJcXGRlbF4wIiwyXSxbNSw5LCJcXGRlbF57LTF9IiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
-		{C_i} & {C_{i-1}} \\
-		{C'_i} & {C'_{i-1}}
-		\arrow["\del", from=1-1, to=1-2]
-		\arrow["{\del'}"', from=2-1, to=2-2]
-		\arrow["\varphi"', from=1-1, to=2-1]
-		\arrow["\varphi", from=1-2, to=2-2]
+		\cdots & {D^{-1}} & {D^0} & {D^1} & \cdots \\
+		\cdots & {C_1} & {C_0} & {C_{-1}} & \cdots
+		\arrow[Rightarrow, no head, from=1-2, to=2-2]
+		\arrow[Rightarrow, no head, from=1-3, to=2-3]
+		\arrow[Rightarrow, no head, from=1-4, to=2-4]
+		\arrow["{\del^{-2}}", from=1-1, to=1-2]
+		\arrow["{\del^{-1}}", from=1-2, to=1-3]
+		\arrow["{\del^0}", from=1-3, to=1-4]
+		\arrow["{\del^1}", from=1-4, to=1-5]
+		\arrow["{\del^2}"', from=2-1, to=2-2]
+		\arrow["{\del^1}"', from=2-2, to=2-3]
+		\arrow["{\del^0}"', from=2-3, to=2-4]
+		\arrow["{\del^{-1}}"', from=2-4, to=2-5]
 	\end{tikzcd}\]
+\end{remark}
+\begin{warn}
+	In light of \autoref{rem:cochaintochain}, we will stop talking about cochain complexes, except to say that they have analogous definitions and results by adding in the prefix co- everywhere and flipping the arrows as described in \autoref{rem:cochaintochain}.
+\end{warn}
+With our chain complexes in place, we can define homology.
+\begin{definition}[Homology]
+	Given a chain complex $(C,\del)$, we define the \textit{homology module} as
+	\[H_i(C):=\ker\del_i/\im\del_{i+1}.\]
 \end{definition}
-We can check that $\varphi$ maps kernels of $\del$ to kernels of $\del'$ and images of $\del$ to images of $\del'$, so we get an induced map $H(\varphi):H_i(C)\to H_i(C')$.
+\begin{remark} \label{rem:homologywelldefined}
+	We quickly check that these modules are well-defined. For a chain complex $(C,\del)$, we see that $\del^2=0$ implies that $\del_i\del_{i+1}:C_{i+1}\to C_{i-1}$ is the zero morphism, so
+	\[\im\del_{i+1}\subseteq\ker\del_i,\]
+	making our quotient well-defined.
+\end{remark}
+\begin{remark}[Nir]
+	To remember this notation, note that we always want $\ker\del_i\subseteq C_i$, so $H_i(C)$ is represented by elements of $C_i$.
+\end{remark}
 
-And because abstraction is all the rage, there is also a notion of morphisms being the same.
-\begin{definition}[Homotopically equivalent]
-	Two chain morphisms $\varphi,\psi:(C,\del)\to(C',\del')$ are \textit{homotopically equivalent} if and only if there exists an $R$-module homomorphism $h:C\to C$ of degree $1$ (i.e., $h:C_i\to C_{i+1}'$) such that $\varphi-\psi=h\del+\del'h$.
+\subsection{Chain Morphisms}
+We have just defined an algebraic object (the chain complex), so because this is algebra, we will want to define their morphisms.
+\begin{definition}[Chain morphism]
+	Given chain complexes $\left(A,\del^A\right)$ and $\left(B,\del^B\right)$, we define a \textit{chain morphism} $\varphi$ as a degree-$0$ morphism $\varphi:A\to B$ such that $\del^B\circ\varphi=\varphi\circ\del^A$.
 \end{definition}
-The image is as follows. As a warning, this diagram does not commute.
+As usual, we can look at chain morphisms $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ on the level of component modules as well: for each index $i\in\ZZ$, we can restrict $\varphi$ to a morphism $\varphi_i:A_i\to B_i$ such that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJDX2kiXSxbMSwwLCJDX3tpLTF9Il0sWzEsMSwiQydfe2ktMX0iXSxbMCwxLCJDJ19pIl0sWzAsMSwiXFxkZWwiXSxbMywyLCJcXGRlbCciLDJdLFswLDMsIlxcdmFycGhpIiwyXSxbMSwyLCJcXHZhcnBoaSJdXQ==
+\[\begin{tikzcd}
+	{A_i} & {A_{i-1}} \\
+	{B_i} & {B_{i-1}}
+	\arrow["{\del^A_i}", from=1-1, to=1-2]
+	\arrow["{\del^B_i}"', from=2-1, to=2-2]
+	\arrow["{\varphi_i}"', from=1-1, to=2-1]
+	\arrow["{\varphi_{i-1}}", from=1-2, to=2-2]
+\end{tikzcd}\]
+Before continuing, we check that composition of chain morphisms gives another chain morphism.
+\begin{lemma} \label{lem:composechainmorphism}
+	Fix chain morphisms $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ and $\psi:\left(B,\del^B\right)\to\left(C,\del^C\right)$. Then $\psi\circ\varphi:\left(A,\del^A\right)\to\left(C,\del^C\right)$ is a chain morphism.
+\end{lemma}
+\begin{proof}
+	Because $\varphi$ and $\psi$ are both degree-$0$ graded morphisms, we see $\psi\circ\varphi$ is a degree-$0$ graded morphism; explicitly, for any index $i$, we have $\varphi(A_i)\subseteq B_i$ and $\psi(B_i)\subseteq C_i$ gives $(\psi\circ\varphi)(A_i)\subseteq C_i$.
+	
+	Additionally, we note that
+	\[(\psi\circ\varphi)\circ\del^A=\psi\circ\varphi\circ\del^A=\psi\circ\del^B\circ\varphi=\del^C\circ\psi\circ\varphi=\del^C\circ(\psi\circ\varphi),\]
+	so we see that $\psi\circ\varphi:\left(A,\del^A\right)\to\left(C,\del^C\right)$ is indeed a chain morphism.
+\end{proof}
+Also, $R$-linear combination of chain morphisms gives another chain morphism.
+\begin{lem} \label{lem:rlinearchainmorphism}
+	Fix elements $r,s\in R$ and chain morphisms $\varphi,\psi:\left(A,\del^A\right)\to\left(B,\del^B\right)$. Then $r\varphi+s\psi$ is also a chain morphism.
+\end{lem}
+\begin{proof}
+	For any index $i$, we do indeed have $\varphi(A_i),\psi(A_i)\subseteq B_i$, so
+	\[(r\varphi+s\psi)(A_i)=r\cdot\varphi(A_i)+s\cdot\psi(A_i)\subseteq rB_i+sB_i\subseteq B_i.\]
+	Additionally, for any $a\in A$, we can check that
+	\[\big((r\varphi+s\psi)\circ\del^A\big)(a)=r\left(\varphi\del^A\right)(A)+s\left(\psi\del^A\right)(a)=r\left(\del^B\varphi\right)(a)+s\left(\del^B\psi\right)(a)=\big(\del^B\circ(r\varphi+s\psi)\big)(a),\]
+	finishing.
+\end{proof}
+Now, the commutativity condition $\del^B\varphi=\varphi\del^A$ is essentially in place to ensure that chain morphisms give rise to natural morphisms of homology modules.
+\begin{lemma} \label{lem:gethomologymorphism}
+	Fix a chain morphism $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ and an index $i\in\ZZ$. Then there is a map
+	\[H_i(\varphi):H_i(A)\to H_i(B)\]
+	induced as $H_i(\varphi):[a]_{\im\del^A_{i+1}}\mapsto[\varphi_ia]_{\im\del^B_{i+1}}$.
+\end{lemma}
+\begin{proof}
+	By construction of the chain morphism, the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNixbMSwwLCJBX2kiXSxbMiwwLCJBX3tpLTF9Il0sWzAsMCwiQV97aSsxfSJdLFswLDEsIkJfe2krMX0iXSxbMSwxLCJCX2kiXSxbMiwxLCJCX3tpLTF9Il0sWzIsMywiXFx2YXJwaGlfe2krMX0iLDJdLFswLDQsIlxcdmFycGhpX2kiXSxbMSw1LCJcXHZhcnBoaV97aS0xfSJdLFsyLDAsIlxcZGVsXkFfe2krMX0iXSxbMCwxLCJcXGRlbF5BX2kiXSxbMyw0LCJcXGRlbF5CX3tpKzF9IiwyXSxbNCw1LCJcXGRlbF5CX2kiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{A_{i+1}} & {A_i} & {A_{i-1}} \\
+		{B_{i+1}} & {B_i} & {B_{i-1}}
+		\arrow["{\varphi_{i+1}}"', from=1-1, to=2-1]
+		\arrow["{\varphi_i}", from=1-2, to=2-2]
+		\arrow["{\varphi_{i-1}}", from=1-3, to=2-3]
+		\arrow["{\del^A_{i+1}}", from=1-1, to=1-2]
+		\arrow["{\del^A_i}", from=1-2, to=1-3]
+		\arrow["{\del^B_{i+1}}"', from=2-1, to=2-2]
+		\arrow["{\del^B_i}"', from=2-2, to=2-3]
+	\end{tikzcd}\]
+	Now, for each element $a\in\ker\del_i^A$, we see that $\del_i^B(\varphi_ a)=\varphi_i\left(\del_i^Aa\right)=\varphi(0)=0$, so $\varphi_i$ restricts to a map
+	\[\varphi_i:\ker\del_i^A\to\ker\del_i^B.\]
+	Continuing, if we pick up some $\del_{i+1}^Aa\in\im\del_{i+1}^A\subseteq\ker\del_i^A$ (see \autoref{rem:homologywelldefined}), then $\varphi_i\left(\del_{i+1}^Aa\right)=\del_{i+1}^B(\varphi_ia)$, so $\varphi_i$ again restricts to a map
+	\[\varphi_i:\im\del_{i+1}^A\to\im\del_{i+1}^B.\]
+	Thus, $\varphi_i$ induces a map $\ker\del_i^A\to\ker\del_i^B\onto\ker\del_i^B/\im\del_{i+1}^B$, from which we can induce our desired map
+	\[H_i(\varphi):H_i(A)\to H_i(B)\]
+	by sending $[a]\mapsto[\varphi_ia]$, as needed.
+\end{proof}
+In fact, so far we have discussed how homology produces an $R$-module from a chain, and we have also discussed how to get a morphism of homology from a morphism of chains. Thus, we have all the data for a functor from chains to $R$-modules by homology, and we only have to run the following checks.
+\begin{lemma}
+	Fix an index $i\in\ZZ$. The mapping $H_i$ taking chains $(C,\del)$ to $H_i(C)$ and morphisms $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ to $H_i(\varphi)$ is in fact a functor. Namely, we have the following.
+	\begin{itemize}
+		\item Identity: $H_i(\id_C)=\id_{H_i(C)}$ for any chain complex $(C,\del)$.
+		\item Composition: $H_i(\psi\circ\varphi)=H_i(\psi)\circ H_i(\varphi)$ for any morphisms $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ and $\psi:\left(B,\del^B\right)\to\left(C,\del^C\right)$.
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	We take our checks one at a time.
+	\begin{itemize}
+		\item Fix a chain complex $(C,\del)$. Here, $\id_C:(C,\del)\to(C,\del)$ is given by $\id_C:C\to C$, which is a chain morphism $\del\id_C=\del=\id_C\del$. Then, by definition in \autoref{lem:gethomologymorphism}, we see that
+		\[H_i(\id_C)\left([c]_{\im\del_{i+1}}\right):=[\id_Cc]_{\im\del_{i+1}}=[c]_{\im\del_{i+1}},\]
+		so $H_i(\id_C)=\id_{H_i(C)}$.
+		\item Fix chain morphisms $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ and $\psi:\left(B,\del^B\right)\to\left(C,\del^C\right)$. Then we see that $\psi\circ\varphi:\left(A,\del^A\right)\to\left(C,\del^C\right)$ is a chain morphism by \autoref{lem:composechainmorphism}. Now, using the definition in \autoref{lem:gethomologymorphism}, we see
+		\[H_i(\psi\circ\varphi)\big([a]_{\im\del^A_{i+1}}\big)=[\psi_i\varphi_ia]_{\im\del^A_{i+1}}=H_i(\psi)\big([\varphi_ia]_{\im\del^A_{i+1}}\big)=H_i(\psi)H_i(\varphi)\big([a]_{\im\del^A_{i+1}}\big),\]
+		so we do indeed have $H_i(\psi\circ\varphi)=H_i(\psi)\circ H_i(\varphi)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+In fact, $H_i$ is an amazing functor: it also preserves the structure of our $\op{Hom}$ sets.
+\begin{lemma} \label{lem:rlinearhomology}
+	Fix an index $i\in\ZZ$. Then, elements of our ambient ring $r,s\in R$ and chain morphisms $\varphi,\psi:\left(A,\del^A\right)\to\left(B,\del^B\right)$, we have
+	\[H_i(r\varphi+s\psi)=rH_i(\varphi)+sH_i(\psi).\]
+\end{lemma}
+\begin{proof}
+	Note that $r\varphi+s\psi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ is indeed a chain morphism by \autoref{lem:rlinearchainmorphism}. Now, we pick up some $[a]_{\im\del^A_{i+1}}\in H_i(A)$ and check via \autoref{lem:gethomologymorphism} that
+	\begin{align*}
+		H_i(r\varphi+s\psi)\big([a]_{\im\del^A_{i+1}}\big) &= [r\varphi_ia+s\psi_ia]_{\im\del^A_{i+1}} \\
+		&= r[\varphi_ia]_{\im\del^A_{i+1}}+s[\psi_ia]_{\im\del^A_{i+1}} \\
+		&= rH_i(\varphi)\big([a]_{\im\del^A_{i+1}}\big)+rH_i(\psi)\big([a]_{\im\del^A_{i+1}}\big) \\
+		&= \big(rH_i(\varphi)+sH_i(\psi)\big)\big([a]_{\im\del^A_{i+1}}\big),
+	\end{align*}
+	so $H_i(r\varphi+s\psi)=rH_i(\varphi)+sH_i(\psi)$ follows.
+\end{proof}
+
+\subsection{Chain Homotopy}
+We defined our chain morphisms to give rise to maps of homology modules. Now, sometimes different chain morphisms will give rise to the same map of homology modules, so we will want a way to keep track of this back in the world of chain morphisms. This gives the following definition.
+\begin{definition}[Chain homotopy]
+	Two chain morphisms $\varphi,\psi:\left(A,\del^A\right)\to(B,\del^B)$ are \textit{homotopically equivalent} if and only if there exists an $R$-module homomorphism $h:A\to B$ of degree $1$ (i.e., $h|_{A_i}:A_i\to B_{i+1}$) such that $\varphi-\psi=h\del_A+\del_Bh$. In this case, we will write $\varphi\sim\psi$ and call $h$ a \textit{chain homotopy}.
+\end{definition}
+On the level of component modules, the image is as follows. As a warning, this diagram does not commute.
 % https://q.uiver.app/?q=WzAsMTAsWzIsMCwiQ18xIl0sWzMsMCwiQ18wIl0sWzQsMCwiMCJdLFsyLDEsIkNfMSciXSxbMywxLCJDXzAnIl0sWzQsMSwiMCJdLFsxLDAsIkNfMiJdLFsxLDEsIkNfMiciXSxbMCwwLCJcXGNkb3RzIl0sWzAsMSwiXFxjZG90cyJdLFs4LDZdLFs2LDBdLFswLDFdLFsxLDJdLFs5LDddLFs3LDNdLFszLDRdLFs0LDVdLFsxLDRdLFswLDNdLFs2LDddLFsxLDMsImgiLDFdLFswLDcsImgiLDFdXQ==
 \[\begin{tikzcd}
-	\cdots & {C_2} & {C_1} & {C_0} & 0 \\
-	\cdots & {C_2'} & {C_1'} & {C_0'} & 0
+	\cdots & {A_2} & {A_1} & {A_0} & {\cdots} \\
+	\cdots & {B_2} & {B_1} & {B_0} & {\cdots}
 	\arrow[from=1-1, to=1-2]
 	\arrow[from=1-2, to=1-3]
 	\arrow[from=1-3, to=1-4]
@@ -545,19 +671,63 @@ The image is as follows. As a warning, this diagram does not commute.
 	\arrow[from=1-4, to=2-4]
 	\arrow[from=1-3, to=2-3]
 	\arrow[from=1-2, to=2-2]
-	\arrow["h"{description}, from=1-4, to=2-3]
-	\arrow["h"{description}, from=1-3, to=2-2]
+	\arrow["{h_0}"{description}, from=1-4, to=2-3]
+	\arrow["{h_1}"{description}, from=1-3, to=2-2]
 \end{tikzcd}\]
-The main point of this definition is the following.
+In particular, we can break up $h:A\to B$ into individual morphisms $h_i:A_i\to B_{i+1}$ such that $\varphi_i-\psi_i=h_{i-1}\del^A_i+\del^B_{i+1}h_i$.
+
+Before continuing, we run some checks on homotopy equivalence.
+\begin{lemma}
+	Homotopy equivalence of morphisms $\varphi:\left(A,\del^A\right)\to\left(B,\del^B\right)$ is an equivalence relation.
+\end{lemma}
+\begin{proof}
+	We have the following checks. All of our chain morphisms will be $\left(A,\del^A\right)\to\left(B,\del^B\right)$, so we will omit this information in our discussion.
+	\begin{itemize}
+		\item Reflexive: fix a chain morphism $\varphi$, and we show $\varphi\sim\varphi$. Well, take $h=0$, which is indeed a degree-$1$ map ($h(A_i)=\{0\}\subseteq B_{i+1}$), and
+		\[\varphi-\varphi=0=0\cdot\del_A+\del_B\cdot0.\]
+		\item Symmetric: fix homotopically equivalent chain morphisms $\varphi\sim\psi$ so that we are given a degree-$1$ map $h:A\to B$ such that $\varphi-\psi=h\del_A+\del_BA$. We want to show $\psi\sim\varphi$, for which we take $-h:A\to B$. Note $-h$ is a degree-$1$ map because $(-h)(A_i)=-h(A_i)\subseteq -B_{i+1}=B_{i+1}$ for any index $i$. Further, we see
+		\[\psi-\varphi=-(\varphi-\psi)=-(h\del_A+\del_Bh)=(-h)\del_A+\del_B(-h)\]
+		after rearranging, so we are done.
+		\item Transitive: fix chain morphisms $\alpha,\beta,\gamma$ so that $\alpha\sim\beta$ and $\beta\sim\gamma$. So we are promised a chain homotopies $a$ and $b$ so that
+		\[\alpha-\beta=a\del_A+\del_Ba\qquad\text{and}\qquad\beta-\gamma=b\del_A+\del_Bb,\]
+		from which we find
+		\[\alpha-\gamma=(a+b)\del_A+\del_B(a+b)\]
+		by adding. To finish, we check that $a+b$ is a degree-$1$ morphism, for which we note $(a+b)(A_i)=a(A_i)+b(A_i)\subseteq B_i+B_i=B_i$ for any index $i$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lem} \label{lem:rlinearchainhomotopy}
+	Fix elements $r,s\in R$ and chain morphisms $\varphi,\varphi',\psi,\psi':\left(A,\del^A\right)$. If $\varphi\sim\varphi'$ and $\psi\sim\psi'$, then
+	\[r\varphi+s\psi\sim r\varphi'+s\psi'.\]
+\end{lem}
+\begin{proof}
+	We are promised chain homotopies $a$ and $b$ witnessing $\varphi\sim\varphi'$ and $\psi\sim\psi'$, respectively. Now, we compute that
+	\begin{align*}
+		(r\varphi+s\psi)-(r\varphi'+s\psi') &= r(\varphi-\varphi')+s(\psi-\psi') \\
+		&= r\left(a\del^A+\del^Ba\right)+s\left(b\del^A+\del^Bb\right) \\
+		&= (ra+sb)\del^A+\del^B(ra+sb).
+	\end{align*}
+	So we will have that $ra+sb$ witnesses $r\varphi+s\psi\sim r\varphi'+s\psi'$ as soon as we know that $ra+sb$ is degree-$1$, for which we note $(ra+sb)(A_i)=ra(A_i)+sb(A_i)\subseteq rB_{i+1}+sB_{i+1}\subseteq B_{i+1}$ for any index $i$.
+\end{proof}
+With those annoying checks out of the way, we show the main point of introducing chain homotopy.
 \begin{proposition}
-	Suppose $\varphi,\psi:(C,\del)\to(C',\del')$ are homotopically equivalent. Then $H(\varphi)=H(\psi)$.
+	Fix homotopically equivalent chain morphisms $\varphi,\psi:\left(A,\del^A\right)\to\left(B,\del^B\right)$. Then, for any index $i$, we have $H_i(\varphi)=H_i(\psi)$.
 \end{proposition}
 \begin{proof}
-	It suffices (by taking $\gamma:=\varphi-\psi$) to show that if $\gamma$ is homotopically equivalent to $0$, then $H(\gamma)$ vanishes. Now, suppose we have any $c\in\ker\del$, and we want to show that $\gamma(c)\in\im\del'$. Well, we compute
-	\[\gamma(c)=(h\del+\del'h)(c)=\del'(h)\in\im\del',\]
-	so we are done.
+	Fix $\gamma:=\varphi-\psi$, for which we note $\varphi\sim\psi$ implies $\varphi=\varphi-\sim\sim\psi-\psi=0$ by \autoref{lem:rlinearchainhomotopy}. We claim that $H_i(\gamma)=0$, which will be enough because it will show by \autoref{lem:rlinearhomology} that
+	\[H_i(\varphi)-H_i(\psi)=H_i(\varphi-\psi)=H(\gamma)=0,\]
+	thus finishing.
+
+	So it remains to show $\gamma\sim0$ implies $H(\gamma)=0$. To start, we are promised a chain homotopy $h$ such that
+	\[\gamma=\gamma-0=h\del^A-\del^Bh.\]
+	Now, pick up any element $[a]_{\im\del^A_{i+1}}\in H_i(A)$ so that we want to show $\gamma\big([a]_{\im\del^A_{i+1}}\big)=0\in H_i(B)$. Well, we compute
+	\[H_i(\gamma)\big([a]_{\im\del^A_{i+1}}\big)=[\gamma a]_{\im\del^B_{i+1}},\]
+	from which we note $a\in\ker\del^A_i$ implies
+	\[\gamma(a)=\left(h_{i-1}\del^A_i+\del^B_{i+1}h_i\right)(a)=h_{i-1}(0)+\del^B_{i+1}(h_ia)\in\im\del^B_{i+1},\]
+	so we do indeed have $H_i(\gamma)\big([a]_{\im\del^A_{i+1}}\big)=[0]_{\im\del^B_{i+1}}$, finishing.
 \end{proof}
 
+\subsection{The Long Exact Sequence}
 To close out class, we discuss the long exact sequence.
 \begin{theorem}
 	Fix
