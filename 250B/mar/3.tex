@@ -3,26 +3,65 @@
 Welcome back everybody.
 
 \subsection{Projective Resolutions}
-Today we will discuss homological methods to determine flatness. For this, we will need to actually discuss homological methods.
-\begin{definition}[Projective resolution]
-	Given an $R$-module $M$ a \textit{projective resolution of $M$} is a complex $P$ of projective modules such that
-	\[\cdots\to P_2\to P_1\to P_0\to M\to 0\]
-	is exact.
+Today we will discuss homological methods to determine flatness. As mentioned last class, we will want to introduce the functor $\op{Tor}$, so we want to be able to talk about left-derived functors.
+
+We will make left-derived functors out of projective resolutions, so that is where we will start.
+\begin{definition}[Resolution]
+	Given an $R$-module $M$ a \textit{resolution of $M$} is a chain complex $(P,\del)$ such that
+	\[P_i=\begin{cases}
+		M & i=-1, \\
+		0 & i<-1.
+	\end{cases}\]
+	Additionally, we require
+	\[\cdots\stackrel{\del_3}\to P_2\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\stackrel{\del_{-1}}\to 0\]
+	to be an exact sequence.
 \end{definition}
 \begin{remark}
-	Alternatively, we can just look at the projective complex
-	\[\cdots\to P_2\to P_1\to P_0\to 0\]
-	and ask for $H_0(P)=M$.
+	Alternatively, we can just look at the complex
+	\[\cdots\stackrel{\del_3}\to P_2\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to 0\]
+	and ask to be exact at all terms except at $P_0$, where we require $H_0(P)=\ker\del_0/\im\del_1=M$. In particular, we note $\ker\del_0=P_0$ because $\del_0:P_0\to0$, so $\del_0$ induces a surjection $P\onto M$ with kernel $\im\del_1$. So we can insert $M$ to make an exact sequence
+	\[\cdots\stackrel{\del_3}\to P_2\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0.\]
 \end{remark}
-We would for our modules to have projective resolutions. Indeed, this is possible.
+\begin{defi}[Projective, free resolutions]
+	Fix an $R$-module $M$ with a resolution $(P,\del)$.
+	\begin{itemize}
+		\item The resolution is \textit{projective} if and only if $P_i$ is projective for $i\ge0$.
+		\item The resolution is \textit{free} if any only if $P_i$ is free over $i\ge0$.
+	\end{itemize}
+\end{defi}
+% \begin{remark}[Nir]
+% 	The last exactness condition is asking for $\im\del_{i-1}=\ker\del_i$ for each $i$; looping over all indices $i$, this is equivalent to requiring $\im\del=\ker\del$.
+% \end{remark}
+To start, we give every module a projective resolution.
 \begin{lemma} \label{lem:enoughprojectives}
-	Every $R$-module $M$ has a free resolution.
+	Every $R$-module $M$ has a free resolution and therefore a projective resolution.
 \end{lemma}
 \begin{proof}
+	The point is to use \autoref{lem:getenoughprojectives}. We produce our injective resolution inductively. To start our resolution $(P,\del)$, we start as required with
+	\[P_i=\begin{cases}
+		M & i=-1, \\
+		0 & i<-1,
+	\end{cases}\]
+	and $\del_i=0$ for $i\le-1$. We now claim that, for any $n\in\NN$, we can construct projective modules $\{P_i\}_{i=0}^n$ with maps $\del_i:P_i\to P_{i-1}$ such that
+	\[P_n\stackrel{\del_n}\to P_{n-1}\stackrel{\del_{n-1}}\to\cdots\stackrel{\del_{2}}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0\]
+	is an exact sequence. This induction will finish the proof.\footnote{Technically, one might want to use something like Zorn's lemma to actually go get the projective resolution with infinitely many terms, but we won't do this here.}
+	
+	For $n=0$, we use \autoref{lem:getenoughprojectives} to find a free module $P_0$ which surjects onto $M$ as $\del_0:P_0\onto M$. Thus,
+	\[P_0\stackrel{\del_0}\to M\to0\]
+	is exact at $M$ because the kernel of $0:M\to 0$ is all of $M$, which is precisely the image of $\del_0:P_0\onto M$.
+	
+	For the inductive step, we begin with our exact sequence
+	\[P_n\stackrel{\del_n}\to P_{n-1}\stackrel{\del_{n-1}}\to\cdots\stackrel{\del_{2}}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0\]
+	and extend it by $P_{n+1}$. Indeed, by \autoref{lem:getenoughprojectives}, we can find a free module $P_{n+1}$ with a projection $\del_{n+1}:P_{n+1}\onto\ker\del_n$. Tacking this on the front, we have the sequence
+	\[P_{n+1}\stackrel{\del_{n+1}}\to P_n\stackrel{\del_n}\to P_{n-1}\stackrel{\del_{n-1}}\to\cdots\stackrel{\del_{2}}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0.\]
+	It remains to show that this sequence is exact
 	Given any module $M$, we see that we can construct
 	\[F_0:=\bigoplus_{m\in M}Rm\]
 	to surject onto $M$ by some map $\del_0:M_0\to M$. Repeating the process, we can create a free module $F_1$ which will surject onto $\ker\del_1$ and then continue the process to create $F_2$ and so on.
 \end{proof}
+\begin{remark}[Nir]
+	There is a complaint that \autoref{lem:getenoughprojectives} products huge free modules to project.\todo{}
+\end{remark}
 \begin{example}
 	Fix $R:=k[x]/\left(x^2\right)$. Then $k$ is an $R$-module, where the $x$ acts by $0$. To start our projective resolution, we note we have a surjection
 	\[R\to k\to 0\]
