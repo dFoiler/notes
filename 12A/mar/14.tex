@@ -1,0 +1,151 @@
+% !TEX root = ../notes.tex
+
+Here we go.
+
+\subsection{Finishing Disjunction Elimination}
+Today we finish natural deduction by talking about syllogistic logic. Recall the following definition.
+\orelim*
+\noindent Here is an example from propositional logic.
+\begin{exe}
+	We derive $p\lor q$ from $\lnot p\to q$.
+\end{exe}
+\begin{proof}
+	We want to do a proof by cases. Recall that we have shown $p\lor\lnot p$ (from reductio ad absurdum in \autoref{exe:reductoex}), so we will just start from there; formally, we should copy and paste the whole proof in, but we won't bother. The point is that the conclusion has $p\lor q$, so we need to get a $p$ there somehow.
+	\begin{align*}
+		\begin{nd}
+			\hypo{hypo}{\lnot p\to q}
+			\have{pornp}{p\lor\lnot p}
+			\open[]
+				\hypo{p}{p}
+				\have{porq}{p\lor q} \by{$\lor$Intro}{p}
+			\close
+			\open[]
+				\hypo{np}{\lnot p}
+				\have{nptoq}{\lnot p\to q} \by{Reit}{hypo}
+				\have{q1}{q} \by{$\to$Elim}{np,nptoq}
+				\have{porq2}{p\lor q} \by{$\lor$Intro}{q}
+			\close
+			\have{end}{p\lor q} \by{$\lor$Elim}{pornp,p-porq,np-porq2}
+		\end{nd}
+	\end{align*}
+	Again, we see that $\lor$ introduction is crucial.
+\end{proof}
+To review, we see that we have now built a full proof system for our propositional logic. With reductio ad absurdum, this proof system is sound (it only proves true statements) and complete (it can prove any true statement).
+\begin{remark}
+	More precisely, a formula $\varphi$ can be called \textit{provable} if and only if there is a proof of $\varphi$ via our proof system. Then it is a powerful theorem that provability is equivalent to validity. For example, a computer can (somewhat) quickly check a proof, which is nice.
+\end{remark}
+
+\subsection{Contradiction}
+We are now essentially done with propositional logic, but we'll add in a small bonus. The point here is that many of our rules (namely, $\lnot$ introduction, ex falso quodlibet, and reductio ad absurdum) have contradictions of the form $\varphi\lor\lnot\varphi$ play a crucial role.
+
+It will be psychologically easier to introduce the following notion.
+\begin{definition}[Falsum, bottom]
+	We introduce the symbol $\perp$ to our propositional language $\mathcal L(P)$ by deciding to live in $P\cup\{\perp\}$ as our set of atomic formulae.
+	
+	We will have $\perp$ ``stand in for'' any contradiction. Explicitly, in order to extend our valuations to $\perp$, we will require that
+	\[V(\perp)=0\]
+	for any valuation $V:P\to\{0,1\}$. In other words, $\perp$ is always false.
+\end{definition}
+To use our $\perp$ symbol, we now need introduction and elimination rules.
+\begin{defihelper}[\texorpdfstring{$\perp$}{}Introducion] \nirindex{Falsum introduction@$\perp$Introduction}
+	Given $\alpha$ and $\lnot\alpha$ in a partial proof, we may introduce $\perp$.	
+\end{defihelper}
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{a}{\alpha}
+		\have[\vdots]{}{\vdots}
+		\have[j]{na}{\lnot\alpha}
+		\have[\vdots]{}{\vdots}
+		\have[k]{}{\perp} \by{$\perp$Intro}{a,na}
+	\end{nd}
+\end{align*}
+Namely, we can introduce $\perp$ from any explicit contradiction.
+
+Here is our elimination rule.
+\begin{defihelper}[\texorpdfstring{$\perp$}{}Elimination] \nirindex{Falsum elimination@$\perp$Elimination}
+	Given $\perp$, we may introduce any formula $\psi$.
+\end{defihelper}
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{bad}{\perp}
+		\have[\vdots]{}{\vdots}
+		\have[j]{}{\psi} \by{$\perp$Elim}{i}
+	\end{nd}
+\end{align*}
+This is essentially ex falso quodlibet, where we took a contradiction $\varphi\land\lnot\varphi$ and derived any formula.
+
+Now, the symbol $\perp$ will let us remove the explicit contradictions from our proof system. Our construction of $\perp$ elimination was essentially ex falso quodlibet, which means that we have to talk about $\lnot$ introduction and reductio ad absurdum. The point is to take our definitions and replace the explicit contradictions with $\perp$. Here are our rules.
+\begin{defihelper}[\texorpdfstring{$\lnot$}{}Introduction] \nirindex{Not Introduction@$\lnot$Introduction}
+	If a subproof with hypothesis $\varphi$ derives $\perp$, we can deduce $\lnot\varphi$.
+\end{defihelper}
+\begin{definition}[Reductio ad absurdum]
+	If a subproof with hypothesis $\lnot\varphi$ derives $\perp$, we can deduce $\varphi$.
+\end{definition}
+This looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\open[]
+			\hypo[i]{np}{\lnot\varphi}
+			\have[\vdots]{}{\vdots}
+			\have[j]{contra}{\perp}
+		\close
+		\have[\vdots]{}{\vdots}
+		\have[k]{}{\varphi} \by{RAA}{np-contra}
+	\end{nd}
+\end{align*}
+Let's see an example.
+\begin{exe}
+	If we have $p\lor q$ and $\lnot p\to\lnot q$, then we can deduce $p$.
+\end{exe}
+\begin{proof}
+	Here is the first version of the proof, without $\perp$.
+	\begin{align*}
+		\begin{nd}
+			\hypo{porq}{p\lor q}
+			\hypo{nptonq}{\lnot p\to\lnot q}
+			\open[]
+				\hypo{np}{\lnot p}
+				\have{nq}{\lnot q} \by{L$\to$Elim}{np,nptonq}
+				\open[]
+					\hypo{p}{p}
+					\have{contra0}{p\land\lnot p} \by{L$\land$Intro}{p,np}
+				\close
+				\open[]
+					\hypo{q}{q}
+					\have{contra1}{q\land\lnot q} \by{L$\land$Intro}{q,nq}
+					\have{contra2}{p\land\lnot p} \by{EFQ}{contra1}
+				\close
+				\have{contra}{p\land\lnot p} \by{$\lor$Elim}{porq,p-contra0,q-contra2}
+			\close
+			\have{}{p} \by{RAA}{np-contra}
+		\end{nd}
+	\end{align*}
+	What is inelegant here is that we have to move between contradictions $q\land\lnot q$ to $p\land\lnot p$. To remove this inelegance, we can use $\perp$.
+	\begin{align*}
+		\begin{nd}
+			\hypo{porq}{p\lor q}
+			\hypo{nptonq}{\lnot p\to\lnot q}
+			\open[]
+				\hypo{np}{\lnot p}
+				\have{nq}{\lnot q} \by{L$\to$Elim}{np,nptonq}
+				\open[]
+					\hypo{p}{p}
+					\have{contra0}{\perp} \by{L$\perp$Intro}{p,np}
+				\close
+				\open[]
+					\hypo{q}{q}
+					\have{contra2}{\perp} \by{L$\perp$Intro}{q,nq}
+				\close
+				\have{contra}{\perp} \by{$\lor$Elim}{porq,p-contra0,q-contra2}
+			\close
+			\have{}{p} \by{RAA}{np-contra}
+		\end{nd}
+	\end{align*}
+	So we got to save one line, but also our proof looks a little cleaner.
+\end{proof}
+This finishes contradiction. The midterm will only use content from our discussion on propositional logic.
