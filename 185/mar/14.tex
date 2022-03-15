@@ -22,15 +22,15 @@ Here's a better way to compute the winding number.
 	Fix $\gamma:[0,1]\to\CC$ a closed, piecewise $C^1$ path. Further, fix $z_0\in\CC\setminus\im\gamma$. Then
 	\[\op{Ind}(\gamma,z_0)=\frac1{2\pi i}\oint_\gamma\frac1{z-z_0}\,dz.\]
 \end{lemma}
-Here's an example.
+Here are some example.
 \begin{example}
 	Fix $\gamma:[0,1]\to\CC$ by $\gamma(t):=\exp(2\pi it)$ to be the unit circle. We can compute that
 	\[\oint_\gamma\frac1z\,dz=\int_0^1\frac{2\pi i\exp(2\pi it)}{2\exp(2\pi it)}\,dt=2\pi i,\]
 	so the winding number of $\gamma$ around $z_0=0$ is $1$.
 \end{example}
 \begin{example}
-	Fix $\gamma:[0,1]\to\CC$ by $\gamma(t):=\exp(-2\pi it)$ to be the unit circle. We can then compute that
-	\[\oint_\gamma\frac1z\,dz=\int_0^1\frac{2\pi i\exp(2\pi it)}{2\exp(2\pi it)}\,dt=2\pi i,\]
+	Fix $\gamma:[0,1]\to\CC$ by $\gamma(t):=\exp(-2\pi it)$ to be the clockwise unit circle. We can then compute that
+	\[\oint_\gamma\frac1z\,dz=\int_0^1\frac{-2\pi i\exp(-2\pi it)}{\exp(-2\pi it)}\,dt=-2\pi i,\]
 	so the winding number of $\gamma$ around $z_0=0$ is $-1$.
 \end{example}
 And here is our proof.
@@ -41,7 +41,7 @@ And here is our proof.
 
 	Fix some $t_0\in[0,1]$. The idea is to show that everything in sight is differentiable. Because $\gamma(t_0)\ne z_0$ and $\gamma$ is continuous, we can find some $\delta>0$ and a suitable branch of the logarithm $\op{Log}$ so that $\op{Log}(\gamma(t)-z_0)$ is defined on all $B(\gamma(t_0),\delta)$. Here, we can compute
 	\[r(t)=\exp\left(\frac12\log\left((\gamma(t)-z_0)(\overline\gamma(t)-\overline{z_0})\right)\right).\]
-	Notably, this is the real-valued logarithm. Thus, we see that $r$ is going to be continuous here. Now, by the continuity of $r(t)$, we can build a branch of the logarithm so that $\op{Log}\left(\frac{\gamma(t)-z_0}{r(t)}\right)$ is defined near $\gamma(t_0)$. Because
+	Notably, this is the real-valued logarithm, so all of our standard logarithm rules apply (i.e., we are allowed to move the $\frac12$ outside without concern). Thus, we see that $r$ is a composite of continuous functions and therefore continuous here. Now, by the continuity of $r(t)$, we can build a branch of the logarithm so that $\op{Log}\left(\frac{\gamma(t)-z_0}{r(t)}\right)$ is defined near $\gamma(t_0)$. Because
 	\[\exp\left(\op{Log}\left(\frac{\gamma(t)-z_0}{r(t)}\right)\right)=\exp(2\pi ia(t)),\]
 	we conclude from \autoref{prop:expker} that
 	\[a(t)-\frac1{2\pi i}\cdot\frac{\gamma(t)-z_0}{r(t)}\]
@@ -59,18 +59,33 @@ And here is our proof.
 \end{proof}
 Here are some corollaries.
 \begin{corollary}
-	Fix a path $\gamma:[0,1]\to\CC$ and $z_0\in\CC\setminus\im\gamma$. Then $\op{Ind}(\gamma^-,z_0)=-\op{Int}(\gamma,z_0)$.
+	Fix a closed piecewise $C^1$ path $\gamma:[0,1]\to\CC$ and $z_0\in\CC\setminus\im\gamma$. Then $\op{Ind}(\gamma^-,z_0)=-\op{Int}(\gamma,z_0)$.
 \end{corollary}
+\begin{proof}
+	Applying \autoref{lem:opposite} to \autoref{lem:betterwinding}, we get
+	\[\op{Ind}(\gamma^-,z_0)=\oint_{\gamma^-}\frac1z\,dz=-\oint_\gamma\frac1z\,dz=-\op{Ind}(\gamma,z_0),\]
+	which is what we wanted.
+\end{proof}
 \begin{corollary}
-	Fix a path $\gamma,\eta:[0,1]\to\CC$ and $z_0\in\CC\setminus(\im\gamma\cup\im\eta)$. Then $\op{Ind}(\gamma*\eta,z_0)=\op{Int}(\gamma,z_0)+\op{Ind}(\eta,z_0)$.
+	Fix closed piecewise $C^1$ paths $\gamma,\eta:[0,1]\to\CC$ such that $\gamma(1)=\eta(0)$, and pick up some $z_0\in\CC\setminus(\im\gamma\cup\im\eta)$. Then $\op{Ind}(\gamma*\eta,z_0)=\op{Int}(\gamma,z_0)+\op{Ind}(\eta,z_0)$.
 \end{corollary}
+\begin{proof}
+	Applying \autoref{lem:concatintegral} to \autoref{lem:betterwinding}, we get
+	\[\op{Ind}(\gamma*\eta,z_0)=\oint_{\gamma*\eta}\frac1z\,dz=\oint_\gamma\frac1z\,dz+\oint_\eta\frac1z\,dz=\op{Ind}(\gamma,z_0)+\op{Ind}(\eta,z_0),\]
+	which is what we wanted.
+\end{proof}
 
 \subsection{More General Indices}
-Let's now use our winding numbers.
+We will want a slightly more general version of the winding number for where we're going.
 \begin{definition}[Index]
-	Fix an open and connected subset $\Omega\subseteq\CC$ and a piecewise $C^1$ path $\gamma:[a,b]\to\Omega$. Given a function $f:\Omega\to\CC$ a function continuous on $\im\gamma$, we define
+	Fix an open and connected subset $\Omega\subseteq\CC$ and a closed piecewise $C^1$ path $\gamma:[a,b]\to\Omega$. Given a function $f:\Omega\to\CC$ which is continuous on $\im\gamma$, we define
 	\[\op{Ind}_f(\gamma,w):=\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz\]
 \end{definition}
+\begin{remark}
+	This integral is equal to
+	\[\int_0^1\frac{f(\gamma(t))}{\gamma(t)-w}\cdot\gamma'(t)\,dt,\]
+	which is now more obviously well-defined. In particular, the inner function is piecewise continuous, so its real and imaginary parts are integrable.
+\end{remark}
 \begin{proposition} \label{prop:indexanalytic}
 	Fix an open and connected subset $\Omega\subseteq\CC$ and a closed, piecewise $C^1$ path $\gamma:[a,b]\to\Omega$. Given a function $f:\Omega\to\CC$ a function continuous on $\im\gamma$, the function $\op{Ind}_f(\gamma,-)$ is analytic (!) at $w$ with power series around $z_0$ given by
 	\[\op{Ind}_f(\gamma,z_0)=\sum_{n=0}^\infty\left(\frac1{2\pi i}\oint_\gamma\frac{f(z)}{(z-z_0)^{n+1}}\,dz\right)(z-z_0)^n\]
@@ -78,7 +93,7 @@ Let's now use our winding numbers.
 This is our first major step towards showing that all holomorphic functions are analytic: here we have been granted a way to conjure some magical power series.
 
 For \autoref{prop:indexanalytic}, we will need the following lemma.
-\begin{lemma}
+\begin{lemma} \label{lem:exchangeintegrallimit}
 	Fix $\Omega$ and $\gamma$ as in \autoref{prop:indexanalytic}. Given a sequence of continuous functions $\{f_k\}_{k=1}^\infty$ which uniformly converge to $f$ on $\im\gamma$, then $f$ is integrable and
 	\[\lim_{n\to\infty}\oint_\gamma f(z)\,dz=\oint_\gamma f(z)\,dz.\]
 \end{lemma}
@@ -86,6 +101,16 @@ For \autoref{prop:indexanalytic}, we will need the following lemma.
 	Roughly speaking, the point is to look at
 	\[\oint_\gamma(f-f_n)(z)\,dz\]
 	and use \autoref{lem:estimation} and uniform convergence to show that this vanishes as $n\to\infty$.
+
+	Let's be a little more precise. We need to show that
+	\[\lim_{n\to\infty}\oint_\gamma\big(f(z)-f_n(z)\big)\,dz=0.\]
+	By \autoref{lem:estimation}, we can say
+	\[\left|\oint_\gamma\big(f(z)-f_n(z)\big)\,dz\right|\le\sup_{t\in[a,b]}\{|f(\gamma(t))-f_n(\gamma(t))|\}\cdot\ell(\gamma).\]
+	If $\ell(\gamma)=0$, there is nothing to say. Otherwise, we set any $\varepsilon>0$ and note that uniform convergence of $f_n\to f$ promises us some $N$ for which $n>N$ has
+	\[|f(z)-f_n(z)|<\frac{\varepsilon}{2\ell(\gamma)}\]
+	for all $z\in\im\gamma$. In particular, we find that
+	\[\left|\oint_\gamma\big(f(z)-f_n(z)\big)\,dz\right|\le\sup_{t\in[a,b]}\{|f(\gamma(t))-f_n(\gamma(t))|\}\cdot\ell(\gamma)\le\frac\varepsilon{2\ell(\gamma)}\cdot\ell(\gamma)<\varepsilon,\]
+	so we have established the needed limit.
 \end{proof}
 And here is our proof.
 \begin{proof}[Proof of \autoref{prop:indexanalytic}]
@@ -94,10 +119,12 @@ And here is our proof.
 	Now, for any $w\in B(0,r)$ and $z\in\im\gamma$, we have $|w|<r$ and $|z|2r$, so we have $|w/z|<1/2$. Continuing with our estimation, we set
 	\[M:=\sup_{t\in[a,b]}\{|f(\gamma(t))|\}\]
 	which exists because $[a,b]$ is compact (namely, real-valued continuous functions always maximums on compact sets). Thus, we bound
-	\[\left|\frac{f(z)w^n}{z^{n+1}}\right|=\left|\frac{f(z)}z\right|\cdot\left|\frac wz\right|^n\le\frac M{2r}\cdot\left(\frac12\right)^n.\]
-	It follows that
+	\[\left|\frac{f(z)w^n}{z^{n+1}}\right|=\left|\frac{f(z)}z\right|\cdot\left|\frac wz\right|^n\le\frac M{2r}\cdot\left(\frac12\right)^n.\tag{$*$}\label{eq:weierboundindex}\]
+	Noting that $|w/z|<1$, it follows that
 	\[\frac{f(z)}{z-w}=\frac{f(z)}z\cdot\frac1{1-w/z}=\sum_{n=0}^\infty\frac{f(z)}z\left(\frac wz\right)^n=\sum_{n=0}^\infty\frac{f(z)w^n}{z^{n+1}},\]
-	by how we sum geometric series. By the Weierstrass $M$-test, this sum converges uniformly to $f(z)/(z-w)$, so the above lemma tells us that
-	\[\frac1{2\pi i}\oint\frac{f(z)}{z-w}\,dz=\frac1{2\pi i}\oint_\gamma\sum_{n=0}^\infty\frac{w^nf(z)}{z^{n+1}}\,dz=\sum_{n=0}^\infty\left(\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z^{n+1}}\right)w^n,\]
+	by how we sum geometric series. In fact, by the Weierstrass $M$-test, this sum converges uniformly: by \autoref{eq:weierboundindex}, we can write
+	\[\sum_{n=0}^\infty\left|\frac{f(z)w^n}{z^{n+1}}\right|\le\frac M{2r}\sum_{n=0}^\infty\left(\frac12\right)^n<\infty.\]
+	Thus, \autoref{lem:exchangeintegrallimit} tells us that
+	\[\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz=\frac1{2\pi i}\oint_\gamma\Bigg(\sum_{n=0}^\infty\frac{w^nf(z)}{z^{n+1}}\Bigg)\,dz=\sum_{n=0}^\infty\left(\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z^{n+1}}\,dz\right)w^n,\]
 	which gives the desired power series expansion.
 \end{proof}
