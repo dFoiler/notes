@@ -1,0 +1,175 @@
+% !TEX root = ../notes.tex
+
+Today we start moving towards predicate logic.
+
+\subsection{Examples of Syllogisms}
+To smooth over our movement to predicate logic, we will talk about syllogistic logic. Let's start with some examples.
+\begin{example}
+	Here is a valid syllogism.
+	\begin{enumerate}
+		\item All sophomores are students.
+		\item All students are invited to the game.
+		\item Therefore, all sophomores are invited to the game.
+	\end{enumerate}
+\end{example}
+\begin{example}
+	More generally, here is a valid syllogism.
+	\begin{enumerate}
+		\item All A are B.
+		\item All B are C.
+		\item Therefore, all A are C.
+	\end{enumerate}
+\end{example}
+\begin{remark}
+	Notably, we are using capital letters A, B, and C because they are properties, not statements.
+\end{remark}
+\begin{example}
+	Here is another valid syllogism.
+	\begin{enumerate}
+		\item All those invited to the game are invited to the after party.
+		\item No faculty are invited to the after party.
+		\item Therefore, no faculty are invited to the game.
+	\end{enumerate}
+\end{example}
+\begin{example}
+	More generally, here is a valid syllogism.
+	\begin{enumerate}
+		\item All A are B.
+		\item No C are B.
+		\item Therefore, no C is A.
+	\end{enumerate}
+\end{example}
+\begin{nex}
+	Here is an invalid syllogism.
+	\begin{enumerate}
+		\item All students are invited to the game.
+		\item No faculty are students.
+		\item Therefore, no faculty are invited to the game.
+	\end{enumerate}
+	Explicitly, it is possible for a faculty to be invited to the game while not violating our premises.
+\end{nex}
+
+\subsection{Models}
+Syllogistic logic has its own language, inductively created just as for propositional logic.
+\begin{defi}[Syllogistic formula]
+	Fix $\mathrm{Pred}$ a set of predicates. Then for any three predicates $A,B,C$, the following three are all predicates.
+	\begin{itemize}
+		\item \textrm{All $A$ are $B$}.
+		\item \textrm{Some $A$ are $B$}.
+		\item \textrm{No $A$ are $B$}.
+		\item \textrm{Not all $A$ are $B$}.
+	\end{itemize}
+\end{defi}
+\begin{remark}
+	We have not allowed for our predicates to have propositional properties; for example, we cannot say that \textrm{All $A$ are $B$ or $C$} yet. This will come in first-order logic.
+\end{remark}
+\begin{remark}
+	The point of dealing with syllogistic logic right now is that we get to just focus on the quantifiers without dealing with propositional logic.
+\end{remark}
+Note that we are calling these predicates, not propositions or formulae.
+\begin{warn}
+	A predicate is a property, not a statement with a truth value.
+\end{warn}
+More explicitly, a predicate's meaning is really made of the set of sophomores. That's where all of its meaning come from: what is a sophomore, and what isn't.
+
+In particular, to determine the truth value of some predicated like \textrm{All $A$ are $B$}, we need to know about $A$ and $B$ themselves. For this, we introduce the idea of a model. We have already seen models, in some sense.
+\begin{definition}[Model]
+	A \textit{model} for a propositional language $\mathcal L(P)$ is a valuation $V:P\to\{0,1\}$.
+\end{definition}
+Namely, a model is how we are able to determine truth values.
+
+For syllogistic logic, our notion of model changes a little.
+\begin{definition}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ for our syllogistic language consists of a nonempty set $D$ and a function $I:\mathrm{Pred}\to\mathcal P(D)$ that sends each predicate $A$ to a subset $I(A)\subseteq D$. Then $I(A)$ is the \textit{extension} or \textit{interpretation} of $A$ in $\mathcal M$.
+\end{definition}
+\begin{example} \label{ex:easysyllogisms}
+	Fix our base predicates consisting of sophomores, students, faculty, and invitees to the game. Then with four people $D=\{1,2,3,4\}$, we could have the following interpretations.
+	\begin{itemize}
+		\item $I(\mathrm{sophomore})=\{1,3\}$.
+		\item $I(\mathrm{students})=\{1,2,3\}$.
+		\item $I(\mathrm{faculty})=\{4\}$.
+		\item $I(\mathrm{invitees})=\{1,2,3,4\}$.
+	\end{itemize}
+\end{example}
+One could visualize this more graphically as a diagram with blobs and such, as follows; here everyone is an invitee, so we have not drawn this in.
+\begin{center}
+	\begin{asy}
+		unitsize(1.5cm);
+		label("$1$", (1,0));
+		label("$2$", (2,-1));
+		label("$3$", (3,0));
+		label("$4$", (4,-1));
+		draw(ellipse((2,0), 1.5, 0.5), dotted+ red);
+		label("\textrm{sophomores}", (2,0), red);
+		draw(circle((2,-0.3), 1.6), dotted+ magenta);
+		label("\textrm{students}", (2,1), magenta);
+		draw(circle((4,-1), 0.3), dotted);
+		label("\textrm{faculty}", (4,-1.5));
+	\end{asy}
+\end{center}
+We also have a notion of truth in a model, which we will go ahead and define perhaps insultingly carefully.
+\begin{definition}[Truth]
+	Fix a formula $\varphi$ in syllogistic logic. Then the formula $\varphi$ is \textit{true} in the model $\mathcal M=(D,I)$, denoted $\mathcal M\models\varphi$ if and only if $\mathcal M$ makes $\varphi$ true, in the following sense, defined inductively.
+	\begin{itemize}
+		\item $\mathcal M\models\textrm{All }A\textrm{ are }B$ if and only if $I(A)\subseteq I(B)$.
+		\item $\mathcal M\models\textrm{Some }A\textrm{ are }B$ if and only if $I(A)\cap I(B)\ne\emp$.
+		\item $\mathcal M\models\textrm{No }A\textrm{ are }B$ if and only if $I(A)\cap I(B)=\emp$.
+		\item $\mathcal M\models\textrm{Not all }A\textrm{ are }B$ if and only if $I(A)\not\subseteq I(B)$.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	For $\mathcal M\models\textrm{Not all }A\textrm{ are }B$ to be true, we actually need to have something in $A$.
+\end{remark}
+\begin{example}
+	We return to our model from \autoref{ex:easysyllogisms}.
+	\begin{itemize}
+		\item $\mathcal M\models\textrm{All sophomores are students}$ because $I(\mathrm{sophomore})\subseteq I(\mathrm{students})$.
+		\item $\mathcal M\models\textrm{Somoe invitees to the game are sophomores}$ because $1$ is both a sophomore and an invitee.
+		\item $\mathcal M\models\textrm{No students are faculty}$ because $I(\mathrm{students})\cap I(\mathrm{faculty})=\{1,2,3\}\cap\{4\}=\emp$.
+		\item $\mathcal M\models\textrm{Not all invitees to the game are students}$ because $4$ is not a student but is an invitee.
+	\end{itemize}
+\end{example}
+\begin{remark}
+	We are allowed to have the model be false, in the real-world sense, but that is still a valid model. For example, we could have sophomores who are not students, even though this does not make sense in the real world.
+\end{remark}
+
+\subsection{Validity}
+From a notion of truth, we can bring in a notion of validity.
+\begin{definition}[Valid]
+	An argument consisting of premises $\{\varphi_1,\ldots,\varphi_n\}$ and conclusion $\psi$ is \textit{valid} if and only if every model $\mathcal M$ which satisfy the premises $\varphi_1,\ldots,\varphi_n$ also satisfy $\psi$.
+\end{definition}
+\begin{remark}
+	This is really the same notion of validity as in propositional logic, except that models in propositional logic are valuations.
+\end{remark}
+\begin{ex}
+	The following argument is valid, for any predicates $A,B,C$.
+	\begin{enumerate}
+		\item \textrm{All $A$ are $B$}.
+		\item \textrm{All $B$ are $C$}.
+		\item Therefore, \textrm{All $A$ are $C$}.
+	\end{enumerate}
+	Indeed, fix any model $\mathcal M=(D,I)$ which satisfies the premises. Then the premises give $I(A)\subseteq I(B)$ and $I(B)\subseteq I(C)$, so $I(A)\subseteq I(C)$, so the conclusion also holds.
+\end{ex}
+\begin{nex}
+	The following argument is invalid.
+	\begin{enumerate}
+		\item \textrm{All $A$ are $B$}.
+		\item \textrm{No $C$ are $A$}.
+		\item \textrm{No $C$ are $B$}.
+	\end{enumerate}
+	Indeed, use the previous model with $A$ being students and $B$ being invitees and $C$ being faculty. We have the following checks.
+	\begin{enumerate}
+		\item $\mathcal M\models\textrm{All students are invitees to the game}$.
+		\item $\mathcal M\models\textrm{No faculty are students}$.
+		\item $\mathcal M\not\models\textrm{No faculty are invitees to the game}$ because $4$ is invited to the game but also a faculty.
+	\end{enumerate}
+\end{nex}
+\begin{remark}
+	As with propositional logic, validity in syllogistic logic is decidable, which is essentially because we only have to check smallish models for validity.
+\end{remark}
+\begin{remark}
+	It is possible to define a sound and complete proof system for our syllogistic logic, just as with propositional logic.
+\end{remark}
+We close by saying that we can extend syllogisms with our propositional logic to make a more complex language, to allow statements like
+\[\lnot(\textrm{Some }A\text{ are }(B\lor C)).\]
+We know how to add connectives to our language, so the main point is figuring out how to add these connectives to our notion of validity, which we know how to do from propositional logic.
