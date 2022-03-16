@@ -1,0 +1,152 @@
+% !TEX root = ../notes.tex
+
+Good morning everyone. Here are some house-keeping notes.
+\begin{itemize}
+	\item Homework \#6 is still due Friday.
+	\item Class on Friday will be recorded.
+\end{itemize}
+
+\subsection{Cauchy Integral Formula Primer}
+Today we're start with the Cauchy integral formula. Here's the statement.
+\begin{theorem}[Cauchy integral formula] \label{thm:cif}
+	Fix an open, connected subset $\Omega\subseteq\CC$ and some $z_0\in\Omega$ with $\varepsilon>0$ such that $\overline{B(z,\varepsilon)}\subseteq\Omega$. Further, fix the path $\gamma:[0,1]\to\Omega$ given by
+	\[\gamma(t):=z_0+\varepsilon\exp(2\pi it).\]
+	Then, if $f:\Omega\to\CC$ is holomorphic, then any $w\in\overline{B(z_0,\varepsilon)}$ has
+	\[f(w)=\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz=\op{Ind}_f(\gamma,w).\]
+\end{theorem}
+Namely, evaluating a holomorphic function $f$ at a point $w$ can be determined only from the value of $f$ on the path $\gamma$!
+
+Here is a nice consequence.
+\begin{corollary}
+	Holomorphic functions are analytic.
+\end{corollary}
+\begin{proof}
+	Use \autoref{thm:cif} to show that any function $f$ differentiable at a point in an open set is equal to $\op{Ind}(w,\gamma)$ locally, from which \autoref{prop:indexanalytic} provides the local power series expansion.
+\end{proof}
+
+\subsection{The Cauchy--Goursat Theorem}
+To prove \autoref{thm:cif}, we will proceed in steps. Here is one major step.
+\begin{theorem}[Cauchy--Goursat] \label{thm:cg}
+	Fix an open, connected subset $\Omega\subseteq\CC$ and $T$ a triangle in $\Omega$ (i.e., a closed path defined as the concatenation of three segments). If $f:\Omega\to\CC$ is holomorphic, then
+	\[\oint_Tf(z)\,dz=0.\]
+\end{theorem}
+\begin{proof}
+	Suppose for the sake of contradiction that the integral is nonzero. Set
+	\[I:=\left|\oint_Tf(z)\,dz\right|\ne0.\]
+	Here is the image. The idea is to subdivide our triangle $T:=T^0$ by midpoints.
+	\begin{center}
+		\begin{asy}
+			unitsize(1.3cm);
+			pair A = (0,0);
+			pair B = (2,4);
+			pair C = (5,0);
+			draw(A -- B -- C -- cycle, red);
+			dot(A ^^ B ^^ C);
+			pair D = (A+B)/2;
+			pair E = (B+C)/2;
+			pair F = (C+A)/2;
+			draw(D -- E -- F -- cycle);
+			dot(D ^^ E ^^ F);
+			label("$T_2^0$", (A+D+F)/3);
+			label("$T_1^0$", (B+D+E)/3);
+			label("$T_3^0$", (E+D+F)/3);
+			label("$T_4^0$", (C+E+F)/3);
+			label("$T^0$", (B+E)/2, NE, red);
+		\end{asy}
+	\end{center}
+	By orienting everything properly, we get cancellation along the overlapped regions, so
+	\[\oint_Tf(z)\,dz=\sum_{i=1}^4\oint_{T^0_i}f(z)\,dz.\]
+	Because the norm here is nonzero, there is an index $i$ such that
+	\[\frac I4\le\left|\oint_{T^0_i}f(z)\,dz\right|,\]
+	so we set $T^1:=T^0_i$. Then we can repeat the process inductively to $T^1$; here is the iterated image for $T^1$, working with $T^1=T^0_2$.
+	\begin{center}
+		\begin{asy}
+			unitsize(1.3cm);
+			pair A = (0,0);
+			pair B = (2,4);
+			pair C = (5,0);
+			dot(A ^^ B ^^ C);
+			pair D = (A+B)/2;
+			pair E = (B+C)/2;
+			pair F = (C+A)/2;
+			draw(A -- D -- F -- cycle, red);
+			draw(D -- B -- C -- F);
+			draw(D -- E -- F);
+			dot(D ^^ E ^^ F);
+			label("$T_2^1$", (A+D+F)/3/2);
+			label("$T_1^1$", (B+D+E)/3/2);
+			label("$T_3^1$", (E+D+F)/3/2);
+			label("$T_4^1$", (C+E+F)/3/2);
+			draw(D/2 -- E/2 -- F/2 -- cycle);
+			dot(D/2 ^^ E/2 ^^ F/2);
+			label("$T^1$", (D/2+D)/2, NW, red);
+		\end{asy}
+	\end{center}
+	This gives a sequence of nested triangles $T^0,T^1,\ldots$ such that
+	\[I_k:=\left|\oint_{T^k}f(z)\,dz\right|\ge\frac I{4^k}>0.\]
+	As another bound, we note that $\ell\left(T^k\right)=2^{-k}\ell(T)$ by essentially geometry of midpoint triangles.
+
+	The idea, now, is to find a point contained in all of our triangles. Let $V^k$ be the region enclosed by $T^k$ (i.e., the convex hull). Thus, we have a descending sequence of nested closed sets
+	\[V^1\supseteq V^2\supseteq V^3\supseteq\cdots.\]
+	Each of the $V^k$ is closed and bounded and therefore compact, so it follows that % \todo{}
+	the intersection in total is nonempty; put $z_0$ in the intersection. Now, $f$ is holomorphic and in particular complex differentiable at $z_0$, so \autoref{prop:cara} promises us a continuous function $h:\Omega\to\CC$ continuous at $z_0$ such that
+	\[f(z)=f(z_0)+h(z)(z-z_0).\]
+	Quickly, we expand
+	\[\oint_{T^k}\big(h(z)-f'(z_0)\big)(z-z_0)\,dz=\oint_{T^k}f(z)\,dz-\oint_{T^k}f(z_0)\,dz-\oint_{T^k}f'(z_0)(z-z_0)\,dz.\]
+	Now, the constant function $z\mapsto f(z_0)$ has $f(z_0)z$ as a primitive, and $f'(z_0)(z-z_0)$ has $\frac{f'(z_0)}2(z-z_0)^2$ as a primitive, so \autoref{cor:ftconclosed} tells us that the two right-hand integrals vanish. Thus, we can estimate (by \autoref{lem:estimation})
+	\begin{align*}
+		I_k &= \left|\oint_{T^k}\big(h(z)-f'(z_0)\big)(z-z_0)\,dz\right| \\
+		&\le \sup_{z\in V^k}\{|h(z)-f'(z_0)|\cdot|z-z_0|\}\cdot\ell\left(T^k\right) \\
+		&\le \sup_{z\in V^k}\{|h(z)-f'(z_0)|\} \cdot\sup_{z\in V^k}\{|z-z_0|\}\cdot\ell\left(T^k\right).
+	\end{align*}
+	Now, $\sup_{z\in V^k}\{|z-z_0|\}$ is less than the largest length in $V^k$, which we define to be $\op{diam}\left(V^k\right)$. Re-expanding out to $T$, we see $\op{diam}\left(V^k\right)=2^{-k}\op{diam}(V^0)$ and $\ell\left(T^k\right)\le\ell(T^0)$, so we get to bound
+	\[I^k\le 4^{-k}\sup_{z\in V^k}\{|h(z)-f'(z_0)|\}\cdot\op{diam}(V)\cdot\ell(T).\]
+	We now take a moment to acknowledge that the point $z_0$ is the unique point in the intersection of the $V^k$ because $\op{diam}\left(V^k\right)=2^{-k}\op{diam}\left(V^0\right)$ goes to $0$, zeroing in on $z_0$.
+
+	As such, we now take $z\to z_0$ and then $k\to\infty$. In particular, the continuity of $h$ requires
+	\[4^kI_k\le\sup_{z\in V^k}\{|h(z)-f'(z_0)|\}\]
+	to go to $0$ as $k\to\infty$. But now, $I\le 4^kI_k$, so $I=0$ is forced, which is our final contradiction.
+\end{proof}
+
+\subsection{Not Just Triangles}
+Triangles are nice in the above sense, but they are not the most natural object. Here's a definition to help us.
+\begin{definition}[Star-like]
+	A subset $X\subseteq\CC$ is \textit{star-like} with respect to $z_0\in X$ if and only if each $w\in X$ has a line segment to $z_0$ contained in $X$.
+\end{definition}
+\begin{example}
+	Any convex set is star-like, for any point in its interior.
+\end{example}
+\begin{ex}
+	The star is star-like with respect to its center. Here is the image.
+	\begin{center}
+		\begin{asy}
+			unitsize(0.6cm);
+			path p;
+			for(int i = 0; i < 5; ++i)
+			{
+				p = p -- dir(360/5 * i+198);
+				p = p -- sqrt(5)*dir(360/5 * (i+0.5)+198);
+			}
+			fill(p -- cycle, lightgray);
+			draw(p -- cycle);
+			draw((0,0) -- 1.5*dir(90-5), red);
+			dot((0,0));
+			dot(1.5*dir(90-5));
+		\end{asy}
+	\end{center}
+\end{ex}
+So here is our associated statement.
+\begin{theorem}
+	Fix an open, connected, star-like subset $\Omega\subseteq\Omega$ with respect to $z_0$. Further, fixing $\gamma:[0,1]\to\CC$ be a closed, piecewise $C^1$ path, then
+	\[\oint_\gamma f(z)\,dz=0.\]
+\end{theorem}
+\begin{proof}
+	The point is to construct a primitive for $f$ by hand, similar to \autoref{thm:getprimitive}, using \autoref{thm:cg} instead of that condition. Namely, for $w\in\Omega$, we define $\gamma_w$ to be the segment from $z_0$ to $w$, from which we set
+	\[F(w):=\int_{\gamma_w}f(z)\,dz.\]
+	We now claim that $F$ is our primitive. Now, for any $z_1\in\Omega$, there is some $\varepsilon>0$ such that $B(z_1,\varepsilon)\subseteq\Omega$. Then any $w$ in $B(z_1,\varepsilon)$ will have the triangle $T_{z_0,z_1,w}=\gamma_w*\eta*\gamma_{z_1}^-$ contained in $\Omega$ %\todo{insert image maybe}
+	so that we have
+	\[0=\oint_{T_{z_0,z_1,w}}f(z)\,dz=\oint_{\gamma_w}f(z)\,dz+\oint_\eta f(z)\,dz-\oint_{\gamma_{z_1}}f(z)\,dz.\]
+	Then from here we can estimate
+	\[\left|\frac{F(z_1)-F(w)}{z_1-0}-f(z_1)\right|=\left|\oint_\eta\frac{f(z)}{z_1-w}\,dz-f(z_1)\right|\]
+	to go to $0$ as $w\to z_1$, which is what we wanted.
+\end{proof}
