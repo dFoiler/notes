@@ -41,7 +41,7 @@ To prove \autoref{thm:cif}, we will proceed in steps. Here is one major step.
 			pair B = (2,4);
 			pair C = (5,0);
 			draw(A -- B -- C -- cycle, red);
-			dot(A ^^ B ^^ C);
+			dot(A ^^ B ^^ C, red);
 			pair D = (A+B)/2;
 			pair E = (B+C)/2;
 			pair F = (C+A)/2;
@@ -65,14 +65,14 @@ To prove \autoref{thm:cif}, we will proceed in steps. Here is one major step.
 			pair A = (0,0);
 			pair B = (2,4);
 			pair C = (5,0);
-			dot(A ^^ B ^^ C);
+			dot(B ^^ C);
 			pair D = (A+B)/2;
 			pair E = (B+C)/2;
 			pair F = (C+A)/2;
 			draw(A -- D -- F -- cycle, red);
 			draw(D -- B -- C -- F);
 			draw(D -- E -- F);
-			dot(D ^^ E ^^ F);
+			dot(E); dot(A ^^ D ^^ F, red);
 			label("$T_2^1$", (A+D+F)/3/2);
 			label("$T_1^1$", (B+D+E)/3/2);
 			label("$T_3^1$", (E+D+F)/3/2);
@@ -88,8 +88,7 @@ To prove \autoref{thm:cif}, we will proceed in steps. Here is one major step.
 
 	The idea, now, is to find a point contained in all of our triangles. Let $V^k$ be the region enclosed by $T^k$ (i.e., the convex hull). Thus, we have a descending sequence of nested closed sets
 	\[V^1\supseteq V^2\supseteq V^3\supseteq\cdots.\]
-	Each of the $V^k$ is closed and bounded and therefore compact, so it follows that % \todo{}
-	the intersection in total is nonempty from the following lemma.
+	Each of the $V^k$ is closed and bounded and therefore compact, so it follows that the intersection in total is nonempty from the following lemma.
 	\begin{lemma}
 		Fix a descending chain
 		\[V_0\supseteq V_1\supseteq V_2\supseteq\cdots\]
@@ -126,12 +125,26 @@ To prove \autoref{thm:cif}, we will proceed in steps. Here is one major step.
 \end{proof}
 
 \subsection{Not Just Triangles}
-Triangles are nice in the above sense, but they are not the most natural object. Here's a definition to help us.
+Triangles are a nice starting point for \autoref{thm:cg}, but most sets we deal with will not be triangles. Here's a more general definition to help us.
 \begin{definition}[Star-like]
 	A subset $X\subseteq\CC$ is \textit{star-like} with respect to $z_0\in X$ if and only if each $w\in X$ has a line segment to $z_0$ contained in $X$.
 \end{definition}
 \begin{example}
-	Any convex set is star-like, for any point in its interior.
+	Any convex set $X$ is star-like, for any point in its interior. To be explicit, fix any $z_0\in X$. Then, for any $x\in X$, the line segment connecting $z_0$ and $x$ lives in $X$, thus finishing. Here's the image.
+	\begin{center}
+		\begin{asy}
+			unitsize(0.8cm);
+			path p = (-2,0) .. (0,1) .. (1,1) .. (1.3,-2) .. (-1,-1.5) .. cycle;
+			fill(p, lightgray);
+			draw(p);
+			pair z0 = (1,-1);
+			pair x = (-1,0.3);
+
+			draw(z0 -- x, red);
+			dot("$z_0$", z0, SE);
+			dot(x);
+		\end{asy}
+	\end{center}
 \end{example}
 \begin{ex}
 	The star is star-like with respect to its center. Here is the image.
@@ -147,25 +160,68 @@ Triangles are nice in the above sense, but they are not the most natural object.
 			fill(p -- cycle, lightgray);
 			draw(p -- cycle);
 			draw((0,0) -- 1.5*dir(90-5), red);
-			dot((0,0));
+			dot("$z_0$", (0,0), S);
 			dot(1.5*dir(90-5));
 		\end{asy}
 	\end{center}
 \end{ex}
 So here is our associated statement.
 \begin{theorem}
-	Fix an open, connected, star-like subset $\Omega\subseteq\CC$ with respect to $z_0$. Further, fixing $\gamma:[0,1]\to\CC$ be a closed, piecewise $C^1$ path, then
+	Fix an open, connected, star-like subset $\Omega\subseteq\CC$ with respect to $z_0$. Further, fix a closed, piecewise $C^1$ path $\gamma:[0,1]\to\Omega$. Then, if $f:\Omega\to\CC$ is holomorphic,
 	\[\oint_\gamma f(z)\,dz=0.\]
 \end{theorem}
 \begin{proof}
-	The point is to construct a primitive for $f$ by hand, similar to \autoref{thm:getprimitive}, using \autoref{thm:cg} instead of that condition; constructing a primitive will be sufficient by \autoref{cor:ftconclosed}.
+	The point is to construct a primitive for $f$ by hand, similar to \autoref{thm:getprimitive}, using \autoref{thm:cg} instead of the listed condition. In particular, note that if we give $f$ a primitive on $\Omega$, then the conclusion will follow by \autoref{cor:ftconclosed}.
 	
-	Well, for $w\in\Omega$, we define $\gamma_w$ to be the segment from $z_0$ to $w$, from which we set
+	We imitate the construction from \autoref{thm:getprimitive}. Indeed, we would like to integrate over a path to create our primitive, so we will use the star-like condition to get the desired path: for $w\in\Omega$, the star-like condition on $\Omega$ promises us the line segment $\gamma_w:[0,1]\to\Omega$ from $z_0$ to $w$, defined by
+	\[\gamma_w(t):=(1-t)z_0+tw.\]
+	As such, we set
 	\[F(w):=\int_{\gamma_w}f(z)\,dz.\]
-	We now claim that $F$ is our primitive. Now, for any $z_1\in\Omega$, there is some $\varepsilon>0$ such that $B(z_1,\varepsilon)\subseteq\Omega$. Then any $w$ in $B(z_1,\varepsilon)$ will have the triangle $T_{z_0,z_1,w}=\gamma_w*\eta*\gamma_{z_1}^-$ contained in $\Omega$ %\todo{insert image maybe}
-	so that we have
-	\[0=\oint_{T_{z_0,z_1,w}}f(z)\,dz=\oint_{\gamma_w}f(z)\,dz+\oint_\eta f(z)\,dz-\oint_{\gamma_{z_1}}f(z)\,dz.\]
-	Then from here we can estimate
-	\[\left|\frac{F(z_1)-F(w)}{z_1-0}-f(z_1)\right|=\left|\oint_\eta\frac{f(z)}{z_1-w}\,dz-f(z_1)\right|\]
-	to go to $0$ as $w\to z_1$, which is what we wanted.
+	We now claim that $F$ is our primitive, for which we have to show $F'(z_1)=f(z_1)$ for any $z_1\in\Omega$.
+	
+	For psychological reasons, we start by placing $z_1\in\Omega$ inside some open ball $B(z_1,r)\subseteq\Omega$. We would like to control the value of $F$ inside $B(z_1,r)$. Well, for any $w$ in $B(z_1,r)$, we have the following image.
+	\begin{center}
+		\begin{asy}
+			unitsize(1.4cm);
+
+			pair z0 = (0,0);
+			pair z1 = (-0.7,2.3);
+			pair w = z1 + dir(10);
+
+			draw((-3,-1) .. (-1.3,0) .. (-2,2) .. (1,2) .. (1,0.5) .. (3,1) .. (2,0.3) .. (0,-1) .. cycle, dashed);
+			draw(circle(z1, 1.2), dotted);
+
+			draw(z0 -- w, arrow=EndArrow, p=rgb(0.2,0.9,0.2));
+			draw(w -- z1, arrow=EndArrow, p=blue);
+			draw(z1 -- z0, arrow=EndArrow, p=magenta);
+
+			dot("$z_1$", z1, W);
+			dot("$w$", w, ENE);
+			dot("$z_0$", z0, S);
+			label("$\gamma_w$", (z0+w)/2, ESE, rgb(0.2,0.9,0.2));
+			label("$\eta$", (w+z1)/2, NNW, blue);
+			label("$\gamma_{z_1}^-$", (0.6*z1+0.4*z0), WSW, magenta);
+		\end{asy}
+	\end{center}
+	In words, we have the triangle
+	\[T_{z_0,w,z_1}:=\gamma_w*\eta*\gamma_{z_1}^-\]
+	contained in $\Omega$, where $\eta(t):=(1-t)w+tz_1$ is the line segment connecting $w$ to $z_1$. In particular, $\gamma_w(1)=w=\eta(0)$ and $\eta(1)=z_1=\gamma_{z_1}^-(1)$, so we may concatenate these segments into a triangle. Further, this triangle lives in $\Omega$ because $\im\gamma_w\subseteq\Omega$ and $\im\gamma_{z_1}\subseteq\Omega$ by hypothesis on $\Omega$, and $\im\eta\subseteq B(z_1,r)\subseteq\Omega$ because $B(z_1,r)$ is convex.
+
+	Thus, by \autoref{thm:cg}, we get to write
+	\begin{align*}
+		0 &= \oint_{T_{z_0,w,z_1}}f(z)\,dz \\
+		&= \int_{\gamma_w}f(z)\,dz+\int_\eta f(z)\,dz+\int_{\gamma_{z_1}^-}f(z)\,dz \\
+		&= \int_{\gamma_w}f(z)\,dz+\int_\eta f(z)\,dz-\int_{\gamma_{z_1}}f(z)\,dz \\
+		&= F(w)-F(z_1)+\int_\eta f(z)\,dz.
+	\end{align*}
+	We are now ready to bound our difference quotient: by \autoref{lem:estimation}, we see
+	\begin{align*}
+		\left|\frac{F(z_1)-F(w)}{z_1-w}-f(z_1)\right| &= \left|\frac1{z_1-w}\int_\eta f(z)\,dz-f(z_1)\right| \\
+		&= \left|\int_0^1\frac{f((1-t)w+tz_1)}{z_1-w}\cdot(z_1-w)\,dt-f(z_1)\right| \\
+		&= \left|\int_0^1f((1-t)w+tz_1)-f(z_1)\,dt\right| \\
+		&= \sup_{t\in[0,1]}\left\{\big|f((1-t)w+tz_1)-f(z_1)\big|\right\}.
+	\end{align*}
+	Now, as $w\to z_1$, we see that $f((1-t)w+tz_1)$ will be forced to approach $f(z_1)$ by continuity of $f$, bounded uniformly by $w$, so the quantity approaches $0$. More rigorously, for any $\varepsilon>0$, choose $\delta<r$ so that $|z'-z_1|<\delta$ implies $|f(z')-f(z_1)|<\varepsilon$. Then any $w$ with $|w-z_1|<\delta$ will have $|(1-t)w+tz_1-z_1|<\delta$ as well, so
+	\[\sup_{t\in[0,1]}\left\{\big|f((1-t)w+tz_1)-f(z_1)\big|\right\}\le\varepsilon\]
+	by taking the supremum everywhere. Sending $\varepsilon\to0$ gives the result.
 \end{proof}
