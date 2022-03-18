@@ -1,0 +1,174 @@
+% !TEX root = ../notes.tex
+
+We're back, y'all.
+
+\subsection{A Quick Exercise}
+Let's start with an exercise, to review for the midterm. Recall the following result.
+\begin{lem}[Eisenbud 6.4]
+	Fix $R$ a ring and $S:=R[x_1,\ldots,x_n]/(f)$, where $f$ is some polynomial. Then $S$ is a flat $R$-algebra if and only if $\op{cont}f=R$.
+\end{lem}
+\begin{proof}
+	This was on the homework.
+\end{proof}
+And here is our exercise.
+\begin{exe}
+	Fix $R:=k[x,y]$ with maximal ideal $\mf m:=(x,y)$, and we consider the blow-up ring
+	\[S:=\op B_\mf mR:=R\oplus\mf m\oplus\mf m^2\oplus\cdots.\]
+	Now, we ask if $S$ is a flat $R$-module.
+\end{exe}
+\begin{proof}
+	Heuristically, the fiber at any point except for $(0,0)$ is a point, but the fiber over $(0,0)$ is the full projective line. So these fibers are pretty poorly behaved, so we expect this to not be a flat module.
+
+	Well, by staring hard at our grading, we see that
+	\[S\cong k[x,y,tx,ty]\cong\frac{k[x,y,z,w]}{(yz-xw)},\]
+	where the point is that we induce the right-hand isomorphism by $tx\mapsto z$ and $ty\mapsto w$. As such, we see that this module is not flat because the polynomial $f(z,w)=yz-xw$ has coefficients which generate $\op{cont}(f)=(x,y)\ne R$. In particular, we have ``detected'' the fiber over the origin.
+\end{proof}
+
+\subsection{The Krull Dimension}
+\begin{warn}
+	For effectively the rest of the course, all of our rings will be Noetherian.
+\end{warn}
+Recall the following definition.
+\begin{definition}[Krull dimension]
+	The \textit{Krull dimension} of a ring $R$, denoted $\dim R$, is the supremum of the length $r$ of a chain of distinct primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_r.\]
+\end{definition} % \todo{make restatable}
+This gives rise to the following definitions.
+\begin{definition}[Krull dimension, ideals]
+	Fix a ring $R$ and an ideal $I\subseteq R$. Then we define the \textit{dimension} of an ideal $I$ to be $\dim I:=\dim R/I$.
+\end{definition}
+\begin{definition}[Codimension]
+	Fix $I$ a prime ideal of a ring $R$. Then we define the \textit{codimension} of $I$ to be $\codim R_I$. For an arbitrary ideal $I$, we define
+	\[\codim I:=\min_{\mf p\supseteq I}\codim\mf p.\]
+\end{definition}
+Note that the above definition for codimension is well-defined because there are only finitely many minimal primes over an ideal.
+\begin{remark} \label{rem:bettercodim}
+	Intuitively, the codimension of $\mf p$, which is the dimension of $R_\mf p$, can be computed as the length of the largest chain which goes up to $\mf p$, because after that we can localize our chain. More explicitly, we are asking for the longest chain of the form
+	\[\mf p_1\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_r\subsetneq\mf p.\]
+\end{remark}
+\begin{example}
+	Fix $R:=\ZZ$, which has $\dim\ZZ=1$. Then $\codim(0)=\dim\QQ=0$; in fact, $\dim(0)=1$. Similarly, $\codim(p)=\dim\ZZ_p=1$ (it helps to use the above remark), and $\dim(p)=\dim\ZZ/p\ZZ=0$.
+\end{example}
+In all these examples, we see that
+\[\dim\mf p+\codim\mf p=\dim R.\]
+As such, we have the following statement.
+\begin{proposition} \label{prop:upperbounddimension}
+	Fix $\mf p$ a prime ideal of a ring $R$. Then
+	\[\dim\mf p+\codim\mf p\le\dim R.\]
+\end{proposition}
+\begin{proof}
+	Use \autoref{rem:bettercodim} so that the left-hand side is the maximal length of a chain containing $\mf p$.
+\end{proof}
+\begin{remark}
+	Equality in \autoref{prop:upperbounddimension} holds for affine domains (i.e., the ring of functions over a reduced variety).
+\end{remark}
+\begin{example}
+	Consider $R:=k[x]\times k[y,z]$, which is the coordinate. Here, $\dim R=2$, but $\op{codim}(x)=1$ and $\dim(x)=0$.
+\end{example}
+
+\subsection{Dimension in Families}
+Here is a basic example of an affine variety.
+\begin{proposition}
+	Fix $R$ a ring.
+	\begin{listalph}
+		\item We have $\dim R=0$ if and only if $R$ is Artinian. In this case, $R$ is the product of finitely many Artinian local rings.
+		\item If $X$ is an algebraic set, then $\dim A(X)=0$ if and only if $X$ is finite.
+	\end{listalph}
+\end{proposition}
+In algebraic geometry, we are interested in families of varieties, which in our algebraic context means morphisms of algebras. A helpful case to consider will be when we take an integral extension; this corresponds to the notion of a finite morphism of algebraic sets.
+\begin{proposition}
+	Fix a ring homomorphism $\varphi:R\to S$ which makes $S$ into an integral $R$-algebra. Then, for any $\mf p\in\op{Spec}R$ such that $\ker\varphi\subseteq\mf p$, there exists $\mf q\in\op{Spec}S$ such that
+	\[\mf p=\varphi^{-1}(\mf q).\]
+	In fact, for any ideal $I\subseteq S$, we have $\dim S/I=\dim R/\varphi^{-1}(I)$.
+\end{proposition}
+\begin{proof}
+	By replacing $R$ with $R/\ker\varphi$, we may assume that $\varphi$ is an embedding. Now the point is to lift our prime $\mf p$ upwards, which we know will give us our prime $\mf q$ such that $\mf p=\mf q\cap R=\varphi^{-1}(\mf q)$.
+
+	For the latter statement, we first mod out by $I$ to not have to worry about quotients, and we note that any chain
+	\[\mf p_0\subseteq\mf p_1\subseteq\cdots\subseteq\mf p_n\subseteq R\]
+	can be lifted to a chain
+	\[\mf q_0\subseteq\mf q_1\subseteq\cdots\subseteq\mf q_n.\]
+	In fact, we know that the lifts $\mf q_\bullet$ of a particular prime $\mf p$ are incomparable, so we cannot make a chain like the one above longer, lest we be able to pull it back to $R$ for a longer chain. This finishes proving the dimension statement.
+\end{proof}
+\begin{corollary}
+	Fix $\varphi:X\to Y$ a morphism of algebraic varieties giving rise to a map $\varphi^*:A(Y)\to A(X)$. Further, suppose $A(X)$ is a finitely generated $A(Y)$-module. Then the following are true.
+	\begin{listalph}
+		\item The fibers of $\varphi$ are finite.
+		\item If $Z\subseteq X$ is Zariski closed, then $\varphi(Z)\subseteq Y$ is also Zariski closed.
+		\item If $\varphi^*$ is an injection, then $\varphi$ is surjective.
+	\end{listalph}
+\end{corollary}
+\begin{proof}
+	We go one at a time.
+	\begin{listalph}
+		\item Fix a maximal ideal $\mf m\subseteq R$. We want to compute the coordinate ring $S/\mf mS$; in particular, we note
+		\[\dim S/\mf mS=\dim R/\varphi^{-1}(\mf mS)=\dim R/\mf m=0,\]
+		so the corresponding algebraic set is finite.
+		\item We will show (c) first.
+		\item Again, pick up a maximal ideal $\mf m\subseteq R$, which is prime. Lifting to $S$, we can find some prime ideal $\mf q\in\op{Spec}S$ such that $\mf q\cap R=\mf m$, so because of the aforementioned incomparability, we conclude that $\mf q$ must be maximal now. This gives our surjectivity. % \todo{wat}
+		\setcounter{enumii}{1}
+		\item The point is to look at $R/\ker\varphi$ so that $Z(\ker\varphi)=\overline{\varphi(X)}$. At this point, we can apply (c) to see that $\varphi$ is surjecting onto a Zariski closed set.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{example}
+	Fix $S:=k[x,y]/\left(x-y^2\right)$ and $R:=k[x]$ so that we have a mapping $R\into S$. The mapping between the algebraic curves is in fact surjective, though this is not apparent from the image in $\RR$.
+\end{example}
+We close this discussion with the following lemma.
+\begin{lem}
+	Fix a multiplicatively closed subset $U\subseteq R$, and set $S:=R\left[U^{-1}\right]$, which gives the natural map $\varphi:R\to S$. Then, for any prime $\mf p\subseteq R\left[U^{-1}\right]$, we have
+	\[\codim\varphi^{-1}(\mf p)=\codim\mf p.\]
+\end{lem}
+\begin{proof}
+	Proceed directly from the definition and how our primes behave in localization.
+\end{proof}
+
+\subsection{The Principal Ideal Theorem}
+Here is our statement.
+\begin{theorem}[Principal ideal]
+	Fix a Noetherian ring $R$. Given $x\in R$, set $\mf p$ to be a minimal prime over $(x)$. Then
+	\[\codim\mf p\le1.\]
+\end{theorem}
+\begin{proof}
+	By moving from $R$ to $R_\mf p$, we may assume that $R$ is local with maximal ideal $\mf p$. We will show that, if we can find a prime $\mf q\subsetneq\mf p$ is strictly smaller than $\mf p$, then $\codim\mf q=0$, which will be enough. As such, we look at $R_\mf q$ and show that the ideal $\mf q_\mf q$ is nilpotent so that it has codimension $0$. With this in mind, we set
+	\[\mf q^{(n)}:=\mf q_\mf q^n\cap R=\{r\in R:rs\in\mf q^n\text{ for some }s\notin\mf q\}.\]
+	We now return to our hypotheses. The fact that $\mf p$ is minimal over $(x)$ implies that $\mf p/(x)$ is a maximal (by being local) and minimal ideal of $R/(x)$, % \todo{is p actually a minimal ideal}
+	so $R/(x)$ is an Artinian ring! As such, the descending chain
+	\[\mf q^{(1)}+(x)\supseteq\mf q^{(n)}+(x)\subseteq\cdots\]
+	must stabilize eventually. So we find our $n$ for which $\mf q^{(n)}+(x)=\mf q^{(n+1)}+(x)$. In particular, $\mf q^{(n)}\subseteq\mf q^{(n+1)}+(x)$, so
+	\[\mf q^{(n)}=x\mf q^{(n)}+\mf q^{(n+1)}.\]
+	Thus, Nakayama's lemma (note that $x$ lives in the Jacobson radical) tells us that $\mf q^{(n)}=\mf q^{(n+1)}$. But now, looking in $R_\mf q$, which is again a local ring, we see that $\mf q^{(n)}=\mf q^{(n+1)}$ forces $\mf q^{(n)}=0$, which is what we wanted.
+\end{proof}
+\begin{remark}
+	The analogous statement in linear algebra is that the codimension of a line in a space is $1$ if the equation has a nonzero solution and $0$ otherwise. More rigorously, by the implicit function theorem in differential geometry, having one equation in a tangent space will have a solution set with either the same dimension or one fewer dimension.
+\end{remark}
+We can extend this result to any finitely generated ideal by an induction.
+\begin{theorem}
+	Fix a Noetherian ring $R$ and a minimal prime $\mf p$ over the (finitely generated) ideal $I=(x_1,\ldots,x_s)\subseteq R$. Then $\codim\mf p\le s$.
+\end{theorem}
+\begin{proof}
+	We proceed by induction. We have already done the case of $s=1$. For the inductive step, we would like some prime $\mf p_1$ containing $\mf p$ which is minimal over an ideal generated by $s-1$ elements.
+
+	Well, if $x_s\in\mf p_1$, then $\mf p=\mf p_1$ will do, so we assume henceforth that $x_s\notin\mf p_1$. As before, we may pass to $R_\mf p$ to assume that $R$ is local with maximal ideal $\mf p$. The idea, now, is to note that
+	\[\mf p/(x_1,\ldots,x_s)\]
+	is nilpotent, using the same argument as in the previous theorem. Thus, there exists $m$ such that
+	\[x_i^n\equiv0\pmod{\mf p_1,x_s}\]
+	for any $i$. As such, we can write
+	\[x_i^n=a_ix_s+y_i,\]
+	where $y_i\in\mf p_1$. So now we claim that $\mf p_1$ is minimal over $(y_1,\ldots,y_{s-1})$, which holds by more or less looking at it, I guess. So we are done by induction.
+\end{proof}
+\begin{remark}
+	The analogous statement in linear algebra is that we now have $s$ equations, which will give rise to codimension $s$.
+\end{remark}
+We close with some applications.
+\begin{example}
+	Fix $R:=k[x_1,\ldots,x_n]$. Then the codimension of $\mf p:=(x_1,\ldots,x_r)$ is upper-bounded by $r$ by the above theorem, but we also have a chain
+	\[(0)\subseteq(x_1)\subseteq(x_1,x_2)\subseteq\cdots(x_1,\ldots,x_r)=\mf p,\]
+	so $\codim\mf p=r$ follows.
+\end{example}
+\begin{cor}
+	Fix $\mf p$ a prime ideal of a ring $R$ with codimension $r$. Then there are elements $x_1,\ldots,x_r$ such that $\mf p$ is minimal over $(x_1,\ldots,x_r)$.
+\end{cor} % \todo{sharpness?} Z[sqrt{-5}] with (2,1+sqrt(-5)) I guess
+\begin{proof}
+	The point is to do an induction. Starting with $r=1$, we choose a minimal prime. Then we can choose an element $x_2$ which does not live in any of these finitely many minimal primes and finish by induction.
+\end{proof}
