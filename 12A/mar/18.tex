@@ -1,0 +1,245 @@
+% !TEX root = ../notes.tex
+
+Welcome to Friday before spring break.
+
+\subsection{Finishing Syllogistic Logic}
+To close up syllogistic logic, we introduce propositional logic to syllogistic logic, to set up our discussion of predicate logic.
+\begin{definition}[Syllogistic propositional formula]
+	A \textit{syllogistic propositional formula} consists of syllogistic propositional formulae used as propositions, on which we can use the propositional connectives $\{\lnot,\land,\lor,\to,\liff\}$.
+\end{definition}
+And here is our notion of truth.
+\begin{definition}[Model]
+	A model $\mathcal M=(D,I)$ appends truth to syllogistic propositional formulae by behaving with connectives as follows.
+	\begin{itemize}
+		\item $\mathcal M\models\varphi\land\psi$ if and only if $\mathcal M\models\varphi$ and $\mathcal M\models\psi$.
+		\item $\mathcal M\models\varphi\lor\psi$ if and only if $\mathcal M\models\varphi$ or $\mathcal M\models\psi$.
+		\item $\mathcal M\models\lnot\varphi$ if and only if $\mathcal M\lnot\models\varphi$.
+		\item $\mathcal M\models\varphi\to\psi$ if and only if $\mathcal M\models\varphi$ implies $\mathcal M\models\psi$.
+		\item $\mathcal M\models\varphi\liff\psi$ if and only if $\mathcal M\models\varphi$ exactly when $\mathcal M\models\psi$.
+	\end{itemize}
+\end{definition}
+These notions of models help us introduce validity and so on, in the same way.
+
+\subsection{Monadic Predicate Logic}
+Today, we are going to move from our syllogistic notation
+\[\textrm{All $A$ are $B$}\]
+to
+\[\forall x(A(x)\to B(x)).\]
+The point is that we can leverage what we know about the conditional $\to$ so that we merely have to add in the semantics for a new symbol $\forall$ in order to include propositional logic to are system.
+
+Similarly,
+\[\textrm{No $A$ is $B$}\]
+becomes
+\[\lnot\exists x(A(x)\land B(x)).\]
+Let's be more rigorous now. Let's introduce our formulae.
+\begin{definition}[Mondadic predicate formula]
+	Fix $\mathrm{Pred}:=\{P_1,P_2,\ldots\}$ a set of unary predicates and some variables $\mathrm{Var}:=\{x_1,x_2,\ldots\}$. Then our formulae are created as follows.
+	\begin{itemize}
+		\item If $P\in\mathrm{Pred}$ and $x\in\mathrm{Var}$, then $P(x)$ is a formula.
+		\item If $\varphi$ and $\psi$ are formulae and $x\in\mathrm{Var}$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ and $\varphi\to\psi$ and $\varphi\liff\psi$ and $\forall x\varphi$ and $\exists x\varphi$ are all formulae.
+		\item There are no other formulae.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	Our formulae are called monadic because we are only using unary predicates.
+\end{remark}
+\begin{remark}
+	We can rigorize the notion that there are no other formulae in the typical ``inductive'' way by intersecting all subsets of expressions which satisfy the above.
+\end{remark}
+\begin{example}
+	The expression $\lnot\exists xP(x)$ is a formula.
+\end{example}
+Variables can come in two types.
+\begin{example}
+	In the formula $\forall xP(x)\to P(y)$, the variable $x$ in $P(x)$ is bound to $\forall x$. The $P(y)$ thus has a free variable $y$.
+\end{example}
+\begin{example}
+	In the formula $\forall xP(x)\to P(x)$, the first $P(x)$ has a bound $x$, but the second $P(x)$ has a free $x$ because the $\forall x$ does not have ``scope'' beyond the main connective $\to$. Notably, if we wanted to bound the second $P(x)$, we would have written $\forall x(P(x)\to P(x))$.
+\end{example}
+Here is our definition.
+\begin{definition}[Bound, free]
+	A variable $x\in\mathrm{Var}$ in a formula $\varphi$ is \textit{bound} if it belongs to a quantifier $\forall$ or $\exists$. Otherwise, the variable $x$ is \textit{free}.
+\end{definition}
+A more rigorous definition can be given by construction sequences, for example. The point is that we need to check the scope of every quantifier.
+
+Free and bounded variables give us the following definition.
+\begin{definition}[Open, closed formulae]
+	A formula $\varphi$ is \textit{open} if and only if some variable in $\varphi$ is free. Otherwise, $\varphi$ is \textit{closed} or a \textit{sentence}.
+\end{definition}
+\begin{example}
+	The formulae $\forall xP(x)\to P(y)$ and $\forall xP(x)\to P(y)$ are open formulae.
+\end{example}
+\begin{example}
+	The formulae $\forall x(P(x)\to P(x))$ and
+	\[\exists x(P(x)\to\forall yQ(y))\]
+	are both closed.
+\end{example}
+The point is that open formulae need to be told what their free variables are before we can determine their truth value. However, closed formulae have all their variables appropriately bound, so the truth value will not require setting variables.
+
+\subsection{Models for Monadic Predicate Logic}
+Models for monadic predicate logic are exactly the same as for syllogistic logic. Here is our definition, again.
+\begin{definition}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ for our syllogistic language consists of a nonempty set $D$ and a function $I:\mathrm{Pred}\to\mathcal P(D)$ that sends each predicate $A$ to a subset $I(A)\subseteq D$. Then $I(A)$ is the \textit{extension} or \textit{interpretation} of $A$ in $\mathcal M$.
+\end{definition}
+However, for free variables, we will also want access to variable assignments.
+\begin{definition}[Variable assignment]
+	Given a model $\mathcal M=(D,I)$ a \textit{variable assignment} is a function $g:\mathrm{Var}\to D$. Intuitively, we are setting our variables equal to objects in our set/domain $D$.
+\end{definition}
+\begin{remark}
+	The variable assignment $g$ does not have to be neither surjective nor injective.
+\end{remark}
+\begin{remark}
+	The point of a variable assignment is that we cannot determine the truth of
+	\[P(x)\]
+	on its own, without knowing what $x$ is.
+\end{remark}
+Here is the image for some assignment.
+\begin{center}
+	\begin{asy}
+		unitsize(1.5cm);
+		label("Language", (-1.5,0), N);
+		label("Model", (-1.5,-1), S);
+		label("$x$", (0,0), N);
+		label("$y$", (1,0), N);
+		label("$z$", (2,0), N);
+		label("$1$", (0,-1), S);
+		label("$2$", (1,-1), S);
+		label("$3$", (2,-1), S);
+		draw((0,0) -- (1,-1), arrow=EndArrow, p=dashed);
+		draw((1,0) -- (2,-1), arrow=EndArrow, p=dashed);
+		draw((2,0) -- (0,-1), arrow=EndArrow, p=dashed);
+		draw((-1.5,0)--(-1.5,-1), arrow=EndArrow, p=dashed);
+		label("$g$", (-1.5,-0.5), W);
+		draw(ellipse((1,-1.15), 1.5, 0.4));
+	\end{asy}
+\end{center}
+Of course, there are lots of ways to do this assignment. Here is a pathological one.
+\begin{center}
+	\begin{asy}
+		unitsize(1.5cm);
+		label("Language", (-1.5,0), N);
+		label("Model", (-1.5,-1), S);
+		label("$x$", (0,0), N);
+		label("$y$", (1,0), N);
+		label("$z$", (2,0), N);
+		label("$1$", (0,-1), S);
+		label("$2$", (1,-1), S);
+		label("$3$", (2,-1), S);
+		draw((0,0) -- (1,-1), arrow=EndArrow, p=dashed);
+		draw((1,0) -- (1,-1), arrow=EndArrow, p=dashed);
+		draw((2,0) -- (1,-1), arrow=EndArrow, p=dashed);
+		draw((-1.5,0)--(-1.5,-1), arrow=EndArrow, p=dashed);
+		label("$g'$", (-1.5,-0.5), W);
+		draw(ellipse((1,-1.15), 1.5, 0.4));
+	\end{asy}
+\end{center}
+There are also ways to modify a variable assignment.
+\begin{definition}[Variable assignment modification]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g:\mathrm{Var}\to D$. Then we set the \textit{modification} $g[x:=d]:\mathrm{Var}\to D$ by
+	\[g[x:=d](y)=\begin{cases}
+		g(y) & y\ne x, \\
+		d & y=x.
+	\end{cases}\]
+	Intuitively, we set $g[x:=d]$ to be $g$, except for the requirement that we definitely send $x$ to $d$.
+\end{definition}
+\begin{remark}
+	We can stack these and write something like $g[x_1=d_1][x_2=d_2]$ to force more than one.
+\end{remark}
+\begin{example}
+	The variable assignment
+	\begin{center}
+		\begin{asy}
+			unitsize(1.5cm);
+			label("Language", (-1.5,0), N);
+			label("Model", (-1.5,-1), S);
+			label("$x$", (0,0), N);
+			label("$y$", (1,0), N);
+			label("$z$", (2,0), N);
+			label("$1$", (0,-1), S);
+			label("$2$", (1,-1), S);
+			label("$3$", (2,-1), S);
+			draw((0,0) -- (1,-1), arrow=EndArrow, p=dashed);
+			draw((1,0) -- (2,-1), arrow=EndArrow, p=dashed);
+			draw((2,0) -- (0,-1), arrow=EndArrow, p=dashed);
+			draw((-1.5,0)--(-1.5,-1), arrow=EndArrow, p=dashed);
+			label("$g$", (-1.5,-0.5), W);
+			draw(ellipse((1,-1.15), 1.5, 0.4));
+		\end{asy}
+	\end{center}
+	becomes
+	\begin{center}
+		\begin{asy}
+			unitsize(1.5cm);
+			label("Language", (-1.5,0), N);
+			label("Model", (-1.5,-1), S);
+			label("$x$", (0,0), N);
+			label("$y$", (1,0), N);
+			label("$z$", (2,0), N);
+			label("$1$", (0,-1), S);
+			label("$2$", (1,-1), S);
+			label("$3$", (2,-1), S);
+			draw((0,0) -- (0,-1), arrow=EndArrow, p=dashed);
+			draw((1,0) -- (2,-1), arrow=EndArrow, p=dashed);
+			draw((2,0) -- (0,-1), arrow=EndArrow, p=dashed);
+			draw((-1.5,0)--(-1.5,-1), arrow=EndArrow, p=dashed);
+			label("$g[x:=1]$", (-1.5,-0.5), W);
+			draw(ellipse((1,-1.15), 1.5, 0.4));
+		\end{asy}
+	\end{center}
+\end{example}
+With variable assignments, here is our notion of semantics, without quantifiers. The point is that we only have to introduce what do with the variables themselves.
+\begin{definition}[Truth] \label{def:truthforfrees}
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae, $\mathcal M\models_gP(x)$ if and only if $g(x)\in I(P)$.
+		\item We build truth for connectives in the same way as for propositional logic.
+	\end{itemize}
+\end{definition}
+\begin{example}
+	Consider the following variable assignment.
+	\begin{center}
+		\begin{asy}
+			unitsize(1.5cm);
+			label("Language", (-1.5,0), N);
+			label("Model", (-1.5,-1), S);
+			label("$x$", (0,0), N);
+			label("$y$", (1,0), N);
+			label("$z$", (2,0), N);
+			label("$1$", (0,-1), S);
+			label("$2$", (1,-1), S);
+			label("$3$", (2,-1), S);
+			draw((0,0) -- (1,-1), arrow=EndArrow, p=dashed);
+			draw((1,0) -- (2,-1), arrow=EndArrow, p=dashed);
+			draw((2,0) -- (0,-1), arrow=EndArrow, p=dashed);
+			draw((-1.5,0)--(-1.5,-1), arrow=EndArrow, p=dashed);
+			label("$g$", (-1.5,-0.5), W);
+			draw(ellipse((1,-1.15), 1.5, 0.4));
+			draw(ellipse((1.5,-1.15), 0.75, -0.3), dotted+magenta);
+			label("$A$", (1.5,-1.15), magenta);
+		\end{asy}
+	\end{center}
+	Here, $\mathcal M\models_gA(y)$ and $\mathcal M\models_gA(z)$, but $\mathcal M\not\models_gA(x)$.
+\end{example}
+We now continue \autoref{def:truthforfrees} to add in quantifiers.
+\begin{defihelper}[Truth]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae, $\mathcal M\models_gP(x)$ if and only if $g(x)\in I(P)$.
+		\item We build truth for connectives in the same way as for propositional logic.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if, for all $d\in D$, we have $\mathcal M\models_{g[x:=d]}\varphi$.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if there is some $d\in D$ for which $\mathcal M\models_{g[x:=d]}\varphi$.
+	\end{itemize}
+\end{defihelper}
+\begin{example}
+	Fix $D:=\{1,2,3\}$ and $\mathcal M:=(D,I)$ some model. Then $\mathcal M\models_g(P(x)\lor Q(x))$ if and only if all the following hold.
+	\begin{listroman}
+		\item $\mathcal M\models_{g[x:=1]}P(x)\lor Q(x)$, which is equivalent to $1\in I(P)$ or $1\in I(Q)$.
+		\item $\mathcal M\models_{g[x:=2]}P(x)\lor Q(x)$, which is equivalent to $2\in I(P)$ or $2\in I(Q)$.
+		\item $\mathcal M\models_{g[x:=3]}P(x)\lor Q(x)$, which is equivalent to $3\in I(P)$ or $3\in I(Q)$.
+	\end{listroman}
+\end{example}
+\begin{example}
+	In \autoref{ex:easysyllogisms}, the statement
+	\[\mathcal M\models_g\forall x(\mathrm{student}(x)\lor\mathrm{faculty}(x))\]
+	is true basically by eye-balling it.
+\end{example}
