@@ -7,6 +7,7 @@
 \usepackage{asymptote}
 \usepackage{cancel}
 \usepackage{enumitem}
+\usepackage{etoolbox}
 \usepackage{footnotebackref}
 \usepackage{graphicx}
 \usepackage{mathdots}
@@ -65,15 +66,16 @@
 \usepackage{imakeidx}
 \makeindex[intoc, title=List of Definitions]
 % thank you https://tex.stackexchange.com/a/299353/261927
+% we are going to label each index entry with a counter
 \newcounter{indexcounterlabel}
 \setcounter{indexcounterlabel}{0}
-\AtBeginDocument{\NewCommandCopy{\nirlabel}{\label}}
-\newcommand{\nirindexlabel}[1]{\nirlabel{indexentry:#1}}
+\newcommand{\nirindexlabel}[1]{\label{indexentry:#1}}
 \newcommand{\nirindex}[1]
-{
-	\stepcounter{indexcounterlabel}
-	\nirindexlabel{\theindexcounterlabel}
-	\index{#1|hyperref[indexentry:\theindexcounterlabel]}
+{%
+	\stepcounter{indexcounterlabel}%
+	\nirindexlabel{\theindexcounterlabel}%
+	% this command will do the labeling
+	\index{#1|hyperref[indexentry:\theindexcounterlabel]}%
 }
 \newcommand{\nirprintindex}{\newpage\toctrue\printindex\tocfalse}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /INDEX
@@ -269,7 +271,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MARGINS
 \usepackage{marginnote}
 % Thank you https://tex.stackexchange.com/a/472882
-% Makes marginnotes always appear on th eleft, apparently
+% Makes marginnotes always appear on the left, apparently
 %
 \makeatletter
 \long\def\@mn@@@marginnote[#1]#2[#3]{%
@@ -422,27 +424,31 @@
 \declaretheorem[style=nirredbox,name=Convention,sibling=thm]{conv}
 \declaretheorem[style=nirredbox,name=Convention,sibling=thm]{convention}
 
-\declaretheorem[style=nirredbox,name=Idea,sibling=thm]{ideahelper}
-\NewDocumentEnvironment{idea}{o}
-	{
-		\IfNoValueTF{#1}%
-			{\begin{ideahelper}\phantom{}\marginnote{\nirideasymbol}[-3pt]}%
-			{\begin{ideahelper}[#1]\phantom{}\marginnote{\nirideasymbol}[-3pt]}%
-	}
-	{
-		\end{ideahelper}
-	}
+\makeatletter
+\declaretheorem[
+	style=nirredbox,
+	name=Idea,
+	sibling=thm,
+	% without phantom{}, the first item in a list gets misformatted
+	postheadhook={\phantom{}\marginnote{\nirideasymbol}[-3pt]%
+	\ifthmt@thisistheone% restatable makes alignment weird
+		\hspace{-2.2pt}%
+	\else%
+		{}%
+	\fi}
+]{idea}
 
-\declaretheorem[style=nirredbox,name=Warning,sibling=thm]{warnhelper}
-\NewDocumentEnvironment{warn}{o}
-	{
-		\IfNoValueTF{#1}%
-			{\begin{warnhelper}\phantom{}\marginnote{\nirwarnsymbol}[-3pt]}%
-			{\begin{warnhelper}[#1]\phantom{}\marginnote{\nirwarnsymbol}[-3pt]}%
-	}
-	{
-		\end{warnhelper}
-	}
+\declaretheorem[
+	style=nirredbox,
+	name=Warning,
+	sibling=thm,
+	% without phantom{}, the first item in a list gets misformatted
+	postheadhook={\phantom{}\marginnote{\nirwarnsymbol}[-3pt]%
+	\ifthmt@thisistheone% restatable makes alignment weird
+		\hspace{-2.2pt}%
+	\fi}
+]{warn}
+\makeatother
 
 \definecolor{nirdarkgreen}{HTML}{20660a}
 \definecolor{nirlightgreen}{HTML}{ebffeb}
@@ -468,19 +474,7 @@
 \declaretheorem[style=nirgreenbox,name=Inventory,sibling=thm]{inv}
 \declaretheorem[style=nirgreenbox,name=Inventory,sibling=thm]{inventory}
 \declaretheorem[style=nirgreenbox,name=Notation,sibling=thm]{notation}
-
 \declaretheorem[style=nirgreenbox,name=Definition,sibling=thm]{defihelper}
-\NewDocumentEnvironment{defi}{o}
-	{
-		\IfNoValueTF{#1}%
-			{\begin{defihelper}}%
-			{\begin{defihelper}[#1] \nirindex{#1}}%
-	}
-	{
-		\end{defihelper}
-	}
-\newenvironment{definition}{
-	\begin{defi}}{\end{defi}}
 
 \definecolor{nirdarkcyan}{HTML}{25805e}
 \definecolor{nirlightcyan}{HTML}{edfffb}
@@ -530,3 +524,133 @@
 \declaretheorem[style=nirbrownbox,name=Remark,sibling=thm]{remark}
 \declaretheorem[style=nirbrownbox,name=Quote,sibling=thm]{quot}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /THM BOXES
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INDEX BOXES
+% smuggle the note from the header formatting
+\makeatletter
+\def\thmt@setheadstyle#1{%
+	\thmt@style@headstyle{%
+		\def\NAME{\the\thm@headfont ##1}%
+		\def\NUMBER{\bgroup\@upn{##2}\egroup}%
+		\def\NOTE{\if=##3=\else\bgroup\thmt@space\the\thm@notefont(##3)\egroup\fi}%
+		% my precious!
+		\def\NIRNOTE{\if=##3=\else##3\fi}%
+	}%
+	\def\thmt@tmp{#1}%
+	\@onelevel@sanitize\thmt@tmp
+	%\tracingall
+	\ifcsname thmt@headstyle@\thmt@tmp\endcsname
+		\thmt@style@headstyle\@xa{%
+			\the\thmt@style@headstyle
+			\csname thmt@headstyle@#1\endcsname
+		}%
+	\else
+		\thmt@style@headstyle\@xa{%
+			\the\thmt@style@headstyle
+			#1%
+		}%
+	\fi
+	%\showthe\thmt@style@headstyle
+}
+% disable indexing in restatable, as with labels
+\renewenvironment{thmt@restatable}[3][]{%
+	\thmt@toks{}% will hold body
+%
+	\stepcounter{thmt@dummyctr}% used for data storage label.
+%
+	\long\def\thmrst@store##1{%
+		\@xa\gdef\csname #3\endcsname{%
+			\@ifstar{%
+				\thmt@thisistheonefalse\csname thmt@stored@#3\endcsname
+			}{%
+				\thmt@thisistheonetrue\csname thmt@stored@#3\endcsname
+			}%
+		}%
+		\@xa\long\@xa\gdef\csname thmt@stored@#3\@xa\endcsname\@xa{%
+			\begingroup
+			\ifthmt@thisistheone
+				% these are the valid numbers, store them for the other
+				% occasions.
+				\thmt@rst@storecounters{#3}%
+			\else
+				% this one should use other numbers...
+				% first, fake the theorem number.
+				\@xa\protected@edef\csname the#2\endcsname{%
+					\thmt@trivialref{thmt@@#3}{??}}%
+				% if the number wasn't there, have a "re-run to get labels right"
+				% warning.
+				\ifcsname r@thmt@@#3\endcsname\else
+					\G@refundefinedtrue
+				\fi
+				% prevent stepcountering the theorem number,
+				% but still, have some number for hyperref, just in case.
+				\@xa\let\csname c@#2\endcsname=\c@thmt@dummyctr
+				\@xa\let\csname theH#2\endcsname=\theHthmt@dummyctr
+				% disable labeling.
+				\let\label=\thmt@gobble@label
+				% disable indexing!
+				\let\index=\@gobble
+				\let\ltx@label=\@gobble% amsmath needs this
+				% We shall need to restore the counters at the end
+				% of the environment, so we get
+				% (4.2) [(3.1 from restate)] (4.3)
+				\def\thmt@restorecounters{}%
+				\@for\thmt@ctr:=\thmt@innercounters\do{%
+					\protected@edef\thmt@restorecounters{%
+						\thmt@restorecounters
+						\protect\setcounter{\thmt@ctr}{\arabic{\thmt@ctr}}%
+					}%
+				}%
+				% pull the new semi-static definition of \theequation et al.
+				% from the aux file.
+				\thmt@trivialref{thmt@@#3@data}{}%
+			\fi
+			% call the proper begin-env code, possibly with optional argument      
+			% (omit if stored via key-val)
+			\ifthmt@restatethis
+				\thmt@restatethisfalse
+			\else
+				\csname #2\@xa\endcsname\ifx\@nx#1\@nx\else[{#1}]\fi
+			\fi
+			\ifthmt@thisistheone
+				% store a label so we can pick up the number later.
+				\label{thmt@@#3}%
+			\fi
+			% this will be the collected body.
+			##1%
+			\csname end#2\endcsname
+			% if we faked the counter values, restore originals now.
+			\ifthmt@thisistheone\else\thmt@restorecounters\fi
+			\endgroup
+		}% thmt@stored@#3
+		% in either case, now call the just-created macro,
+		\csname #3\@xa\endcsname\ifthmt@thisistheone\else*\fi
+		% and artificially close the current environment.
+		\@xa\end\@xa{\@currenvir}
+	}% thm@rst@store
+	\thmt@collect@body\thmrst@store
+}{%
+	%% now empty, just used as a marker.
+}
+\makeatother
+\declaretheoremstyle[
+	mdframed={
+		backgroundcolor=nirlightgreen,
+		linecolor=nirdarkgreen,
+		rightline=false,
+		topline=false,
+		bottomline=false,
+		linewidth=2pt,
+		innertopmargin=5pt,
+		innerbottommargin=8pt,
+		innerleftmargin=8pt,
+		leftmargin=-2pt,
+		skipbelow=2pt,
+		nobreak
+	},
+	headfont=\normalfont\bfseries\color{nirdarkgreen},
+	headformat={\NAME\ \NUMBER\NOTE{\nirindex{\NIRNOTE}}}
+]{nirgreenboxindexed}
+\declaretheorem[style=nirgreenboxindexed,name=Definition,sibling=thm]{defi}
+\declaretheorem[style=nirgreenboxindexed,name=Definition,sibling=thm]{definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /INDEX BOXES
