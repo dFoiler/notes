@@ -1,0 +1,184 @@
+% !TEX root = ../notes.tex
+
+This lecture was recorded.
+
+\subsection{Proving the Cauchy Integral Formula}
+Today we finish the proof of the Cauchy integral formula. Recall the statement.
+\thmcif*
+\begin{proof}
+	As needed, choose $w\in B(z_0,r)$, which is open, so we choose any $\varepsilon>0$ such that $\overline{B(w,\varepsilon)}\subseteq B(z_0,r)$. As such, we set
+	\[C_1:=\del B(z_0,r)=\im\gamma\qquad\text{and}\qquad C_2=\del B(w,\varepsilon).\]
+	Now, the main trick in the proof will be the following image, which will turn the integral around $\gamma$ into a more controlled (and small!) square.
+	\begin{center}
+		\begin{asy}
+			unitsize(2cm);
+			pair z0=(0,0);
+			pair w=(0.3,0.4);
+			dot("$w$", w, E);
+			draw(circle(w,0.9));
+			
+			pair a1 = (-1.96,0.4);
+			pair a2 = (1.96,0.4);
+			pair b1 = (-0.6,0.4);
+			pair b2 = (1.2,0.4);
+			pair c1 = (0.3,1.3);
+			pair c2 = (0.3,-0.5);
+			
+			label("$C_2$", c2, S);
+			label("$C_1=\Gamma_1*\Gamma_2$", (0,2), N);
+			
+			draw(arc((0,0), a2, 2*dir(94)), arrow=EndArrow, p=rgb(0,0.8,0));
+			draw(arc((0,0), 2*dir(88), a1), p=rgb(0,0.8,0));
+			label("$\Gamma_1$", 2*dir(70), -dir(70), rgb(0,0.8,0));
+			
+			draw(arc((0,0), a1, 2*dir(-86)), arrow=EndArrow, p=rgb(0,0,0.8));
+			draw(arc((0,0), 2*dir(-88), a2), p=rgb(0,0,0.8));
+			label("$\Gamma_2$", 2*dir(-70), -dir(-70), rgb(0,0,0.8));
+			
+			draw(a1 -- (a1+b1)/2+dir(0)*0.1, arrow=EndArrow);
+			draw((a1+b1)/2 -- b1);
+			label("$s_1$", (a1+b1)/2, N);
+			
+			draw(b1 -- (b1+c1)/2+dir(45)*0.1, arrow=EndArrow, p=rgb(0,0.8,0));
+			draw((b1+c1)/2 -- c1, p=rgb(0,0.8,0));
+			draw(c1 -- (c1+b2)/2+dir(-45)*0.1, arrow=EndArrow, p=rgb(0,0.8,0));
+			draw((c1+b2)/2 -- b2, p=rgb(0,0.8,0));
+			label("$\Delta_1$", (b1+c1)/2, -NW, rgb(0,0.8,0));
+			
+			draw(b2 -- (b2+a2)/2+dir(0)*0.1, arrow=EndArrow);
+			draw((b2+a2)/2 -- a2);
+			label("$s_2$", (b2+a2)/2, N);
+			
+			draw(b2 -- (b2+c2)/2+dir(-135)*0.1, arrow=EndArrow, p=rgb(0,0,0.8));
+			draw((b2+c2)/2 -- c2, p=rgb(0,0,0.8));
+			draw(c2 -- (c2+b1)/2+dir(135)*0.1, arrow=EndArrow, p=rgb(0,0,0.8));
+			draw((c2+b1)/2 -- b1, p=rgb(0,0,0.8));
+			label("$\Delta_2$", (b1+c2)/2, -SW, rgb(0,0,0.8));
+		\end{asy}
+	\end{center}
+	We will not spend the time to rigorously define what the various paths are, but we will list their properties.
+	\begin{itemize}
+		\item The concatenation $\Gamma_1*\Gamma_2$ fully covers the circle $C_1$.
+		\item The concatenation $\Delta_1*\Delta_2$ creates a square around $w$ whose vertices are $\{w-\varepsilon,w+i\varepsilon,w+\varepsilon,w-i\varepsilon\}$, in that order.
+		\item The segments $s_1$ and $s_2$ are parallel to the real axis such that $s_1$ intersects $C_1$ (``on the left'') and $w-\varepsilon$. Similarly, $s_2$ intersects $C_1$ (``on the right'') and $w+\varepsilon$.
+		\item The path $\Gamma_1$ starts where $s_2$ ends and ends where $s_1$ begins. Similarly, the path $\Gamma_2$ starts where $s_1$ begins and ends where $s_2$ ends.
+	\end{itemize}
+	Now, as promised, we move from an integral around $\gamma$ to an integral around the square $\Delta_1*\Delta_2$. In particular, we set $\widetilde\gamma:[0,1]\to\Omega$ to be a reparameterization of $(\Delta_1*\Delta_2)^-$, and we will transfer the integral around $\gamma$ into an integral around $\widetilde{\gamma}$.
+
+	For this, we use the work we did last class. Recall the following statement.
+	\starlikecg*
+	\noindent With this in mind, we set
+	\[\gamma_1:=\Gamma_1*s_1*\Delta_1*s_2\qquad\text{and}\qquad\gamma_2:=\Gamma_2*s_2^-*\Delta_2*s_1^-\]
+	to be closed paths, more or less representing the green and blue halves of our drawn contours. (These concatenations are well-defined and are closed by the chosen orientations of our paths.) In particular, applying our rules from \autoref{lem:concatintegral} and \autoref{lem:opposite}, we see that
+	\begin{align*}
+		\oint_{\gamma_1}\frac{f(z)}{z-w}\,dz+\oint_{\gamma_2}\frac{f(z)}{z-w}\,dz &= \int_{\Gamma_1}\frac{f(z)}{z-w}\,dz+\int_{s_1}\frac{f(z)}{z-w}\,dz+\int_{\Delta_1}\frac{f(z)}{z-w}\,dz+\int_{s_2}\frac{f(z)}{z-w}\,dz \\
+		&\qquad +\int_{\Gamma_2}\frac{f(z)}{z-w}\,dz-\int_{s_s}\frac{f(z)}{z-w}\,dz+\int_{\Delta_2}\frac{f(z)}{z-w}\,dz-\int_{s_1}\frac{f(z)}{z-w}\,dz \\
+		&= \int_{\Gamma_1*\Gamma_2}\frac{f(z)}{z-w}\,dz+\int_{\Delta_1*\Delta_2}\frac{f(z)}{z-w}\,dz \\
+		&= \oint_{\gamma}\frac{f(z)}{z-w}\,dz-\oint_{\widetilde\gamma}\frac{f(z)}{z-w}\,dz, \tag{1}\label{eq:reducetogammatilde}
+	\end{align*}
+	where in the last step we have reparameterized (twice), as in \autoref{lem:reparam}. The negative sign in front of $\oint_{\widetilde\gamma}$ occurs because $\widetilde\gamma$ is a reparameterization of $(\Delta_1*\Delta_2)^-$; pictorially, $\widetilde\gamma$ is counterclockwise.
+
+	We now finish by brute force. Note that the function $\frac{f(z)}{z-w}$ is a quotient of holomorphic functions on $\Omega\setminus\{w\}$ is holomorphic itself. Even though we cannot immediately apply \autoref{thm:starlikecg} to $\Omega\setminus\{w\}$, we can apply it to the regions interior to $\gamma_1$ and $\gamma_2$; i.e., the top and bottom parts of $B(z_0,r)\setminus\overline{B(w,\varepsilon)}$, respectively. Both of these regions are star-like\footnote{Technically, we should expand out the regions by a very small amount $\delta$ in order to make these regions also open and containing $\gamma_1$ and $\gamma_2$, but we will not bother to do this in any rigorous way.} (as witnessed by $w+i\varepsilon$ and $w-i\varepsilon$, respectively) because $s_1$ and $s_2$ are collinear and on opposite sides of our square, so \autoref{thm:starlikecg} implies
+	\[\oint_{\gamma_1}\frac{f(z)}{z-w}\,dz=\oint_{\gamma_2}\frac{f(z)}{z-w}\,dz=0+0=0.\]
+	As such, \autoref{eq:reducetogammatilde} tells us that
+	\[\oint_\gamma\frac{f(z)}{z-w}\,dz=\oint_{\widetilde\gamma}\frac{f(z)}{z-w}\,dz.\]
+	So we have indeed transformed our integral around $\gamma$ into an integral around a square $\widetilde\gamma$. Observe that we can even make $\varepsilon>0$ smaller and maintain the above equality.
+
+	We now run our computation of the integral around the square. We see
+	\begin{align*}
+		\frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)}{z-w} &= \frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)-f(w)}{z-w}\,dz+\frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(w)}{z-w}\,dz \\
+		&= \frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)-f(w)}{z-w}\,dz+f(w)\op{Ind}(\widetilde\gamma,w) \\
+		&= \frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)-f(w)}{z-w}\,dz+f(w), \tag{2}\label{eq:cifevalonsquare}
+	\end{align*}
+	where we have computed the winding number as in \autoref{lem:betterwinding}. Notably, our winding number is $+1$, perhaps by plugging into the definition via \autoref{lem:byhandwinding} because the normalized version of $\widetilde\gamma$ is just a circle, so the corresponding $\theta_{\widetilde\gamma}$ can be set to $\theta_0+2\pi t$ for some starting value $\theta_0$. We will not make this more rigorous because look at it.
+
+	We now send $\varepsilon\to0$, which will send $\frac{f(z)-f(w)}{z-w}\to f'(w)$ by definition of the derivative. More rigorously, for any $\varepsilon_0>0$, there exists $\varepsilon>0$ so that $|z-w|<\varepsilon$ implies
+	\[\left|\frac{f(z)-f(w)}{z-w}-f'(w)\right|<\varepsilon_0,\]
+	so \autoref{lem:estimation} tells us that
+	\begin{align*}
+		\left|\frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)-f(w)}{z-w}\,dz\right| &\le \frac1{2\pi}\cdot\sup_{t\in[0,1]}\left\{\left|\frac{f(\widetilde\gamma(z))-f(w)}{\widetilde\gamma(z)-w}\right|\right\}\cdot\ell(\widetilde\gamma) \\
+		&\le \frac1{2\pi}\cdot\big(|f'(w)|+\varepsilon_0\big)\cdot2\pi\varepsilon,
+	\end{align*}
+	where in the last step we have bounded both the difference quotient and $\widetilde\gamma$ by the circumference of the circumscribed circle. Thus, sending $\varepsilon\to0$ will force the entire integral to vanish, so we find from \autoref{eq:cifevalonsquare} that
+	\[\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz=\lim_{\varepsilon\to0}\frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)}{z-w}\,dz=\lim_{\varepsilon\to0}\frac1{2\pi i}\oint_{\widetilde\gamma}\frac{f(z)-f(w)}{z-w}\,dz+f(w)=f(w),\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{Applications of the Cauchy Integral Formula}
+As a first application, we extend \autoref{cor:holoisana}.
+\begin{corollary} \label{cor:betterholoisana}
+	Fix an open, connected subset $\Omega\subseteq\CC$ and $f:\Omega\to\CC$ some holomorphic function. Then $f$ is analytic at any $z_0\in\Omega$. In fact, for any $r>0$ such that $\overline{B(z_0,r)}\subseteq\Omega$, the path
+	\[\gamma(t):=z_0+r\exp(2\pi it)\]
+	gives
+	\[f^{(n)}(z_0)=\frac{n!}{2\pi i}\oint_\gamma\frac{f(z)}{(z-w)^{n+1}}\,dz.\]
+\end{corollary}
+\begin{proof}
+	By \autoref{thm:cif}, we know that
+	\[f(w)=\op{Ind}_f(\gamma,w),\]
+	for any $w\in B(z_0,r)$. Now, applying \autoref{prop:indexanalytic}, we see that 
+	\[f(z)=\sum_{n=0}^\infty\left(\frac1{2\pi i}\oint_\gamma\frac{f(z)}{(z-z_0)^{n+1}}\right)(z-z_0)^n\]
+	for $z$ in some open ball around $z_0$, which is our local power series expansion. Now, inductively throwing \autoref{prop:powerseriesholo} at this power series, we see that
+	\[f^{(n)}(z_0)=\frac{n!}{2\pi i}\oint_\gamma\frac{f(z)}{(z-z_0)^{n+1}}\,dz,\]
+	which is what we wanted.
+\end{proof}
+And here is another one.
+\begin{theorem}[Morera] \label{thm:morera}
+	Fix an open, connected subset $\Omega\subseteq\CC$ such that $f:\Omega\to\CC$ is continuous. Further, suppose that every closed, piecewise $C^1$ path $\gamma:[a,b]\to\Omega$ has
+	\[\oint_\gamma f(z)\,dz=0.\]
+	Then $f$ is holomorphic.
+\end{theorem}
+\begin{proof}
+	By \autoref{thm:getprimitive} tells us that $f$ has a primitive $F$ on $\Omega$. In particular, $F$ is holomorphic on $\Omega$ (with $F'=f$) and therefore $F$ is analytic by \autoref{cor:betterholoisana}, so $f=F'$ is analytic by \autoref{lem:ddzanaisana} and therefore holomorphic by \autoref{prop:anaisholo}.
+\end{proof}
+\begin{remark}
+	I think a strengthening of \autoref{thm:getprimitive} can show that we merely need to check
+	\[\oint_\gamma f(z)\,dz=0\]
+	for $C^1$ paths $\gamma$.
+\end{remark}
+
+\subsection{Primitive Domains}
+To close our lecture, we build a little theory on domains.
+\begin{definition}[Domain]
+	A subset $\Omega\subseteq\CC$ is a \textit{domain} if and only if $\Omega$ is open and connected.
+\end{definition}
+\begin{definition}[Primitive domain]
+	A domain $\Omega\subseteq\CC$ is a \textit{primitive domain} if and only if every holomorphic function $f:\Omega\to\CC$ admits a primitive.
+\end{definition}
+\begin{example}
+	Star-like domains are primitive because we constructed a primitive for each holomorphic $f:\Omega\to\CC$ by hand in the proof of \autoref{thm:starlikecg}. Alternatively, we can more directly just apply \autoref{thm:starlikecg} and then \autoref{thm:getprimitive} backwards to get our primitive.
+\end{example}
+Here is a quick reason why we might care about this definition.
+\begin{lemma}
+	Fix a primitive domain $\Omega\subseteq\CC$ and some holomorphic function $f:\Omega\to\CC$. Then, given a closed, piecewise $C^1$ path $\gamma:[a,b]\to\CC$, we have
+	\[\oint_\gamma f(z)\,dz=0.\]
+\end{lemma}
+\begin{proof}
+	Because $\Omega$ is a primitive domain, $f$ admits a primitive. Then \autoref{cor:ftconclosed} finishes.
+\end{proof}
+And here is the technical result we will need.
+\begin{lemma}
+	Fix primitive domains $\Omega_1,\Omega_2\subseteq\CC$. Further, suppose that $\Omega_1\cap\Omega_2$ is nonempty and connected. Then $\Omega_1\cup\Omega_2$ is a primitive domain.
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:unionconnected}, we see that $\Omega_1\cup\Omega_2$ is connected, and because both these sets are open, we see that $\Omega_1\cup\Omega_2$ is in fact a domain as well.
+	
+	It remains to show that $\Omega_1\cup\Omega_2$ is in fact a primitive domain. Well, fix any holomorphic function $f:(\Omega_1\cup\Omega_2)\to\CC$. For brevity, set $f_1:=f|_{\Omega_1}$ and $f_2:=f|_{\Omega_2}$ so that $f_1:\Omega_1\to\CC$ and $f_2:\Omega_2\to\CC$ are both holomorphic by restriction.
+
+	Thus, because $\Omega_1$ and $\Omega_2$ are both primitive domains, we are promised primitives $F_1$ and $F_2$ for $f_1$ and $f_2$ respectively. In particular,
+	\[F_1'=f_1\qquad\text{and}\qquad F_2'=f_2.\]
+	It remains to stitch these together to create a single primitive for $f$. Well, $\Omega_1\cap\Omega_2$ is also open and connected (as the intersection of open and connected sets) and hence a domain, and we note
+	\[(F_1-F_2)'(z)=F_1'(z)-F_2'(z)=f(z)-f(z)=0\]
+	for any $z\in\Omega_1\cap\Omega_2$. In particular, $F_1-F_2$ is constant on $\Omega_1\cap\Omega_2$ by \autoref{lem:unionconnected}; note that here is where we use the condition that $\Omega_1\cap\Omega_2$ is connected! So we set $(F_1-F_2)(z)=:c$ for some $c\in\CC$.
+
+	We now note that $F_2+c$ will be a primitive for $f$ on $\Omega_2$ because
+	\[(F_2+c)'=F_2'+c'=f.\]
+	With this in mind, we define $F:(\Omega_1\cup\Omega_2)\to\CC$ by
+	\[F(z):=\begin{cases}
+		F_1(z) & z\in\Omega_1, \\
+		F_2(z)+c & z\in\Omega_2.
+	\end{cases}\]
+	Note this is well-defined because $z\in\Omega_1\cap\Omega_2$ has $F_1(z)=F_2(z)+c$. We can then check that
+	\[(F|_{\Omega_1})'=F_1'=f\qquad\text{and}\qquad(F|_{\Omega_2})'=(F_2+c)'=f,\]
+	which is what we wanted.
+\end{proof}
+After spring break, we prove some more consequences of the Cauchy integral formula.
