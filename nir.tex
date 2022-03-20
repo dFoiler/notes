@@ -42,7 +42,8 @@
 	citecolor=black,
 	filecolor=black,
 	linkcolor=wikipediadarkblue,
-	urlcolor=black
+	urlcolor=black,
+	pdftitle={Notes}
 }
 \usepackage{hyperref}
 
@@ -51,15 +52,31 @@
 	(#2\null)%
 }
 
-% For the index
+% Sometimes I want to see the labels
+\newif\ifnirdebug
+\nirdebugfalse
+
+\ifnirdebug
+	\usepackage{showkeys}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /SET-UP
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INDEX
 \usepackage{imakeidx}
 \makeindex[intoc, title=List of Definitions]
 % thank you https://tex.stackexchange.com/a/299353/261927
-\newcommand{\nirindexref}[1]{\hyperpage{#1}}
-\newcommand{\nirindex}[1]{\index{#1|nirindexref}}
+\newcounter{indexcounterlabel}
+\setcounter{indexcounterlabel}{0}
+\AtBeginDocument{\NewCommandCopy{\nirlabel}{\label}}
+\newcommand{\nirindexlabel}[1]{\nirlabel{indexentry:#1}}
+\newcommand{\nirindex}[1]
+{
+	\stepcounter{indexcounterlabel}
+	\nirindexlabel{\theindexcounterlabel}
+	\index{#1|hyperref[indexentry:\theindexcounterlabel]}
+}
 \newcommand{\nirprintindex}{\newpage\toctrue\printindex\tocfalse}
-% \todo{make the index reference the label not the page}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /SET-UP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /INDEX
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TITLING
 \usepackage{titlesec}
