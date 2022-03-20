@@ -1,0 +1,281 @@
+% !TEX root = ../notes.tex
+
+These notes were transcribed from Rhea's notes. Thank you, Rhea!
+
+\subsection{Limit Review}
+Let's review the kinds of limits we can do.
+\begin{itemize}
+	\item The limit of an empty set is the final object.
+	\item The limit of a discrete category is a product.
+	\item The limit of the arrow
+	% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzAsMV1d
+	\[\begin{tikzcd}
+		A & B
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}\]
+	is $A$.
+	\item The limit of the diagram
+	% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzAsMSwiIiwwLHsib2Zmc2V0IjoxfV0sWzAsMSwiIiwyLHsib2Zmc2V0IjotMX1dXQ==
+	\[\begin{tikzcd}
+		\bullet & \bullet
+		\arrow[shift right=1, from=1-1, to=1-2]
+		\arrow[shift left=1, from=1-1, to=1-2]
+	\end{tikzcd}\]
+	is the equalizer.
+\end{itemize}
+We continue our discussion with diagrams of three points.
+\begin{exe}
+	We show that limit of the triangle
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiQiJdLFsxLDEsIkMiXSxbMCwxLCJmIl0sWzEsMiwiZyJdLFswLDIsImgiLDJdXQ==
+	\[\begin{tikzcd}
+		A & B \\
+		& C
+		\arrow["f", from=1-1, to=1-2]
+		\arrow["g", from=1-2, to=2-2]
+		\arrow["h"', from=1-1, to=2-2]
+	\end{tikzcd}\]
+	is $A$.
+\end{exe}
+\begin{proof}
+	Any apex $L$ for the diagram will consist of maps $\iota_A:L\to A$ and $\iota_B:L\to B$ and $\iota:L\to C$ so that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJBIl0sWzEsMSwiQiJdLFsxLDIsIkMiXSxbMSwwLCJMIl0sWzAsMSwiZiIsMV0sWzEsMiwiZyIsMV0sWzAsMiwiaCIsMl0sWzMsMSwiXFxpb3RhX0IiLDFdLFszLDAsIlxcaW90YV9BIiwyXSxbMywyLCJcXGlvdGFfQyIsMCx7Im9mZnNldCI6LTEsImN1cnZlIjotMn1dXQ==
+	\[\begin{tikzcd}
+		& L \\
+		A & B \\
+		& C
+		\arrow["f"{description}, from=2-1, to=2-2]
+		\arrow["g"{description}, from=2-2, to=3-2]
+		\arrow["h"', from=2-1, to=3-2]
+		\arrow["{\iota_B}"{description}, from=1-2, to=2-2]
+		\arrow["{\iota_A}"', from=1-2, to=2-1]
+		\arrow["{\iota_C}", shift left=1, curve={height=-12pt}, from=1-2, to=3-2]
+	\end{tikzcd}\tag{$*$}\label{eq:trianglecone}\]
+	However, we note that $\iota_B=f\iota_A$ and $\iota_C=h\iota_A$ by the commutativity of the diagram, so in fact, we can make the cone by only specifying $\iota_A$.
+	
+	And in fact, for any choice $\iota_A:L\to A$, we can induce the above diagram to commute by forcing $\iota_B:=f\iota_A$ and $\iota_C:h\iota_A$, which will cause \autoref{eq:trianglecone} to commute because all the internal triangles commute.
+
+	We thus claim that $A$ equipped with $\id_A:A\to A$ is our limit. This means that we want a unique induced arrow $\varphi:L\to A$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsNSxbMCwxLCJBIl0sWzEsMSwiQiJdLFsxLDIsIkMiXSxbMCwwLCJMIl0sWzEsMCwiQSJdLFswLDEsImYiLDFdLFsxLDIsImciLDFdLFswLDIsImgiLDJdLFszLDAsIlxcaW90YV9BIiwyXSxbNCwwLCJcXGlkX0EiLDFdLFszLDQsIlxcdmFycGhpIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+	\[\begin{tikzcd}
+		L & A \\
+		A & B \\
+		& C
+		\arrow["f"{description}, from=2-1, to=2-2]
+		\arrow["g"{description}, from=2-2, to=3-2]
+		\arrow["h"', from=2-1, to=3-2]
+		\arrow["{\iota_A}"', from=1-1, to=2-1]
+		\arrow["{\id_A}"{description}, from=1-2, to=2-1]
+		\arrow["\varphi", dashed, from=1-1, to=1-2]
+	\end{tikzcd}\]
+	Well, any such arrow $\varphi:L\to A$ must satisfy $\varphi=\id_A\varphi=\iota_A$, so $\varphi$ is forced. And indeed, $\varphi=\iota_A$ causes the necessary triangle to commute, we are done.
+\end{proof}
+\begin{remark}
+	At a high level, what is causing this diagram to commute is that we are reducing this limit to a limit on a one-object category, which we know how to do.
+\end{remark}
+
+\subsection{Pullbacks}
+For our next limit, we have the following definition.
+\begin{definition}[Cospan]
+	A \textit{cospan} is a diagram of the following form.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIkMiXSxbMCwxXSxbMiwxXV0=
+	\[\begin{tikzcd}
+		A & B & C
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-3, to=1-2]
+	\end{tikzcd}\]
+	Equivalently, a cospan is a diagram indexed by the following category.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIkMiXSxbMCwxXSxbMiwxXV0=
+	\[\begin{tikzcd}
+		\bullet & \bullet & \bullet
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-3, to=1-2]
+	\end{tikzcd}\]
+\end{definition}
+As with equalizers, we can decrease the number of arrows we have to keep track of in a cone over a cospan. Indeed, an apex $L$ over a cospan is equipped with maps $\varphi_A:L\to A$ and $\varphi_B:L\to B$ and $\varphi_C:L\to C$ such that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJMIl0sWzAsMSwiQSJdLFsxLDAsIkMiXSxbMSwxLCJCIl0sWzIsMywiZyJdLFsxLDMsImYiLDJdLFswLDIsIlxcdmFycGhpX0IiXSxbMCwxLCJcXHZhcnBoaV9BIiwyXSxbMCwzLCJcXHZhcnBoaV9CIiwxXV0=
+\[\begin{tikzcd}
+	L & C \\
+	A & B
+	\arrow["g", from=1-2, to=2-2]
+	\arrow["f"', from=2-1, to=2-2]
+	\arrow["{\varphi_C}", from=1-1, to=1-2]
+	\arrow["{\varphi_A}"', from=1-1, to=2-1]
+	\arrow["{\varphi_B}"{description}, from=1-1, to=2-2]
+\end{tikzcd}\]
+Now, the commutativity diagram now forces $\varphi_B=f\varphi_A=g\varphi_C$, so we can simply induce $\varphi_B$ from the rest of the diagram. As such, we decrease the data of a cone over a cospan as merely consisting of the maps $\varphi_A:L\to A$ and $\varphi_C:L\to C$ forcing $f\varphi_A=g\varphi_C$; i.e., we require the following diagram to commute.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJMIl0sWzAsMSwiQSJdLFsxLDAsIkMiXSxbMSwxLCJCIl0sWzIsMywiZyJdLFsxLDMsImYiLDJdLFswLDIsIlxcdmFycGhpX0MiXSxbMCwxLCJcXHZhcnBoaV9BIiwyXV0=
+\[\begin{tikzcd}
+	L & C \\
+	A & B
+	\arrow["g", from=1-2, to=2-2]
+	\arrow["f"', from=2-1, to=2-2]
+	\arrow["{\varphi_C}", from=1-1, to=1-2]
+	\arrow["{\varphi_A}"', from=1-1, to=2-1]
+\end{tikzcd}\]
+Of course, a cone will induce a diagram of the above form by forgetting the morphism $\varphi_B$. Conversely, a diagram of the above form makes a cone by setting $\varphi_B:=f\varphi_A=g\varphi_C$, which will satisfy the needed commutativity to be a cone by construction.
+
+Anyways, here is our limit.
+\begin{definition}[Pullback]
+	A \textit{pullback} $A\times_BC$ is the limit of a cospan, labeled as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBXFx0aW1lc19CQyJdLFswLDEsIkEiXSxbMSwwLCJDIl0sWzEsMSwiQiJdLFsyLDMsImciXSxbMSwzLCJmIiwyXSxbMCwyLCJcXHBpX0MiXSxbMCwxLCJcXHBpX0EiLDJdLFswLDMsIiIsMSx7InN0eWxlIjp7Im5hbWUiOiJjb3JuZXIifX1dXQ==
+	\[\begin{tikzcd}
+		{A\times_BC} & C \\
+		A & B
+		\arrow["g", from=1-2, to=2-2]
+		\arrow["f"', from=2-1, to=2-2]
+		\arrow["{\pi_C}", from=1-1, to=1-2]
+		\arrow["{\pi_A}"', from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	The right angle next to $A\times_BC$ is how we diagrammatically notate pullbacks.
+\end{definition}
+\begin{warn}
+	The pullback $A\times_BC$ also depends on the chosen maps $f:A\to B$ and $g:C\to B$, even though these maps are not included in the notation.
+\end{warn}
+
+It turns out that pullbacks are actually nontrivial limits, so we will need to fix our category to compute them. Here's an example.
+\begin{exe}
+	We compute pullbacks in $\mathrm{Set}$.
+\end{exe}
+\begin{proof}
+	Fix our diagram as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJMIl0sWzEsMCwiWCJdLFswLDEsIlkiXSxbMSwxLCJaIl0sWzEsMywiZiJdLFsyLDMsImciLDJdLFswLDEsIlxccGlfWCJdLFswLDIsIlxccGlfWSIsMl0sWzAsMywiIiwxLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV1d
+	\[\begin{tikzcd}
+		L & X \\
+		Y & Z
+		\arrow["f", from=1-2, to=2-2]
+		\arrow["g"', from=2-1, to=2-2]
+		\arrow["{\pi_X}", from=1-1, to=1-2]
+		\arrow["{\pi_Y}"', from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	As a first attempt, we might try $L=X\times Y$ with $\pi_X$ and $\pi_Y$ being the usual projection. But this does not work because the diagram might not commute: there is no reason to have
+	\[f(x)=f(\pi_X(x,y))=(f\pi_X)(x,y)=(g\pi_Y)(x,y)=g(\pi_Y(x,y))=g(y)\]
+	for each $x\in X$ and $y\in Y$. However, without much better to do, we force this condition in the rudest way possible: we simply restrict our product to be
+	\[X\times_ZY:=\{(x,y)\in X\times Y:f(x)=g(y)\},\]
+	where $\pi_X:(x,y)\mapsto x$ and $\pi_Y:(x,y)\mapsto y$ are the usual projections. This does indeed make a valid cone because any $(x,y)\in X\times Y$ will have
+	\[(f\pi_X)(x,y)=f(\pi_X(x,y))=f(x)=g(y)=g(\pi_Y(x,y))=(g\pi_Y)(x,y),\]
+	so $f\pi_X=g\pi_Y$.
+
+	It remains to show that this $X\times_ZY$ creates the universal cone. Well, fix a set $W$ with morphisms $\varphi_X:W\to X$ and $\varphi_Y:W\to Y$ so that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNSxbMSwxLCJYXFx0aW1lc19aWSJdLFsyLDEsIlgiXSxbMSwyLCJZIl0sWzIsMiwiWiJdLFswLDAsIlciXSxbMSwzLCJmIl0sWzIsMywiZyIsMl0sWzAsMSwiXFxwaV9YIiwyXSxbMCwyLCJcXHBpX1kiXSxbNCwyLCJcXHZhcnBoaV9ZIiwyLHsiY3VydmUiOjJ9XSxbNCwxLCJcXHZhcnBoaV9YIiwwLHsiY3VydmUiOi0yfV0sWzQsMCwiXFx2YXJwaGkiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=
+	\[\begin{tikzcd}
+		W \\
+		& {X\times_ZY} & X \\
+		& Y & Z
+		\arrow["f", from=2-3, to=3-3]
+		\arrow["g"', from=3-2, to=3-3]
+		\arrow["{\pi_X}"', from=2-2, to=2-3]
+		\arrow["{\pi_Y}", from=2-2, to=3-2]
+		\arrow["{\varphi_Y}"', curve={height=12pt}, from=1-1, to=3-2]
+		\arrow["{\varphi_X}", curve={height=-12pt}, from=1-1, to=2-3]
+		\arrow["\varphi"{description}, dashed, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	We need to show that there is a unique arrow $\varphi$. To show that it is unique, note that we need
+	\[\pi_X(\varphi(w))=(\pi_X\varphi)(w)=\varphi_X(w)\qquad\text{and}\qquad\pi_Y(\varphi(w))=(\pi_Y\varphi)(w)=\varphi_Y(w)\]
+	by the commutativity of the diagram. It follows that we are forced to have
+	\[\varphi(w):=(\varphi_Xw,\varphi_Yw).\]
+	We now show that this works. Note that this $\varphi$ is well-defined because each $w\in W$ has
+	\[f(\varphi_Xw)=(f\varphi_X)(w)=(g\varphi_Y)(w)=g(\varphi_Yw),\]
+	so $(\varphi_Xw,\varphi_Yw)\in X\times_ZY$. Then we have $\pi_X\varphi=\varphi_X$ and $\pi_Y\varphi=\varphi_Y$ by construction, forcing the diagram to commute for free.
+\end{proof}
+
+\subsection{Pullbacks as Equalizers}
+It is perhaps not too surprising that we ended up with something that looks like a product, with some equalizing condition. In fact, we can realize pullbacks as an equalized product.
+\begin{proposition}
+	Work in some category $\mathcal C$. Fix morphisms $f:X\to Z$ and $g:Y\to Z$ in some category. Further, assume that $X\times Y$ exists with the canonical projections $\pi_X:X\times Y\to X$ and $\pi_Y:X\times Y\to Y$. If $\op{eq}(f\pi_X,g\pi_Y)$ exists, then it is equal to $X\times_ZY$.
+\end{proposition}
+\begin{proof}
+	Set $E:=\eq(f\pi_X,g\pi_Y)$ with equalizing map $e:E\to X\times Y$. Our required map $E\to X$ will be $\pi_Xe$; similarly, the required map $E\to Y$ will be $\pi_Ye$. Now, we see that $E$ with $\pi_Xe:E\to X$ and $\pi_Ye:E\to Y$ makes the following diagram commute.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJFIl0sWzEsMCwiWCJdLFswLDEsIlkiXSxbMSwxLCJaIl0sWzEsMywiZiJdLFsyLDMsImciLDJdLFswLDEsIlxccGlfWGUiXSxbMCwyLCJcXHBpX1llIiwyXV0=
+	\[\begin{tikzcd}
+		E & X \\
+		Y & Z
+		\arrow["f", from=1-2, to=2-2]
+		\arrow["g"', from=2-1, to=2-2]
+		\arrow["{\pi_Xe}", from=1-1, to=1-2]
+		\arrow["{\pi_Ye}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	Indeed, we have
+	\[f(\pi_Xe)=(f\pi_X)e\stackrel*=(g\pi_Y)e=g(\pi_Ye),\]
+	where $\stackrel*=$ is by construction of the equalizer.
+
+	It remains to show that $E$ is universal. Well, pick up some object $W$ with maps $\varphi_X:W\to X$ and $\varphi_Y:W\to Y$ such that $f\varphi_X=g\varphi_Y$. We then claim that there is a unique morphism $\varphi$ causing the following diagram to commute.
+	% https://q.uiver.app/?q=WzAsNSxbMSwxLCJFIl0sWzEsMiwiWSJdLFsyLDEsIlgiXSxbMiwyLCJaIl0sWzAsMCwiVyJdLFsyLDMsImYiXSxbMSwzLCJnIiwyXSxbMCwyLCJcXHBpX1hlIiwyXSxbMCwxLCJcXHBpX1llIl0sWzQsMiwiXFx2YXJwaGlfWCIsMCx7ImN1cnZlIjotMn1dLFs0LDEsIlxcdmFycGhpX1kiLDIseyJjdXJ2ZSI6Mn1dLFs0LDAsIlxcdmFycGhpIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+	\[\begin{tikzcd}
+		W \\
+		& E & X \\
+		& Y & Z
+		\arrow["f", from=2-3, to=3-3]
+		\arrow["g"', from=3-2, to=3-3]
+		\arrow["{\pi_Xe}"', from=2-2, to=2-3]
+		\arrow["{\pi_Ye}", from=2-2, to=3-2]
+		\arrow["{\varphi_X}", curve={height=-12pt}, from=1-1, to=2-3]
+		\arrow["{\varphi_Y}"', curve={height=12pt}, from=1-1, to=3-2]
+		\arrow["\varphi"{description}, dashed, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	We start with the existence of the map $\varphi$. For this, we expand the diagram as follows.
+	% https://q.uiver.app/?q=WzAsNixbMiwwLCJYXFx0aW1lcyBZIl0sWzMsMCwiWCJdLFsyLDEsIlkiXSxbMywxLCJaIl0sWzEsMCwiRSJdLFswLDAsIlciXSxbMSwzLCJmIl0sWzIsMywiZyIsMl0sWzAsMSwiXFxwaV9YIiwyXSxbMCwyLCJcXHBpX1kiXSxbNCwwLCJlIl0sWzUsMSwiXFx2YXJwaGlfWCIsMCx7Im9mZnNldCI6LTEsImN1cnZlIjotMn1dLFs1LDIsIlxcdmFycGhpX1kiLDJdLFs1LDQsIlxcdmFycGhpIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+	\[\begin{tikzcd}
+		W & E & {X\times Y} & X \\
+		&& Y & Z
+		\arrow["f", from=1-4, to=2-4]
+		\arrow["g"', from=2-3, to=2-4]
+		\arrow["{\pi_X}"', from=1-3, to=1-4]
+		\arrow["{\pi_Y}", from=1-3, to=2-3]
+		\arrow["e", from=1-2, to=1-3]
+		\arrow["{\varphi_X}", shift left=1, curve={height=-12pt}, from=1-1, to=1-4]
+		\arrow["{\varphi_Y}"', from=1-1, to=2-3]
+		\arrow["\varphi"{description}, dashed, from=1-1, to=1-2]
+	\end{tikzcd}\]
+	Note that the square does not commute anymore. We have two steps.
+	\begin{itemize}
+		\item We use the universal property of $X\times Y$. The maps $\varphi_X$ and $\varphi_Y$ induce a unique map $\psi:W\to X\times Y$ such that $\pi_X\psi=\varphi_X$ and $\pi_Y\psi=\varphi_Y$.
+		\item We use the universal property of $E$. By construction,
+		\[(f\pi_X)\psi=f(\pi_X\psi)=f\varphi_X=g\varphi_Y=g(\pi_Y\psi)=(g\pi_Y)\psi,\]
+		so $\psi$ equalizes $f\pi_X$ and $g\pi_Y$. As such, there is a unique map $\varphi:W\to E$ such that $e\varphi=\psi$. In particular, we see that
+		\[(\pi_Xe)\varphi=\pi_X(e\varphi)=\pi_X\psi=\varphi_X\qquad\text{and}\qquad(\pi_Ye)\varphi=\pi_Y(e\varphi)=\pi_Y\psi=\varphi_Y,\]
+		so the required diagram commutes.
+	\end{itemize}
+	It remains to show that the map $\varphi:E\to X$ is unique. Suppose that we have two such maps $\varphi_1$ and $\varphi_2$. We again proceed in two steps.
+	\begin{itemize}
+		\item We use the universal property of $X\times Y$. Note that
+		\[\varphi_X=(\pi_Xe)\varphi_\bullet=\pi_X(e\varphi_\bullet)\qquad\text{and}\varphi_Y=(\pi_Ye)\varphi_\bullet=\pi_Y(e\varphi_\bullet),\]
+		so both morphisms $e\varphi_\bullet$ are the needed unique morphism $W\to X\times Y$. So we see $e\varphi_1=e\varphi_2$.
+		\item We use the universal property of $E$. Note that
+		\[(f\pi_X)(e\varphi_\bullet)=f(\pi_Xe\varphi_\bullet)=f\varphi_X=g\varphi_Y=g(\pi_Ye\varphi_\bullet)=(g\pi_Y)(e\varphi_\bullet),\]
+		so the universal property of $E$ forces there to be a unique map $\varphi$ such $e\varphi=e\varphi_1=e\varphi_2$. But of course, $\varphi_1$ and $\varphi_2$ are such maps $\varphi$, so $\varphi_1=\varphi_2$ follows.
+	\end{itemize}
+	This finishes checking that $E$ is universal.
+\end{proof}
+\begin{remark}[Bryce]
+	As Bryce would like to point out, the existence proof might look like it shows that $\varphi$ is unique immediately---we did use two uniqueness results, after all---but some care is required. Namely, we only know that the morphism $\varphi$ is the unique morphism commuting with $\psi$ and then happens to make the diagram commute, so $\varphi$ might not be unique making the diagram commute.
+\end{remark}
+\begin{remark}[Bryce]
+	It will turn out that all limits can be realized as equalizers of products.
+\end{remark}
+
+\subsection{Direct and Inverse Limits}
+We close lecture with two definitions.
+\begin{definition}[Direct limit]
+	A \textit{direct limit} is a colimit of the poset category $\NN$. In other words, a direct limit is a colimit of a diagram of the following form.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBXzAiXSxbMSwwLCJBXzEiXSxbMiwwLCJBXzIiXSxbMywwLCJcXGNkb3RzIl0sWzAsMV0sWzEsMl0sWzIsM11d
+	\[\begin{tikzcd}
+		{A_0} & {A_1} & {A_2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+	\end{tikzcd}\]
+\end{definition}
+Intuitively, we can think of direct limits as ascending unions.
+\begin{definition}[Inverse limits]
+	An \textit{inverse limit} is a limit of the poset category $\NN\opp$. In other words, an inverse limit is a limit of a diagram of the following form.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBXzAiXSxbMSwwLCJBXzEiXSxbMiwwLCJBXzIiXSxbMywwLCJcXGNkb3RzIl0sWzEsMF0sWzIsMV0sWzMsMl1d
+	\[\begin{tikzcd}
+		{A_0} & {A_1} & {A_2} & \cdots
+		\arrow[from=1-2, to=1-1]
+		\arrow[from=1-3, to=1-2]
+		\arrow[from=1-4, to=1-3]
+	\end{tikzcd}\]
+\end{definition}
+Dually, we can intuitively think of inverse limits as a descending intersection.
