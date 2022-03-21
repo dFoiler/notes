@@ -1,0 +1,283 @@
+% !TEX root = ../notes.tex
+
+Once again, these notes were transcribed from Rhea's notes. Thank you, Rhea!
+
+\subsection{Direct and Inverse Limits}
+We continue where we left off with direct and inverse limits. We recall our definitions.
+\directlimdef*
+\invlimdef*
+\noindent It is reasonable to ask why, say, we take the colimit over $\NN$ instead of the limit. Here is why.
+\begin{exe}
+	Fix a functor $F:\NN\to\mathcal C$. Then the limit of the diagram $F$ is $F0$, where the maps $F0\to Fn$ are the induced ones.
+\end{exe}
+\begin{proof}
+	For concreteness, we will let the morphism $i\to j$ in $\NN$ be denoted $(i\to j)$. As usual, we begin by restating what it means for a cone to have apex $c$ over our diagram $F$. In particular, the cone has data consisting of the object $L$ and morphisms $\varphi_n:c\to F(n)$ such that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJjIl0sWzAsMSwiMCJdLFsxLDEsIjEiXSxbMiwxLCIyIl0sWzMsMSwiXFxjZG90cyJdLFswLDEsIlxcdmFycGhpXzAiLDJdLFsxLDJdLFsyLDNdLFszLDRdLFswLDIsIlxcdmFycGhpXzEiLDFdLFswLDMsIlxcdmFycGhpXzIiXV0=
+	\[\begin{tikzcd}
+		c \\
+		F0 & F1 & F2 & \cdots
+		\arrow["{\varphi_0}"', from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow["{\varphi_1}"{description}, from=1-1, to=2-2]
+		\arrow["{\varphi_2}", from=1-1, to=2-3]
+	\end{tikzcd}\tag{$*$}\label{eq:coneoverndiagram}\]
+	In other words, we require that
+	\[\varphi_n=F(0\to n)\varphi_0\]
+	for each $n\in\NN$. Thus, we can retrieve the data of $\varphi_n$ from merely knowing $\varphi_0$, and these data are unique determined. And conversely, from merely knowing $\varphi_0$, we can set $\varphi_n:=F(0\to n)\varphi_0$ to get over $F$ with apex $c$ because \autoref{eq:coneoverndiagram} commutes for free.
+
+	As such, we claim that the limit of this diagram is $F0$, with $\varphi_0:=\id_{F0}$. Indeed, suppose that we have some cone over $F$ with apex $c$, and we need to induce a unique morphism $\varphi:c\to F0$ such that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJGMCJdLFswLDIsIkYwIl0sWzEsMiwiRjEiXSxbMiwyLCJGMiJdLFszLDIsIlxcY2RvdHMiXSxbMCwwLCJjIl0sWzEsMl0sWzIsM10sWzMsNF0sWzUsMSwiXFx2YXJwaGlfMCIsMix7ImN1cnZlIjoyfV0sWzAsMSwiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNSwwLCJcXHZhcnBoaSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==
+	\[\begin{tikzcd}
+		c \\
+		F0 \\
+		F0 & F1 & F2 & \cdots
+		\arrow[from=3-1, to=3-2]
+		\arrow[from=3-2, to=3-3]
+		\arrow[from=3-3, to=3-4]
+		\arrow["{\varphi_0}"', curve={height=12pt}, from=1-1, to=3-1]
+		\arrow[Rightarrow, no head, from=2-1, to=3-1]
+		\arrow["\varphi", dashed, from=1-1, to=2-1]
+	\end{tikzcd}\]
+	Well, for the diagram to commute, we need $\id_{F0}\varphi=\varphi_0$, so $\varphi=\varphi_0$ is forced. And certainly $\varphi=\varphi_0$ will work because it has
+	\[\varphi_n=F(0\to n)\varphi_0=F(0\to n)\varphi\]
+	for any $n\in\NN$, which is what we wanted. This finishes.
+\end{proof}
+So limits over $\NN$ are not very interesting, but colimits under $\NN$ (i.e., direct limits) are, which are why they get a fancy name.
+
+\subsection{Pushouts}
+We are obligated to spend a few words saying that there is a dual to \autoref{def:pullback}.
+\begin{definition}[Span]
+	A \textit{span} is a diagram of the following form.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIkMiXSxbMiwxXSxbMCwxXV0=
+	\[\begin{tikzcd}
+		A & B & C
+		\arrow[from=1-3, to=1-2]
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}\]
+	Equivalently, a span is the image of the following index category.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzIsMCwiXFxidWxsZXQiXSxbMCwxXSxbMiwxXV0=
+	\[\begin{tikzcd}
+		\bullet & \bullet & \bullet
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-3, to=1-2]
+	\end{tikzcd}\]
+\end{definition}
+\begin{definition}[Pushout, fibered coproduct] \label{def:pushout}
+	A \textit{pushout} is a colimit of a span, labeled as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQyJdLFswLDEsIkIiXSxbMSwxLCJCXFxvcGx1c19BQyJdLFswLDIsImYiLDJdLFswLDEsImciXSxbMSwzLCJcXGlvdGFfQyJdLFsyLDMsIlxcaW90YV9CIiwyXSxbMywwLCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=
+	\[\begin{tikzcd}
+		A & C \\
+		B & {B\oplus_AC}
+		\arrow["f"', from=1-1, to=2-1]
+		\arrow["g", from=1-1, to=1-2]
+		\arrow["{\iota_C}", from=1-2, to=2-2]
+		\arrow["{\iota_B}"', from=2-1, to=2-2]
+		\arrow["\lrcorner"{anchor=center, pos=0.125, rotate=180}, draw=none, from=2-2, to=1-1]
+	\end{tikzcd}\]
+	The right angle next to $B\oplus_AC$ signifies that this is a pushout.
+\end{definition}
+As before, we have a warning that $B\oplus_AC$ depends on the morphisms $f$ and $g$, even though these are not communicated in the definition.
+
+The story for pushouts is exactly dual to the story for pullbacks, simply by placing everything in the opposite category. For example, as suggested, a cone under a span with nadir $X$ merely needs the data of $\varphi_C:C\to X$ and $\varphi_B:B\to C$ with the coherence condition
+\[\varphi_Bf=\varphi_Cg\]
+because this morphism should be equal to $\varphi_A$ and will cause the needed diagram
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQyJdLFswLDEsIkIiXSxbMSwxLCJYIl0sWzAsMiwiZiIsMl0sWzAsMSwiZyJdLFsxLDMsIlxcdmFycGhpX0MiXSxbMiwzLCJcXHZhcnBoaV9CIiwyXSxbMCwzLCJcXHZhcnBoaV9BIiwxXV0=
+\[\begin{tikzcd}
+	A & C \\
+	B & X
+	\arrow["f"', from=1-1, to=2-1]
+	\arrow["g", from=1-1, to=1-2]
+	\arrow["{\varphi_C}", from=1-2, to=2-2]
+	\arrow["{\varphi_B}"', from=2-1, to=2-2]
+	\arrow["{\varphi_A}"{description}, from=1-1, to=2-2]
+\end{tikzcd}\]
+to commute. This explains why we only drew two arrows in \autoref{def:pushout}.
+
+As such, we can provide a wordier version of the universal property for pushouts via the universal property for colimits: fix any object $X$ with morphisms $\varphi_B:B\to X$ and $\varphi_C:C\to X$ such that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQyJdLFswLDEsIkIiXSxbMSwxLCJYIl0sWzAsMiwiZiIsMl0sWzAsMSwiZyJdLFsyLDMsIlxcdmFycGhpX0IiLDJdLFsxLDMsIlxcdmFycGhpX0MiXV0=
+\[\begin{tikzcd}
+	A & C \\
+	B & X
+	\arrow["f"', from=1-1, to=2-1]
+	\arrow["g", from=1-1, to=1-2]
+	\arrow["{\varphi_B}"', from=2-1, to=2-2]
+	\arrow["{\varphi_C}", from=1-2, to=2-2]
+\end{tikzcd}\]
+Then there is a unique morphism $\varphi:B\oplus_AC\to X$ which makes the following diagram commute.
+% https://q.uiver.app/?q=WzAsNSxbMCwwLCJBIl0sWzEsMCwiQyJdLFswLDEsIkIiXSxbMiwyLCJYIl0sWzEsMSwiQlxcb3BsdXNfQUMiXSxbMCwyLCJmIiwyXSxbMCwxLCJnIl0sWzEsMywiXFx2YXJwaGlfQyIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIlxcdmFycGhpX0IiLDIseyJjdXJ2ZSI6Mn1dLFsxLDQsIlxcaW90YV9DIiwyXSxbMiw0LCJcXGlvdGFfQiJdLFs0LDMsIlxcdmFycGhpIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	A & C \\
+	B & {B\oplus_AC} \\
+	&& X
+	\arrow["f"', from=1-1, to=2-1]
+	\arrow["g", from=1-1, to=1-2]
+	\arrow["{\varphi_C}", curve={height=-12pt}, from=1-2, to=3-3]
+	\arrow["{\varphi_B}"', curve={height=12pt}, from=2-1, to=3-3]
+	\arrow["{\iota_C}"', from=1-2, to=2-2]
+	\arrow["{\iota_B}", from=2-1, to=2-2]
+	\arrow["\varphi"{description}, dashed, from=2-2, to=3-3]
+\end{tikzcd}\]
+\begin{remark}
+	It is possible to have both a pullback and a pushout in the same square. For example, consider the following diagram in \textrm{Set}.
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJBIl0sWzEsMCwiQiJdLFswLDAsIkFcXGNhcCBCIl0sWzEsMSwiQVxcY3VwIEIiXSxbMiwxLCJcXHBpX0IiXSxbMCwzLCJcXGlvdGFfQSIsMl0sWzEsMywiXFxpb3RhX0IiXSxbMiwwLCJcXHBpX0EiLDJdLFszLDIsIiIsMSx7InN0eWxlIjp7Im5hbWUiOiJjb3JuZXIifX1dLFsyLDMsIiIsMSx7InN0eWxlIjp7Im5hbWUiOiJjb3JuZXIifX1dXQ==
+	\[\begin{tikzcd}
+		{A\cap B} & B \\
+		A & {A\cup B}
+		\arrow["{\pi_B}", from=1-1, to=1-2]
+		\arrow["{\iota_A}"', from=2-1, to=2-2]
+		\arrow["{\iota_B}", from=1-2, to=2-2]
+		\arrow["{\pi_A}"', from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125, rotate=180}, draw=none, from=2-2, to=1-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	Now, we see that $A\cap B$ is the pullback in this diagram via our computation in \autoref{exe:setpullback}. We will not show that $A\cup B$ is in fact the pushout of this diagram, but it is true; roughly speaking, this is the coproduct $A\sqcup B$ modded out by identifying $\iota_A\pi_A=\iota_B\pi_B$.
+\end{remark}
+\begin{example}
+	We work in $\mathrm{Ab}$. Then, working in the standard pushout diagram, we set
+	\[B\oplus_AC\cong\frac{B\oplus C}{\langle(f(a),0)-(0,g(a)):a\in A\rangle}.\]
+	Then this is our pushout, as in the following diagram.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQyJdLFswLDEsIkIiXSxbMSwxLCJCXFxvcGx1c19BQyJdLFswLDIsImYiLDJdLFswLDEsImciXSxbMSwzLCJcXGlvdGFfQyIsMl0sWzIsMywiXFxpb3RhX0IiXV0=
+	\[\begin{tikzcd}
+		A & C \\
+		B & {B\oplus_AC}
+		\arrow["f"', from=1-1, to=2-1]
+		\arrow["g", from=1-1, to=1-2]
+		\arrow["{\iota_C}"', from=1-2, to=2-2]
+		\arrow["{\iota_B}", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	This diagram commutes essentially by construction, and it is universal basically because we have modded out by the smallest amount possible in order to make this diagram commute.
+\end{example}
+
+\subsection{\textrm{Hom} Sets of (Co)products}
+Fix $\mathcal I$ some discrete category and $A:\mathcal I\to\mathcal C$ some functor. As we discussed when talking about coproducts, a cone under $A$ with nadir $X$ will contain the data of morphisms
+\[f_i:A_i\to X\]
+for each $i\in\mathcal I$, and there are no commutativity conditions here because $\mathcal I$ has no non-identity morphisms.
+
+Now, suppose that we have a coproduct object $\coprod_{i\in\mathcal I}A_i$ equipped with $\iota_j:A_j\to\coprod_{i\in\mathcal I}A_i$. Then, given an object $X$ with a morphism $f:\coprod_{i\in\mathcal I}A_i$, we can generate a tuple of morphisms
+\[f\in\op{Mor}\left(\coprod_{i\in\mathcal I}A_i,X\right)\mapsto\{f\iota_i:A_i\to X\}_{i\in\mathcal I}\in\prod_{i\in\mathcal I}\op{Mor}(A_i,X).\]
+However, because of the data of the morphisms $f_i:A_i\to X$ makes a cone under $A$, it seems like we can reverse the map.
+\begin{proposition} \label{prop:coprodup}
+	Fix a discrete category $\mathcal I$ and a diagram $A:\mathcal I\to\mathcal C$. Further, let $\coprod_{i\in\mathcal I}A_i$ be the coproduct of $A$ equipped with inclusions $\iota_j:A_j\to\coprod_{i\in\mathcal I}A_i$.
+	
+	Then there is a (canonical) isomorphism
+	\[\op{Mor}\left(\coprod_{i\in\mathcal I}A_i,X\right)\cong\prod_{i\in\mathcal I}\op{Mor}(A_i,X).\]
+\end{proposition}
+\begin{proof}
+	The forwards map is $f\mapsto\{f\iota_i\}_{i\in\mathcal I}$, as discussed preceding the statement. We call this map $\varphi$.
+
+	To show that $\varphi$ is an isomorphism, we give it an explicit inverse. Well, given some tuple $\{f_i\}_{i\in\mathcal I}\in\prod_{i\in\mathcal I}\op{Mor}(A_i,X)$ provides the data of a cone under $A$ with nadir $X$: indeed, we only need the morphisms $f_i:A_i\to X$ to have a cone. Then the universal property of the coproduct (!) promises a (unique) morphism $f:\coprod_{i\in\mathcal I}\to X$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwxLCJcXGRpc3BsYXlzdHlsZVxcY29wcm9kX3tpXFxpblxcbWF0aGNhbCBJfUFfaSJdLFswLDAsIkFfaSJdLFsxLDEsIlgiXSxbMSwwLCJcXGlvdGFfaSIsMl0sWzEsMiwiZl9pIl0sWzAsMiwiZiIsMl1d
+	\[\begin{tikzcd}
+		{A_j} \\
+		{\displaystyle\coprod_{i\in\mathcal I}A_i} & X
+		\arrow["{\iota_j}"', from=1-1, to=2-1]
+		\arrow["{f_j}", from=1-1, to=2-2]
+		\arrow["f"', from=2-1, to=2-2]
+	\end{tikzcd}\tag{$*$}\label{eq:coprodup}\]
+	So we have generated a morphism $f:\coprod_{i\in\mathcal I}A_i\to X$. We call this map $\psi\left(\{f_i\}_{i\in\mathcal I}\right)$.
+
+	It remains to show that $\varphi$ and $\psi$ are mutually inverse. We run the checks independently.
+	\begin{itemize}
+		\item We show $\varphi\psi$ is the identity. Well, we start with $\{f_i\}_{i\in\mathcal I}\in\prod_{i\in\mathcal I}\op{Mor}(A_i,X)$. Then $f:=\psi\left(\{f_i\}_{i\in\mathcal I}\right)$ is chosen to make \autoref{eq:coprodup} commute. In particular, we are told that
+		\[\varphi(f)=\{f\iota_i\}_{i\in\mathcal I}=\{f_i\}_{i\in\mathcal I}\]
+		by construction of $f$. This finishes.
+		\item We show $\psi\varphi$ is the identity. This time we start with $f:\coprod_{i\in\mathcal I}A_i\to X$. Then $\psi(\varphi(f))$ is the unique morphism $g$ such that
+		\[g\iota_i=\varphi(f)_i=f\iota_i\]
+		for each $i\in\mathcal I$. But we see that $f$ will work here, so $g=f$ follows, finishing.
+	\end{itemize}
+	The above checks do witness $\varphi$ and $\psi$ to be isomorphisms.
+\end{proof}
+\begin{remark}
+	In fact, the isomorphism in \autoref{prop:coprodup} is natural in $X$ as well as $A$, for suitably defined notions of natural.
+\end{remark}
+Of course, there is also an analogous story for products, by reversing all of our arrows.
+\begin{proposition}
+	Fix a discrete category $\mathcal I$ and a diagram $A:\mathcal I\to\mathcal C$. Further, let $\prod_{i\in\mathcal I}A_i$ be the coproduct of $A$ equipped with projections $\pi_j:\coprod_{i\in\mathcal I}A_i\to A_j$.
+	
+	Then there is a (canonical) isomorphism
+	\[\op{Mor}\left(X,\prod_{i\in\mathcal I}A_i\right)\cong\prod_{i\in\mathcal I}\op{Mor}(X,A_i).\]
+\end{proposition}
+\begin{proof}
+	We argue by duality. Moving all objects into $\mathcal C\opp$ turns the product into a coproduct, so we are looking for an isomorphism
+	\[\op{Mor}\left(\coprod_{i\in\mathcal I}A_i\opp,X\opp\right)\cong\prod_{i\in\mathcal I}\op{Mor}(A_i\opp, X\opp),\]
+	which is exactly \autoref{prop:coprodup}. Then, from this isomorphism, we merely have to push back from $\mathcal C\opp$ to $\mathcal C$ to get the result.
+
+	We spend a moment to unravel this isomorphism. Note that
+	\[\Bigg(\prod_{i\in\mathcal I}A_i\Bigg)\opp\cong\coprod_{i\in\mathcal I}A_i\opp,\]
+	where our new inclusion morphisms are $\pi_j\opp:A_j\opp\to\coprod_{i\in\mathcal I}A_i\opp$.
+	Now, given $f:X\to\prod_{i\in\mathcal I}A_i$, the isomorphism in \autoref{prop:coprodup} yields
+	\[\{f\opp\pi_i\opp\}_{i\in\mathcal I}\in\prod_{i\in\mathcal I}\op{Mor}(X\opp,A_i\opp),\]
+	which then comes back to
+	\[\{\pi_if\}_{i\in\mathcal I}\in\prod_{i\in\mathcal I}\op{Mor}(A_i,X).\]
+	This finishes. We quickly remark that we could also just use the above mapping to argue more directly by the universal property of products, merely imitating the proof of \autoref{prop:coprodup}.
+\end{proof}
+
+\subsection{Surjective Projection Maps}
+We close lecture with an application of the ideas in the previous subsection.
+\begin{theorem} \label{thm:projareepi}
+	Fix $\mathcal C$ be a category such that $\op{Mor}(A,B)\ne\emp$ for each $A,B\in\mathcal C$. Further, fix a discrete category $\mathcal I$ and a diagram $A:\mathcal I\to\mathcal C$, and suppose that we have a product $\prod_{i\in\mathcal I}A_i$ with projection maps
+	\[\pi_j:\prod_{i\in\mathcal I}A_i\to A_j.\]
+	Then these morphisms $\pi_j$ are split epimorphisms.
+\end{theorem}
+\begin{proof}
+	Fix some $j\in\mathcal J$, and we show that $\pi_j$ is a split epimorphism. The point is to manually create a lifting morphism from $A_j$ to $\prod_{i\in\mathcal I}A_i$.
+	
+	Well, for each $k\in\mathcal J$, we find some $\eta_k\in\op{Mor}(A_j,A_k)$ (which exists by hypothesis on $\mathcal C$), and we will further require that $\eta_j:=\id_{A_j}$. The point is that we are promised that the following diagram commutes, for any $k\in\mathcal I$.
+	% https://q.uiver.app/?q=WzAsMyxbMSwwLCJcXGRpc3BsYXlzdHlsZVxccHJvZF97aVxcaW5cXG1hdGhjYWwgSX1BX2kiXSxbMSwxLCJBX2siXSxbMCwwLCJBX2oiXSxbMCwxLCJcXHBpX2siLDJdLFsyLDAsIlxcZXRhIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzIsMSwiXFxldGFfayIsMl1d
+	\[\begin{tikzcd}
+		{A_j} & {\displaystyle\prod_{i\in\mathcal I}A_i} \\
+		& {A_k}
+		\arrow["{\pi_k}"', from=1-2, to=2-2]
+		\arrow["\eta", dashed, from=1-1, to=1-2]
+		\arrow["{\eta_k}"', from=1-1, to=2-2]
+	\end{tikzcd}\]
+	Thus, as shown in the above diagram, we are promised some morphism $\eta:\prod_{i\in\mathcal I}A_i\to A_j$ such that $\eta\pi_k=\eta_k$ for each $k\in\mathcal J$. In particular, we see that
+	\[\eta\pi_j=\eta_j=\id_{A_j},\]
+	so we have manually split $\pi_j$.
+\end{proof}
+\begin{remark}[Nir]
+	I am under the impression that we needed some strong form of choice to choose all the morphisms $\eta_j$.
+\end{remark}
+\begin{remark}
+	Arguing by duality, \autoref{thm:projareepi} tells us that the inclusion morphisms of a coproduct are split monomorphisms.
+\end{remark}
+The condition that all morphism sets are nonempty is not actually very strong.
+\begin{example} \label{ex:nonemptysetgoodmors}
+	The category $\mathrm{Set}_{\ne\emp}$ of nonempty sets has all nonempty morphism sets. Thus, the projection maps from a product of nonempty sets will all be split epimorphisms.
+\end{example}
+\begin{ex}
+	Similarly, the category $\mathrm{Grp}$ has all morphism sets nonempty because any two groups $G$ and $H$ have the trivial morphism $\varphi:G\to H$ by $\varphi:g\mapsto e_H$.
+\end{ex}
+\begin{corollary}
+	Fix $\mathcal C$ a concrete category with faithful functor $U:\mathcal C\to\mathrm{Set}$. Further, fix a diagram $A:\mathcal I\to\mathcal C$ over a discrete category $\mathcal I$ with a product $\prod_{i\in\mathcal I}A_i$ with projection maps
+	\[\pi_j:\prod_{i\in\mathcal I}A_i\to A_j.\]
+	If $UA_i\ne\emp$ for each $i$, then the maps $\pi_j$ are epimorphisms.
+\end{corollary}
+\begin{proof}
+	Fix some index $j\in\mathcal I$. Because all the $A_i$ have $UA_i\ne\emp$, we see that the induced map
+	\[U\pi_j:\prod_{i\in\mathcal I}UA_i\to UA_j\]
+	is a split epimorphism (and in particular, an epimorphism) by \autoref{ex:nonemptysetgoodmors}.
+
+	So to finish, it suffices to show that faithful functor will pull back epimorphisms to epimorphisms, which we siphon off to the following lemma.
+	\begin{lemma} \label{lem:faithfulgivesepi}
+		Fix $U:\mathcal C\to\mathcal D$ a faithful functor. If $\pi:A\to B$ is a morphism in $\mathcal C$ such that $U\pi$ is an epimorphism (or monomorphism), then $\pi$ is also an epimorphism (or monomorphism).
+	\end{lemma}
+	\begin{proof}
+		We show that $\pi$ is an epimorphism; the other case follows similarly or by arguing by duality. Suppose that we have an object $X$ with morphisms $f,g:B\to X$. We want to show that $f\pi=g\pi$ implies $f=g$. But now, we see that
+		\[U(f)U(\pi)=U(f\pi)=U(g\pi)=U(g)U(\pi),\]
+		so because $U\pi$ is an epimorphism, $Uf=Ug$ follows. However, $U$ is faithful, so we get $f=g$, finishing.
+	\end{proof}
+	\begin{remark}[Nir]
+		I do not think that we can strengthen \autoref{lem:faithfulgivesepi} to making $\pi$ a split epimorphism if $U\pi$ is an epimorphism. For example, the subcategory $\mathcal C$
+		% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXHsxLDJcXH0iXSxbMSwwLCJcXHsxXFx9Il0sWzAsMSwiXFxwaSJdXQ==
+		\[\begin{tikzcd}
+			{\{1,2\}} & {\{1\}}
+			\arrow["\pi", from=1-1, to=1-2]
+		\end{tikzcd}\]
+		of $\mathrm{Set}$ will embed via a faithful functor $U:\mathcal C\to\mathrm{Set}$, upon which $U\pi$ will be a split epimorphism. However, $\pi$ itself is not a split epimorphism because this category has no morphism $\{1\}\to\{1,2\}$ at all!
+	\end{remark}
+	The above lemma finishes the proof.
+\end{proof}
+In other words, we see that, in concrete categories, products of nonempty objects will have surjective projection maps. Arguing by duality, we also see that coproducts of nonempty objects will have injective inclusion maps.
