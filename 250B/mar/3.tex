@@ -6,15 +6,12 @@ Welcome back everybody.
 Today we will discuss homological methods to determine flatness. As mentioned last class, we will want to introduce the functor $\op{Tor}$, so we want to be able to talk about left-derived functors.
 
 We will make left-derived functors out of projective resolutions, so that is where we will start.
-\begin{definition}[Resolution]
+\begin{definition}[Resolution] \label{def:resolution}
 	Given an $R$-module $M$ a \textit{resolution of $M$} is a chain complex $(P,\del)$ such that
-	\[P_i=\begin{cases}
-		M & i=-1, \\
-		0 & i<-1.
-	\end{cases}\]
-	Additionally, we require
-	\[\cdots\stackrel{\del_3}\to P_2\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\stackrel{\del_{-1}}\to 0\]
-	to be an exact sequence.
+	\[P_i=0\qquad\text{for }i<0.\]
+	Additionally, we require an augmentation map $\varepsilon:P_0\onto M$ so that
+	\[\cdots\stackrel{\del_3}\to P_2\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\varepsilon}\to M\to 0\]
+	is an exact sequence. We call the above complex the \textit{augmented resolution}, and we notate it by $P\to M$.
 \end{definition}
 \begin{remark}
 	Alternatively, we can just look at the complex
@@ -40,7 +37,7 @@ To start, we give every module a projective resolution.
 	Every $R$-module $M$ has a free resolution and therefore a projective resolution.
 \end{lemma}
 \begin{proof}
-	The point is to use \autoref{lem:getenoughprojectives}. We produce our injective resolution inductively. To start our resolution $(P,\del)$, we start as required with
+	We build the augmented resolution $P\to M$, which we callously call $P$ (so that $P_{-1}=M$). The point is to use \autoref{lem:getenoughprojectives}. We produce our injective resolution inductively. To start our resolution $(P,\del)$, we start as required with
 	\[P_i=\begin{cases}
 		M & i=-1, \\
 		0 & i<-1,
@@ -76,13 +73,16 @@ To start, we give every module a projective resolution.
 \end{example}
 
 \subsection{Creating Chain Morphisms}
+\begin{warn}[Nir]
+	The proofs in the next two subsections were written for augmented resolutions and then edited later to accommodate the correct definition of a projective resolution. There might be typos and are many elided details in this transition.
+\end{warn}
 One complaint is that our proof of \autoref{lem:enoughprojectives} did not produce a unique projective resolution. However, projective resolutions are unique in the following way.
 \begin{lemma} \label{lem:uniqprojresolution}
-	Suppose that $P$ and $Q$ are projective resolutions for an $R$-module $M$. Then there are chain morphisms $\alpha:P\to Q$ and $\beta:Q\to B$ such that $\alpha\beta\sim\id_Q$ and $\beta\alpha\sim\id_P$.
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to M$ are augmented projective resolutions for an $R$-module $M$. Then there are chain morphisms $\alpha:P\to Q$ and $\beta:Q\to B$ such that $\alpha\beta\sim\id_Q$ and $\beta\alpha\sim\id_P$.
 \end{lemma}
 For this, it will be convenient to talk about how to induce chain morphisms for projective resolutions.
 \begin{lemma} \label{lem:inducechainmorphism}
-	Suppose that $\left(P,\del^P\right)$ and $\left(Q,\del^Q\right)$ are projective resolutions for the $R$-modules $M$ and $N$, respectively. Then an $R$-module homomorphism $\varphi:M\to N$ can be extended to a chain morphism $\varphi:P\to Q$.
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to N$ are projective resolutions for the $R$-modules $M$ and $N$, respectively. Then an $R$-module homomorphism $\varphi:M\to N$ can be extended to a chain morphism $\varphi:P\to Q$.
 \end{lemma}
 \begin{proof}
 	The point is to use the fact our modules are projective to extend the morphism $\varphi_{-1}:P_{-1}\to Q_{-1}$ backwards. In particular, for $i<-1$, we set $\varphi_i=0$ so that the following diagram commutes for any $i\le-1$.
@@ -125,7 +125,7 @@ For this, it will be convenient to talk about how to induce chain morphisms for 
 \end{proof}
 Now, these induced chain morphisms do not look unique either (namely, the arrow provided by the projective condition need not be unique), but they are unique in the following sense.
 \begin{lemma} \label{lem:uniqchainmorphism}
-	Suppose that $\left(P,\del^P\right)$ and $\left(Q,\del^Q\right)$ are projective resolutions for the $R$-modules $M$ and $N$, respectively. Further, fix two chain morphisms $\alpha,\beta:P\to Q$ such that $\alpha_{-1}=\beta_{-1}$; i.e., the restrictions of $\alpha$ and $\beta$ to $M\to N$ are equal. Then $\alpha$ and $\beta$ are homotopic.
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to N$ are augmented projective resolutions for the $R$-modules $M$ and $N$, respectively. Further, fix two chain morphisms $\alpha,\beta:P\to Q$ such that $\alpha_{-1}=\beta_{-1}$; i.e., the restrictions of $\alpha$ and $\beta$ to $M\to N$ are equal. Then $\alpha$ and $\beta$ are homotopic.
 \end{lemma}
 \begin{proof}
 	By \autoref{lem:rlinearchainhomotopy}, it suffices to show that $\alpha-\beta\sim0$, so set $\varphi:=\alpha-\beta$. In particular, we know that $\varphi_{-1}=\alpha_{-1}-\beta_{-1}=0$, and we would like to extend this to $\varphi\sim0$.
@@ -173,10 +173,10 @@ We are now ready to prove \autoref{lem:uniqprojresolution}.
 
 \subsection{The Horseshoe Lemma}
 Arguably, the ``main point'' of homology is to introduce the amazing long exact sequence in \autoref{thm:les}. To apply this story to projective resolutions, we will need a way to create a short exact sequence of projective resolutions.
-\begin{prop}[Horseshoe lemma]
+\begin{prop}[Horseshoe lemma] \label{prop:horseshoe}
 	Fix a short exact sequence of $R$-modules named
 	\[0\to M'\to M\to M''\to 0.\]
-	Further, suppose we have projections resolutions $P'$ and $P''$ for $M'$ and $M''$, respectively. Then we can form a projective resolution $P$ for $M$ such that
+	Further, suppose we have augmented projections resolutions $P'=\overline{P'}\to M'$ and $P'':=\overline{P''}\to M''$ for $M'$ and $M''$, respectively. Then we can form an augmented projective resolution $P:=\overline P\to M$ for $M$ such that
 	\[0\to P'\to P\to P''\to 0\]
 	is a short exact sequence of complexes.
 \end{prop}
@@ -257,64 +257,170 @@ Arguably, the ``main point'' of homology is to introduce the amazing long exact 
 \end{proof}
 
 \subsection{Left-Derived Functors}
-For left-derived functors, we need to start with a right-exact functor $\Phi$.
+We are now ready to talk about left-derived functors. The functor $\op{Tor}$ will fall out of this theory, but we will continue with the generality for a little while longer. For left-derived functors, we need to start with a right-exact functor $\Phi$.
 \begin{example}
-	In the discussion that follows, keeping $\Phi:=-\otimes_RM$ in mind is not a bad idea.
+	In the discussion that follows, keeping $\Phi:=-\otimes_RM$ in mind is not a bad idea. This will be the only example that we care about because it will give $\op{Tor}$.
 \end{example}
-We define a family of functors $\{L_i\Phi\}_{i\in\NN}$ as follows. We start with some projective resolution of $M$ by
-\[\cdots\to P_2\to P_1\to P_0\to M\to 0.\]
-Applying $\Phi$, we get a new complex by
-\[\cdots\to\Phi P_2\to\Phi P_1\to\Phi P_0\to M\to 0.\]
-This complex need not be exact because $\Phi$ is not exact, but it is a complex, which is something that we can check. To test the exactness, we have the following.
-\begin{definition}[Left-derived functor]
-	In the construction above, we define $L_i\Phi:=H_i(\Phi P)$ to be the $i$th homology group of the complex $\Phi P$.
+And here are our left-derived functors.
+\begin{definition}[Left-derived functor] \label{def:leftderivfunctor}
+	Fix a right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ (where $R$ and $S$ are rings) and $i\in\NN$ an index. Then, for any $R$-module $M$, we build a projective resolution $P$ for $M$ by
+	\[\cdots\to P_2\to P_1\to P_0\to M\to0.\]
+	Applying $\Phi$ gives us another complex
+	\[\cdots\to\Phi P_2\to\Phi P_1\to\Phi P_0\to\Phi M\to0.\]
+	Then we define the \textit{left-derived functor} $L_i\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ by $L_i\Phi(M):=H_i(\Phi P)$.
 \end{definition}
-This definition is well-defined by \autoref{lem:uniqprojresolution}. Here is the formal statement.
+We quickly check that $\Phi P$ does indeed properly as a complex.
+\begin{lemma} \label{lem:functorgivescomplexfunctor}
+	Fix a functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$.
+	\begin{itemize}
+		\item If $(P,\del)$ is a complex, then $(\Phi P,\Phi\del)$ is also a complex.
+		\item If $\alpha:\left(P,\del^P\right)\to\left(Q,\del^Q\right)$ is a chain morphism, then $\Phi\alpha:\left(\Phi P,\del^{\Phi P}\right)\to\left(\Phi Q,\del^{\Phi Q}\right)$ is also a chain morphism.
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	We do our checks separately.
+	\begin{itemize}
+		\item Expanding out, we see that $\Phi$ applied to the complex $P$ produces the complex
+		\[\cdots\to\Phi P_2\stackrel{\Phi\del_2}\to\Phi P_1\stackrel{\Phi\del_1}\to\Phi P_0\stackrel{\Phi\del_0}\to\cdots.\]
+		We can use this labeling to properly make $\Phi P$ into a graded module, but we won't bother because this is a formalization of the above sequence anyways. To check that this is a complex, we pick up any index $i\in\NN$ and note
+		\[(\Phi\del_{i+1})(\Phi\del_i)=\Phi(\del_{i+1}\del_i)=\Phi0=0\]
+		by functoriality of $\Phi$.
+		\item On applying $\Phi$ to $\alpha$, here is the diagram we need to commute.
+		% https://q.uiver.app/?q=WzAsMTAsWzEsMCwiXFxQaGkgUF97aS0xfSJdLFsyLDAsIlxcUGhpIFBfaSJdLFszLDAsIlxcUGhpIFBfe2krMX0iXSxbMCwwLCJcXGNkb3RzIl0sWzQsMCwiXFxjZG90cyJdLFswLDEsIlxcY2RvdHMiXSxbNCwxLCJcXGNkb3RzIl0sWzEsMSwiXFxQaGkgUV97aS0xfSJdLFsyLDEsIlxcUGhpIFFfaSJdLFszLDEsIlxcUGhpIFFfe2krMX0iXSxbMCw3LCJcXFBoaVxcYWxwaGFfe2ktMX0iLDJdLFszLDBdLFs1LDddLFsxLDgsIlxcUGhpXFxhbHBoYV9pIl0sWzIsOSwiXFxQaGlcXGFscGhhX3tpKzF9Il0sWzcsOCwiXFxQaGlcXGRlbF97aS0xfV5RIiwyXSxbOCw5LCJcXFBoaVxcZGVsXlFfe2krMX0iLDJdLFs5LDZdLFswLDEsIlxcUGhpXFxkZWxfe2ktMX1eUCJdLFsxLDIsIlxcUGhpXFxkZWxfaV5QIl0sWzIsNF1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			\cdots & {\Phi P_{i-1}} & {\Phi P_i} & {\Phi P_{i+1}} & \cdots \\
+			\cdots & {\Phi Q_{i-1}} & {\Phi Q_i} & {\Phi Q_{i+1}} & \cdots
+			\arrow["{\Phi\alpha_{i-1}}"', from=1-2, to=2-2]
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=2-1, to=2-2]
+			\arrow["{\Phi\alpha_i}", from=1-3, to=2-3]
+			\arrow["{\Phi\alpha_{i+1}}", from=1-4, to=2-4]
+			\arrow["{\Phi\del_{i-1}^Q}"', from=2-2, to=2-3]
+			\arrow["{\Phi\del^Q_{i+1}}"', from=2-3, to=2-4]
+			\arrow[from=2-4, to=2-5]
+			\arrow["{\Phi\del_{i-1}^P}", from=1-2, to=1-3]
+			\arrow["{\Phi\del_i^P}", from=1-3, to=1-4]
+			\arrow[from=1-4, to=1-5]
+		\end{tikzcd}\]
+		In particular, for $\Phi\alpha$ to be a chain morphism, we note that $\alpha\del^P=\del^Q\alpha$ because $\alpha$ is a chain morphism, so
+		\[(\Phi\alpha)\del^{\Phi P}=(\Phi\alpha)\left(\Phi\del^P\right)=\Phi\left(\alpha\del^P\right)=\Phi\left(\del^Q\alpha\right)=\left(\Phi\del^Q\right)(\Phi\alpha)=\del^{\Phi Q}(\Phi\alpha)\]
+		by repeatedly using the functoriality of $\Phi$. This finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	A few more checks would show that $\Phi$ induces a functor from the category of complexes over $R$ to the category of complexes over $S$.
+\end{remark}
+
+However, the bigger concern with \autoref{def:leftderivfunctor} is that it looks like it depends on our choice of projective resolution for $M$. Thankfully, \autoref{lem:uniqchainmorphism} assures us that it does not.
 \begin{lemma}
-	The left-derived functor $L_i\Phi$ does not depend on the chosen projective resolution of $M$.
+	Fix a right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then the left-derived functor $L_i\Phi$ is well-defined, up to isomorphism. Namely, $L_i\Phi(M)$ does not depend on the chosen projective resolution of $M$.
 \end{lemma}
 \begin{proof}
-	Indeed, any two projective resolutions $P$ and $Q$ for $M$ will have morphisms $\alpha:P\to Q$ and $\beta:Q\to P$ such that
-	\[\beta\alpha-\id_Q\sim0.\]
-	Applying $\Phi$, we see that
-	\[\Phi(\beta)\Phi(\alpha)-\Phi(\id_Q)\sim0,\]
-	so we get isomorphisms of homology groups.
+	Pick up two augmented projective resolutions for $M$ denoted $P:=\overline P\to M$ and $Q:=\overline Q\to M$. The main point is to use \autoref{lem:uniqprojresolution} to induce isomorphisms of the homology modules of $\Phi P$ and $\Phi Q$. Writing this all out takes some words.
+	
+	By \autoref{lem:uniqprojresolution}, we are promised chain morphisms $\alpha:P\to Q$ and $\beta:Q\to P$ such that
+	\[\beta\alpha\sim\id_P\qquad\text{and}\qquad\alpha\beta\sim\id_Q.\]
+	Namely, there is a degree-$1$ morphisms $g:P\to P$ and $h:Q\to Q$ such that
+	\[\alpha\alpha-\id_P=h\del^Q+\del^Qh\qquad\text{and}\qquad\alpha\beta-\id_Q=g\del^P+\del^Pg.\]
+	Applying $\Phi$, functoriality tells us that
+	\[(\Phi\beta)(\Phi\alpha)-\id_{\Phi P}=(\Phi h)\del^{\Phi P}+\del^{\Phi P}(\Phi h)\qquad\text{and}\qquad(\Phi\alpha)(\Phi\beta)-\id_{\Phi Q}=(\Phi g)\del^{\Phi Q}+\del^{\Phi Q}(\Phi g).\]
+	In particular, the differentials of $\Phi P$ and $\Phi^Q$ are $\Phi\del^P$ and $\Phi\del^Q$, respectively, and $\Phi\alpha$ and $\Phi\beta$ are chain morphisms by \autoref{lem:functorgivescomplexfunctor}. It follows that
+	\[(\Phi\beta)(\Phi\alpha)\sim\id_{\Phi P}\qquad\text{and}\qquad(\Phi\alpha)(\Phi\beta)\sim\id_{\Phi Q}.\]
+	Now, \autoref{lem:gethomologymorphism} promises us induced morphisms $H_i(\Phi\alpha):(\Phi P)_i\to(\Phi Q)_i$ and $H_i(\Phi\beta):(\Phi Q)_i\to(\Phi P)_i$, from which \autoref{lem:homologyfunctor} gives
+	\[H_i(\Phi\beta)H_i(\Phi\alpha)=H_i(\Phi(\beta\alpha))\stackrel*=H_i(\id_{\Phi Q})=\id_{H_i(\Phi Q)},\]
+	where we have used \autoref{prop:homotopyequalizeshomology} in $\stackrel*=$. Similarly,
+	\[H_i(\Phi\alpha)H_i(\Phi\beta)=H_i(\Phi(\alpha\beta))=H_i(\id_{\Phi P})=\id_{H_i(\Phi P)},\]
+	where we have again used \autoref{prop:homotopyequalizeshomology} in $\stackrel*=$. Thus, $H_i(\Phi\alpha):H_i(\Phi P)\to H_i(\Phi Q)$ is an isomorphism with inverse $H_i(\Phi\beta)$.
+
+	Now, $L_i\Phi(M)=H_i(\Phi P)$ at all indices except $i=0$ (recall that $P$ is the augmented projective resolution), so we so far know that $L_i\Phi(M)$ is well-defined away from $i=0$. To fix this, we pick up the following lemma.
+	\begin{lemma} \label{lem:lzero}
+		Fix $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ a right-exact functor. We have that $L_0\Phi(M)\cong\Phi M$.
+	\end{lemma}
+	\begin{proof}
+		For the first time, we use the fact that $\Phi$ is right-exact. Give $M$ any projective resolution $(P,\del)$ so that our resolution starts as the exact sequence
+		\[P_1\stackrel{\del_1}\to P_0\stackrel{\varepsilon}\to M\to0.\]
+		Because $\Phi$ is right-exact, we get an exact sequence
+		\[\Phi P_1\stackrel{\Phi\del_1}\to\Phi P_0\stackrel{\Phi\varepsilon}\to\Phi M\to0.\]
+		Thus, $\Phi\varepsilon$ induces an isomorphism
+		\[\Phi M\cong\frac{\Phi P_0}{\im\Phi\del_1}=\frac{\ker\Phi\del_0}{\im\Phi\del_1}=H_0(\Phi P)=L_0\Phi(M),\]
+		which is what we wanted.
+	\end{proof}
+	\begin{remark}[Nir]
+		The above lemma is why the definition of a projective resolution does not take $P_{-1}=M$ automatically.
+	\end{remark}
+	It follows that $L_0\Phi(M)$ is in fact well-defined as $\Phi M$. This finishes.
 \end{proof}
-Here are some more nice properties.
-\begin{lemma} \label{lem:lzero}
-	We have that $L_0\Phi(M)\simeq\Phi M$.
+
+\subsection{Properties of Left-Derived Functors}
+We take a moment to list some nice properties of left-derived functors. To start off these are actually functors.
+\begin{lemma}
+	Fix a right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ and an $R$-module homomorphism $\varphi:M\to N$. Given any index $i\in\NN$, we can exhibit an $S$-module morphism $L_i\Phi(\varphi):L_i\Phi(M)\to L_i(\Phi N)$ satisfying the following functoriality conditions.
+	\begin{itemize}
+		\item For $R$-modules $A,B,C$ with morphisms $\alpha:A\to B$ and $\beta:B\to C$, we have $L_i\Phi(\beta)L_i(\alpha)=L_i(\beta\alpha)$.
+		\item For an $R$-module $M$, we have $L_i\Phi(\id_M)=\id_{L_i\Phi(M)}$.
+	\end{itemize}
 \end{lemma}
 \begin{proof}
-	The point is that $\Phi$ is right-exact. Indeed, we send the right-exact sequence
-	\[P_1\to P_0\to M\to 0\]
-	to
-	\[\Phi P_1\to\Phi P_0\to\Phi M\to 0.\]
-	In particular, $\Phi M=H_0(\Phi P)=\coker(\Phi P_1\to\Phi P_0)=H_0(\Phi P)$, which is what we wanted.
+	We simply plug into \autoref{lem:homologyfunctor}. Fix an $R$-module homomorphism $\varphi:M\to N$, and we give $M$ and $N$ the projective resolutions $\left(P,\del^P\right)$ and $\left(Q,\del^Q\right)$, respectively. Note that \autoref{lem:inducechainmorphism} then grants us an extension of $\varphi:M\to N$ to a full chain morphism $\varphi:P\to Q$. Pushing through \autoref{lem:functorgivescomplexfunctor} grants us a chain morphism $\Phi\varphi:\Phi P\to\Phi Q$, from which \autoref{lem:gethomologymorphism} turns into a morphism
+	\[H_i(\Phi\varphi):H_i(\Phi P)\to H_i(\Phi Q).\]
+	As such, we set $L_i\Phi(\varphi):=H_i(\Phi\varphi)$.
+
+	Checking through the above construction, we see that all steps are well-defined except for extending the morphism $\varphi:M\to N$ to a chain morphism $\varphi:P\to Q$. However, this is okay: if $\alpha,\beta:P\to Q$ are chain morphisms extending $\varphi$ so that $\alpha_{-1}=\beta_{-1}=\varphi$, \autoref{lem:uniqchainmorphism} implies
+	\[\alpha\sim\beta.\]
+	So \autoref{prop:homotopyequalizeshomology} tells us $H_i(\Phi\alpha)=H_i(\Phi\beta)$, so our induced morphism $L_i\Phi(\varphi)$ is well-defined.
+	
+	We now run our functoriality checks.
+	\begin{itemize}
+		\item We work in the context of the statement. As discussed above, extend $\alpha:A\to B$ and $\beta:B\to C$ to any chain morphism of projective resolutions. From \autoref{lem:homologyfunctor}, we see that
+		\[L_i\Phi(\beta)L_i\Phi(\alpha)=H_i(\Phi\beta)H_i(\Phi\alpha)=H_i(\Phi\beta\circ\Phi\alpha)=H_i(\Phi(\beta\alpha))=L_i\Phi(\beta\alpha),\]
+		where we have also used the functoriality of $\Phi$.
+		\item Fix our module $M$ with projective resolution $(P,\del)$. Note that $\id_M$ can be extended to the chain morphism $\id_P:\to P$, from which \autoref{lem:homologyfunctor} tells us that
+		\[L_i\Phi(\id_M)=H_i(\Phi\id_P)=H_i(\id_{\Phi P})=\id_{H_i(\Phi P)}=\id_{L_i\Phi(M)},\]
+		where we have again used the functoriality of $\Phi$.
+	\end{itemize}
+	The above checks finish.
 \end{proof}
-\begin{lemma} \label{lem:leftderivles}
+And here is the main result of left-derived functors.
+\begin{prop} \label{prop:leftderivles}
 	Suppose
-	\[0\to M'\to M\to M''\to 0\]
+	\[0\to M'\stackrel\iota\to M\stackrel\pi\to M''\to 0\]
 	an exact sequence of $R$-modules. Then there is a long exact sequence of left-derived functors, given by
-	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiTF9pXFxQaGkoTScpIl0sWzIsMCwiTF9pXFxQaGkoTSkiXSxbMywwLCJMX2lcXFBoaShNJycpIl0sWzEsMSwiTF97aS0xfVxcUGhpKE0nKSJdLFsyLDEsIkxfe2ktMX1cXFBoaShNKSJdLFszLDEsIkxfe2ktMX1cXFBoaShNJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs0LDVdLFs1LDZdLFs2LDddXQ==
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiTF9pXFxQaGkoTScpIl0sWzIsMCwiTF9pXFxQaGkoTSkiXSxbMywwLCJMX2lcXFBoaShNJycpIl0sWzEsMSwiTF97aS0xfVxcUGhpKE0nKSJdLFsyLDEsIkxfe2ktMX1cXFBoaShNKSJdLFszLDEsIkxfe2ktMX1cXFBoaShNJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDIsIkxfaVxcUGhpKFxcaW90YSkiXSxbMiwzLCJMX2lcXFBoaShcXHBpKSJdLFszLDQsIlxcZGVsdGFfaSIsMV0sWzQsNSwiTF97aS0xfVxcUGhpKFxcaW90YSkiLDJdLFs1LDYsIkxfe2ktMX1cXFBoaShcXHBpKSJdLFs2LDddXQ==
 	\[\begin{tikzcd}
 		\cdots & {L_i\Phi(M')} & {L_i\Phi(M)} & {L_i\Phi(M'')} \\
 		& {L_{i-1}\Phi(M')} & {L_{i-1}\Phi(M)} & {L_{i-1}\Phi(M'')} & \cdots
 		\arrow[from=1-1, to=1-2]
-		\arrow[from=1-2, to=1-3]
-		\arrow[from=1-3, to=1-4]
-		\arrow[from=1-4, to=2-2]
-		\arrow[from=2-2, to=2-3]
-		\arrow[from=2-3, to=2-4]
+		\arrow["{L_i\Phi(\iota)}", from=1-2, to=1-3]
+		\arrow["{L_i\Phi(\pi)}", from=1-3, to=1-4]
+		\arrow["{\delta_i}"{description}, from=1-4, to=2-2]
+		\arrow["{L_{i-1}\Phi(\iota)}"', from=2-2, to=2-3]
+		\arrow["{L_{i-1}\Phi(\pi)}"', from=2-3, to=2-4]
 		\arrow[from=2-4, to=2-5]
 	\end{tikzcd}\]
-\end{lemma}
+\end{prop}
 \begin{proof}
-	Choose projective resolutions $P'$ and $P$ and $P''$ for $M'$ and $M$ and $M''$ so that we have a short exact sequence
+	Choose any augmented projective resolutions $P':=\overline{P'}\to M'$ and $P'':=\overline{P''}\to M''$ for $M'$ and $M''$. Then \autoref{prop:horseshoe} promises us a third augmented projective resolution $P:=\overline{P}\to M$ so that we have a short exact sequence
 	\[0\to P'\to P\to P''\to 0\]
-	of projective resolutions. Then this gives rise to a long exact sequence of homology, which is what we wanted.
+	of augmented projective resolutions. By deleting everything at index $-1$ (i.e., replacing this row with $0$s across), we obtain a short exact sequence
+	\[0\to\overline{P'}\to\overline P\to\overline{P''}\to0\]
+	of projective resolutions. From here, \autoref{thm:les} grants us a long exact sequence as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiSF9pKFxcUGhpIFAnKSJdLFsyLDAsIkhfaShcXFBoaSBQKSJdLFszLDAsIkhfaShcXFBoaSBQJycpIl0sWzEsMSwiSF9pKFxcUGhpIFAnKSJdLFsyLDEsIkhfaShcXFBoaSBQKSJdLFszLDEsIkhfaShcXFBoaSBQJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDIsIkhfaShcXFBoaVxcaW90YSkiXSxbMiwzLCJIX2koXFxQaGlcXHBpKSJdLFszLDQsIlxcZGVsdGFfaSIsMV0sWzQsNSwiSF97aS0xfShcXFBoaVxcaW90YSkiLDJdLFs1LDYsIkhfe2ktMX0oXFxQaGlcXHBpKSIsMl0sWzYsN11d
+	\[\begin{tikzcd}
+		\cdots & {H_i(\Phi P')} & {H_i(\Phi P)} & {H_i(\Phi P'')} \\
+		& {H_i(\Phi P')} & {H_i(\Phi P)} & {H_i(\Phi P'')} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow["{H_i(\Phi\iota)}", from=1-2, to=1-3]
+		\arrow["{H_i(\Phi\pi)}", from=1-3, to=1-4]
+		\arrow["{\delta_i}"{description}, from=1-4, to=2-2]
+		\arrow["{H_{i-1}(\Phi\iota)}"', from=2-2, to=2-3]
+		\arrow["{H_{i-1}(\Phi\pi)}"', from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	Plugging into the definitions of the functor $L_i\Phi$ finishes.
 \end{proof}
 \begin{remark}
-	There is an analogous theory for right-derived functors for left-exact functors by simply flipping all the arrows. For example, instead of using projective resolutions, we use injective resolutions. The only technicality is showing that all modules can be embedded into an injective module, which is not easy.
+	There is an analogous theory for right-derived functors for left-exact functors by simply flipping all the arrows. For example, instead of using projective resolutions, we use injective resolutions. The only technicality is showing that all modules can be embedded into an injective module, which is not easy. We will not say more.
 \end{remark}
 
 \subsection{The Functor \texorpdfstring{$\op{Tor}$}{Tor}}
@@ -326,7 +432,7 @@ In practice, what happens is that we take a projective resolution $P$ of $M$ wri
 \[\cdots\to P_1\to P_0\to M\to 0.\]
 Then we apply the functor $N\otimes_R-$ to get
 \[\cdots\to N\otimes_RP_1\to N\otimes_RP_0\to N\otimes_RN\to0,\]
-and $\op{Tor}_i^R(M,N)$ will be our $i$th homology group. For example, \autoref{lem:lzero} tells us that
+and $\op{Tor}_i^R(M,N)$ will be our $i$th homology module. For example, \autoref{lem:lzero} tells us that
 \[\op{Tor}_0^R(M,N)\cong M\otimes_RN.\]
 This is symmetric, which is perhaps unsurprising.
 \begin{remark}
@@ -345,7 +451,7 @@ Let's continue collecting properties.
 	then we have a long exact sequence of $\op{Tor}$.
 \end{lemma}
 \begin{proof}
-	Use \autoref{lem:leftderivles}.
+	Use \autoref{prop:leftderivles}.
 \end{proof}
 \begin{lemma}
 	If $F$ is a free $R$-module, then $\op{Tor}_i^R(F,N)\simeq0$ for all $i>0$.
