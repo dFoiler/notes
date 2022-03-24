@@ -58,10 +58,10 @@ To start, we give every module a projective resolution.
 	\[\im\del_{n+1}=\ker\del_n,\]
 	which is exactly the exactness condition at $P_n$.
 \end{proof}
-\begin{remark}[Nir]
+\begin{remark}[Nir] \label{rem:fingenprojresolution}
 	There is a complaint that \autoref{lem:getenoughprojectives} products huge free modules to project. However, if $R$ is Noetherian and $M$ is finitely generated, then we can choose a resolution of free and finitely generated modules.
 	
-	To see this, we proceed inductively: $M$ is finitely generated, so we can choose $P_0$ to be free of finite rank surjecting onto $M$. Then, for the inductive step, $P_n$ is free of finite rank, and $\ker\del_n\subseteq P_n$ is a submodule of the Noetherian module $P_n$, so $\ker\del_n$ is finitely generated, so we can surject onto it.
+	To see this, we proceed inductively: $M$ is finitely generated, so we can choose $P_0$ to be free of finite rank surjecting onto $M$. Then, for the inductive step, $P_n$ is free of finite rank, and $\ker\del_n\subseteq P_n$ is a submodule of the Noetherian module $P_n$, so $\ker\del_n$ is finitely generated, so we can surject onto it with a free module $P_{n+1}$ of finite rank.
 \end{remark}
 \begin{example}
 	Fix $R:=k[x]/\left(x^2\right)$. Then $k$ is an $R$-module, where the $x$ acts by $0$: we can induce a map $k[x]\to k$ by lifting $\id_k:k\to k$ by $x\mapsto0$, and then we can mod out $k[x]$ by $x^2\mapsto0$, which gives us our map $\pi:R\to k$. Note $ax+b\in\ker\pi$ if and only if $bx=x(ax+b)=0$, so $\ker\pi=kx$.
@@ -178,7 +178,7 @@ Arguably, the ``main point'' of homology is to introduce the amazing long exact 
 	\[0\to M'\to M\to M''\to 0.\]
 	Further, suppose we have augmented projections resolutions $P'=\overline{P'}\to M'$ and $P'':=\overline{P''}\to M''$ for $M'$ and $M''$, respectively. Then we can form an augmented projective resolution $P:=\overline P\to M$ for $M$ such that
 	\[0\to P'\to P\to P''\to 0\]
-	is a short exact sequence of complexes.
+	is a split short exact sequence of complexes.
 \end{prop}
 \begin{proof}
 	This is a little technical. Let our short exact sequence of $R$-modules be
@@ -257,13 +257,59 @@ Arguably, the ``main point'' of homology is to introduce the amazing long exact 
 \end{proof}
 
 \subsection{Left-Derived Functors}
-We are now ready to talk about left-derived functors. The functor $\op{Tor}$ will fall out of this theory, but we will continue with the generality for a little while longer. For left-derived functors, we need to start with a right-exact functor $\Phi$.
+We are now ready to talk about left-derived functors. The functor $\op{Tor}$ will fall out of this theory, but we will continue with the generality for a little while longer. For left-derived functors, we need to start with an additive right-exact functor $\Phi$.
+\begin{definition}[Additive]
+	A functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ is \textit{additive} if and only if, for any $R$-modules $M$ and $N$, the induced map
+	\[\Phi:\mathrm{Hom}_R(M,N)\to\mathrm{Hom}_R(\Phi M,\Phi N)\]
+	is a homomorphism of abelian groups.
+\end{definition}
+\begin{definition}[Right exact]
+	A functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ is \textit{right-exact} if and only if $\Phi$ sends right-exact sequences to right-exact sequences.
+\end{definition}
 \begin{example}
-	In the discussion that follows, keeping $\Phi:=-\otimes_RM$ in mind is not a bad idea. This will be the only example that we care about because it will give $\op{Tor}$.
+	In the discussion that follows, keeping $\Phi:=-\otimes_RM$ in mind is not a bad idea; this will be the only example that we care about because it will give $\op{Tor}$. To be explicit, we already know that $\Phi$ is right-exact, and it is additive by simply checking: $\varphi,\psi:A\to B$ give
+	\[(\varphi\otimes M+\psi\otimes M)(a\otimes m)=\varphi(a)\otimes m+\psi(a)\otimes m=(\varphi+\psi)(a)\otimes m=((\varphi+\psi)\otimes M)(a\otimes m).\]
 \end{example}
+Here's a reason why we want the additive condition.
+\begin{lemma} \label{lem:addpreservezero}
+	Additive functors $\Phi$ preserve the zero object.
+\end{lemma}
+\begin{proof}
+	Note that an additive functor $\Phi$ must preserve the zero morphism, but when $0$ is our zero object, this is our identity. So
+	\[\Phi\id_0=\id_{\Phi0}\]
+	must still be a zero morphism, so $\Phi0$ is the zero object.
+\end{proof}
+Here is a better reason.
+\begin{lemma} \label{lem:addpreservesplits}
+	Additive functors $\Phi$ preserves split short exact sequences.
+\end{lemma}
+\begin{proof}
+	The idea is to turn being a split short exact sequence into some system of equations which $\Phi$ will then preserve. By the proof of \autoref{lem:splitgrabbag}, the short exact sequence
+	\[0\to A\stackrel\iota\to B\stackrel\pi\to C\to0\]
+	splitting implies that we have an isomorphism $\iota\oplus\varphi:A\oplus C\to B$ such that $\pi\varphi=\id_C$. In addition, we see that this gives an arrow $B\cong A\oplus C\to A$ which we name $\psi$ such that $\psi\iota=\id_A$. Notably, $\psi\varphi=0$ because
+	\[\psi(\iota\oplus\varphi)(\iota\oplus\varphi)^{-1}\varphi(c)=\psi(\iota\oplus\varphi)(0,c)=0\]
+	because $\psi(\iota\oplus\varphi)$ projects onto the $A$-coordiante. It follows
+	\[\iota\psi+\varphi\pi=\id_B\]
+	because multiplying by the invertible morphism $\iota\oplus\varphi$ on the right gives $(\iota\oplus0)+(0\oplus\varphi)=(\iota\oplus\varphi)$, which is true.
+	
+	Now, applying $\Phi$ everywhere, we get the sequence of maps
+	\[0\to\Phi A\stackrel{\Phi\iota}\to\Phi B\stackrel{\Phi\pi}\to\Phi C\to0,\]
+	which we would like to show is a split short exact sequence. We see $(\Phi\psi)(\Phi\iota)=\id_{\Phi A}$, so $\Phi\iota$ is injective. Also, $(\Phi\pi)(\Phi\varphi)=\id_{\Phi C}$, so $\Phi\pi$ is surjective. Further, we have
+	\[(\Phi\iota)(\Phi\psi)+(\Phi\varphi)(\Phi\pi)=\id_{\Phi B}\tag{$*$}\label{eq:splitsseschainhomotopy}\]
+	because $\Phi$ is additive (!).
+
+	So to finish, we need to show that $\ker\Phi\pi=\im\Phi\iota$ from which $(\Phi\pi)(\Phi\varphi)=\id_{\Phi C}$ will show that our short exact sequence splits.
+	\begin{itemize}
+		\item If $b\in\ker\Phi\pi$, then
+		\[(\Phi\iota)((\Phi\psi)b)=b\]
+		by \autoref{eq:splitsseschainhomotopy}, so $b\in\im\Phi\iota$.
+		\item We see $(\Phi\pi)(\Phi\iota)=\Phi(\pi\iota)=\Phi0=0$ because $\Phi$ is additive, so $\im\Phi\iota\subseteq\ker\Phi\pi$.
+	\end{itemize}
+	These checks finish.
+\end{proof}
 And here are our left-derived functors.
 \begin{definition}[Left-derived functor] \label{def:leftderivfunctor}
-	Fix a right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ (where $R$ and $S$ are rings) and $i\in\NN$ an index. Then, for any $R$-module $M$, we build a projective resolution $P$ for $M$ by
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ (where $R$ and $S$ are rings) and $i\in\NN$ an index. Then, for any $R$-module $M$, we build a projective resolution $P$ for $M$ by
 	\[\cdots\to P_2\to P_1\to P_0\to M\to0.\]
 	Applying $\Phi$ gives us another complex
 	\[\cdots\to\Phi P_2\to\Phi P_1\to\Phi P_0\to\Phi M\to0.\]
@@ -314,7 +360,7 @@ We quickly check that $\Phi P$ does indeed properly as a complex.
 
 However, the bigger concern with \autoref{def:leftderivfunctor} is that it looks like it depends on our choice of projective resolution for $M$. Thankfully, \autoref{lem:uniqchainmorphism} assures us that it does not.
 \begin{lemma}
-	Fix a right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then the left-derived functor $L_i\Phi$ is well-defined, up to isomorphism. Namely, $L_i\Phi(M)$ does not depend on the chosen projective resolution of $M$.
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then the left-derived functor $L_i\Phi$ is well-defined, up to isomorphism. Namely, $L_i\Phi(M)$ does not depend on the chosen projective resolution of $M$.
 \end{lemma}
 \begin{proof}
 	Pick up two augmented projective resolutions for $M$ denoted $P:=\overline P\to M$ and $Q:=\overline Q\to M$. The main point is to use \autoref{lem:uniqprojresolution} to induce isomorphisms of the homology modules of $\Phi P$ and $\Phi Q$. Writing this all out takes some words.
@@ -323,7 +369,7 @@ However, the bigger concern with \autoref{def:leftderivfunctor} is that it looks
 	\[\beta\alpha\sim\id_P\qquad\text{and}\qquad\alpha\beta\sim\id_Q.\]
 	Namely, there is a degree-$1$ morphisms $g:P\to P$ and $h:Q\to Q$ such that
 	\[\alpha\alpha-\id_P=h\del^Q+\del^Qh\qquad\text{and}\qquad\alpha\beta-\id_Q=g\del^P+\del^Pg.\]
-	Applying $\Phi$, functoriality tells us that
+	Applying $\Phi$, functoriality and additivity tells us that
 	\[(\Phi\beta)(\Phi\alpha)-\id_{\Phi P}=(\Phi h)\del^{\Phi P}+\del^{\Phi P}(\Phi h)\qquad\text{and}\qquad(\Phi\alpha)(\Phi\beta)-\id_{\Phi Q}=(\Phi g)\del^{\Phi Q}+\del^{\Phi Q}(\Phi g).\]
 	In particular, the differentials of $\Phi P$ and $\Phi^Q$ are $\Phi\del^P$ and $\Phi\del^Q$, respectively, and $\Phi\alpha$ and $\Phi\beta$ are chain morphisms by \autoref{lem:functorgivescomplexfunctor}. It follows that
 	\[(\Phi\beta)(\Phi\alpha)\sim\id_{\Phi P}\qquad\text{and}\qquad(\Phi\alpha)(\Phi\beta)\sim\id_{\Phi Q}.\]
@@ -354,10 +400,10 @@ However, the bigger concern with \autoref{def:leftderivfunctor} is that it looks
 
 \subsection{Properties of Left-Derived Functors}
 We take a moment to list some nice properties of left-derived functors. To start off these are actually functors.
-\begin{lemma}
-	Fix a right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ and an $R$-module homomorphism $\varphi:M\to N$. Given any index $i\in\NN$, we can exhibit an $S$-module morphism $L_i\Phi(\varphi):L_i\Phi(M)\to L_i(\Phi N)$ satisfying the following functoriality conditions.
+\begin{lemma} \label{lem:leftderivfunctor}
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ and an $R$-module homomorphism $\varphi:M\to N$. Given any index $i\in\NN$, we can exhibit an $S$-module morphism $L_i\Phi(\varphi):L_i\Phi(M)\to L_i(\Phi N)$ satisfying the following functoriality conditions.
 	\begin{itemize}
-		\item For $R$-modules $A,B,C$ with morphisms $\alpha:A\to B$ and $\beta:B\to C$, we have $L_i\Phi(\beta)L_i(\alpha)=L_i(\beta\alpha)$.
+		\item For $R$-modules $A,B,C$ with morphisms $\alpha:A\to B$ and $\beta:B\to C$, we have $L_i\Phi(\beta)L_i(\alpha)=L_i\Phi(\beta\alpha)$.
 		\item For an $R$-module $M$, we have $L_i\Phi(\id_M)=\id_{L_i\Phi(M)}$.
 	\end{itemize}
 \end{lemma}
@@ -381,9 +427,36 @@ We take a moment to list some nice properties of left-derived functors. To start
 	\end{itemize}
 	The above checks finish.
 \end{proof}
-And here is the main result of left-derived functors.
+\begin{example}
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then, given an $R$-module homomorphism $\varphi:M\to N$, we see
+	\[L_0\Phi(\varphi)=H_0(\Phi\varphi),\]
+	which is simply $\Phi\varphi$ after tracking $L_i\Phi(M)\cong M$ and $L_i\Phi(N)\cong N$ through with \autoref{lem:gethomologymorphism}.
+\end{example}
+Here is another computation.
+\begin{lemma} \label{lem:projectiveacyclic}
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then, if $P$ is a projective $R$-module, then $L_i\Phi(R)=0$ for $i>0$.
+\end{lemma}
+\begin{proof}
+	We build our projective resolution by hand. Note that the sequence
+	\[0\to P\to P\to 0\]
+	is exact, so we set
+	\[P_i:=\begin{cases}
+		P & i=0, \\
+		0 & i\ne0,
+	\end{cases}\]
+	with $\del=0$. This makes $\del^2=0$, so $(P,\del)$ is a complex. Further, we set $\varepsilon=\id_P$ (note $P_0=P$), so the sequence
+	\[\cdots\stackrel0\to P_2\stackrel0\to P_1\stackrel0\to P_0\stackrel\varepsilon=P\to0\]
+	is exact. Indeed, we are exact at each $P_i=0$ for $i>0$ because both the kernel and images are $0$. We are exact at $P_0$ because the kernel of the map $\id_P:P_0\to P$ is $0$; we are exact at $P$ because the kernel of the map $P\to0$ is equal to $P$, which is the image of $\varepsilon=\id_P$. Thus, $P$ is indeed a projective resolution of $P$.
+
+	Now, we apply $\Phi$, which gives the complex
+	\[\cdots\to\Phi P_2\to\Phi P_1\to\Phi P_0\to 0.\]
+	In particular, note that $\Phi0=0$ by \autoref{lem:addpreservezero}, so for $i>0$, we can compute
+	\[H_i(P\otimes_RN)=\frac{\ker\del_i}{\im\del_{i+1}}=\frac0{\im\del_{i+1}}=0\]
+	because $\ker\del_i\subseteq\Phi P_i=\Phi0=0$ for $i>0$. The result follows
+\end{proof}
+Lastly, here is the main result of left-derived functors.
 \begin{prop} \label{prop:leftderivles}
-	Suppose
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Suppose
 	\[0\to M'\stackrel\iota\to M\stackrel\pi\to M''\to 0\]
 	an exact sequence of $R$-modules. Then there is a long exact sequence of left-derived functors, given by
 	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiTF9pXFxQaGkoTScpIl0sWzIsMCwiTF9pXFxQaGkoTSkiXSxbMywwLCJMX2lcXFBoaShNJycpIl0sWzEsMSwiTF97aS0xfVxcUGhpKE0nKSJdLFsyLDEsIkxfe2ktMX1cXFBoaShNKSJdLFszLDEsIkxfe2ktMX1cXFBoaShNJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDIsIkxfaVxcUGhpKFxcaW90YSkiXSxbMiwzLCJMX2lcXFBoaShcXHBpKSJdLFszLDQsIlxcZGVsdGFfaSIsMV0sWzQsNSwiTF97aS0xfVxcUGhpKFxcaW90YSkiLDJdLFs1LDYsIkxfe2ktMX1cXFBoaShcXHBpKSJdLFs2LDddXQ==
@@ -402,9 +475,11 @@ And here is the main result of left-derived functors.
 \begin{proof}
 	Choose any augmented projective resolutions $P':=\overline{P'}\to M'$ and $P'':=\overline{P''}\to M''$ for $M'$ and $M''$. Then \autoref{prop:horseshoe} promises us a third augmented projective resolution $P:=\overline{P}\to M$ so that we have a short exact sequence
 	\[0\to P'\to P\to P''\to 0\]
-	of augmented projective resolutions. By deleting everything at index $-1$ (i.e., replacing this row with $0$s across), we obtain a short exact sequence
+	of augmented projective resolutions. By deleting everything at index $-1$ (i.e., replacing this row with $0$s across), we obtain a split short exact sequence
 	\[0\to\overline{P'}\to\overline P\to\overline{P''}\to0\]
-	of projective resolutions. From here, \autoref{thm:les} grants us a long exact sequence as follows.
+	of projective resolutions. Now, because $\Phi$ is additive, this will induce a short exact sequence of complexes
+	\[0\to\Phi\overline{P'}\to\Phi\overline P\to\Phi\overline{P''}\to0\]
+	by \autoref{lem:addpreservesplits}. From here, \autoref{thm:les} grants us a long exact sequence as follows.
 	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiSF9pKFxcUGhpIFAnKSJdLFsyLDAsIkhfaShcXFBoaSBQKSJdLFszLDAsIkhfaShcXFBoaSBQJycpIl0sWzEsMSwiSF9pKFxcUGhpIFAnKSJdLFsyLDEsIkhfaShcXFBoaSBQKSJdLFszLDEsIkhfaShcXFBoaSBQJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDIsIkhfaShcXFBoaVxcaW90YSkiXSxbMiwzLCJIX2koXFxQaGlcXHBpKSJdLFszLDQsIlxcZGVsdGFfaSIsMV0sWzQsNSwiSF97aS0xfShcXFBoaVxcaW90YSkiLDJdLFs1LDYsIkhfe2ktMX0oXFxQaGlcXHBpKSIsMl0sWzYsN11d
 	\[\begin{tikzcd}
 		\cdots & {H_i(\Phi P')} & {H_i(\Phi P)} & {H_i(\Phi P'')} \\
@@ -420,67 +495,229 @@ And here is the main result of left-derived functors.
 	Plugging into the definitions of the functor $L_i\Phi$ finishes.
 \end{proof}
 \begin{remark}
+	The fact that we have extended our short exact sequence
+	\[\cdots\to\Phi M'\to\Phi M\to\Phi M''\to M'\to M\to M''\to 0\]
+	to the ``left'' is why these are called left-derived functors.
+\end{remark}
+
+\subsection{Uniqueness of Left-Derived Functors}
+We close our discussion of left-derived functors with a uniqueness result, which we will only sketch. This was not covered in class. We start with a remark.
+\begin{remark}
+	In fact, the $\delta_i$ from \autoref{prop:leftderivles} are natural in the short exact sequence, in the sense that a morphism of short exact sequences labeled
+	% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIk0nIl0sWzIsMCwiTSJdLFszLDAsIk0nJyJdLFs0LDAsIjAiXSxbMCwxLCIwIl0sWzEsMSwiTiciXSxbMiwxLCJOIl0sWzMsMSwiTicnIl0sWzQsMSwiMCJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs1LDZdLFs2LDddLFs3LDhdLFs4LDldLFsxLDYsIlxcdmFycGhpJyIsMl0sWzIsNywiXFx2YXJwaGkiXSxbMyw4LCJcXHZhcnBoaScnIl1d
+	\[\begin{tikzcd}
+		0 & {M'} & M & {M''} & 0 \\
+		0 & {N'} & N & {N''} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow["{\varphi'}"', from=1-2, to=2-2]
+		\arrow["\varphi", from=1-3, to=2-3]
+		\arrow["{\varphi''}", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	gives rise to a commutative diagram as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJMX2lcXFBoaShNJycpIl0sWzEsMCwiTF97aS0xfVxcUGhpKE0nKSJdLFswLDEsIkxfaVxcUGhpKE4nJykiXSxbMSwxLCJMX3tpLTF9XFxQaGkoTicnKSJdLFswLDEsIlxcZGVsdGFfaSJdLFsyLDMsIlxcZGVsdGFfaSIsMl0sWzAsMiwiTF9pXFxQaGkoXFx2YXJwaGknJykiLDJdLFsxLDMsIkxfe2ktMX1cXFBoaShcXHZhcnBoaScpIl1d
+	\[\begin{tikzcd}
+		{L_i\Phi(M'')} & {L_{i-1}\Phi(M')} \\
+		{L_i\Phi(N'')} & {L_{i-1}\Phi(N'')}
+		\arrow["{\delta_i}", from=1-1, to=1-2]
+		\arrow["{\delta_i}"', from=2-1, to=2-2]
+		\arrow["{L_i\Phi(\varphi'')}"', from=1-1, to=2-1]
+		\arrow["{L_{i-1}\Phi(\varphi')}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Checking this commutativity is a matter of unraveling all the definitions; we will not do it here.
+\end{remark}
+In fact, the above properties uniquely determine the functors $L_i\Phi$, in the following sense.
+\begin{theorem} \label{thm:uniqleftderiv}
+	Fix an additive right-exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then, up to natural isomorphism, there is exactly one family of functors $\{L_i\Phi\}_{i\in\NN}$ taking $\mathrm{Mod}_R\to\mathrm{Mod}_S$ satisfying the following.
+	\begin{listalph}
+		\item We have $L_0\Phi$ is naturally isomorphic to $\Phi$.
+		\item We have $L_i\Phi(F)=0$ for any free $R$-module $F$ and $i>0$.
+		\item For any short exact sequence
+		\[0\to M'\stackrel\iota\to M\stackrel\pi\to M''\]
+		of $R$-modules, there is a long exact sequence
+		\[\cdots\to L_i\Phi(M')\stackrel{L_i\Phi(\iota)}\to L_i\Phi(M)\stackrel{L_i\Phi(\pi)}\to L_i\Phi(M'')\stackrel{\delta_i}\to L_{i-1}\Phi(M')\stackrel{L_{i-1}\Phi(\iota)}\to\cdots\]
+		such that the $\delta_i$ are natural in the short exact sequence.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We will be brief. We employ dimension-shifting, inducting on $i$. The fact that $L_0\Phi$ is unique follows from (a).
+
+	Now take $i>0$ and suppose that we have uniquely determined the functor $L_{i-1}\Phi$ up to natural isomorphism. We now pick up any $R$-module $M$, and we show that $L_i\Phi$ is unique up to natural isomorphism. Well, by \autoref{lem:getenoughprojectives}, there is a free $R$-module $F$ and surjection $\pi:F\onto M$. Setting $K:=\ker\pi$, we have a short exact sequence
+	\[0\to K\stackrel\iota\to F\stackrel\pi\to M\to 0.\]
+	Using (c), we thus have the exact sequence
+	\[L_i\Phi(F)\to L_i\Phi(M)\stackrel{\delta_i}\to L_{i-1}\Phi(K)\stackrel{L_{i-1}\Phi(\iota)}\to L_{i-1}\Phi(F).\]
+	Because $i>0$, we see that $L_i\Phi(F)=0$ by (b), so $\delta_i$ is injective. In particular, $L_i\Phi(M)$ is isomorphic to the kernel of $L_{i-1}\Phi(\iota)$. This isomorphism is natural because the $\delta_i$ is natural and $L_{i-1}\Phi$ is determined up to natural isomorphism. We will not say more.
+\end{proof}
+\begin{remark}
 	There is an analogous theory for right-derived functors for left-exact functors by simply flipping all the arrows. For example, instead of using projective resolutions, we use injective resolutions. The only technicality is showing that all modules can be embedded into an injective module, which is not easy. We will not say more.
 \end{remark}
 
 \subsection{The Functor \texorpdfstring{$\op{Tor}$}{Tor}}
-We have the following definition.
+After all of our hard work, we are able to define the functor $\op{Tor}$.
 \begin{defihelper}[\texorpdfstring{$\op{Tor}$}{Tor}] \nirindex{Tor@$\op{Tor}$}
-	Fix $M$ an $R$-module. Then the functor $M\otimes_R-$ is a right-exact functor, so we define $\op{Tor}_i^R(M,N):=L_i(M\otimes_RN)$.
+	Fix an $R$-module $N$. Then the functor $-\otimes_RN:\mathrm{Mod}_R\to\mathrm{Mod}_R$ is an additive right-exact functor, so we define $\op{Tor}_i^R(M,N):=L_i(-\otimes_RN)(M)$.
 \end{defihelper}
 In practice, what happens is that we take a projective resolution $P$ of $M$ written as
-\[\cdots\to P_1\to P_0\to M\to 0.\]
-Then we apply the functor $N\otimes_R-$ to get
-\[\cdots\to N\otimes_RP_1\to N\otimes_RP_0\to N\otimes_RN\to0,\]
-and $\op{Tor}_i^R(M,N)$ will be our $i$th homology module. For example, \autoref{lem:lzero} tells us that
-\[\op{Tor}_0^R(M,N)\cong M\otimes_RN.\]
-This is symmetric, which is perhaps unsurprising.
+\[\cdots\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to 0.\]
+Then we apply the functor $-\otimes_RN$ to get
+\[\cdots\stackrel{\del_2\otimes N}\to P_1\otimes_RN\stackrel{\del_1\otimes N}\to P_0\otimes_RN\stackrel{\del_0\otimes N}\to 0,\]
+and $\op{Tor}_i^R(M,N)$ will be the $i$th homology module of this complex.
+\begin{example}
+	\autoref{lem:lzero} implies that $\op{Tor}_0^R(M,N)\cong L_0(-\otimes_RN)(M)=M\otimes_RN$.
+\end{example}
 \begin{remark}
-	It is more generally true that $\op{Tor}_i^R(M,N)\simeq\op{Tor}_i^R(N,M)$, but we will not use this. Its proof of somewhat more advanced.
+	We note that
+	\[\op{Tor}_0^R(M,N)\cong M\otimes_RN\cong N\otimes_RN\cong\op{Tor}_0^R(N,M),\]
+	which is symmetric. It is more generally true that $\op{Tor}_i^R(M,N)\simeq\op{Tor}_i^R(N,M)$ for any index $i\in\NN$, but we will not use this. The proof of this statement requires more machinery than we have built.
 \end{remark}
 Let's continue collecting properties.
 \begin{lemma}
-	Fix $R$ a Noetherian ring and $M,N$ finitely generated $R$-modules. Then $\op{Tor}_i^R(M,N)$ is finitely generated for all $i$.
+	Fix an $R$-module $N$. Then $\op{Tor}_i^R(-,N)$ is a functor.
 \end{lemma}
 \begin{proof}
-	Omitted.
+	We defined $\op{Tor}_i^R(-,N)=L_i(-\otimes_RN)(-)$, so we are done by \autoref{lem:leftderivfunctor}.
 \end{proof}
+Arguably, the following is the ``main result'' and the reason we've been keeping track of our long exact sequences.
+\begin{theorem}
+	Fix an $R$-module $N$ If we have a short exact sequence
+	\[0\to M'\stackrel\iota\to M\stackrel\pi\to M''\to 0,\]
+	of $R$-modules, then we have a long exact sequence of $\op{Tor}$, as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiXFxvcHtUb3J9X2leUihNJyxOKSJdLFsyLDAsIlxcb3B7VG9yfV9pXlIoTSxOKSJdLFszLDAsIlxcb3B7VG9yfV9pXlIoTScnLE4pIl0sWzEsMSwiXFxvcHtUb3J9X3tpLTF9XlIoTScsTikiXSxbMiwxLCJcXG9we1Rvcn1fe2ktMX1eUihNLE4pIl0sWzMsMSwiXFxvcHtUb3J9X3tpLTF9XlIoTScnLE4pIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDIsIlxcb3B7VG9yfV9pXlIoXFxpb3RhLE4pIl0sWzIsMywiXFxvcHtUb3J9X2leUihcXHBpLE4pIl0sWzMsNCwiXFxkZWx0YV9pIiwxXSxbNCw1LCJcXG9we1Rvcn1fe2ktMX1eUihcXGlvdGEsTikiLDJdLFs1LDYsIlxcb3B7VG9yfV97aS0xfV5SKFxccGksTikiLDJdLFs2LDddXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {\op{Tor}_i^R(M',N)} & {\op{Tor}_i^R(M,N)} & {\op{Tor}_i^R(M'',N)} \\
+		& {\op{Tor}_{i-1}^R(M',N)} & {\op{Tor}_{i-1}^R(M,N)} & {\op{Tor}_{i-1}^R(M'',N)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow["{\op{Tor}_i^R(\iota,N)}", from=1-2, to=1-3]
+		\arrow["{\op{Tor}_i^R(\pi,N)}", from=1-3, to=1-4]
+		\arrow["{\delta_i}"{description}, from=1-4, to=2-2]
+		\arrow["{\op{Tor}_{i-1}^R(\iota,N)}"', from=2-2, to=2-3]
+		\arrow["{\op{Tor}_{i-1}^R(\pi,N)}"', from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+\end{theorem}
+\begin{proof}
+	By definition $\op{Tor}_i^R(-,N):=L_i(-\otimes_RN)(-)$, so this is an application of \autoref{prop:leftderivles}.
+\end{proof}
+Here are some more basic computations.
 \begin{lemma}
-	If we have a short exact sequence
-	\[0\to M'\to M\to M''\to 0,\]
-	then we have a long exact sequence of $\op{Tor}$.
+	If $P$ is a projective $R$-module, then $\op{Tor}_i^R(P,N)\cong0$ for all $i>0$.
 \end{lemma}
 \begin{proof}
-	Use \autoref{prop:leftderivles}.
+	As usual, this follows from plugging in $L_i(-\otimes_RN)(-)$ into \autoref{lem:projectiveacyclic}.
 \end{proof}
+\begin{remark}
+	In fact, if $F$ is a flat module, then $\op{Tor}_i^R(M,F)\cong0\cong\op{Tor}_i^R(F,M)$ for all $i>0$. We will show this shortly.
+\end{remark}
+\begin{remark}
+	In fact, the above properties more or less characterize $\op{Tor}$, as usual by plugging into the associated result for left-derived functors, namely \autoref{thm:uniqleftderiv}.
+\end{remark}
+
+\subsection{Properties of \texorpdfstring{$\op{Tor}$}{Tor}}
+We continue our fact-collection beyond what immediately falls out of the theory of left-derived functors. For example, $\op{Tor}$ is reasonably small.
 \begin{lemma}
-	If $F$ is a free $R$-module, then $\op{Tor}_i^R(F,N)\simeq0$ for all $i>0$.
+	Fix a Noetherian ring $R$ and finitely generated $R$-modules $M$ and $N$. Then, for any index $i\in\NN$, the module $\op{Tor}_i^R(M,N)$ is finitely generated.
 \end{lemma}
 \begin{proof}
-	The projective resolution for $F$ is almost trivial and in particular trivial for $i>0$.
+	The point is to use \autoref{rem:fingenprojresolution}. Before continuing, we pick up the following lemma.
+	\begin{lemma}
+		Suppose that $A$ and $B$ are finitely generated $R$-modules. Then $A\otimes_RN$ is also a finitely generated $R$-module.
+	\end{lemma}
+	\begin{proof}
+		By hypothesis, we are granted $m,n\in\NN$ and surjections $\varphi:R^m\onto A$ and $\psi:R^n\onto N$. Because tensoring is right-exact and in particular preserves surjections, we see that $\psi:R^n\onto N$ induces a surjection
+		\[M\otimes_RR^n\onto M\otimes_R N\]
+		by applying $M\otimes_R-$. Further, $\varphi:R^m\onto M$ induces a surjection
+		\[R^m\otimes_RR^n\onto M\otimes_RR^n\]
+		by applying $-\otimes_RR^n$. But now, we see that
+		\[R^m\otimes_RR^n\cong\left(R\otimes_RR^n\right)^m\cong\left((R\otimes_RR)^n\right)^m\cong R^{nm}\]
+		is a free $R$-module of finite rank which can surject onto $M\otimes_RR^n$ and then onto $M\otimes_RN$.
+	\end{proof}
+	Now, \autoref{rem:fingenprojresolution} promises us a free and therefore projective resolution for $M$ notated
+	\[\cdots\to P_2\to P_1\to P_0\to0\]
+	such that all the $P_\bullet$ are finitely generated. Applying $-\otimes_RN$ gives us the complex
+	\[\cdots\stackrel{\del_3\otimes N}\to P_2\otimes_RN\stackrel{\del_2\otimes N}\to P_1\otimes_RN\stackrel{\del_1\otimes N}\to P_0\otimes_RN\stackrel{\del_0\otimes N}\to0,\]
+	where each term is finitely generated by the above lemma. Thus, for our fixed index $i$, we see that $\ker(\del_i\otimes N)$ is finitely generated (for example, use the fact that finitely generated modules over a Noetherian), so
+	\[\op{Tor}_i^R(M,N)=\ker(\del_i\otimes N)/\im(\del_{i+1}\otimes N)\]
+	is finitely generated as well, so we are done.
 \end{proof}
+We also have a notion of base change, for flat algebras.
 \begin{lemma}
-	Fix $S$ a flat $R$-algebra. Then
-	\[S\otimes_R\op{Tor}_i^R(M,N)\simeq\op{Tor}_i^S(S\otimes_RM,S\otimes_RN).\]
+	Fix a flat $R$-algebra $S$ as well as $R$-modules $M$ and $N$. Then
+	\[S\otimes_R\op{Tor}_i^R(M,N)\cong\op{Tor}_i^S(S\otimes_RM,S\otimes_RN).\]
 \end{lemma}
 \begin{proof}
-	Build a projective resolution by hand and apply the definitions.
+	The point is to build our projective resolution for $S\otimes_RM$ by hand. We need $S$ to be flat in order to preserve homology and exactness. To be explicit, we use \autoref{lem:enoughprojectives} to give $M$ a free resolution so that the sequence
+	\[\cdots\to F_2\stackrel{\del_2}\to F_1\stackrel{\del_1}\to F_0\stackrel\varepsilon\to M\to 0\]
+	is an exact sequence. The key trick is that applying $S\otimes_R-$ to this sequence gives the complex
+	\[\cdots\to S\otimes_RF_2\stackrel{S\otimes\del_2}\to S\otimes_RF_1\stackrel{S\otimes\del_1}\to S\otimes_RF_0\stackrel\varepsilon\to S\otimes_RM\to0.\tag{$*$}\label{eq:freeresfortensor}\]
+	Note that this complex is exact everywhere; more generally, we have the following lemma.
+	\begin{lemma}
+		Fix a complex $(A,\del)$ of $R$-modules and $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$ an exact functor. Then $H_i(\Phi A)\cong\Phi H_i(A)$.
+	\end{lemma}
+	\begin{proof}
+		Because $\Phi$ is exact, we note that $\Phi$ preserves kernels and cokernels: a morphism $\varphi:A\to B$ gives the exact sequence
+		\[0\to\ker\varphi\to A\stackrel\varphi\to B,\]
+		which upon applying $\Phi$ to will show that $\Phi\ker\varphi\subseteq\Phi A$ is the kernel of the morphism $\Phi\varphi$. Similarly, we have the short exact sequence
+		\[A\stackrel\varphi\to B\to\coker\varphi\to0,\]
+		so applying $\Phi$ will give the short exact sequence
+		\[\Phi A\stackrel{\Phi\varphi}\to\Phi B\to\Phi\coker\varphi\to0,\]
+		from which $\Phi\coker\varphi=\coker\Phi\varphi$.\footnote{We are being intentionally sloppy about these objects being literally equal instead of naturally isomorphic or something because I don't want to write out the naturality squares we have to check.}
+
+		To finish, we note that $H_i(A)$ is the kernel of the map
+		\[\del_i:\coker\del_{i+1}\to A_{i-1}.\]
+		Thus, $\Phi H_i(A)$ is the kernel of the map
+		\[\Phi\del_i:\Phi\coker\del_{i+1}\to\Phi A_{i-1},\]
+		but because we know $\Phi\coker\del_{i+1}=\coker\Phi\del_{i+1}$, we see that this kernel is also $H_i(\Phi A)$.
+	\end{proof}
+	\begin{lem}
+		Fix an exact complex of $R$-modules $(A,\del)$. Then, given an additive exact functor $\Phi:\mathrm{Mod}_R\to\mathrm{Mod}_S$, the complex
+		\[\cdots\to \Phi A_2\to \Phi A_1\to \Phi A_0\to\cdots\]
+		is an exact complex of $S$-modules.
+	\end{lem}
+	\begin{proof}
+		That we have a complex of $S$-modueles is because $\Phi$ is a functor $\mathrm{Mod}_R\to\mathrm{Mod}_S$. Then we simply note that the above lemma tells us that
+		\[H_i(\Phi A)=\Phi H_i(A)=\Phi0=0,\]
+		where the last equality is by \autoref{lem:addpreservezero}. Thus, $\Phi A$ is exact everywhere, finishing.
+	\end{proof}
+	Thus, \autoref{eq:freeresfortensor} shows that
+	\[\cdots\to S\otimes_RF_2\stackrel{S\otimes\del_2}\to S\otimes_RF_1\stackrel{S\otimes\del_1}\to S\otimes_RF_0\stackrel{S\otimes\varepsilon}\to S\otimes_RM\to0\]
+	is a(n augmented) resolution for $S\otimes_RM$. In fact, because $S\otimes_RR^{\oplus X}\cong(S\otimes_R)^{\oplus X}\cong S^{\oplus X}$ is a free $S$-module for any free $R$-module $R^{\oplus X}$, we conclude that we in fact have a free resolution for $S\otimes_RM$.
+
+	For our homology computation, we will also want to create the module $S\otimes_R\op{Tor}_i^R(M,N)$ as a homology module. Well, $S\otimes_R-$ is an exact functor, so we note that
+	\[S\otimes_RH_i(F_\bullet\otimes_RN)\cong H_i(S\otimes_R(F_\bullet\otimes_RN)).\]
+	However, by \autoref{prop:tensordistrib}, we see that $S\otimes_R(F_\bullet\otimes_RN)\cong(S\otimes_RF_\bullet)\otimes_S(S\otimes_RN)$, and in fact this isomorphism is functorial (which I won't check out of laziness), so it follows
+	\[H_i(S\otimes_R(F_\bullet\otimes_RN))\cong H_i((S\otimes_RF_\bullet)\otimes_S(S\otimes_RN)).\]
+	So to finish, we note that this last homology comes from the complex that we get after applying $-\otimes_S(S\otimes_RN)$ to the projective resolution for $S\otimes_RM$. In particular, it is $\op{Tor}_i^S(S\otimes_RM,S\otimes_RN)$, so we are done.
 \end{proof}
-Let's see an application.
+We close with an example computation for $\op{Tor}$.
 \begin{exe}
 	Fix $a\in R$ an element which is not a zero-divisor. Further, fix $M$ an $R$-module. Then we compute $\op{Tor}_i^R(R/(a),M)$.
 \end{exe}
 \begin{proof}
-	The main point is to construct a projective resolution for $R/(a)$. Namely, we take
-	\[\cdots\to 0\to 0\to R\stackrel a\to R\to R/(a)\to 0.\]
-	Tensoring with $M$, we get the complex
-	\[\cdots0\to 0\to M\stackrel a\to M\to 0.\]
-	In particular, we vanish for $i>2$, so we have left to compute for $i=0$ and $i=1$.
+	The main point is to construct a projective resolution for $R/(a)$. Namely, we claim that the sequence
+	\[\cdots\to 0\to 0\to R\stackrel a\to R\to R/(a)\to 0\]
+	is exact and therefore provides an augmented resolution for $R/(a)$. We have the following checks.
 	\begin{itemize}
-		\item We see $\op{Tor}_0^R(R/(a),M)\cong R/(a)\otimes_RM\cong M/aM$.
-		\item We see $\op{Tor}_1^R(R/(a),M)=\ker(M\stackrel a\to M)=\{m\in M:am=0\}$ from the above complex.
+		\item We are exact at all $0$s for free.
+		\item Exactness at the first $R$ follows because the map $R\stackrel a\to R$ is injective. This is because $a$ is not a zero-divisor: if $x\in R$ is in the kernel, then $ax=0$, so $x=0$. Thus, the kernel is indeed trivial.
+		\item Exactness at the second $R$ is because $x\in R$ goes to $0$ under $R\onto R/(a)$ if and only if $x\in(a)$ if and only if there exists $y\in R$ such that $x=ay$.
+		\item Lastly, we are exact at $R/(a)$ because the map $R\onto R/(a)$ is surjective.
 	\end{itemize}
-	The above computation finishes the proof.
+	Now, tensoring our projective resolution $M$, we get the complex
+	\[\cdots\to 0\to 0\to R\otimes_RM\stackrel a\to R\otimes_RM\to 0.\]
+	Tracking the isomorphism $R\otimes_RM\cong M$ through, we see that $R\otimes_RM\stackrel a\to R\otimes_RM$ becomes $m\mapsto1\otimes m\mapsto a\otimes m\mapsto am$, which is $M\stackrel a\to M$. So our complex is
+	\[\cdots\to 0\to 0\to M\stackrel a\to M\to 0.\]
+	We now run our homology computation. For $i>2$, we see that we have $\op{Tor}_i^R(M,N)=0$ immediately. It remains to compute $i=0$ and $i=1$.
+	\begin{itemize}
+		\item We see $\op{Tor}_0^R(R/(a),M)$ is the kernel of $M\to0$ (which is all of $M$) modded out by the image of $M\stackrel a\to M$ (which is $aM$). So we have $M/aM$ here.
+		\item We see $\op{Tor}_1^R(R/(a),M)$ is the kernel of $M\stackrel a\to M$ modded out by the image of $0\to M$ (which is $0$). So we have $\{m\in M:am=0\}$ in this case.
+	\end{itemize}
+	The above computation finishes.
 \end{proof}
 
 \subsection{Flatness via \texorpdfstring{$\op{Tor}$}{Tor}}
