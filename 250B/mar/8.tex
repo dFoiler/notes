@@ -286,24 +286,241 @@ Anyways, here is our result.
 	% Fix some $a$ in the completion of $\widehat R_{\widehat {\mathcal J}}$.
 \end{proof}
 
-\subsection{Completions, Topologically}
+\subsection{The Krull Topology}
 Let's have a little fun with our completions.
-\begin{definition}[Limit]
-	Fix a completion $\widehat R_\mathcal J$. Then we say that an element $a\in\widehat R_\mathcal J$ is the \textit{limit} of a sequence $\{a_k\}_{k\in\NN}$ if and only if, for each $n$, there exists $N$ such that $a_i-a\in I_n$ for each $i>N$.
-\end{definition}
-\begin{definition}[Cauchy sequence]
-	Fix a completion $\widehat R_\mathcal J$. Then a sequence $\{a_k\}_{k\in\NN}$ is \textit{Cauchy} if and only if, for each $n$, there exists $N$ such that $a_i-a_j\in I_n$ for each $i,j>N$.
-\end{definition}
-So the following is why we used the term ``complete.''
+\begin{warn}
+	The following two subsections (on the Krull topology and the topological interpretation of completion) are very topological in nature and were not covered in class. They appear in these notes because they are fun.
+\end{warn}
+\begin{defi}[Krull topology]
+	Fix $R$ a ring and $\mathcal J$ a filtration. Then we define the \textit{Krull topology} on $R$ to have a basis consisting of $\emp$ as well as the open sets $a+I$ for any $a\in R$ and $I\in\mathcal J$.
+\end{defi}
+Here is our key example.
+\begin{example}
+	The standard topology on the $p$-adic integers $\ZZ_p$ is the Krull topology induced by the $(p)$-adic filtration.
+\end{example}
+We run some checks on this topology.
 \begin{lemma}
-	A ring $R$ is complete with respect to the filtration $\mathcal J$ if and only if every Cauchy sequence in $\widehat R$ converges.
+	Fix $R$ a ring and $\mathcal J$ a filtration. Then the Krull topology is a topology.
 \end{lemma}
 \begin{proof}
-	Omitted.
+	We merely have to check that the claimed open sets do in fact form a basis for a topology.
+	\begin{itemize}
+		\item We show that our basis covers $R$. Fixing any $I\in\mathcal J$, we note that
+		\[\bigcup_{a\in R}(a+I)=R,\]
+		so our open sets do cover $R$.
+		\item We show that our basis is closed under intersection. Fix any two basis elements $a+I$ and $b+J$. Because $\mathcal J$ is a filtration, either $I\subseteq J$ or $J\subseteq I$; without loss of generality, take the former case.
+
+		Now, if $b\equiv a\pmod J$, then $(a+I)\subseteq(b+J)$ because $I\subseteq J$. So here, we have $(a+I)\cap(b+J)=(a+I)$, implying that we are closed intersection.
+
+		Otherwise, $b\not\equiv a\pmod J$, in which case $x\in a+I\subseteq a+J$ implies $x\notin b+J$, so $(a+I)\cap(b+J)=\emp$, finishing.
+		\qedhere
+	\end{itemize}
 \end{proof}
-As an aside, we note that, if we have a sequence $a:=\{a_k\}_{k\in\NN}\in\widehat R_\mathcal J$, then we have $a_{i+1}-a_i\in\mf I_n$, so we can write
-\[a=\sum_{j=1}^\infty(a_{j+1}-a_j)\]
-to be an infinite convergent series; in particular, the partial sums converge.
+\begin{lemma} \label{lem:krulltoporing}
+	Fix $R$ a ring and $\mathcal J$ a filtration. Then the Krull topology makes $R$ into a topological ring; i.e., the addition and multiplication maps $R\times R\to R$ are both continuous.
+\end{lemma}
+\begin{proof}
+	We run our checks separately.
+	\begin{itemize}
+		\item We show that the addition map $R\times R\to R$ is continuous. For brevity, name this map $f:R\times R\to R$ by $f(a,b)=a+b$. We need to show that the pre-image of any open set $U\subseteq R$ has $f^{-1}(U)\subseteq R\times R$ still open. Because we have a basis, it suffices to take $U$ to be a basis element.
+
+		If $U=\emp$, then $f^{-1}(\emp)=\emp$, which is open. Otherwise, we are looking at $f^{-1}(x+I)$ for some open set $x+I$. Well,
+		\begin{align*}
+			f^{-1}(x+I)=\{(a,b):a+b\in x+I\} &= \bigcup_{(r+I)\in R/I}\{(a,b):a\in (r+I),b\in((x-a)+I)\} \\
+			&= \bigcup_{(r+I)\in R/I}(r+I)\times((x-r)+I).
+		\end{align*}
+		Now, each of the sets $(r+I)\times((x-r)+I)$ are in fact open in the product topology $R\times R$, so we are done.
+
+		\item We show that the multiplication map $R\times R\to R$ is continuous. Again, we set $g:R\times R\to R$ by $g(a,b):=ab$ to be our multiplication map. As with last time, it suffices to show that the pre-image of any basis element under $g$ is an open set in $R\times R$.
+
+		If $U=\emp$, then $g^{-1}(\emp)=\emp$, which is open. Otherwise, we are looking at $g^{-1}(x+I)$ for some open set $x+I$. For this, we compute
+		\[g^{-1}(x+I)=\{(a,b):ab\in x+I\}=\bigcup_{(r+I),(s+I)\in R/I}\{(a,b):a\in(r+I).b\in (s+I),ab\in (x+I)\}.\]
+		At this point, we see $a\in r+I$ and $b\in s+I$ implies that $ab\in x+I$ if and only if $rs\in x+I$. Thus, we can move this condition outside and write
+		\[g^{-1}(x+I)=\bigcup_{\substack{(r+I),(s+I)\in R/I\\rs\in x+I}}\{(a,b):a\in (r+I),b\in (s+I)\}=\bigcup_{\substack{(r+I),(s+I)\in R/I\\rs\in x+I}}(r+I)\times(s+I),\]
+		which we can see is the union of basis of elements in $R\times R$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark} \label{rem:krulladdandmultcont}
+	Fix any $a\in R$. Because the map $x\mapsto(a,x)$ is a continuous map $R\to R\times R$ (it is the product of continuous maps), we see that the composites
+	\[x\mapsto(a,x)\mapsto a+x\qquad\text{and}\qquad x\mapsto(a,x)\mapsto ax\]
+	are also both continuous.
+\end{remark}
+The Krull topology need not always be Hausdorff, but it is Hausdorff for many well-behaved rings and filtrations.
+\begin{example}
+	Fix the ring $R:=\ZZ\times\ZZ$ and the proper ideal $I:=(2)\times\ZZ$, and endow $R$ with the Krull topology induced by the $I$-adic filtration. We claim that $\{0\}$ is not closed. 
+\end{example}
+\begin{lemma}
+	Fix a Noetherian ring $R$ and a proper ideal $I\subsetneq R$, and endow $R$ with the Krull topology induced by the $I$-adic filtration. If $R$ is local or a domain, then $R$ is Hausdorff.
+\end{lemma}
+\begin{proof}
+	The point is to use the Krull intersection theorem. Namely, we need to show that the sets $\{a\}\subseteq R$ are closed for any $a\in R$. Well, we note that, by \autoref{cor:krullintersect}, we have
+	\[R\setminus\{0\}=R\mathbin{\bigg\backslash}\bigcap_{s\ge0}I^s=\bigcup_{s\ge0}\left(R\setminus I^s\right)=\bigcup_{s\ge0}\bigcup_{a\notin I^s}\left(a+I^s\right).\]
+	So $R\setminus\{0\}$ is open, thus making $\{0\}$ closed.
+
+	To finish, we cop out and use the fact that we live in a topological ring. Fixing any $a\in R$, note that \autoref{rem:krulladdandmultcont} tells us that the map $\mu_a:x\mapsto x-a$ is continuous. Thus, because $\{0\}$ is closed, we see that
+	\[\mu_a^{-1}(\{0\})=\{a\}\]
+	is also closed, finishing.
+\end{proof}
+So we see that the Krull topology is reasonably nice.
+
+\subsection{Completions, Topologically}
+For the discussion that follows, fix a ring $R$ with a filtration $\mathcal J$ given by
+\[R=I_0\supseteq I_1\supseteq I_2\subseteq\cdots.\]
+Now, in the example $\ZZ_p$, we see that we can define
+\[d(a,b):=p^{-\max\left\{k\in\NN:a-b\in\left(p^k\right)\right\}},\]
+which we can check forms a metric on $\ZZ_p$. In fact, this restricts to a metric on $\ZZ$, for which $\ZZ_p$ is the completion. (We will be able to justify this claim shortly.) This is our first hint of that the name ``completion'' should be a topological notion. In particular, it will turn out that a ring being ``complete'' with respect to a filtration means that every Cauchy sequence converges to some limit.
+
+To generalize the case of $\ZZ_p$, we can still fix some $c>1$ and define the function
+\[d(a,b):=c^{-\max\{k\in\NN:a-b\in I_k\}},\]
+where $a,b\in R$. For our edge case, if $a-b\in I_k$ for arbitrarily large $k$, then $a-b\in I_k$ for each $k$, so we might as well set $d(a,b)=0$.
+
+This edge case, ultimately, is where we are going to have problems: it is possible for the intersection of all the $I_k$ to be nonzero, in which case any element
+\[r\in\bigcap_{k\ge0}I_k\]
+would have $d(r,0)=0$, so $d$ cannot be a metric. However, this is the only obstruction.
+\begin{lemma} \label{lem:krullmetric}
+	Fix a ring $R$ with a filtration $\mathcal J$, notated
+	\[R=I_0\supseteq I_1\supseteq I_2\supseteq\cdots.\]
+	Further, suppose that $x\in I$ for each $I\in\mathcal J$ implies $x=0$. Then, fixing a real number $c>1$, the function $d:R^2\to\RR$ defined by
+	\[d(a,b):=\begin{cases}
+		c^{-\max\{k\in\NN:a-b\in I_k\}} & a-b\notin I_n\text{ for some }n, \\
+		0 & \text{else},
+	\end{cases}\]
+	is a metric on $R$.
+\end{lemma}
+\begin{proof}
+	Observe that the function $d$ is well-defined because $a-b\notin I_k$ for some $n$ implies that $a-b\notin I_m$ for any $m\ge n$ because $I_m\subseteq I_n$, so this means that the set $\{k\in\NN:a-b\in I_k\}$ does indeed have a maximum.
+	
+	We have the following checks on $d$.
+	\begin{itemize}
+		\item Identity: fix $a,b\in R$. Note that $d(a,b)=0$ if and only if $a-b\in I_k$ for each $I_k\in\mathcal J$, so $a-b=0$ by hypothesis on $\mathcal J$, so $a=b$. Conversely, if $a=b$, then $a-b\in I_k$ for each $k$, so $d(a,b)=0$.
+		\item Symmetry: fix $a,b\in R$. Then $a-b\in I_k$ if and only if $-1(a-b)=b-a\in I_k$, so
+		\[\{k\in\NN:a-b\in I_k\}=\{k\in\NN:b-a\in I_k\}.\]
+		If both of these sets are $\NN$, then $d(a,b)=d(b,a)=0$. Otherwise, these sets have maximums, which must be the same $M\in\NN$, so $d(a,b)=c^{-M}=d(b,a)$.
+		\item Triangle inequality: fix $a,b,c\in R$. We need to show that
+		\[d(a,b)+d(b,c)\ge d(a,c).\]
+		If $a=b$ or $b=c$, then this inequality collapses to $d(x,y)\ge d(x,y)$.
+
+		The point is that if $a-b\in I_k$ and $b-c\in I_\ell$, then $a-c=a-b+b-c\in I_{\min\{k,\ell\}}$. In particular, fix
+		\[m:=\max\{k\in\NN:a-b\in I_k\}\qquad\text{and}\qquad n:=\max\{\ell\in\NN:b-c\in I_\ell\}.\]
+		Without loss of generality, we take $m\le n$, which implies that $a-c=(a-b)+(b-c)\in I_m+I_n\subseteq I_m$, so
+		\[d(a,c)\le c^{-m}\le c^{-m}+c^{-n}=d(a,b)+d(b,c).\]
+		This is what we wanted.
+	\end{itemize}
+	These checks finish showing that $d$ is a metric on $R$.
+\end{proof}
+Continuing with our story, as with $\ZZ_p$, we see that elements of $R$ are considered ``close'' if and only if their difference lies in the same ``small'' open set. In particular, for any $x\in R$ and $r\in\RR^+$, some $a\in R$ has
+\begin{align*}
+	d(a,x)<r &\iff c^{-\max\{k\in\NN:a-x\in I_k\}}<r \\
+	&\iff -\max\{k\in\NN:a-x\in I_k\}<\log_cr \\
+	&\iff \max\{k\in\NN:a-x\in I_k\}>-\log_cr \\
+	&\iff a-x\in I_k\text{ for some }k>-\log_cr \\
+	&\iff a\in x+I_{\ceil{-\log_cr}}.
+\end{align*}
+Thus, any $r>0$ will make $\{a\in R:d(a,x)<r\}=x+I_{\ceil{-\log_cr}}$ into some open set (where $I_k=R$ for $k<0$); conversely, any open basis element $x+I_k$ arises in this way by choosing $r=c^{-k}$.
+
+So it looks like our function $d$ correctly induces the Krull topology as a metric. Of course, we need to overcome the Hausdorff obstruction for this to make sense, but we do have the following lemma.
+\begin{lemma}
+	Work in the context of \autoref{lem:krullmetric}. Then the metric topology induced by $d$ is the Krull topology induced by $\mathcal J$.
+\end{lemma}
+\begin{proof}
+	We get that $d$ is a metric from \autoref{lem:krullmetric}. Further, $d$ induces the Krull topology from the computation above.
+\end{proof}
+With all of this set-up, it makes sense to think about the Krull topology as a metric space, which is the context where ``completions'' actually make topological sense: we want every Cauchy sequence to have a limit. In order to stop talking about topology (and worrying about the Hausdorff condition), we would like to translate these notions back to algebra.
+
+Let's start with limits. An element $a\in R$ is a limit of the sequence $\{a_n\}_{n\in\NN}\subseteq R$ (with respect to  $d$) means that
+\[\lim_{n\to\infty}d(a,a_n)=0.\]
+By definition of $d$, this is the same as requiring
+\[\lim_{n\to\infty}\max\{k\in\NN:a-a_n\in I_k\}=\infty.\]
+This means that, for any bound $m\in\NN$, there exists some $N$ such that $n>N$ implies $\max\{k\in\NN:a-a_n\in I_k\}>m$. However, this last condition is equivalent to $a-a_n\in I_m$ because $\mathcal J$ is a filtration. So we have the following definition.
+\begin{definition}[Limit]
+	Fix a ring $R$ with a filtration $\mathcal J=\{I_k\}_{k\in\NN}$. Then we say that an element $a\in\widehat R$ is the \textit{limit} of a sequence $\{a_n\}_{n\in\NN}$ if and only if, for each $m$, there exists $N$ such that $a_n-a\in I_m$ for each $n>N$.
+\end{definition}
+Now let's move to Cauchy sequences. A sequence $\{a_n\}_{n\in\NN}\subseteq R$ is Cauchy (with respect to $d$) if and only if, for any $\varepsilon>0$, there exists $n$ such that $k,\ell>N$ implies
+\[d(a_k,a_\ell)<\varepsilon.\]
+By replacing $\varepsilon$ with $-\log_c\varepsilon$, this is equivalent to saying that, for any $m\in\NN$, there exists $N$ such that $k,\ell>N$ implies
+\[\max\{n\in\NN:a_k-a_\ell\in I_n\}\ge m,\]
+or equivalently, $a_k-a_\ell\in I_m$. So we have the following definition.
+\begin{definition}[Cauchy sequence]
+	Fix a ring $R$ with a filtration $\mathcal J=\{I_k\}_{k\in\NN}$. Then we say that a sequence $\{a_k\}_{k\in\NN}$ is \textit{Cauchy} if and only if, for each $m$, there exists $N$ such that $a_k-a_\ell\in I_m$ for each $k,\ell>N$.
+\end{definition}
+We are finally able to unite our two notions of completion.
+\begin{prop} \label{prop:unitecompletion}
+	Fix a ring $R$ with a filtration $\mathcal J$ such that $x\in I$ for each $I\in\mathcal J$ implies $I=0$. Then $\widehat R_\mathcal J$ is the completion of $R$ with respect to the Krull (metric) topology, where the needed inclusion $R\to\widehat R_\mathcal J$ is the canonical one.
+\end{prop}
+\begin{proof}
+	We already have that $R$ is a metric space from \autoref{lem:krullmetric}. We will construct $\widehat R$ as the completion of the metric space for $R$ and then show that $\widehat R\cong\widehat R_\mathcal J$ as topological rings.
+
+	The completion $\widehat R$ consists of equivalence classes of Cauchy sequences of $R$, where two Cauchy sequences $\{a_n\}_{n\in\NN}\sim\{b_n\}_{n\in\NN}$ if and only if
+	\[d(a,b):=\lim_{n\to\infty}d(a_n,b_n)=0.\]
+	Very quickly, we let $S$ be the set of Cauchy sequences of $R$, and we note that we can give $S\subseteq R^\NN$ a subring structure, with operations given by
+	\[\{a_n\}_{n\in\NN}+\{b_n\}_{n\in\NN}:=\{a_n+b_n\}_{n\in\NN}\qquad\text{and}\qquad\{a_n\}_{n\in\NN}\cdot\{b_n\}_{n\in\NN}:=\{a_nb_n\}_{n\in\NN}.\]
+	We quickly check that $S$ is closed under these operations: for any bound $m\in\NN$, there exists $N$ such that $k,\ell>N$ implies $a_k-a_\ell,b_k-b_\ell\in I_m$, so
+	\[(a_k+b_k)-(a_\ell+b_\ell)\in I_m\qquad\text{and}\qquad a_kb_k-a_\ell b_\ell\in I_m\]
+	follows. To finish checking that $S$ is a subring, we merely note that $\{1_R\}_{n\in\NN}$ is a Cauchy sequence.
+	
+	Now, $\widehat R$ is $S$ modded out by the equivalence relation $\sim$ described above. To make this notion more ring-theoretic, we set
+	\[I:=\{a\in S:a\sim0\}.\]
+	In particular $\{a_n\}_{n\in\NN}\sim\{b_n\}_{n\in\NN}$ if and only if
+	\[0=\lim_{n\to\infty}d(a_n,b_n)=\lim_{n\to\infty}d(a_n-b_n,0)\]
+	if and only if $\{a_n\}_{n\in\NN}-\{b_n\}_{n\in\NN}\in I$. Thus, we see that $\widehat R=S/I$, as sets. However, we in fact claim that $I$ is an ideal: if $\{a_n\}_{n\in\NN},\{b_n\}_{n\in\NN}\in I$ and $\{r_n\}_{n\in\NN},\{s_n\}_{n\in\NN}\in S$, then we need to show that
+	\[\{r_na_n+s_nb_n\}_{n\in\NN}\in I.\]
+	Well, $d(a_n,0)\to0$ and $d(b_n,0)\to0$ as $n\to\infty$, so for any $m$, there exists $N$ such that $n>N$ implies $a_n,b_n\in I_m$, so $r_na_n+s_nb_n\in I_m$. Thus, $d(r_na_n+s_nb_n,0)\to0$ as $n\to\infty$.
+
+	Thus, we have given $\widehat R:=S/I$ a ring structure as well as a topology. We claim that $S/I\cong\widehat R_J$; it will happen that this is also an isomorphism of topological rings, but we won't check the topological aspects of this isomorphism. We start by defining
+	\[\varphi:S\to\widehat R_J.\]
+	For this, we take some Cauchy sequence $\{a_n\}_{n\in\NN}$. Then, for any index $m\in\NN$, there exists $N_m$ such that $k,\ell\ge N_m$ implies $a_k-a_\ell\in I_m$. As such, we define
+	\[\varphi\left(\{a_n\}_{n\in\NN}\right):=\left\{[a_{N_m}]_{I_m}\right\}_{n\in\NN}.\]
+	We have the following checks on $\varphi$.
+	\begin{itemize}
+		\item To start, we see that $[a_{N_m}]_{I_m}$ is well-defined: if $N_m'$ is another constant such that $k,\ell\ge N_m'$ implies $a_k-a_\ell\in I_m$, then without loss of generality $N_m\ge N_m'$ so that $a_{N_m}-a_{N_m'}\in I_m$, so $[a_{N_m}]_{I_m}=[a_{N_m'}]_{I_m}$.
+	
+		\item Further, $\varphi$ does actually output an element of $\widehat R_J$. We need to show that $a_{N_{m+1}}\equiv a_{N_m}\pmod{I_m}$ for any $m\in\NN$. Well, $N_{m+1}$ satisfies $k,\ell\ge N_{m+1}$ implies $a_k-a_\ell\in I_{m+1}\subseteq I_m$, so the argument from the previous point shows that
+		\[[a_{N_{m+1}}]_{I_m}=[a_{N_m}]_{I_m},\]
+		which is what we wanted.
+	
+		\item We show $\varphi$ is surjective. Well, suppose that we have an element
+		\[\{[a_m]_{I_m}\}\in\widehat R_\mathcal J.\]
+		Well, we claim that $\{a_m\}_{m\in\NN}$ is itself a Cauchy sequence, which will be our pre-image element. To see that this is a Cauchy sequence, we note that any $m\in\NN$ has $k,\ell>m$ has
+		\[a_k-a_\ell\in I_{\min\{k,\ell\}}\subseteq I_m.\]
+		In fact, this computation shows that, in our definition of $\varphi(\{a_n\}_{n\in\NN})$, we can set $m:=N_m$ so that
+		\[\varphi(\{a_n\}_{n\in\NN})=\{[a_{N_m}]_{I_m}\}_{m\in\NN}=\{[a_m]_{I_m}\}_{m\in\NN},\]
+		which is what we wanted.
+
+		\item We show $\varphi$ has kernel $I$. In one direction, if $\{a_n\}_{n\in\NN}\in I$, we see that, for any $m\in\NN$, there exists $N_m$ for which $a_n\in I_m$ for each $n\ge N_m$. Thus, $k,\ell\ge N_m$ will have $a_k-a_\ell\in I_m$, so we can set
+		\[\varphi\left(\{a_n\}_{n\in\NN}\right)=\{[a_{N_m}]_{I_m}\}_{m\in\NN}=\{[0]\}_{m\in\NN},\]
+		which is what we wanted.
+		
+		Conversely, suppose that $\{a_n\}_{n\in\NN}$ goes to $0$ under $\varphi$. This means that, for any $m\in\NN$, there exists $N_m$ such that $k,\ell\ge N_m$ will have $a_k-a_\ell\in I_m$ and
+		\[a_{N_m}\in I_m.\]
+		In particular, we see that any $k\ge N_m$ will have $a_k\in a_{N_m}+I_m=I_m$. So indeed, $a_n\to0$ as $n\to\infty$.
+	\end{itemize}
+	The above checks finish showing our isomorphism of rings. We could show that $\varphi$ is continuous as well (but won't do so here); the third point explicitly constructs our inverse, which we could also show is continuous (but again won't do it here).
+
+	We close the proof by remarking that, because the canonical maps $R\to\widehat R_\mathcal J$ and $R\to\widehat R$ above both simply take $r\in R$ to the constant sequence $\{[r_n]\}_{n\in\NN}\in\widehat R_\mathcal J$ and $\{r_n\}_{n\in\NN}+I\in\widehat R$ (respectively), we see that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJSIl0sWzEsMCwiXFx3aWRlaGF0IFIiXSxbMSwxLCJcXHdpZGVoYXQgUl9cXG1hdGhjYWwgSiJdLFswLDEsIlIiXSxbMCwxXSxbMywyXSxbMSwyLCJcXHZhcnBoaSJdLFswLDMsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+	\[\begin{tikzcd}
+		R & {\widehat R} \\
+		R & {\widehat R_\mathcal J}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\varphi", from=1-2, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+	\end{tikzcd}\]
+	Indeed, going along the top, we take $r\in R$ to $\{r\}_{n\in\NN}$ to $\{[r]\}_{n\in\NN}$, which is the same as we get along the bottom. This shows that we can make $\widehat R_\mathcal J$ is not only isomorphic to the metric completion $\widehat R$, but in fact, the canonical inclusion $R\to\widehat R_\mathcal J$ is the inclusion needed by the completion.
+\end{proof}
+And just for fun, let's unite our notions of complete.
+\begin{corollary}
+	Fix a ring $R$ and a filtration $\mathcal J=\{I_k\}_{k\in\NN}$ such that $x\in I$ for all $I\in\mathcal J$ implies $x=0$. Then $R$ is complete with respect to the filtration $\mathcal J$ if and only if $R$ is complete with respect to the Krull (metric) topology.
+\end{corollary}
+\begin{proof}
+	Note $R$ is complete with respect to the Krull (metric) topology if and only if $R$ is homeomorphic to its completion. But by \autoref{prop:unitecompletion}, we see that the metric completion of $R$ is $\widehat R_\mathcal J$ with the canonical inclusion $\iota:R\to\widehat R_\mathcal J$.
+
+	We already know that $\iota$ is injective because $x\in I$ for each $I\in\mathcal J$ implies $x=0$. Thus, the only thing to worry about is that $\iota$ is surjective. Well, $\iota$ is surjective if and only if $\iota$ is an isomorphism of rings (because $\iota$ is a priori an injective homomorphism of rings), so $R$ is metrically complete if and only if $\iota:R\to\widehat R_\mathcal J$ is an isomorphism. This finishes.
+\end{proof}
+% As an aside, we note that, if we have a sequence $a:=\{a_k\}_{k\in\NN}\in\widehat R_\mathcal J$, then we have $a_{i+1}-a_i\in\mf I_n$, so we can write
+% \[a=\sum_{j=1}^\infty(a_{j+1}-a_j)\]
+% to be an infinite convergent series; in particular, the partial sums converge.
 
 \subsection{Properties Preserved by Completion}
 Taking the completion also tends to look like localization.
