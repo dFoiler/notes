@@ -2,41 +2,138 @@
 
 We continue discussing completion.
 
-\subsection{Completion for Modules}
+\subsection{Refining Inverse Limits}
 Recall that we had a notion of completion for modules as follows.
-\begin{definition}[Completion, modules]
-	Fix $R$ a ring and $M$ a module with a filtration $\mathcal J$ given by
-	\[M=M_0\supseteq M_1\supseteq M_2\supseteq\cdots.\]
-	Then we define the \textit{completion} as the inverse limit $\limit M/M_i$.
-\end{definition}
-Here is our primary example.
+\modcomplete*
+\noindent Here is our primary example.
 \begin{example}
-	If we fix an ideal $I\subseteq R$, then we are granted an $I$-adic filtration of $M$, which gives the $I$-adic completion of $M$. In particular, this is an $\widehat R_I$-module.
+	If we fix an ideal $I\subseteq R$, then we are granted an $I$-adic filtration of $M$, which gives the $I$-adic completion of $M$. In particular, this is an $\widehat R_I$-module by \autoref{lem:completemodovercompletering}.
 \end{example}
-Here is a nice lemma.
+We are going to want some freedom in changing our exact filtration, so we have the following sequence of lemmas. To start, subsequences don't do anything to our inverse limit.
+\begin{lemma} \label{lem:subsequencefiltration}
+	Fix an $R$-module $M$ with a filtration $\mathcal J=\{M_k\}_{k\in\NN}$. Then, for any strictly increasing function $\alpha:\NN\to\NN$, we have
+	\[\limit M/M_{\alpha k}\cong\limit M/M_k.\]
+\end{lemma}
+\begin{proof}
+	We proceed by force. For any $k$, we note that $\alpha k\ge k$ (e.g., by induction because $\alpha$ is strictly increasing), so $M_k\supseteq M_{\alpha k}$, so we have an induced map
+	\[\psi_k:M/M_{\alpha k}\onto M/M_k.\]
+	As such, we define the map $\psi:\prod_kM/M_{\alpha k}\to\prod_kM/M_k$ by
+	\[\psi:\{m_k+M_{\alpha k}\}_{k\in\NN}\mapsto\{m_k+M_k\}_{k\in\NN}\]
+	created by gluing the maps $\psi_k$. We claim that $\psi$ descends to the desired isomorphism: let $\varphi$ be the restriction of $\psi$ to $\limit M/M_{\alpha k}$. We have the following checks on $\varphi$.
+	\begin{itemize}
+		\item The image of $\varphi$ is contained in $\limit M/M_k$. Indeed, fix some $\{m_k+M_{\alpha k}\}_{k\in\NN}$, which goes to $\{m_k+M_k\}_{k\in\NN}$. For any $i>j$, we need to show that
+		\[m_i\equiv m_j\pmod{M_i}.\]
+		Well, by hypothesis, we see that $m_i\equiv m_j\pmod{M_{\alpha i}}$, so $m_i-m_j\in M_{\alpha i}\subseteq M_i$, which is what we wanted.
+		\item The image of $\varphi$ contains $\limit M/M_k$. For this, we create an inverse map of sets. Indeed, fix some $\{m_k+M_k\}_{k\in\NN}$, and we note that
+		\[\varphi:\{m_{\alpha k}+M_{\alpha k}\}_{k\in\NN}\mapsto\{m_{\alpha k}+M_k\}_{k\in\NN}.\]
+		So we claim that $\{m_{\alpha k}+M_{\alpha k}\}_{k\in\NN}$ is the desired input. First, this input is valid: for any $i>j$, we see that $m_{\alpha i}\equiv m_{\alpha j}\pmod{M_{\alpha i}}$ by hypothesis on the $m_i$.
+
+		But second, we note that $\alpha k\ge k$ implies that
+		\[m_{\alpha k}\equiv m_k\pmod{M_k},\]
+		so $\{m_{\alpha k}+M_k\}_{k\in\NN}=\{m_k+M_k\}_{k\in\NN}$, so we have indeed hit the desired coset.
+		\item The kernel of $\varphi$ is trivial. Indeed, suppose that $\{m_k+M_{\alpha k}\}_{k\in\NN}$ goes to $0$ under $\varphi$, which means that
+		\[m_k+M_k=0+M_k\]
+		for each $k$. But this implies that $m_{\alpha k}\in M_{\alpha k}$ while $\alpha k\ge k$, so the hypothesis on the $m_k$ implies that
+		\[m_k\equiv m_{\alpha k}\equiv0\pmod{M_{\alpha k}},\]
+		so the $m_k+M_{\alpha k}$ all vanish. This finishes.
+	\end{itemize}
+	Thus, we have shown that $\varphi$ will inject onto $\limit M/M_k$ and therefore witnesses the needed isomorphism
+	\[\limit M/M_{\alpha k}\cong\limit M/M_k.\]
+	This finishes.
+\end{proof}
+Next, we note that containment is fairly well-behaved.
+\begin{lemma} \label{lem:containedfiltration}
+	Fix an $R$-module $M$ with filtrations $\mathcal J=\{M_k\}_{k\in\NN}$ and $\mathcal J'=\{M_k'\}_{k\in\NN}$ such that $M_k\subseteq M_k'$ for each $k$. Then the map
+	\[\{m_k+M_k\}_{k\in\NN}\mapsto\{m_k+M_k'\}_{k\in\NN}\]
+	defines a morphism $\limit M/M_k\to\limit M/M_k'$.
+\end{lemma}
+\begin{proof}
+	For any fixed $k$, that $M_k\subseteq M_k'$ induces a morphism $\psi_k:M/M_k\to M/M_k'$ by
+	\[\psi_k:m_k+M_k\to m_k+M_k'.\]
+	These glue together to a morphism
+	\[\psi:\prod_{k\in\NN}M/M_k\to\prod_{k\in\NN}M/M_k'.\]
+	Let $\varphi$ be the restriction of this map to $\limit M/M_k$, and we need to show $\im\varphi\subseteq\limit M/M_k'$. Well, fix $\{m_k+M_k\}_{k\in\NN}$ in $\limit M/M_k$. Then, for any $i>j$, we see that
+	\[m_i-m_j\in M_j\subseteq M_j',\]
+	so it follows
+	\[\{m_k+M_k'\}_{k\in\NN}\in\limit M/M_k',\]
+	which is what we wanted.
+\end{proof}
+We can then synthesize the above two lemmas to give the following refinement result.
 \begin{lemma} \label{lem:samecompletion}
-	Suppose we have two filtrations of an $R$-module $M$ given by $\mathcal J$
-	\[M\supseteq M_1\supseteq M_2\supseteq\cdots\]
-	and $\mathcal J'$ given by
-	\[M\supseteq M_1'\supseteq M_2'\supseteq\cdots.\]
-	Further, suppose that, for all $i$, there exists $j$ such that $M_i\supseteq M_j'$ and perhaps another $j$ such that $M_i'\supseteq M_j'$. Then we have an isomorphism
+	Fix an $R$-module $M$ with filtrations $\mathcal J=\{M_k\}_{k\in\NN}$ and $\mathcal J'=\{M_k'\}_{k\in\NN}$. Further, suppose that, for all $i$, there exists $j$ such that $M_i\supseteq M_j'$; similarly, there exists (perhaps another) $j$ such that $M_i'\supseteq M_j$. Then we have an isomorphism
 	\[\limit M/M_i\cong\limit M/M_i'\]
 \end{lemma}
-\begin{remark}
-	Of course, any subsequence of a filtration $\mathcal J$ will give rises to the same inverse limit. Intuitively, this is fairly clear because any given term in the inverse limit is just some sequence where earlier terms are fixed by later ones, so we can just build the isomorphism explicitly.
-\end{remark}
 \begin{proof}
 	In general, if we have two inverse limits, the way to define an inverse limit is to define a map into each of the components. To manifest this idea, we pick up strictly increasing $\alpha,\beta,\gamma:\NN\to\NN$ such that
-	\[M_j\supseteq N_{\alpha(j)}\supseteq M_{\beta(j)}\supseteq N_{\gamma(j)}.\tag{$*$}\label{eq:inclusions}\]
-	These embeddings give us surjections
-	\[M/N_{\gamma(j)}\onto M/M_{\beta(j)}\onto M/M_{\alpha(j)}\onto M/M_j.\]
-	This gives rise to morphisms
-	\[\limit M/N_{\gamma(j)}\to\limit M/M_{\beta(j)}\to\limit M/M_{\alpha(j)}\to\limit M/M_j.\]
-	Now, these are subsequences, so the terms are isomorphic to the terms without the injective functions, so we get morphisms
-	\[\limit M/N_j\to\limit M/M_j\to\limit M/M_j\to\limit M/M_j.\]
-	We can check by hand that the composite of any consecutive map is the identity by tracking through \autoref{eq:inclusions} on the inclusions $M_j\subseteq M_{\beta(j)}$ and $N_{\alpha(j)}\subseteq N_{\gamma(j)}$. This provides us with our isomorphisms.
+	\[M_j\supseteq M_{\alpha(j)}'\supseteq M_{\beta(j)}\supseteq M'_{\gamma(j)}.\tag{$*$}\label{eq:inclusions}\]
+	To show that such $\alpha,\beta,\gamma$ all actually exist, we proceed inductively: we can start with $\alpha(0)=\beta(0)=\gamma(0)$ because $M_0=M_0'=M$. Then, if we have defined all three up to $n\in\NN$, we increment in three steps.
+	\begin{itemize}
+		\item We find some $n'$ such that $M_n\supseteq M_{n'}'$. Then we can set $\alpha(n+1)=\max\{n',\alpha n+1\}$, which works because $M_{n'}'\supseteq M_{\alpha(n+1)}$ while $\alpha(n+1)>\alpha(n)$.
+		\item We find some $n'$ such that $M_{\alpha(n+1)}'\supseteq M_{n'}$. Then we can set $\beta(n+1)=\max\{n',\beta n+1\}$, which works because $M_{\alpha(n+1)}'\supseteq M_{\beta(n+1)}$ while $\beta(n+1)>\beta(n)$.
+		\item We find some $n'$ such that $M_{\beta(n+1)}\supseteq M_{n'}'$. Then we can set $\gamma(n+1)=\max\{n',\gamma n+1\}$, which works because $M_{\beta(n+1)}\supseteq M_{\gamma(n+1)}'$ while $\gamma(n+1)>\gamma(n)$.
+	\end{itemize}
+	Anyways, the point is that our $\alpha,\beta,\gamma$ induce morphisms
+	\[\limit M/M'_{\gamma(j)}\to\limit M/M_{\beta(j)}\to\limit M/M'_{\alpha(j)}\to\limit M/M_j\]
+	by \autoref{lem:containedfiltration}. In fact, \autoref{lem:subsequencefiltration} lets us remove the $\alpha,\beta,\gamma$ to set up the following commutative diagram.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGxpbWl0IE0vTSdfe1xcZ2FtbWEoail9Il0sWzEsMCwiXFxsaW1pdCBNL01fe1xcYmV0YShqKX0iXSxbMiwwLCJcXGxpbWl0IE0vTSdfe1xcYWxwaGEoail9Il0sWzMsMCwiXFxsaW1pdCBNL01fe2p9Il0sWzAsMSwiXFxsaW1pdCBNL01fe2p9JyJdLFsxLDEsIlxcbGltaXQgTS9NX3tqfSJdLFszLDEsIlxcbGltaXQgTS9NX3tqfSJdLFsyLDEsIlxcbGltaXQgTS9NX3tqfSciXSxbMCw0XSxbMSw1XSxbMiw3XSxbMyw2XSxbMCwxXSxbMSwyXSxbMiwzXSxbNCw1LCJmIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzUsNywiZyIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs3LDYsImgiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\limit M/M'_{\gamma(j)}} & {\limit M/M_{\beta(j)}} & {\limit M/M'_{\alpha(j)}} & {\limit M/M_{j}} \\
+		{\limit M/M_{j}'} & {\limit M/M_{j}} & {\limit M/M_{j}'} & {\limit M/M_{j}}
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["f", dashed, from=2-1, to=2-2]
+		\arrow["g", dashed, from=2-2, to=2-3]
+		\arrow["h", dashed, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	Namely, the vertical morphisms are isomorphisms and therefore induce the morphisms on the bottom row. We claim that $gf$ and $hg$ are both the identity. Indeed, tracking through the morphisms in the commutative diagram, we see that $fg$ moves as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXHttX3tcXGdhbW1hIGt9K01fe1xcZ2FtbWEga30nXFx9X3trXFxpblxcTk59Il0sWzEsMCwiXFx7bV97XFxnYW1tYSBrfStNX3tcXGJldGEga31cXH1fe2tcXGluXFxOTn0iXSxbMiwwLCJcXHttX3tcXGdhbW1hIGt9K01fe1xcYWxwaGEga30nXFx9X3trXFxpblxcTk59Il0sWzMsMCwiXFxidWxsZXQiXSxbMCwxLCJcXHttX2srTV9rJ1xcfV97a1xcaW5cXE5OfSJdLFsxLDEsIlxcYnVsbGV0Il0sWzMsMSwiXFxidWxsZXQiXSxbMiwxLCJcXHttX3tcXGdhbW1hIGt9K01fe2t9J1xcfV97a1xcaW5cXE5OfSJdLFswLDRdLFsxLDVdLFsyLDddLFszLDZdLFswLDFdLFsxLDJdLFsyLDNdLFs0LDUsImYiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNSw3LCJnIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzcsNiwiaCIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\{m_{\gamma k}+M_{\gamma k}'\}_{k\in\NN}} & {\{m_{\gamma k}+M_{\beta k}\}_{k\in\NN}} & {\{m_{\gamma k}+M_{\alpha k}'\}_{k\in\NN}} & \bullet \\
+		{\{m_k+M_k'\}_{k\in\NN}} & \bullet & {\{m_{\gamma k}+M_{k}'\}_{k\in\NN}} & \bullet
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["f", dashed, from=2-1, to=2-2]
+		\arrow["g", dashed, from=2-2, to=2-3]
+		\arrow["h", dashed, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	This is the identity because $\gamma k\ge k$ (because $\gamma$ is strictly increasing), so $m_k+M_k'=m_{\gamma k}+M_k'$ for any $k$.
+	
+	Similarly, we track $hg$ as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxce21fe1xcYmV0YSBrfStNX3tcXGJldGEga31cXH1fe2tcXGluXFxOTn0iXSxbMiwwLCJcXHttX3tcXGJldGEga30rTV97XFxhbHBoYSBrfSdcXH1fe2tcXGluXFxOTn0iXSxbMywwLCJcXHttX3tcXGJldGEga30rTV97a31cXH1fe2tcXGluXFxOTn0iXSxbMCwxLCJcXGJ1bGxldCJdLFsxLDEsIlxce21faytNX2tcXH1fe2tcXGluXFxOTn0iXSxbMywxLCJcXHttX3tcXGJldGEga30rTV97a31cXH1fe2tcXGluXFxOTn0iXSxbMiwxLCJcXGJ1bGxldCJdLFswLDRdLFsxLDVdLFsyLDddLFszLDZdLFswLDFdLFsxLDJdLFsyLDNdLFs0LDUsImYiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNSw3LCJnIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzcsNiwiaCIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\bullet & {\{m_{\beta k}+M_{\beta k}\}_{k\in\NN}} & {\{m_{\beta k}+M_{\alpha k}'\}_{k\in\NN}} & {\{m_{\beta k}+M_{k}\}_{k\in\NN}} \\
+		\bullet & {\{m_k+M_k\}_{k\in\NN}} & \bullet & {\{m_{\beta k}+M_{k}\}_{k\in\NN}}
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["f", dashed, from=2-1, to=2-2]
+		\arrow["g", dashed, from=2-2, to=2-3]
+		\arrow["h", dashed, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	Again, this is the identity because $\beta k\ge k$ everywhere implies that $m_k+M_k=m_{\beta k}+M_k$ for any $k$.
+
+	Thus, we see that $g$ is a morphism with both a left and a right inverse, so it is an isomorphism. (For example, a left inverse shows that $g$ is injective, and a right inverse shows that $g$ is surjective.) This is what we wanted to prove, so we are done.
 \end{proof}
-Here is another lemma which we will want for abstract nonsense reasons.
+\begin{remark}[Nir]
+	Another way to prove \autoref{lem:samecompletion} is to note that both filtrations will induce the same topology on $M$ and therefore will be isomorphic as completions.
+\end{remark}
+
+\subsection{Completion for Modules}
+We now return to talking about completions. We want to show that $\widehat R_I$ is flat, so we will want to talk about short exact sequences.
 \begin{lemma}
 	Fix $R$ a Noetherian ring and an ideal $I$. Further, suppose that we have a short exact sequence
 	\[0\to A\to B\to C\to 0\]
@@ -48,7 +145,7 @@ Here is another lemma which we will want for abstract nonsense reasons.
 	We start with the short exact sequence
 	\[0\to A\to B\to C\to 0\]
 	and tensor by $-\otimes R/I^s$ to get a right-exact sequence
-	\[A/I^sA\to B/I^sB\to C/I^SC\to0.\]
+	\[A/I^sA\to B/I^sB\to C/I^sC\to0.\]
 	We can show by hand that this gives us a surjection $\widehat B\onto\widehat C$, but we need this to be exact on the left. Well, the next best thing that we can write down is
 	\[0\to\frac A{A\cap I^sB}\to\frac B{I^sB}\to\frac C{I^sC},\]
 	so because taking inverse limits is left exact, we have a left-exact sequence
@@ -88,6 +185,9 @@ The point of this is that we see completion is an exact functor. In fact, as wit
 	is an inclusion for any finitely generated $J$ by our flatness criterion, % \todo{}
 	which we do have, so we are done.
 \end{proof}
+\begin{remark}[Nir]
+	It is in fact necessary that $M$ be finitely generated. For example, take $R=\ZZ$ and $I=(p)$ and $M=\QQ$. In this case, $\widehat R_I\otimes_RM=\QQ_p$, but $\widehat M_I=0$ because $M/I^sM=\QQ/\left(p^s\right)\QQ=\QQ/\QQ=0$ for all $s$.
+\end{remark}
 
 \subsection{Examples of Hensel's Lemma}
 Let's continue talking about number theory. Hensel's lemma is a way to lift solutions to polynomial equations from quotients up to complete rings. More precisely, we have the following.
