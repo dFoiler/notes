@@ -1,0 +1,152 @@
+% !TEX root = ../notes.tex
+
+Welcome back from spring break. We are still doing limits.
+
+\subsection{Complete Categories}
+To talk about limits more concretely, we will want to make our categories nicer.
+\begin{definition}[Complete]
+	A category $\mathcal C$ is \textit{complete} (\textit{cocomplete}) if and only if $\mathcal C$ has all small limits. In other words, each diagram $F:\mathcal J\to\mathcal C$ for $\mathcal J$ small has a (co)limit.
+\end{definition}
+\begin{remark}
+	One can more generally talk about diagrams with index category that is not small.
+\end{remark}
+The reason we are asking for only small (co)limits is for moral size reasons.
+\begin{theorem}
+	A category $\mathcal C$ with products indexed by $\op{Mor}\mathcal C$ is a preorder.
+\end{theorem}
+\begin{proof}
+	Fix any two morphisms $f,g:a\to b$ in $\mathcal C$. We would like to show that $f=g$, so suppose for the sake of contradiction that $f\ne g$. Well, we are granted a product
+	\[p:=\prod_{h\in\op{Mor}\mathcal C}b\]
+	in $\mathcal C$, with projection maps $\pi_h:p\to b$.
+
+	But now consider morphisms from $a$ to $p$. The issue here is that
+	\[\op{Mor}\left(a,\prod_{h\in\op{Mor}\mathcal C}b\right)\cong\prod_{h\in\op{Mor}\mathcal C}\op{Mor}(a,b).\]
+	Comparing sizes, there are at most $\op{Mor}\mathcal C$ morphisms on the left and at least $2^{\op{Mor}\mathcal C}$ morphisms on the right. So the right is strictly larger than the left, finishing.
+\end{proof}
+\begin{remark}
+	It is not obvious that $\op{Mor}\mathcal C$ is strictly smaller than $2^{\op{Mor}\mathcal C}$ because $\op{Mor}\mathcal C$ might not be a set, but such is life. Bryce muttered something about inaccessible cardinals, but I am not a set theorist and therefore did not record it.
+\end{remark}
+\begin{corollary}
+	All complete small categories are preorders.
+\end{corollary}
+\begin{proof}
+	This follows from the preceding theorem and the definition of complete.
+\end{proof}
+Let's try to give a more nontrivial example.
+\begin{proposition}
+	The category $\mathrm{Set}$ is complete.
+\end{proposition}
+\begin{proof}
+	Fix a diagram $F:\mathcal J\to\mathrm{Set}$. For our limit, we will simply define
+	\[L:=\op{Cone}(*,F)\]
+	to be the set of cones over $F$ with apex $*$; note that there are no size issues because this is a subset of product of all $\op{Mor}(*,Fi)$ for all $i\in\mathcal J$, which is okay because $\mathcal J$ is small.
+	
+	For our projection maps, we define $\lambda_j:L\to F_j$ by
+	\[\lambda_j(\mu):=\mu_j(*),\]
+	where this makes sense because $\mu:*\Rightarrow F$ has $\mu_j:*\to Fj$, so we can extract out our element by $\mu_j(*)$.
+
+	Quickly, we verify that we have defined a cone $\lambda:L\Rightarrow F$. Namely, for any morphism $f:i\to j$, we need to show that the following commutes.
+	% https://q.uiver.app/?q=WzAsMyxbMSwwLCJMIl0sWzAsMSwiRmkiXSxbMiwxLCJGaiJdLFswLDEsIlxcbGFtYmRhX2kiLDJdLFswLDIsIlxcbGFtYmRhX2oiXSxbMSwyLCJGZiIsMl1d
+	\[\begin{tikzcd}
+		& L \\
+		Fi && Fj
+		\arrow["{\lambda_i}"', from=1-2, to=2-1]
+		\arrow["{\lambda_j}", from=1-2, to=2-3]
+		\arrow["Ff"', from=2-1, to=2-3]
+	\end{tikzcd}\]
+	For this, we diagram-chase on our elements. Namely, we compute
+	\[(Ff)\lambda_i(\mu)=(Ff)\mu_i(*)=\mu_j(*)\]
+	because the $\mu$ we picked up is a cone already. But now this right-hand side is $(Ff)\lambda_j(\mu)$ by hypothesis.
+
+	We now show that $\lambda:L\Rightarrow F$ is our limit cone. Well, pick up any cone $\eta:X\Rightarrow F$, and we need to induce a unique morphism $\varphi:X\to L$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJYIl0sWzEsMSwiTCJdLFswLDIsIkZpIl0sWzIsMiwiRmoiXSxbMiwzLCJGZiIsMl0sWzEsMiwiXFxsYW1iZGFfaSJdLFsxLDMsIlxcbGFtYmRhX2oiLDJdLFswLDIsIlxcZXRhX2kiLDJdLFswLDMsIlxcZXRhX2oiXV0=
+	\[\begin{tikzcd}
+		& X \\
+		& L \\
+		Fi && Fj
+		\arrow["Ff"', from=3-1, to=3-3]
+		\arrow["{\lambda_i}", from=2-2, to=3-1]
+		\arrow["{\lambda_j}"', from=2-2, to=3-3]
+		\arrow["{\eta_i}"', from=1-2, to=3-1]
+		\arrow["{\eta_j}", from=1-2, to=3-3]
+	\end{tikzcd}\tag{1}\label{eq:setlimitdiagram}\]
+	Well, given $x\in X$, we need to define $\varphi(x)$ to be a cone, which means that given $j\in\mathcal J$, we need a morphism $\varphi(x)_j:*\to Fj$. Looking around, the only morphism of this form that we have is
+	\[\varphi(x)_j(*):=\eta_j(x).\]
+	To check that $\varphi$ is a cone, we need to run the check, for any $f:i\to j$ in $\mathcal J$, we have
+	\[(Ff)\varphi(x)_i(*)=(Ff)\eta_i(x)=\eta_j(x)=\varphi(x)_j(*)\]
+	by using the fact that $\eta$ is already cone.
+
+	We now show that the diagram \autoref{eq:setlimitdiagram} commutes. Well, we have, for any $x\in X$,
+	\[\lambda_j\varphi(x)=\varphi(x)_j(*)=\eta_j(x)\]
+	by definition of $\lambda_j$ and $\varphi(x)$.
+
+	It remains to show that $\varphi$ commutes. Well, suppose that we have a morphism $\psi:X\to L$ making \autoref{eq:setlimitdiagram} commutes so that $\lambda_j\psi=\eta_j$ everywhere. Well, for any $x\in X$, we need to verify that $\psi(x)=\varphi(x)$, which means that for any $j\in\mathcal J$, we need to verify that
+	\[\psi(x)_j(*)=\varphi(x)_j\]
+	because $\psi(x)_j,\varphi(x)_j:*\to Fj$. However, by hypothesis, we have
+	\[\psi(x)_j(*)=\lambda_j\psi(x)=\eta_j(x)\]
+	by hypothesis on our commuting, so we see that $\psi$ is in fact forced.
+\end{proof}
+
+\subsection{Limits through Functors}
+It's definition time!
+\begin{definition}[Preserves, reflects limits]
+	Fix a diagram $\mathcal K:\mathcal J\to\mathcal C$ and a functor $F:\mathcal C\to\mathcal D$.
+	\begin{itemize}
+		\item The functor $F$ \textit{preserves limits} if and only if a limit cone $\lambda:L\Rightarrow\mathcal K$ in $\mathcal C$ gives another limit cone $F\lambda:FL\to F\mathcal K$ in $\mathcal D$.
+		\item The functor $F$ \textit{reflects limits} if and only if a limit cone $F\lambda:FL\to F\mathcal K$ in $\mathcal D$ promises another limit cone $\lambda:L\Rightarrow\mathcal K$ in $\mathcal C$.
+	\end{itemize}
+\end{definition}
+Here is the image for these two properties.
+% https://q.uiver.app/?q=WzAsOCxbMSwxLCJMIl0sWzAsMiwiXFxtYXRoY2FsIEtpIl0sWzIsMiwiXFxtYXRoY2FsIEtqIl0sWzEsMCwiXFxtYXRoY2FsIEMiXSxbNCwwLCJcXG1hdGhjYWwgRCJdLFs0LDEsIkZMIl0sWzMsMiwiRlxcbWF0aGNhbCBLaSJdLFs1LDIsIkZcXG1hdGhjYWwgS2oiXSxbMSwyLCJcXG1hdGhjYWwgS2YiLDJdLFswLDEsIlxcbGFtYmRhX2kiLDJdLFswLDIsIlxcbGFtYmRhX2oiXSxbMyw0LCJGIiwxXSxbNiw3LCJGXFxtYXRoY2FsIEtmIiwyXSxbNSw2LCJGXFxsYW1iZGFfaSIsMl0sWzUsNywiRlxcbGFtYmRhX2oiXSxbMCw1LCJcXHRleHR7cHJlc2VydmVzfSIsMSx7Im9mZnNldCI6LTUsInNob3J0ZW4iOnsic291cmNlIjoxMCwidGFyZ2V0IjoxMH0sImxldmVsIjoyfV0sWzUsMCwiXFx0ZXh0e3JlZmxlY3RzfSIsMSx7InNob3J0ZW4iOnsic291cmNlIjoxMCwidGFyZ2V0IjoxMH0sImxldmVsIjoyfV1d
+\[\begin{tikzcd}
+	& {\mathcal C} &&& {\mathcal D} \\
+	& L &&& FL \\
+	{\mathcal Ki} && {\mathcal Kj} & {F\mathcal Ki} && {F\mathcal Kj}
+	\arrow["{\mathcal Kf}"', from=3-1, to=3-3]
+	\arrow["{\lambda_i}"', from=2-2, to=3-1]
+	\arrow["{\lambda_j}", from=2-2, to=3-3]
+	\arrow["F"{description}, from=1-2, to=1-5]
+	\arrow["{F\mathcal Kf}"', from=3-4, to=3-6]
+	\arrow["{F\lambda_i}"', from=2-5, to=3-4]
+	\arrow["{F\lambda_j}", from=2-5, to=3-6]
+	\arrow["{\text{preserves}}"{description}, shift left=5, shorten <=8pt, shorten >=8pt, Rightarrow, from=2-2, to=2-5]
+	\arrow["{\text{reflects}}"{description}, shorten <=8pt, shorten >=8pt, Rightarrow, from=2-5, to=2-2]
+\end{tikzcd}\]
+And here is one more definition.
+\begin{definition}[Create limits]
+	Fix a diagram $\mathcal K:\mathcal J\to\mathcal C$ and a functor $F:\mathcal C\to\mathcal D$. Then $F$ \textit{creates limits} if and only if $F$ already reflects limits and any a limit $\eta:d\Rightarrow F\mathcal K$ in $\mathcal D$ induces a limit $\lambda:L\Rightarrow\mathcal K$ in $\mathcal C$ such that $F\lambda=\eta$.
+\end{definition}
+Essentially, having a limit in $\mathcal D$ allows us to bring the limit upwards to $\mathcal C$. This is different from reflecting limits because reflecting limits already assumed that we had the objects present in $\mathcal C$ already while creating limits conjures the objects for us.
+\begin{remark}
+	There are also dual notions for all the above definitions by adding the prefix co- everywhere.
+\end{remark}
+Here is a quick result to get some practice with these words.
+\begin{proposition}
+	Fix a functor $F:\mathcal C\to\mathcal D$ which creates limits for some class of diagrams in $\mathcal C$. Further, suppose that $\mathcal D$ has limits for these diagrams. Then $\mathcal C$ has limits for these diagrams, and $F$ will preserve these limits.
+\end{proposition}
+\begin{proof}
+	Fix a diagram $\mathcal K:\mathcal J\to\mathcal C$. Then $F\mathcal K$ has a limit $\eta:d\Rightarrow F\mathcal K$, which because $F$ creates limits will go up to a limit $\lambda:c\Rightarrow\mathcal K$ in $\mathcal C$.
+
+	It remains to show that $F$ preserves the limit of $\mathcal K$. We already know that $F$ will preserve the limit $\lambda$ because we lifted by hand (and so $\lambda$ will go down to $\eta$), so suppose that we have some perhaps distinct limit $\mu:c'\Rightarrow\mathcal K$ in $\mathcal C$. Then the uniqueness of limits promises us a unique isomorphism $c\cong c'$ which commutes with the various legs in $\lambda$ and $\mu$, so it follows
+	\[F\mu\simeq F\lambda=\eta,\]
+	so $F$ still preserved our limit $\mu$ going to $\eta$.
+\end{proof}
+We close by stating a few results.
+\begin{proposition}
+	Fully faithful functors reflect limits and colimits.
+\end{proposition}
+\begin{proof}
+	This is supposedly on the homework.
+\end{proof}
+\begin{remark}
+	The functor need not create limits or colimits. Intuitively, this is because a fully faithful functor is merely an embedding, so the codomain category might have lots of space elsewhere for limits that our embedding does not hit.
+\end{remark}
+\begin{proposition}
+	Equivalences preserve, reflect, and create all limits and colimits.
+\end{proposition}
+\begin{proof}
+	We leave this as an exercise.
+\end{proof}
+\begin{remark}
+	Philosophically, this is good because we expect equivalent categories to be ``the same'' and so they should have the same limits and colimits, for a good notion of same.
+\end{remark}
