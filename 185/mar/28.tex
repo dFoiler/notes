@@ -1,0 +1,100 @@
+% !TEX root = ../notes.tex
+
+Welcome back from spring break, everybody. Homework \#7 has been released and is due on Sunday.
+
+\subsection{Liouville's Theorem}
+Today we are discussing consequences of the Cauchy integral formula. Here is the statement.
+\thmcif*
+\begin{remark}
+	There are two ways to read this: we could either try to evaluate $f$ at $w$ via the integral, or we could be handed an integral that looks something like the right-hand side and then compute by evaluating $f$ at $w$.
+\end{remark}
+As one immediate consequence, we showed that holomorphic functions are analytic.
+
+Let's see another consequence.
+\begin{theorem}[Liouville's] \label{thm:liouville}
+	Fix an entire function $f:\CC\to\CC$. If $f$ is bounded, then $f$ is constant.
+\end{theorem}
+\begin{proof}
+	This isn't too hard. Because $f$ is bounded, we are promised a real number $M\in\RR^+$ such that $|f(z)|<M$ for all $z\in\CC$. Fix some $w\in\CC$, and choose any $r$ so that $r>|w|$. The idea is to take $r$ very large in the Cauchy integral formula to show that $f(w)=f(0)$; for now, we innocently define $\gamma_r:[0,1]\to\CC$ by
+	\[\gamma_r(0):=r\exp(2\pi it)\]
+	as tracing the boundary of $B(0,r)$. In particular, our $w\in\CC$ with $|w|<r$ (i.e., $w\in B(0,r)$) will have
+	\[|z-w|\ge|r-|w||\]
+	for any $z\in\im\gamma_r$.\footnote{This is from the triangle inequality: note $|z-w|+|w|\ge|z|=r$ and $|w-z|+r\ge|w|$.} We will show that $f(w)=f(0)$ by the Cauchy integral formula: by \autoref{thm:cif}, we have
+	\begin{align*}
+		|f(w)-f(0)| &= \left|\frac1{2\pi i}\oint_{\gamma_r}\left(\frac{f(z)}{z-w}-\frac{f(z)}z\right)\,dz\right| \\
+		&= \left|\frac1{2\pi i}\oint_{\gamma_r}\frac{wf(z)}{z(z-w)}\,dz\right| \\
+		&\le \frac1{2\pi}\cdot\ell(\gamma_r)\cdot\sup_{z\in\im\gamma_r}\left\{\left|\frac{wf(z)}{z(z-w)}\right|\right\},
+	\end{align*}
+	where we have applied \autoref{lem:estimation} in the last step. Further, $\ell(\gamma_r)=2\pi r$ because we are tracking out a circle. And lastly, we note that any $z\in\im\gamma_r$ will have
+	\[\left|\frac{wf(z)}{z(z-w)}\right|\le\frac{|w|\cdot M}{r\cdot(r-|w|)},\]
+	so
+	\[|f(w)-f(0)|\le\frac1{2\pi}\cdot2\pi r\cdot\frac{|w|\cdot M}{r\cdot(r-|w|)}=\frac{|w|\cdot M}{r-|w|}.\]
+	Now, taking $r\to\infty$ will have
+	\[\frac{|w|\cdot M}{r-|w|}=0,\]
+	so $f(w)=f(0)$ follows. Thus, $f$ is indeed constant.
+\end{proof}
+And now we can use Liouville's theorem for fun and profit.
+\begin{theorem}[Fundamental theorem of algebra]
+	Fix a polynomial $p(z)\in\CC[z]$ of degree $n>0$. Then $p$ has a root in $\CC$.
+\end{theorem}
+\begin{proof}
+	Let our polynomial be
+	\[p(z)=\sum_{k=0}^na_kz^k.\]
+	Note that $p(w)=0$ if and only if $\frac1{a_n}p(w)=0$, so for psychological reasons, we will replace $p(z)$ with $\frac1{a_n}p(z)$. In other words, we will simply assume that $a_n=1$ and set
+	\[q(z)=\sum_{k=0}^{n-1}a_kz^k\]
+	so that $p(z)=z^n+q(z)$.
+
+	Now, suppose that $p$ has no roots, and we will show that $p$ is constant via \autoref{thm:liouville}; i.e., $p(z)\ne0$ for any $z\in\CC$. Then \autoref{prop:computederivs} tells us that $f(z):=\frac1{p(z)}$ is holomorphic no $\CC$ (i.e., entire). We claim that $f$ is bounded on $\CC$. Well, by the triangle inequality again, we see
+	\[\left|\left|z^n\right|-|q(z)|\right|\le|p(z)|,\]
+	so
+	\[\left|f(z)\right|\le\frac1{\left||z|^n-|q(z)|\right|}.\]
+	But now, by sending $|z|\to\infty$, we may assume that $z\ne0$ for $|z|$ sufficiently large, so
+	\[\left|f(z)\right|\le\frac1{\left||z|-|q(z)/z^{n-1}|\right|},\]
+	which goes to $0$ as $|z|\to\infty$. As such, $f(z)$ is bounded and hence constant by \autoref{thm:liouville}, so $p(z)=\frac1{f(z)}$ is also bounded and hence constant. Note $f(z)\ne0$ because $f(z)=\frac1{p(z)}$ everywhere.
+\end{proof}
+\begin{remark}
+	This proof is somewhat non-constructive, in that we have no idea what the root is.
+\end{remark}
+\begin{remark}
+	By inducting, we can show that $p$ has exactly $n$ roots, counted with multiplicity.
+\end{remark}
+
+\subsection{Poles and Zeroes Preview}
+Here is another result.
+\begin{theorem}[Riemann removable singularity]
+	Fix an open and connected subset $\Omega\subseteq\CC$, and pick up some $z_0\in\Omega$. If $f:\Omega\setminus\{z_0\}\to\CC$ is holomorphic and bounded near $z_0$, then $f$ extends to a holomorphic function on $\Omega$.
+\end{theorem}
+\begin{proof}
+	We will construct $f(z_0)$ explicitly by starting with a function fully holomorphic on $\Omega$, which we will then use to derive $f(z_0)$. In particular, we define $h:\Omega\to\CC$ by
+	\[h(z):=\begin{cases}
+		(z-z_0)^2f(z) & z\ne z_0, \\
+		0 & z=z_0.
+	\end{cases}\]
+	Quickly, we claim that $h$ is holomorphic on $\Omega$. Because $h|_{\Omega\setminus\{z_0\}}(z)=(z-z_0)^2f(z)$ is a product of holomorphic functions, we conclude that $h$ is holomorphic on $\Omega\setminus\{z_0\}$. Thus, we merely have to check that $h$ is holomorphic at $z_0$. In particular, we compute
+	\[h'(z_0)=\lim_{z\to z_0}\frac{h(z)-h(z_0)}{z-z_0}=\lim_{z\to z_0}\frac{f(z)(z-z_0)^2}{z-z_0}=\lim_{z\to z_0}f(z)(z-z_0)=0,\]
+	where the last step is because $f$ is bounded near $z_0$.
+
+	Now, $h$ is holomorphic on $\Omega$, so $h$ is analytic on $\Omega$ by \autoref{cor:betterholoisana}, so we are promised a local power series expansion at $z_0$: there are coefficients $\{a_k\}_{k\in\NN}\subseteq\CC$ with an $r>0$ such that $z\in B(z_0,r)$ will have
+	\[h(z)=\sum_{k=0}^\infty a_k(z-z_0)^k.\]
+	Quickly, we see that $a_0=h(0)=0$ and $a_1=h'(0)=0$ (by \autoref{cor:betterholoisana}). Thus, we may write
+	\[f(z)=\frac{h(z)}{(z-z_0)^2}=\sum_{k=0}^\infty a_{k+2}(z-z_0)^k\tag{$*$}\label{eq:expandatz0}\]
+	for any $z\in B(z_0,r)\setminus\{z_0\}$. However, if we define $\widetilde f:\Omega\to\CC$ by
+	\[\widetilde f(z):=\begin{cases}
+		a_2 & z=z_0, \\
+		f(z) & z\ne z_0,
+	\end{cases}\]
+	then $\widetilde f$ is holomorphic on $\Omega\setminus\{z_0\}$ by restriction and analytic at $z_0$ by \autoref{eq:expandatz0}, so $\widetilde f$ is the holomorphic extension of $f$ to $\Omega$.
+\end{proof}
+We close with one more statement.
+\begin{proposition}
+	Fix an open, connected subset $\Omega\subseteq\CC$ and a holomorphic function $f:\Omega\to\CC$. Further, define $Z:=f^{-1}(\{0\})$.
+	\begin{listalph}
+		\item If $z_0\in Z$, then either $z_0$ is isolated, or there is some open neighborhood of $z_0$ in $Z$.
+		\item If $z_0$ is isolated, then there is a unique integer $n$ and holomorphic function $g:\Omega\to\CC$ with $g(z_0)\ne0$ such that
+		\[f(z)=(z-z_0)^ng(z)\]
+		for $z\in\Omega$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We will prove this next class.
+\end{proof}
