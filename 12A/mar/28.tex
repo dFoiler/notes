@@ -1,0 +1,125 @@
+% !TEX root = ../notes.tex
+
+We continue our discussion of monadic logic. There is no homework this week due to the midterm.
+
+\subsection{The Universal Quantifier}
+To review, recall the following example for our monadic logic.
+\easymonad*
+In particular, we had the following notion of modeling for $\forall$.
+\begin{definition}[Truth for \texorpdfstring{$\forall$}{}]
+	Fix a model $\mathcal M=(D,I)$ and variable assignment $g:\op{Var}\to D$. Then, for some formula $\varphi$, then $\mathcal M\models_g\forall x\varphi x$ if and only if, for all variable assignments $g$ of the open variables in $\varphi$ and all $a\in D$, we have
+	\[\mathcal M\models_{g[x:=a]}\varphi.\]
+\end{definition}
+\begin{example}
+	In the context of \autoref{ex:easysyllogisms}, asking if ``$x$ is a student'' is true does not make sense while $\varphi$ has open variables. For example,
+	\[\mathcal M\models_g\op{student}(x)\lor\op{faculty}(x)\]
+	because we can check each $x\in\{1,2,3,4\}$ by hand.
+	\begin{itemize}
+		\item We see $\mathcal M\models_{g[x:=1]}\op{student}(x)\lor\op{faculty}(x)$ because $\op{student}(1)$ is true.
+		\item We see $\mathcal M\models_{g[x:=2]}\op{student}(x)\lor\op{faculty}(x)$ because $\op{student}(2)$ is true.
+		\item We see $\mathcal M\models_{g[x:=3]}\op{student}(x)\lor\op{faculty}(x)$ because $\op{student}(3)$ is true.
+		\item We see $\mathcal M\models_{g[x:=4]}\op{student}(x)\lor\op{faculty}(x)$ because $\op{faculty}(4)$ is true.
+	\end{itemize}
+\end{example}
+\begin{remark}
+	A claim like ``All $A$ are $B$'' can be written down as
+	\[\forall x(A(x)\to B(x)).\]
+	Namely, each $x$ such that $A(x)$ must also have $B(x)$.
+\end{remark}
+
+\subsection{The Existential Quantifier}
+And here is what we do for $\exists$.
+\begin{definition}[Truth for \texorpdfstring{$\exists$}{}]
+	Fix a model $\mathcal M=(D,I)$ and variable assignment $g:\op{Var}\to D$. Then, for some formula $\varphi$, then $\mathcal M\models_g\forall x\varphi x$ if and only if, for all variable assignments $g$ of the open variables in $\varphi$ and some $a\in D$, we have
+	\[\mathcal M\models_{g[x:=a]}\varphi.\]
+	Then $a$ is a \textit{witness} to this statement.
+\end{definition}
+\begin{remark}
+	It is possible to have more than one witness.
+\end{remark}
+The only difference is that we require this to be true for some $a\in D$, which is notably different from requiring all $a\in D$.
+\begin{example}
+	We have $\mathcal M\models_g\exists(P(x)\land\lnot Q(x))$ if and only if there is some $d\in D$ such that $\mathcal M\models_{g[x:=d]}P(x)\land\lnot Q(x)$.
+
+	Concretely, if $D=\{1,2,3\}$, then $\mathcal M\models_g\exists(P(x)\land\lnot Q(x))$ holds if and only if any one of the following is true.
+	\begin{listroman}
+		\item $\mathcal M\models_{g[x:=1]}P(x)\land\lnot Q(x)$, which means $P(1)$ and not $Q(1)$.
+		\item $\mathcal M\models_{g[x:=2]}P(x)\land\lnot Q(x)$, which means $P(2)$ and not $Q(2)$.
+		\item $\mathcal M\models_{g[x:=3]}P(x)\land\lnot Q(x)$, which means $P(3)$ and not $Q(3)$.
+	\end{listroman}
+\end{example}
+\begin{example}
+	Working in \autoref{ex:easysyllogisms}, we have
+	\[\mathcal M\models_g\exists x(\op{student}(x)\land\lnot\op{sophomore}(x)).\]
+	Indeed,
+	\[\mathcal M\models(\op{student}(2)\land\lnot\op{sophomore}(2)).\]
+	Namely, $2$ is a student and not a sophomore.
+\end{example}
+\begin{remark}
+	Intuitively, we can think about $\forall$ as some giant $\land$ over all variables. Dually, we can think about $\exists$ as some giant $\lor$ over all variables. In particular, if our model $D$ has finitely many elements, then $\forall xP(x)$
+	\[\bigwedge_{d\in D}P(d).\]
+\end{remark}
+What are we missing? Well, we would like properties that depend on more than one variable, and we would also like a notion of equality. These will be a feature of first-order logic that we do not have in pure monadic logic.
+
+\subsection{Validity}
+Note that, if $\varphi$ is a closed formula (i.e., has no free variables), then $\varphi$ is true independent of the chosen variable assignment $g$. In other words, if we have a model $\mathcal M$ and two variable assignments $g$ and $g'$, then
+\[\mathcal M\models_g\varphi\iff\mathcal M\models_{g'}\psi.\]
+Simply speaking, whatever $g$ does doesn't matter because we are going to set everything in a $\forall$ or $\exists$ modification.
+
+In fact, we have the following.
+\begin{proposition}
+	Fix a model $\mathcal M$ and formula $\varphi$. Then if $g$ and $g'$ agree on all free variables in $\varphi$, then we still have
+	\[\mathcal M\models_g\varphi\iff\mathcal M\models_{g'}\varphi.\]
+\end{proposition}
+\begin{proof}
+	Once again, the reasoning is that we can determine the truth of $\varphi$ as soon as we know what happens to its free variables.
+\end{proof}
+As with propositional logic, we have a notion of validity.
+\begin{definition}[Valid]
+	An argument with a set $\Gamma$ of premises and conclusion $\psi$ is \textit{valid} if and only if every model $\mathcal M$ and variable assignment $g$ such that $\mathcal M\models_g\varphi$ for each $\varphi\in\Gamma$, we have
+	\[\mathcal M\models_g\psi\]
+	as well. We notate this $\Gamma\models\psi$ and say that $\psi$ is a semantic consequence of $\Gamma$.
+\end{definition}
+As before, we will still say that a formula $\varphi$ is valid if and only if $\emp\models\varphi$.
+\begin{example}
+	The following argument is valid.
+	\begin{enumerate}
+		\item $\forall x(A(x)\land B(x))$.
+		\item Therefore, $\forall xA(x)$.
+	\end{enumerate}
+\end{example}
+For more examples, the following statements are valid. We will not prove them rigorously, though the reader might want to be convinced that they could if they wanted to.
+\begin{itemize}
+	\item Quantifier exchange: $\forall xP(x)\liff\lnot\exists x\lnot P(x)$ and $\exists P(x)\liff\lnot\forall x\lnot P(x)$.
+
+	For example, someone had a high-five if and only if nobody did not have a high-five.
+
+	\item Universal instantiation: $\forall P(x)\to P(y)$. Namely, if $P(x)$ is always true, then surely $P(y)$ is true.
+
+	\item Existential generalization: $P(y)\to\exists xP(x)$. Namely, if we have found an apple, then we know that there exists an apple.
+
+	\item Distribution: $\forall x(P(x)\to Q(x))\to(\forall xP(x)\to\forall xQ(x))$. In words, if we know that everyone with $P$ has $Q$, and we know that everybody has $P$, then we also know that everyone has $Q$.
+
+	\item Vacuous quantification: $P(x)\to\forall yP(x)$. Namely, the $\forall y$ does not help us evaluate $P(x)$.
+\end{itemize}
+\begin{remark}
+	There is an algorithm that will decide in finite time if a formula in pure monadic logic is valid. The main key to the algorithm is to run through all possible ``versions'' of interpretation instead of working through all models and variable assignments, of which there are infinitely many. The reason we are able to do this is that our formula only has finitely many predicates to care about.
+\end{remark}
+To manifest the above remark, we state the following lemma.
+\begin{lemma}
+	If a formula $\varphi$ is not valid, then there is a model $\mathcal M=(D,I)$ with $\#D=2^k$, where $k$ is the number of predicate symbols appearing in $\varphi$.
+\end{lemma}
+\begin{example}
+	The formula
+	\[\varphi:=\forall xA(x)\to\forall x(A(x)\land B(x))\]
+	can be falsified by a model with domain $\{1,2,3,4\}$. Namely, we set $\mathcal I$ by defining $I$ as $I(A)=\{1,2\}$ and $I(B)=\{1,3\}$ so that $A(2)\to(A(2)\land B(2))$ is false, thus falsifying $\varphi$.
+\end{example}
+\begin{corollary}
+	There is an algorithm for deciding if a formula in pure monadic logic
+\end{corollary}
+\begin{proof}
+	Fix $\varphi$ a formula with $k$ predicates. In the hard direction, suppose that $\varphi$ is not valid. Then by the lemma, we know that there is a model $\mathcal M=(D,I)$ where $\#D=2^k$. Now, $I$ is a function $\op{Pred}\to\mathcal P(D)$, of which there are
+	\[(\#\op{Pred})^{\#\mathcal P(D)}=k^{2^k}\]
+	total models to check, which gives our algorithm. Conversely, if $\varphi$ is true, then the above process will not find any model falsifying $\varphi$, so we still return true.
+\end{proof}
+This algorithm might be slow, but at least it works.
