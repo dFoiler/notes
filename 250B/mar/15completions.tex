@@ -2,15 +2,20 @@
 
 Today's notes were transcribed from Miles's notes of the class. Thank you, Miles! We are finishing up completions today.
 
-\subsection{Lifting Idempotents}
+\subsection{Idempotents}
 We recall the following definitions.
 \begin{definition}[Idempotent]
-	Fix $R$ a ring. An element $e\in R$ is \textit{idempotent} if and only if $e^2=e$.
-\end{definition} % \todo{make restatable}
+	Fix a ring $R$. An element $e\in R$ is \textit{idempotent} if and only if $e^2=e$.
+\end{definition}
 \begin{remark}
 	Equivalently, $e\in R$ is idempotent if and only if $e$ is a root of the polynomial $f(x)=x^2-x$.
 \end{remark}
-\begin{example}
+\begin{remark}
+	If $e\in R$ is idempotent, then we can give $Re$ a ring structure, where the addition and multiplication are inherited from $R$. In particular, we are closed under addition as $re+se=(r+s)e$, and we are closed under multiplication as $re\cdot se=rse^2=(rs)e$.
+	
+	However, our identity element is now $e$, which works because $e\cdot re=re\cdot e=re^2=re$ for any $re\in Re$. The coherence (commutativity, associativity, distributivity, etc.) checks are all inherited directly from $R$.
+\end{remark}
+\begin{example} \label{ex:subfromoneidemp}
 	If $e\in E$ is an idempotent, then $1-e$ is also an idempotent: we can directly compute
 	\[(1-e)^2=1-e-e+e^2=1-e-e+e=1-e.\]
 \end{example}
@@ -22,7 +27,7 @@ We recall the following definitions.
 	This was on the homework.
 \end{proof}
 
-We want to lift idempotents, but we will want to keep track of a little more data.
+We will want to lift idempotents, but we will want to keep track of a little more data.
 \begin{definition}[Orthogonal idempotents]
 	Fix $R$ a ring. Then a set $E\subseteq R$ of idempotents of $R$ is \textit{orthogonal} if and only if $ee'=0$ for any two distinct $e,e'\in E$.
 \end{definition}
@@ -30,11 +35,11 @@ We want to lift idempotents, but we will want to keep track of a little more dat
 	Fix $e\in R$ an idempotent. Then the elements $\{e,1-e\}$ are orthogonal. In particular, these are orthogonal because
 	\[e(1-e)=e-e^2=e-e=0.\]
 \end{example}
-Here are some reasons to care about orthogonal idempotents.
-\begin{lemma}
-	Fix $R$ a ring and $E\subseteq R$ a finite set of idempotents. Then
+Here are some reasons to care about orthogonal idempotents. For one, they give more idempotents.
+\begin{lemma} \label{lem:sumidemps}
+	Fix $R$ a ring and $E\subseteq R$ any finite set of orthogonal idempotents. Then
 	\[\sum_{e\in E}e\]
-	is another idempotents.
+	is another idempotent.
 \end{lemma}
 \begin{proof}
 	This is a direct computation. For concreteness, enumerate $E=\{e_1,\ldots,e_n\}$. Then we can compute
@@ -43,6 +48,58 @@ Here are some reasons to care about orthogonal idempotents.
 	\[\left(\sum_{k=1}^ne_k\right)^2=\sum_{k=1}^ne_k,\]
 	which is what we wanted.
 \end{proof}
+The above lemma is in fact detecting a larger ring decomposition, generalizing \autoref{lem:basicidempdecomp}.
+\begin{lemma} \label{lem:idempringdecomp}
+	Fix $R$ a ring and $E\subseteq R$ a finite set of orthogonal idempotents such that
+	\[\sum_{e\in E}e=1.\]
+	Then
+	\[\bigoplus_{e\in E}Re\cong R\]
+	by taking $(r_ee)_{e\in E}$ to $\sum_{e\in E}r_ee$.
+\end{lemma}
+\begin{proof}
+	Let $\varphi:(r_ee)_{e\in E}\mapsto\sum_{e\in E}r_ee$ be the map in question. We have the following checks on $\varphi$; let $(r_ee)_{e\in E}$ and $(s_ee)_{e\in E}$ be elements of $\bigoplus_{e\in E}Re$.
+	\begin{itemize}
+		\item Additive: we note that
+		\[\varphi\left((r_ee)_{e\in E}+(s_ee)_{e\in E}\right)=\varphi\left(((r_e+s_e)e)_{e\in E}\right)=\sum_{e\in E}(r_e+s_e)e=\varphi\left((r_e)_{e\in E}\right)+\varphi\left((s_e)_{e\in E}\right).\]
+		\item Multiplicative: we note that
+		\[\varphi\left((r_ee)_{e\in E}\cdot(s_ee)_{e\in E}\right)=\varphi\left((r_es_ee)_{e\in E}\right)=\sum_{e\in E}r_es_ee.\]
+		However,
+		\[\varphi\left((r_e)_{e\in E}\right)\varphi\left((s_e)_{e\in E}\right)=\left(\sum_{e\in E}r_ee\right)\left(\sum_{e'\in E}s_{e'}e'\right)=\sum_{e=e'\in E}r_es_{e'}e'+\sum_{\substack{e,e'\in E\\e\ne e'}}r_es_{e'}ee'.\]
+		The left sum here evaluates term-wise as $r_es_ee^2=r_es_ee$, and the right sum here evaluates term-wise as $r_es_{e'}ee'=0$ because $E$ is made of orthogonal idempotents (!). So we are done.
+		\item Identity: we note that
+		\[\varphi\left((1e)_{e\in E}\right)=\sum_{e\in E}e=1\]
+		by hypothesis.
+		\item Injective: if an element $(r_ee)_{e\in E}\in\ker\varphi$, then we see that
+		\[\sum_{e\in E}r_ee=0\]
+		by definition. Now, fixing any $e'\in E$, we note that $r_eee'=0$ for any $e\ne e'$ because $E$ is made of orthogonal idempotents; however, when $e=e'$, we have $r_eee'=r_ee^2=r_ee$. As such, we see
+		\[r_{e'}e'=e'\cdot\sum_{e\in E}r_ee=e'\cdot0=0,\]
+		so $r_{e'}e'=0$ for any $e'\in E$. Thus, $(r_ee)_{e\in E}$ is the zero element.
+		\item Surjective: for any $r\in R$, we note that
+		\[\varphi\left((re)_{e\in E}\right)=\sum_{e\in E}re=r\sum_{e\in E}e=r\cdot1=r,\]
+		so we are done.
+	\end{itemize}
+	The above checks finish showing that $\varphi$ is an isomorphism of rings.
+\end{proof}
+The condition that the orthogonal idempotents sum to $1$ might look limiting, but it really is not so bad.
+\begin{lemma}
+	Fix $R$ a ring and $E\subseteq R$ a finite set of idempotents. Then
+	\[1-\sum_{e\in E}e\]
+	is another idempotent, orthogonal from the rest of $E$.
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:sumidemps}, $\sum_{e\in E}e$ is an idempotent. By \autoref{ex:subfromoneidemp}, $1-\sum_{e\in E}e$ is an idempotent.
+
+	It remains to show that this idempotent is orthogonal to $E$. Well, fixing any $e'\in E$, we note that
+	\[e'\cdot\sum_{e\in E}e=\sum_{e\in E}ee'.\]
+	If $e=e'$, then $ee'=(e')^2=e'$; else if $e\ne e'$, then $ee'=0$ because $E$ consists of orthogonal idempotents. So the sum collapses to
+	\[e'\left(1-\sum_{e\in E}e\right)=e'-e'\sum_{e\in E}e=e'-e'=0.\]
+	This finishes.
+\end{proof}
+As such, given any set of orthogonal idempotents, $E$, we can just add in the idempotent
+\[1-\sum_{e\in E}e\]
+to get a new larger set of orthogonal idempotents, from which we can use \autoref{lem:idempringdecomp}.
+
+\subsection{Lifting Idempotents}
 With that definition out of the way, here is our main statement.
 \begin{proposition} \label{prop:liftidemp}
 	Fix a Noetherian, local ring $R$ complete with respect to its maximal ideal $\mf m$. Further, take $A$ to be a finite $R$-algebra (not necessarily commutative!), and pick up a finite set of orthogonal idempotents
