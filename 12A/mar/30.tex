@@ -1,0 +1,156 @@
+% !TEX root = ../notes.tex
+
+We continue moving towards first-order logic.
+
+\subsection{Decidability}
+Last time we introduced validity for pure monadic first-order logic and gave a rough sketch for why there is a finite-time algorithm to determine if a formula in pure monadic first-order logic is valid.
+\begin{remark}
+	Roughly speaking, the reason why we can work with only finite models is that two objects with the exact same properties (up to interpretation in the predicates in $\varphi$) can be identified. Then, because $\varphi$ has only $k$ predicates, we only have $2^k$ ways to assign these properties, so this is the number of elements we need for the domain of our model.
+\end{remark}
+However, it will turn out that there is no algorithm to determine if an algorithm in first-order logic is valid or not. This is the price of a powerful language.
+
+\subsection{Constants}
+We will now add ``names'' to our language which cannot change on variable assignments. Quickly, recall that we defined our language of pure monadic logic by inducting upwards from connective, predicates, and variables.
+
+We now define a different kind of ``term,'' which will be constants.
+\begin{example}
+	In the sentence ``For any integer $n$,'' the letter ``$n$'' is a variable.
+\end{example}
+\begin{example}
+	We will never say ``For any integer $0$,'' the meaning of $0$ is fixed, so it is a constant.
+\end{example}
+As such, we will add in constant symbols
+\[\mathrm{Const}=\{c_1,c_2,\ldots\}\]
+which is disjoint from our sets of variables $\op{Var}$ and of predicates $\op{Pred}$. Otherwise, constants behave like variables.
+\begin{defihelper}[Mondadic predicate formula] \label{def:formulawithconsts}
+	Fix $\mathrm{Pred}:=\{P_1,P_2,\ldots\}$ a set of unary predicates and some variables $\mathrm{Var}:=\{x_1,x_2,\ldots\}$ and some constants $\mathrm{Const}:=\{c_1,c_2,\ldots\}$. Then our formulae are created as follows.
+	\begin{itemize}
+		\item If $P\in\mathrm{Pred}$ and $x\in\mathrm{Var}$, then $P(x)$ is a formula.
+		\item Similarly, if $P\in\mathrm{Pred}$ and $c\in\mathrm{Const}$, then $P(c)$ is a formula.
+		\item If $\varphi$ and $\psi$ are formulae and $x\in\mathrm{Var}$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ and $\varphi\to\psi$ and $\varphi\liff\psi$ and $\forall x\varphi$ and $\exists x\varphi$ are all formulae.
+		\item There are no other formulae.
+	\end{itemize}
+\end{defihelper}
+We also have to update our models.
+\begin{defihelper}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ for pure monadic logic consists of a nonempty set $D$ and a function $I:\mathrm{Pred}\to\mathcal P(D)$ that has the following data.
+	\begin{itemize}
+		\item Each predicate $A$ to a subset $I(A)\subseteq D$.
+		\item We also have to assign $I(c)\in D$ for each $c\in\mathrm{Const}$.
+	\end{itemize}
+\end{defihelper}
+Then for validity, we also have to add in our constants.
+\begin{defihelper}[Truth]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae, $\mathcal M\models_gP(x)$ for $x\in\mathrm{Var}$ if and only if $g(x)\in I(P)$.
+		\item Similarly, $\mathcal M\models_gP(x)$ for $x\in\mathrm{Const}$ if and only if $I(c)\in I(P)$.
+		\item We build truth for connectives in the same way as for propositional logic.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if, for all $d\in D$, we have $\mathcal M\models_{g[x:=d]}\varphi$.
+		\item $\mathcal M\models_g\exists x\varphi$ if and only if there is some $d\in D$ for which $\mathcal M\models_{g[x:=d]}\varphi$.
+	\end{itemize}
+\end{defihelper}
+\begin{example}
+	To the model in \autoref{ex:easysyllogisms}, we add a constant $\mathrm{kate}$, and we set $I(\mathrm{kate})=4$. As such, we see that $\mathcal M\models_g\mathrm{Faculty}(\mathrm{kate})$ because
+	\[I(\mathrm{kate})=4\in I(\mathrm{Faculty})=\{4\}.\]
+	Similarly, we see that $\mathcal M\nvDash_g\mathrm{Student}(\mathrm{kate})$ because
+	\[I(\mathrm{kate})=4\notin I(\mathrm{Student})=\{1,2,3\}.\]
+\end{example}
+Note that constants let us turn quantifiers into propositional logic: fixing $D=\{1,2,\ldots,n\}$, and suppose that our model has constants $\{c_1,\ldots,c_n\}$ which our model sends $I(c_k)=k$. Then
+\begin{align*}
+	\mathcal M\models_g\forall xP(x) &\iff\mathcal M\models_gP(c_1)\land\cdots\land P(c_n) \\
+	\mathcal M\models_g\exists xP(x) &\iff\mathcal M\models_gP(c_1)\lor\cdots\lor P(c_n).
+\end{align*}
+This idea works as long as the domain $D$ is finite; otherwise, we will need an infinite formula to correctly simulate.
+
+\subsection{Function Symbols}
+We will now introduce functions. The important part of a function is that we have unique outputs.
+\begin{example}
+	There is a function $\mathrm{biomom}$ taking a person to their biological mother. This is a unary function: it takes one input. In fact,
+	\[\op{biomom}(\op{biomom}(\op{kate}))\]
+	is a notion which makes sense.
+\end{example}
+\begin{remark}
+	Our predicates will be upper-case, and our functions will be lower-case.
+\end{remark}
+Now, with functions, we need to be careful about what we call a term. We define it inductively.
+\begin{definition}
+	Fix a language with variables in $\mathrm{Var}$ and predicates $\mathrm{Pred}$ and constants $\mathrm{Const}$ and functions $\mathrm{Func}$. We now define a \textit{term} as follows.
+	\begin{itemize}
+		\item Variables are terms.
+		\item Constants are terms.
+		\item If $f\in\mathrm{Func}$ and $t$ is a term, then $f(t)$ is a term.
+		\item Nothing else is a term.
+	\end{itemize}
+\end{definition}
+\begin{example}
+	If $\op{biomom}$ is a function and $x\in\mathrm{Var}$, then $\op{biomom}(x)$ is a term, so $\op{biomom}(\op{biomom}(x))$ is also a term.
+\end{example}
+We can now appropriately extend \autoref{def:formulawithconsts} to talk about formulae as follows.
+\begin{defihelper}[Mondadic predicate formula]
+	Fix $\mathrm{Pred}:=\{P_1,P_2,\ldots\}$ a set of unary predicates and some variables $\mathrm{Var}:=\{x_1,x_2,\ldots\}$ and some constants $\mathrm{Const}:=\{c_1,c_2,\ldots\}$. Then our formulae are created as follows.
+	\begin{itemize}
+		\item If $P\in\mathrm{Pred}$ and $x\in\mathrm{Term}$, then $P(x)$ is a formula.
+		\item Similarly, if $P\in\mathrm{Pred}$ and $c\in\mathrm{Const}$, then $P(c)$ is a formula.
+		\item If $\varphi$ and $\psi$ are formulae and $x\in\mathrm{Var}$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ and $\varphi\to\psi$ and $\varphi\liff\psi$ and $\forall x\varphi$ and $\exists x\varphi$ are all formulae.
+		\item There are no other formulae.
+	\end{itemize}
+\end{defihelper}
+\begin{ex}
+	If $\op{biomom}$ is a function and $\mathrm{kate}\in\mathrm{Const}$, the $\op{biomom}(\op{biomom}(x))$ is a term, so
+	\[\op{LeftHanded}(\op{biomom}(\op{biomom}(\mathrm{kate}))\]
+	might be some formula.
+\end{ex}
+We now need to give functions some semantics. So we update our definition of model.
+\begin{defihelper}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ for pure monadic logic consists of a nonempty set $D$ and a function $I:\mathrm{Pred}\to\mathcal P(D)$ that has the following data.
+	\begin{itemize}
+		\item Each predicate $A$ to a subset $I(A)\subseteq D$.
+		\item We also have to assign $I(c)\in D$ for each $c\in\mathrm{Const}$.
+		\item A unary function $f\in\mathrm{Func}$ gets sent to a unary function $I(f):D\to D$.
+	\end{itemize}
+\end{defihelper}
+We won't define precisely what it means to be a function, but it should be intuitive.
+\begin{example} \label{ex:kate}
+	In a model $\mathcal M=(D,I)$ where $D=\NN$, we can define $I(\mathrm{biomom})$ to be the successor function $n\mapsto n+1$. For fun, we will also set $I(\mathrm{kate})=0$, and add a predicate
+	\[I(\mathrm{LeftHanded})=\{3,4\}.\]
+\end{example}
+To keep track, here is everything that we've introduced.
+\begin{itemize}
+	\item Predicates $\mathrm{Pred}$ belong to the language.
+	\item Constants $\mathrm{Const}$ belong to the language.
+	\item Functions $\mathrm{Func}$ belong to the language.
+	\item More generally, terms $\mathrm{Term}$ belong to the language.
+	\item However, the interpretation of a model tells us what to do with all this data.
+\end{itemize}
+To keep track of this, here is some notation.
+\begin{defi}[Denotation]
+	Fix a model $\mathcal M=(D,I)$. Then, given a variable assignment $g$, we set
+	\[\llbracket t\rrbracket_I^g\in D\]
+	to be the term $t$ relative to the interpretation $t$ and variable assignment $g$. This is defined inductively as follows.
+	\begin{itemize}
+		\item For $x\in\mathrm{Var}$, we set $\llbracket x\rrbracket_I^g:=g(x)$.
+		\item For $c\in\mathrm{Const}$, we set $\llbracket c\rrbracket_I^g:=I(c)$.
+		\item Lastly, if $f\in\mathrm{Func}$ and $t\in\mathrm{Term}$, we set $\llbracket f(t)\rrbracket_I^g$ to be the interpreted function $I(f)$ applied to the term $\llbracket t\rrbracket_I^g$. I.e.,
+		\[\llbracket f(t)\rrbracket_I^g:=I(f)(\llbracket t\rrbracket_I^g).\]
+	\end{itemize}
+\end{defi}
+\begin{example}
+	From \autoref{ex:kate}, we can compute
+	\[\llbracket\op{biomom}(\mathrm{kate})\rrbracket_I^g:=I(\op{biomom})(\llbracket \mathrm{kate}\rrbracket_I^g)=I(\op{biomom})(I(\mathrm{kate})=I(\op{biomom})(0)=1.\]
+\end{example}
+And now we update our semantics, which generalizes.
+\begin{defihelper}[Truth]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae, $\mathcal M\models_gP(x)$ for $x\in\mathrm{Var}$ if and only if $\llbracket t\rrbracket_I^g\in I(P)$.
+		\item We build truth for connectives in the same way as for propositional logic.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if, for all $d\in D$, we have $\mathcal M\models_{g[x:=d]}\varphi$.
+		\item $\mathcal M\models_g\exists x\varphi$ if and only if there is some $d\in D$ for which $\mathcal M\models_{g[x:=d]}\varphi$.
+	\end{itemize}
+\end{defihelper}
+\begin{example}
+	From \autoref{ex:kate}, we see that
+	\[\mathcal M\nvDash_g\mathrm{LeftHanded}(\op{biomom}(\mathrm{kate}))\]
+	because $1\notin I(\mathrm{LeftHanded})$.
+\end{example}
