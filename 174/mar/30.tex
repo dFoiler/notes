@@ -1,0 +1,126 @@
+% !TEX root = ../notes.tex
+
+We continue rolling.
+
+\subsection{More on Functors through Limits}
+We add a new definition.
+\begin{definition}[Strictly creates limits]
+	A functor $F:\mathcal C\to\mathcal D$ \textit{strictly creates limits} for some class $\mathcal K$ of diagrams if and only if a diagram $K:\mathcal J\to\mathcal C$ in $\mathcal K$ with limit cone $\mu:d\Rightarrow FK$ in $\mathcal D$ has the following.
+	\begin{itemize}
+		\item There is a unique lift of $\mu$ to $\mathcal C$ to a cone over $\mathcal K$ in $\mathcal C$.
+		\item The lift of $\mu$ is a limit cone.
+	\end{itemize}
+\end{definition}
+This is different from merely creating limits because of the uniqueness.
+
+And now a result.
+\begin{quot}[Bryce]
+	Any time I use the word ``small,'' it's kinda sloppy.
+\end{quot}
+\begin{proposition}
+	Fix $\mathcal A$ a small category and some category $\mathcal C$. The forgetful functor
+	\[U:\op{Fun}(\mathcal A,\mc C)\to\op{Fun}(\op{Ob}\mc A,\mc C)\]
+	strictly creates all limits and colimits that $\mathcal C$ admits. In fact, the lifts are computed pointwise: given $a\in\mathcal A$, then $\op{ev}_a:\op{Fun}(\mc A,\mc C)\to\mathcal C$ sending $F\mapsto Fa$ preserves limits and colimits.
+\end{proposition}
+To elaborate, $\op{Ob}A\subseteq\mathcal A$ is the subcategory of $\mathcal A$ where we have forgotten about all the non-identity morphisms.
+\begin{proof}
+	We kinda just do it. We note that
+	\[\op{Fun}(\op{Ob}\mathcal A,\mc C)\cong\prod_{\op{Ob}\mc A}\mc C\]
+	in the nicest possible way because we are approximately thinking about a functor from a discrete set of $\mc C$ as just a $\op{Ob}\mc A$-indexed tuple of things in $\mc C$. These are pretty much literally equal. Here are our projection maps $\pi_a$ are pretty much evaluating the functor $\op{ev}_a$ along $\op{Ob}A$.
+
+	Now, fix a diagram $K:\mathcal J\to\op{Fun}(\mathcal A,\mathcal C)$ such that $\op{ev}_a\mathcal K:\mathcal J\to\mathcal C$ has a limit for each $a\in\mc A$. In other words, we are working in the context of the limits that $\mathcal C$ admits. As such, we get lots of limit cones. Type-checking everything through, we have a diagram that looks like the following.
+	% https://q.uiver.app/?q=WzAsMyxbMSwwLCJcXGxpbVxcb3B7ZXZ9X2FLIl0sWzAsMSwiXFxvcHtldn1fYUtfaSJdLFsyLDEsIlxcb3B7ZXZ9X2FLX2oiXSxbMSwyXSxbMCwxLCJcXGxhbWJkYV9pXmEiLDJdLFswLDIsIlxcbGFtYmRhX2peYSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& {\lim\op{ev}_aK} \\
+		{\op{ev}_aK_i} && {\op{ev}_aK_j}
+		\arrow[from=2-1, to=2-3]
+		\arrow["{\lambda_i^a}"', from=1-2, to=2-1]
+		\arrow["{\lambda_j^a}", from=1-2, to=2-3]
+	\end{tikzcd}\]
+	Namely, this is a limit taking place in $\mathcal C$ that we asserted $\mathcal C$ should admit. We want to lift this upwards to get a limit for $K$. Namely, we want a functor
+	\[\lim K:\mc A\to\mc C.\]
+	Well, we simply define our behavior on objects by hand as
+	\[(\lim K)(a):=\lim\op{ev}_aK.\]
+	This verifies that we are lifting pointwise because $(\lim K)(a)=\op{ev}_a(\lim K)$, so we are really just concerned with showing the uniqueness of our lift.
+
+	To continue assembling our data, for $f:a\to b$ in $\mc A$, we need
+	\[(\lim K)(f):(\lim K)(a)\to(\lim K)(b).\]
+	In particular, we are exhibiting a morphism as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXGxpbVxcb3B7ZXZ9X2FLIl0sWzIsMCwiXFxsaW1cXG9we2V2fV9iSyJdLFswLDEsIlxcb3B7ZXZ9X2FLX2oiXSxbMiwxLCJcXG9we2V2fV9iS19qIl0sWzAsMSwiIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzAsMiwiXFxsYW1iZGFfal5hIiwyXSxbMSwzLCJcXGxhbWJkYV9qXmIiXSxbMiwzLCJLX2ooZikiLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\lim\op{ev}_aK} && {\lim\op{ev}_bK} \\
+		{\op{ev}_aK_j} && {\op{ev}_bK_j}
+		\arrow[dashed, from=1-1, to=1-3]
+		\arrow["{\lambda_j^a}"', from=1-1, to=2-1]
+		\arrow["{\lambda_j^b}", from=1-3, to=2-3]
+		\arrow["{K_j(f)}"', dashed, from=2-1, to=2-3]
+	\end{tikzcd}\]
+	We can exhibit a map along the bottom objects because $\op{ev}_aK_j=K_j(a)$ and $\op{ev}_bK_j=K_j(b)$, so we have some morphism of $K_j(f)$ of the bottom objects. Then this will induce a unique map upstairs
+	\[\lim\op{ev}_aK\to\lim\op{ev}_bK\]
+	by the universal property of our limits. We call this map $(\lim K)(f)$, and it will turn out to be functorial. To be more explicit, the composite maps
+	\[\lim\op{ev}_aK\stackrel{\lambda_j^a}\to\lim\op{ev}_aK_j\stackrel{}K_j(f)\to\lim\op{ev}_bK_j\]
+	make a cone, which will induce the desired morphism.
+
+	For a taste, let's show that $(\lim K)(\id_a)$ is still the identity. The main point is that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXGxpbVxcb3B7ZXZ9X2FLIl0sWzIsMCwiXFxsaW1cXG9we2V2fV9hSyJdLFswLDEsIlxcb3B7ZXZ9X2FLX2oiXSxbMiwxLCJcXG9we2V2fV9hS19qIl0sWzAsMSwiXFxpZF97XFxsaW1cXG9we2V2fV9hS30iLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwyLCJcXGxhbWJkYV9qXmEiLDJdLFsxLDMsIlxcbGFtYmRhX2peYiJdLFsyLDMsIktfaihcXGlkX2EpPVxcaWRfe0tfaihhKX0iLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\lim\op{ev}_aK} && {\lim\op{ev}_aK} \\
+		{\op{ev}_aK_j} && {\op{ev}_aK_j}
+		\arrow["{\id_{\lim\op{ev}_aK}}", dashed, from=1-1, to=1-3]
+		\arrow["{\lambda_j^a}"', from=1-1, to=2-1]
+		\arrow["{\lambda_j^b}", from=1-3, to=2-3]
+		\arrow["{K_j(\id_a)=\id_{K_j(a)}}"', dashed, from=2-1, to=2-3]
+	\end{tikzcd}\]
+	In particular, the bottom objects are pretty much equal because their morphisms are the identities. Thus, the map above $\lim\op{ev}_aK\to\lim\op{ev}_aK$ is unique, and $\id_{\lim\op{ev}_aK}$ works, so we are done.
+
+	Lastly, we talk about uniqueness. Essentially, by the uniqueness of the rest of our universal properties, we can back-solve for what our functor $\lim K$ should have been the entire time.
+\end{proof}
+
+\subsection{Limits in Set}
+We continue.
+\begin{theorem}
+	Fix any diagram $F:\mathcal J\to\mathcal C$. Then we claim there is a natural isomorphism
+	\[\op{Mor}(x,\lim_{\mathcal J}F)\cong\lim_{\mathcal J}\op{Mor}(x,F)\]
+	in $\mathrm{Set}$.
+\end{theorem}
+Roughly speaking, this is a superpowered version of \autoref{prop:limprods}.
+\begin{proof}
+	Back in \autoref{prop:setlims}, we showed that we can construct a limit of a diagram $K:\mathcal I\to\mathrm{Set}$ by
+	\[\lim_\mathcal IK=\op{Cone}(*,K).\]
+	In particular, we have a natural isomorphism
+	\[\lim_{\mathcal J}\op{Mor}(x,F)\cong\op{Cone}(*,\op{Mor}(x,F)).\]
+	As such, we claim that
+	\[\op{Cone}(*,\op{Mor}(x,F))\cong\op{Cone}(x,F).\]
+	For this, we take a cone $\lambda:*\Rightarrow\op{Cone}(*,\op{Mor}(x,F))$ and recover a morphism $\lambda_j(*):x\to Fj$, which we claim will assemble to a cone in $\op{Cone}(x,F)$. To check the coherence, we pick up a morphism $f:i\to j$ and check the naturality square as
+	\[(Ff)\lambda_i(*)\stackrel?=\lambda_j(*),\]
+	which is true because $\lambda$ was already a cone.
+
+	In the other direction, we take a cone $\mu:x\Rightarrow F$. We can then define the cone
+	\[\mu':*\Rightarrow\op{Mor}(x,F)\]
+	by sending $\mu'_j(*):=\mu_j$. These maps will be inverses, and we will get naturality by elbow grease.
+
+	Synthesizing, we now have an isomorphism
+	\[\lim_{\mathcal J}\op{Mor}(x,F)\cong\op{Cone}(x,F).\]
+	But now this is isomorphic to
+	\[\op{Mor}(x,\lim_{\mathcal J}F)\]
+	because morphisms from $x$ to the diagram to $F$ are the same as morphisms from $x$ to $\lim_{\mathcal J}F$.
+\end{proof}
+\begin{remark}
+	We cannot talk very well about
+	\[\op{Mor}(\lim_{\mathcal J}F,x)\]
+	because it is hard to map out of limits. On the other hand, it is true that
+	\[\op{Mor}(\op{colim}_{\mathcal J}F,y)\cong\lim_{\mathcal J}\op{Mor}(F,y)\]
+	by believing very hard.
+\end{remark}
+And now let's see an example because Bryce is feeling benevolent.
+\begin{ex}
+	Iterated products of an element $a\in\mc C$ are called powers. The above fact gives
+	\[\op{Mor}\left(X,\prod_{\mathcal I}A\right)\cong\prod_{\mathcal I}\op{Mor}(X,A).\]
+\end{ex}
+We close with a last result.
+\begin{corollary}
+	The covariant representable functors $\op{Mor}(X,-):\mathcal C\to\mathrm{Set}$ in $\mathcal C$.
+\end{corollary}
+\begin{proof}
+	This follows directly from the previous result, where preservation of limits requires some notion of naturality given in the previous proposition.
+\end{proof}
