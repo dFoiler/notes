@@ -1,0 +1,114 @@
+% !TEX root = ../notes.tex
+
+We continue moving towards first-order logic.
+
+\subsection{Validity}
+Continuing our story with function symbols, we still have the same notion of validity.
+\begin{defihelper}[Valid]
+	A formula $\varphi$ is \textit{valid} if and only if, for all models $\mathcal M=(D,I)$, we have that $\mathcal M\models_g\varphi$ for all variable assignments in $D$.
+\end{defihelper}
+It turns out that, even with our unary function symbols, it is possible to give an algorithm for the truth. Here is the key result.
+\begin{theorem}
+	Given a formula $\varphi$ with only unary function symbols, there exists a formula $\psi$ which is valid if and only if $\varphi$ is valid, but now $\psi$ has no function symbols at all.
+\end{theorem}
+Thus, we can reduce validity to the pure monadic case without function symbols.
+
+\subsection{Identity}
+We are interested in talking about identity in a rigorous way; namely, we want a notion of two objects being (literally) the same. To start, we need to introduce the predicate for equality.
+\begin{defihelper}[Mondadic predicate formula]
+	Fix $\mathrm{Pred}:=\{P_1,P_2,\ldots\}$ a set of unary predicates and some variables $\mathrm{Var}:=\{x_1,x_2,\ldots\}$ and some constants $\mathrm{Const}:=\{c_1,c_2,\ldots\}$. Then our formulae are created as follows.
+	\begin{itemize}
+		\item If $s,t\in\mathrm{Term}$, then $s\doteq t$ is a formula.
+		\item If $P\in\mathrm{Pred}$ and $x\in\mathrm{Term}$, then $P(x)$ is a formula.
+		\item If $\varphi$ and $\psi$ are formulae and $x\in\mathrm{Var}$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ and $\varphi\to\psi$ and $\varphi\liff\psi$ and $\forall x\varphi$ and $\exists x\varphi$ are all formulae.
+		\item There are no other formulae.
+	\end{itemize}
+\end{defihelper}
+Note that we are writing $\doteq $ to distinguish the language's identity with our identity outside.
+\begin{notation}
+	We may write $\lnot(s\doteq t)$ for $s\not\doteq t$.
+\end{notation}
+And here are our semantics.
+\begin{defihelper}[Truth]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae $P(x)$, $\mathcal M\models_gP(x)$ for $x\in\mathrm{Var}$ if and only if $\llbracket t\rrbracket_I^g\in I(P)$.
+		\item For atomic formulae $s\doteq t$, we have $\mathcal M\models_gs\doteq t$ if and only if $\llbracket s\rrbracket_I^g=\llbracket t\rrbracket_I^g$.
+		\item We build truth for connectives in the same way as for propositional logic.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if, for all $d\in D$, we have $\mathcal M\models_{g[x:=d]}\varphi$.
+		\item $\mathcal M\models_g\exists x\varphi$ if and only if there is some $d\in D$ for which $\mathcal M\models_{g[x:=d]}\varphi$.
+	\end{itemize}
+\end{defihelper}
+Note that we are not getting free relation about how the predicate $\doteq $ is interpreted by our model's $I$ function.
+\begin{example}
+	Continuing from \autoref{ex:kate}, we set a constant $\mathrm{bev}\in\mathrm{Const}$ so that $I(\mathrm{bev})=1$. Then we can compute
+	\[\mathcal M\models_g\mathrm{bev}\doteq\mathrm{biomom}(\mathrm{kate}).\]
+	Indeed, $\llbracket\mathrm{bev}\rrbracket_I^g=I(\mathrm{bev})=1$ and $\llbracket\op{biomom}(\mathrm{kate})\rrbracket=I(\op{biomom})(I(\mathrm{kate}))=1$ as well.
+\end{example}
+As an aside, we are able to talk about distinctness with our notion of identity, so we can count the number of objects in our model as well.
+\begin{ex}
+	In a model with a one-object domain, we cannot have
+	\[\exists x_1\exists x_2(x_1\not\doteq x_2).\]
+	Similarly, we can write
+	\[\exists x_1\cdots\exists x_n\bigland_{\substack{1\le i,j\le n\\i\ne j}}(x_i\not\doteq x_j)\]
+	to say that there are at least $n$ elements. Negating asserts that there at most $n-1$ objects, so we can actually pin down a finite number of objects. For example,
+	\[\lnot\big(\exists x_1\exists x_2\exists x_3(x_1\not\doteq x_2\land x_1\not\doteq x_3\land x_2\not\doteq x_3)\big)\land(\exists x_1\exists x_2(x_1\lnot\doteq x_2)\]
+	asserts that there are exactly $2$ objects.
+\end{ex}
+\begin{example}
+	If we want to classify objects with a property $P$, we can write something like
+	\[\exists x_1\exists x_2(P(x_1)\land P(x_2)\land x_1\not\doteq x_2).\]
+\end{example}
+As such, we can more or less completely describe a finite model by asserting the existence and number of objects with particular properties.
+
+We take a moment to list some tautologies.
+\begin{proposition}
+	The following are true, for any terms $s$ and $t$.
+	\begin{itemize}
+		\item Reflexivity: $t\doteq t$.
+		\item Symmetry: $s\doteq t\to t\doteq s$.
+		\item Transitivity: $(a\doteq b)\land (b\doteq c)\to(a\doteq c)$.
+		\item Substitution: $s\doteq t\to(P(s)\liff P(t))$.
+	\end{itemize}
+\end{proposition}
+\begin{proof}
+	Plug into the definitions. For example, for a model $\mathcal M=(D,I)$, we must have
+	\[\llbracket t\rrbracket_I^g=\llbracket t\rrbracket_I^g,\]
+	which we could show by an induction if we so chose, but it is also just true in our metalanguage. The rest are similar.
+\end{proof}
+
+\subsection{Decidability, Again}
+Our notion of validity is the same as usual. It turns out that we still have validity, which causes the following result.
+\begin{lemma}
+	If a formula $\varphi$ (with no function symbols but perhaps with identity) can be falsified in a model, then $\varphi$ can be falsified in a model with domain
+	\[\left\{1,2,\ldots,r\cdot 2^k\right\},\]
+	where $r$ is the number of variables and $k$ is the number of predicates.
+\end{lemma}
+\begin{remark}
+	We need to depend on the number of variables and not just the number of predicates because our remarks on counting allow us to force the model to have an arbitrary number of elements without changing the number of predicates.
+\end{remark}
+If we add in one unary function symbol, then we are still decidable, which is its own theorem. But it turns out that we have two unary function symbols, then there is no algorithm for deciding validity (!).
+
+\subsection{Substitution}
+We have a little bookkeeping to do before we can continue. We showed earlier that
+\[\forall xP(x)\to P(y)\]
+is valid, for any variable $x$ and term $y$. However, this only holds for our unary predicates $P$, but we want something like this to hold for arbitrary formulae $\varphi$. For example, we want to be able to say
+\[\forall(P(x)\land Q(x))\to(P(y)\land Q(y)).\]
+As of now, we don't have an intelligent way to talk about these formulae with multiple variables and perhaps lots of complexity: we need a notion of substituting a term into a formula.
+\begin{example}
+	Working in \autoref{ex:kate}, we note that we can start with the term
+	\[\op{biomom}(x)\]
+	and substitute the term $\op{biomom}(\mathrm{kate})$ for the variable $x$ to get
+	\[\op{biomom}(\op{biomom}(\mathrm{kate})).\]
+\end{example}
+We now codify this idea into a definition.
+\begin{definition}[Substitution]
+	Fix terms $s$ and $t$ and a variable $x$. Then we define the \textit{substitution} function $s_t^x$ as a function on terms to terms, as follows.
+	\begin{itemize}
+		\item If $c\in\mathrm{Const}$, then $c^x_t:=c$.
+		\item If $y\in\mathrm{Var}$ and $y\ne x$, then $y^x_t=y$.
+		\item We take $x^x_t=t$, which is our substitution.
+		\item If $f\in\mathrm{Func}$ and $u\in\mathrm{Term}$, then $f(u)_t^x=f(u_t^x)$.
+	\end{itemize}
+\end{definition}
+Intuitively, we are modifying our term $s$ to replace $x$s with $t$s.
