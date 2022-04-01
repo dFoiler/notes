@@ -1,0 +1,164 @@
+% !TEX root = ../notes.tex
+
+Unsurprisingly, we are not having discussion today.
+\begin{exe}
+	In $\mathrm{Set}$, we provide a nice isomorphism $\op{Mor}(A,B\cap C)$ and $\op{Mor}(A,B)\cap\op{Mor}(A,C)$.
+\end{exe}
+\begin{proof}
+	Note that we have a pull-back square as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJCXFxjYXAgQyJdLFsxLDAsIkMiXSxbMCwxLCJCIl0sWzEsMSwiQlxcY3VwIEMiXSxbMCwxXSxbMCwyXSxbMCwzLCIiLDIseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XSxbMSwzXSxbMiwzXV0=
+	\[\begin{tikzcd}
+		{B\cap C} & C \\
+		B & {B\cup C}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Passing through $\op{Mor}(A,-)$, we have the following diagram, which is still a pull-back diagram by \autoref{thm:morlimit}.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn0oQSxCXFxjYXAgQykiXSxbMSwwLCJcXG9we01vcn0oQSxDKSJdLFswLDEsIlxcb3B7TW9yfShBLEIpIl0sWzEsMSwiXFxvcHtNb3J9KEEsQlxcY3VwIEMpIl0sWzAsMV0sWzAsMl0sWzAsMywiIiwyLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV0sWzEsM10sWzIsM11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\op{Mor}(A,B\cap C)} & {\op{Mor}(A,C)} \\
+		{\op{Mor}(A,B)} & {\op{Mor}(A,B\cup C)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	As such, we get a more or less canonical isomorphism
+	\[\op{Mor}(A,B\cap C)\cong\op{Mor}(A,B)\cap\op{Mor}(A,C).\]
+\end{proof}
+
+\subsection{Limits through Representable Functors}
+Last time we were talking about the following result, which we restate and add to.
+\begin{theorem}
+	Fix a locally small category $\mathcal C$.
+	\begin{listalph}
+		\item Covariant representable functors preserve limits.
+		\item The (covariant) Yoneda embedding $\yo:\mathcal C\to\op{Fun}(\mathcal C\opp,\mathrm{Set})$ preserves and reflects limits.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	Note that (a) is essentially \autoref{thm:morlimit}. It remains to show (b). For one side, note that $\yo$ reflects limits because it is an embedding. 
+	
+	It remains to preserve limits. Suppose that we have a diagram $F:\mathcal J\to\mathcal C$ with a limit in $\mathcal C$. We need to show that
+	\[\yo(\lim_{\mathcal J}F)\cong\lim_\mathcal J\yo(F).\]
+	We provide an isomorphism on the corresponding diagrams. So we pick up n object $X\in\mathcal C$, and we see that
+	\[\yo(\lim_{\mathcal J}F)(X)=\op{Mor}(X,\lim_\mathcal JF)\]
+	by tracking through \autoref{thm:yonedaembedding} through. Now, by part (a), we see
+	\[\op{Mor}(X,\lim_\mathcal JF)\cong\lim_\mathcal J\op{Mor}(X,F)=\lim_\mathcal J((\yo(F))(X)).\]
+	However, we showed that limits are computed pointwise back in \autoref{prop:limitspointwise}, so
+	\[\lim_\mathcal J((\yo(F))(X))\cong(\lim_{\mathcal J}\yo F)(X).\]
+	This completes checking our isomorphisms of objects. Tracking through the naturality everywhere, we get to say the same thing for morphisms, finishing.
+\end{proof}
+\begin{quot}[Bryce]
+	Can I say the whole thing is trivial? No, part of it is trivial.
+\end{quot}
+As usual, there is a dual story. Namely, we have
+\[\op{Mor}(\colim_{\mathcal J}F,X)\cong\op{Cone}(F,X)\]
+by the universal property of colimits. However, working in $\mathrm{Set}$, we can take opposites to get
+\[\lim_{\mathcal J\opp}\op{Mpr}(F,X)=\op{Cone}(*,\op{Mor}(F,X))\cong\op{Cone}(F,C).\]
+This is not quite the colimit we want because the colimit wants to work with cocones, not with cones, so flipping $\mathcal J$ is not doing the right flip.
+
+Anyway, working with the dual gives us the following statement, which is completely dual.
+\begin{theorem}
+	Fix a locally small category $\mathcal C$.
+	\begin{listalph}
+		\item Contravariant representable functors preserve colimits.
+		\item The (contravariant) Yoneda embedding $\yo:\mathcal C\to\op{Fun}(\mathcal C,\mathrm{Set})$ preserves and reflects limits in $\mathcal C\opp$.
+	\end{listalph}
+\end{theorem}
+Note that we are talking about limits in $\mathcal C\opp$ because of the flipping of the diagram we just described.
+
+\subsection{Computing Limits}
+We would like to compute limits. So let's compute limits.
+\begin{theorem}
+	Fix a diagram $F:\mathcal J\to\mathcal C$. Then $\lim_\mathcal JF$ exists if and only if the equalizer of $c$ and $d$ in the diagram
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJcXGRpc3BsYXlzdHlsZVxcbGltX3tcXG1hdGhjYWwgSn1GIl0sWzEsMSwiXFxkaXNwbGF5c3R5bGVcXHByb2Rfe2pcXGluXFxtYXRoY2FsIEp9RmoiXSxbMiwxLCJcXGRpc3BsYXlzdHlsZVxccHJvZF97ZlxcaW5cXG9we01vcn1cXG1hdGhjYWwgSn1GKFxcb3B7Y29kfWYpIl0sWzIsMCwiRihcXG9we2NvZH1oKSJdLFsxLDIsIkYoXFxvcHtkb219aCkiXSxbMiwyLCJGKFxcb3B7Y29kfWgpIl0sWzIsMywiXFxwaV9oIiwyXSxbMSwzLCJcXHBpX3tcXG9we2NvZH1ofSJdLFsxLDIsImMiLDEseyJvZmZzZXQiOi0yfV0sWzAsMSwiIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzEsMiwiZCIsMSx7Im9mZnNldCI6MX1dLFsxLDQsIlxccGlfe1xcb3B7ZG9tfWh9IiwyXSxbMiw1LCJcXHBpX2YiXSxbNCw1LCJGaCIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		&& {F(\op{cod}h)} \\
+		{E} & {\displaystyle\prod_{j\in\mathcal J}Fj} & {\displaystyle\prod_{f\in\op{Mor}\mathcal J}F(\op{cod}f)} \\
+		& {F(\op{dom}h)} & {F(\op{cod}h)}
+		\arrow["{\pi_h}"', from=2-3, to=1-3]
+		\arrow["{\pi_{\op{cod}h}}", from=2-2, to=1-3]
+		\arrow["c"{description}, shift left=2, from=2-2, to=2-3]
+		\arrow[dashed, from=2-1, to=2-2]
+		\arrow["d"{description}, shift right=1, from=2-2, to=2-3]
+		\arrow["{\pi_{\op{dom}h}}"', from=2-2, to=3-2]
+		\arrow["{\pi_f}", from=2-3, to=3-3]
+		\arrow["Fh"', from=3-2, to=3-3]
+	\end{tikzcd}\]
+	exists, in which case the limit is this equalizer. Here, $c$ is induced as a map from the top product diagram, and $d$ is induced as a map from the bottom product diagram.
+\end{theorem}
+\begin{remark}
+	Thus, checking if a category is complete reduces to checking that we have (small) products and equalizers.
+\end{remark}
+\begin{proof}
+	We first show this in $\mathrm{Set}$. By tracking the diagram through, we have
+	\[c(x_j)_{j\in\mathcal J}=(x_{\mathrm{cod}f})_{f\in\op{Mor}\mathcal J},\]
+	by looking at what we should do with $\pi_f$ and tracking the commutativity of the diagram. Similarly,
+	\[d(x_j)_{j\in\mathcal J}=(Ff(x_{\op{dom}f}))_{f\in\op{Mor}\mathcal J},\]
+	which we can again track through some particular $\pi_f$ projection map. Now, we can compute
+	\[
+		\lim_{\mathcal J}F = \op{Cone}(*,F) = \{\lambda:*\Rightarrow F\}.
+	\]
+	In particular, we are dealing with some subset of $\prod_{j\in\mathcal J}Fj$, which we want to track through to be an equalizer. So in one direction, let $\chi:*\Rightarrow F$ be a cone; then $f\in\op{Mor}\mathcal J$ will need to have
+	\[Ff(x_{\mathrm{dom}f})=x_{\mathrm{cod}f},\]
+	which is exactly the equalizing condition we need because of our construction of $c$ and $d$. We can track this backwards to describe a cone from this equalizing condition, so we are done with this case in $\mathrm{Set}$.
+
+	We now show the general case. In one direction, suppose that an equalizer $E$ of our diagram exists. Applying the covariant Yoneda embedding $\yo:\mathcal C\to\mathrm{Fun}(\mathcal C\opp,\mathrm{Set})$. In particular, pushing through $\op{Mor}(-,E)$, the fact that we preserve limits gives us the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG9we01vcn0oLSxFKSJdLFsxLDAsIlxcZGlzcGxheXN0eWxlXFxvcHtNb3J9XFxCaWdnKC0sXFxwcm9kX3tqXFxpblxcbWF0aGNhbCBKfUZqXFxCaWdnKSJdLFsyLDAsIlxcZGlzcGxheXN0eWxlXFxvcHtNb3J9XFxCaWdnKC0sXFxwcm9kX3tmXFxpblxcb3B7TW9yfVxcbWF0aGNhbCBKfUYoXFxvcHtjb2R9ZilcXEJpZ2cpIl0sWzEsMiwiYyIsMSx7Im9mZnNldCI6LTJ9XSxbMCwxLCIiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMSwyLCJkIiwxLHsib2Zmc2V0IjoxfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\op{Mor}(-,E)} & {\displaystyle\op{Mor}\Bigg(-,\prod_{j\in\mathcal J}Fj\Bigg)} & {\displaystyle\op{Mor}\Bigg(-,\prod_{f\in\op{Mor}\mathcal J}F(\op{cod}f)\Bigg)}
+		\arrow["c"{description}, shift left=2, from=1-2, to=1-3]
+		\arrow[dashed, from=1-1, to=1-2]
+		\arrow["d"{description}, shift right=1, from=1-2, to=1-3]
+	\end{tikzcd}\]
+	Pulling out the products, we get a diagram that looks like the following.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG9we01vcn0oLSxFKSJdLFsxLDAsIlxcZGlzcGxheXN0eWxlXFxwcm9kX3tqXFxpblxcbWF0aGNhbCBKfVxcb3B7TW9yfVxcQmlnZygtLEZqXFxCaWdnKSJdLFsyLDAsIlxcZGlzcGxheXN0eWxlXFxwcm9kX3tmXFxpblxcb3B7TW9yfVxcbWF0aGNhbCBKfVxcb3B7TW9yfVxcQmlnZygtLEYoXFxvcHtjb2R9ZilcXEJpZ2cpIl0sWzEsMiwiYyIsMSx7Im9mZnNldCI6LTJ9XSxbMCwxLCIiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMSwyLCJkIiwxLHsib2Zmc2V0IjoxfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\op{Mor}(-,E)} & {\displaystyle\prod_{j\in\mathcal J}\op{Mor}\Bigg(-,Fj\Bigg)} & {\displaystyle\prod_{f\in\op{Mor}\mathcal J}\op{Mor}\Bigg(-,F(\op{cod}f)\Bigg)}
+		\arrow["c"{description}, shift left=2, from=1-2, to=1-3]
+		\arrow[dashed, from=1-1, to=1-2]
+		\arrow["d"{description}, shift right=1, from=1-2, to=1-3]
+	\end{tikzcd}\]
+	Drawing in the big diagram, our $c$ and $d$ morphisms which we induced are precisely the $c$ and $d$ we need from the case of $\mathrm{Set}$. In particular, because $\yo$ reflects limits, this last limit is
+	\[\lim_\mathcal J\yo F,\]
+	which is what we wanted after pulling the $\yo$ outside and using the fact that we have an embedding.
+
+	For the other direction, we just run the entire argument in reverse, starting with the limit, pushing it through $\yo$, viewing that as the equalizer in $\mathrm{Set}$, using the fact that $\yo$ reflects limits to pull back the equalizer to the original category, finishing. I will not write this out because I only understood it for the five seconds after Bryce explained it.
+\end{proof}
+There is also a dual story, as follows.
+\begin{theorem}
+	Fix a diagram $F:\mathcal J\to\mathcal C$. Then $\colim_\mathcal JF$ exists if and only if the coequalizer of $c$ and $d$ in the diagram
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXGRpc3BsYXlzdHlsZVxcY29wcm9kX3tmXFxpblxcb3B7TW9yfVxcbWF0aGNhbCBKfUYoXFxvcHtjb2R9ZikiXSxbMSwwLCJcXGRpc3BsYXlzdHlsZVxcY29wcm9kX3tqXFxpblxcbWF0aGNhbCBKfUZqIl0sWzIsMCwiRSJdLFswLDEsImMiLDEseyJvZmZzZXQiOi0yfV0sWzAsMSwiZCIsMSx7Im9mZnNldCI6MX1dLFsxLDIsIiIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\displaystyle\coprod_{f\in\op{Mor}\mathcal J}F(\op{cod}f)} & {\displaystyle\coprod_{j\in\mathcal J}Fj} & E
+		\arrow["c"{description}, shift left=2, from=1-1, to=1-2]
+		\arrow["d"{description}, shift right=1, from=1-1, to=1-2]
+		\arrow[dashed, from=1-2, to=1-3]
+	\end{tikzcd}\]
+	exists, in which case the limit is this equalizer. Here, $c$ and $d$ are induced analogously as previously.
+\end{theorem}
+\begin{proof}
+	Duality.
+\end{proof}
+\begin{corollary}
+	The categories $\mathrm{Set}$ and $\mathrm{Grp}$ and $\mathrm{Ab}$ and $\mathrm{Top}$ and $\mathrm{Vec}_k$ are all complete and cocomplete.
+\end{corollary}
+\begin{proof}
+	We run down.
+	\begin{itemize}
+		\item $\mathrm{Set}$ is complete because it has products (products) and equalizers (equalizers).
+		\item $\mathrm{Set}$ is cocomplete because it has coproducts (disjoint union) and equalizers (take a quotient).
+		\item $\mathrm{Grp}$ is complete because it has products (products) and equalizers (weird kernel things).
+		\item $\mathrm{Grp}$ is cocomplete because it has coproducts (free products) and coequalizers (weird quotient things).
+		\item $\mathrm{Ab}$ is complete because it has products (products) and coequalizers (quotient things).
+		\item $\mathrm{Ab}$ is cocomplete because it has coproducts (direct sums) and coequalizers (kernel things).
+		\item The story for $\mathrm{Vec}$ is the same as $\mathrm{Ab}$.
+		\item $\mathrm{Top}$ is complete because it is pretty much the same as $\op{Set}$.
+	\end{itemize}
+	This finishes.
+\end{proof}
