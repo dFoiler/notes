@@ -1,0 +1,100 @@
+% !TEX root = ../notes.tex
+
+Good morning everyone.
+\begin{itemize}
+	\item Homework \#8 is due on Friday at 11:59PM.
+	\item Midterm \#2 is on Friday, April 15th.
+	\item Office hours on Thursday are in flux.
+\end{itemize}
+
+\subsection{The Residue Theorem}
+Today we are talking about residues. We return to the following lemma.
+\laurent*
+\begin{proof}
+	We symbol-shift. Because $z_0$ is a removable singularity for $1/f(z)$, \autoref{thm:riemannremove} implies that we can extend $1/f(z)$ to $z_0$ in such a way that preserves being holomorphic. Further, \autoref{lem:poletozero} promises us that $1/f(z)$ goes to $0$ at $z=z_0$. Namely, we can write
+	\[\frac1{f(z)}=(z-z_0)^mg(z),\]
+	where $g(z_0)\ne0$ and $m$ is the order of our pole, where we are using \autoref{prop:isolatezeroes}. Because $g(z_0)\ne0$, we get a small neighborhood $B(z_0,\varepsilon)$ such that $g(z)\ne0$ in this neighborhood (by continuity), so we can write
+	\[f(z)=(z-z_0)^{-m}\cdot\frac1{g(z)}\]
+	for $z\in B(0,\varepsilon)$. Now, setting $h(z):=1/g(z)$, we see that $h(z)$ is holomorphic on $B(0,\varepsilon)$ by \autoref{prop:computederivs}. Thus, $h$ is holomorphic, so $h$ is analytic at $z_0$ by \autoref{cor:betterholoisana}, so we get a power series expansion
+	\[h(z)=\sum_{k=0}^\infty a_k(z-z_0)^k\]
+	for all $z\in B(z_0,r)$, for some $r>0$. Dividing out, we see that $z\in B(z_0,r)\setminus\{z_0\}$ will have
+	\[f(z)=(z-z_0)^{-m}\sum_{k=0}^\infty a_k(z-z_0)^k=\sum_{k=-m}^\infty a_{k+m}(z-z_0)^k,\]
+	which is what we wanted.
+\end{proof}
+Now, here is our central definition today, which we introduced last class.
+\resideudef*
+\noindent Here is the main result for today.
+\begin{theorem}[Residue theorem] \label{thm:residue}
+	Fix a primitive domain $\Omega\subseteq\CC$ and some finite subset $S\subseteq\Omega$ such that we have a holomorphic function $f:\Omega\setminus S\to\CC$, where $S$ consists of the poles of $f$. Now, if $\gamma:[0,1]\to\Omega$ is a closed, piecewise $C^1$ path such that $\im\gamma\cap S=\emp$, then
+	\[\oint_\gamma f(z)\,dz=2\pi i\sum_{z_0\in S}\op{Res}_{z_0}(f)\op{Ind}(\gamma,z_0).\]
+\end{theorem}
+\begin{proof}
+	We combine previous results. At a high level, we are going to fix $f$ at all poles, and the process of ``unfixing'' the integrals will give rise to the residues. For each $z_0\in S$, we take $p_{f,z_0}(z)$ to be the principal part of $f$ at $z_0$, where
+	$f(z)=\sum_{k=-m_w}^\infty a_{w,k}(z-z_0)^k$
+	is our Laurent expansion at $z_0$. The idea here is to kill all the ``bad parts'' of $f$: we set
+	\[g(z):=f(z)-\sum_{z_0\in S}p_{f,z_0}(z).\]
+	We automatically know that $g$ is holomorphic on $\Omega\setminus S$, and in fact, each $w\in S$ will have some power series expansion
+	\[g(z)=\sum_{k=-m_w}^\infty a_{w,k}(z-w)^k-\sum_{k=-m_w}^{-1}a_{w,k}(z-w)^k=\sum_{k=0}^\infty a_{w,k}(z-w)^k\]
+	in a neighborhood around $w$, so setting $g(w):=a_{w,0}$ makes $g$ analytic and hence holomorphic at each $w\in S$. Thus, we can extend $g$ to be holomorphic on all of $\Omega$.
+
+	Now, because $\Omega$ is a primitive domain, so \autoref{lem:primitivepaths} tells us that
+	\[\oint_\gamma f(z)\,dz=\underbrace{\oint_\gamma g(z)\,dz}_0+\sum_{z_0\in S}\oint_\gamma p_{f,z_0}(z)\,dz=\sum_{z_0\in S}\oint_\gamma p_{f,z_0}(z)\,dz.\]
+	We now integrate by hand. Fix some $w\in S$, and we note that
+	\[\oint_\gamma p_{f,w}(z)\,dz=\sum_{k=-m_w}^{-1}a_k\oint_\gamma(z-z_0)^k\,dz.\]
+	Now, for $k\le-2$, we see that
+	\[\frac d{dz}\frac{(z-z_0)^{k+1}}{k+1}=(z-z_0)^k,\]
+	so the function $(z-z_0)^k$ has a primitive, so \autoref{cor:ftconclosed} promises us that
+	\[\oint_\gamma p_{f,w}(z)\,dz=\sum_{k=-m_w}^{-2}a_k\underbrace{\oint_\gamma(z-w)^k\,dz}_0+a_{-1}\oint_\gamma(z-w)^{-1}\,dz=\op{Res}_{w}(f)\op{Ind}(\gamma,w).\]
+	Thus, we conclude
+	\[\oint_\gamma f(z)\,dz=\sum_{z_0\in S}\op{Res}_{w}(f)\op{Ind}(\gamma,w),\]
+	which is what we wanted.
+\end{proof}
+\noindent The main point to \autoref{thm:residue} is that it helps us compute integrals, if only we could compute residues. So let's compute residues.
+\begin{lemma}
+	Fix a domain $\Omega$, and pick up a meromorphic function $f:\Omega\setminus S\to\CC$ for some set $S$ of the poles of $f$. Letting $z_0\in S$ be a pole of order $m$, we get
+	\[\op{Res}_{z_0}(f)=\lim_{z\to z_0}\frac1{(m-1)!}\frac{d^{m-1}}{dz^{m-1}}\left((z-z_0)^mf(z)\right).\]
+\end{lemma}
+The point is that we can now compute residues in terms of derivatives, and we understand derivatives.
+\begin{proof}
+	The main idea is to use the Laurent series expansion, turn it into a typical power series expansion, and then extract out the $a_{-1}$ coefficient by hand. In particular, let our Laurent series expansion be
+	\[f(z)=\sum_{k=-m}^\infty a_k(z-z_0)^k\]
+	for $z$ in some neighborhood $B(z_0,r)$ of $z_0$. Thus, we get
+	\[(z-z_0)^mf(z)=\sum_{k=0}^\infty a_{k-m}(z-z_0)^k\]
+	for each $z\in B(z_0,r)$. In particular,
+	\[\frac{d^{m-1}}{dz^{m-1}}\left((z-z_0)^mf(z)\right)=\sum_{k=m-1}^\infty a_{k-m}\cdot k(k-1)\cdot\ldots\cdot(k-m+2)(z-z_0)^{k-m},\]
+	which is notably analytic at $z_0$ and hence holomorphic and hence continuous, so taking the limit at $z\to z_0$ recovers the value of $a_{-1}$.
+\end{proof}
+
+\subsection{Examples of the Residue Theorem}
+Let's see some examples.
+\begin{exe}
+	We compute $\oint_{|z|=2}\frac{5z-2}{z(z-1)}\,dz$, where we are oriented counterclockwise around $\del B(0,2)$.
+\end{exe}
+\begin{proof}
+	Here is the image; we let our path be $\gamma$, and set $f(z):=\frac{5z-2}{z(z-1)}$.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			draw((-3,0)--(3,0), arrow=EndArrow);
+			draw((0,-3)--(0,3), arrow=EndArrow);
+			label("$\textrm{Re}$", (3,0), E);
+			label("$\textrm{Im}$", (0,3), N);
+			draw(arc((0,0),2,90,90+359), EndArrow);
+			label("$\gamma$", 2*dir(45), dir(45));
+			dot("$0$", (0,0), SW, red);
+			dot("$1$", (1,0), S, red);
+		\end{asy}
+	\end{center}
+	In particular, we use \autoref{thm:residue} to get
+	\[\oint_{\gamma}f(z)\,dz=\sum_{w\in\{0,1\}}\op{Res}_w(f)\op{Ind}(\gamma,w).\]
+	Now, the poles of $f$ are $0$ and $1$, and each have order $1$ because $f(z)(z-w)$ is holomorphic in some neighborhood at $w$ for each $w\in\{0,1\}$. Further, we see that $\op{Ind}(\gamma,0)=\op{Ind}(\gamma,1)=1$ from the image. It remains to compute the residues.
+	\begin{itemize}
+		\item At $z=0$, we see
+		\[\op{Res}_0(f)=\lim_{z\to0}(z\cdot f(z))=\lim_{z\to0}\frac{5z-2}{z-1}=2.\]
+		\item At $z=1$, we see
+		\[\op{Res}_1(f)=\lim_{z\to1}((z-1)\cdot f(z))=\lim_{z\to0}\frac{5z-2}z=3.\]
+	\end{itemize}
+	In total, we see that
+	\[\oint_\gamma f(z)\,dz=\op{Res}_0(f)\op{Ind}(\gamma,0)+\op{Res}_1(f)\op{Ind}(\gamma,1)=2\cdot1+3\cdot1=\boxed5,\]
+	so we are done.
+\end{proof}
