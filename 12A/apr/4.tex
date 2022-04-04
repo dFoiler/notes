@@ -1,0 +1,105 @@
+% !TEX root = ../notes.tex
+
+Welcome back everyone.
+
+\subsection{Substitution for Formulae}
+We return to the notion of substitution. Here is our definition.
+\subdef*
+\begin{example}
+	We compute
+	\[\op{biomom}(x)^x_{\op{biomom}(\mathrm{kate})}=\op{biomom}\left(x^x_{\op{biomom}(\mathrm{kate})}\right)=\op{biomom}(\op{biomom}(\mathrm{kate})).\]
+\end{example}
+We can actually extend substitution to formulae.
+\begin{example}
+	In the formula
+	\[\op{LeftHanded}(\op{biomom}(x)),\]
+	we can still substitute $\op{biomom}(\mathrm{kate})$ for $x$.
+\end{example}
+However, some care is required here: we should only substitute into free variables. For example, looking at
+\[P(x)\land\exists xQ(x),\]
+To substitute $\mathrm{kate}$ for $x$, we should not write $P(\mathrm{kate})\exists xQ(\mathrm{kate})$ or even worse $P(\mathrm{kate})\exists\mathrm{kate}Q(\mathrm{kate})$. The former is poorly behaved, and the latter is not even grammatical. To see that the former is not necessarily true, we note that the formula
+\[\forall x(P(x)\land\exists xQ(x))\to(P(\mathrm{kate})\land\exists xQ(\mathrm{kate}))\]
+need not be true, which is not what we want out of our substitution (i.e., ``universal instantiation''). In particular, $\exists xQ(\mathrm{kate})$ requires $Q(\mathrm{kate})$.
+
+So to be rigorous, here is our definition.
+\begin{definition}[Substitution, formulae]
+	Fix terms $s$ and $t$ and a variable $x$. Then we define the \textit{substitution} function $(-)^x_t:\mathcal L\to\mathcal L$ inductively, as follows.
+	\begin{itemize}
+		\item Atomic formulae: $P(s)^x_t=P\left(s^x_t\right)$ for terms $s$ and predicates $P$.
+		\item Connectives: $(\lnot\varphi)^x_t=\lnot(\varphi^x_t)$ and $(\varphi\#\psi)^x_t=\varphi^x_t\#\psi^x_t$ for any $\#\in\{\land,\lor,\lif,\liff\}$.
+		\item Quantifiers: if $y\in\mathrm{Var}\setminus\{x\}$, then $(\forall y\varphi)_t^x=\forall y\varphi^x_t$ and $(\exists y\varphi)_t^x=\exists y\varphi^x_t$.
+		\item Quantifiers: $(\forall x\varphi)_t^x=\forall x\varphi$ and $(\exists x\varphi)_t^x=\exists x\varphi$.
+	\end{itemize}
+\end{definition}
+Note that we are not doing anything in the last case because the $x$ has already been bound in a formula of the form $\forall x\varphi$ or $\exists x\varphi$.
+\begin{example}
+	We compute
+	\begin{align*}
+		(\forall yP(x)\land\exists xQ(x))^x_{\mathrm{kate}} &= (\forall yP(x))^x_{\mathrm{kate}}\land(\exists xQ(x))^x_{\mathrm{kate}} \\
+		&= \forall yP(x)^x_{\mathrm{kate}}\land\exists xQ(x) \\
+		&= \forall yP(x^x_{\mathrm{kate}})\land\exists xQ(x) \\
+		&= \forall yP(\mathrm{kate})\land\exists xQ(x).
+	\end{align*}
+\end{example}
+
+\subsection{Universal Instantiation}
+We are almost ready for universal instantiation. However, we note the following.
+\begin{example}
+	Work in a model with more than two objects in the domain. Then we can write
+	\[\forall x\exists y(x\not\doteq y)\]
+	by simply picking any $x$ and then finding a distinct $y$. However, if we run $\exists y(x\not\doteq y)$ and substitute $y$ for $x$, then we might hope to deduce
+	\[\exists y(y\not\doteq y).\]
+\end{example}
+The issue with the above example is that we are substituting in a variable already seen in the formula, which is creating problems. Namely, substituting in the variable $y$ does not keep it free because it is bound within the formula.
+
+There are a few ways to fix this. For one, we choose a variable outside the ones used in $\varphi$; we could also just substitute in constants for variables exclusively. To unify these, we have the notion of substitutable.
+\begin{definition}[Substitutable]
+	A term $t$ is \textit{substitutable} for $x$ in $\varphi$ if and only if no variable in $t$ becomes bound in $\varphi$ after substituting $t$ for $x$.
+\end{definition}
+As usual, one could give a recursive definition of this, but we will not bother.
+\begin{example}
+	We cannot substitute $\op{biomom}(y)$ for $x$ in the formula $\exists y(x\not\doteq y)$ because $y$ has already been bound.
+\end{example}
+And here, finally, here is our statement.
+\begin{theorem}[Universal instantiation]
+	Fix a formula $\varphi$, a variable $x$, and a term $t$ so that $t$ is substitutable for $x$ in $\varphi$. Then
+	\[\forall x\varphi\to\varphi^x_t\]
+	is valid.
+\end{theorem}
+Intuitively, if $\varphi$ is true for all $x$, then $\varphi$ is true for $t$ specifically.
+\begin{corollary}
+	Fix terms $s$ and $t$ and a predicate $P$. Then, for a formula $\varphi$ with a variable $x$ such that $s$ and $t$ are substitutable for $tx$ in $\varphi$, we have
+	\[(s\doteq t)\to(\varphi^x_s\liff\varphi^x_t).\]
+\end{corollary}
+This wraps up our story on the basic parts of monadic predicate logic. We will now go beyond monadic predicate logic.
+\begin{example}
+	In monadic predicate logic, there is no way to stay that ``Kate is taller than Sue.''
+\end{example}
+
+\subsection{Predicates of Higher Arity}
+We close class by introducing predicates with more inputs, which will dramatically increase our expressive power.
+\begin{example}
+	Here are some predicates.
+	\begin{itemize}
+		\item We can say $a$ loves $b$ with $\op{Loves}(a,b)$.
+		\item We can say $a$ is greater than $b$ with $a\dot{{}>{}}b$. Note we are writing $\dot>$ to distinguish the language's version of $>$ with English's version (i.e., the metalanguage's) version of $>$.
+		\item We can say $a,b,c$ are collinear with $\op{Coll}(a,b,c)$.
+	\end{itemize}
+\end{example}
+Now here is our new definition of formulae: we just update the atomic formulae using predicates.
+\begin{defi}[Predicate formula]
+	Fix $\mathrm{Pred}^n:=\{P_1^n,P_2^n,\ldots\}$ a set of $n$-ary predicates (for any positive integer $n$) and some variables $\mathrm{Var}:=\{x_1,x_2,\ldots\}$ and some constants $\mathrm{Const}:=\{c_1,c_2,\ldots\}$. Then our formulae are created as follows.
+	\begin{itemize}
+		\item If $s,t\in\mathrm{Term}$, then $s\doteq t$ is a formula.
+		\item If $P\in\mathrm{Pred}$ and $(x_1,\ldots,x_n)\in\mathrm{Term}$, then $P(x_1,\ldots,x_n)$ is a formula.
+		\item If $\varphi$ and $\psi$ are formulae and $x\in\mathrm{Var}$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ and $\varphi\to\psi$ and $\varphi\liff\psi$ and $\forall x\varphi$ and $\exists x\varphi$ are all formulae.
+		\item There are no other formulae.
+	\end{itemize}
+\end{defi}
+As usual, here is an example.
+\begin{example}
+	Fix $f$ a unary function and $R$ a binary predicate. Then
+	\[\forall x\exists yR(x,f(y))\]
+	is a good formula. Namely, $f(y)$ is a term, and $R(x,f(y))$ is atomic, so then we can write $\exists yR(x,f(y))$ and then $\forall x\exists yR(x,f(y))$.
+\end{example}
+We can also update the semantics of our models in the usual way. The point is that, in a model $\mathcal M=(D,I)$, we can set $I(P^n)$ to be an $n$-ary predicate $P^n$ to be some subset of $D^n$.
