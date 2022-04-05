@@ -26,44 +26,153 @@ And here is our exercise.
 
 \subsection{The Krull Dimension}
 \begin{warn}
-	For effectively the rest of the course, all of our rings will be Noetherian.
+	For effectively the rest of the course, all of our rings will be Noetherian. This hypothesis will only occasionally be stated.
 \end{warn}
 Recall the following definition.
-\begin{restatable}[Krull dimension]{definition}{krulldimdef}
-	The \textit{Krull dimension} of a ring $R$, denoted $\dim R$, is the supremum of the length $r$ of a chain of distinct primes
-	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_r.\]
-\end{restatable} % \todo{make restatable}
-This gives rise to the following definitions.
+\krulldimdef*
+\noindent This gives rise to the following definitions.
 \begin{definition}[Krull dimension, ideals]
 	Fix a ring $R$ and an ideal $I\subseteq R$. Then we define the \textit{dimension} of an ideal $I$ to be $\dim I:=\dim R/I$.
 \end{definition}
 \begin{definition}[Codimension]
-	Fix $I$ a prime ideal of a ring $R$. Then we define the \textit{codimension} of $I$ to be $\codim R_I$. For an arbitrary ideal $I$, we define
-	\[\codim I:=\min_{\mf p\supseteq I}\codim\mf p.\]
+	Fix $I$ a proper ideal of a ring $R$.
+	\begin{itemize}
+		\item If $I=\mf p$ is a prime ideal of $R$, then we define the \textit{codimension} as $\codim\mf p:=\dim R_\mf p$.
+		\item More generally, we define the \textit{codimension} as
+		\[\codim I:=\min_{\mf p\subseteq I}\codim\mf p,\]
+		where the minimum is over all prime ideals $\mf p$ containing $I$.
+	\end{itemize}
 \end{definition}
-Note that the above definition for codimension is well-defined because there are only finitely many minimal primes over an ideal.
-\begin{remark} \label{rem:bettercodim}
-	Intuitively, the codimension of $\mf p$, which is the dimension of $R_\mf p$, can be computed as the length of the largest chain which goes up to $\mf p$, because after that we can localize our chain. More explicitly, we are asking for the longest chain of the form
-	\[\mf p_1\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_r\subsetneq\mf p.\]
-\end{remark}
+We quickly check the well-definedness of these definitions. To start, we give more hands-on characterizations of these definitions.
+\begin{lemma} \label{lem:dimisascend}
+	Fix an ideal $I$ of a ring $R$. Then $\dim I$ is equal to the length of the longest chain of primes
+	\[I\subseteq\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d\]
+	in $R$.
+\end{lemma}
+\begin{proof}
+	Let $\pi:R\onto R/I$ be the natural projection. In one direction, suppose that
+	\[I\subseteq\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d\]
+	is the longest possible such chain of primes in $R$. Then, projecting down via $\pi$, we get a chain
+	\[\pi\mf p_0\subseteq\pi\mf p_1\subseteq\cdots\subseteq\pi\mf p_d.\tag{1}\label{eq:chaininquotient}\]
+	We have two checks.
+	\begin{itemize}
+		\item If $\mf p$ is a prime ideal containing $I$, then we claim $\pi\mf p$ is also a prime ideal. Indeed, if $(a+I)(b+I)\in\pi\mf p$ implies $ab+I\in\pi\mf p$ implies $ab+x\in\mf p$ for some $x\in I$ implies $ab\in\mf p$ because $I\subseteq\mf p$.
+		
+		Thus, because $\mf p$ is prime, $a\in\mf p$ or $b\in\mf p$, so $a+I\in\pi\mf p$ or $b+I\in\pi\mf p$.
+
+		\item If $I_1\subsetneq I_2$ are distinct ideals containing $I$, then we claim $\pi(I_1)\subsetneq\pi(I_2)$. Indeed, we claim that $\pi(I_1)=\pi(I_2)$ would imply $I_1=I_2$; by symmetry, it suffices to show that $\pi(I_1)\subset\pi(I_2)$ implies $I_1\subseteq I_2$.
+
+		Well, fix any $a\in I_1$. Then $\pi(a)\in\pi(I_1)\subseteq\pi(I_2)$, so $a+I\in\pi(I_2)$, so there exists $b\in I_2$ such that
+		\[a+I=b+I.\]
+		Then $a-b\in I\subseteq I_2$, so $a\in b+I_2=I_2+I_2=I_2$. Thus, $I_1\subseteq I_2$.
+
+		By symmetry, we see that $\pi(I_2)\subseteq\pi(I_1)$ implies $I_2\subseteq I_1$ as well. Thus, $\pi(I_1)=\pi(I_2)$ implies both $\pi(I_1)\subseteq\pi(I_2)$ and $\pi(I_2)\subseteq\pi(I_1)$ and so $I_1\subseteq I_2$ and $I_2\subseteq I_1$, giving $I_1=I_2$.
+	\end{itemize}
+	Thus, \autoref{eq:chaininquotient} provides a chain of distinct primes in $R/I$, so $d\le\dim R/I$.
+
+	In the other direction, suppose that we have chosen our largest possible chain of distinct primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_{\dim R/I}\]
+	in $R/I$. Pulling backwards, we get a chain of primes
+	\[\pi^{-1}\mf p_0\subseteq\pi^{-1}\mf p_1\subseteq\cdots\subseteq\pi^{-1}\mf p_{\dim R/I}.\tag{2}\label{eq:chainabovei}\]
+	Notably, $(0)\subseteq\mf p_k$ for each prime $\mf p_k\subseteq R/I$ above, so $I=\pi^{-1}(0)\subseteq\pi^{-1}\mf p_k$ for each prime $\pi^{-1}\mf p_k$, so all these primes contain $I$.
+
+	Additionally, we check that distinct $R/I$-ideals $I_1\ne I_2$ will have $\pi^{-1}(I_1)\ne\pi^{-1}(I_2)$. Indeed, we claim that $\pi^{-1}(I_1)=\pi^{-1}(I_2)$ implies $I_1=I_2$. To see this, we show $\pi^{-1}(I_1)\subseteq\pi^{-1}(I_2)$ implies $I_1\subseteq I_2$. Well, pick up $a+I\in I_1$ so that $\pi(a)\in I_1$, implying
+	\[a\in\pi^{-1}(I_1)\subseteq\pi^{-1}(I_2)\]
+	and hence $a+I=\pi(a)\in I_2$ as well.
+	
+	Now, by symmetry, we see that $\pi^{-1}(I_2)\subseteq\pi^{-1}(I_1)$ will also imply $I_2\subseteq I_1$, so when we have both in the equality $\pi^{-1}(I_1)=\pi^{-1}(I_2)$, we will have both $I_1\subseteq I_2$ and $I_2\subseteq I_1$. Thus, $I_2=I_2$.
+
+	In total, \autoref{eq:chainabovei} now provides us with a chain of $\dim R/I$ distinct primes above $I$ in $R$, showing that $\dim R/I\le d$. This finishes the proof, for we now have $d=\dim R/I$.
+\end{proof}
+\begin{lemma} \label{lem:codimisdescend}
+	Fix a prime ideal $\mf p$ of a ring $R$. Then $\codim\mf p$ is equal to the length of the longest chain of primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d\subsetneq\mf p,\]
+	where $\mf p$ is included in the chain; I.e., $\codim\mf p=d+1$ here.
+\end{lemma}
+\begin{proof}
+	Let $\iota:R\to R_\mf p$ denote the natural inclusion. In one direction, suppose that
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d\subsetneq\mf p\]
+	is the longest possible chain of distinct prime ideals below $\mf p$. Notably, none of these primes have intersection with $R\setminus\mf p$ because they are contained in $\mf p$, so \autoref{thm:localizedprimes} (combined with \autoref{lem:localidealsa} to give the inverse map) tells us that we have a chain of primes
+	\[\mf p_0R_\mf p\subsetneq\mf p_1R_\mf p\subsetneq\cdots\subsetneq\mf p_dR_\mf p\subsetneq\mf pR_\mf p.\]
+	By the bijection of \autoref{thm:localizedprimes}, we are getting an ascending chain of distinct primes, so we see $\dim R_\mf p\ge d+1$.
+
+	In the other direction, suppose that we have chain of distinct primes
+	\[\mf q_0\subsetneq\mf q_1\subsetneq\cdots\subsetneq\mf q_{\codim\mf p}.\]
+	Notably, $R_\mf p$ is a local ring with maximal ideal $\mf pR_\mf p$, so  if the prime $\mf q_{\codim\mf p}$ is not equal to $\mf pR_\mf p$, then $\mf q_{\codim\mf p}\subsetneq\mf pR_\mf p$, allowing us to add an extra prime to the list and violating the definition of $\codim\mf p=\dim R_\mf p$. So we must have $\mf q_{\codim\mf p}=\mf pR_\mf p$.
+
+	Now, applying \autoref{thm:localizedprimes} once more, we get a chain of primes
+	\[\iota^{-1}\mf q_0\subsetneq\iota^{-1}\mf q_1\subsetneq\cdots\subsetneq\iota^{-1}\mf q_{\codim\mf p},\]
+	which remain distinct by our bijection. In particular, $\iota^{-1}\mf q_{\codim\mf p}=\iota^{-1}\left(\mf pR_\mf p\right)=\mf p$ because $\iota^{-1}:I\mapsto\iota^{-1}I$ is inverse to $I\mapsto IR_\mf p$ by \autoref{lem:localidealsa}.
+
+	Thus, we see that we have exhibited a chain of $\codim\mf p$ primes (strictly) below $\mf p$, so we see that $\dim R_\mf p\le d+1$ as well. Combining with our previous inequality, we are done.
+\end{proof}
+\begin{lemma}
+	Fix an ideal $I$ of a ring $R$. The two definitions of codimension of an ideal coincide when $I$ is a prime ideal.
+\end{lemma}
+\begin{proof}
+	For this proof, we will ignore the second definition when discussing codimension of a prime ideal. We need to show that
+	\[\codim I=\min_{\mf p\supseteq I}\codim\mf p\]
+	and in particular that one is finite when the other is finite.
+
+	In one direction, note that $I\supseteq I$ implies that
+	\[\codim I\ge\min_{\mf p\supseteq I}\codim\mf p\]
+	because the ideal $I$ is contained in the ideal. In the other direction, we note that we can find a chain of primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subseteq\mf p_{\codim I-1}\subsetneq I\]
+	by \autoref{lem:codimisdescend}. As such, by tacking on the prime $\mf p\supseteq I$ to the end, we get a chain of length at least $\codim I$ distinct primes descending from $\mf p$, so \autoref{lem:codimisdescend} again tells us that
+	\[\codim\mf p\ge\codim I.\]
+	It follows that $\min_{\mf p\supseteq I}\mf p\ge\codim I$, and this inequality finishes the proof.
+\end{proof}
+
+\subsection{Bounds on Dimension}
+These results give us the following proposition, which finishes our well-definedness checks.
+\begin{prop}
+	Fix a ring $R$ such that $\dim R$ is finite. Then, for any proper ideal $I$, both $\dim I$ and $\codim I$ are finite.
+\end{prop}
+\begin{proof}
+	We prove the statements in steps.
+	\begin{itemize}
+		\item We show that $\dim I$ is finite. Well, by \autoref{lem:dimisascend}, we note that $\dim I$ is equal to the length of the longest possible chain of distinct primes
+		\[I\subseteq\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d.\]
+		However, ignoring the $I$ and viewing this as a chain of distinct primes in $R$, we see that $d\le\dim R$ is forced, and in particular, $\dim I$ must be finite.
+		\item We show that $\codim\mf p$ is finite when $\mf p$ is a prime ideal. By \autoref{lem:codimisdescend}, we note that $\codim\mf p$ is equal to the length of the longest possible chain of distinct primes
+		\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d=\mf p.\]
+		Again ignoring the $\mf p$ at the end and viewing this as a chain of distinct primes in $R$, we see that $d\le\dim R$ is forced, and in particular, $\codim\mf p$ must be finite.
+		\item We show that $\codim I$ is finite when $I$ is any ideal. Well, we note that $I$ is contained in some maximal and hence prime ideal because $I$ is proper, so
+		\[\{\codim\mf p:\mf p\supseteq I\}\]
+		is nonempty and only contains natural numbers by our previous checks. So the well-ordering of $\NN$ promises us that we have a minimum, finishing.
+		\qedhere
+	\end{itemize}
+\end{proof}
+With that out of the way, here are some examples.
 \begin{example}
-	Fix $R:=\ZZ$, which has $\dim\ZZ=1$. Then $\codim(0)=\dim\QQ=0$; in fact, $\dim(0)=1$. Similarly, $\codim(p)=\dim\ZZ_p=1$ (it helps to use the above remark), and $\dim(p)=\dim\ZZ/p\ZZ=0$.
+	Fix $R:=\ZZ$, which has $\dim\ZZ=1$. Then $\codim(0)=\dim\ZZ_{(0)}=\dim\QQ=0$; in fact, $\dim(0)=1$.
+\end{example}
+\begin{example}
+	Similarly, if $p$ is a positive prime, one can show that
+	\[\codim(p)=\dim\ZZ_p=1\]
+	by showing that $\ZZ_p$ is a principal ideal domain whose principal ideals take the form $\left(p^\bullet\right)$. On the other hand, $\dim(p)=\dim\ZZ/p\ZZ=0$ because $\ZZ/p\ZZ$ is a field.
 \end{example}
 In all these examples, we see that
-\[\dim\mf p+\codim\mf p=\dim R.\]
-As such, we have the following statement.
+\[\dim\mf p+\codim\mf p\stackrel?=\dim R.\]
+This equality need not hold in general, as we will show in a second, but we do have the following.
 \begin{proposition} \label{prop:upperbounddimension}
 	Fix $\mf p$ a prime ideal of a ring $R$. Then
 	\[\dim\mf p+\codim\mf p\le\dim R.\]
 \end{proposition}
 \begin{proof}
-	Use \autoref{rem:bettercodim} so that the left-hand side is the maximal length of a chain containing $\mf p$.
+	By \autoref{lem:codimisdescend}, we have a chain of distinct primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_{\codim\mf p}=\mf p.\]
+	Similarly, by \autoref{lem:dimisascend}, we have a chain of distinct primes
+	\[\mf p\subseteq\mf q_0\subsetneq\mf q_1\subsetneq\cdots\subseteq\mf q_{\dim\mf p}.\]
+	By maximality, we note that we need $\mf p=\mf q_0$, lest we be able to make this chain longer by taking on $\mf p\subsetneq\mf q_0$ at the front. As such, we can zipper our two chains together into a long chain
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_{\codim\mf p}=\mf p=\mf q_0\subsetneq\mf q_1\subsetneq\mf q_2\subsetneq\cdots\subsetneq\mf q_{\dim\mf p}.\]
+	This chain has length $\codim\mf p+\dim\mf p$, which must be less than or equal to $\dim R$ because we have constructed a chain of distinct primes in $R$. This finishes.
 \end{proof}
 \begin{remark}
 	Equality in \autoref{prop:upperbounddimension} holds for affine domains (i.e., the ring of functions over a reduced variety).
 \end{remark}
 \begin{example}
-	Consider $R:=k[x]\times k[y,z]$, which is the coordinate. Here, $\dim R=2$, but $\op{codim}(x)=1$ and $\dim(x)=0$.
+	Consider $R:=k[x]\times k[y,z]$, which is the coordinate ring of the disjoint union of a line and a plane. Intuitively, we can see that $\dim R=2$ (the plane has higher dimension than the line), but $\op{codim}(x)=\dim R_{(x)}=\dim k[x]=1$ while $\dim(x)=0$. % \todo{maybe add details to this example}
 \end{example}
 
 \subsection{Dimension in Families}
