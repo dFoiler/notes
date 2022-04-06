@@ -1,0 +1,137 @@
+% !TEX root = ../notes.tex
+
+We continue our leap towards first-order logic.
+
+\subsection{Binary Relations}
+Namely, today we continue talking about the relations between two objects. Namely, we need to update what our models now look like because models need to keep track of what our higher-arity predicates behave.
+\begin{example} \label{ex:binrelation}
+	We could represent a relation $I(R)$ (where $R\in\op{Pred}^2$) in a model $\mathcal M=(\{1,2\},I)$ as follows.
+	% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAEYQBfU9TXfIRTtyVWoxZsATNzEwoAc3hFQAMwBOEALZIyIHBCTseazTsQj9hi9QYQIaIgE4yqxnBhiGdAEYwGAAr8eARs6lgKABY43LwgGtq61AZJIHYORFIA7K7unra+-kHYIUIg4VExXBRcQA
+	\[\begin{tikzcd}
+		1 \arrow[r] \arrow[loop, distance=2em, in=215, out=145] & 2 \arrow[loop, distance=2em, in=35, out=325]
+	\end{tikzcd}\]
+	Concretely, we might imagine $R(t_1,t_2)$ is the relation ``$t_1$ follows $t_2$,'' so the above diagram asserts that ``$1$ follows $2$.'' In total, we can write down
+	\[I(R)=\{\langle1,1\rangle,\langle1,2\rangle,\langle2,2\rangle\}.\]
+\end{example}
+\begin{remark}
+	The order of the elements matters. Namely, $\langle1,2\rangle\in I(R)$ above does not force $\langle2,1\rangle\in I(R)$. Namely, $\langle1,2\rangle\ne\langle2,1\rangle$. We are not using parentheses here to avoid confusion with the parentheses used in the language itself. We are not using curly brace (i.e., $\{\}$) because sets do not care about order.
+\end{remark}
+It takes some getting used to, but it is important to realize that we can gather all the data of a binary relation $R$ on a set of objects $D$ as simply stating the $\langle a,b\rangle\in D^2$ with $\langle a,b\rangle$ related by $R$. So we can think of $I(R)$ as the subset $D^2$.
+
+Codifying, we have the following.
+\begin{defihelper}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ consists of a nonempty set $D$ and a function $I$ which restricts as $I:\mathrm{Pred}\to\mathcal P(D)$ and $I:\mathrm{Pred}^2\to\mathcal P\left(D^2\right)$.
+\end{defihelper}
+We can now also update our semantics.
+\begin{defihelper}[Truth]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae $P(t)$, $\mathcal M\models_gP(t)$ for $t\in\mathrm{Term}$ if and only if $\llbracket t\rrbracket_I^g\in I(P)$.
+		\item For atomic formulae $P(t_1,t_2)$, $\mathcal M\models_gP(t_1,t_2)$ for $t_1,t_2\in\mathrm{Term}$ if and only if $\left\langle\llbracket t_1\rrbracket_I^g,\llbracket t_2\rrbracket_I^g\right\rangle\in I(P)$.
+		\item Lastly, for atomic formulae $s\doteq t$, we have $\mathcal M\models_gs\doteq t$ if and only if $\llbracket s\rrbracket_I^g=\llbracket t\rrbracket_I^g$.
+		\item We build truth for connectives in the same way as for propositional logic.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if, for all $d\in D$, we have $\mathcal M\models_{g[x:=d]}\varphi$.
+		\item $\mathcal M\models_g\exists x\varphi$ if and only if there is some $d\in D$ for which $\mathcal M\models_{g[x:=d]}\varphi$.
+	\end{itemize}
+\end{defihelper}
+\begin{example}
+	Working in \autoref{ex:binrelation}, we check
+	\[\mathcal M\models_{g{[x:=1]}}R(x,c),\]
+	where $I(c)=2$. Well, we can compute
+	\[\left\langle\llbracket x\rrbracket]_I^{g[x:=1]},\llbracket c\rrbracket]_I^{g[x:=1]}\right\rangle=\langle1,2\rangle\in R,\]
+	so we are done.
+\end{example}
+
+\subsection{Predicates of Higher Arity}
+Continuing, we can also talk about ternary relations $B(a,b,c)$, which should be interpreted as a subset of $D^3$.
+\begin{example} \label{ex:ternrelation}
+	Let $B(a,b,c)$ be the predicate that ``$b$ is between $a$ and $c$.'' Well, consider the following model $\mathcal M$.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			dot("$3$", (0,0), NE);
+			dot("$1$", (0,-1), S);
+			dot("$2$", (-1,0), W);
+			dot("$5$", (1,0), E);
+			dot("$4$", (0,1), N);
+			draw((1,0) -- (-1,0));
+			draw((0,1) -- (0,-1));
+		\end{asy}
+	\end{center}
+	Then we can compute what $I(B)$ should be off of the diagram.
+\end{example}
+Then for semantics, to check $\mathcal M_gB(t_1,t_2,t_3)$ for a ternary relation $B$, we need to check
+\[\left\langle\llbracket t_1\rrbracket_I^g,\llbracket t_2\rrbracket_I^g,,\llbracket t_3\rrbracket_I^g\right\rangle\in I(B).\]
+As an example, we have the following.
+\begin{example}
+	We work in the context of \autoref{ex:ternrelation}. We check
+	\[\mathcal M\nVdash_{g[x:=2,y:=3,z:=4]}B(x,y,z)\]
+	Well, we see that
+	\[\left\langle\llbracket x\rrbracket_I^{g[x:=2,y:=3,z:=4]},\llbracket y\rrbracket_I^{g[x:=2,y:=3,z:=4]},\llbracket z\rrbracket_I^{g[x:=2,y:=3,z:=4]}\right\rangle=\langle2,3,4\rangle\notin I(B).\]
+\end{example}
+In the most general case, we have the following.
+\begin{defi}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ consists of a nonempty set $D$ and a function $I$ which restricts as $I:\mathrm{Pred}^n\to\mathcal P\left(D^n\right)$. Namely, an $n$-ary predicate $P$ goes to $I(P)\subseteq D^n$.
+\end{defi}
+And here are our semantics.
+\begin{defi}[Truth]
+	Fix a model $\mathcal M=(D,I)$ and a variable assignment $g$. Then we define the truth value of a formula $\varphi$ (i.e., $\varphi$ is \textit{true in the model $\mathcal M$ under $g$}) recursively, as follows.
+	\begin{itemize}
+		\item For atomic formulae $P(t_1,\ldots,t_n)$, $\mathcal M\models_gP(t)$ for $P\in\op{Pred}^n$ and $t_1,\ldots,t_n\in\mathrm{Term}$ if and only if
+		\[\left\langle\llbracket t_1\rrbracket_I^g,\ldots,\llbracket t_n\rrbracket_I^g\right\rangle\in I(P).\]
+		\item For atomic formulae $s\doteq t$, we have $\mathcal M\models_gs\doteq t$ if and only if $\llbracket s\rrbracket_I^g=\llbracket t\rrbracket_I^g$.
+		\item We build truth for connectives in the same way as for propositional logic.
+		\item $\mathcal M\models_g\forall x\varphi$ if and only if, for all $d\in D$, we have $\mathcal M\models_{g[x:=d]}\varphi$.
+		\item $\mathcal M\models_g\exists x\varphi$ if and only if there is some $d\in D$ for which $\mathcal M\models_{g[x:=d]}\varphi$.
+	\end{itemize}
+\end{defi}
+\begin{example}
+	In monadic predicate logic, the statement
+	\[\forall x\exists y\varphi\liff\exists y\forall x\varphi\]
+	is valid. However, the statement
+	\[\forall x\exists yL(x,y)\to\exists y\forall xL(x,y)\]
+	is not valid. For example, letting $L(x,y)$ be ``$x$ loves $y$,'' then the above is saying that everyone loves someone should imply that someone is loved by everyone. But this does not make sense. To be rigorous, we would have to build a model where the statement is false. Here is one such.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzAsMSwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFswLDEsIiIsMCx7Im9mZnNldCI6MX1dLFsyLDMsIiIsMCx7Im9mZnNldCI6MX1dLFszLDIsIiIsMCx7Im9mZnNldCI6MX1dLFsxLDAsIiIsMCx7Im9mZnNldCI6MX1dXQ==
+	\[\begin{tikzcd}
+		\bullet & \bullet \\
+		\bullet & \bullet
+		\arrow[shift right=1, from=1-1, to=1-2]
+		\arrow[shift right=1, from=2-1, to=2-2]
+		\arrow[shift right=1, from=2-2, to=2-1]
+		\arrow[shift right=1, from=1-2, to=1-1]
+	\end{tikzcd}\]
+	Indeed, all elements love someone else, but there is no one element loved by everyone.
+\end{example}
+\begin{remark}
+	As a note on decidability of validity again, there is no algorithm to decide if a formula in ``pure predicate logic'' is valid. Namely, we can restrict our language to only have functions, identity, and a single predicate of arity at least $2$, and then validity is not decidable. For the proof, take Philosophy 140B.
+\end{remark}
+
+\subsection{Functions of Higher Arity}
+The last part we need to get to predicate logic is to add in functions of higher arity.
+\begin{example}
+	The following are functions.
+	\begin{itemize}
+		\item The function $(a,b)\mapsto a+b$ is binary.
+		\item The function $(a,b)\mapsto a\times b$ is binary.
+		\item The function $(a,b,m)\mapsto (a+b)\pmod m$ is ternary.
+	\end{itemize}
+\end{example}
+To start, we need to add in these functions to our language. For this, we just need to modify the definition of a term.
+\begin{definition}[Term]
+	Fix a language with variables in $\mathrm{Var}$ and $n$-ary predicates $\mathrm{Pred}^n$ (for any $n$) and constants $\mathrm{Const}$ and $n$-ary functions $\mathrm{Func}^n$ (for any $n$). We now define a \textit{term} as follows.
+	\begin{itemize}
+		\item Variables are terms.
+		\item Constants are terms.
+		\item If $f\in\mathrm{Func}^n$ and $t_1,\ldots,t_n$ are term, then $f(t_1,\ldots,t_n)$ is a term.
+		\item Nothing else is a term.
+	\end{itemize}
+\end{definition}
+\begin{example}
+	Let $\dot0$ be a constant symbol and $\dot s$ be a unary function symbol and $\dot+$ a binary function symbol. Then
+	\[\dot+(\dot+(\dot s(\dot0),\dot s(\dot0)),\dot0)\]
+	is a term. In infix notation, we can write this as $(\dot s(\dot0)\dot+\dot s(\dot0))\dot+\dot0$.
+\end{example}
+\begin{remark}
+	Notably, associativity is not automatic for these terms. In particular, $f(f(x,y),z)$ and $f(x,f(y,z))$ are different terms: the parentheses matter.
+\end{remark}
+As such, we need to add in how to interpret an $n$-ary function in a model. It happens that this should be a function $D^n\to D$, which we will discuss more next class.
