@@ -1,0 +1,374 @@
+% !TEX root = ../notes.tex
+
+Good morning everyone.
+\begin{itemize}
+	\item Office hours tomorrow are still to be determined.
+	\item Homework \#8 is due on Friday at 11:59PM.
+	\item It is Professor Morrow's birthday.
+\end{itemize}
+
+\subsection{Homotopy}
+Today we enter the realm of algebraic topology. In particular, we are talking about homotopy because we want to talk about integration along ``arbitrary'' paths, but computing these can be potentially very annoying.
+\usepiecewisecone*
+As such, we have the following definition.
+\begin{definition}[Path integration]
+	Fix a domain $\Omega\subseteq\CC$. Given a continuous function $f:\Omega\to\CC$ and a path $\gamma:[0,1]\to\CC$, let $\{\gamma_n\}_{n\in\NN}$ be a sequence of piecewise $C^1$ paths such that $\gamma_n\to\gamma$ uniformly. Then we define
+	\[\int_\gamma f(z)\,dz=\lim_{n\to\infty}\int_{\gamma_n}f(z)\,dz.\]
+\end{definition}
+\begin{remark}
+	Professor Morrow is not sure if this integral is well-defined.
+\end{remark}
+Today we are going to talk about how we can vary paths and still be able to compute our integrals, provided that we are sufficiently careful. For example, we showed in \autoref{lem:reparam} that we only care about paths up to equivalence, but it turns out that we can do better than this.
+
+As such, we have the following definition.
+\begin{definition}[Homotopy]
+	Fix a domain $\Omega$ and two paths $\gamma,\eta:[0,1]\to\Omega$. Then a \textit{homotopy} $h$ between $\gamma$ and $\eta$ is a continuous map $h:[0,1]^2\to\Omega$ such that
+	\[h(t,0)=\gamma(t)\qquad\text{and}\qquad h(t,1)=\eta(t).\]
+	In this case, we say that $\gamma$ and $\eta$ are \textit{homotopic}.
+\end{definition}
+\begin{definition}[Homotopic with fixed endpoints]
+	Fix a domain $\Omega$ and two paths $\gamma,\eta:[0,1]\to\Omega$. If $\gamma(0)=\eta(0)$ and $\gamma(1)=\eta(1)$, and we have a homotopy $h:[0,1]^2\to\Omega$ such that
+	\[h(0,t)=\gamma(0)=\eta(0)\qquad\text{and}\qquad h(1,t)=\gamma(1)=\eta(1)\]
+	for all $t$.
+\end{definition}
+We now provide the obligatory picture of a homotopy, here with fixed endpoints.
+\begin{center}
+	\begin{asy}
+		import graph;
+		unitsize(10cm);
+		real x(real t)
+		{
+			return t;
+		}
+		real y1(real t)
+		{
+			return t*t+0.01*sin(10*3.1415*t)-t;
+		}
+		real y2(real t)
+		{
+			return sqrt(t)+0.04*sin(3.1415*t)+0.01*sin(20*3.1415*t)-t;
+		}
+
+		real h(real t, real s)
+		{
+			return (1-s)*y1(t) + s*y2(t);
+		}
+
+		int iters = 5;
+		for(real s = 0; s <= 1; s += 1.0/iters)
+		{
+			path p = (0,0);
+			for(real t = 0; t <= 1; t += 0.01)
+			{
+				p = p -- (x(t),h(t,s));
+			}
+
+			if(s != 0 && s != 1)
+			{
+				draw(p -- (x(1), h(1,s)), rgb(255*(1-s), 0, 255*s)+dotted);
+				label("$h(t,"+string(5*s)+"/5)$",
+					(x(0.5),h(0.5,s)),
+					p=rgb(255*(1-s), 0, 255*s),
+					filltype=Fill(rgb(255,255,255)));
+			}
+			else
+			{
+				draw(p -- (x(1), h(1,s)), rgb(255*(1-s), 0, 255*s));
+			}
+		}
+
+		label("$\eta(t)=h(t,0)$", (x(0.5),y1(0.5)), S, red);
+		label("$\gamma(t)=h(t,1)$", (x(0.5),y2(0.5)), dir(60), blue);
+	\end{asy}
+\end{center}
+Namely, the idea is that we can continuously move from one path to the other, and $h(-,s)$ is telling us how to do that.
+\begin{example}
+	For $r\in\RR^+$, we define $\gamma_r:[0,1]\to\CC$ by
+	\[\gamma_r(t):=r\exp(2\pi it).\]
+	We claim that the $\gamma_r$ are all homotopic. Explicitly, given two radii $r_1,r_2\in\RR^+$, we can define our homotopy from $\gamma_{r_1}$ to $\gamma_{r_2}$ by
+	\[h(t,s)=(1-s)\gamma_{r_1}(t)+s\gamma_{r_2}(t)=\big((1-s)r_1+sr_2\big)\exp(2\pi it),\]
+	which we can check works.
+\end{example}
+Here is the image for the previous example.
+\begin{center}
+	\begin{asy}
+		import graph;
+		unitsize(2cm);
+		pair gamma(real t)
+		{
+			return 0.5*(cos(6.28*t), sin(6.28*t));
+		}
+		pair eta(real t)
+		{
+			return 2*(cos(6.28*t), sin(6.28*t));
+		}
+		
+		pair h(real t, real s)
+		{
+			return (1-s)*gamma(t) + s*eta(t);
+		}
+		
+		int iters = 4;
+		for(real s = 0; s <= 1; s += 1.0/iters)
+		{
+			path p = h(0,s);
+			for(real t = 0; t <= 1; t += 0.01)
+			{
+				p = p -- h(t,s);
+			}
+		
+			if(s != 0 && s != 1)
+			{
+				draw(p -- h(1,s), rgb(255*(1-s), 0, 255*s)+dotted);
+				label("$h(t,"+string(4*s)+"/4)$",
+					h(0.25,s),
+					p=rgb(255*(1-s), 0, 255*s),
+					filltype=Fill(rgb(255,255,255)));
+			}
+			else
+			{
+				draw(p -- h(1,s), rgb(255*(1-s), 0, 255*s));
+			}
+		}
+		
+		label("$\gamma_{r_2}(t)$", h(0.25,1), blue, Fill(rgb(255,255,255)));
+		label("$\gamma_{r_1}(t)$", h(0.25,0), red, Fill(rgb(255,255,255)));
+	\end{asy}
+\end{center}
+\begin{example}
+	A coffee mug and a donut both have one hole and are therefore pretty much ``homotopic'' because we can imagine deforming one into the other.
+\end{example}
+
+\subsection{Simply Connected Domains}
+It will turn out that homotopy provides the correct notion of equivalence. To see this, we have the following definition.
+\begin{definition}[Null homotopic]
+	Fix a domain $\Omega$ and a closed path $\gamma:[0,1]\to\CC$. Further, let $\eta:[0,1]\to\CC$ be defined by $\eta(t):=\gamma(0)=\gamma(1)$ for all $t$. Then $\gamma$ is \textit{null homotopic} if and only if $\gamma$ is homotopic to the ``constant path'' $\eta$.
+\end{definition}
+\begin{definition}[Simply connected]
+	A domain $\Omega$ is \textit{simply connected} if and only if every pair of paths $\gamma$ and $\eta$ with $\gamma(0)=\eta(0)$ and $\gamma(1)=\eta(1)$ are homotopic with fixed endpoints.
+\end{definition}
+And here is our example
+\begin{lemma}
+	Convex domains are simply connected.
+\end{lemma}
+\begin{proof}
+	The point is to draw line segments directly from one path to the other. Here is the image.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(10cm);
+			pair gamma(real t)
+			{
+				return (t,t*t+0.01*sin(10*3.1415*t)-t);
+			}
+			pair eta(real t)
+			{
+				return (t,sqrt(t)+0.04*sin(3.1415*t)+0.01*sin(20*3.1415*t)-t);
+			}
+			
+			pair h(real t, real s)
+			{
+				return (1-s)*gamma(t) + s*eta(t);
+			}
+			
+			int iters = 5;
+			int lines = 5;
+			for(int i = 0; i <= iters; ++i)
+			{
+				real s = 1.0*i/iters;
+				path p = h(0,s);
+				for(real t = 0; t <= 1; t += 0.01)
+				{
+					p = p -- h(t,s);
+				}
+				for(real t = 0; t <= 1; t += 1.0/lines)
+				{
+					if(i < iters)
+						draw(h(t,s) -- h(t,s+1.0/iters), arrow=EndArrow, p=rgb(255*(1-s-0.5/iters), 0, 255*(s+0.5/iters)));
+				}
+				if(s != 0 && s != 1)
+				{
+					draw(p -- h(1,s), rgb(255*(1-s), 0, 255*s)+dotted);
+					label("$h(t,"+string(i)+"/"+string(iters)+")$",
+						h(0.5,s),
+						p=rgb(255*(1-s), 0, 255*s),
+						filltype=Fill(rgb(255,255,255)));
+				}
+				else
+				{
+					draw(p -- h(1,s), rgb(255*(1-s), 0, 255*s));
+				}
+			}
+			for(int i = 0; i <= iters; ++ i)
+			{
+				real s = 1.0*i/iters;
+				for(real t = 0; t <= 1; t += 1.0/lines)
+					dot(h(t,s), rgb(255*(1-s), 0, 255*s));
+			}
+			
+			label("$\eta(t)$", h(0.5,1), blue, Fill(rgb(255,255,255)));
+			label("$\gamma(t)$", h(0.5,0), red, Fill(rgb(255,255,255)));
+		\end{asy}
+	\end{center}
+	We now rigorize this. Pick up a convex domain $\Omega$. Then, given two paths $\gamma,\eta:[0,1]\to\Omega$, we define $h:[0,1]^2\to\Omega$ by
+	\[h(t,s)=(1-s)\gamma(t)+s\eta(t).\]
+	Notably, $h$ is well-defined because $\Omega$ is convex: for any $s,t\in[0,1]$, we see $\gamma(t),\eta(t)\in\Omega$, so $(1-s)\gamma(t)+s\eta(t)\in\Omega$ by convexity.
+	
+	Continuing our checks, $h$ is continuous as a linear combination of continuous functions. Further, $h(t,0)=\gamma(t)$ and $h(t,1)=\eta(t)$, and in fact
+	\[h(0,s)=(1-s)\gamma(0)+s\eta(0)=\gamma(0)\qquad\text{and}\qquad h(1,s)=(1-s)\gamma(t)+s\eta(t)=\gamma(1),\]
+	so $h$ does indeed witness the needed homotopy.
+\end{proof}
+\begin{remark}
+	It is also true that star-like domains are simply connected. Roughly speaking, fix $\Omega$ a star-like domain so that we have some $z\in\Omega$ such that the line segment between $z$ and any $w\in\Omega$ lives in $\Omega$. The point is that we can contract any path to the constant path at $z$ by drawing line segments in the same way as above. See \href{https://math.stackexchange.com/a/1748540/869257}{sx1748540} for details.
+\end{remark}
+\begin{example}
+	The open ball $B(z,r)$ for any $z\in\CC$ and $r\in\RR^+$ is convex. Thus, $B(z,r)$ is simply connected.
+\end{example}
+
+\subsection{Homotopic Independence of Integrals}
+We close class by proving this last result.
+\begin{theorem}[Homotopy independence] \label{thm:homoind}
+	Fix a domain $\Omega$ and a continuous function $f:\Omega\to\CC$. Further, take two paths $\gamma,\eta:[0,1]\to\Omega$ with $\gamma(0)=\eta(0)$ and $\gamma(1)=\eta(1)$. If $\gamma$ and $\eta$ are homotopic with fixed endpoints, then
+	\[\int_\gamma f(z)\,dz=\int_\eta f(z)\,dz.\]
+\end{theorem}
+This is codifying the idea that homotopic paths (with fixed endpoints) should be essentially equivalent: they are giving the same integral.
+\begin{example}
+	We already have reason to believe this theorem. The Cauchy integral formula told us that
+	\[f(w)=\frac1{2\pi i}\oint_{\gamma_r}\frac{f(z)}{z-w}\,dz\]
+	for any loop $\gamma_r(t):=w+r\exp(2\pi it)$. This makes sense because we showed that all circles $\gamma_r$ are homotopic.
+\end{example}
+Anyway, here is our result.
+\begin{proof}[Proof of \autoref{thm:homoind}]
+	Fix our homotopy $h:[0,1]^2\to\CC$ which fixes the endpoints. As an outline, we will show that two paths which are homotopic and ``close together'' in a suitable sense will have the same integral, which we can extend to the general case by some compactness argument.
+	
+	For psychological reasons, we will get the compactness argument out of the way first. Set $K:=\im h$, which is compact because the image of a compact set under a continuous map. Thus, by compactness, there exists $\varepsilon>0$ such that $B(z,3\varepsilon)\subseteq\Omega$ for all $z\in K$, where we are using \autoref{lem:singleepsilon} with $\{\Omega\}$ as the open cover of $K$.
+
+	Now, view $h(t,s)$ as inducing a function taking $s\in[0,1]$ and outputting a function $h(-,s):[0,1]\to\Omega$; i.e., $\gamma_s(t):=h(t,s)$. Notably, $h$ being continuous implies that $\gamma_s:[0,1]\to\Omega$ is continuous ($\gamma_s$ this is the composite $t\mapsto(t,s)\mapsto h(t,s)$), so because the codomain $t\in[0,1]$ is compact, the function $\gamma_s$ is bounded.
+	
+	As such, we can trigger \autoref{rem:metriconfuncs} to say that $s\mapsto\gamma_s$ is a continuous function on the compact set $[0,1]$ to the metric space of bounded functions $[0,1]\to\CC$, so $s\mapsto\gamma_s$ is uniformly continuous, so there exists $\delta>0$ such that
+	\[|s_1-s_2|<\delta\implies\sup_{t\in[0,1]}\{|\gamma_{s_1}(t)-\gamma_{s_2}(t)|\}<\varepsilon.\tag{$*$}\label{eq:uniformcontonfuncs}\]
+	In particular, we are using the definition of the metric back in \autoref{rem:metriconfuncs}.
+
+	Fix any two times $s_1<s_2$ with $|s_1-s_2|<\delta$. The homotopy $h$ more or less restricts to a homotopy between $\alpha:=\gamma_{s_1}$ and $\beta:=\gamma_{s_2}$, but we now also have \autoref{eq:uniformcontonfuncs}, which tells us that $\alpha$ and $\beta$ are $\varepsilon$-close together. The idea, is to use the closeness to place everything locally in a disk: we want to create an image that looks like the following.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(10cm);
+			pair alpha(real t)
+			{
+				return (t,sin(3.1415*t)/10);
+			}
+			pair beta(real t)
+			{
+				return (t,(t-sin(2.5*3.1415*t)*sin(2.5*3.1415*t))/30 - sin(3.1415*t)/10);
+			}
+	
+			draw(graph(alpha, 0, 1), blue);
+			draw(graph(beta, 0, 1), red);
+	
+			int pts = 4;
+			for(int i = 0; i <= pts; ++i)
+			{
+				dot("$z_{"+string(i)+"}$", alpha(i/pts), N, blue);
+				dot("$w_{"+string(i)+"}$", beta(i/pts), S, red);
+				if(i < pts)
+				{
+					draw(circle(alpha(i/pts), 0.31), dotted);
+					label("$D_{"+string(i)+"}$", alpha(i/pts)+0.31*dir(100-20*i/pts), N);
+				}
+			}
+		\end{asy}
+	\end{center}
+	In words, we want to choose disks $D_0,\ldots,D_n$ with points
+	\[z_0,\ldots,z_{n+1}\in\im\alpha\qquad\text{and}\qquad w_0,\ldots,w_{n+1}\in\im\beta\]
+	satisfying the following constraints.
+	\begin{itemize}
+		\item We want $\alpha(0)=\beta(0)=z_0=w_0$ and $\alpha(1)=\beta(1)=z_{n+1}=w_{n+1}$. Notably, the endpoints of $\alpha=h(-,s_1)$ and $\beta=h(-,s_2)$ because $h$ fixes the endpoints of $\gamma$ and $\eta$.
+		\item For technical reasons, we should have each $D_i$ with center on $\im\alpha$ or $\im\beta$ and have radius at most $3\varepsilon$. This ensures that the $D_i$ are contained in $\Omega$, by construction of $\varepsilon$. (Notably, $\im\alpha,\im\beta\subseteq\im h=K$.)
+		\item We want consecutive ``quadruplets'' $z_k,z_{k+1},w_k,w_{k+1}\in D_k$ for each $0\le k\le n$.
+	\end{itemize}
+	We will want a few other non-intuitive constraints that will pop out of our construction, but we will ignore these for now. Rigorously, we do the following.
+	\begin{itemize}
+		\item The path $\alpha$ is a continuous path with compact domain, so it is uniformly continuous, so there exists $\varepsilon_0$ such that implies
+		\[|t_1-t_2|<\varepsilon_0\implies|\alpha(t_1)-\alpha(t_2)|<\varepsilon.\]
+		In particular, choose some $n\in\NN$ with $\frac1{n+1}<\varepsilon_0$ and then set $z_k:=\alpha(k/(n+1))$ for each $k\in[0,n+1]$. Notably, $|z_{k+1}-z_k|<\varepsilon$ for each $k\in[1,n]$, by construction.
+
+		We also set $w_k:=\beta(k/(n+1))$ for each $k\in[0,n+1]$. Note that we do indeed have $z_0=\alpha(0)=\beta(0)=w_0$ and $z_{n+1}=\alpha(1)=\beta(1)=w_{n+1}$.
+
+		\item As such, we set $D_k:=B(z_k,3\varepsilon)$ for each $k\in[0,n]$. Again, $z_k\in\im\alpha\subseteq\im h=K$ implies that $D_k\subseteq\Omega$ by construction of $\varepsilon$.
+	\end{itemize}
+	Now, for each $0\le k\le n$, we see that $z_k\in D_k$ automatically, we have $|z_{k+1}-z_k|<\varepsilon$ by construction and
+	\[|z_k-w_k|,|z_{k+1}-w_{k+1}|<\varepsilon\]
+	by \autoref{eq:uniformcontonfuncs}, so $|z_k-w_{k+1}|<2\varepsilon<3\varepsilon$ as well. Thus, $z_k,z_{k+1},w_k,w_{k+1}\in D_k$.
+
+	We now continue to decorate our diagram. For $k\in[0,n]$, let $\alpha_k=\alpha|_{[k/(n+1),(k+1)/(n+1)]}$ denote the part of $\alpha$ connecting $z_k$ to $z_{k+1}$, let $\beta_k$ denote the part of $\beta|_{[k/(n+1),(k+1)/(n+1)]}$ connecting $w_k$ to $w_{k+1}$. Lastly, for $k\in[0,n+1]$, we define $h_k:[s_1,s_2]\to\Omega$ by
+	\[h_k(s):=h(s,k/(n+1))\]
+	so that $h_k(s_1)=\alpha(k/(n+1))=z_k$ and $h_k(s_2)=\beta(k/(n+1))=w_k$, making $h_k$ a continuous path from $z_k$ to $w_k$. Here is our image.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(10cm);
+			pair alpha(real t)
+			{
+				return (t,sin(3.1415*t)/10);
+			}
+			pair beta(real t)
+			{
+				return (t,(t-sin(2.5*3.1415*t)*sin(2.5*3.1415*t))/30 - sin(3.1415*t)/10);
+			}
+
+			int pts = 4;
+			for(int i = 0; i <= pts; ++i)
+			{
+				if(i < pts)
+				{
+					draw(graph(alpha, i/pts, (i+1)/pts), arrow=EndArrow, p=blue);
+					draw(graph(beta, i/pts, (i+1)/pts), arrow=EndArrow, p=red);
+					label("$\alpha_{"+string(i)+"}$", alpha((i+0.5)/pts), N, blue);
+					label("$\beta_{"+string(i)+"}$", beta((i+0.5)/pts), S, red);
+					draw(alpha(i/pts) -- beta(i/pts), arrow=EndArrow);
+					if(i > 0)
+						label("$h_{"+string(i)+"}$", (alpha(i/pts)+beta(i/pts))/2, E);
+					draw(circle(alpha(i/pts), 0.31), dotted);
+					label("$D_{"+string(i)+"}$", alpha(i/pts)+0.31*dir(100-20*i/pts), N);
+				}
+				dot("$z_{"+string(i)+"}$", alpha(i/pts), N, blue);
+				dot("$w_{"+string(i)+"}$", beta(i/pts), S, red);
+			}
+		\end{asy}
+	\end{center}
+	We would like to rigorize some aspects of the above diagram. In particular, for each $k\in[0,n]$, we claim that $h\left([s_1,s_2]\times\left[\frac k{n+1},\frac{k+1}{n+1}\right]\right)\subseteq D_k$. To see this, pick up any $(s,t)\in[s_1,s_2]\times\left[\frac k{n+1},\frac{k+1}{n+1}\right]$. Then $|s_1-s|\le|s_1-s_2|<\delta$, so we see that
+	\[|\gamma_s(t)-\alpha(t)|=|\gamma_s(t)-\gamma_{s_1}(t)|<\varepsilon\]
+	by \autoref{eq:uniformcontonfuncs}. But now $t\in\left[\frac k{n+1},\frac{k+1}{n+1}\right]$, so $\left|t-\frac k{n+1}\right|\le\frac1{n+1}<\varepsilon_0$, so
+	\[|\alpha(t)-z_k|=\left|\alpha(t)-\alpha\left(\frac k{n+1}\right)\right|<\varepsilon.\]
+	Combining, we see that
+	\[|\gamma_s(t)-z_k|<\varepsilon+\varepsilon<3\varepsilon,\]
+	which is what we wanted. Thus, we make the following observations.
+	\begin{itemize}
+		\item $\im\alpha_k\subseteq D_k$ because $\alpha_k(t)=h(s_1,t)$ for $t\in\left[\frac k{n+1},\frac{k+1}{n+1}\right]$.
+		\item $\im\beta_k\subseteq D_k$ because $\beta_k(t)=h(s_2,t)$ for $t\in\left[\frac k{n+1},\frac{k+1}{n+1}\right]$.
+		\item $\im h_k\subseteq D_k$ because $h_k(s)=h(s,k/(n+1))$ for $s\in[s_1,s_2]$.
+		\item $\im h_{k+1}\subseteq D_k$ because $h_k(s)=h(s,{k+1}/(n+1))$ for $s\in[s_1,s_2]$.
+	\end{itemize}
+	Combining everything above, we see that we can write down the path
+	\[\alpha_k*h_k*\beta_k^-*h_{k+1}^-\]
+	as a closed path contained in $D_k$. Upon noting that $D_k$ is a disk and hence convex and hence star-like, it follows from \autoref{thm:starlikecg} that
+	\[\oint_{\alpha_k*h_k*\beta_k^-*h_{k+1}^-}f(z)\,dz=0,\]
+	so
+	\[\int_{\alpha_k}f(z)\,dz-\int_{\beta_k}f(z)\,dz=\int_{h_{k+1}}f(z)\,dz-\int_{h_k}f(z)\,dz.\]
+	Summing over $k\in[0,n]$, we see that
+	\begin{align*}
+		\int_\alpha f(z)\,dz-\int_\beta f(z)\,dz &= \sum_{k=0}^n\left(\int_{\alpha_k}f(z)\,dz-\int_{\beta_k}f(z)\,dz\right) \\
+		&= \sum_{k=0}^n\left(\int_{h_{k+1}}f(z)\,dz-\int_{h_k}f(z)\,dz\right) \\
+		&= \int_{h_{n+1}}f(z)\,dz-\int_{h_0}f(z)\,dz
+	\end{align*}
+	by telescoping. However, $h_{n+1}$ and $h_0$ are constant paths because $h$ fixes the endpoints, so $h_{n+1}'=h'_0=0$ everywhere, so the right-hand side above simply vanishes. So have verified that
+	\[\int_\alpha f(z)\,dz=\int_\beta f(z)\,dz.\]
+	This finishes this part of the proof.
+
+	We now finish the proof. Fix some $N$ such that $\frac1N<\delta$ and set $s_k:=k/N$ for $k\in[0,N+1]$. In particular, $|s_{k+1}-s_k|<\delta$ for each $k\in[0,N]$, so
+	\[\int_{\gamma_{s_k}}f(z)\,dz=\int_{\gamma_{s_{k+1}}}f(z)\,dz\]
+	for each $k\in[0,N]$, using the work above. Chaining these equalities together, we conclude that
+	\[\int_\gamma f(z)\,dz=\int_{\gamma_0}f(z)\,dz=\int_{\gamma_1}f(z)\,dz=\int_\eta f(z)\,dz.\]
+	This is what we wanted.
+\end{proof}
