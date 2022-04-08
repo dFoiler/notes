@@ -1,0 +1,123 @@
+% !TEX root = ../notes.tex
+
+Welcome back everyone.
+
+\subsection{Semantics for Functions}
+Today we continue adding in our functions of higher arity. Namely, we have added these functions to our set of terms $\mathrm{Term}$, which automatically add them to our syntax because formulae are built from terms. Thus, we have left to add functions of higher arity to our semantics. As such, we need to discuss how to interpret such a function.
+\begin{example}
+	For a binary function $f\in\mathrm{Func}^2$, we would like to view this as a binary function $D\times D\to D$. For example, we should view $\dot+$ as a function which takes two (say) natural numbers $a,b\in\NN$ and outputs $a+b\in\NN$. The way to keep track of these inputs and outputs is by working with ordered pairs in $D\times D$.
+\end{example}
+\begin{remark}
+	Technically speaking, we will often think of a function $f:A\to B$ set-theoretically as a set of pairs $(a,b)$ where $a\in A$ and $b\in B$, and each $a\in A$ has exactly one pair $(a',b')$ with $a=a'$. We will not labor on this technical point, but it is correct.
+\end{remark}
+For ternary functions $f\in\mathrm{Func}^3$, we should similarly interpret this as a function $D^3\to D$. More generally, we have the following.
+\begin{defihelper}[Model]
+	A \textit{model} $\mathcal M=(D,I)$ consists of a nonempty set $D$ and a function $I$ which consists of the following data.
+	\begin{itemize}
+		\item For each $n$-ary predicate $P\in\mathrm{Pred}^n$, we have $I(P)\subseteq D^n$.
+		\item For each $n$-ary function $f\in\mathrm{Func}^n$, we have $I(f):D^n\to D$.
+		\item Lastly, for each $c\in\mathrm{Const}$, we have $I(c)\in D$.
+	\end{itemize}
+\end{defihelper}
+As such, we need to update our denotation to accommodate these functions.
+\begin{defi}[Denotation]
+	Fix a model $\mathcal M=(D,I)$. Then, given a variable assignment $g$, we set
+	\[\llbracket t\rrbracket_I^g\in D\]
+	to be the term $t$ relative to the interpretation $t$ and variable assignment $g$. This is defined inductively as follows.
+	\begin{itemize}
+		\item For $x\in\mathrm{Var}$, we set $\llbracket x\rrbracket_I^g:=g(x)$.
+		\item For $c\in\mathrm{Const}$, we set $\llbracket c\rrbracket_I^g:=I(c)$.
+		\item Lastly, if $f\in\mathrm{Func}^n$ and $t_1,\ldots,t_n\in\mathrm{Term}$, we set $\llbracket f(t_1,\ldots,t_n)\rrbracket_I^g$ to be the interpreted function $I(f)$ applied to the terms $\llbracket t_\bullet\rrbracket_I^g$. I.e.,
+		\[\llbracket f(t_1,\ldots,t_n)\rrbracket_I^g:=I(f)(\bb{t_1}_I^g,\ldots,\llbracket t_n\rrbracket_I^g).\]
+	\end{itemize}
+\end{defi}
+Note that our semantics from \autoref{def:truthwithhighpreds} follow directly because we defined these via terms.
+\begin{example}
+	We work in a language with a constant symbol $\dot0$, a unary function symbol $\dot s$, and a binary function symbol $\dot+$. Our model $\mathcal M=(\NN,I)$ is interpreted with
+	\[I(\dot0)=0,\quad I(\dot s)(n)=n+1,\quad\text{and}\quad I(\dot+)(a,b)=a+b.\]
+	From here, we can show that our model $\mathcal M$ satisfies the following.
+	\begin{itemize}
+		\item $\forall x(x\dot+\dot0=x)$.
+		\item $\forall x\forall(x\dot+\dot s(y)\dot=\dot s(x\dot+y))$.
+	\end{itemize}
+	It turns out that these can define addition, in a suitable way.
+\end{example}
+At a high level, the reason why we've added all these function symbols is that we want to express things beyond what we've been talking about with unary function symbols. For example, unary functions are not expressive enough to talk about addition.
+\begin{remark}
+	Having a single binary function symbol and identity (even without any predicates!) is enough to make validity undecidable again.
+\end{remark}
+
+\subsection{Universal Elimination}
+We will now talk about how to prove things. In propositional logic, we could get by via truth tables. However, our models are more complicated now (namely, we cannot run through all of them in finite time), so we will be forced to use natural deduction if we want to show that something is valid.
+
+Most of our rules are carried over directly from propositional logic (namely, we maintain all rules for our connectives), but we will need to talk about how to eliminate and introduce $\forall$ and $\exists$. Let's see an example.
+\begin{example}
+	It is valid to take $\forall xP(x)$ and deduce $P(t)$ for any term $t\in\mathrm{Term}$.
+\end{example}
+\begin{lemma} \label{lem:basicforall}
+	For all real numbers $x$ and $y$, if $0<x<y$, then $x^2<y^2$.
+\end{lemma}
+\begin{proposition}
+	We have $9<\pi^2$.
+\end{proposition}
+\begin{proof}
+	Note $0<3<\pi$, so \autoref{lem:basicforall} forces $9=3^2<\pi^2$, so we are done.
+\end{proof}
+The point is that we applied \autoref{lem:basicforall} to take a statement with the ``for all'' and apply it directly to $3$ and $\pi$. In Fitch style, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have{hypo}{\forall x\forall y\left(0<x<y\to x^2<y^2\right)}
+		\have{if}{0<3<\pi\to x^2<y^2} \by{$\forall$Elim}{hypo}
+		\have{start}{0<3<\pi} \by{Math}{}
+		\have{almost}{3^2<\pi^2} \by{$\to$Elim}{if,start}
+		\have{getting}{3^2\dot=9} \by{Math}{}
+		\have{}{9<\pi^2} \by{$=$Elim}{almost,getting}
+	\end{nd}
+\end{align*}
+Note our use of the rules ``$\forall$Elim'' and ``$=$Elim.'' These are the ones we are currently paying attention to.
+
+Here is our $\forall$ elimination.
+\begin{defihelper}[$\forall$Elimination] \nirindex{All Elimination@$\forall$Elimination}
+	If we have $\forall x\varphi$ such that the term $t\in\mathrm{Term}$ is substitutable for $x$ in $\varphi$, then we can deduce $\varphi^x_t$ on a new line in the same column, citing $\forall$ elimination.
+\end{defihelper}
+In essence, this is just using \autoref{thm:univinstantiation} to get $\forall x\varphi\to\varphi^x_t$ and then using $\to$ elimination.
+\begin{remark}
+	Another way to see this is $\forall xP(x)$ is roughly saying
+	\[P(c_1)\land P(c_2)\land\cdots\]
+	and then deriving some individual $P(c_\bullet)$ via $\land$ elimination.
+\end{remark}
+\begin{nex}
+	We remark that the substitutability condition is necessary. For example, the following is not a valid proof.
+	\begin{align*}
+		\begin{nd}
+			% \have{}{}
+			\have{hypo}{\forall x\exists y(x\dot\neq y)}
+			\have{}{\exists y(y\dot\neq y)} \by{Bad $\forall$Elim}{hypo}
+		\end{nd}
+	\end{align*}
+	The issue is that $y$ is not substitutable for $x$ in $\forall x\exists y(x\dot\neq y)$.
+\end{nex}
+Here is another example.
+\begin{exe}
+	We show $\forall xP(x)\to\lnot\forall x\lnot P(x)$.
+\end{exe}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{beg}{\forall xP(x)}
+				\open[]
+					\have{hypo}{\forall x\lnot P(x)}
+					\have{np}{\lnot P(c)} \by{$\forall$Elim}{hypo}
+					\have{reit}{\forall xP(x)} \by{Reit}{beg}
+					\have{p}{P(c)} \by{$\forall$Elim}{reit}
+					\have{contra}{P(c)\land\lnot P(c)} \by{$\land$Elim}{p,np}
+				\close
+				\have{end}{\lnot\forall x\lnot P(x)} \by{$\lnot$Elim}{hypo-contra}
+			\close
+			\have{}{\forall xP(x)\to\lnot\forall x\lnot P(x)} \by{$\to$Intro}{beg-end}
+		\end{nd}
+	\end{align*}
+	This finishes.
+\end{proof}
