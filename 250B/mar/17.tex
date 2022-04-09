@@ -257,7 +257,7 @@ And here is an example computation.
 	Computing, we see that $\dim R=2>1+0=\codim((x)\times R_2)+\dim((x)\times R_2)$, manifesting the lack of equality in \autoref{prop:upperbounddimension}.
 \end{example}
 To close out our examples, we study the most basic affine sets: sets of points.
-\begin{proposition}
+\begin{proposition} \label{prop:dimenzionzero}
 	Fix a nonzero Noetherian ring $R$.
 	\begin{listalph}
 		\item We have $\dim R=0$ if and only if $R$ is Artinian. In this case, $R$ is the product of finitely many Artinian local rings.
@@ -423,50 +423,143 @@ As an intermission, we quickly discuss how dimension behaves locally.
 
 \subsection{The Principal Ideal Theorem}
 Here is our statement.
-\begin{restatable}[Principal ideal]{theorem}{pidtheorem}
-	Fix a Noetherian ring $R$. Given $x\in R$, set $\mf p$ to be a minimal prime over $(x)$. Then
+\begin{restatable}[Principal ideal]{theorem}{pidtheorem} \label{thm:pit1}
+	Fix a Noetherian ring $R$. Given $x\in R$, suppose $\mf p$ is a minimal prime over $(x)$. Then
 	\[\codim\mf p\le1.\]
 \end{restatable}
 \begin{proof}
-	By moving from $R$ to $R_\mf p$, we may assume that $R$ is local with maximal ideal $\mf p$. We will show that, if we can find a prime $\mf q\subsetneq\mf p$ is strictly smaller than $\mf p$, then $\codim\mf q=0$, which will be enough. As such, we look at $R_\mf q$ and show that the ideal $\mf q_\mf q$ is nilpotent so that it has codimension $0$. With this in mind, we set
-	\[\mf q^{(n)}:=\mf q_\mf q^n\cap R=\{r\in R:rs\in\mf q^n\text{ for some }s\notin\mf q\}.\]
-	We now return to our hypotheses. The fact that $\mf p$ is minimal over $(x)$ implies that $\mf p/(x)$ is a maximal (by being local) and minimal ideal of $R/(x)$, % \todo{is p actually a minimal ideal}
-	so $R/(x)$ is an Artinian ring! As such, the descending chain
-	\[\mf q^{(1)}+(x)\supseteq\mf q^{(n)}+(x)\subseteq\cdots\]
-	must stabilize eventually. So we find our $n$ for which $\mf q^{(n)}+(x)=\mf q^{(n+1)}+(x)$. In particular, $\mf q^{(n)}\subseteq\mf q^{(n+1)}+(x)$, so
-	\[\mf q^{(n)}=x\mf q^{(n)}+\mf q^{(n+1)}.\]
-	Thus, Nakayama's lemma (note that $x$ lives in the Jacobson radical) tells us that $\mf q^{(n)}=\mf q^{(n+1)}$. But now, looking in $R_\mf q$, which is again a local ring, we see that $\mf q^{(n)}=\mf q^{(n+1)}$ forces $\mf q^{(n)}=0$, which is what we wanted.
+	We start by localizing. The key is the following lemma.
+	\begin{lemma} \label{lem:localminimal}
+		Fix an ideal $I$ of a ring $R$. If the prime $\mf p$ of $R$ is minimal over $I$, then $\mf pR_\mf p$ is minimal over $IR_\mf p$.
+	\end{lemma}
+	\begin{proof}
+		Indeed, if we can find a prime $\mf q\subseteq R_\mf p$ such that
+		\[IR_\mf p\subseteq\mf q\subseteq\mf pR_\mf p,\]
+		then pulling back along the localization map $\psi:R\to R_\mf p$ gives us the chain
+		\[I\subseteq\psi^{-1}(\mf q)\subseteq\psi^{-1}(\mf pR_\mf p)\]
+		because $I\subseteq\psi^{-1}(IR_\mf p)$. As such, minimality forces $\psi^{-1}(\mf q)$ to be equal to $\psi^{-1}(\mf pR_\mf p)=\mf p$ (here we are using \autoref{thm:localizedprimes}), so \autoref{lem:localidealsa} tells us
+		\[\mf q=\psi^{-1}(\mf q)R_\mf p=\mf pR_\mf p,\]
+		thus finishing.
+	\end{proof}
+	In particular, $\mf pR_\mf p$ is minimal over $(x)R_\mf p$.
+
+	So at this point, we fully replace $R$ with $R_\mf p$ (which is still Noetherian by \autoref{cor:localisnoether}), $\mf p$ with $R_\mf p$, and $(x)$ with $(x)R_\mf p$. Thus, $R$ is a local ring with maximal ring $\mf p$, and $\mf p$ is a minimal prime over $(x)$. Before the replacement, we wanted to show that $\dim R_\mf p\le1$, so we see that now we want to show $\dim R\le1$. In other words, we want to show that any chain of distinct primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d\]
+	must have $d\le1$. Note that if $\mf p_d\ne\mf p$, then we can tack on $\subsetneq\mf p$ to the end of chain because $\mf p$ is the unique maximal ideal, so we may in fact assume that $\mf p_d=\mf p$. Thus, we are essentially showing that the chain
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\underbrace{\mf p_{d-1}}_{\mf q:=}\subsetneq\mf p\]
+	has $d\le1$. If $d=0$, then there is nothing to say.
+	
+	Otherwise, we want $\mf q=\mf p_{d-1}$ to have no primes strictly below it, which means (from \autoref{lem:codimisdescend}) we want to show $\dim R_\mf q=\codim\mf q=0$. Noting that $R_\mf q$ is still Noetherian, we see that showing $\dim R_\mf q=0$ is equivalent to showing $R_\mf q$ is Artinian by \autoref{prop:dimenzionzero}. Thus, we will imitate the discussion in \autoref{thm:artingrabbag} and show that the ideal $\mf q$ is nilpotent.
+
+	As a starting step, we claim that $R/(x)$ is Artinian. We have the following stronger statement.
+	\begin{lemma} \label{lem:minprimegrabbag}
+		Fix an ideal $I$ of a ring local ring $R$ with maximal ideal $\mf p$. Then the following are equivalent.
+		\begin{listalph}
+			\item $\mf p$ is minimal over $I$.
+			\item $R/I$ is Artinian.
+			\item $\mf p^n=I$ for some positive integer $n$.
+		\end{listalph}
+	\end{lemma}
+	\begin{proof}
+		We have the following implications. Let $\pi:R\to R/I$ be the natural projection.
+		\begin{itemize}
+			\item We show (a) implies (b). In particular, we claim $\dim I=\dim R/I=0$, for which we use \autoref{lem:dimisascend}. Well, if we have some chain
+			\[I\subseteq\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d,\]
+			then because $R$ is local, we can place $\subseteq\mf p_d$ at the end, thus allowing us to assume $\mf p_d=\mf p$. But then $\mf p$ is minimal over $I$, so the entire chain collapses to $\mf p_0=\mf p$. It follows $d=0$, finishing.
+			\item We show (b) implies (c). By \autoref{lem:pullmax}, we see that $\pi(I)$ is the unique maximal ideal of $R/I$, so $\pi(I)$ is the Jacobson radical of $R/I$. Because $R/I$ is Artinian, this Jacobson radical is nilpotent by \autoref{lem:jacobsonnilpotent}, so there exists a positive integer $n$ for which
+			\[\pi(\mf p)^n=(0)+I.\]
+			As such, any generating element $x_1\cdot\ldots\cdot x_n\in\mf p^n$ will have its projection go to $0\pmod I$, meaning that $x_1\cdot\ldots\cdot x_n\in I$, finishing.
+			\item We show (b) implies (a). Indeed, suppose that we have a prime $\mf q$ such that
+			\[I\subseteq\mf q\subseteq\mf p.\]
+			We need $\mf q=\mf p$, for which it suffices to show $\mf p\subseteq\mf q$. Well, any $x\in\mf p$ has $x^n\in\mf p^n=I\subseteq\mf q$, so $x\in\mf q$ follows.
+		\end{itemize}
+		The above implications finish the proof.
+	\end{proof}
+	So indeed, $R/(x)$ is Artinian by \autoref{lem:minprimegrabbag}.
+
+	Continuing, to measure how close $\mf q$ is to being nilpotent, we let $\varphi:R\to R_\mf q$ be the localization map and set
+	\[\mf q^{(n)}:=\varphi^{-1}\left((\mf qR_\mf q)^n\right).\]
+	In particular, $\frac r1\in(\mf qR_\mf q)^n$ if and only if $\frac r1=\frac{r'}{s'}$ for some $r'\in\mf q^n$ and $s'\notin\mf q$,\footnote{To see $(\mf qR_\mf q)^n=\mf q^nR_\mf q$, certainly $\mf q^nR_\mf q\subseteq(\mf qR_\mf q)^n$ by directly localizing. On the other hand, any product $\frac{r_1}{s_1}\cdot\ldots\cdot\frac{r_n}{s_n}$ generating $(\mf q^nR_\mf q)$ must live in $\mf q^nR_\mf q$ by multiplying through.} or equivalently, $rs''\in\mf q^n$ for some $s''\notin\mf q$, where we are implicitly using the fact $R\setminus\mf q$ is multiplicative. Thus,
+	\[\mf q^{(n)}=\left\{r\in R:rs\in\mf q^n\text{ for some }s\notin\mf q\right\}.\]
+	Now, using the fact that $R/(x)$ is Artinian, we see that the chain
+	\[\mf q^{(1)}+(x)\supseteq\mf q^{(2)}+(x)\supseteq\mf q^{(3)}+(x)\supseteq\cdots\]
+	must stabilize, so we are promised some $n$ for which $\mf q^{(n)}+(x)=\mf q^{(n+1)}+(x)$. It follows $\mf q^{(n)}\subseteq\mf q^{(n+1)}+(x)$. Quickly, this means that any element of $\mf q^{(n)}$ can be written as $a+bx$ with $a\in\mf q^{(n+1)}$ and $b\in R$. But then $bx\in\mf q^{(n)}$, so $b(sx)\in\mf q^n$ for some $s\notin\mf q$, but $x\notin\mf q$ (otherwise $(x)\subseteq\mf q\subseteq\mf p$ forces $\mf q=\mf p$ by minimality), so in fact $b\in\mf q^{(n)}$. So actually
+	\[\mf q^{(n)}\subseteq\mf q^{(n+1)}+(x)\mf q^{(n)},\]
+	and we get a full equality because $\mf q^{(n+1)},(x)\mf q^{(n)}\subseteq\mf q^{(n)}$ individually. In other words, looking in $R/\mf q^{(n+1)}$, we find
+	\[\left(\mf q^{(n)}+\mf q^{(n+1)}\right)=(x)\cdot\left(\mf q^{(n)}+\mf q^{(n+1)}\right),\]
+	so we can apply Nakayama's lemma: the fact that $(x)\subseteq\mf p$ lives in the Jacobson radical, forces by \autoref{thm:nakayama} that $\mf q^{(n)}+\mf q^{(n+1)}=0+\mf q^{(n+1)}$. Thus, $\mf q^{(n)}=\mf q^{(n+1)}$, so
+	\[(\mf qR_\mf q)^n=\varphi^{-1}\left((\mf qR_\mf q)^n\right)R_\mf q=\mf q^{(n)}R_\mf q=\mf q^{(n+1)}R_\mf q=\varphi^{-1}\left((\mf qR_\mf q)^{n+1}\right)R_\mf q=(\mf qR_\mf q)^{n+1}\]
+	using \autoref{lem:localidealsa}. In particular, noting that the Jacobson radical in $R_\mf q$ is $\mf qR_\mf q$, applying \autoref{thm:nakayama} to the above equation gives
+	\[(\mf qR_\mf q)^n=0.\]
+	So indeed, our maximal ideal $\mf qR_\mf q$ is nilpotent, so it follows that $R_\mf q$ has dimension $1$, which is what we wanted. One could track through the proof of \autoref{thm:artingrabbag} to see this. Alternatively, one could note more directly that, $R_\mf q$ has only one prime: if $\mf q'\subseteq R_\mf q$ is a prime, then of course $\mf q'\subseteq\mf qR_\mf q$ by maximality; conversely, any element $a\in\mf qR_\mf q$ has $a^n=0\in\mf q'$, so $a\in\mf q'$ follows, giving $\mf q'=\mf qR_\mf q$. So we get $\dim R_\mf q=0$.
 \end{proof}
-\begin{remark}
-	The analogous statement in linear algebra is that the codimension of a line in a space is $1$ if the equation has a nonzero solution and $0$ otherwise. More rigorously, by the implicit function theorem in differential geometry, having one equation in a tangent space will have a solution set with either the same dimension or one fewer dimension.
+\begin{remark} \label{rem:geometricpit}
+	The analogous statement in the affine case is that the dimension of the intersection between a one-dimensional curve $f=0$ and the space cut out by $\mf p$ is either going to be $0$ (if we intersect at points) or $1$ (if a nontrivial part of the curve $f=0$ lives in the region cut out by $\mf p$).
+	
+	More rigorously, by the implicit function theorem in differential geometry, having one equation in a tangent space will have a solution set with either the same dimension or one fewer dimension.
 \end{remark}
 We can extend this result to any finitely generated ideal by an induction.
-\begin{theorem}
-	Fix a Noetherian ring $R$ and a minimal prime $\mf p$ over the (finitely generated) ideal $I=(x_1,\ldots,x_s)\subseteq R$. Then $\codim\mf p\le s$.
+\begin{theorem} \label{thm:pit}
+	Fix a Noetherian ring $R$. Given an ideal $(x_1,\ldots,x_s)\in R$, suppose $\mf p$ is a minimal prime over $(x_1,\ldots,x_s)$. Then
+	\[\codim\mf p\le s.\]
 \end{theorem}
 \begin{proof}
-	We proceed by induction. We have already done the case of $s=1$. For the inductive step, we would like some prime $\mf p_1$ containing $\mf p$ which is minimal over an ideal generated by $s-1$ elements.
+	We proceed by induction on $s$; the case of $s=0$ is merely saying that a minimal prime $\mf p$ (over $(0)$) has $\codim\mf p=0$, which is true by \autoref{lem:codimisdescend}. The case of $s=1$ is \autoref{thm:pit1}.
+	
+	So now we discuss the inductive step. As before, we begin by localizing. By \autoref{lem:localminimal}, we see that $\mf pR_\mf p$ remains minimal over $(x_1,\ldots,x_s)R_\mf p$, and we are trying to show that $\dim R_\mf p=\codim\mf p=s$. In particular, replacing $R$ with $R_\mf p$, $\mf p$ with $R_\mf p$, and $(x_1,\ldots,x_s)$ with $(x_1,\ldots,x_s)R_\mf p$, we see that $R$ is local with maximal ideal $\mf p$, which is minimal over $(x_1,\ldots,x_s)$, and we want to show that
+	\[\dim R\le s.\]
+	We now proceed with the proof. In particular, we would like to show that any chain of distinct primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_d\]
+	must have $d\le s$. If $d=0$, there is nothing to say.
+	
+	Otherwise, note that $\mf p$ is the unique maximal ideal, so we can tack on $\subseteq\mf p$ to the end of this chain, allowing us to assume $\mf p=\mf p_d$. Similarly, we can replace $\mf p_{d-1}$ with the largest prime $\mf q$ containing $\mf p_{d-1}$ while strictly below $\mf p$ so that we have the chain
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_{d-2}\subsetneq\mf q\subsetneq\mf p.\]
+	As such, we would like to show that there at most $s-1$ primes below $\mf q$, which means we want $\codim\mf q\le s-1$ by \autoref{lem:codimisdescend}. By the inductive hypothesis, it will suffice to show that $\mf q$ is minimal over an ideal generated by $s-1$ elements.
 
-	Well, if $x_s\in\mf p_1$, then $\mf p=\mf p_1$ will do, so we assume henceforth that $x_s\notin\mf p_1$. As before, we may pass to $R_\mf p$ to assume that $R$ is local with maximal ideal $\mf p$. The idea, now, is to note that
-	\[\mf p/(x_1,\ldots,x_s)\]
-	is nilpotent, using the same argument as in the previous theorem. Thus, there exists $m$ such that
-	\[x_i^n\equiv0\pmod{\mf p_1,x_s}\]
-	for any $i$. As such, we can write
-	\[x_i^n=a_ix_s+y_i,\]
-	where $y_i\in\mf p_1$. So now we claim that $\mf p_1$ is minimal over $(y_1,\ldots,y_{s-1})$, which holds by more or less looking at it, I guess. So we are done by induction.
+	Note that, if $\mf q$ contains the $x_\bullet$, then $(x_1,\ldots,x_s)\subseteq\mf q\subsetneq\mf p$, violating the minimality of $\mf p$. So $\mf q$ does not contain at least one of the $x_\bullet$; by rearranging, suppose $x_s\notin\mf q$. Now, imitating the previous proof, we note that $\mf p$ is a minimal prime over $\mf q$ and contains $(x_s)$, so actually $\mf p$ is a minimal prime over $\mf q+(x_s)$. So \autoref{lem:minprimegrabbag} tells us
+	\[\mf p^n=\mf q+(x_s)\]
+	for some positive integer $n$. In particular, each $x_i$ has $x_i^n\in\mf p^n=\mf q+(x_s)$, so there exists a corresponding $y_i\in\mf q$ and $r_i\in R$ such that
+	\[x_i^n=y_i+r_ix_s.\tag{$*$}\label{eq:getnilpotent}\]
+	We now claim that $\mf q$ is minimal over $(y_1,\ldots,y_{s-1})$, which will of course finish. To see this, we proceed in steps.
+	\begin{enumerate}
+		\item Note that $\mf p+(y_1,\ldots,y_{s-1},x_s)$ is nilpotent in $R/(y_1,\ldots,y_{s-1},x_s)$ by \autoref{lem:minprimegrabbag}: taking $\mf p$ to a sufficiently large power places $\mf p^\bullet$ in $(x_1,\ldots,x_s)$, but then taking any generator $x_i$ to a sufficiently large power places it into $(y_1,\ldots,y_{s-1},x_s)$ by \autoref{eq:getnilpotent}.
+		\item Reading the previous step backwards, it follows that the image of $\mf p$ in $(R/(y_1,\ldots,y_{s-1}))/(x_s)$ nilpotent, so the image of $\mf p$ in $R/(y_1,\ldots,y_{s-1})$ is minimal over $(x_s)$ by \autoref{lem:minprimegrabbag}. In particular, \autoref{thm:pit1} enforces
+		\[\codim(\mf p+(y_1,\ldots,y_{s-1}))\le1.\]
+		\item We now track through $\mf q$. To show that $\mf q$ is minimal over $(y_1,\ldots,y_{s-1})$ we are showing that there are no primes strictly between $(y_1,\ldots,y_{s-1})$ and $\mf q$. Modding out by $(y_1,\ldots,y_{s-1})$, we are showing that there are no primes strictly between $(0)$ and $\mf q+(y_1,\ldots,y_{s-1})$ in $R/(y_1,\ldots,y_{s-1})$. (The fact that the modding process preserves inclusions of primes is discussed in \autoref{lem:dimisascend}.) As such, we need
+		\[\codim(\mf q+(y_1,\ldots,y_{s-1}))=0\]
+		in $R/(y_1,\ldots,y_{s-1})$. Well, note that $x_s$ is not in $\mf q$ and hence not in $(y_1,\ldots,y_{s-1})$, so we have
+		\[\mf q+(y_1,\ldots,y_{s-1})\subsetneq(\mf q+(x_s))+(y_1,\ldots,y_{s-1})\subseteq\mf p+(y_1,\ldots,y_{s-1}),\]
+		in $R/(y_1,\ldots,y_{s-1})$. Thus, the previous step forces $\mf q+(y_1,\ldots,y_{s-1})$ to in fact have no primes strictly smaller (and hence have codimension $0$), lest we be able to add more primes below $\mf p+(y_1,\ldots,y_{s-1})$.
+	\end{enumerate}
+	So $\mf q$ is minimal over $(y_1,\ldots,y_{s-1})$, which is what we wanted.
 \end{proof}
 \begin{remark}
-	The analogous statement in linear algebra is that we now have $s$ equations, which will give rise to codimension $s$.
+	As in \autoref{rem:geometricpit}, the analogous statement in linear algebra is that the solution set to $s$ equations (carved out by $(x_1,\ldots,x_s)$) will have at most dimension codimension $s$ when living inside an affine variety.
 \end{remark}
-We close with some applications.
+We close class by discussing the sharpness of \autoref{thm:pit}. As an example, the equality case is in fact achievable, for any $s$.
 \begin{example}
-	Fix $R:=k[x_1,\ldots,x_n]$. Then the codimension of $\mf p:=(x_1,\ldots,x_r)$ is upper-bounded by $r$ by the above theorem, but we also have a chain
-	\[(0)\subseteq(x_1)\subseteq(x_1,x_2)\subseteq\cdots(x_1,\ldots,x_r)=\mf p,\]
+	Fix $R:=k[x_1,\ldots,x_n]$. Then the codimension of the prime $\mf p:=(x_1,\ldots,x_r)$ is upper-bounded by $r$ by \autoref{thm:pit}, but we also have a chain of distinct primes
+	\[(0)\subsetneq(x_1)\subsetneq(x_1,x_2)\subsetneq\cdots\subsetneq(x_1,\ldots,x_r)=\mf p,\]
 	so $\codim\mf p=r$ follows.
 \end{example}
+And here is a full converse to \autoref{thm:pit}.
 \begin{restatable}{cor}{pidthmconverse}
-	Fix $\mf p$ a prime ideal of a ring $R$ with codimension $r$. Then there are elements $x_1,\ldots,x_r$ such that $\mf p$ is minimal over $(x_1,\ldots,x_r)$.
-\end{restatable} % \todo{sharpness?} Z[sqrt{-5}] with (2,1+sqrt(-5)) I guess
+	Fix a prime ideal $\mf p$ of a Noetherian ring $R$ with codimension $r$. Then there are elements $x_1,\ldots,x_r$ such that $\mf p$ is minimal over $(x_1,\ldots,x_r)$, and in fact $\codim(x_1,\ldots,x_r)=r$.
+\end{restatable}
 \begin{proof}
-	The point is to do an induction. Starting with $r=1$, we choose a minimal prime. Then we can choose an element $x_2$ which does not live in any of these finitely many minimal primes and finish by induction.
+	We induct. If $\mf p$ has codimension $0$, then by \autoref{lem:codimisdescend}, we see that there is no prime strictly smaller than $\mf p$. In other words, $\mf p$ is minimal over $(0)$, the ideal generated by $0$ elements.
+
+	We now proceed with the induction. Because $\mf p$ has codimension $r>0$, we can build a chain of primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_{r-1}\subsetneq\mf p\]
+	by \autoref{lem:codimisdescend}. In particular, $\codim\mf p_{r-1}=r-1$ (it is at least $r-1$ by this construction and cannot exceed $r-1$ lest we be able to make the tail longer), so the induction promises us that $\mf p_{r-1}$ is minimal over some ideal $(x_1,\ldots,x_{r-1})$ of codimension $r-1$.
+
+	We now just need to choose $x_r$ to make our codimension a little bigger. Indeed, the set of primes minimal over $(x_1,\ldots,x_{r-1})$ is finite by \autoref{prop:finminprimes}, and $\mf p$ is not contained in of them (because then \autoref{thm:pit} would upper-bound the codimension of $\mf p$ by $r-1$). So \autoref{lem:primeavoidance} promises that we can find an element $x_r$ which lives in $\mf p$ but in none of the primes minimal over $(x_1,\ldots,x_{r-1})$, so we claim that $\mf p$ is minimal over
+	\[(x_1,\ldots,x_r).\]
+	Indeed, any prime $\mf q$ such that
+	\[(x_1,\ldots,x_r)\subseteq\mf q\subseteq\mf p.\]
+	We claim $\codim\mf q=r$, which will force $\mf p=\mf q$ because $\mf q\subsetneq\mf p$ would then allow us to build a chain of $r+1$ distinct primes below $\mf p$, contradicting $\codim\mf p=r$ by \autoref{lem:codimisdescend}. Note that certainly $\codim\mf q\le\codim\mf p=r$ by taking a chain of primes below $\mf q$ and replacing $\mf q$ with $\mf p$, finishing via \autoref{lem:codimisdescend}.
+	
+	So we want $\codim\mf q\ge r$. Well, $\mf q$ contains $(x_1,\ldots,x_{r-1})$ and hence have codimension at least
+	\[\codim(x_1,\ldots,x_{r-1})=r-1.\]
+	However, if we did have $\codim\mf q=r-1$, then there could be no prime strictly between $\mf q$ and $(x_1,\ldots,x_{r-1})$ because such a prime would have codimension strictly less than $\codim\mf q=r-1=\codim(x_1,\ldots,x_{r-1})$ by \autoref{lem:codimisdescend}. So in this case, $\mf q$ is minimal over $(x_1,\ldots,x_{r-1})$, which is a contradiction because $x_r\in\mf q$. This finishes.
 \end{proof}
