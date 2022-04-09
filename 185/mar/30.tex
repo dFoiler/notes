@@ -32,7 +32,7 @@ We are talking about more consequences of the Cauchy integral formula. For examp
 	Lastly, we get the uniqueness of the integer $n$ follows from its minimality. %\todo{}
 \end{proof}
 To use the above result, we show one of my personal favorite results from complex analysis.
-\begin{theorem}[Identity]
+\begin{theorem}[Identity]\label{thm:id}
 	Fix an open, connected subset $\Omega\subseteq\CC$ with two holomorphic functions $f_1,f_2:\Omega\to\CC$. Further, set
 	\[Z:=\{z\in\Omega:f_1(z)=f_2(z)\}.\]
 	If $Z$ contains an accumulation point, then $f_2=f_2$ on $\Omega$.
@@ -85,15 +85,44 @@ We close by stating a theorem.
 	\[|f(w)|>|f(z)|.\]
 \end{theorem}
 \begin{proof}
-	We will not prove this result in class, but it might be on the homework.
+	We proceed by contraposition. Fix some $z_0\in\Omega$ and $r>0$ such that $w\in B(z_0,r)\cap\Omega$ has $|f(w)|\le|f(z_0)|$. Note that making $r$ smaller merely makes our search space smaller, so we may take $r$ small enough so that $B(z_0,r)\subseteq\Omega$.
+	
+	Further, note that if $f$ is constant on $B(z_0,r)$, then $f$ is constant on all of $\Omega$ because $f$ will agree with a constant function on the set $B(z_0,r)$---which contains a limit point---forcing $f$ to be constant on all of $\Omega$ by \autoref{thm:id}. Thus, it suffices to show that $f$ is constant on $B(z_0,r)$.
+
+	As such, we think of $f$ as a function on $B(z_0,r)$ such that $|f(z_0)|\ge|f(w)|$ for each $w\in\Omega$, and we want to show that $f$ is constant. Very quickly, if $|f(z_0)|=0$, then we get $f\equiv0$ automatically, so we assume $f(z_0)\ne0$. As such, we can replace $f$ with $f(z)/f(z_0)$, which lets us assume that $f(z_0)=1$.
+	
+	The key point here, is to use \autoref{thm:cif} to note
+	\[f(z_0)=\frac1{2\pi i}\oint_{\gamma_\varepsilon}\frac{f(z)}{z-z_0}\,dz\]
+	for $\gamma_\varepsilon:[0,1]\to\CC$ defined by $\gamma_\varepsilon(t):=z_0+\varepsilon\exp(2\pi it)$, for any $\varepsilon\in(0,r)$. The main idea, then, is that the numerator $f(z)$ is in some sense ``too small'' to actually accumulate properly to $f(z_0)=1$, especially if $f(z)$ ever deviates from exactly $1$.
+	
+	To be able to keep track of deviations in direction, we see that \autoref{lem:byhandwinding} promises us a function $\theta_\varepsilon$ with
+	\[(f\circ\gamma_\varepsilon)(t)=|f(\gamma(t))|\exp(2\pi i\theta_\varepsilon(t)).\]
+	Thus, we compute
+	\begin{align*}
+		1 &= \frac1{2\pi i}\oint_{\gamma_\varepsilon}\frac{f(z)}{z-z_0}\,dz \\
+		&= \frac1{2\pi i}\int_0^1\frac{|f(\gamma(t))|\exp(2\pi i\theta_\varepsilon(t))}{\exp(2\pi it)}\cdot2\pi i\exp(2\pi it)\,dt \\
+		&= \int_0^1|f(\gamma(t))|\exp(2\pi i\theta_\varepsilon(t))\,dt.
+	\end{align*}
+	In particular, extracting out the real part from the integral forces
+	\[1=\int_0^1|f(\gamma(t))|\cos(2\pi\theta_\varepsilon(t))\,dt.\]
+	Bounding the integral in $\RR$, we see
+	\[\int_0^1|f(\gamma(t))|\cos(2\pi\theta_\varepsilon(t))\,dt\le(1-0)\cdot\max_{t\in[0,1]}\big\{|f(\gamma(t))|\cos(2\pi\theta_\varepsilon(t))\big\}\le1,\]
+	where equality is now holding only when $|f(\gamma(t))|\cos(2\pi\theta_\varepsilon(t))=1$ for all $t\in[0,1]$.\footnote{The sharpness of these equalities really does need some continuity discussion. Roughly speaking, if we ever have a strict inequality $|f(\gamma(t_0))|\cos(2\pi\theta_\varepsilon(t_0))<1$, then we have strict inequality in some neighborhood around $t_0$, which we can track through to make the integral strictly less than $1$. This argument is purely real analysis.} In particular, we need $|f(\gamma(t))|=1$ exactly, and we also need $\theta_\varepsilon(t)\equiv0\pmod{2\pi}$ for all $t$, so in particular,
+	\[(f\circ\gamma_\varepsilon)(t)=|f(\gamma(t))|\exp(2\pi i\theta_\varepsilon(t))=1\]
+	always. Now, because any $z\in B(z_0,r)\setminus\{z_0\}$ can be written in polar form by
+	\[z-z_0=\varepsilon\exp(i\theta)\]
+	for some $\varepsilon<r$ and some $\theta$, we see that actually any $z\in B(z_0,r)$ will be forced to have $f(z)=1$. This finishes the proof that $f$ is constant.
 \end{proof}
+\begin{remark}[Nir]
+	There are other ways to see this result. For example, it happens that holomorphic are open, so $f(B(z_0,r))$ must be open and in particular contains an open neighborhood around $f(z_0)$, and we can choose an output in this neighborhood smaller than $f(z_0)$ in magnitude.
+\end{remark}
 
 The rough idea here is that $f$ cannot obtain a maximum on an open set: we must always look to the boundary. More rigorously, we have the following statement.
 \begin{corollary} \label{cor:mmp}
 	Fix an open, connected subset $\Omega\subseteq\CC$ and a non-constant continuous function $f:\overline\Omega\to\CC$ such that $f|_\Omega$ is holomorphic. Now, if $z_0\in\overline\Omega$ such that $|f(z_0)|$ is maximal, then $z_0\in\del\Omega$.
 \end{corollary}
 \begin{proof}
-	Once again, we omit this proof.
+	If $z_0\in\Omega$, then $f$ is forced to be continuous on $\Omega$ by \autoref{thm:mmp}, which violates the hypothesis on $f$. Thus, we conclude $z_0\in\overline\Omega\setminus\Omega$, which is $\del\Omega$.
 \end{proof}
 \begin{restatable}[Schwarz's lemma]{cor}{schwarzlemma}
 	Fix a holomorphic function $f:B(0,1)\to B(0,1)$ such that $f(0)=0$. Then actually $|f(z)|\le|z|$ for all $z\in B(0,1)$ and also $|f'(0)|\le1$. Further, if $|f'(0)|=1$ or $|f(z)|=|z|$ for some nonzero $z\in B(0,1)$, then $f(z)=az$ for all $z\in\CC$ for some fixed $a\in\CC$.
