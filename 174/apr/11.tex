@@ -1,0 +1,185 @@
+% !TEX root = ../notes.tex
+
+We finally begin our discussion of adjoints.
+\begin{remark}
+	Being shocked for thirty minutes after lecturing is strongly cringe.
+\end{remark}
+
+\subsection{Introducing Adjunctions}
+Given two categories $\mathcal C$ and $\mathcal D$, we can ask for the following relations, listed in order of strength.
+\begin{itemize}
+	\item We can ask for categories to be equal. This is very strong.
+	\item We can ask for categories to be isomorphic. This is evil.
+	\item We can ask for categories to be equivalent. This is a good notion, but it is also somewhat strong.
+\end{itemize}
+For example, we might want to think of $\mathrm{Set}$ and $\mathrm{Grp}$ to be related. Of course, they are not equivalent (for example, $\mathrm{Grp}$ has a zero object $\{e\}$ while $\mathrm{Set}$ does not).
+
+The goal for today is to talk about a weaker notion than equivalence (so that we have lots of interesting examples) that is still powerful enough to be useful. Here is our definition.
+\begin{definition}
+	Fix two categories $\mathcal C$ and $\mathcal D$. An \textit{adjunction} is a pair of functors $F:\mathcal C\to\mc D$ and $G:\mc D\to\mc C$ with isomorphisms (of sets)
+	\[\op{Mor}_{\mc D}(Fc,d)\cong\op{Mor}_{\mc C}(c,Gd)\]
+	natural in both arguments. We will call $F$ a \textit{left adjoint} to $G$ and $G$ a \textit{right adjoint} to $F$.
+\end{definition}
+\begin{notation}
+	We will write the pair of functors $F:\mathcal C\to\mc D$ and $G:\mc D\to\mc C$ as $F:\mc C\rightleftharpoons\mc D:G$.
+\end{notation}
+\begin{remark}
+	It turns out that adjoints are unique up to some notion of isomorphism, so we may write ``the'' adjoint. However, we will not prove this uniqueness for a while.
+\end{remark}
+Let's actually write out our naturality square. For $c$, if $f:c\to c'$ is a morphism, we need the following diagram to commute.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn1fe1xcbWMgRH0oRmMnLGQpIl0sWzAsMSwiXFxvcHtNb3J9X3tcXG1jIER9KEZjLGQpIl0sWzEsMCwiXFxvcHtNb3J9X3tcXG1jIEN9KGMnLEdkKSJdLFsxLDEsIlxcb3B7TW9yfV97XFxtYyBDfShjLEdkKSJdLFswLDEsIi1cXGNpcmMgRmYiLDJdLFsyLDMsIi1cXGNpcmMgZiJdLFswLDIsIlxcY29uZyIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDMsIlxcY29uZyIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\op{Mor}_{\mc D}(Fc',d)} & {\op{Mor}_{\mc C}(c',Gd)} \\
+	{\op{Mor}_{\mc D}(Fc,d)} & {\op{Mor}_{\mc C}(c,Gd)}
+	\arrow["{-\circ Ff}"', from=1-1, to=2-1]
+	\arrow["{-\circ f}", from=1-2, to=2-2]
+	\arrow["\cong"{description}, draw=none, from=1-1, to=1-2]
+	\arrow["\cong"{description}, draw=none, from=2-1, to=2-2]
+\end{tikzcd}\]
+And here is the other naturality square, for a morphism $g:d\to d'$.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG9we01vcn1fe1xcbWMgRH0oRmMsZCkiXSxbMCwxLCJcXG9we01vcn1fe1xcbWMgRH0oRmMsZCcpIl0sWzEsMCwiXFxvcHtNb3J9X3tcXG1jIEN9KGMsR2QpIl0sWzEsMSwiXFxvcHtNb3J9X3tcXG1jIEN9KGMsR2QnKSJdLFswLDEsImdcXGNpcmMtIiwyXSxbMiwzLCJHZ1xcY2lyYy0iXSxbMCwyLCJcXGNvbmciLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCJcXGNvbmciLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\op{Mor}_{\mc D}(Fc,d)} & {\op{Mor}_{\mc C}(c,Gd)} \\
+	{\op{Mor}_{\mc D}(Fc,d')} & {\op{Mor}_{\mc C}(c,Gd')}
+	\arrow["{g\circ-}"', from=1-1, to=2-1]
+	\arrow["{Gg\circ-}", from=1-2, to=2-2]
+	\arrow["\cong"{description}, draw=none, from=1-1, to=1-2]
+	\arrow["\cong"{description}, draw=none, from=2-1, to=2-2]
+\end{tikzcd}\]
+Here is one last piece of notation.
+\begin{notation}
+	We will notate $f^\sharp:Fc\to d$ being ``adjoint'' or ``transpose'' to the morphism $f^\flat:c\to Gd$, by the isomorphism promised by the adjunction.
+\end{notation}
+Let's make the naturality a little faster; it turns out that the naturality is equivalent to having a natural isomorphism as follows.
+% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXG1jIENcXG9wcFxcdGltZXNcXG1jIEQiXSxbMiwwLCJcXG1hdGhybXtTZXR9Il0sWzAsMSwiXFxtYyBEKEYtLC0pIiwwLHsiY3VydmUiOi0yfV0sWzAsMSwiXFxtYyBDKC0sRy0pIiwyLHsiY3VydmUiOjJ9XSxbMiwzLCJcXGNvbmciLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\mc C\opp\times\mc D} && {\mathrm{Set}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{\mc D(F-,-)}", curve={height=-12pt}, from=1-1, to=1-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{\mc C(-,G-)}"', curve={height=12pt}, from=1-1, to=1-3]
+	\arrow["\cong", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+\end{tikzcd}\]
+Take a moment to verify that the functors actually type-check.
+
+Here is another way to promote the efficiency.
+\begin{lemma} \label{lem:betteradjoint}
+	Fix functors $F:\mc C\rightleftharpoons\mc D:G$ with given isomorphisms $\mc D(Fc,d)\cong\mc C(c,Gd)$ for $c\in\mc C$ and $d\in\mc D$. Then, naturality is equivalent to the following: one of the squares below commutes if and only if the other does, for any morphisms making the diagrams well-defined.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJGYyJdLFswLDEsIkZjJyJdLFsxLDAsImQiXSxbMSwxLCJkJyJdLFsyLDAsImMiXSxbMywwLCJHZCJdLFsyLDEsImMnIl0sWzMsMSwiR2QnIl0sWzAsMiwiZl5cXHNoYXJwIl0sWzEsMywiZ15cXHNoYXJwIiwyXSxbMCwxLCJGaCIsMl0sWzIsMywiayJdLFs0LDYsImgiLDJdLFs0LDUsImZeXFxmbGF0Il0sWzYsNywiZ15cXGZsYXQiLDJdLFs1LDcsIkdrIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		Fc & d & c & Gd \\
+		{Fc'} & {d'} & {c'} & {Gd'}
+		\arrow["{f^\sharp}", from=1-1, to=1-2]
+		\arrow["{g^\sharp}"', from=2-1, to=2-2]
+		\arrow["Fh"', from=1-1, to=2-1]
+		\arrow["k", from=1-2, to=2-2]
+		\arrow["h"', from=1-3, to=2-3]
+		\arrow["{f^\flat}", from=1-3, to=1-4]
+		\arrow["{g^\flat}"', from=2-3, to=2-4]
+		\arrow["Gk", from=1-4, to=2-4]
+	\end{tikzcd}\]
+\end{lemma}
+\begin{proof}
+	This is supposedly on the homework.
+\end{proof}
+In general, the above condition
+
+\subsection{Examples}
+We are feeling kind today, so let's see some examples.
+\begin{exe}
+	The functor $F:\mathrm{Set}\to\mathrm{Grp}$ sending a group $X$ to the free group on $X$ is left adjoint to the forgetful functor $U:\mathrm{Grp}\to\mathrm{Set}$.
+\end{exe}
+\begin{proof}
+	The point is that, given a set $X$ and group $G$, a morphism $FX\to G$ is in some sense the ``same data'' as a morphism $X\to FG$. For example, given a morphism $f^\flat:X\to UG$, we define $f^\sharp:FX\to G$ by
+	\[f^\sharp(x_1x_2\cdots x_n)=f^\flat(x_1)f^\flat(x_2)\cdots f^\flat(x_n).\]
+	This turns out to be an isomorphism, and it turns out that we can show naturality everywhere, but we will not bother.
+\end{proof}
+\begin{remark}
+	There are many examples of ``free-forgetful'' adjunctions.
+\end{remark}
+\begin{remark}
+	Philosophically, a right adjoint poses a question which the left adjoint answers. For example, $U:\mathrm{Grp}\to\mathrm{Set}$ is asking how to get maps of groups from sets, which the free functor tells us how to do.
+\end{remark}
+\begin{exe}
+	The functor $F:\mathrm{Set}\to\mathrm{Top}$ taking a set $X$ to the topological space $X$ equipped with the discrete topology is left adjoint to the forgetful functor $U:\mathrm{Top}\to\mathrm{Set}$.
+
+	Similarly, the functor $G:\mathrm{Set}\to\mathrm{Top}$ taking a set $X$ to the topological space $X$ equipped with the indiscrete topology is right adjoint to $U$.
+\end{exe}
+\begin{proof}
+	For the first claim, we are saying that, given a set $X$ and a topological space $T$, continuous maps $FX\to T$ have the same data as $X\to UT$. However, all maps (of sets) $FX\to T$ are continuous for free because $FX$ has the discrete topology.
+
+	On the other hand, for the second claim, we are saying that, given a set $X$ and a topological space $T$, maps (of spaces) $UT\to X$ have the same data as continuous maps $T\to GX$. This is true because all maps $T\to GX$ are automatically continuous because we are asking for the preimages of $\emp$ and $GX$ to be open, which are true for free.
+\end{proof}
+\begin{exe}
+	We give the embedding functor between the poset categories $\iota:(\ZZ,\le)\to(\RR,\le)$ a right adjoint.
+\end{exe}
+\begin{proof}
+	We claim that the right adjoint is $r\mapsto\floor r$. This is well-defined and does give a functor. To get a right adjoint, we are saying that $\iota n\le r$ if and only if $n\le\floor r$, which is true by some analysis. Notably, we only care about the existence of morphisms to get our bijections because we are working in poset categories.
+\end{proof}
+\begin{remark}
+	Of course, $\iota$ also has a left adjoint as $\ceil{\cdot}$.
+\end{remark}
+\begin{exe}
+	We give the embedding functor $\iota:\mathrm{Groupoids}\to\mathrm{Cat}$ a left and right adjoint.
+\end{exe}
+\begin{proof}
+	Recall that a groupoid is a category where all morphisms are isomorphisms. There are two ways to do this.
+	\begin{itemize}
+		\item We can construct the ``maximal subgroupoid'' $\max\mathcal C$ by merely taking $\mathcal C$ and throwing out all morphisms which are not isomorphisms. This turns out to be a right adjoint.
+		\item We can force all morphisms to be isomorphisms by adding in all the necessary inverses and quotient out by what we need to remain a category; this process is called ``localization,'' in analogy with localizing a ring. This turns out to be a left adjoint.
+	\end{itemize}
+	We won't actually check that these are adjoints (because the checks are painful), so we will declare that we are done.
+\end{proof}
+
+\subsection{Units and Counits}
+We are now done talking about examples. As such, have a lemma.
+\begin{lemma} \label{lem:getunits}
+	Fix adjunctions $F:\mc C\rightleftharpoons\mc D:G$. Then there exists a natural transformation $\eta:\id_{\mc C}\Rightarrow GF$, where $\eta_c:c\to GFc$ is defined as the transpose of $\id_{Fc}:Fc\to Fc$ along the isomorphism
+	\[\op{Mor}_{\mc D}(Fc,Fc)\cong\op{Mor}_{\mc C}(c,GFc)\]
+	promised by the adjunction.
+\end{lemma}
+\begin{proof}
+	We only have to check naturality. As such, fix some morphism $f:c\to c'$, and we need the following diagram to commute.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJjIl0sWzAsMSwiYyciXSxbMSwwLCJHRmMiXSxbMSwxLCJHRmMnIl0sWzAsMSwiZiIsMl0sWzIsMywiR0ZmIl0sWzAsMiwiXFxldGFfYyJdLFsxLDMsIlxcZXRhX3tjJ30iLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		c & GFc \\
+		{c'} & {GFc'}
+		\arrow["f"', from=1-1, to=2-1]
+		\arrow["GFf", from=1-2, to=2-2]
+		\arrow["{\eta_c}", from=1-1, to=1-2]
+		\arrow["{\eta_{c'}}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Note that $\id_{c}$ is the $f^\flat$ of $\id_{Fc}$, so by \autoref{lem:betteradjoint}, it suffices to check that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGYyJdLFswLDEsIkZjJyJdLFsxLDAsIkZjIl0sWzEsMSwiRmMnIl0sWzAsMiwiXFxpZF97RmN9Il0sWzEsMywiXFxpZF97RmMnfSJdLFswLDEsIkZmIiwyXSxbMiwzLCJGZiJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		Fc & Fc \\
+		{Fc'} & {Fc'}
+		\arrow["{\id_{Fc}}", from=1-1, to=1-2]
+		\arrow["{\id_{Fc'}}", from=2-1, to=2-2]
+		\arrow["Ff"', from=1-1, to=2-1]
+		\arrow["Ff", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	This commutes because look at it.
+\end{proof}
+The $\eta$ in the lemma is special.
+\begin{definition}[Unit]
+	Work in the context of \autoref{lem:getunits}. Then $\eta$ is called the \textit{unit}.
+\end{definition}
+Our lemma also has the following dual.
+\begin{lemma} \label{lem:getcounits}
+	Fix adjunctions $F:\mc C\rightleftharpoons\mc D:G$. Then there exists a natural transformation $\varepsilon:FG\Rightarrow\id_{\mc D}$, where $\varepsilon_d:FGd\to d$ is defined as the transpose of $\id_{Gd}:Gd\to Gd$ along the isomorphism
+	\[\op{Mor}_{\mc D}(FGd,d)\cong\op{Mor}_{\mc C}(Gd,Gd)\]
+	promised by the adjunction.
+\end{lemma}
+\begin{proof}
+	Duality.
+\end{proof}
+And here is our corresponding word.
+\begin{definition}[Unit]
+	Work in the context of \autoref{lem:getcounits}. Then $\varepsilon$ is called the \textit{counit}.
+\end{definition}
+We close class with an example.
+\begin{exe}
+	We compute units and counits for the free-forgetful adjoints between $\mathrm{Set}$ and $\mathrm{Grp}$.
+\end{exe}
+\begin{proof}
+	Our unit $\eta_X:X\to UFX$ sends an element $x\in X$ to $x\in UFX$, the length-one word. On the other hand, counit $\varepsilon_G:FUG\to G$ sends an element $g_1\cdots g_n\in FUG$ made of letters of $G$ to its evaluation in $G$.
+\end{proof}
