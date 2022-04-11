@@ -1,0 +1,136 @@
+% !TEX root = ../notes.tex
+
+Welcome back everyone.
+
+\subsection{Universal Introduction}
+We continue with our discussion of natural deduction for first-order logic. Last time we discussed the elimination rule for $\forall$, which was like the elimination rule for $\land$.
+
+Today we start with a discussion of introducing $\forall$, which will be like $\land$ introduction. For example, if there will only finitely many elements of the domain $D$, then we could check $\forall x\varphi$ by checking $\varphi$ on $x:=d$ for each of the finitely many $d\in D$. However, if the domain is infinite, we need to be careful; the idea is to prove for an ``arbitrary'' element $d$ of the domain.
+\begin{idea}
+	If we can prove something for an arbitrary object, then we can prove it for all objects.
+\end{idea}
+Let's see an example.
+\begin{lemma} \label{lem:auxlemma}
+	For any real numbers $a$ and $b$, if $0<a<b$, then $a^2<b^2$.
+\end{lemma}
+\begin{proposition}
+	For any real numbers $a$ and $b$, if $0<a<b$, then $(a-b)^2<a^2$.
+\end{proposition}
+\begin{proof}
+	Let $c$ and $d$ be any real numbers. Notably, we are allowing $c$ and $d$ be whatever they want to be. To start, we assume the hypothesis so that $0<d<c$. Now, we see that $0<c-d<c$, so it follows
+	\[(c-d)^2<c^2\]
+	from \autoref{lem:auxlemma}, using $\forall$ elimination. But $c$ and $d$ were arbitrary real numbers, so any reals numbers $a$ and $b$ have, if $0<a<b$, then $(a-b)^2<a^2$.
+\end{proof}
+\begin{example}
+	Let $P$ be an arbitrary patient in a hospital. Because they are in the hospital, they have an email address logged in the database, so in particular, $P$ has an email address. As such, 
+\end{example}
+Let's write out the above proof in Fitch style proofs.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo{beg}{\boxed{c,d}}
+			\open[]
+				\hypo{hypo}{0<d<c}
+				\have{1}{0<c-d<c} \by{Basic math}{}
+				\have{2}{\forall x\forall y\left(0<x<y\to x^2<y^2\right)} \by{\autoref{lem:auxlemma}}{}
+				\have{3}{0<c-d<d\to (c-d)^2<d^2} \by{$\forall$Elim}{2}
+				\have{last}{(c-d)^2<c^2} \by{$\to$Elim}{1,3}
+			\close
+			\have{end}{(0<d<c)\to(c-d)^2<c^2} \by{$\to$Intro}{hypo-last}
+		\close
+		\have{}{\forall u\forall v\left((0<v<u)\to(u-v)^2<u^2\right)} \by{$\forall$Intro}{beg-end}
+	\end{nd}
+\end{align*}
+The point of the boxes at the top is that they are newly introduced constants. As such, we make the slightly formal point that we will permit adding in some finitely many new constants $c_1,\ldots,c_n$ without changing our semantics.
+\begin{remark}
+	Technically, we are not allowed to introduce both $\forall$ at the same time, but the fix is just to introduce the quantifiers one at a time.
+\end{remark}
+Anyway, here is our rule.
+\begin{defihelper}[$\forall$ Introduction] \nirindex{All introduction@$\forall$Intro}
+	Suppose we have the following in a given subproof.
+	\begin{itemize}
+		\item $c$ is a constant not in the base language $\mathcal L$.
+		\item We have a proof starting with $\boxed c$ and ending with $\varphi^x_c$.
+		\item The constant $c$ is nowhere outside the subproof.
+	\end{itemize}
+	Then we may write down $\forall x\varphi$ outside the current subproof.
+\end{defihelper}
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo{beg}{\boxed c}
+			\have[\vdots]{}{\vdots}
+			\have[n]{end}{\varphi^x_c}
+		\close
+		\have{}{\forall x\varphi} \by{$\forall$Intro}{beg-end}
+	\end{nd}
+\end{align*}
+We have some extra hypotheses ensuring that $c$ is really an ``arbitrary'' object, but that is all they are. The main point is that the subproof above is a ``template'' of sorts for any object in the domain.
+
+Let's do another example.
+\begin{exe}
+	We show $\forall x(P(x)\to Q(x))\to(\forall xP(x)\to\forall xQ(x))$.
+\end{exe}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{beg}{\forall x(P(x)\to Q(x))}
+				\open[]
+					\hypo{begbeg}{\forall xP(x)}
+					\open[]
+						\hypo{intro}{\boxed c}
+						\have{reit1}{\forall xP(x)} \by{Reit}{begbeg}
+						\have{pc}{P(c)} \by{$\forall$Elim}{reit1}
+						\have{reit2}{\forall x(P(x)\to Q(x))} \by{Reit}{beg}
+						\have{pctoqc}{P(c)\to Q(c)} \by{$\forall$Elim}{reit2}
+						\have{qc}{Q(c)} \by{$\to$Elim}{pc,pctoqc}
+					\close
+					\have{endend}{\forall xQ(x)} \by{$\forall$Intro}{intro-qc}
+				\close
+				\have{end}{\forall xP(x)\to\forall xQ(x)} \by{$\to$Intro}{begbeg-endend}
+			\close
+			\have{}{\forall x(P(x)\to Q(x))\to(\forall xP(x)\to\forall xQ(x))} \by{$\to$Intro}{beg-end}
+		\end{nd}
+	\end{align*}
+	The main point is to keep unwinding our quantifiers down until we get to $\forall xQ(x)$, from which point we know that we should introduce a constant $c$. Then, once we are dealing with no quantifiers, we are essentially down to working in propositional logic (and eliminating quantifiers).
+\end{proof}
+\begin{remark}
+	As a quick check-in, one can still show that our proof system is ``sound'': if $\psi$ has a proof from the assumptions $\varphi_1,\ldots,\varphi_n$, then $\psi$ is still a semantic consequence of the formulae $\varphi_1,\ldots,\varphi_n$. The converse is called completeness.
+
+	If we add in the axiom $\exists x\varphi\liff\lnot\forall x\lnot\varphi$ (i.e., if $\varphi$ is true for some $x$, then it is not the case that $\varphi$ fails for all $x$), then we have a fully sound and complete axiom for first-order logic.
+\end{remark}
+Nevertheless, we go on to give introduction and elimination rules for $\exists$. While the axiom $\exists x\varphi\liff\lnot\forall x\lnot\varphi$ is valid, people do not in general think about $\exists$ like this, and we would like our proof system to more faithfully mirror how people think.
+
+\subsection{Existential Introduction}
+We start with existential introduction, which is in some sense dual to universal elimination.
+
+Recall from \autoref{prop:raaexample} that we were able to conjure the existence of irrational numbers $a$ and $b$ such that $a^b$ is rational, but we did not know what the $a$ and $b$ were. In contrast, here is a constructive proof.
+\raaexample*
+\begin{proof}
+	The point is to use logarithms. Set $r:=\log_32$ so that $2^r=3$.\footnote{Here is one way to see this: the set $\{r\in\RR:2^r<3\}$ is upper-bounded, and so it will have a maximum. The maximum is the number that we want.} Further, recall that we showed $\sqrt2$ is irrational (constructively via $\lnot$ introduction in \autoref{prop:sqrttwo}).
+	
+	Quickly, we show that $2\log_32$ is irrational. Well, if we could write $2\log_32=\frac mn$ for positive integers $m$ and $n$, then $\log_32=\frac m{2n}$, so $2^{m/2n}=3$ by substitution, so
+	\[2^m=3^{2n}.\]
+	Now, $m\ne0$, so $2^m$ is even, but $3^{2m}$ is odd, so we have our contradiction.
+
+	So we can conclude that $2\log_32$ is irrational, So to finish, we observe that
+	\[\left(\sqrt2\right)^{2\log_32}=\left(\left(\sqrt2\right)^2\right)^{\log_32}=2^{\log_32}=3,\]
+	so we have two irrational numbers $a=\sqrt2$ and $b=\log_32$ such that $a^b=3$.
+\end{proof}
+Diagrammatically, the point of the above proof is that we had the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{i}{\lnot\op{Rat}(\sqrt2)}
+		\have[\vdots]{}{\vdots}
+		\have[j]{j}{\lnot\op{Rat}(\log_32)}
+		\have[\vdots]{}{\vdots}
+		\have[k]{k}{\op{Rat}(\sqrt2^{\log_32})}
+		\have{what}{\lnot\op{Rat}(\sqrt2)\land\lnot\op{Rat}(\log_32)\land\op{Rat}(2^{\log_32})}
+		\have{}{\exists x\exists y\lnot\op{Rat}(x)\land\lnot\op{Rat}(y)\land\op{Rat}(x^y)}
+	\end{nd}
+\end{align*}
+The moral of the story is that we can prove an existential by going and constructing the objects.
