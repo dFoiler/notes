@@ -1,0 +1,150 @@
+% !TEX root = ../notes.tex
+
+We continue talking about adjoints.
+
+\subsection{More Examples}
+We recall the following definition.
+\adjdefi*
+\noindent From here we were able to define the unit and counit. Another way to view our construction last time is to apply the Yoneda lemma to the natural isomorphism
+\[\op{Mor}_\mc D(Fc,-)\cong\op{Mor}_{\mc C}(c,G-)\]
+of functors $\mc D\to\mathrm{Set}$. In particular, \autoref{thm:yoneda} grants us an object $\eta_c:\op{Mor}_\mc C(c,GFc)$ representing this isomorphism, which assembles into our unit $\eta:\id_\mc C\Rightarrow GF$.
+
+Let's see some more examples.
+\begin{exe}
+	We discuss the product--hom adjunction in $\mathrm{Set}$.
+\end{exe}
+\begin{proof}
+	The point is that there is a natural bijection
+	\[\op{Mor}(X\times Y,Z)\cong\op{Mor}(X,\op{Mor}(Y,Z))\label{eq:curry}\tag{$*$}\]
+	by taking the function $f:X\times Y\to Z$ to the function $\widetilde f$ defined by $x\mapsto(y\mapsto f(x,y))$. To see that this is a bijection, there is an inverse taking $g\in\op{Mor}(X,\op{Mor}(Y,Z))$ by $\hat g(x,y):=g(x)(y)$, and we can check that these are inverses by hand.
+	
+	This will assemble into an adjunction of the functors $F:=-\times Y$ and $G:=\op{Mor}(Y,-)$. Thus, \autoref{eq:curry} turns into a natural isomorphism
+	\[\op{Mor}(FX,Z)\cong\op{Mor}(X,GY),\]
+	which is what we need for $F\adjoint G$.
+
+	We close our discussion by tracking through our unit and counit.
+	\begin{itemize}
+		\item For the unit, we need to transpose $\id_{Fc}$ through $\op{Mor}_\mc D(Fc,Fc)\cong\op{Mor}(c,GFc)$. In particular, we are tracking through $\id_{X\times Y}$ through
+		\[\op{Mor}(X\times Y,X\times Y)\cong\op{Mor}(X,\op{Mor}(Y,X\times Y)).\]
+		Thus, $\eta_X(x)(y)$ should be $\eta_X(x)(y)=\id_{X\times Y}(x,y):=(x,y)$ after moving everything through.
+		\item For the counit, we need to transpose $\id_{Gd}$ through $\op{Mor}_\mc D(FGd,d)\cong\op{Mor}(Gd,Gd)$. In particular, we are tracking through $\id_{\op{Mod}(Y,Z)}$ through
+		\[\op{Mor}(\op{Mod}(Y,Z)\times Y,Z)\cong\op{Mor}(\op{Mod}(Y,Z),\op{Mod}(Y,Z)).\]
+		Thus, we can find $\varepsilon_Z(f,y):=f(y)$, which finishes.
+	\end{itemize}
+	This finishes our discussion.
+\end{proof}
+\begin{exe}
+	We discuss the hom--tensor adjunction for $k$-vector spaces.
+\end{exe}
+\begin{proof}
+	It is false that
+	\[\op{Hom}(V\times W,U)\cong\op{Hom}(V,\op{Hom}(W,U)).\]
+	This does not make sense because we don't really want to talk about linear maps $V\times W\to U$ but rather being bilinear in both arguments, so we want an isomorphism
+	\[\op{Bilin}(V\times W,U)\cong\op{Hom}(V,\op{Hom}(W,U))\]
+	instead. Thus, using the universal property for tensor products, we would have
+	\[\op{Hom}(V\otimes W,U)\cong\op{Hom}(V,\op{Hom}(W,U)).\]
+	We can compute that the unit is still $\varepsilon_U(f\otimes w):=f(w)$. Chris does not remember the counit precisely.
+\end{proof}
+
+\subsection{The Triangle Equations}
+We should probably prove something today, so let's prove something.
+\begin{proposition} \label{prop:triangleequations}
+	Fix adjoint functors $F\adjoint G$ between categories $\mc C$ and $\mc D$ with unit $\eta$ and counit $\varepsilon$. Then we have the triangle equations.
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJGIl0sWzEsMCwiRkdGIl0sWzEsMSwiRiJdLFsyLDAsIkciXSxbMywwLCJHRkciXSxbMywxLCJHIl0sWzAsMSwiRlxcZXRhIiwwLHsibGV2ZWwiOjJ9XSxbMSwyLCJcXHZhcmVwc2lsb24gRiIsMCx7ImxldmVsIjoyfV0sWzAsMiwiXFxpZF9GIiwyLHsibGV2ZWwiOjJ9XSxbMyw0LCJcXGV0YSBHIiwwLHsibGV2ZWwiOjJ9XSxbNCw1LCJHXFx2YXJlcHNpbG9uIiwwLHsibGV2ZWwiOjJ9XSxbMyw1LCJcXGlkX0ciLDIseyJsZXZlbCI6Mn1dXQ==
+	\[\begin{tikzcd}
+		F & FGF & G & GFG \\
+		& F && G
+		\arrow["F\eta", Rightarrow, from=1-1, to=1-2]
+		\arrow["{\varepsilon F}", Rightarrow, from=1-2, to=2-2]
+		\arrow["{\id_F}"', Rightarrow, from=1-1, to=2-2]
+		\arrow["{\eta G}", Rightarrow, from=1-3, to=1-4]
+		\arrow["G\varepsilon", Rightarrow, from=1-4, to=2-4]
+		\arrow["{\id_G}"', Rightarrow, from=1-3, to=2-4]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	Expanding out on objects, our first triangle takes some $c\in\mc C$ and writes down the following.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJGYyJdLFsxLDAsIkZHRmMiXSxbMSwxLCJGYyJdLFswLDEsIkYoXFxldGFfYykiXSxbMSwyLCJcXHZhcmVwc2lsb25fe0ZjfSJdLFswLDIsIlxcaWRfe0ZjfSIsMl1d
+	\[\begin{tikzcd}
+		Fc & FGFc \\
+		& Fc
+		\arrow["{F(\eta_c)}", from=1-1, to=1-2]
+		\arrow["{\varepsilon_{Fc}}", from=1-2, to=2-2]
+		\arrow["{\id_{Fc}}"', from=1-1, to=2-2]
+	\end{tikzcd}\label{eq:triangle1}\tag{1}\]
+	Namely, the top arrow is a whiskering. Similarly, the other triangle looks like the following on some $d\in\mc D$.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJHZCJdLFsxLDAsIkdGR2QiXSxbMSwxLCJHZCJdLFswLDIsIlxcaWRfe0dkfSIsMl0sWzAsMSwiXFxldGFfe0dkfSJdLFsxLDIsIkcoXFx2YXJlcHNpbG9uX2QpIl1d
+	\[\begin{tikzcd}
+		Gd & GFGd \\
+		& Gd
+		\arrow["{\id_{Gd}}"', from=1-1, to=2-2]
+		\arrow["{\eta_{Gd}}", from=1-1, to=1-2]
+		\arrow["{G(\varepsilon_d)}", from=1-2, to=2-2]
+	\end{tikzcd}\label{eq:triangle2}\tag{2}\]
+	To prove the result, we recall the following lemma.
+	\lembetteradjoint*
+	\noindent As such, we start with the following diagram. Note that the following diagram commutes because look at it.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJjIl0sWzEsMCwiR0ZjIl0sWzAsMSwiR0ZjIl0sWzEsMSwiR0ZjIl0sWzAsMiwiXFxldGFfYyIsMl0sWzAsMSwiXFxldGFfYyJdLFsxLDMsIlxcaWRfe0dGY30iXSxbMiwzLCJcXGlkX3tHRmN9IiwyXV0=
+	\[\begin{tikzcd}[ampersand replacement=\&]
+		c \& GFc \\
+		GFc \& GFc
+		\arrow["{\eta_c}"', from=1-1, to=2-1]
+		\arrow["{\eta_c}", from=1-1, to=1-2]
+		\arrow["{\id_{GFc}}", from=1-2, to=2-2]
+		\arrow["{\id_{GFc}}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Thus, \autoref{lem:betteradjoint} tells us that the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGYyJdLFsxLDAsIkZjIl0sWzAsMSwiRkdGYyJdLFsxLDEsIkZjIl0sWzAsMSwiXFxpZF97RmN9Il0sWzEsMywiXFxpZF97RmN9Il0sWzIsMywiXFx2YXJlcHNpbG9uX3tGY30iLDJdLFswLDIsIkZcXGV0YV9jIiwyXV0=
+	\[\begin{tikzcd}[ampersand replacement=\&]
+		Fc \& Fc \\
+		FGFc \& Fc
+		\arrow["{\id_{Fc}}", from=1-1, to=1-2]
+		\arrow["{\id_{Fc}}", from=1-2, to=2-2]
+		\arrow["{\varepsilon_{Fc}}"', from=2-1, to=2-2]
+		\arrow["{F\eta_c}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	This is \autoref{eq:triangle1}.
+
+	For the other one, we start with the following square which commutes because look at it.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGR2QiXSxbMSwwLCJGR2QiXSxbMCwxLCJGR2QiXSxbMSwxLCJkIl0sWzAsMSwiXFxpZF97RkdkfSJdLFswLDIsIlxcaWRfe0ZHZH0iLDJdLFsyLDMsIlxcdmFyZXBzaWxvbl9kIiwyXSxbMSwzLCJcXHZhcmVwc2lsb25fZCJdXQ==
+	\[\begin{tikzcd}[ampersand replacement=\&]
+		FGd \& FGd \\
+		FGd \& d
+		\arrow["{\id_{FGd}}", from=1-1, to=1-2]
+		\arrow["{\id_{FGd}}"', from=1-1, to=2-1]
+		\arrow["{\varepsilon_d}"', from=2-1, to=2-2]
+		\arrow["{\varepsilon_d}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Again applying \autoref{lem:betteradjoint}, we get the following commutative diagram.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGR2QiXSxbMSwwLCJHRkdkIl0sWzAsMSwiRkdkIl0sWzEsMSwiR2QiXSxbMCwxLCJcXGV0YV97R2R9Il0sWzAsMiwiXFxpZF97R2R9IiwyXSxbMiwzLCJcXGlkX3tHZH0iLDJdLFsxLDMsIkcoXFx2YXJlcHNpbG9uX2QpIl1d
+	\[\begin{tikzcd}[ampersand replacement=\&]
+		FGd \& GFGd \\
+		FGd \& Gd
+		\arrow["{\eta_{Gd}}", from=1-1, to=1-2]
+		\arrow["{\id_{Gd}}"', from=1-1, to=2-1]
+		\arrow["{\id_{Gd}}"', from=2-1, to=2-2]
+		\arrow["{G(\varepsilon_d)}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	This is \autoref{eq:triangle2}. This finishes the proof.
+\end{proof}
+As such, we have the following nice result for adjoints.
+\begin{theorem}
+	Fix functors $F:\mc C\rightleftharpoons\mc D:G$ with natural transformations $\eta:\id_\mc C\Rightarrow GF$ and $\varepsilon:FG\Rightarrow\id_\mc D$ satisfying the triangles in \autoref{prop:triangleequations}. Then $F\adjoint G$.
+\end{theorem}
+\begin{proof}
+	Given some $f^\sharp$ in $\mc C$, we set $f^\flat$ equal to $Gf^\sharp\circ\eta_c$; conversely, we send $g^\flat$ in $\mc D$ to $g^\sharp$ equal to $\varepsilon_d\circ Fg^\flat$. The point of showing that these commute is by drawing the following diagram.
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJGYyJdLFsxLDAsIkZHRmMiXSxbMiwwLCJGR2QiXSxbMywwLCJkIl0sWzIsMSwiRmMiXSxbMCw0LCJcXGlkX3tGY30iLDJdLFsxLDQsIlxcdmFyZXBzaWxvbl97RmN9Il0sWzMsNCwiZl5cXHNoYXJwIl0sWzAsMSwiRlxcZXRhX2MiXSxbMSwyLCJGR2ZeXFxzaGFycCJdLFsyLDMsIlxcdmFyZXBzaWxvbl9kIl1d
+	\[\begin{tikzcd}[ampersand replacement=\&]
+		Fc \& FGFc \& FGd \& d \\
+		\&\& Fc
+		\arrow["{\id_{Fc}}"', from=1-1, to=2-3]
+		\arrow["{\varepsilon_{Fc}}", from=1-2, to=2-3]
+		\arrow["{f^\sharp}", from=1-4, to=2-3]
+		\arrow["{F\eta_c}", from=1-1, to=1-2]
+		\arrow["{FGf^\sharp}", from=1-2, to=1-3]
+		\arrow["{\varepsilon_d}", from=1-3, to=1-4]
+	\end{tikzcd}\]
+	This diagram commutes by some effort, which will give the inverse conditions.
+	
+	We can show that these are mutually inverse, and then they are natural in both arguments because of course they are.
+\end{proof}
