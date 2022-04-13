@@ -1,0 +1,217 @@
+% !TEX root = ../notes.tex
+
+Welcome back, everyone.
+
+\subsection{Existential Introduction}
+We continue talking about existential introduction. Here is our rule.
+\begin{defihelper}[$\exists$ Introduction] \nirindex{Existential introduction@$\exists$Introduction}
+	Suppose we have a formula $\varphi^x_t$ where $t$ is a term substitutable for $x$ in $\varphi$. Then we can deduce $\exists x\varphi$ in the same subproof and cite existential introduction.
+\end{defihelper}
+\begin{example}
+	Set $\varphi:=P(x)$. If we can deduce $P(c)=\varphi^x_c$ for some constant $c$, then we can deduce $\exists xP(x)$.
+\end{example}
+\begin{remark}
+	This makes sense given that we are viewing $\exists xP(x)$ as an infinite conjunction: given any $P(c)$, we can kind of deduce
+	\[\biglor_{c\in\op{Const}}P(c),\]
+	which is approximately $\exists xP(x)$.
+\end{remark}
+We very quickly note that we can remove applications of $\exists$ introduction with instead using $\forall$ elimination and $\lnot$ elimination with the axiom
+\[\exists x\varphi\liff\lnot\forall\lnot\varphi.\]
+Concretely, we can turn the proof
+\begin{align*}
+	\begin{nd}
+		\have{i}[i]{\varphi^x_t}
+		\have{}{\exists x\varphi} \by{$\exists$Intro}{i}
+	\end{nd}
+\end{align*}
+into the proof as follows.
+\begin{align*}
+	\begin{nd}
+		\have{beg}[i]{\varphi^x_t}
+		\open[]
+			\hypo{bad}{\forall x\lnot\varphi}
+			\have{1}{\lnot\varphi^x_t} \by{$\forall$Elim}{bad}
+			\have{2}{\varphi^x_t} \by{Reit}{beg}
+			\have{contra}{\varphi^x_t\land\lnot\varphi^x_t} \by{$\land$Intro}{1,2}
+		\close
+		\have{end}{\lnot\forall x\lnot\varphi} \by{$\lnot$Intro}{bad-contra}
+	\end{nd}
+\end{align*}
+And here is an example.
+\begin{exe}
+	We show $\forall xP(x)\to\exists xP(x)$.
+\end{exe}
+\begin{proof}
+	Importantly, we are assuming that we are working in a nonempty domain. Anyway, we have the following proof.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{beg}{\forall xP(x)}
+				\have{2}{P(y)} \by{$\forall$Elim}{beg}
+				\have{end}{\exists xP(x)} \by{$\exists$Intro}{2}
+			\close
+			\have{}{\forall xP(x)\to\exists xP(x)} \by{$\to$Intro}{beg-end}
+		\end{nd}
+	\end{align*}
+	This finishes.
+\end{proof}
+\begin{remark}
+	In particular, the above proof makes our proof system unsound if we allow empty domains. There is a notion of ``free logic'' which fixes this.
+\end{remark}
+
+\subsection{Identity Elimination}
+As an intermission before existential elimination, we discuss identity. Here is an example proof.
+\begin{proposition}
+	We prove $3<\sqrt{11}<4$.
+\end{proposition}
+\begin{proof}
+	We start by showing $3<\sqrt{11}$. Well, note that $9<11$, so taking square roots gives $\sqrt9<\sqrt{11}$. However, $3=\sqrt9$, so we may say $3<\sqrt{11}$.
+
+	Next we show $\sqrt{11}<4$. Well, note that $11<16$, so taking square roots gives $\sqrt{11}<\sqrt{16}$. However, $4=\sqrt{16}$, so we may say $\sqrt{11}<\sqrt{16}$.
+\end{proof}
+The point we are emphasizing is our movement from $\sqrt9<\sqrt{11}$ to $3<\sqrt{11}$. This is an elimination rule; diagrammatically, it looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{start}{\sqrt9<\sqrt{11}}
+		\have{eq}{3=\sqrt9}
+		\have{}{3<\sqrt{11}} \by{$\doteq $Elim}{eq,start}
+	\end{nd}
+\end{align*}
+Similar works for $4$.
+
+Here is our rule.
+\begin{defihelper}[$\doteq $Elim] \nirindex{Identity elimination@$\doteq $Elim}
+	Suppose we have a correct partial proof with the following constraints.
+	\begin{itemize}
+		\item $t_1\doteq t_2$ and $\varphi$ are in the same column.
+		\item All variables of $t_1$ are free in $\varphi$ (to prevent binding).
+		\item $t_2$ is substitutable for $t_1$ in $\varphi$.
+		\item $\varphi'$ is obtained by replacing some (but perhaps not all!) occurrences of $t_1$ by $t_2$ in $\varphi$.
+	\end{itemize}
+	Then we can deduce $\varphi'$ and cite identity elimination.
+\end{defihelper}
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[i]{eq}{t_1\doteq t_2}
+		\have[\vdots]{}{\vdots}
+		\have[j]{p}{\varphi}
+		\have[\vdots]{}{\vdots}
+		\have[k]{}{\varphi'} \by{$\doteq $Elim}{eq,p}
+	\end{nd}
+\end{align*}
+\begin{example}
+	Given $\sqrt9=3$ and $(\sqrt9<\sqrt{11})\land(\sqrt9=\sqrt9)$, we can deduce $(3<\sqrt{11})\land(\sqrt9=\sqrt9)$.
+\end{example}
+Here is an example.
+\begin{example}[Transitivity]
+	We can show transitivity, as follows.
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{a\doteq b}
+			\hypo{2}{b\doteq c}
+			\have{3}{a\doteq c} \by{$\doteq $Elim}{1,2}
+		\end{nd}
+	\end{align*}
+	Namely, the formula ``$a\doteq c$'' is the formula ``$b\doteq c$'' where we have replaced occurrences of $b$ with $a$.
+\end{example}
+\begin{nex}
+	The following is not good, for binding reasons.
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{x\doteq y}
+			\hypo{2}{\forall x(x\doteq x)}
+			\have{3}{\forall x(x\doteq y)} \by{$\doteq $Elim}{1,2}
+		\end{nd}
+	\end{align*}
+	Notably, the variable $x$ is not free in $\forall x(x\doteq x)$---it already has a meaning! So we can't really replace for it.
+\end{nex}
+\begin{nex}
+	The following is also not good, for substitutability reasons.
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{x\doteq y}
+			\hypo{2}{\forall yP(x)}
+			\have{3}{\forall yP(y)} \by{$\doteq $Elim}{1,2}
+		\end{nd}
+	\end{align*}
+	Again, the issue is that $y$ is not substitutable for $x$ in $\forall yP(x)$ because this would make the new variable bound to $\forall y$.
+\end{nex}
+Lastly, we mention our introduction rule for identity.
+\begin{defihelper}[$\doteq$Intro] \nirindex{Identity introduction@$\doteq$Intro}
+	Given any term $t$, we get to write down $t\doteq t$ and cite $\doteq$ introduction.
+\end{defihelper}
+Essentially, the idea is that the reflexive property of identity ought to be true, so it will be our introduction.
+
+Here is a last example.
+\begin{exe}[Symmetry]
+	We derive $b\doteq a$ from $a\doteq b$.
+\end{exe}
+\begin{proof}
+	We have the following.
+	\begin{align*}
+		\begin{nd}
+			\hypo{1}{a\doteq b}
+			\have{2}{a\doteq a} \by{$\doteq$Intro}{}
+			\have{3}{b\doteq a} \by{$\doteq$Elim}{1,2}
+		\end{nd}
+	\end{align*}
+	Notably, we replaced some but not all instances of $a$ in $a\doteq a$ with a $b$, citing $a\doteq b$.
+\end{proof}
+
+\subsection{Existential Elimination}
+This is our last rule for natural deduction!
+
+Recall that, to use a disjunction $\alpha\lor\beta$, we show $\alpha\to\varphi$ and show $\beta\to\varphi$ so that we can conclude $\varphi$ in either case. Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[a]{a}{\alpha\lor\beta}
+		\open[]
+			\hypo[b]{b}{\alpha}
+			\have[c]{c}{\varphi}
+		\close
+		\open[]
+			\hypo[d]{d}{\beta}
+			\have[e]{e}{\varphi}
+		\close
+		\have[n]{}{\varphi} \by{$\lor$Elim}{a,b-c,d-e}
+	\end{nd}
+\end{align*}
+Here is an example of a proof.
+\begin{definition}[Divides]
+	We say that an integer $a$ divides an integer $b$ if and only if there exists an integer $c$ such that $b=ac$.
+\end{definition}
+\begin{proposition}
+	For all integers $x,y,z$, if $x\mid y$ and $y\mid z$, then $x\mid z$.
+\end{proposition}
+\begin{proof}
+	As usual, pick up some specific integers $a,b,c$ and suppose $a\mid b$ and $b\mid c$. As such, $a\mid b$ promises an integer $m$ such that $b=am$; similarly, $b\mid c$ promises an integer $n$ such that $c=bn$. But then we can write
+	\[c=bn=(am)n=a(mn),\]
+	so we deduce $a\mid c$. Notably, we are using some various symmetry and transitivity of identity laws to deduce $c=a(mn)$. To finish, we recall that $a,b,c$ were arbitrary, so we are done.
+\end{proof}
+Notably, everything above is justified, except perhaps our associativity step above. The main point of the proof is to ``undo'' the definition of divides so that we could find specific integers $m$ and $n$ such that $b=am$ and $c=bn$. Then our conclusion $a\mid c$ was able to throw out our auxiliary variables, so we get to actually conclude $a\mid c$.
+
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\open[]
+			\hypo{beg}{\boxed a\boxed b\boxed c}
+			\open[]
+				\hypo{beg2}{(\exists v(xv=y)\land\exists v(yv=z)}
+				\have{exist1}{\exists v(xv=y)}
+				\have{exist2}{\exists v(yv=z)}
+				\have{end2}{\exists v(xv=z)}
+				\open[]
+					\hypo{}{am=b\quad\boxed m}
+					\hypo{}{bn=c\quad\boxed n}
+					\have{}{a(mn)=c} \by{Basic math}{}
+				\close
+			\close
+			\have{end}{(\exists v(xv=y)\land\exists v(yv=z)\to\exists v(xv=z))}
+		\close
+		\have{}{\forall x\forall y\forall z((\exists v(xv=y)\land\exists v(yv=z)\to\exists v(xv=z)))} %\by{$\forall$Intro}{beg-end}
+	\end{nd}
+\end{align*}
+The point is at lines $6$ and $7$, where we have used our existential quantifiers. We have not been entirely formal; next class we will actually give our rule.
