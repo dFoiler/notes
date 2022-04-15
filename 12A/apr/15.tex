@@ -1,0 +1,64 @@
+% !TEX root = ../notes.tex
+
+Welcome back, everyone.
+
+\subsection{Existential Elimination}
+Last class we were talking about existential elimination. The idea is that a statement
+\[\exists x\varphi\]
+allows us to conjure a ``witness'' constant $n$ for $x$ satisfying $\varphi$ and then proceed with the proof. Here is the formal rule.
+\begin{defihelper}[$\exists$ Elimination] \nirindex{Existential Elimination@$\exists$Elim}
+	Suppose we have a statement $\exists x\varphi$. If granted a constant $c$ (not in the original language $\mc L$) with a subproof starting with $\varphi^x_c$ and ending with $\psi$ (which does not contain $c$!), then we can add $\psi$ to the main line outside the subproof and cite $\exists$ elimination.
+\end{defihelper}
+Diagrammatically, this looks like the following.
+\begin{align*}
+	\begin{nd}
+		\have[\vdots]{}{\vdots}
+		\have[j]{exists}{\exists x\varphi}
+		\open[]
+			\hypo{beg}{\varphi^x_c\quad\boxed c}
+			\have[\vdots]{}{\vdots}
+			\have[k]{end}{\psi}
+		\close
+		\have{}{\psi} \by{$\exists$Elim}{j,beg-end}
+	\end{nd}
+\end{align*}
+And let's see an example.
+\begin{exe}
+	We derive $\exists xP(x)\lor\exists xQ(x)$ from $\exists x(P(x)\lor Q(x))$.
+\end{exe}
+\begin{proof}
+	We have the following.
+	\begin{align*}
+		\begin{nd}
+			\hypo{start}{\exists x(P(x)\lor Q(x))}
+			\open[]
+				\hypo{beg}{P(c)\lor Q(c)\quad\boxed c}
+				\open[]
+					\hypo{p}{P(c)}
+					\have{exp}{\exists xP(x)} \by{$\exists$Intro}{p}
+					\have{end1}{\exists xP(x)\lor\exists xQ(x)} \by{$\lor$Intro}{exp}
+				\close
+				\open[]
+					\hypo{q}{Q(c)}
+					\have{exq}{\exists xP(x)} \by{$\exists$Intro}{q}
+					\have{end2}{\exists xP(x)\lor\exists xQ(x)} \by{$\lor$Intro}{exq}
+				\close
+				\have{end}{\exists xP(x)\lor\exists xQ(x)} \by{$\lor$Elim}{beg,p-end1,q-end2}
+			\close
+			\have{}{\exists xP(x)\lor\exists xQ(x)} \by{$\exists$Elim}{start,beg-end}
+		\end{nd}
+	\end{align*}
+	This finishes.
+\end{proof}
+\begin{remark}
+	Again, this is like $\lor$ elimination as a proof-by-cases for an arbitrary number of cases. To see this, we note we can derive $\psi$ from
+	\[P(c_1)\lor\cdots\lor P(c_n)\]
+	by doing a proof that $P(c_i)$ would imply $\psi$ for each case, and from here we can use $\lor$ elimination. The ability to do all cases at once for some ``arbitrary'' $c$ (to show $\psi$ from $P(c)$) is what we've done above. In some sense, we are doing ``all'' of the cases at the same time, via some ``template'' proof.
+\end{remark}
+\begin{remark}
+	As such, the above example is more or less like $\lor$ distributing over $\lor$, using the intuition that $\exists$ is a very large $\lor$.
+\end{remark}
+\begin{remark}
+	We also have $(\forall xP(x)\land\forall xQ(x))\liff(\forall x(P(x)\land Q(x))$.
+\end{remark}
+This finishes our discussion of natural deduction.

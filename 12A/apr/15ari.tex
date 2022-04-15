@@ -1,0 +1,92 @@
+% !TEX root = ../notes.tex
+
+We now transition into discussing arithmetic, using first-order logic. The idea is to add a few axioms to be able to discuss actual mathematics.
+
+\subsection{Peano Arithmetic}
+Let's see an example of an arithmetic proof, to start off.
+\begin{lemma}
+	Let $n$ be a nonnegative integer. Then $n$ is even or odd.
+\end{lemma}
+\begin{proof}
+	We proceed by induction on $n$. As our base case, we note that $n=0$ has $0=2\cdot0$, so $0$ is even, so $0$ is even or odd.
+
+	We now show the inductive step. Suppose that $n$ is even or odd, and we will show $n+1$ is even or odd. We have two cases.
+	\begin{itemize}
+		\item If $n$ is even, then write $n=2k$. Thus, $n+1=2k+1$, so $n+1$ is odd, so $n+1$ is even or odd.
+		\item If $n$ is odd, then write $n=2k+1$. Thus, $n+1=2(k+1)$, so $n+1$ is even, so $n+1$ is even or odd.
+	\end{itemize}
+	In all cases we were able to conclude that $n+1$ is even or odd, so we are done.
+\end{proof}
+The main point is that we are able to formalize all parts of this proof except for the induction. So we will build an induction.
+
+For our arithmetic, we will build a language with the following tools.
+\begin{definition}[Peano arithmetic language]
+	The language of Peano arithmetic has the following data.
+	\begin{itemize}
+		\item No predicate symbols.
+		\item One constant symbol $\dot0$, sometimes written $0$.
+		\item One unary function symbol $S$.
+		\item Two binary function symbols $\dot+$ and $\dot\times$, sometimes written $+$ and $\times$.
+	\end{itemize}
+\end{definition}
+And here are some conventions.
+\begin{itemize}
+	\item $S(0)$ will be denoted $1$, $S(S(0))$ will be denoted $2$, and so on.
+	\item We might also omit $\times$ and write (for example, $2k$) for $2\times k$.
+	\item We'll write $=$ for $\dot=$ for brevity.
+\end{itemize}
+For our arithmetic (which will be called Peano arithmetic) is that we will start with some basic axioms to avoid an infinite regress. Here they are.
+\begin{axiom}[Peano arithmetic]
+	Peano arithmetic takes the following axioms. We begin by pinning down $S$.
+	\begin{enumerate}[label=(S\arabic*)]
+		\item $\forall x(\lnot S(x)=0)$. In other words, $0$ is not the successor (of any natural number).
+		\item $\forall x\forall y((S(x)=S(y))\to (x=y))$. In other words, taking successors is one-to-one.
+	\end{enumerate}
+	Next we talk about how $+$ behaves, more or less recursively.
+	\begin{enumerate}[label=(A\arabic*)]
+		\item $\forall x(x+0=x)$. In other words, adding $0$ doesn't do anything.
+		\item $\forall x\forall y(x+S(y)=S(x+y))$. This codifies the associativity $x+(y+1)=(x+y)+1$ and defines $+$.
+	\end{enumerate}
+	Here is multiplication, again recursively.
+	\begin{enumerate}[label=(M\arabic*)]
+		\item $\forall x(x\times0=0)$. In other words, multiplying by $0$ gets $0$.
+		\item $\forall x\forall y(x\times S(y))=(x\times y)+x$. Expanding out, we are roughly saying that $x\times(y+1)=x\times y+x$, codifying the notion that multiplication is repeated addition.
+	\end{enumerate}
+	Lastly, we need induction.
+	\begin{enumerate}[label=(IND)]
+		\item For any formula $\varphi$, we have $(\varphi^x_0\land\forall x(\varphi\to\varphi^x_{S(x)})\to\forall x\varphi$.
+
+		In other words, if we can show $\varphi$ ``holds'' for $0$ and that $\varphi$ ``holding'' for $x$ implies that $\varphi$ ``holding'' for $x+1$, then we may deduce $\forall x\varphi$.
+	\end{enumerate}
+\end{axiom}
+Notably, we needed to talk about function symbols, constant symbols, and quantifiers in our discussion of first-order logic to be able to codify the above.
+\begin{remark}
+	Even though our axiom list is infinite (namely, induction gives an axiom for each formula $\varphi$), our axiom list is at least computable: all the axioms provided by induction have a very specific form.
+\end{remark}
+Let's close with an example.
+\begin{exe}
+	We show $\forall x(x+1=S(x))$.
+\end{exe}
+\begin{proof}
+	We have the following.
+	\begin{align*}
+		\begin{nd}
+			\hypo{addident}{\forall x(x+0=x)}
+			\hypo{succ}{\forall x(x+S(y)=S(x+y))}
+			\open[]
+				\hypo{beg}{\boxed c}
+				\have{addidc}{c+0=c} \by{L$\forall$Elim}{addident}
+				\have{succc}{c+1=S(c+0)} \by{L$\forall$Elim}{succ}
+				\have{end}{c+1=S(c)} \by{$=$Elim}{addidc,succc}
+			\close
+			\have{}{\forall x(x+1=S(x))} \by{$\forall$Intro}{beg-end}
+		\end{nd}
+	\end{align*}
+	This finishes. Notably, we didn't even need induction.
+\end{proof}
+\begin{remark}
+	Notably, we can now proof $\forall$ statements by either $\forall$ introduction or by induction.
+\end{remark}
+\begin{remark}
+	Without any axioms, the formula ``$\forall x(x+1=S(x))$'' need not be true. Our axioms are now giving our semantics.
+\end{remark}
