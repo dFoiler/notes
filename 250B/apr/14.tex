@@ -1,0 +1,222 @@
+% !TEX root = ../notes.tex
+
+Welcome back to class.
+
+\subsection{Overview}
+We take the following definition.
+\begin{definition}[Affine ring]
+	A ring $R$ is \textit{affine} if and only if it is finitely generated over a field as
+	\[k[x_1,\ldots,x_n]/I.\]
+	In particular, if $I$ is prime, then $R$ is a domain.
+\end{definition}
+Today we are working towards the following theorem.
+\begin{theorem} \label{thm:degistranscedence}
+	Fix an affine domain $R$ over the field $k$. Then $\dim R$ is equal to the transcendence degree of $K(R)$ over $k$.
+\end{theorem}
+Recall that the transcendence degree is defined as follows.
+\begin{definition}
+	Fix an extension of fields $K/k$. Then one can choose a maximal set $\mathcal B$ of algebraically independent elements of $K$ over $k$. The \textit{transcendence degree of $K$ over $k$} is $\#\mathcal B$.
+\end{definition}
+It requires checking that the transcendence degree is well-defined and that
+\[k[\mathcal B]\subseteq K\]
+is an algebraic extension; this last assertion is just by maximality.
+
+We will also show the following result.
+\begin{theorem} \label{thm:maxisgood}
+	Fix an affine domain $R$ over a field $k$. Then a maximal chain of prime ideals
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_m\]
+	in $R$ has $m=\dim R$.
+\end{theorem}
+Intuitively, this is what we expect from vector spaces: any maximal basis has the same size.
+\begin{remark}
+	There is an example in the homework that this does not true for general rings.
+\end{remark}
+
+\subsection{Proofs}
+In particular, we will use Noether normalization to prove \autoref{thm:degistranscedence} and \autoref{thm:maxisgood}. Before stating this, we prove the following result.
+\begin{lemma} \label{lem:exchange}
+	Fix a polynomial ring $T:=k[x_1,\ldots,x_r]$ and nonconstant polynomial $f\in T$. Then there are $x_1',\ldots,x_{r-1}'$ such that $T$ is finite over $S:=k[x_1',\ldots,x_{r-1}',f]$. If $k$ is infinite, then we can choose the $x'_i$ by taking $a_1,\ldots,a_{r-1}$ and setting $x_i':=x_i-a_ix_r$.
+\end{lemma}
+\begin{proof}
+	Supposing from the case that $k$ is infinite, we see that the $x_i$ are automatically in $k[x_1',\ldots,x_{r-1}',x_r]$, so it suffices to show that $x_r$ is the root of some monic finite polynomial in $k[x_1',\ldots,x_r',f]$. For this, we can just stare at the system of equations
+	\[f(x_1,\ldots,x_r)= f(x_1'+a_1x_r,\ldots,x_{r-1}+a_{r-1}x_r,x_r).\]
+	By inducting downwards, it suffices to set $f_d$ to be the terms of maximal homogeneous degree and work with $f_d$. In particular, we find
+	\[f_d(x_1'+a_1x_r,\ldots,x'_{r-1}+a_{r-1}x_r,x_r)=f_d(a_1,\ldots,a_{r-1},1)x_r^d+\sum_{i=0}^{d-1}c_i(x_1',\ldots,x_{r-1}')x_r^i.\]
+	This will be a fine monic polynomial for $f$, provided we can make $f_d(a_1,\ldots,a_{r-1},1)$ nonzero, but because $k$ is infinite (!), we can find some $a_i$ to work.
+
+	Now take $k$ to be finite. The point is to set $e$ very large (explicitly, larger than the degree of $x_i$ in any monomial of $f$) and set
+	\[x_i':=x_i-x_r^{e^i}.\]
+	Some estimates combined with the previous trick is enough to give us our monic polynomial.
+\end{proof}
+And here is our result.
+\begin{theorem}[Noether normalization] \label{thm:noethernormal}
+	Fix an affine ring $R$ of dimension $d$. Given a chain
+	\[I_1\subseteq I_2\subseteq\cdots\subseteq I_m\subseteq R\]
+	with $d_j:=\dim I_j$ such that $\{d_j\}_{j=0}^m$ is strictly decreasing. Then there is a subring $S\subseteq R$ such that
+	\begin{listalph}
+		\item $S\cong k[x_1,\ldots,x_d]$,
+		\item $R$ is finite over $S$, and
+		\item any ideal $I_j$ has $S\cap I_j=(x_{d_j+1},\ldots,x_d)$.
+	\end{listalph}
+\end{theorem}
+In essence the given filtration on $R$ becomes the polynomial filtration for $S$, which is quite amazing.
+\begin{proof}
+	Because $R$ is an affine ring, we can write $R=T/I$, where $R$ is some polynomial ring. In particular, pulling back to $T$ gives a filtration
+	\[I\subseteq I_1\subseteq I_2\subseteq\cdots\subseteq I_m\subseteq T\]
+	and run the theorem though. Thus, it suffices to take $R:=k[y_1,\ldots,y_d]$ to be a polynomial ring.
+
+	Now, find any $x_d\in I_m$. By \autoref{lem:exchange}, we can find variables $x_1',\ldots,x_{d-1}'$ so that
+	\[k[x_1',\ldots,x_{d-1}',x_d]\subseteq I_m.\]
+	We can repeat this process. To be rigorous, suppose that we are in the middle of this process so that we have written down
+	\[k[x_1',\ldots,x_p',x_{p+1},\ldots,x_d]\]
+	so that $(x_q,\ldots,x_d)\subseteq I_j$ for all $q>p$. To construct $x_p$, we have two cases.
+	\begin{itemize}
+		\item If $d_j=p$, then choose $x_p\in I_{j-1}$ and use \autoref{lem:exchange} to move downwards.
+		\item Otherwise, $d_j>p$, then choose $x_p$ from $I_j$, doing the same thing. Notably, in this case, we know that such an $x_p$ exists here by a dimension argument: we know that
+		\[\dim(x_{p+1},\ldots,x_d)\le\dim I_j,\]
+		and we are getting strict inequality here because equality would make our extension integral, which is bad.
+	\end{itemize}
+	We can continue the above process downward until $j=0$. Thus,
+	\[S=k[x_1,\ldots,x_d]\]
+	is finitely generated by $d$ elements. Now, certainly
+	\[I_j\cap S\]
+	will contain $(x_{d_j+1},\ldots,x_d)$ (by construction) and $\dim(I_j\cap S)=\dim I_j=d_j$, so we get our equality just fine. Namely, we cannot go any bigger, lest we violate the dimension.
+\end{proof}
+From here \autoref{thm:degistranscedence} follows quickly.
+\begin{proof}[Proof of \autoref{thm:degistranscedence}]
+	By \autoref{thm:noethernormal}, we extract our promised $S$. Now,
+	\[K(S)\subseteq K(R)\]
+	is finite (because $S\subseteq R$ is finite) and hence algebraic, so the transcendence degree of $K(S)$ over $k$ is equal to the desired transcendence degree. But now this transcendence degree is equal to the number of variables of $S$, which is $\dim R=\dim S$. This finishes.
+\end{proof}
+And here is the proof of the second part.
+\begin{proof}[Proof of \autoref{thm:maxisgood}]
+	Fix a maximal chain of disctint primes
+	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_m\]
+	in $R$. Extracting $S$ as needed from \autoref{thm:noethernormal}, we see that we do get a maximal chain of primes
+	\[\mf q_0\subsetneq\mf q_1\subsetneq\cdots\subsetneq\mf p_m\]
+	by intersection. In particular, we get $m\le\dim S$. Because primes in $S$ are pretty well-understood (namely, these are just generated by the free variables in $S$ by construction of $S$), so $m<\dim S$ would imply that the bottom chain is not maximal; suppose we can insert some prime $\mf q$ as
+	\[\mf q_j\subsetneq\mf q\subsetneq\mf q_{j+1}\]
+	for some $j$. Thus, lifting (which we know to be at least comparable), we get the following image.
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJcXG1mIHFfaiJdLFswLDAsIlxcbWYgcF9qIl0sWzEsMCwiXFxjb2xvcntyZWR9XFxtZiBwIl0sWzEsMSwiXFxtZiBxIl0sWzIsMCwiXFxtZiBwX3tqKzF9Il0sWzIsMSwiXFxtZiBxX3tqKzF9Il0sWzAsMywiXFxzdWJzZXRuZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMyw1LCJcXHN1YnNldG5lcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDIsIlxcc3Vic2V0bmVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsNCwiXFxzdWJzZXRuZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwwLCIiLDMseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsMywiIiwzLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDUsIiIsMyx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mf q_j} & {\mf q} & {\mf q_{j+1}} \\
+		{\mf p_j} & {\color{red}\mf p} & {\mf p_{j+1}}
+		\arrow["\subsetneq"{marking}, draw=none, from=2-1, to=2-2]
+		\arrow["\subsetneq"{marking}, draw=none, from=2-2, to=2-3]
+		\arrow["\subsetneq"{marking}, draw=none, from=1-1, to=1-2]
+		\arrow["\subsetneq"{marking}, draw=none, from=1-2, to=1-3]
+		\arrow[no head, from=1-1, to=2-1]
+		\arrow[no head, from=1-2, to=2-2]
+		\arrow[no head, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	Modding out by $\mf p_j$, we may assume that $\mf p_j=\mf q_j=0$. Now, we can certainly go up, as we discussed earlier in the class, so going down (preserving the inclusions!) is the only problem. As such, we have the following lemma.
+	\begin{lemma}
+		Fix a normal ring $S$ and a finite $S$-algebra $R$. If we are given primes
+		\[\mf q\subsetneq\mf q_1\]
+		of $S$ such that there exists a prime $\mf p_1$ of $R$ with $\mf q_1=\mf p_1\cap S$, then there exists a prime $\mf p$ such that $\mf q=\mf p\cap S$.
+	\end{lemma}
+	\begin{proof}
+		Diagrammatically, we are constructing the highlighted prime below.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1mIHEiXSxbMCwxLCJcXGNvbG9ye3JlZH1cXG1mIHAiXSxbMSwwLCJcXG1mIHFfMSJdLFsxLDEsIlxcbWYgcF8xIl0sWzEsMywiXFxzdWJzZXRuZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwyLCJcXHN1YnNldG5lcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsIiIsMyx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiwzLCIiLDMseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\color{red}\mf p} & {\mf p_1} \\
+			{\mf q} & {\mf q_1}
+			\arrow["\subsetneq"{marking}, draw=none, from=2-1, to=2-2]
+			\arrow["\subsetneq"{marking}, draw=none, from=1-1, to=1-2]
+			\arrow[no head, from=1-1, to=2-1]
+			\arrow[no head, from=1-2, to=2-2]
+		\end{tikzcd}\]
+		This is a little hard. We know that $K(S)\subseteq K(R)$ is a finite extension of fields, so we can find a normal closure $L$, and we set $G:=\op{Gal}(L/K(S))$. We then set $T$ to be the integral closure of $R$ in $L$, giving the following tower.
+		% https://q.uiver.app/?q=WzAsMTEsWzIsMCwiVCJdLFsyLDEsIlIiXSxbMiwyLCJTIl0sWzMsMCwiTCJdLFszLDEsIksoUikiXSxbMywyLCJLKFMpIl0sWzEsMF0sWzEsMiwiXFxtZiBxXzEiXSxbMCwyLCJcXG1mIHEiXSxbMSwxLCJcXG1mIHBfMSJdLFswLDEsIlxcY29sb3J7cmVkfVxcbWYgcCJdLFswLDMsIlxcc3Vic2V0ZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJcXHN1YnNldGVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsNSwiXFxzdWJzZXRlcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsIiIsMSx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwyLCIiLDEseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsNCwiIiwxLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDUsIiIsMSx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsOSwiXFxzdWJzZXRlcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs4LDcsIlxcc3Vic2V0ZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsOCwiIiwzLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs5LDcsIiIsMyx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			& {} & T & L \\
+			{\color{red}\mf p} & {\mf p_1} & R & {K(R)} \\
+			{\mf q} & {\mf q_1} & S & {K(S)}
+			\arrow["\subseteq"{marking}, draw=none, from=1-3, to=1-4]
+			\arrow["\subseteq"{marking}, draw=none, from=2-3, to=2-4]
+			\arrow["\subseteq"{marking}, draw=none, from=3-3, to=3-4]
+			\arrow[no head, from=1-3, to=2-3]
+			\arrow[no head, from=2-3, to=3-3]
+			\arrow[no head, from=1-4, to=2-4]
+			\arrow[no head, from=2-4, to=3-4]
+			\arrow["\subseteq"{marking}, draw=none, from=2-1, to=2-2]
+			\arrow["\subseteq"{marking}, draw=none, from=3-1, to=3-2]
+			\arrow[no head, from=2-1, to=3-1]
+			\arrow[no head, from=2-2, to=3-2]
+		\end{tikzcd}\]
+		Now, we lift construct lifts as follows.
+		% https://q.uiver.app/?q=WzAsMTIsWzIsMCwiVCJdLFsyLDEsIlIiXSxbMiwyLCJTIl0sWzMsMCwiTCJdLFszLDEsIksoUikiXSxbMywyLCJLKFMpIl0sWzEsMCwiXFxtZiBwXzEnJyJdLFsxLDIsIlxcbWYgcV8xIl0sWzAsMiwiXFxtZiBxIl0sWzEsMSwiXFxtZiBwXzEiXSxbMCwxLCJcXGNvbG9ye3JlZH1cXG1mIHAiXSxbMCwwLCJcXG1mIHAnJyJdLFswLDMsIlxcc3Vic2V0ZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJcXHN1YnNldGVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsNSwiXFxzdWJzZXRlcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsIiIsMSx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwyLCIiLDEseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsNCwiIiwxLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDUsIiIsMSx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsOSwiXFxzdWJzZXRlcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs4LDcsIlxcc3Vic2V0ZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsOCwiIiwzLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs5LDcsIiIsMyx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbOSw2LCIiLDMseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzExLDEwLCIiLDMseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzExLDYsIj8iLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mf p''} & {\mf p_1''} & T & L \\
+			{\color{red}\mf p} & {\mf p_1} & R & {K(R)} \\
+			{\mf q} & {\mf q_1} & S & {K(S)}
+			\arrow["\subseteq"{marking}, draw=none, from=1-3, to=1-4]
+			\arrow["\subseteq"{marking}, draw=none, from=2-3, to=2-4]
+			\arrow["\subseteq"{marking}, draw=none, from=3-3, to=3-4]
+			\arrow[no head, from=1-3, to=2-3]
+			\arrow[no head, from=2-3, to=3-3]
+			\arrow[no head, from=1-4, to=2-4]
+			\arrow[no head, from=2-4, to=3-4]
+			\arrow["\subseteq"{marking}, draw=none, from=2-1, to=2-2]
+			\arrow["\subseteq"{marking}, draw=none, from=3-1, to=3-2]
+			\arrow[no head, from=2-1, to=3-1]
+			\arrow[no head, from=2-2, to=3-2]
+			\arrow[no head, from=2-2, to=1-2]
+			\arrow[no head, from=1-1, to=2-1]
+			\arrow["{?}"{marking}, draw=none, from=1-1, to=1-2]
+		\end{tikzcd}\]
+		A priori, we cannot construct $\mf p''$ to live inside $\mf p_1''$, but it turns out that a Galois conjugate of $\mf p''$ will be good enough: upon intersecting back down with $R$, all will be made well, for we can get inside $\mf p_1$ while still being on top of $\mf q$.
+	\end{proof}
+	To complete the proof of the above lemma, we need to finish the proof of the result on conjugates of primes. This is as follows.
+	\begin{proposition}
+		Fix a normal domain $S$ and a field $L$ such that $K(S)\subseteq L$ is a finite normal extension with Galois group $G$. Letting $T$ be the integral closure of $S$ in $L$, then $G$ acts transitively on the primes lying over some fixed prime $\mf q$ of $S$.
+	\end{proposition}
+	\begin{proof}
+		Let $\mf p_1,\ldots,\mf p_n$ be a $G$-orbit of primes in $T$ lying over $\mf q$. Now, suppose for the sake of contradiction that we have a prime $\mf p$ lying over $\mf q$ distinct from all of these. Because primes lying over $\mf q$ are incomparable, we find some $a\in T$ in $\mf p$ but none of the $\mf p_i$.
+
+		However, we see that
+		\[\prod_{g\in G}ga\]
+		lives in $\mf p\cap S=\mf q$ while not living in any of the $\mf p_i$ (because we have a Galois orbit present here), which is a contradiction. Note that we used normality when showing $S=R^G$.
+	\end{proof}
+	This completes the proof of \autoref{thm:maxisgood}.
+\end{proof}
+
+\subsection{Corollaries}
+Let's show some corollaries because we have a little time on our hands.
+\begin{corollary}
+	Fix an affine domain $R$. Given an ideal $I\subseteq R$, we have
+	\[\dim I+\codim I=\dim R.\]
+\end{corollary}
+\begin{proof}
+	If $I$ is not prime, then take $I$ to be any minimal prime $\mf p$ containing $I$. Then this is exactly \autoref{thm:maxisgood}, upon gluing chains ascending and descending from $\mf p$.
+\end{proof}
+\begin{corollary}
+	Fix an affine domain $R$. Then $\dim R=\codim\mf m$ for any maximal ideal $\mf m\subseteq R$.
+\end{corollary}
+\begin{proof}
+	Fix any maximal descending chain from $\mf m$; then this comes from \autoref{thm:maxisgood}.
+\end{proof}
+\begin{remark}
+	Geometrically, we are saying that we can determine the dimension of $R$ (when $R$ is the coordinate ring of an affine variety) locally at any point.
+\end{remark}
+\begin{corollary}
+	Suppose that we have an inclusion $R\subseteq T$ of affine domains over $k$. Then
+	\[\dim T=\dim R+\dim K(R)\otimes_RT.\]
+\end{corollary}
+\begin{proof}
+	The point is to use \autoref{thm:degistranscedence}, using the chain
+	\[k\subseteq K(R)\subseteq K(T).\]
+	In particular, by additivity of the transcendence degree, it suffices to show that the transcendence degree of $K(R)\subseteq K(T)$ is the dimension of $\dim K(R)\otimes_RT$, which is true by staring at it, I guess.
+\end{proof}
+\begin{remark}
+	Geometrically, we are saying that the dimension of a generic fiber $K(R)\otimes_RT$ plus the dimension of the base of a family $\dim R$ is equal to the dimension of the original variety $\dim T$.
+\end{remark}
+\begin{corollary}
+	Fix an affine domain $R$ and a nonzero, non-unit $f\in R\setminus(\{0\}\cup R^\times)$. Then
+	\[\dim R/(f)=\dim R-1.\]
+\end{corollary}
+\begin{proof}
+	Certainly $\dim R/(f)<\dim R$ because $(f)$ lives in some maximal ideal $\mf m$, so $\dim R/(f)\le\codim\mf m<\dim R$. On the other hand, localizing $R$ at any maximal ideal $\mf m$ containing $(f)$, we see that
+	\[\dim R_\mf m/(f)R_\mf m\ge\dim R_\mf m-1\]
+	as we showed earlier for general modules over a local ring, which completes the proof.
+\end{proof}
