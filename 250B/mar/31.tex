@@ -100,7 +100,7 @@ We could either manually localize $S$ to get this effect, but we will just force
 	which is still contained in $\mf n$ because all the generators are contained in $\mf n$ by construction or in $\varphi\mf m\subseteq\mf n$ by construction. Thus, $\dim S\le r+s$ by \autoref{prop:betterlocaldim}, which is what we wanted.
 \end{proof}
 We can even give an equality case to our Rank--nullity theorem. In particular, if we force $S$ to be flat, then we expect to have ``continuously varying'' fibers, so we should not have any of the disruption of local problems that forced us to localize $S$. As such, we have the following.
-\begin{proposition}
+\begin{proposition} \label{prop:ranknullityflat}
 	Fix two local rings $R$ and $S$ with maximal ideals $\mf m$ and $\mf n$, respectively. Given a map $\varphi:R\to S$ of local rings so that $\varphi(\mf m)\subseteq\mf n$ and $S$ is flat as an $R$-module, we have
 	\[\dim S=\dim R+\dim S/\mf mS.\]
 \end{proposition}
@@ -238,37 +238,103 @@ Let's see an example of failed equality.
 \end{remark}
 
 \subsection{Consequences of the Rank--Nullity Theorem}
-As a consequence, we show that dimension is preserved by completion.
+As a quick corollary, we show the other side of ``dimension is a local property'': dimension is preserved by completion.
 \begin{corollary}
 	Fix a Noetherian local ring $R$ with maximal ideal $\mf m$. Then $\dim R=\dim\widehat R$.
 \end{corollary}
 \begin{proof}
-	We know that $\widehat R$ is flat as an $R$-algebra, via the natural map $R\to\widehat R$. Now, $\mf m$ goes to $\widehat{\mf m}=\mf m\widehat R$ under this map, so we conclude from \autoref{prop:ranknullity} that
+	To start, we set $\iota:R\to\widehat R$ to be the natural inclusion. Note that $\widehat R$ is local with maximal ideal $\widehat{\mf m}$ by \autoref{lem:completeislocal}, and we note that
+	\[\iota{\mf m}\subseteq\mf m\widehat R=\widehat{\mf m},\]
+	where the last equality is by \autoref{prop:getbetterinducedfiltration}. So we see that $\iota$ is indeed a good map of local rings.
+
+	Continuing, we note that $\widehat R$ is flat as an $R$-algebra by \autoref{thm:completetensor}, so \autoref{prop:ranknullityflat} promises
 	\[\dim\widehat R=\dim R+\dim\widehat R/\widehat{\mf m}.\]
-	But $\widehat R/\widehat{\mf m}\cong R/\mf m$ is a field, so it has dimension $0$. This finishes.
+	However, $\widehat R/\widehat{\mf m}\cong R/\mf m$ by definition of $\widehat{\mf m}$, so we conclude $\dim\widehat R/\widehat{\mf m}=\dim R/\mf m=0$ because $R/\mf m$ is a field (all primes are maximal because all proper ideals are $(0)$). It follows
+	\[\dim\widehat R=\dim R,\]
+	which is what we wanted.
 \end{proof}
 And here is another corollary.
 \begin{proposition} \label{prop:polyringdimension}
-	Fix a Noetherian ring $R$. Then $\dim R[x]=\dim R+1$.
+	Fix a Noetherian ring $R$ with finite dimension. Then $\dim R[x]=\dim R+1$.
 \end{proposition}
 \begin{proof}
-	We start by showing $\dim R[x]\ge\dim R+1$. Well, taking $r:=\dim R$, we pick up a chain
-	\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_r.\]
-	Lifting these to $R[x]$, we get the chain
-	\[\mf p_0R[x]\subsetneq\mf p_1R[x]\subsetneq\cdots\subsetneq\mf p_rR[x].\]
-	But now we can add $\mf p_rR[x]+(x)$ to the end of this chain, which is prime by checking that the quotient $R[x]/(\mf p_rR[x]+(x))\cong R/\mf p_r$ is an integral domain. In particular, $\mf p_rR[x]$ contains no monic polynomials, so $\mf p_rR[x]+(x)$ is indeed strictly bigger.
+	We split the proof into two parts. For brevity, set $r:=\dim R$.
+	\begin{itemize}
+		\item We start by showing $\dim R[x]\ge r+1$; we do this by manually constructing a chain of primes of length $r+1$. Well, because $r=\dim R$, we may pick up a chain
+		\[\mf p_0\subsetneq\mf p_1\subsetneq\cdots\subsetneq\mf p_r.\]
+		Lifting these to $R[x]$, we get the chain
+		\[\mf p_0R[x]\subseteq\mf p_1R[x]\subseteq\cdots\subseteq\mf p_rR[x].\]
+		The point is to show that this is a distinct chain of primes in $R[x]$, and then we'll add $\mf p_rR[x]+(x)$ to the end.
+		
+		Note that these ideals $\mf p_iR[x]$ are prime because, for any prime $\mf p\subseteq R$, we have
+		\[\frac{R[x]}{\mf pR[x]}\cong(R/\mf p)[x],\]
+		where the isomorphism is by lifting the natural projection map $R\onto R/\mf p$ via $x\mapsto x$. (Surjectivity of this morphism $R[x]\to(R/\mf p)[x]$ is clear. The kernel consists of all elements of $R[x]$ all of whose coefficients live in $\mf p$, which is $\mf pR[x]$.) Now, $(R/\mf p)[x]$ is a polynomial ring over an integral domain and hence is an integral domain, so we conclude $\mf pR[x]$ is indeed prime.
+	
+		Further, the primes $\mf p_iR[x]$ are distinct because passing $\mf p_iR[x]$ through the map $R[x]\to R$ evaluating $x\mapsto0$ recovers the constant terms in $\mf p_iR[x]$, which is simply $\mf p_i$. So the map $\mf p\mapsto\mf pR[x]$ has a left inverse and hence must be injective. So we indeed have the chain of distinct primes
+		\[\mf p_0R[x]\subsetneq\mf p_1R[x]\subsetneq\cdots\subsetneq\mf p_rR[x]\]
+		of length $r$ in $R[x]$.
 
-	To finish, we show $\dim R[x]\le\dim R+1$. Well, pick up a maximal ideal $\mf n\subseteq R[x]$ such that $\mf n$ appears in the maximum chain, promising
-	\[\codim\mf n=\dim R[x].\]
-	As such, we pull $\mf n$ back to $R$ as $\mf m\subseteq R$. Localizing at $\mf m$, we see
-	\[\dim R[x]=\dim R[x]_{\mf n}\le\dim R+\dim R[x]_\mf n/\mf mR[x]_\mf n,\]
-	where we have used \autoref{prop:ranknullity}. But now $\dim R[x]_\mf n/\mf mR[x]_\mf n=1$ because it is the dimension of a polynomial ring in one variable over a field.
+		Lastly, we note that $\mf p_rR[x]+(x)$ is a prime ideal because
+		\[\frac{R[x]}{\mf p_rR[x]+(x)}\cong R/\mf p_r,\]
+		where the isomorphism is by lifting $R\mapsto R/\mf p_r$ with $x\mapsto0$; in other words, we extract the constant term and take it$\pmod{\mf p_r}$. Certainly this map is surjective (everyone in $R$ is eligible to be a constant term), and $\mf p_rR[x]+(x)$ lives in its kernel; conversely, the kernel consists exactly of the elements with constant term in $\mf p_r$, which is $\mf p_r+(x)=\mf p_rR[x]+(x)$.
+
+		However, note $\mf p_rR[x]\subsetneq\mf p_rR[x]+(x)$ because $x\notin\mf p_rR[x]$ (the coefficient of $x$ is $1$, which is not in $\mf p_r$) while $x\in\mf p_rR[x]+(x)$. As such, we have a chain of distinct primes
+		\[\mf p_0R[x]\subsetneq\mf p_1R[x]\subsetneq\cdots\subsetneq\mf p_rR[x]\subsetneq\mf p_rR[x]+(x)\]
+		of length $r+1$ in $R[x]$. Thus, $\dim R[x]\ge r+1=\dim R+1$.
+		
+		\item We show $\dim R[x]\le\dim R+1$ by \autoref{prop:ranknullity}. Well, suppose that we have a chain of primes
+		\[\mf q_0\subsetneq\mf q_1\subsetneq\cdots\subsetneq\mf q_d\label{eq:polychain}\tag{$*$}\]
+		for some $d$; we will show that $d\le r+1$, which will be enough. Note that, if $\mf q_d$ is not a maximal ideal, then we can place $\mf q_d$ inside a maximal ideal $\mf n$ and then replace $\mf q_d$ with $\mf n$ because we still have $\mf q_{d-1}\subsetneq\mf q_d\subseteq\mf n$. Notably, we still have a chain of distinct primes of length $d$, and we'll still show $d\le r+1$.
+
+		As such, we can assume that $\mf n:=\mf q_d$ is a maximal ideal. Very quickly, note that we have the natural map $\iota:R\into R[x]$, and we note $\iota^{-1}\mf n$ (i.e., $\mf n\cap R$) is a maximal ideal: certainly $\iota^{-1}\mf n$ is prime and hence proper. On the other hand, if
+		\[\iota^{-1}\mf n\subseteq I\subsetneq R,\]
+		then $I=\iota^{-1}\mf n+I$ still does not contain $1_R$, so $\mf n+IR[x]$ still cannot $1_R$ because the constant terms of $\mf n+IR[x]$ are precisely $\iota^{-1}\mf n+I$. So $\mf n+IR[x]$ is a proper ideal containing $\mf mf n$, so $\mf n+IR[x]=\mf n$, so $IR[x]\subseteq\mf n$, so $I\subseteq\iota^{-1}\mf n$, so $\iota^{-1}\mf n=I$.
+
+		Thus, we set $\mf m:=\iota^{-1}\mf n$ and so $\iota\mf m\subseteq\mf n$. Localizing, we see that \autoref{prop:ranknullity} promises
+		\[\dim R[x]_\mf n\le\dim R_\mf m+\dim R[x]_\mf n/(\mf mR_\mf m)R[x]_\mf n.\]
+		We now compute each of these terms.
+		\begin{itemize}
+			\item Note that $\dim R[x]_\mf n=\codim\mf n=\codim\mf q_d\ge d$ from \autoref{eq:polychain}.
+			\item Note that $\dim R_\mf m=\codim\mf m\le\dim R=r$ by \autoref{prop:upperbounddimension}.
+			\item Lastly, we compute $\dim R[x]_\mf n/(\mf mR_\mf m)R[x]_\mf n$. Intuitively, this is a localization of $R[x]/\mf mR[x]$, which is $(R/\mf m)[x]$, which is a polynomial ring over a field and hence a principal ideal domain (while not a field) and therefore has dimension $1$.
+			
+			Rigorizing this computation is quite annoying, so we will be a little terse. Note that $\mf n/\mf mR[x]$ is a maximal ideal of $R[x]/\mf mR[x]$ by \autoref{lem:pullmax}, and so $\mf n/\mf mR[x]$ will go to a maximal ideal $\mf n'$ under the isomorphism
+			\[\frac{R[x]}{\mf mR[x]}\cong(R/\mf m)[x],\]
+			induced by $R\onto R/\mf m$ and $x\mapsto x$. Thus, we compute
+			\[\dim\left(\frac{R[x]}{\mf mR[x]}\right)_{\mf n/\mf mR[x]}=\dim\big((R/\mf m)[x]\big)_{\mf n'}=1,\]
+			where the last equality is because $\mf n'$ is a nonzero prime of the principal ideal domain $(R/\mf m)[x]$.
+
+			So to finish, we claim that
+			\[\frac{R[x]_\mf n}{(\mf mR_\mf m)R[x]_\mf n}\cong\left(\frac{R[x]}{\mf mR[x]}\right)_{\mf n/\mf mR[x]}.\]
+			This will finish because it shows that $\dim R[x]_\mf n/(\mf mR_\mf m)R[x]_\mf n=1$.
+			
+			We manually exhibit maps in both directions. In one direction, we have a map
+			\[R[x]\to\frac{R[x]}{\mf mR[x]}\to\left(\frac{R[x]}{\mf mR[x]}\right)_{\mf n/\mf mR[x]}\]
+			sending $p(x)$ to $\frac{[p(x)]_{\mf mR[x]}}1$ and in particular all elements of $R[x]\setminus\mf n$ to a unit (notably, $\mf mR[x]\subseteq\mf n$, so this localization is legal), so we get an induced map from $R[x]_\mf n$ by the universal property. By definition, we can see that $(\mf mR_\mf m)R[x]_\mf n$ will end up in the kernel, so we get an induced map
+			\[\varphi:\frac{R[x]_\mf n}{(\mf mR_\mf m)R[x]_\mf n}\to\left(\frac{R[x]}{\mf mR[x]}\right)_{\mf n/\mf mR[x]}\]
+			by sending
+			\[\varphi:\left[\frac{p(x)}{q(x)}\right]_{\mf mR_\mf mR[x]_\mf n}\mapsto\frac{[p(x)]_{\mf mR[x]}}{[q(x)]_{\mf mR[x]}}.\]
+			In the other direction, we note that we have a map
+			\[R[x]\to R[x]_\mf n\to\frac{R[x]_\mf n}{(\mf mR_\mf m)R[x]_\mf n}\]
+			sending $p(x)$ to $\left[\frac{p(x)}1\right]_{(\mf mR_\mf m)R[x]_\mf n}$. In particular, we can see that any element of $\mf mR[x]$ goes to $0$ immediately, so we get an induced map from $R[x]/\mf mR[x]$. However, we see further that any $[p]\notin\mf n/\mf mR[x]$ will go to a unit because it's mapping to $\frac{p(x)}1$, which is a unit in $R[x]_\mf n$ with inverse $\frac1{p(x)}$. As such, we get an induced map
+			\[\psi:\left(\frac{R[x]}{\mf mR[x]}\right)_{\mf n/\mf mR[x]}\to\frac{R[x]_\mf n}{(\mf mR_\mf m)R[x]_\mf n}\]
+			by sending
+			\[\psi:\frac{[p(x)]_{\mf mR[x]}}{[q(x)]_{\mf mR[x]}}\mapsto\left[\frac{p(x)}{q(x)}\right]_{\mf mR_\mf mR[x]_\mf n}\]
+			Tracking through $\varphi$ and $\psi$ shows that they are inverse essentially immediately, so we get our isomorphism.
+		\end{itemize}
+		Plugging in, we see that
+		\[d\le r+1,\]
+		which is what we wanted.
+	\end{itemize}
+	The above inequalities finish the proof.
 \end{proof}
 \begin{corollary}
 	For a field $k$, we have $k[x_1,\ldots,x_n]=n$.
 \end{corollary}
 \begin{proof}
-	This follows from induction, starting with $\dim k=0$ and incrementing by \autoref{prop:polyringdimension}.
+	This follows by induction on $n$. For $n=0$, we are showing that $\dim k=0$, which follows because all prime ideals are maximal because all proper ideals are $(0)$ in a field. Then the inductive step is \autoref{prop:polyringdimension} because we compute
+	\[\dim k[x_1,\ldots,x_{n+1}]=\dim k[x_1,\ldots,x_n]+1=n+1\]
+	by induction.
 \end{proof}
 
 \subsection{Dimension for Modules}
