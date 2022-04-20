@@ -1,0 +1,146 @@
+% !TEX root = ../notes.tex
+
+Chris is back, for the last time.
+
+\subsection{Adjoints Preserve (Co)limits}
+Here is a theorem.
+\begin{theorem}
+	Fix a category $\mc C$.
+	\begin{itemize}
+		\item $\mc C$ admits all limits of shape $\mc J$ if and only if the diagonal functor $\Delta\colon\mc C\to\mc C^\mc J$ admits a right adjoint. Here, the right adjoint is the $\lim$ functor.
+		\item Dually, $\mc C$ admits all colimits of shape $\mc J$ if and only if the diagonal functor $\Delta\colon\mc C\to\mc C^\mc J$ admits a left adjoint. Here, the left adjoint is the $\colim$ functor.
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	Here is the image.
+	% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXG1jIEMiXSxbMSwwLCJcXG1jIENeXFxtYyBKIl0sWzAsMSwiXFxEZWx0YSIsMV0sWzEsMCwiXFxvcHtjb2xpbX0iLDIseyJjdXJ2ZSI6M31dLFsxLDAsIlxcbGltIiwwLHsiY3VydmUiOi0zfV0sWzMsMiwiXFxhZGpvaW50IiwzLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsNCwiXFxhZGpvaW50IiwzLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc C} & {\mc C^\mc J}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "\Delta"{description}, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{\op{colim}}"', curve={height=18pt}, from=1-2, to=1-1]
+		\arrow[""{name=2, anchor=center, inner sep=0}, "\lim", curve={height=-18pt}, from=1-2, to=1-1]
+		\arrow["\adjoint"{marking}, Rightarrow, draw=none, from=1, to=0]
+		\arrow["\adjoint"{marking}, Rightarrow, draw=none, from=0, to=2]
+	\end{tikzcd}\]
+	We now recall the following theorem.
+	\limfunc*
+	\noindent As such, we start by proving the forward direction of our theorem. Namely, we are promised a functor
+	\[\lim\colon\mc C^\mc J\to\mc C.\]
+	We check that this is the right adjoint of $\Delta$: we merely have to exhibit isomorphisms
+	\[\op{Mor}_{\mc C}\left(c,\lim F\right)\stackrel?\cong\op{Mor}_{\mc C^\mc J}(\Delta c,F).\]
+	Now, $\op{Mor}_{\mc C^\mc J}(\Delta c,F)$ denotes natural transformations from $c$ to $F$, which are just cones over $F$ with apex $c$. As such, we have
+	\[\op{Mor}_{\mc C}\left(c,\lim F\right)\stackrel*\cong\op{Cone}(c,F)\cong\op{Mor}_{\mc C^\mc J}(\Delta c,F),\]
+	where $\stackrel*\cong$ is because $\lim F$ represents the functor $\op{Cone}(-,F)$. This is natural because look at it.
+
+	Now work in the other direction. Suppose that $R:\mc C^\mc J\to\mc C$ is right adjoint to $\Delta$. But then
+	\[\op{Mor}(c,RF)\cong\op{Cone}(c,F)\]
+	naturally, so $RF$ represents $\op{Cone}(c-,F)$, so $RF$ will be a limit of the diagram $F$. In fact, we can see that $R$ must now be the limit functor because we showed the limit functor was a right adjoint, and we know limits are unique.
+\end{proof}
+Here is our main theorem.
+\begin{theorem}
+	Right adjoints preserve limits.
+\end{theorem}
+\begin{proof}[Proof by diagrams]
+	More rigorously, suppose that $F\adjoint G$ are functors $F\colon\mc C\to\mc D$ and $G\colon\mc D\to\mc C$. Then, for a diagram $K\colon\mc K\to\mc D$, if the limit $\lim K$ exists, then
+	\[G(\lim K)=\lim GK.\]
+	We will do a proof by diagrams. To be explicit, we pick our limit cone $\lambda:\lim K\Rightarrow K$. Hitting everything with $G$, we have the following diagram.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXGxpbSBLIl0sWzAsMSwiSyJdLFsyLDAsIkdcXGxpbSBrIl0sWzIsMSwiR0siXSxbMCwxLCIiLDAseyJsZXZlbCI6Mn1dLFsyLDMsIiIsMCx7ImxldmVsIjoyfV0sWzQsNSwiRyIsMCx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\lim K} && {G\lim k} \\
+		K && GK
+		\arrow[""{name=0, anchor=center, inner sep=0}, Rightarrow, from=1-1, to=2-1]
+		\arrow[""{name=1, anchor=center, inner sep=0}, Rightarrow, from=1-3, to=2-3]
+		\arrow["G", shorten <=14pt, shorten >=14pt, from=0, to=1]
+	\end{tikzcd}\]
+	In particular, our legs $\lambda_i:\lim K\to Ki$ become $G\lambda_i:G\lim K\to GKi$, which assembles into a cone $G\lambda:G\lim K\Rightarrow GK$ by whiskering.
+
+	We claim that $G\lambda$ is a limit cone. As such, we pick up a cone $\mu\colon c\Rightarrow GK$, and we want a unique map $c\to G\lim K$ commuting with our legs. To use our adjoint, we transpose everything.
+	\begin{quot}
+		It's good notation. Fuck you.
+	\end{quot}
+	In particular, we hope that we have cones as follows.
+	% https://q.uiver.app/?q=WzAsMyxbMSwwLCJGYyJdLFsxLDEsIksiXSxbMCwwLCJcXGxpbSBLIl0sWzAsMSwiXFxtdV9qXlxcc2hhcnAiLDAseyJsZXZlbCI6Mn1dLFsyLDEsIiIsMix7ImxldmVsIjoyfV0sWzIsMCwiISJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\lim K} & Fc \\
+		& K
+		\arrow["{\mu_j^\sharp}", Rightarrow, from=1-2, to=2-2]
+		\arrow[Rightarrow, from=1-1, to=2-2]
+		\arrow["{!}", from=1-1, to=1-2]
+	\end{tikzcd}\]
+	In particular, we will now check that $\mu^\sharp:\colon Fc\Rightarrow K$ is actually a cone. To check this, we invoke \autoref{lem:betteradjoint}. Indeed, because $G\lambda\colon G\lim K\to GK$ is a cone, the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJjIl0sWzEsMCwiYyJdLFswLDEsIkdLaSJdLFsxLDEsIkdLaSciXSxbMCwxLCJcXGlkX2MiXSxbMiwzLCJHa2YiLDJdLFswLDIsIlxcbXVfaSIsMl0sWzEsMywiXFxtdV97aSd9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		c & c \\
+		GKi & {GKi'}
+		\arrow["{\id_c}", from=1-1, to=1-2]
+		\arrow["GKf"', from=2-1, to=2-2]
+		\arrow["{\mu_i}"', from=1-1, to=2-1]
+		\arrow["{\mu_{i'}}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Transposing, the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJGYyJdLFsxLDAsIkZjIl0sWzAsMSwiS2kiXSxbMSwxLCJLaSciXSxbMCwxLCJcXGlkX3tGY30iXSxbMiwzLCJLZiIsMl0sWzAsMiwiXFxtdV9pXlxcc2hhcnAiLDJdLFsxLDMsIlxcbXVfe2knfV5cXHNoYXJwIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		Fc & Fc \\
+		Ki & {Ki'}
+		\arrow["{\id_{Fc}}", from=1-1, to=1-2]
+		\arrow["Kf"', from=2-1, to=2-2]
+		\arrow["{\mu_i^\sharp}"', from=1-1, to=2-1]
+		\arrow["{\mu_{i'}^\sharp}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	So indeed, $\mu^\sharp$ is a cone, so we have a unique map $\tau\colon Fc\to\lim K$ commuting with our cones. So we get a map
+	\[\tau^\flat c\to\colon G\lim K.\]
+	Everything commutes because we can transpose triangles back as squares (using \autoref{lem:betteradjoint}: do the above diagram argument in reverse), so we have indeed constructed the needed map.
+
+	It remains to show that our $\tau^\flat$ is unique. Well, given any $\sigma\colon c\to G\lim K$, we can transpose back to show $\sigma^\sharp$ must match up with $\tau$, which we then bring back to say $\sigma=\tau^\flat$. This finishes.
+\end{proof}
+\begin{proof}[Proof by Yoneda]
+	We can also the Yoneda lemma as follows. Write
+	\begin{align*}
+		\op{Mor}_\mc C(c,G\lim_\mc J K) &\cong \op{Mor}_\mc C(Fc,\lim_\mc J K) \\
+		&\stackrel*\cong \lim_\mc J\op{Mor}_\mc D(Fc,K) \\
+		&\cong \lim_\mc J\op{Mor}_\mc C(c,GK) \\
+		&\cong \op{Mor}_\mc C(c,\lim GK),
+	\end{align*}
+	which finishes. Notably, $\stackrel*\cong$ is the universal property of the limit; this is how limits behave in $\mathrm{Set}$.
+\end{proof}
+We also have the following result.
+\begin{corollary}
+	Left adjoints preserve colimits.
+\end{corollary}
+\begin{proof}
+	Duality.
+\end{proof}
+\begin{quot}
+	I only lecture properly when I am harassed.
+\end{quot}
+
+\subsection{Whiskering}
+We close class with the following result.
+\begin{theorem}
+	Fix an adjunction $F\adjoint G$. If $\mc J$ is small and $\mc E$ is locally small, then we have adjunctions as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIENeXFxtYyBKIl0sWzEsMCwiXFxtYyBEXlxcbWMgSiJdLFszLDAsIlxcbWMgRV5cXG1jIEMiXSxbNCwwLCJcXG1jIEVeXFxtYyBEIl0sWzAsMSwiLVxcY2lyYyBGIiwwLHsib2Zmc2V0IjotMn1dLFsxLDAsIi1cXGNpcmMgRyIsMCx7Im9mZnNldCI6LTJ9XSxbMiwzLCJGXFxjaXJjLSIsMCx7Im9mZnNldCI6LTJ9XSxbMywyLCJHXFxjaXJjLSIsMCx7Im9mZnNldCI6LTJ9XSxbNiw3LCJcXGFkam9pbnQiLDMseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw1LCJcXGFkam9pbnQiLDMseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc C^\mc J} & {\mc D^\mc J} && {\mc E^\mc C} & {\mc E^\mc D}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "{F\circ-}", shift left=2, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{G\circ-}", shift left=2, from=1-2, to=1-1]
+		\arrow[""{name=2, anchor=center, inner sep=0}, "{-\circ F}", shift left=2, from=1-4, to=1-5]
+		\arrow[""{name=3, anchor=center, inner sep=0}, "{-\circ G}", shift left=2, from=1-5, to=1-4]
+		\arrow["\adjoint"{marking}, Rightarrow, draw=none, from=2, to=3]
+		\arrow["\adjoint"{marking}, Rightarrow, draw=none, from=0, to=1]
+	\end{tikzcd}\]
+\end{theorem}
+\begin{proof}
+	We will show one of these. We start by writing out the triangle identities as follows.
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJGIl0sWzEsMCwiRkdGIl0sWzEsMSwiRiJdLFsyLDAsIkciXSxbMywwLCJHRkciXSxbMywxLCJHIl0sWzAsMSwiRlxcZXRhIl0sWzEsMiwiXFx2YXJlcHNpbG9uIEYiXSxbMCwyLCIiLDIseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFszLDUsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsNCwiXFx2YXJlcHNpbG9uIEciXSxbNCw1LCJHXFxldGEiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		F & FGF & G & GFG \\
+		& F && G
+		\arrow["F\eta", from=1-1, to=1-2]
+		\arrow["{\varepsilon F}", from=1-2, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-3, to=2-4]
+		\arrow["{\varepsilon G}", from=1-3, to=1-4]
+		\arrow["G\eta", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	As such, we can build units and counits by hand. Indeed, we set $\hat\eta:\id_{\mc D^\mc J}:(G\circ -)(F\circ -)$ by sending $K$ to $\eta K$. Similarly, we set $\hat\varepsilon:(F\circ -)(G\circ -)\Rightarrow\id_{\mc C^\mc J}$ by $K\to\varepsilon K$. Drawing the internal diagram for one of the triangle identities shows that they commute.
+\end{proof}
