@@ -1,0 +1,141 @@
+% !TEX root = ../notes.tex
+
+Welcome back everyone.
+\begin{itemize}
+	\item Homework \#9 is due on Sunday, at 11:59PM.
+	\item The average on the midterm was 76.4, which is a few points lower than desired.
+\end{itemize}
+
+\subsection{Defining Laurent Series}
+Today we are talking about Laurent series in their full power. This will allow us to add some power to our Residue theorem.
+\begin{quot}
+	It is not lost on me what today is.
+\end{quot}
+Anyway, we begin with the following definition.
+\begin{definition}[Open annulus]
+	The \textit{open annulus} centered $z_0$ is
+	\[A(z_0,r,R)\coloneqq\{z\in\CC:r<|z-z_0|<R\}.\]
+\end{definition}
+\begin{remark}
+	We can also write $A(z_0,r,R)=B(z_0,R)\setminus\overline{B(z_0,r)}$, so this is an open set.
+\end{remark}
+\begin{remark}
+	We permit $r=0$, which makes the annulus a punctured ball.
+\end{remark}
+Here is the image.
+\begin{center}
+	\begin{asy}
+		unitsize(1cm);
+		real r = 1;
+		real R = 3;
+		fill(circle((0,0), R), lightgray);
+		fill(circle((0,0), r), white);
+		draw(circle((0,0), R), dashed);
+		draw(circle((0,0), r), dashed);
+		dot("$z_0$", (0,0), W);
+		draw((0,0) -- r*dir(45));
+		draw((0,0) -- R*dir(-45));
+		label("$r$", r/2*dir(45), SE);
+		label("$R$", R/2*dir(-45), NE);
+	\end{asy}
+\end{center}
+Now, we pick up the following definition of a Laurent series, generalizing our previous one.
+\begin{definition}[Laurent series]
+	A \textit{Laurent series} is a (formal) expression
+	\[L(z)\coloneqq\sum_{n=-\infty}^\infty c_nz^n,\]
+	where $\{c_n\}_{n\in\NN}\subseteq\CC$. This \textit{converges} if and only if the individual series
+	\[\sum_{n=0}^\infty c_nz^n\qquad\text{and}\qquad\sum_{n=0}^\infty c_{-n}z^{-n}\]
+	both converge.
+\end{definition}
+An alternate way to state this convergence is to set
+\[S_+(z)\coloneqq\sum_{n=0}^\infty c_nz^n\qquad\text{and}\qquad S_-(z)\coloneqq\sum_{n=0}^\infty c_{-n}z^{-n}.\]
+As such, we let $R_+>0$ be the radius of convergence of $S_+$ and $R_-$ the radius of convergence of $S_-$, which means that both of these series will converge if and only if
+\[\frac1{R_-}<|z|<R_+,\]
+which creates an ``annulus'' of convergence.
+\begin{remark}
+	In the cases we discussed previously, we had the Laurent series have a finite tail, which made $R_-=+\infty$ and hence we were able to deal with the annulus/punctured ball
+	\[0<|z|<R_+.\]
+\end{remark}
+We will also want a shifting.
+\begin{defihelper}[Laurent series]
+	A \textit{Laurent series centered at $z_0$} is a (formal) expression
+	\[L(z)\coloneqq\sum_{n=-\infty}^\infty c_n(z-z_0)^n.\]
+\end{defihelper}
+
+\subsection{Making Laurent Series}
+The reason we allowed infinite tails is to give us more power with series expansions, expanding from mere meromorphic functions.
+\begin{theorem} \label{thm:laurent}
+	Fix an open annulus $A(z_0,r,R)$ and a domain $\Omega$ containing $\overline{A(z_0,r,R)}$. Given a holomorphic function $f\colon\Omega\to\CC$, we can construct
+	\[c_n\coloneqq\frac1{2\pi i}\oint_{\gamma_s}\frac{f(z)}{(z-z_0)^{n+1}}\,dz,\]
+	where $\gamma_s\colon[0,1]\to\Omega$ is $\gamma_s(t)\coloneqq z_0+s\exp(2\pi it)$ for $s\in[r,R]$. Then we claim
+	\[f(z)=\sum_{n=-\infty}^\infty c_n(z-z_0)^n\]
+	for $z\in A(z_0,r,R)$.
+\end{theorem}
+Before proving this, we need to strengthen our version of Cauchy's integral formula.
+\begin{definition}[Cycles]
+	Fix a domain $\Omega$. A \textit{cycle} $\Gamma$ in $\Omega$ is a formal $\CC$-linear combination of closed piecewise $C^1$ paths homologous to $0$. We will write $\im\Gamma$ to be the union of the individual paths making up $\Gamma$.
+\end{definition}
+\begin{example} \label{ex:annuluscycle}
+	Consider the following annulus.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			real r = 1;
+			real R = 3;
+			fill(circle((0,0), R), lightgray);
+			fill(circle((0,0), r), RGB(237,255,251));
+			draw(circle((0,0), R), EndArrow);
+			draw(circle((0,0), r), EndArrow);
+			label("$\gamma_1$", (r,0), E);
+			label("$\gamma_2$", (R,0), E);
+			dot("$z_0$", (0,0), W);
+		\end{asy}
+	\end{center}
+	Then we can set, for example, $\Gamma\coloneqq\gamma_1+\gamma_2$.
+\end{example}
+These cycles are essentially bookkeeping devices to go around multiple paths. In particular, we have the following definitions.
+\begin{definition}[Cycle integration]
+	Fix a domain $\Omega$ and a holomorphic function $f\colon\Omega\to\CC$. Then, given a cycle $\Gamma=\sum_{i=1}^na_i\gamma_i$, we define
+	\[\oint_\Gamma f(z)\,dz\coloneqq\sum_{i=1}^na_i\oint_{\gamma_i}f(z)\,dz.\]
+\end{definition}
+\begin{definition}[Winding number, cycles]
+	Fix a domain $\Omega$ and a cycle $\Gamma$. Then we define the \textit{winding number} of $\Gamma$ around $w\in\CC$ to be
+	\[\op{Ind}(\Gamma,w)\coloneqq\sum_{i=1}^na_i\op{Ind}(\gamma_i,w).\]
+\end{definition}
+\begin{definition}[Inside]
+	The \textit{inside} of a cycle $\Gamma$ consists of all the points $w\in\Omega\setminus\im\Gamma$ with nonzero winding number.
+\end{definition}
+\begin{example} \label{ex:insideannulus}
+	Work in the context of \autoref{ex:annuluscycle}.
+	\begin{itemize}
+		\item If we set $\Gamma\coloneqq\gamma_1+\gamma_2$, then the interior will just be everything inside $\gamma_2$.
+		\item If we set $\Gamma\coloneqq\gamma_1-\gamma_2$, then the interior will just be everything inside $\gamma_2$ but outside $\gamma_1$: everything inside both $\gamma_1$ and $\gamma_2$ will have the winding number be $1-1=0$ and cancel out!
+	\end{itemize}
+	In particular, our cycle is letting us pick out the annulus itself.
+\end{example}
+Now, here is our stronger version of the Cauchy integral formula.
+\begin{theorem}[Cauchy integral formula] \label{thm:cif3}
+	Fix a domain $\Omega$ with a cycle $\Gamma$. Then, given a holomorphic function $f\colon\Omega\to\CC$, we have
+	\[\oint_\Gamma f(z)\,dz=0,\]
+	and for any $w\in\Omega\setminus\im\gamma$, we have
+	\[f(w)\op{Ind}(\Gamma,w)=\frac1{2\pi i}\oint_\Gamma\frac{f(z)}{z-w}\,dz.\]
+\end{theorem}
+\begin{proof}
+	Simply split all the integrals into their formal sum over $\Gamma$, apply \autoref{thm:cif2}, and then sum back to values over $\Gamma$.
+\end{proof}
+We are now ready to prove our theorem.
+\begin{proof}[Proof of \autoref{thm:laurent}]
+	By shifting, we take $z_0$ to be $0$. Now, we can recover $A(z_0,r,R)$ by setting $\Gamma\coloneqq\gamma_R-\gamma_r$ so that the inside of $\Gamma$ is $A(z_0,r,R)$, as discussed in \autoref{ex:insideannulus}. As such, \autoref{thm:cif3} tells us that all $w\in A(z_0,r,R)$ have
+	\[f(w)\op{Ind}(\gamma_R,w)-f(w)\op{Ind}(\gamma_r,w)=f(w)\op{Ind}(\Gamma,w)=\oint_\Gamma f(z)\,dz=\oint_{\gamma_R}f(z)\,dz-\oint_{\gamma_r}f(z)\,dz.\]
+	Now, $\op{Ind}(\gamma_R,w)=1$ and $\op{Ind}(\gamma_r,w)=0$, so we get
+	\[f(w)=\frac1{2\pi i}\oint_{\gamma_R}f(z)\,dz-\frac1{2\pi i}\oint_{\gamma_r}f(z)\,dz.\]
+	We will compute the integrals separately. Indeed, we notice that any $z\in\CC$ with $|z|>|w|$ will have
+	\[\frac1{z-w}=\frac{1/z}{1-(w/z)}\sum_{k=0}^\infty\frac{w^k}{z^{k+1}},\]
+	which by the Weierstrass $M$-test will converge uniformly when $|z|>|w|+\varepsilon$ for any $\varepsilon>0$. In particular, $R>|w|$, so we may write
+	\[\frac1{2\pi i}\oint_{\Gamma_R}\frac{f(z)}{z-w}=\sum_{k=0}^\infty\underbrace{\left(\frac1{2\pi i}\oint_{\gamma_R}\frac{f(z)}{z^{k+1}}\,dz\right)}_{c_k}w^k\]
+	by interchanging the sum and integral. Similarly, $|w|>|z|$ implies
+	\[\frac1{z-w}=\frac{-1/w}{1-(z/w)}=-\sum_{k=0}^\infty\frac{z^k}{w^{k+1}}=-\sum_{k=-1}^{-\infty}\frac{w^k}{z^{k+1}}.\]
+	This still absolutely converges and hence uniformly converges for $|w|>|z|$, so taking $|z|=r$, we can get
+	\[\frac1{2\pi i}\oint_{\gamma_r}\frac{f(z)}{z-w}\,dz=-\sum_{k=-1}^{-\infty}\underbrace{\left(\frac1{2\pi i}\oint_{\gamma_r}\frac{f(z)}{z^{k+1}}\,dz\right)}_{c_k}w^k.\]
+	Subtracting our two integrals gets the desired result.
+\end{proof}
