@@ -1,0 +1,133 @@
+% !TEX root = ../notes.tex
+
+Good morning, everyone.
+\begin{itemize}
+	\item Homework \#9 is due on Sunday at 11:59PM. One of the questions has since been corrected.
+	\item There are (extended) office hours today from 12:30PM--3PM because we did not have office hours yesterday.
+	\item Homework \#10 will be released later today. This will be our last homework.
+\end{itemize}
+
+\subsection{Residue Theorem Two, Electric Boogaloo}
+Today we are talking about the more general Residue theorem. Last time we showed that all holomorphic functions have a Laurent series over an annulus. Here is a corollary, which will be our jumping-off point.
+\begin{corollary}
+	Fix a domain $\Omega$ and a holomorphic function $f\colon\Omega\to\CC$. If $z_0\in\overline\Omega$ is an isolated singularity of $f$, then $f$ has a Laurent series expansion at $z_0$ in the punctured ball $B(z_0,r)\setminus\{z_0\}$ for some (small) $r>0$.
+\end{corollary}
+\begin{proof}
+	When $z_0$ is a pole, we were able to make our Laurent series with finite tail, and we were able to control the size of the tail.
+
+	Anyway, by shifting we may assume that $z_0=0$. Now, fix any $r$ so that $B(z_0,r)\setminus\{z_0\}\subseteq\Omega$, and \autoref{thm:laurent} promises us that any $r'>0$ will give $\overline{A(0,r',r)}\subseteq\Omega$ with
+	\[f(z)=\sum_{n=-\infty}^\infty\left(\frac1{2\pi i}\oint_{\gamma_s}\frac{f(z)}{(z-z_0)^{n+1}}\,dz\right)z^n,\]
+	where $s:=r$. Now, the coefficient depends on $r$ but not on $r'$, so we may send $r'$ to $0$ to say that this series holds on $B(z_0,r)\setminus\{z_0\}$. This finishes.
+\end{proof}
+And here are our generalized versions of residue and principal part.
+\begin{definition}[Residue]
+	Fix a domain $\Omega$ and some isolated set $S\subseteq\Omega$ so that $f\colon(\Omega\setminus S)\to\CC$ can be a holomorphic function with isolated singularities $S$. Then, writing our Laurent series for $f$ as
+	\[f(z)=\sum_{n=-\infty}^\infty c_n(z-z_0)^n,\]
+	we define the \textit{residue} as $\op{Res}_{z_0}(f):=c_{-1}$.
+\end{definition}
+\begin{definition}[Residue]
+	Fix a domain $\Omega$ and some isolated set $S\subseteq\Omega$ so that $f\colon(\Omega\setminus S)\to\CC$ can be a holomorphic function with isolated singularities $S$. Then, writing our Laurent series for $f$ as
+	\[f(z)=\sum_{n=-\infty}^\infty c_n(z-z_0)^n,\]
+	we define the \textit{principal part} as $P_{f,z_0}(z):=\sum_{n=-1}^{-\infty} c_n(z-z_0)^n$.
+\end{definition}
+And so here is our theorem.
+\begin{theorem}[Residue] \label{thm:residue2}
+	Fix a domain $\Omega$ and a finite set $S\subseteq\Omega$ so that $\colon(\Omega\setminus S)\to\CC$ can be a holomorphic function with isolated singularities $S$. Given a closed, piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$ such that $\im\gamma\cap S=\emp$ with inside contained in $\Omega$ (i.e., homologous to $0$ in $\Omega$), we have
+	\[\oint_\gamma f(z)\,dz=2\pi i\sum_{z_0\in S}\op{Res}_{z_0}(f)\op{Ind}(\gamma,z_0).\]
+\end{theorem}
+\begin{proof}
+	We imitate the proof of \autoref{thm:residue}. For each $z_0\in S$, let $P_{f,z_0}$ denote the principal part of $f$ at $z_0$. In particular, for each $z_0\in\CC$, we see that $f-P_{f,z_0}$ is holomorphic at $z_0$ and that $P_{f,z_0}$ is holomorphic at all points aside $z_0$ (and therefore won't affect differentiability away from $z_0$). Thus,
+	\[f-\sum_{z_0\in S}P_{f,z_0}\]
+	is holomorphic on $\Omega$. In particular, because $\im\gamma\cap S$ and that $\gamma$ is homologous to $0$ in $\Omega$, we may bop this with \autoref{thm:cif2} to see
+	\[\oint_\gamma\left(f(z)-\sum_{z_0\in S}P_{f,z_0}(z)\right)\,dz=0.\]
+	Rearranging, we see
+	\[\oint_\gamma f(z)\,dz=\sum_{z_0\in S}\oint_\gamma P_{f,z_0}(z)\,dz.\]
+	Now, in our proof of \autoref{thm:laurent}, we showed that the series for $P_{f,z_0}$ converges uniformly on $\im\gamma$ because $\im\gamma$ is a compact set away from $z_0$ (namely, they were integrals of some geometric series, which have a perfectly fine radius of convergence). Thus, fixing some particular $P_{f,z_0}$, we compute
+	\[\oint_\gamma P{f,z_0}(z)\,dz = \oint_\gamma\sum_{k=-1}^{-\infty}c_{k,z_0}(z-z_0)^k\,dz = \sum_{k=-1}^{-\infty}c_{k,z_0}\oint_\gamma (z-z_0)^k\,dz.\]
+	Now, for each $k<-1$, the function $(z-z_0)^k$ has a primitive (namely, $\frac1{k+1}(z-z_0)^{k+1}$), so \autoref{cor:ftconclosed} tells us that the integral vanishes. Otherwise, at $k=-1$, we see that
+	\[\oint_\gamma P{f,z_0}(z)\,dz = c_{-1,z_0}\oint_\gamma\frac1{z-z_0}\,dz=2\pi i\op{Res}_{z_0}(f)\op{Ind}(\gamma,z_0).\]
+	Thus,
+	\[\oint_\gamma f(z)\,dz=\sum_{z_0\in S}\oint_\gamma P_{f,z_0}(z)\,dz=2\pi  i\sum_{z_0\in S}\op{Res}_{z_0}(f)\op{Ind}(\gamma,z_0),\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{Example Contour Integral}
+So now we get to compute all the integrals we could want.
+\begin{exe}
+	We compute
+	\[\int_0^\infty\frac{\sqrt x}{1+x^2}\,dx.\]
+\end{exe}
+\begin{proof}
+	We use a keyhole contour. To begin, we fix the branch of the logarithm on $\CC\setminus\RR_{\ge0}$, and we will work with the following image, where the red is our ray of death.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			draw((-1.5,0)--(0,0));
+			draw((0,-1.5)--(0,1.5), arrow=EndArrow);
+			label("$\textrm{Re}$", (1.5,0), E);
+			label("$\textrm{Im}$", (0,1.5), N);
+			draw((0,0)--(1.5,0), arrow=EndArrow, p=red);
+		\end{asy}
+	\end{center}
+	As such, we set $f(z):=\sqrt z/\left(z^2+1\right)$ and write
+	\[z:=r\exp(i\theta)\]
+	where now $\theta\in(0,2\pi)$ avoids the ray of death. We now draw the following contour.
+	\begin{center}
+		\begin{asy}
+			unitsize(3cm);
+			draw((-1.5,0)--(0,0));
+			draw((0,-1.5)--(0,1.5), arrow=EndArrow);
+			label("$\textrm{Re}$", (1.5,0), E);
+			label("$\textrm{Im}$", (0,1.5), N);
+			draw((0,0)--(1.5,0), arrow=EndArrow, p=red);
+
+			real r = 0.4;
+			real R = 1.2;
+			real delta = 0.1;
+			real a = 180/3.1415 * asin(delta/r);
+			real b = 180/3.1415 * asin(delta/R);
+			pen outer = rgb(0,0.8,0);
+			pen inner = blue;
+			pen lines = rgb(0,0.3,0.3);
+			draw(arc((0,0), r, a, 360-a), arrow=BeginArrow, p=inner);
+			draw(arc((0,0), R, b, 360-b), arrow=EndArrow, p=outer);
+			draw(r*dir(a) -- R*dir(b), arrow=EndArrow, p=lines);
+			label("$\eta_1$", (r*dir(a)+R*dir(b))/2, N, lines);
+			label("$\eta_2$", (r*dir(-a)+R*dir(-b))/2, S, lines);
+			draw(r*dir(-a) -- R*dir(-b), arrow=BeginArrow, p=lines);
+
+			label("$\gamma_\varepsilon$", r*dir(150), dir(150), p=inner);
+			label("$\gamma_R$", R*dir(150), dir(150), p=outer);
+
+			draw((0,0) -- r*dir(100), p=inner);
+			label("$\varepsilon$", r/2*dir(100), 0.5*dir(90+100), p=inner);
+
+			draw((0,0) -- R*dir(200), p=outer);
+			label("$R$", R*dir(200)/2, 0.5*dir(90+200), p=outer);
+		\end{asy}
+	\end{center}
+	Let $\gamma$ be the full contour. To be explicit, $\gamma_\varepsilon$ and $\gamma_R$ are two arcs, oriented as drawn, with radii $\varepsilon$ and $R$ respectively. Then ``cut out'' from these are the horizontal paths $\eta_1$ and $\eta_2$ to connect them. We will send $\varepsilon\to0$ and $R\to\infty$ so that the figure essentially becomes two copies of the real line, moving in opposite directions. As such, we compute the integrals making up $\gamma$ one at a time.
+	\begin{itemize}
+		\item As $R\to\infty$, the integral along $\gamma_R$ becomes a circle. So we bound $|f(z)|\le\frac{\sqrt R}{R^2+1}$ so that
+		\[\left|\oint_{\gamma_R} f(z)\,dz\right|\le2\pi R\cdot\frac{\sqrt R}{R^2+1},\]
+		which goes to $0$ for $R$ large.
+		\item As $\varepsilon\to0$, the integral along $\gamma_\varepsilon$ becomes a circle. So we do the same bound to see that
+		\[\left|\oint_{\gamma_\varepsilon} f(z)\,dz\right|\le2\pi \varepsilon\cdot\frac{\sqrt \varepsilon}{\varepsilon^2+1},\]
+		which still goes to $0$ for $\varepsilon$ small.
+		\item It remains to compute the integral the integrals over $\eta_1$ and $\eta_2$. Because $\eta_1$ and $\eta_2$ have constant imaginary parts, we let this imaginary part be $\pm\delta$, which goes to $0$ for $R$ large and $\varepsilon$ small. As such
+		\[\lim_{\delta\to0}\oint_{\eta_1}f(z)\,dz=\oint_\varepsilon^R\frac{\sqrt x}{x^2+1}\,dz\]
+		and
+		\[\lim_{\delta\to0}\oint_{\eta_2}f(z)\,dz=\oint_R^\varepsilon\frac{-\sqrt x}{x^2+1}\,dz.\]
+		In particular, we have a $-$ sign here because the parameterization of $\eta_2$ goes in the opposite direction. Thus, the sum of the two integrals over the $\eta_\bullet$s is simply
+		\[2\int_0^\infty\frac{\sqrt x}{x^2+1}\,dx\]
+		as $\delta$ goes to $0$.
+		\item It remains to compute the integral of $f$ over the entire contour. We use \autoref{thm:residue2}; note that $f$ only has poles at $\pm i$, and the square root portion can be defined to be holomorphic, given our branch cut. Thus, we compute
+		\[\op{Res}_i(f)=\frac12\exp(7\pi i/4)\qquad\text{and}\qquad\op{Res}_{-i}(f)=-\frac12\exp(i\pi/4).\]
+		So in total, our integral comes out to
+		\[\oint_\gamma f(z)\,dz=2\pi i\big(\op{Res}_i(f)+\op{Res}_{-i}(f)\big)=\pi\sqrt2\]
+		because our only singularities are at $\pm i$, where we are using \autoref{thm:residue2}.
+	\end{itemize}
+	Synthesizing, we find that
+	\[\oint_0^\infty\frac{\sqrt x}{x^2+1}\,dx=\frac12\lim_{\substack{R\to0\\\varepsilon\to0}}\oint_\gamma f(z)\,dz=\frac\pi{\sqrt 2}.\]
+	This finishes.
+\end{proof}
