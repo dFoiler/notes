@@ -1,0 +1,104 @@
+
+
+\subsection{Induction}
+Let's give an example proof using induction.
+\begin{prop}
+	We show that $\forall x\forall y\forall z((x+y)+z=x+(y+z))$.
+\end{prop}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\open[]
+				\hypo{a}{\boxed a}
+				\open[]
+					\hypo{b}{\boxed b}
+					\have{0}{\forall x(x+0=x)}
+					\have{1}{(a+b)+0=a+b} \by{$\forall$Elim}{0}
+					\have{2}{b+0=b} \by{$\forall$Elim}{0}
+					\have{base}{(a+b)+0=a+(b+0)} \by{$=$Elim}{1,2}
+					\open[]
+						\hypo{c}{\boxed c}
+						\open[]
+							\hypo{cbeg}{(a+b)+c=a+(b+c)}
+							\have{aa}{\forall x\forall y(x+S(y))=S(x+y)} \by{(A2)}{}
+							\have{aas}{\forall y(x+S(c)=S(x+c))} \by{$\forall$Elim}{aa}
+							\have{aass}{b+S(c)=S(b+c)} \by{$\forall$Elim}{aa}
+							\have{}{a+(b+S(c))=a+(b+S(c))} \by{$=$Intro}{}
+							\have{}{a+(b+S(c))=a+S(b+c)} \by{$=$Elim}{aass}
+							\have{}{a+S(b+c)=S(a+(b+c))} \by{$\forall$Elim}{aa}
+							\have{}{(a+b)+S(c)=S((a+b)+c)} \by{$\forall$Elim}{aa}
+							\have{cend}{(a+b)+S(c)=a+(b+S(c)} \by{Many $=$Elim}{}
+						\close
+						\have{}{(a+b)+c=a+(b+c)\to(a+b)+S(c)=a+(b+S(c))} \by{$\to$Intro}{cbeg-cend}
+					\close
+					\have{step}{\forall z((a+b)+z=a+(b+z)\to(a+b)+S(z)=a+(b+S(z)))}
+					\have{ind}{\varphi^z_0\land\forall z(\varphi\to\varphi^z_{S(z)})\text{ for }\varphi\coloneqq(a+b)+z=a+(b+z)} \by{$\land$Intro}{base,step}
+					\have{apply}{(\varphi^z_0\land\forall z(\varphi\to\varphi^z_{S(z)}))\to\varphi} \by{(IND)}{}
+					\have{end}{\forall z((a+b)+z=a+(b+z))} \by{$\to$Elim}{ind,apply}
+				\close
+				\have{aend}{\forall y\forall z((a+y)+z=a+(y+z))} \by{$\forall$Intro}{b-end}
+			\close
+			\have{}{\forall x\forall y\forall z((x+y)+z=x+(y+z))} \by{$\forall$Intro}{a-aend}
+		\end{nd}
+	\end{align*}
+	Notably, we have split the proof into a base case, which comes down to shifting $x+0=x$ around, and an inductive step, which is the business with the $c$. The point of the inductive step is the application of (A2).
+\end{proof}
+\begin{lemma}
+	Any natural number $n$ is either even or odd.
+\end{lemma}
+\begin{proof}
+	We induct on $n$. For $n=0$, we note $n=2\cdot0$ is even. For the inductive step, take $n$ to be either even or odd.
+	\begin{itemize}
+		\item If $n$ is even, then $n=2k$, so $n+1=2k+1$ is odd.
+		\item If $n$ is odd, then $n=2k+1$, so $n+1=2(k+1)$ is odd.
+	\end{itemize}
+	These computations finish the proof.
+\end{proof}
+And here is our formalization.
+\begin{exe}
+	We show that $\forall n(\exists k(n=2k)\lor\exists k(n=2\times k+1))$.
+\end{exe}
+\begin{proof}
+	We proceed as follows.
+	\begin{align*}
+		\begin{nd}
+			\have{almostbase}{2\times0=0} \by{$\forall x(x\times0=0)$}{}
+			\have{almostalmostbase}{0=2\times0} \by{Use symmetry}{}
+			\have{base}{\varphi^n_0} \by{$\lor$Intro}{almostalmostbase}
+			\open[]
+				\hypo{beg}{\varphi}
+				\open[]
+					\hypo{ebeg}{\exists k(n=2k)}
+					\open[]
+						\hypo{cbeg}{n=2c\quad\boxed c}
+						\have{almosteend}{n+1=2c+1} \by{$=$Elim}{cbeg}
+						\have{applythatonething}{S(n)=n+1} \by{Shown in class}{}
+						\have{ughalmosteend}{S(n)=2c+1} \by{$=$Elim}{applythatonething,almosteend}
+						\have{ughughalmosteend}{\exists k(S(n)=2k+1)} \by{$\exists$Intro}{ughalmosteend}
+						\have{theeend}{\varphi^n_{S(n)}} \by{$\exists$Elim}{ughughalmosteend}
+					\close
+					\have{eend}{\varphi^n_{S(n)}} \by{$\lor$Elim}{theeend}
+				\close
+				\open[]
+					\hypo{obeg}{n=2k+1}
+					\open[]
+						\hypo{cbeg}{n=2c+1\quad\boxed c}
+						\have{ogetting}{n+1=n+1} \by{$=$Intro}{}
+						\have{osub}{n+1=(2c+1)+1} \by{$=$Elim}{obeg,ogetting}
+						\have{oass}{n+1=2c+2} \by{Association}{}
+						\have{cend}{n+1=2(c+1)} \by{Distribution}{oass}
+					\close
+					\have{gettingoend}{\exists k(n+1=2(k+1))} \by{$\exists$Elim}{cbeg-cend}
+					\have{oend}{\varphi^n_{S(n)}} \by{$\lor$Intro}{gettingoend}
+				\close
+				\have{end}{\varphi^n_{S(n)}} \by{$\lor$Elim}{beg,ebeg-eend,obeg-oend}
+			\close
+			\have{step}{\varphi\to\varphi^n_{S(n)}} \by{$\to$Intro}{beg-end}
+			\have{get}{\varphi^n_0\land(\varphi\to\varphi^n_{S(n)})} \by{$\land$Elim}{base,step}
+			\have{ind}{\big(\varphi^n_0\land(\varphi\to\varphi^n_{S(n)})\big)\to\varphi} \by{(IND)}{}
+			\have{}{\forall n\varphi} \by{$\to$Elim}{get,ind}
+		\end{nd}
+	\end{align*}
+	The point is to induct on the formula $\varphi$ defined as $\exists k(n=2k)\lor\exists k(n=2k+1)$. Notably, we are applying our previous results of association and $\forall x(S(x)=x+1)$, which we showed earlier. We have also abbreviated the $\exists$ out of $\varphi$ because of space reasons.
+\end{proof}
