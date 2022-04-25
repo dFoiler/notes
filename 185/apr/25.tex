@@ -1,0 +1,173 @@
+% !TEX root = ../notes.tex
+
+Good morning, everyone.
+\begin{itemize}
+	\item Homework \#10 is due on Friday, at 11:59PM.
+	\item Course evaluations exist.
+	\item Today will be our last ``material for the final.''
+	\item On Wednesday, we'll talk about complex dynamics. There is a talk (for general audience) on complex dynamics on Thursday at 4:10PM, in Evans 60.
+\end{itemize}
+
+\subsection{M\"obius Transformations}
+Today we are talking about M\"obius transformations. Here is our definition.
+\begin{definition}[M\"obius tranformation]
+	Fix a domain $\Omega$. A \textit{M\"obius transformation} is a function $f\colon\Omega\to\CC$ of the form
+	\[f(z)\coloneqq\frac{az+b}{cz+d},\]
+	where $a,b,c,d\in\CC$ and $ad-bc\ne0$.
+\end{definition}
+The point is that M\"obius transformations are more or less matrices in $\op{GL}_2(\CC)$, the group of $2\times2$ matrices with complex coefficients. Namely,
+\[\begin{bmatrix}
+	a & b \\
+	c & d
+\end{bmatrix}\cdot z\coloneqq\frac{az+b}{cz+d}\]
+provides a group action of $\op{GL}_2(\CC)$ on $\CC$.
+\begin{example}
+	When $c=0$, then $f(z)=\frac{az+b}{d}$ with $ad\ne0$, so $f$ is non-constant and entire.
+\end{example}
+\begin{example}
+	When $c\ne0$, then $f(z)=\frac{az+b}{cz+d}$ will have a pole at $z=-d/c$. Notably, $a\cdot-d/c+b\ne0$ because $ad-bc\ne0$, so this singularity is indeed not removable.
+\end{example}
+
+\subsection{Generating M\"obius Transformations}
+There are, roughly speaking, three types of M\"obius transformations.
+\begin{definition}[M\"obius transformation, types]
+	Here are some examples of M\"obius transformations.
+	\begin{itemize}
+		\item The M\"obius transformations
+		\[T_b(z)\coloneqq\frac{1z+b}{0z+1}=z+b\]
+		are called the \textit{translations}.
+		\item The M\"obius transformations
+		\[D_a(z)\coloneqq\frac{az+0}{0z+1}=ax\]
+		are called the \textit{dilations}.
+		\item The M\"obius transformation
+		\[I(z)\coloneqq\frac{0z+1}{1z+0}=\frac1z\]
+		is called the \textit{inversion}.
+	\end{itemize}
+\end{definition}
+It will turn out that these generate all of our M\"obius transformations.
+
+Here are some computational lemmas to rigorize our notion of ``generate.''
+\begin{lemma} \label{lem:mobgrp}
+	Let $f$ and $g$ be M\"obius transformations.
+	\begin{itemize}
+		\item $f\circ g$ is also a M\"obius transformation, with composition give as multiplication of matrices.
+		\item $f$ is bijective, and its inverse is
+		\[f^{-1}(z)\coloneqq\frac{dz-b}{-cz+a}.\]
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	The first is a direct computation. The second comes down to noting that
+	\[\begin{bmatrix}
+		a & b \\
+		c & d
+	\end{bmatrix}^{-1}=\frac1{ad-bc}\begin{bmatrix}
+		d & -b \\
+		-c & a
+	\end{bmatrix},\]
+	but the factor of $1/(ad-bc)$ does nothing.
+\end{proof}
+\begin{remark}
+	The above computations turn our set of M\"obius transformations into a group under composition.
+\end{remark}
+And here is our result.
+\begin{proposition} \label{prop:genmob}
+	Every M\"obius transformation can be written as a composition of translations, dilations, and inversions.
+\end{proposition}
+\begin{proof}
+	We proceed by hand. Fix
+	\[f(z)\coloneqq\frac{az+b}{cz+d}\]
+	a M\"obius transformation.
+	\begin{itemize}
+		\item If $c\ne0$, then proceed as
+		\[z\stackrel{D_c}\longmapsto cz\stackrel{T_d}\longmapsto cz+d\stackrel{I}\longmapsto\frac1{cz+d}\stackrel{D_{(bc-ad)/c}}\longmapsto\frac{(bc-ad)/c}{cz+d}.\]
+		From here, we can apply $T_{a/c}$ to get
+		\[\frac ac+\frac{(bc-ad)/c}{cz+d}=\frac1c\left(\frac{a(cz+d)+bc-ad}{cz+d}\right)=\frac{az+b}{cz+d}.\]
+		So in total, we have
+		\[f=T_{a/c}\circ D_{(bc-ad)/c}\circ I\circ T_d\circ D_c.\]
+		\item If $c=0$, then proceed as
+		\[z\stackrel{TD_{a/d}}\longmapsto\frac adz\stackrel{D_{a/d}}\longmapsto\frac adz+\frac bd,\]
+		which checks $f=T_{b/d}\circ D_{a/d}$.
+	\end{itemize}
+	These cases finish the proof.
+\end{proof}
+\begin{exe}
+	We verify \autoref{prop:genmob} for
+	\[f(z)\coloneqq\frac{iz+0}{z-i}.\]
+\end{exe}
+\begin{proof}
+	Following the algorithm, we get
+	\[z\longmapsto z\longmapsto z-i\longmapsto\frac1{z-i}\longmapsto\frac{-1}{z-i}\longmapsto\frac{-1}{z-i}+i.\]
+	We can check that $\frac{-1}{z-i}+i=\frac{iz}{z-i}=f(z)$, which finishes.
+\end{proof}
+
+\subsection{Classifying Automorphisms of \texorpdfstring{$B(0,1)$}{B(0,1)}}
+The point of M\"obius transformations is to be able to describe certain very nice maps. Here is our definition.
+\begin{definition}[Biholomorphic]
+	Fix domains $\Omega_1,\Omega_2$. A function $f\colon\Omega_1\to\Omega_2$ is \textit{biholomorphic} if and only if $f$ is bijective and holomorphic.
+\end{definition}
+Note that, by \autoref{thm:inv}, we know that the inverse function $f^{-1}$ is holomorphic.
+
+In the case of $\Omega_1=\Omega_2$, we get a well-defined composition and hence group structure.
+\begin{definition}[Automorphism]
+	Fix a domain $\Omega$. Then the \textit{automorphism group} of $\Omega$ is
+	\[\op{Aut}(\Omega)\coloneqq\{\text{biholomorphic maps }f\colon\Omega\to\Omega\}.\]
+\end{definition}
+Automorphisms (and more generally biholomorphic maps) are good to consider because they are in some sense the natural symmetries of a complex space, so we often want to ``mod out'' by them in some suitable sense.
+
+Anyway, here is our theorem.
+\begin{theorem}
+	The group $\op{Aut}(B(0,1))$ is equal to
+	\[\left\{f(z)\coloneqq\frac{az+b}{cz+d}:|a|^2-|b|^2=1\qquad\text{and}\qquad c=\overline b,d=\overline a\right\}.\]
+\end{theorem}
+\begin{proof}
+	We show our inclusions separately.
+	\begin{itemize}
+		\item Let $f\colon B(0,1)\to B(0,1)$ be an automorphism; we will show that $f$ is a M\"obius transformation of the required type. Fix some $z\in B(0,1)$ and $w\coloneqq f(z)$. There are three steps.
+		\begin{enumerate}
+			\item Suppose that $f(0)=0$. Then we may apply the Schwarz lemma: \autoref{cor:schwarz} with $f^{-1}$, which tells us that
+			\[|z|=\left|f^{-1}(w)\right|\le|w|=|f(z)|.\]
+			Applying \autoref{cor:schwarz} this time to $f$ tells us that
+			\[|w|=|f(z)|\le|z|.\]
+			In particular, $|f(z)|=|z|$, so \autoref{cor:schwarz} one more time (namely, the second sentence) tells us that $f(z)=\alpha z$ for some $\alpha\in\CC$; note that $|f(z)|=|z|$ forces $|\alpha|=1$.
+
+			Now, setting $\alpha=r\exp(i\theta)$, we see $r=1$ is forced, so we take $a\coloneqq\exp(i\theta/2)$ and $b\coloneqq0$ and $c\coloneqq0$ and $d\coloneqq\exp(-i\theta/2)$ to get
+			\[f(z)=\alpha z=\exp(i\theta)z=\frac{\exp(i\theta/2)z+0}{0+\exp(-i\theta/2)},\]
+			which finishes.
+
+			\item Suppose that $c\coloneqq f(0)\ne0$ with $|c|<1$. Notably, $|c|>0$ as well. Now, set
+			\[g(z)\coloneqq\frac{z-c}{1-\overline cz}=\frac{z-c}{-\overline c+1}.\]
+			Now, the only pole here is at $1/\overline c$, which has magnitude larger than $1$ and hence does not live in the ball, so $g$ is holomorphic on $B(0,1)$. We claim that $g$ is an automorphism in $B(0,1)$, for which we need to show that $g\colon B(0,1)\to B(0,1)$ is a bijection.
+			\begin{itemize}
+				\item In one direction, suppose $z\in B(0,1)$. Then
+				\[|z|^2-|cz|^2=|z|^2\left(1-|c|^2\right)<1-|c|^2,\]
+				which rearranges to $|z|^2+|c|^2<1+|cz|^2$, which gives
+				\[|g(z)|^2=\frac{|z|^2+|c|^2-\overline cz-c\overline z}{1+|cz|^2-\overline cz-z\overline c}<1\]
+				by using our bound above.
+				\item In the other direction, we note that the inverse of $g$ is
+				\[g^{-1}(z)=\frac{z-\overline c}{-c+1}\]
+				from \autoref{lem:mobgrp}, which has the same form as $g$, so we appeal to the previous case.
+			\end{itemize}
+
+			\item To finish, consider $g\circ f$. This is certainly an automorphism because compositions of automorphisms give another automorphism. But
+			\[(g\circ f)(0)=g(f(0))=g(c)=0,\]
+			so we conclude from our first step that $g\circ f$ is a dilation of the form $z\mapsto\exp(i\theta)z$. In particular, we get to write
+			\[f(z)=g^{-1}(\exp(i\theta)z)=\frac{\exp(i\theta)z+c}{\overline c\exp(i\theta)z+1}\]
+			from the above computation. As such, we set $d\coloneqq 1/\left(1-|c|^2\right)$ and $a\coloneqq\sqrt d\exp(i\theta/2)$ and $b\coloneqq c\sqrt d\exp(i\theta)$. Then we can check by hand that
+			\[f(z)=\frac{az+b}{cz+d}\]
+			and $|a|^2-|b|^2=d\left(1-|c|^2\right)=1$. This finishes.
+		\end{enumerate}
+		\item We omit the proof that all the given M\"obius transformations are in fact 
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	The conditions on $a,b,c,d$ force $ad-bc\ne0$. In particular, $ad-bc=|a|^2-|b|^2=1$.
+\end{remark}
+We close with a warning.
+\begin{warn}
+	M\"obius transformations are not in bijection with matrices.
+\end{warn}
+The main point is that
+\[f(z)=\frac{az+b}{cz+d}=\frac{waz+wb}{wcz+wd}\]
+for any $w\in\CC^\times$. As such, our M\"obius transformations turn out to really be in bijection with elements of $\op{PGL}_2(\CC)$, where we have modded out by the center. In particular, we can put elements of the form
+\[f(z)\coloneqq\frac{z-a}{1-\overline az}\in\op{Aut}(B(0,1))\]
+in the correct form, with some elbow grease.
