@@ -1,0 +1,141 @@
+% !TEX root = ../notes.tex
+
+My computer charge is low, so let's see how far we go.
+\begin{remark}
+	Peter Haine took the class when Professor Riehl was writing the book.
+\end{remark}
+
+\subsection{Motivation}
+We are doing an invitation to Kan extensions.
+
+Roughly speaking, fix a functor $K\colon\mc C\to\mc D$ and another category $\mc E$. Then the precomposition functor
+\[(-\circ K)\colon\op{Fun}(\mc D,\mc E)\to\op{Fun}(\mc C,\mc E)\]
+preserves all co/limits admitted by $\op{Fun}(\mc D,\mc E)$. Namely, if $\mc E$ has all limits and colimits, then $(-\circ K)$ will preserve them. As such, here is our idea.
+\begin{idea} \label{idea:kan}
+	If $\mc E$ above has all limits and colimits, then we expect the functor $(-\circ K)$ to have both left and right adjoints.
+\end{idea}
+One can often check this by hand, but the point of this week's lecture is to discuss if or when the above is true and to be able to describe the adjoints.
+\begin{exe}
+	Fix a group $G$ and subgroup $H\subseteq G$; let $\mathrm BG$ and $\mathrm BH$ be the one-object categories for $G$ and $H$, respectively. Then we fix a field $K$ and set
+	\[\op{Rep}_K(G)\coloneqq\op{Fun}(\mathrm BG,\mathrm{Vec}_K)\]
+	to be the $K$-representations of the group $G$; define $\op{Rep}_K(H)$ similarly. We talk through \autoref{idea:kan} here.
+\end{exe}
+\begin{proof}
+	The inclusion $\iota\colon\mathrm BH\to\mathrm BG$ gives the map
+	\[\op{res}^G_H\colon\op{Rep}_K(G)\to\op{Rep}_K(H)\]
+	by precomposition. The adjoints are as follows.
+	% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXG9we1JlcH1fSyhHKSJdLFsxLDAsIlxcb3B7UmVwfV9LKEgpIl0sWzAsMV0sWzEsMCwiXFxvcHtJbmR9XkdfSCIsMix7ImN1cnZlIjo0fV0sWzEsMCwiXFxvcHtDb2luZH1eR19IIiwwLHsiY3VydmUiOi00fV0sWzMsMiwiXFxhZGpvaW50IiwzLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjEsInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDQsIlxcYWRqb2ludCIsMyx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\op{Rep}_K(G)} & {\op{Rep}_K(H)}
+		\arrow[""{name=0, anchor=center, inner sep=0}, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{\op{Ind}^G_H}"', curve={height=24pt}, from=1-2, to=1-1]
+		\arrow[""{name=2, anchor=center, inner sep=0}, "{\op{Coind}^G_H}", curve={height=-24pt}, from=1-2, to=1-1]
+		\arrow["\vdash"{marking}, draw=none, from=1, to=0]
+		\arrow["\phantom{\vdash}"{marking}, draw=none, from=0, to=1]
+		\arrow["\adjoint"{marking}, draw=none, from=0, to=2]
+	\end{tikzcd}\]
+	These have names from algebra, but that is all that we will say.
+\end{proof}
+Anyway, let's say explicitly what we are doing for the rest of the week.
+\begin{enumerate}
+	\item We will work through \autoref{idea:kan}.
+	\item We will discuss Kan extensions, which answer \autoref{idea:kan} and in particular give formulae for the inverses.
+	\item Then we will explain that all concepts are Kan extensions.
+	\item And lastly, we will get some fun theorems.
+\end{enumerate}
+For fun, let's give a theorem to whet our appetite.
+\begin{theorem}[Universal property of presheaves]
+	Fix a small category $\mc C$ so that we can fix the presheaf category $\op{PSh}(\mc C)\coloneqq\op{Func}(\mc C\opp,\mathrm{Set})$; further, take a category $\mc E$ with all colimits. Then the restriction of $\yo\colon\mc C\to\op{PSh}(\mc C)$ defines an equivalence
+	\[(-\circ\yo)\colon\op{Fun}^{\mathrm{colim}}(\op{PSh}(\mc C),\mc E)\equiv\op{Fun}(\mc C,\mc E).\]
+	Namely, a functor from $\mc C$ to $\mc E$ has the same data as a functor from $\op{PSh}(\mc C)$ to $\mc E$ which preserves colimits.
+\end{theorem}
+Intuitively, what is happening is that $\op{PSh}(\mc C)$ is the ``free category'' preserving colimits. To see this, note that the free-forgetful adjunction from, say, $\mathrm{Ab}$ to $\mathrm{Set}$ says that
+\[\op{Mor}_{\mathrm{Ab}}(\ZZ[S],G)\cong\op{Mor}_{\mathrm{Set}}(S,G),\]
+so now the analogy is a bit clearer.
+
+With all that motivation said, here is what we will do for the rest of the week.
+\begin{itemize}
+	\item Today we will introduce Kan extensions.
+	\item On Wednesday, we will talk through the formula for computations involving Kan extensions.
+	\item On Friday, we will explain why all concepts are Kan extensions.
+\end{itemize}
+
+\subsection{Kan Extensions}
+So let's talk about Kan extensions. Here is our motivating question.
+\begin{ques}
+	Given a functor $K\colon\mc C\to\mc D$, how can extend $K$ (covariantly) to $\op{PSh}(\mc C)$?
+\end{ques}
+Here is the image for this.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEMiXSxbMSwwLCJcXG1jIEQiXSxbMCwxLCJcXG9we1BTaH0oXFxtYyBDKSJdLFsxLDEsIlxcb3B7UFNofShcXG1jIEQpIl0sWzAsMiwiXFx5b19cXG1jIEMiLDJdLFsxLDMsIlxceW9fXFxtYyBEIl0sWzAsMSwiSyJdLFsyLDMsIiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\mc C} & {\mc D} \\
+	{\op{PSh}(\mc C)} & {\op{PSh}(\mc D)}
+	\arrow["{\yo_\mc C}"', from=1-1, to=2-1]
+	\arrow["{\yo_\mc D}", from=1-2, to=2-2]
+	\arrow["K", from=1-1, to=1-2]
+	\arrow[dashed, from=2-1, to=2-2]
+\end{tikzcd}\]
+We would like to draw in the dashed arrow. In general, there need not be a good way to do this, and it need not be unique---in fact, we will have a handedness to our choice of arrow.
+
+As such, here is our definition.
+\begin{defi}[Kan extension]
+	Fix functors $K\colon\mc C\to\mc D$ and $F\colon\mc C\to\mc E$. A \textit{left Kan extension} of $F$ along $K$ is a functor $\op{Lan}_KF\colon\mc D\to\mc E$ and a natural transformation $\eta\colon F\Rightarrow\op{Lan}_KF\circ K$. We also require the data to be ``initial'' in the following sense: for any other pair $(G\colon\mc D\to\mc E,\gamma\colon F\Rightarrow GK)$, we require $\gamma$ to factor uniquely through $\eta$, as follows.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEMiXSxbMCwyLCJcXG1jIEQiXSxbMiwwLCJcXG1jIEUiXSxbMCwyLCJGIl0sWzAsMSwiSyIsMl0sWzEsMiwiXFxvcHtMYW59X0tGIiwxLHsiY3VydmUiOi00fV0sWzEsMiwiRyIsMSx7ImN1cnZlIjo0fV0sWzMsNSwiXFxldGEiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV0sWzUsNiwiISIsMSx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[
+		column sep={6em,between origins},
+		row sep={6em,between origins}]
+		{\mc C} && {\mc E} \\
+		\\
+		{\mc D}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "F", from=1-1, to=1-3]
+		\arrow["K"', from=1-1, to=3-1]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{\op{Lan}_KF}"{description}, curve={height=-24pt}, from=3-1, to=1-3]
+		\arrow[""{name=2, anchor=center, inner sep=0}, "G"{description}, curve={height=24pt}, from=3-1, to=1-3]
+		\arrow["\eta"', shorten <=4pt, shorten >=4pt, Rightarrow, from=0, to=1]
+		\arrow["{!}"{description}, shorten <=8pt, shorten >=8pt, Rightarrow, from=1, to=2]
+	\end{tikzcd}\]
+	A \textit{right Kan extension} is the same, flipping all the natural transformation arrows: our data are the terminal pair $(\op{Ran}_KF\colon\mc D\to\mc E,\eta\colon(\op{Lan}K_F)K\Rightarrow F)$.
+\end{defi}
+Let's see an example.
+\begin{exe}
+	Fix an object $c\in\mc C$ to make the pair of functors $c\colon1\to\mc C$ and $*\colon1\to\mathrm{Set}$. We describe $\op{Lan}_c*$ using the Yoneda lemma.
+\end{exe}
+\begin{proof}
+	The main point is that, given a functor $G\colon\mc C\to\mathrm{Set}$, \autoref{thm:yoneda} gives us a bijection
+	\[\psi_\bullet\colon Fc\cong\op{Fun}(\op{Mor}_\mc C(c,-),F).\]
+	In particular, a natural transformation from $*\colon1\to\mathrm{Set}$ to $Fc\colon1\to\mathrm{Set}$ consists exactly of the data of a natural transformation from $\op{Mor}_\mc C(c,-)$ to $F$. In total, we are promised a unique natural transformation $\psi_c$ to make the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCIxIl0sWzAsMiwiXFxtYyBDIl0sWzIsMCwiXFxtYXRocm17U2V0fSJdLFswLDIsIioiXSxbMCwxLCJjIiwyXSxbMSwyLCJcXG9we01vcn1fXFxtYyBDKGMsLSkiLDEseyJjdXJ2ZSI6LTR9XSxbMSwyLCJGIiwxLHsiY3VydmUiOjR9XSxbMyw1LCJcXGlkX2MiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV0sWzUsNiwiXFxwc2lfYyIsMSx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[
+		column sep={6em,between origins},
+		row sep={6em,between origins}]
+		1 && {\mathrm{Set}} \\
+		\\
+		{\mc C}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "{*}", from=1-1, to=1-3]
+		\arrow["c"', from=1-1, to=3-1]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{\op{Mor}_\mc C(c,-)}"{description}, curve={height=-24pt}, from=3-1, to=1-3]
+		\arrow[""{name=2, anchor=center, inner sep=0}, "F"{description}, curve={height=24pt}, from=3-1, to=1-3]
+		\arrow["{\id_c}"', shorten <=4pt, shorten >=4pt, Rightarrow, from=0, to=1]
+		\arrow["{\psi_c}"', shorten <=8pt, shorten >=8pt, Rightarrow, from=1, to=2]
+	\end{tikzcd}\]
+	Thus, $\op{Lan}_c*$ is $\op{Mor}_\mc C(c,-)$.
+\end{proof}
+Anyway, it's a math class, so let's prove something today.
+\begin{proposition}
+	Fix a functor $K\colon\mc C\to\mc D$ and category $\mc E$. If all functors $F\colon\mc C\to\mc E$ have Kan extensions, then $\op{Lan}_K(-)$ is a left adjoint of $(-\circ K)$.
+	% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXG9we0Z1bn0oXFxtYyBDLFxcbWMgRSkiXSxbMSwwLCJcXG9we0Z1bn0oXFxtYyBELFxcbWMgRSkiXSxbMSwwLCIoLVxcY2lyYyBLKSIsMCx7Im9mZnNldCI6LTJ9XSxbMCwxLCJcXG9we0xhbn1fSygtKSIsMCx7Im9mZnNldCI6LTJ9XSxbMywyLCJcXGFkam9pbnQiLDMseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\op{Fun}(\mc C,\mc E)} & {\op{Fun}(\mc D,\mc E)}
+		\arrow[""{name=0, anchor=center, inner sep=0}, "{(-\circ K)}", shift left=2, from=1-2, to=1-1]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{\op{Lan}_K(-)}", shift left=2, from=1-1, to=1-2]
+		\arrow["\adjoint"{marking}, Rightarrow, draw=none, from=1, to=0]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	It suffices to provide the natural bijection
+	\[\op{Mor}(F,GK)\stackrel?\cong\op{Mor}(\op{Lan}_KF,G).\]
+	Well, by the universal property of $\op{Lan}_KF$, natural transformations $\gamma\colon F\Rightarrow GK$ are in bijection with natural transformations $\gamma'\colon\op{Lan}_KF\Rightarrow G$ such that
+	\[\gamma=\gamma'\eta,\]
+	where $\eta\colon F\Rightarrow\op{Lan}_KF$. From this bijection one can turn $\op{Lan}_K(-)$ into a functor by extending the action on objects.
+\end{proof}
+Next class we will attempt to discuss when we can remove the seemingly strong condition on having all Kan extensions.
