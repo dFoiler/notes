@@ -1,0 +1,245 @@
+% !TEX root = ../notes.tex
+
+We begin with some announcements.
+\begin{itemize}
+	\item There will be no class on Thursday.
+	\item There will be a review session next Tuesday.
+\end{itemize}
+
+\subsection{Projective Varieties}
+Today we are speed-running elimination theory. There will be a lot of geometry. At a high level, commutative Noetherian domains are supposed to be functions over affine varieties. Similarly, graded rings are supposed to be functions over a projective variety.
+
+So let's talk about projective varieties. The points of $\PP^n(k)$ points are in bijection with maximal homogeneous ideals of
+\[k[x_0,\ldots,x_n],\]
+except for the irrelevant maximal ideal (of all polynomials with no constant term). Approximately speaking, what we mean is that projective varieties of $\PP^n(k)$ are cut out by homogeneous ideals, and points still correspond to maximal ideals.
+
+We pick up the following facts.
+\begin{proposition}
+	Take $M$ to be a graded module over the graded ring $R$. Then, given a prime ideal $\mf p$ associated to $M$ with $\mf p=\op{Ann}m$, then we can make $m$ homogeneous. In particular, $\mf p$ turns out to be homogeneous.
+\end{proposition}
+\begin{proof}
+	We showed this in class a while ago.
+\end{proof}
+There is also a notion of Noether normalization for graded rings.
+\begin{proposition}
+	Fix a graded (affine) ring $R$ of dimension $n$. Then one can choose homogeneous and algebraically independent elements $x_1,\ldots,x_n$ so that $R$ is finite over $k[x_1,\ldots,x_n]$.
+\end{proposition}
+\begin{proof}
+	This is of approximately the same difficulty as the usual Noether normalization theorem.
+\end{proof}
+\begin{proposition} \label{prop:affineprod}
+	Affine algebraic varieties $X$ and $Y$ will have
+	\[A(X\times Y)=A(X)\otimes_kA(Y).\]
+\end{proposition}
+\begin{proof}
+	Essentially this generalizes from the fact that
+	\[k[x_1,\ldots,x_m]\otimes_kk[y_1,\ldots,y_n]=k[x_1,\ldots,x_m,y_1,\ldots,y_n],\]
+	from which we can mod out if we're careful.
+\end{proof}
+We would like to do something like \autoref{prop:affineprod} for projective varieties.
+
+Well, let's take two projective spaces $\PP^m(k)$ and $\PP^n(k)$. Then, given two points $(x_0:x_1:\ldots:x_m)$ and $(y_0:y_1:\ldots:y_n)$, we want to glue them together in some meaningful way. In particular, we hope that
+\[\PP^m(k)\times\PP^n(k)\]
+is a projective variety. To begin, we make a matrix
+\[M\coloneqq\begin{bmatrix}
+	x_1y_1 & \cdots & x_1y_n \\
+	\vdots & \ddots & \vdots \\
+	x_my_1 & \cdots & x_my_n
+\end{bmatrix}.\]
+In particular, this makes an $(m+1)\times(n+1)$ matrix, defined up to scalar, so we can think about as it living in $\PP^{(m+1)(n+1)-1}$. However, we need to mod out a bit to correctly get the pairs we had earlier. Namely, the matrix above is supposed to have rank $1$, so we can just take the rank-$1$ matrices out of this. To see this, we define
+\[z_{ij}\coloneqq x_iy_j\]
+and need to mod out by the relation
+\[z_{i\ell}z_{kj}=z_{ij}z_{k\ell}.\]
+These turn out to be all the conditions we need because they fully account for the scaling of the $x$ and the $y$s.
+
+\subsection{Elimination Theory Examples}
+We are now ready to formulate the main theorem of elimination theory.
+\begin{theorem} \label{thm:elim}
+	Fix an affine variety $X$ over $k$. Then a closed subset $Z\subseteq X\times\PP^n(k)$ can be projected along $\pi\colon X\times\PP^n\to X$. Then the image $\pi Z$ is also closed.
+\end{theorem}
+Note that there is a reason why we are using projective space for our second coordinate.
+\begin{exe} \label{exe:elimnex}
+	We exhibit a counterexample to \autoref{thm:elim} in the case where $X$ and $Y$ are both affine.
+\end{exe}
+\begin{proof}
+	If we have two affine varieties $X$ and $Y$, subsets $Z\subseteq X\times Y$ need not have image along projection $\pi Z$ be closed. For example, set $X=Y=\AA^1(k)$ can take
+	\[Z\coloneqq\{(x,y):xy=1\}.\]
+	Then $\pi_XZ$ is $\AA^1(k)\setminus\{0\}$. Here is the image.
+	\begin{center}
+		\begin{asy}
+			unitsize(0.5cm);
+			import graph;
+			real y(real t)
+			{
+				return t;
+			}
+			real x(real t)
+			{
+				return 1/t;
+			}
+			draw(graph(x, y,-4,-1/4));
+			draw(graph(x, y, 4,1/4));
+			draw((-4,0)--(4,0), dotted); label("$x$", (4,0), E);
+			draw((0,-4)--(0,4), dotted); label("$y$", (0,4), N);
+		\end{asy}
+	\end{center}
+	Indeed, we project on the $x$ axis hits everything minus $0$.
+\end{proof}
+Let's explain why we are calling our theory ``elimination theory.'' Well, let's suppose that we are dealing with a point
+\[\underbrace{(x_1,\ldots,x_m)}_s;(y_0:\ldots:y_n)\in X\times\PP^(n)k.\]
+Now, we can define our subset $Z\subseteq X\times\PP^n(k)$ via some equations
+\[\begin{cases}
+	f_1(s,y_0,\ldots,y_n)=0, \\
+	\quad\vdots \\
+	f_r(s,y_0,\ldots,y_n)=0.
+\end{cases}\]
+We want to be able to eliminate the $y_\bullet$s to make equations only in $s$, and this is our projection to $X$. There were many classical results to be able to do this by hand, but we will be able to do it abstractly.
+
+Anyway, let's see an example.
+\begin{exe}
+	Fix $Z\subseteq X\times\PP^1(k)$ given by the equations
+	\[\begin{cases}
+		f_0(s)y_0+f_1(s)y_1=0, \\
+		g_0(s)y_0+g_1(s)y_1=0.
+	\end{cases}\]
+	We verify \autoref{thm:elim}.
+\end{exe}
+\begin{proof}
+	We need to find all $s\in X$ such that the given system has some pair $(y_0:y_1)\in\PP^1(k)$. Well, by scaling, we are really just asking for all $s$ such that there is a nonzero solution for $(y_0,y_1)$. Well, this will occur so long as the determinant of the matrix
+	\[\begin{bmatrix}
+		f_0(s) & f_1(s) \\
+		g_0(s) & g_1(s)
+	\end{bmatrix}\]
+	vanishes. Namely, we are asking for $g_1(s)f_0(s)-f_1(s)g_0(s)=0$, which we can see manifestly describes an algebraic set in $X$.
+\end{proof}
+\begin{exe}[Sylvester]
+	Fix $Z\subseteq X\times\PP^1(k)$ given by
+	\[\begin{cases}
+		f_0(s)x_0^d+f_1(s)x_0^{d-1}x_1+\cdots+f_{d+1}(s)x_1^d=0, \\
+		g_0(s)x_0^e+g_1(s)x_0^{e-1}x_1+\cdots+g_{e+1}(s)x_1^e=0.
+	\end{cases}\]
+	We verify \autoref{thm:elim}.
+\end{exe}
+\begin{proof}
+	The point is to use the resultant. Namely, we build the following $(e+d)\times(e+d)$ matrix.
+	\[\begin{bmatrix}
+		f_1 & f_2 & \cdots & f_{d+1} & 0 & \cdots & 0 \\
+		0 & f_1 & \cdots & f_d & f_{d+1} & \cdots & 0 \\
+		\vdots & \vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+		0 & 0 & \cdots & 0 & 0 & \cdots & f_1
+	\end{bmatrix}\]
+	and then we put the matrix for $g$ down as well. For concreteness, we take $d=2$ and $e=3$, which give
+	\[M\coloneqq\begin{bmatrix}
+		f_0 & f_1 & f_2 \\
+		    & f_0 & f_1 & f_2 \\
+			&     & f_0 & f_1 & f_2 \\
+		g_0 & g_1 & g_2 & g_3 \\
+		    & g_0 & g_1 & g_2 & g_3
+	\end{bmatrix}.\]
+	We claim that we have a solution to our equations for a given $s\in X$ if and only if the determinant of $M$ vanishes.
+
+	The main point is to consider the following matrix product
+	\[\begin{bmatrix}
+		f_0 & f_1 & f_2 \\
+		    & f_0 & f_1 & f_2 \\
+			&     & f_0 & f_1 & f_2 \\
+		g_0 & g_1 & g_2 & g_3 \\
+		    & g_0 & g_1 & g_2 & g_3
+	\end{bmatrix}\begin{bmatrix}
+		x_0^4 \\
+		x_0^3x_1 \\
+		x_0^2x_1^2 \\
+		x_0x_1^3 \\
+		x_1^4
+	\end{bmatrix}.\]
+	Now, by multiplying our equations through (noting that $(x_1,x_2)$ may not be $0$), we see that the above vanishing is equivalent to getting our equations solved. So in this case, we do indeed have vanishing determinant if our $s\in X$ has some solution.
+
+	In the reverse direction, suppose our determinant vanishes. Set $V_n$ to be the $k$-vector space of homogeneous spaces of degree $n$; note $\dim V=n+1$ spanned by our monomials. Note that multiplying by our first equation $f$ gives us a map
+	\[\mu_f\colon V_2\to V_4.\]
+	Similarly, multiplying by our second equation gives us a map
+	\[\mu_g\colon V_1\to V_3.\]
+	In particular, we can glue these into a map $V_2\times V_1\to V_4\times V_3$, and we can create the standard matrix and find that it is $3\times 5$; if our determinant vanishes, then the determinant of the created matrix vanishes, so we can find polynomials $\alpha\in V_2$ and $\beta\in V_1$ such that
+	\[\alpha(x_0,x_1)f(s,x_0,x_1)=\beta(x_0,x_1)g(s,x_0,x_1).\]
+	Now, both of these equations will have common roots, and because $\deg g=3>2=\deg\alpha$, we can find a common root of $f$ and $g$ by hand.
+\end{proof}
+\begin{remark}
+	The above construction is called the resultant. To find common roots, we take the resultant of $f$ and $f'$, which is called the discriminant.
+\end{remark}
+
+\subsection{Elimination Theory Proofs}
+There are two proofs of \autoref{thm:elim} in Eisenbud. The text of the chapter has an advanced proof which achieves more, but we do not have time for it. Instead, we will follow the proof presented in Exercise 14.1.
+\begin{proof}[Proof of \autoref{thm:elim}]
+	We proceed directly. As suggested, we can define our subset $Z\subseteq X\times\PP^n(k)$ via some equations
+	\[\begin{cases}
+		f_1(s,y_0,\ldots,y_n)=0, \\
+		\quad\vdots \\
+		f_r(s,y_0,\ldots,y_n)=0.
+	\end{cases}\]
+	We want to find all $s$ for which there is a nonzero solution for the $y_\bullet$s. In particular, a fixed $s\in S$ with nonzero fiber will cut out a homogeneous ideal $I_s\subseteq k[x_0,\ldots,x_n]$. To say that $I_s$ has a nonzero root, we want to exclude $I_s$ from merely containing the irrelevant ideal, as this would mean our only solution would then be the all-zero solution. Further, we actually don't want to contain any power of the irrelevant ideal, and this is enough.
+
+	In particular, we set
+	\[X_d\coloneqq\left\{s\in X:I_s\not\supseteq J^d\right\},\]
+	where $J$ is our irrelevant ideal. In particular,
+	\[\pi Z=\bigcap_{d\ge0}X_d\]
+	from the argument above. It now suffices to show that the $X_d$ are Zariski closed (for sufficiently large $d$) and appeal to the topological fact that the intersection of closed sets is closed.
+
+	Now, for concreteness, let $d_i$ be the degree of the $y_\bullet$ in equation $f_i$; notably, we are ignoring the ``constantly set'' value of $s$. To test $I_s\not\subseteq J^d$, we note that $J^d$ is generated by the degree-$d$ monomials in $y_\bullet$, so using our notation of $V_d$ from before, it really suffices to check
+	\[V_d\not\subseteq I_s.\]
+	Thus, as before, we define the map
+	\[\mu_{f_i}\colon V_{d-d_i}\to V_d\]
+	To ensure that everything is positive, we force $d>d_i$ always. In particular, the direct sum of all these maps makes a map
+	\[\mu\colon\bigoplus_{i=1}^rV_{d_i}\to V_d.\]
+	To make sure that $I_s$ is avoiding $V_d$, we need to check that the above map is not surjective. In theory, we could imagine making a huge matrix again, which has inputs from a space of dimension
+	\[\sum_{i=1}^n\dim V_{d-d_i}\]
+	and outputs to a space of $\dim V_d$. However, for size reasons, this is impossible because we can write out all of our relevant dimensions.
+\end{proof}
+Annoyingly, this proof is non-constructive because we took an infinite intersection of these closed sets. The exercises we did above were more constructive but not generalizable. Such is life.
+
+Roughly speaking, we are kind of saying that projective space is compact, in the sense that the image is closed, and compact sets are approximately the only ones which stay compact/closed through a continuous map.\footnote{The Zariski topology is not Hausdorff, but this is fine.} More precisely, 
+\begin{corollary}
+	The image of a projective variety $X\subseteq\PP^m(k)$ through a map $\varphi\colon\PP^m(k)\to\PP^n(k)$ is closed.
+\end{corollary}
+\begin{proof}
+	We use \autoref{thm:elim}. By embedding our spaces in a sufficiently large projective space, we may assume that $m=n$. The point is to be able to consider the ``graph''
+	\[Z\coloneqq\{(x,y)\in X\times\PP^n(k):y=\varphi(x)\}.\]
+	It suffices to show that $Z$ is closed (after embedding into some affine space), for then it follows that the projection onto the first coordinate is closed. Well, we define the diagonal set
+	\[\Delta X\coloneqq\{(x,x):x\in X\},\]
+	which is closed. Then we can realize $Z$ as the pre-image of $\Delta X$ through $(\id\times\varphi)^{-1}$, which finishes.
+\end{proof}
+Let's see an example of the above.
+\begin{ex}
+	We embed $\PP^1(k)\to\PP^2(k)$ by
+	\[(s:t)\mapsto\left(s^3:s^2t+st^2:t^3\right).\]
+	This should have closed image in $\PP^2(k)$, and indeed we can see that the image is cut out by the equation
+	\[x^2z-xz^2-xyz=0,\]
+	which we can see by direct expansion.
+\end{ex}
+\begin{remark}
+	The final exam might ask us to do something like the above computations.
+\end{remark}
+
+\subsection{Speed Run}
+The following speed-run will not show up on the final, but it is fun. So let's talk about dimension theory.
+
+To continue our geometric story, we as usual fix some morphism of affine varieties $\varphi\colon X\to Y$. One might ask what we can see about the image. The image is allowed to be open (as in \autoref{exe:elimnex}), but we can say more. We have the following definition.
+\begin{definition}[Locally closed]
+	An affine set $X$ is \textit{locally closed} if and only if it is the intersection a Zariski closed and a Zariski open set.
+\end{definition}
+\begin{definition}[Constructible]
+	An affine set $X$ is \textit{constructible} if and only if it is a finite union of locally closed sets.
+\end{definition}
+And here is our theorem.
+\begin{theorem}[Chevalley]
+	Fix a ring homomorphism $\varphi\colon R\to S$ so that $S$ is finite over $R$. Define
+	\[X(\varphi)\coloneqq\left\{\varphi^{-1}\mf q:\mf q\in\op{Spec}S\right\}\]
+	to be the image of $\varphi$. Then $X(\varphi)$ is constructible.
+\end{theorem}
+We can even be a little sharper as to how our fibers behave. To review, given a maximal point $\mf p\in\op{Spec}R$, we note that
+\[K(R/\mf p)\otimes_RS\]
+is the ring of functions on the fiber $\varphi^{-1}\mf p$. One has to be careful that the fiber might not be a variety meaning that $K(R/\mf p)\otimes_RS$ need not be a domain. Regardless, we have the following.
+\begin{theorem}
+	Fix a ring homomorphism $\varphi\colon R\to S$ so that $S$ is finite over $R$. Then the map
+	\[\mf p\in\op{Spec}R\longmapsto\dim K(R/\mf p)\otimes_RS\]
+	is semicontinuous. If in fact $S$ is graded as an $R$-algebra by $R=S_0$, then the set of points of $R$ with points of dimension greater than $d$ is closed.
+\end{theorem}
+The above result can actually recover \autoref{thm:elim}.
