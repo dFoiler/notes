@@ -1,0 +1,120 @@
+% !TEX root = ../notes.tex
+
+Welcome back, everyone.
+
+\subsection{Numbers as Sets}
+We now turn to set theory.
+\begin{remark}
+	It is possible to think about all objects in mathematics as sets.
+\end{remark}
+Let's manifest the above remark.
+\begin{exe}
+	We encode the natural numbers as sets.
+\end{exe}
+\begin{proof}
+	There are a few ways to do this; here is one.
+	\begin{itemize}
+		\item Set $0$ to be $\emp$.
+		\item Set $1$ to be $\{0\}=\{\emp\}$.
+		\item Continuing, set $2$ to be $\{0,1\}=\{\emp,\{\emp\}\}$.
+		\item In general, define $S(n)$ recursively to be $\{0,1,\ldots,n\}$.
+	\end{itemize}
+	With this in mind, we will now define $\NN$ to be the smallest set (defined inductively) containing $\emp$ and closed under the map
+	\[S\colon x\mapsto x\cup\{x\}.\]
+	In particular, $S\colon\NN\to\NN$ is $S(x)\coloneqq x\cup\{x\}$. Our Peano axioms ``make'' $\NN$. Then $+$ and $\times$ are defined recursively to make true
+	\[\begin{cases}
+		n+0\coloneqq n, \\
+		n+S(m)\coloneqq S(n+m),
+	\end{cases}\quad\text{and}\qquad\begin{cases}
+		n\times0\coloneqq0, \\
+		n\times m\coloneqq(n\times m)+n.
+	\end{cases}\]
+	This is, approximately speaking, the idea behind von Neumann universe.
+\end{proof}
+\begin{remark}
+	To define addition and multiplication recursively, as we have done here, we need to know that these recursive definitions force a unique function; this is by the Recursion theorem, which we will not say more about.
+\end{remark}
+As an aside, addition lets us define a notion of subtraction:
+\[c=a-b\iff a=b+c.\]
+However, this might not be possible for all natural numbers. So next we construct the integers $\ZZ$.
+\begin{exe}
+	We encode ordered pairs as sets.
+\end{exe}
+\begin{proof}
+	We simply define
+	\[\langle x,y\rangle\coloneqq\{\{x\},\{x,y\}\}.\]
+	The point is that $\langle a,b\rangle=\langle a',b'\rangle$ if and only if $a=a'$ and $b=b'$. To see this, we just note that $\{a'\}\in\langle a,b\rangle$ forces $\{a'\}=\{a\}$ or $\{a'\}=\{a,b\}$, from which we can read $a=a'$. Then $b=b'$ follows similarly.
+\end{proof}
+\begin{exe}
+	We encode the integers as sets.
+\end{exe}
+\begin{proof}
+	The idea is to use the pair $\langle n,m\rangle$ of natural numbers to encode $n-m$. This does not quite work, however, because $\langle2,4\rangle$ and $\langle4,6\rangle$ should be the same negative number. To fix this, we define the equivalence relation
+	\[\langle n,m\rangle\sim\langle n',m'\rangle\iff n+m'=n'+m.\]
+	This condition is meant to encode $n-m=n'-m'$ without ever writing down subtraction. As such, we define $\ZZ$ to be the equivalence classes of $\sim$; concretely, the equivalence class for $\langle n,m\rangle$ as $[\langle n,m\rangle]\in\ZZ$. For example,
+	\[-2\coloneqq[\langle n,m\rangle]=\{\langle0,2\rangle,\langle1,3\rangle,\langle2,4\rangle,\ldots\}.\]
+	Then we can define addition and multiplication by
+	\begin{align*}
+		[\langle n,m\rangle]+[\langle n',m'\rangle] &= [\langle n+n',m+m'\rangle], \\
+		[\langle n,m\rangle]\times[\langle n',m'\rangle] &= [\langle (n\times n')+(m\times m'),(n\times m')+(m\times n')\rangle].
+	\end{align*}
+	Notably, these operations make sense because they are encoding the intuitive differences as
+	\begin{align*}
+		(n-m)+(n'-m') &\coloneqq (n+n')-(m+m'), \\
+		(n-m)\times(n'-m') &\coloneqq (n\times n')-(m\times n')-(n\times m')+(m\times m').
+	\end{align*}
+	One needs to verify that these operations behave that we want them to while also being well-defined operations (i.e., do not depend on the ``representative chosen'' in the equivalence class).
+\end{proof}
+\begin{remark}
+	In the future, to be able to embed $\NN$ into $\ZZ$, we will think about our natural numbers as embedded by the image of the map $n\mapsto[\langle n,0\rangle]$. This might be a little dangerous because we have multiple notions of $2$ (namely, in $\NN$ and in $\ZZ$), but in practice we might as well just forget that we had a $2$ in $\NN$ to begin with and work with its image in $\ZZ$ instead.
+\end{remark}
+And now we keep going. Next up is rationals.
+\begin{exe}
+	We encode rational numbers as sets.
+\end{exe}
+\begin{proof}
+	The idea is to represent the rational number $\frac ab$ by some ordered pair $\langle a,b\rangle$ where $a$ and $b$ are integers and $b\ne[\langle0,0\rangle]$. Again, we need to identify some ordered pairs because (for example) $\frac12=\frac24$. As such, we define the equivalence relation $\sim$ by
+	\[\langle a,b\rangle\sim\langle a',b'\rangle\iff a\times b'=a'\times b.\]
+	As before, this condition $a\times b'=a'\times b$ is intended to encode $\frac ab=\frac{a'}{b'}$ while never writing down division.
+
+	Thus, we define $\QQ$ to be the set of equivalence classes $[\langle a,b\rangle]$ of $\sim$ above, as $\langle a,b\rangle$ varies with $a\in\ZZ$ and $b\in\ZZ\setminus\{[\langle0,0\rangle]\}$. We can now define addition and multiplication by
+	\begin{align*}
+		[\langle a,b\rangle]+[\langle a',b'\rangle] &\coloneqq [\langle(a\times b')+(b\times a'),b\times b'\rangle] \\
+		[\langle a,b\rangle]\times[\langle a',b'\rangle] &\coloneqq [\langle a\times a',b\times b'\rangle].
+	\end{align*}
+	Again, the point of these definitions are intended to codify what we want:
+	\begin{align*}
+		\frac ab+\frac{a'}{b'} &= \frac{ab'+ba'}{bb'}, \\
+		\frac ab\cdot\frac{a'}{b'} &= \frac{aa'}{bb'}.
+	\end{align*}
+	We can check that these are well-defined and so on.
+\end{proof}
+\begin{remark}
+	Lastly, we will identify our old integers $\ZZ$ canonically with their image in $\QQ$ by taking $a$ to $[\langle a,1\rangle]$.
+\end{remark}
+If we wanted to do real numbers, there are a few ways to do this. One way is to define a real number is an integer $\floor x$ and then a function $f\colon\NN\to\{0,\ldots,9\}$ to give the decimal expansion. To make sure that our real numbers are all distinct, we need to avoid
+\[0.999\ldots=1.000\ldots,\]
+so we need to forbid functions $f$ which are eventually all $9$s. We won't be much more rigorous than this because defining addition and multiplication is really annoying (namely, we have to carry).
+
+To codify this properly, we do need to encode functions.
+\begin{exe}
+	We encode functions as sets.
+\end{exe}
+\begin{proof}
+	The point is that functions $f\colon X\to Y$ need to give a unique output for given input. A function $f\colon X\to Y$ is subset of ordered pairs $X\times Y$ such that each $x\in X$ has exactly one $y\in Y$ such that $\langle x,y\rangle\in f$.
+\end{proof}
+So we've put most math that we care about into sets. It remains to talk about how to reason with sets.
+
+\subsection{Set Theory}
+We close class by making the language of set theory just the language of predicate logic with a single binary relation $\dot\in$. Namely, $x\dot\in y$ is intended to mean that $x$ is an element of $y$. There are some other relations that we can build from here.
+\begin{itemize}
+	\item We write $x\dot\subseteq y$ to mean $\forall z(z\dot\in x\to z\dot\in y)$.
+	\item If we want to talk about ordered pairs, we can write
+	\[\forall x\forall y\exists s\forall z(z\doteq s\liff(z\doteq x\lor z\doteq y)).\]
+	Namely, we are saying that there is a set $s$ containing precisely $x$ and $y$.
+	\item We can also give unions $x\cup y$ by writing
+	\[\forall x\forall y\exists s\forall z(z\dot\in s\liff(z\dot\in x\lor z\dot\in y)).\]
+	\item Lastly, we can write $\mc P(x)$ by writing
+	\[\forall x\exists s\forall z(z\dot\in z\liff z\dot\subseteq s).\]
+\end{itemize}
+That these statements are true are axioms of set theory.
