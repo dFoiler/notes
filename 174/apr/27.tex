@@ -1,0 +1,187 @@
+% !TEX root = ../notes.tex
+
+We continue our discussion of Kan extensions.
+
+\subsection{Kan Extensions for Embeddings}
+Our goal for today is to give a formula for Kan extensions (to be able to determine when they exist), which we saw utility for last class.
+\begin{exe}
+	There is an order-preserving map/functor between the poset categories
+	\[2^\bullet\colon\QQ\to\RR.\]
+	We extend this functor to all of $\RR$ by continuity. Namely, we want to induce the dashed arrow in the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXFFRIl0sWzAsMSwiXFxSUiJdLFsxLDAsIlxcUlIiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFswLDIsIjJeXFxidWxsZXQiXSxbMSwyLCIiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\QQ & \RR \\
+		\RR
+		\arrow[hook, from=1-1, to=2-1]
+		\arrow["{2^\bullet}", from=1-1, to=1-2]
+		\arrow[dashed, from=2-1, to=1-2]
+	\end{tikzcd}\]
+\end{exe}
+\begin{proof}
+	Intuitively, we want to write
+	\[2^x\coloneqq\lim_{q\to x}2^q,\]
+	where the limit is over $q\in\QQ$. To make this rigorous, we can define this in two ways.
+	\begin{itemize}
+		\item On the left, we can write
+		\[2^x\coloneqq\sup_{\substack{q\in\QQ\\q\le x}}2^q.\]
+		\item On the right, we can write
+		\[2^x\coloneqq\inf_{\substack{q\in\QQ\\q\ge x}}2^q.\]
+	\end{itemize}
+	These fit into our context of category theory because the supremum is the colimit in the slice category of objects $q\in\QQ$ under $x$; i.e., we want the objects $q\in\QQ$ with a map to $x$, which is equivalent to $q\le x$. So we can reframe our two stories as follows.
+	\begin{itemize}
+		\item On the left, we can write
+		\[\sup_{\substack{q\in\QQ\\q\le x}}2^q=\colim\left(\QQ/x\to\QQ\stackrel{2^\bullet}\to\RR\right).\]
+		\item On the right, we can write
+		\[\inf_{\substack{q\in\QQ\\q\ge x}}2^q=\lim\left(x/\QQ\to\QQ\stackrel{2^\bullet}\to\RR\right).\]
+	\end{itemize}
+	As such, we have a purely categorical extension of $2^\bullet\colon\QQ\to\RR$ to all of $\RR$. It turns out that these are the left and right Kan extensions for $2^\bullet\colon\QQ\to\RR$, but we will not check this now.
+\end{proof}
+More generally, suppose that we have some embedding $K\colon\mc C\to\mc D$ with a functor $F\colon\mc C\to\mc E$. Then our story of Kan extensions will again be about trying to ``extend'' $F$ to all of $\mc D$. Namely, we want to induce the following arrow.
+% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEMiXSxbMCwxLCJcXG1jIEQiXSxbMSwwLCJcXG1jIEUiXSxbMCwyLCJGIl0sWzAsMSwiSyIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzEsMiwiIiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\mc C} & {\mc E} \\
+	{\mc D}
+	\arrow["F", from=1-1, to=1-2]
+	\arrow["K"', hook, from=1-1, to=2-1]
+	\arrow[dashed, from=2-1, to=1-2]
+\end{tikzcd}\]
+Drawing motivation for example, we would like to define
+\[(\op{Lan}_KF)(d)\stackrel?\cong\colim_{c\in\mc C/d}F(c).\]
+Here, $\mc C/d$ refers to the subcategory of $\mc D/d$ where we are restricting to $\im K$; i.e., this category consists of objects which are morphisms $Kc\to d$ and morphisms which are triangles commuting under $d$.
+
+Approximately speaking, we are trying to understand $\op{Lan}_KF$ to be approximating $F$ from below, which is reasonable because defining as a colimit will still be able to have maps out of it for our initial universal property later. Similarly, we might hope
+\[(\op{Ran}_KF)(d)\stackrel?\cong\lim_{c\in d/\mc C}F(c).\]
+Before continuing, we want to remove the condition that $F$ is an embedding.
+
+\subsection{Comma Categories, Quickly}
+We take a moment to talk about comma categories. Suppose that we have the following set-up, where $X,Y,Z$ are categories with $F,G$ functors.
+% https://q.uiver.app/?q=WzAsMyxbMCwxLCJYIl0sWzEsMCwiWSJdLFsxLDEsIloiXSxbMCwyLCJmIiwyXSxbMSwyLCJnIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	& Y \\
+	X & Z
+	\arrow["F"', from=2-1, to=2-2]
+	\arrow["G", from=1-2, to=2-2]
+\end{tikzcd}\]
+Then we want to define the comma category to be universal with respect to the following diagram.
+% https://q.uiver.app/?q=WzAsNCxbMCwxLCJYIl0sWzEsMCwiWSJdLFsxLDEsIloiXSxbMCwwLCJYXFx2ZWN7XFx0aW1lc31fWlkiXSxbMCwyLCJmIiwyXSxbMSwyLCJnIl0sWzMsMF0sWzMsMV0sWzAsMSwiIiwxLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{X\vec{\times}_ZY} & Y \\
+	X & Z
+	\arrow["F"', from=2-1, to=2-2]
+	\arrow["G", from=1-2, to=2-2]
+	\arrow[from=1-1, to=2-1]
+	\arrow[from=1-1, to=1-2]
+	\arrow[shorten <=5pt, shorten >=5pt, Rightarrow, from=2-1, to=1-2]
+\end{tikzcd}\]
+In particular, we define $X\vec\times_ZY$ as having objects which are morphisms $Fx\to Gy$ (for $x\in X$ and $y\in Y$). Then out morphisms are commuting squares (made of a pair of morphisms $x\to x'$ and $y\to y'$) so that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJmKHgpIl0sWzAsMSwiZih4JykiXSxbMSwwLCJnKHkpIl0sWzEsMSwiZyh5JykiXSxbMCwxLCJGZiIsMl0sWzIsMywiR2ciXSxbMCwyXSxbMSwzXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{f(x)} & {g(y)} \\
+	{f(x')} & {g(y')}
+	\arrow["Ff"', from=1-1, to=2-1]
+	\arrow["Gg", from=1-2, to=2-2]
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=2-1, to=2-2]
+\end{tikzcd}\]
+
+\subsection{Kan Extensions in General}
+In particular, with our functor $K\colon\mc C\to\mc D$, we can more concretely describe
+\[\mc C\vec\times_\mc Dd\coloneqq\mc C\vec\times_Z\{d\}.\]
+Namely, its objects has the data of $c\in\mc C$, the fixed $d\in\mc D$ and a morphism $Kc\to d$; we may ignore the data of $d$. Continuing, our morphisms $(c,f)\to(c',f')$ condition is asking for morphisms $k\colon Kc\to d$ and $k'\colon Kc'\to d$ so that the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJLYyJdLFsxLDEsImQiXSxbMSwwLCJkIl0sWzAsMSwiS2MnIl0sWzAsMywiS2YiLDJdLFswLDIsImsiXSxbMiwxLCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFszLDEsImsnIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	Kc & d \\
+	{Kc'} & d
+	\arrow["Kf"', from=1-1, to=2-1]
+	\arrow["k", from=1-1, to=1-2]
+	\arrow[Rightarrow, no head, from=1-2, to=2-2]
+	\arrow["{k'}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+Notably, the two vertices on the right collapse, so this is really a commuting triangle ``under'' $d$.
+
+This now lets us generalize our Kan extensions.
+\begin{theorem} \label{thm:kanformula}
+	Fix $K\colon\mc C\to\mc D$ and $F\colon\mc C\to\mc E$ as usual. If the colimit
+	\[\ell_K(F)(d)\coloneqq\colim\left(\mc C\vec\times_\mc Dd\to\mc C\stackrel F\to\mc E\right)\]
+	exists, then it defines the action of $\op{Lan}_KF$ on objects $d\in\mc D$; the action on morphisms is induced by action of $\colim$ on morphisms along with the functoriality of the construction of $\mc C\vec\times_\mc Dd$ in $d$.
+\end{theorem}
+\begin{proof}
+	This is long and therefore omitted.
+\end{proof}
+Nonetheless, let's see some corollaries.
+\begin{corollary} \label{cor:kanformulaex}
+	Fix a functor $K\colon\mc C\to\mc D$ from a small category $\mc C$ to a locally small category $\mc D$. If $\mc E$ is cocomplete, and we have a functor $F\colon\mc C\to\mc E$, then $\op{Lan}_KF$ exists by \autoref{thm:kanformula}.
+\end{corollary}
+\begin{proof}
+	Our limit exists because $\mc E$ has all colimits and $\mc C$ is a fine index category because it is small by hypothesis.
+\end{proof}
+\begin{corollary}
+	Fix a functor $K\colon\mc C\to\mc D$ from a small category $\mc C$ to a locally small category $\mc D$. If $\mc E$ is cocomplete, then the functor
+	\[(-\circ K)\colon\op{Fun}(\mc D,\mc E)\to\op{Fun}(\mc C,\mc E)\]
+	has a left adjoint, namely $\op{Lan}_K(-)$.
+\end{corollary}
+\begin{proof}
+	The Kan extension exists by \autoref{cor:kanformulaex}.
+\end{proof}
+
+\subsection{Kan Extension Examples}
+We close class with some examples.
+\begin{exe}
+	Fix a small category $\mc C$ and a cocomplete category $\mc E$ with a functor $F\colon\mc C\to\mc E$. We compute the left Kan extension.
+\end{exe}
+\begin{proof}
+	Then \autoref{cor:kanformulaex} gives us a Kan extension from the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEMiXSxbMSwwLCJcXG1jIEUiXSxbMCwxLCJcXG9we1BTaH0oXFxtYyBDKSJdLFswLDEsIkYiXSxbMCwyLCJcXHlvIiwyXSxbMiwxLCJcXG9we0xhbn1fXFx5byhGKSIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc C} & {\mc E} \\
+		{\op{PSh}(\mc C)}
+		\arrow["F", from=1-1, to=1-2]
+		\arrow["\yo"', from=1-1, to=2-1]
+		\arrow["{\op{Lan}_\yo(F)}"', dashed, from=2-1, to=1-2]
+	\end{tikzcd}\]
+	In particular, \autoref{thm:kanformula} promises that we can compute
+	\[\op{Lan}_KX=\colim_{\yo c\to X}Fc.\]
+	As an aside, if $X=\yo c$, then our diagram above is indexed over a category (namely, $\mc E$) with a terminal object, so we can find its colimit $c'$ in there to be able to say
+	\[\colim_{\yo c\to X}Fc=Fc'.\]
+	So this is nice.
+\end{proof}
+As a corollary of the previous exercise, we have proven the following theorem from yesterday.
+\presheafuniprop*
+\noindent Namely, the inverse mapping is given by taking $F\colon\mc C\to\mc E$ to $\op{Lan}_\yo F$.
+\begin{exe}
+	Fix a group $G$ and subgroup $H\subseteq G$ and a complete and cocomplete category $\mc C$. Then \autoref{cor:kanformulaex} grants us the following left and right Kan extensions.
+	\[\begin{tikzcd}
+		{\op{Rep}_K(G)} & {\op{Rep}_K(H)}
+		\arrow[""{name=0, anchor=center, inner sep=0}, from=1-1, to=1-2]
+		\arrow[""{name=1, anchor=center, inner sep=0}, "{\op{Ind}^G_H}"', curve={height=24pt}, from=1-2, to=1-1]
+		\arrow[""{name=2, anchor=center, inner sep=0}, "{\op{Coind}^G_H}", curve={height=-24pt}, from=1-2, to=1-1]
+		\arrow["\vdash"{marking}, draw=none, from=1, to=0]
+		\arrow["\phantom{\vdash}"{marking}, draw=none, from=0, to=1]
+		\arrow["\adjoint"{marking}, draw=none, from=0, to=2]
+	\end{tikzcd}\]
+	We compute these.
+\end{exe}
+\begin{proof}
+	On the left, we begin by needing to compute
+	\[\mathrm BH\vec\times_{\mathrm BG}*,\]
+	which has objects which are morphisms in $\mathrm BG$ (namely, we only have to care about our single object $*$ here) and hence in bijection with $G$. Then the morphisms $g\to g'$ are elements $h\in H$ with $g'h=g$ by tracking through our diagram. Notably, we can forget about $g'$ (and recover it as $gh^{-1}$).
+
+	From these computations, we can actually write out $\op{ind}^G_H(X)$ (for $X\colon\mathrm BG\to\mc C$) as the coequalizer (given at the right) of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXGRpc3BsYXlzdHlsZVxcYmlnc3FjdXBfe0dcXHRpbWVzIEh9WCJdLFsxLDAsIlxcZGlzcGxheXN0eWxlXFxiaWdzcWN1cF97R31YIl0sWzIsMCwiXFxkaXNwbGF5c3R5bGVcXGJpZ3NxY3VwX3tHL0h9WCJdLFswLDFdLFsxLDJdLFswLDEsIiIsMCx7Im9mZnNldCI6LTN9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\displaystyle\coprod_{G\times H}X} & {\displaystyle\coprod_{G}X} & {\displaystyle\coprod_{G/H}X}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[shift left=2, from=1-1, to=1-2]
+	\end{tikzcd}\]
+	One has to be a little careful about how our actions of $G$ on the objects are as well as what precisely these morphisms are. There is a similar formula for right Kan extensions.
+\end{proof}
+And so we end with the following theorem.
+\begin{theorem}[Frobenius reciprocity]
+	In the previous example, set $\mc C\coloneqq\op{Vec}_k$ and assume that $[G:H]<\infty$. Then the functors
+	\[\op{ind}^G_H,\op{coind}^G_H\colon\op{Rep}_KH\to\op{Rep}_K(G)\]
+	are naturally isomorphic.
+\end{theorem}
+\begin{proof}
+	The point is that we computed these as some products and coproducts, which are equal when finite (which is true because $G/H$ is finite).
+\end{proof}
