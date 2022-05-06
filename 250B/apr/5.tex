@@ -2,53 +2,207 @@
 
 Welcome back.
 
-\subsection{Regular Rings}
-Today we are mostly talking about regular local rings of dimension $1$. Concretely, we have a ring $R$ with a unique maximal ideal $\mf m$ (by being local), and because $R$ is regular, we have
+\subsection{Discrete Valuation Rings}
+This subsection will focus on regular local rings $R$ of dimension $1$, which turn out to be ``discrete valuation rings.'' For example, \autoref{prop:regularimpliesdomain} tells us that such rings $R$ must be integral domains, so we have some inkling that such rings must be nice. Further, the maximal ideal $\mf m\subseteq R$ must be principal because $R$ is regular, so we set
 \[\mf m=(\pi)\]
-for some $\pi\in R$. As we showed last time, all regular local rings are domains, but in fact we now claim that regular local rings of dimension $1$ are principal ideal domains. In fact, we have stronger.
+for some $\pi\in R$. This turns out to make $R$ very nice.
 \begin{proposition} \label{prop:altdvr}
-	Fix a Noetherian, regular, local ring $R$ of dimension $1$, with maximal ideal $(\pi)$. Then all nonzero ideals of $R$ are of the form $\left(\pi^k\right)$ for some natural number $k$.
+	Fix a Noetherian regular local ring $R$ of dimension $1$, with maximal ideal $\mf m\coloneqq(\pi)$. Then all nonzero ideals of $R$ are of the form $\left(\pi^k\right)$ for some natural number $k$. In particular, $R$ is a principal ideal domain.
 \end{proposition}
 \begin{proof}
-	Set $K(R)$ to be the quotient field of $R$. We show that any nonzero element of the quotient field $r\in K(R)^\times$ can be written as $u\pi^n$ for some $u\in R\setminus(\pi)$ and $n\in\ZZ$. This will be enough to finish the proof because we more or less have a very good unique prime factorization.
+	The key is to show that any $r\in R\setminus\{0\}$ can be written as $u\pi^n$ for some $n\in\NN$ and $u\in R^\times=R\setminus(\pi)$. For this, we use the Krull intersection theorem: by \autoref{cor:krullintersect}, we see that
+	\[\bigcap_{n\ge0}\left(\pi^n\right)=\bigcap_{n\ge0}\left(\pi\right)^n=0.\]
+	Thus, $r\ne0$ is not in the intersection of all the $\pi^n$ even though certainly $r\in\left(\pi^0\right)=R$, so there exists some least $n\ge1$ such that $r\notin\left(\pi^{n+1}\right)$. Notably, because $n$ is the least such, we have
+	\[r\in\left(\pi^n\right)\setminus\left(\pi^{n+1}\right).\]
+	As such, we can write $r=u\pi^n$, but $u\notin(\pi)$ because this would imply $r\in\left(\pi^{n+1}\right)$. This is what we wanted.
 
-	We start by taking $r\in K(R)$. By the Krull intersection theorem, we see that
-	\[\bigcap_{n\ge1}(\pi)^n=(0),\]
-	so because $r\ne0$, we deduce that $r$ must live in $\left(\pi^n\right)\setminus\left(pi^{n+1}\right)$ for some $n$. Thus, setting $r=u\pi^n$, we see that $u\in R\setminus(\pi)$, so $u$ is a unit, as needed.
-
-	For general elements $\frac rs\in K(R)$, we simply take the quotient of the representations of $r$ and $s$ to finish. This finishes the proof.
+	We take a moment to note that representation as $u\pi^n$ is in fact unique: suppose $u\pi^a=v\pi^b$ for $u,v\notin(\pi)$ and $a,b\in\NN$. Without loss of generality, take $a\ge b$ so that $R$ being an integral domain (by \autoref{prop:regularimpliesdomain}) gives
+	\[u\pi^{a-b}=v\notin(\pi).\]
+	Thus, $a-b<1$, so $a=b$ follows. In this case, the above equation reads $a=b$.
+	
+	In total, we have written all elements $r\in R\setminus\{0\}$ uniquely in the form $u\pi^n$ for some $u\notin(\pi)$ and $n\in\NN$. As such, we may define the function $\nu\colon R\setminus\{0\}\to\NN$ by
+	\[\nu(r)\coloneqq n.\]
+	In particular, $r/\pi^{\nu(r)}=u\in R^\times$ implies that $(r)=\left(\pi^{\nu(r)}\right)$.
+	
+	We are now ready to attack the proof directly. Suppose that $I\subseteq R$ is a nonzero ideal. Then we set
+	\[\nu\coloneqq\min\{\nu(a):a\in I\setminus\{0\}\},\]
+	where the minimum is well-defined because $I\ne(0)$; in particular, this is some $x\in I$ with $\nu(x)=\nu$. Now, $a\ge b$ implies that $\left(\pi^a\right)\subseteq\left(\pi^b\right)$, so we write
+	\[I=\bigcup_{r\in I\setminus\{0\}}(r)=\bigcup_{r\in I\setminus\{0\}}\left(\pi^{\nu(r)}\right)\subseteq\bigcup_{r\in I}\left(\pi^\nu\right)=\left(\pi^\nu\right)=(x)\subseteq I.\]
+	Thus, equalities follow, and we get $I=(x)=\left(\pi^\nu\right)$, which finishes the proof.
 \end{proof}
-These rings are actually called discrete valuation rings. Let's explain this terminology.
-\begin{definition}
-	A group $\Gamma$ endowed with a total order $\ge$ is a \textit{totally ordered group} if and only if the set
-	\[\{\gamma:\gamma\ge0\}\]
-	is closed under the operation of $\Gamma$, and $\gamma_1\ge\gamma_2$ is implied by $\gamma_1\gamma_2^{-1}\ge0$.
+As mentioned above, these rings are actually called discrete valuation rings. Let's explain this.
+\begin{definition}[Totally ordered group]
+	A group $\Gamma$ endowed with a total order $\ge$ is a \textit{totally ordered group} if and only if $a\ge b$ for $a,b\in G$ implies
+	\[ac\ge bc\qquad\text{and}\qquad ca\ge cb\]
+	for any $c\in G$.
 \end{definition}
-\begin{example}
-	The rings $\ZZ$ and $\RR$ are ordered groups.
+\begin{example} \label{ex:zisordered}
+	The group $(\ZZ,+)$ is an ordered group under the usual ordering $\ge$. The coherence check is that $a\ge b$ implies $a+c\ge b+c$.
 \end{example}
-It happens that the discrete, countable totally ordered groups are all $\ZZ$.
+\begin{example}
+	Exactly analogously to \autoref{ex:zisordered}, $(\RR,+)$ is an ordered group under the usual ordering $\ge$; the coherence check is the same.
+\end{example}
+% As an aside, recall that a totally ordered set $(\Gamma,\ge)$ comes with an order topology with subbasis of open sets given by
+% \[(a,\infty)\coloneqq\{g\in\Gamma:g>a\}\qquad\text{and}\qquad(-\infty,a)\coloneqq\{g\in\Gamma:a>g\}.\]
+% Now, it turns out that the definition of a totally ordered group turns $\Gamma$ into a topological group.
+% \begin{lemma}
+% 	Fix a totally ordered group $\Gamma$ with a total order $\ge$, and endow the set $\Gamma$ with the order topology. Then $\Gamma$ is a topological group.
+% \end{lemma}
+% \begin{proof}
+% 	Suppose that $\Gamma$ is a totally ordered group. Let $\mu\colon\Gamma^2\to\Gamma$ and $i\colon\Gamma\to\Gamma$ be the multiplication and inversion maps, respectively. We need to show that $\mu$ and $i$ are continuous.
+	
+% 	Quickly, observe that if any interval
+% 	\[(a,b)=\{g\in\Gamma:b>g>a\}\]
+% 	is a singleton $\{g\}$, then in fact $\Gamma$ has the discrete topology: for any $h\in\Gamma$, we have $h^{-1}bg>x>h^{-1}ag$ if and only if
+% 	\[b>h^{-1}xg^{-1}>a\]
+% 	if and only if $h^{-1}xg^{-1}=g$ if and only if $x=h$, so $\{h\}=\left(h^{-1}bg,h^{-1}ag\right)$ is open. In these cases, $\mu$ and $i$ are trivially continuous because all maps are continuous in the discrete topology.
+
+% 	We now suppose that all nonempty intervals $(a,b)$ contain more than one element. We now run our checks.
+% 	\begin{itemize}
+% 		\item To show $\mu$ is continuous, it suffices to show that $\mu^{-1}((-\infty,a))$ and $\mu^{-1}((a,\infty))$ are open; we will show that $\mu^{-1}((a,\infty))$ is open, and the other is analogous.
+
+% 		Well, suppose $(g,h)\in\mu^{-1}((a,\infty))$; we will put an open neighborhood around the point $(g,h)\in\Gamma^2$ inside $\mu^{-1}((a,\infty))$. To start, we know that $gh>a$. We have two cases.
+% 		\begin{itemize}
+% 			\item If there are no elements strictly between $gh$ and $a$, then we claim that
+% 			\[U\coloneqq\left(ah^{-1},\infty\right)\times\left(g^{-1}a,\infty\right)\]
+% 			is the open set we are looking for. Surely $gh>a$ implies $g>ah^{-1}$ and $h>g^{-1}a$, so the point $(g,h)$ lives in $U$. Further, $U$ is open as the product of sub-basis elements.
+			
+% 			It remains to show $U\subseteq\mu^{-1}((a,\infty))$. Well, given a point $(x,y)\in U$, then $x>ah^{-1}$ and $y>g^{-1}a$. If $g>x$, we see $gh>xh>a$, which contradicts our assumption. Similarly, if $h>y$, we see $gh>gy>a$, again a contradiction. So instead $x\ge g$ and $y\ge h$, so it follows that $xy\ge gh>a$. Thus, $U\subseteq\mu^{-1}((a,\infty))$ follows.
+
+% 			\item Otherwise, there exists some element $z$ strictly between $gh$ and $a$. We claim that
+% 			\[U\coloneqq\left(zh^{-1},\infty\right)\times\left(hz^{-1}a,\infty\right)\]
+% 			is the open set we are looking for. Again, $gh>z$ implies $g>zh^{-1}$ and $h>hz^{-1}a$ because $z>a$, so $(g,h)\in U$; and $U$ is open because it is the product of subbasis elements.
+
+% 			It remains to show $U\subseteq\mu^{-1}((a,\infty))$. Well, given a point $(x,y)\in U$, we see $x>zh^{-1}$ and $y>hz^{-1}a$ implies
+% 			\[xy>zh^{-1}y>zh^{-1}hz^{-1}a=a,\]
+% 			giving $\mu((x,y))\in(a,\infty)$, finishing.
+% 		\end{itemize}
+
+% 		\item To show $i$ is continuous, it suffices to show that $i^{-1}((-\infty,a))$ and $i^{-1}((a,\infty))$ are open for any $a$; we will show that $i^{-1}((a,\infty))$ is open, and the other is analogous.
+		
+% 		Well, $g\in i^{-1}((a,\infty))$ if and only if $g^{-1}>a$ if and only if $a^{-1}>g^{-1}$ if and only if $g\in\left(a^{-1},-\infty\right)$. Thus, $i^{-1}((a,\infty))=\left(-\infty,a^{-1}\right)$ is open.
+% 	\end{itemize}
+% 	The above checks complete the proof.
+% \end{proof}
+% \begin{remark}[Nir]
+% 	Recall that a totally ordered set $(\Gamma,\ge)$ comes with an order topology with basis of open sets given by
+% 	\[(a,b)\coloneqq\{g\in\Gamma:b>g>a\}.\]
+% 	The definition of being a totally ordered group essentially turns $\Gamma$ into a topological group under this topology. Here are our checks; let $\mu\colon\Gamma^2\to\Gamma$ be multiplication and $i\colon\Gamma\to\Gamma$ be inversion.
+% 	\begin{itemize}
+% 		\item To show $\mu$ is continuous, it suffices to show $\mu^{-1}((a,b))$ is open for any $b>a$. Well, given $(g,h)\in\mu^{-1}((a,b))$, we have $b>gh>a$.
+% 		\item To show $i$ is continuous, it suffices to show that $i^{-1}((a,b))$ is open for any $b>a$. Well, $g\in i^{-1}((a,b))$ if and only if $g^{-1}\in (a,b)$ if and only if $b>g^{-1}$ and $g^{-1}>a$ if and only if $a^{-1}>g>b^{-1}$. Thus, $i^{-1}((a,b))=\left(b^{-1},a^{-1}\right)$ is open.
+% 	\end{itemize}
+% \end{remark}
+The reason we have defined totally ordered groups is to be able to define valuations.
 \begin{definition}[Valuation]
-	Fix a domain $R$ and totally ordered group $\Gamma$. A \textit{valuation} $\nu$ is a group homomorphism $\nu:K(R)^\times\to\Gamma$ satisfying the following.
+	Fix a domain $R$ and totally ordered group $\Gamma$. A \textit{valuation} $\nu$ is a group homomorphism $\nu\colon K(R)^\times\to\Gamma$ satisfying the following.
 	\begin{itemize}
 		\item We have $\nu(a+b)\ge\min\{\nu(a),\nu(b)\}$.
-		\item We have $R=\{x\in K(R):\nu(x)\ge0\}$.
+		\item We have $R=\{x\in K(R)^\times:\nu(x)\ge0\}\cup\{0\}$.
 	\end{itemize}
 \end{definition}
+When the codomain of our valuation is $\ZZ$, these rings have a special name.
 \begin{definition}[Discrete valuation ring]
-	A \textit{valuation ring} is an integral domain $R$ equipped with a valuation $\nu:K(R)^\times\to\ZZ$.
+	A \textit{discrete valuation ring} is an integral domain $R$ equipped with a valuation $\nu\colon K(R)^\times\to\ZZ$.
 \end{definition}
-And here are our examples.
-\begin{example}
-	Fix a regular, local ring $R$ of dimension $1$. Then we described in the proof of \autoref{prop:altdvr} a way to write elements $x\in K(R)^\times$ in the form $u\pi^n$ where $n\in\ZZ$. Defining $\nu(x):=n$ equips $R$ with a discrete valuation.
+\begin{example} \label{ex:fieldisdvr}
+	Suppose that $R$ is a field. Then we claim $R$ is a discrete valuation ring. Indeed, set $\nu\colon K(R)^\times\to\ZZ$ by $\nu(x)=0$ always. We have the following checks.
+	\begin{itemize}
+		\item Homomorphism: note $\nu(a)+\nu(b)=0=\nu(a+b)$ for any $a,b\in K(R)^\times$.
+		\item Note $\nu(a+b)=0\ge0=\min\{\nu(a),\nu(b)\}$ for any $a,b\in K(R)^\times$.
+		\item Lastly, note $\nu(x)=0\ge0$ for all $x\in K(R)^\times$, so
+		\[\{x\in K(R)^\times:\nu(x)\ge0\}\cup\{0\}=K(R)^\times\cup\{0\}=K(R)=R,\]
+		where the last equality is because $R$ is a field.
+	\end{itemize}
 \end{example}
+We are now ready for our main result.
+\begin{proposition} \label{prop:dvrgrabbag}
+	Fix a ring $R$. The following are equivalent.
+	\begin{itemize}
+		\item $R$ is a discrete valuation ring.
+		\item $R$ is a field or regular local ring of dimension $1$.
+	\end{itemize}
+\end{proposition}
+\begin{proof}
+	We show the directions independently.
+	\begin{itemize}
+		\item In one direction, suppose $R$ is a regular local ring of dimension $1$ or a field. If $R$ is a field, then $R$ is a discrete valuation ring by \autoref{ex:fieldisdvr}.
+
+		Otherwise, take $R$ to be a regular local ring of dimension $1$; as such, suppose $(\pi)$ is maximal. Then most of the heavy lifting is done by \autoref{prop:altdvr}, in which we defined a function $\nu\colon R\setminus\{0\}\to\NN$ such that $\nu(r)$ is the unique nonnegative integer such that
+		\[r/\pi^{\nu(r)}\in R^\times.\]
+		Quickly, we check $\nu$ is additive: taking $r,s\in R$, we see that $r/\pi^{\nu(r)},s/\pi^{\nu(s)}\in R^\times$ so that
+		\[\frac{rs}{\pi^{\nu(r)+\nu(s)}}\in R^\times\]
+		so that uniqueness of $\nu$ forces $\nu(r+s)=\nu(r)-\nu(s)$. Now, to extend this to all of $K(R)^\times$, we simply define
+		\[\nu(r/s)\coloneqq\nu(r)-\nu(s)\]
+		for $r/s\in K(R)^\times$ (note $r,s\ne0$). Observe that each $r\in R$ has $\nu(r/1)=\nu(r)-\nu(1)=\nu(r)$, so $\nu$ does indeed extend $\nu$.
+		
+		Now, to see that $\nu$ is well-defined, note $\frac rs=\frac{r'}{s'}$ implies $rs'=r's$ because $R$ is an integral domain, so
+		\[\nu(r)-\nu(s)=\nu(r')-\nu(s').\]
+		As such, we have a well-defined function $\nu\colon K(R)^\times\to\ZZ$. To check that this is a homomorphism, set $\frac ab,\frac cd\in K(R)^\times$. Then, because we already showed that $\nu$ is additive on $R$, we see
+		\[\nu\left(\frac ab\cdot\frac cd\right)=\nu\left(\frac{ac}{bd}\right)=\nu(ac)-\nu(bd)=\big(\nu(a)-\nu(b)\big)+\big(\nu(c)-\nu(d)\big)=\nu\left(\frac ab\right)+\nu\left(\frac cd\right).\]
+		So we do have a homomorphism $\nu\colon K(R)^\times\to\ZZ$.
+		
+		Before continuing, observe that some $\frac ab\in K(R)^\times$ will have $a=u\pi^{\nu(a)}$ and $b=v\pi^{\nu(b)}$ for $u,v\in R^\times$, so
+		\[\frac ab=\frac{u\pi^{\nu(a)}}{v\pi^{\nu(b)}}=uv^{-1}\pi^{\nu(a)-\nu(b)}=uv^{-1}\cdot\pi^{\nu(a/b)}\in R^\times.\]
+		In particular, $\nu(a/b)$ is the correct power in $\ZZ$ to divide out from $\frac ab$ by to get into $R^\times$. As usual, this is unique: if $u\pi^m=v\pi^n$ for $u,v\in R^\times$ and $m\ge n$ (without loss of generality), then $\pi^{m-n}=u^{-1}v\in R^\times$, so $0\le m-n<1$, so $m=n$.
+
+		We now have the following remaining checks.
+		\begin{itemize}
+			\item Given $\frac ab,\frac cd\in K(R)^\times$, and suppose that $\nu(c/d)\ge\nu(a/b)$ without loss of generality. Then
+			\[\frac{a/b}{\pi^{\nu(a/b)}}\in R\qquad\text{and}\qquad\frac{c/d}{\pi^{\nu(a/b)}}=\pi^{\nu(c/d)-\nu(a/b)}\cdot\frac{c/d}{\pi^{\nu(c/d)}}\in R,\]
+			so it follows
+			\[\frac{a/b+c/d}{\pi^{\nu(a/b)}}\in R,\]
+			so $\nu(a/b+c/d)\ge\nu(a/b)$.
+			\[\nu\left(\frac ab+\frac cd\right)=\nu\left(\frac{ad+bc}{bd}\right)=\nu(ad+bc)-\nu(bd).\]
+			\item Certainly $r\in R\setminus\{0\}$ has $\nu(r)\ge0$ by definition of $\nu$, so
+			\[R\subseteq\{x\in K(R)^\times:\nu(x)\ge0\}\cup\{0\}.\]
+			Conversely, of course $0\in R$, and any $\frac rs\in K(R)^\times$ with $\nu(r/s)=\nu(r)-\nu(s)\ge0$ has $r=u\pi^{\nu(r)}$ and $s=v\pi^{\nu(s)}$ for some $u,v\in R^\times$. As such,
+			\[\frac rs=\frac{u\pi^{\nu(r)}}{v\pi^{\nu(s)}}=\frac{uv^{-1}\pi^{\nu(r)-\nu(s)}}1\in R,\]
+			so we also get
+			\[\{x\in K(R)^\times:\nu(x)\ge0\}\cup\{0\}\subseteq R.\]
+		\end{itemize}
+		The above checks verify that $R$ is in fact a discrete valuation ring with valuation $\nu$.
+
+		\item Suppose $R$ is a discrete valuation ring, so pick up our valuation $\nu\colon K(R)^\times\to\ZZ$. If $\im\nu=\{0\}$, then
+		\[R=\{x\in K(R)^\times:\nu(x)\ge0\}\cup\{0\}=K(R),\]
+		so $R$ is a field.
+
+		Otherwise, suppose $R$ is not a field and that $\im\nu\subseteq\ZZ$ has a nonzero element and hence a positive element by signing, so suppose $d$ is the least such positive element. As such, find any
+		\[\pi\in\nu^{-1}(\{d\}).\]
+		We now proceed with the following steps.
+		\begin{itemize}
+			\item We claim $R^\times=\nu^{-1}(\{0\})$. In one direction, if $r\in R^\times$, find $s\in R$ with $rs=1$ so that certainly $r,s\ne0$ and
+			\[\nu(r)+\nu(s)=\nu(rs)=\nu(1)=0,\]
+			so $\nu(s)\ge0$ (from $s\in R$) implies $\nu(r)\le0$. But still $\nu(r)\ge0$, so we conclude $\nu(r)=0$.
+
+			Conversely, if $x\in K(R)^\times$ has $\nu(x)=0$, then $\nu\left(x^{-1}\right)=-\nu(x)=0\ge0$ as well, so we see that both $x$ and $x^{-1}$ live in $R$, so $x\cdot x^{-1}=1$ witnesses that $x$ is a unit in $R$.
+			
+			\item We claim that
+			\[(\pi)=\{0\}\cup\{x\in K(R)^\times:\nu(x)>0\}.\]
+			Certainly any $\pi r\in(\pi)$ has $r=0$ or $\nu(\pi r)=\nu(\pi)+\nu(r)\ge d+0>0$. Conversely, if $x\in K(R)^\times$ has $\nu(x)>0$, then of course $x\in R$. Also, $\nu(\pi)=d$ is as small as possible, so $\nu(x)\ge\nu(\pi)$, so $\nu(x/\pi)\ge0$ gives $x/\pi\in R$ as well. Thus,
+			\[x=(x/\pi)\cdot\pi\]
+			witnesses $x\in(\pi)$.
+		\end{itemize}
+		The above two claims show that
+		\begin{align*}
+			R &= \{0\}\cup\{x\in K(R)^\times:\nu(x)\ge0\} \\
+			&= \left(\{0\}\cup\{x\in K(R)^\times:\nu(x)>0\}\right)\sqcup\{x\in K(R)^\times:\nu(x)=0\} \\
+			&=(\pi)\sqcup R^\times,
+		\end{align*}
+		so $R$ is local with unique maximal ideal $(\pi)$. Further, note that $\dim R=\codim(\pi)\le1$ by \autoref{thm:pit1}, but $\dim R>0$ because of the chain of primes $(0)\subsetneq(\pi)$. Thus, $R$ is a regular local ring with dimension $1$, regular because its maximal ideal is principal.
+	\end{itemize}
+	The above directions complete the proof.
+\end{proof}
+As such, here is another example.
 \begin{example}
-	The ring $\ZZ_p$ is a discrete valuation ring. Indeed, $K(\ZZ_p)=\QQ_p$, and in the same way above we can write any $x\in\ZZ_p$ as $up^n$ for a unit $u$ and integer $n$. Setting $\nu(x):=n$ provides our valuation. In fact, the function
+	The ring $\ZZ_p=\widehat{\ZZ}_{(p)}$ is a discrete valuation ring. Indeed, $\ZZ_p$ is local with maximal ideal $\widehat{(p)}$ by \autoref{lem:completeislocal}, and $\widehat{(p)}=p\ZZ_p$ by \autoref{prop:getbetterinducedfiltration}. Further, $\dim\ZZ_p=1$ because $\dim\ZZ_p\ge1$ because of the chain of primes $(0)\subsetneq p\ZZ_p$ while
+	\[\dim\ZZ_p=\codim p\ZZ_p\le1\]
+	by \autoref{thm:pit1}. Thus, $\ZZ_p$ is a regular local ring with dimension $1$, so we finish by \autoref{prop:dvrgrabbag}.
+\end{example}
+\begin{remark}
+	Tracking \autoref{prop:dvrgrabbag} through, we see that our valuation $\nu\colon\QQ_p\to\ZZ$ takes $q\in\QQ_p$ to the value $n$ such that $q=u\pi^n$ with $u\in\ZZ_p^\times$. In fact, we can see that the function
 	\[d(a,b):=p^{-\nu(a-b)}\]
-	turns $\QQ_p$ into a metric space, in fact complete with respect to this metric $d$.
-\end{example}
-\begin{remark}[Nir]
-	It also turns out that discrete valuation rings are regular, local rings of dimension $1$ as well.
+	is exactly the metric defined in \autoref{lem:krullmetric}, so $\ZZ_p$ is a metric space defined by this valuation, actually complete by \autoref{prop:unitecompletion}.
 \end{remark}
 
 \subsection{Normal Domains}
