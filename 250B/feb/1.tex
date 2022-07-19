@@ -313,7 +313,7 @@ The Jordan--H\"older theorem gives us the following quick result about modules o
 \end{proof}
 
 Quickly, note that the support of $M$ is particularly nice when $M$ has a composition series, which essentially comes from various facts we've already proven.
-\begin{lemma}
+\begin{lemma} \label{lem:computefinitesupp}
 	Fix $M$ an $R$-module with a finite composition series
 	\[M:=M_0\supsetneq M_1\supsetneq\cdots\supsetneq M_n:=\{0\}.\]
 	If the composition factors are $R/\mf p_k\cong M_{k-1}/M_k$ for $k\in\{1,\ldots,n\}$, then $\op{Supp}M=\{\mf p_1,\ldots,\mf p_n\}$.
@@ -333,26 +333,83 @@ Quickly, note that the support of $M$ is particularly nice when $M$ has a compos
 	\[\op{Supp}M=\{\mf p_1,\mf p_2,\ldots,\mf p_n\},\]
 	which is what we wanted.
 \end{proof}
+\begin{remark}[Nir] \label{rem:suppismaximal}
+	As a corollary, we see that the support of a module of finite length is made of exclusively maximal ideals because each of the $\mf p_k$ are maximal by \autoref{exe:classifysimple}.
+\end{remark}
 And here is a nice result which we get from this.
 \begin{theorem} \label{thm:finitelengthdecomp}
 	Fix $M$ an $R$-module of finite length. Then the following are true.
 	\begin{listalph}
+		\item The multiplicity of a simple module $R/\mf p$ as a composition factor is the length of $M_\mf p$ as an $R_\mf p$-module. In particular, this is independent of the choice of composition series.
 		\item We can glue the localization maps $M\to M_\mf p$ together to form an $R$-module isomorphism
 		\[M\cong\bigoplus_{\mf p\in\op{Supp}M}M_\mf p.\]
-		\item The multiplicity of a simple module $R/\mf m$ as a composition factor is the length of $M_\mf p$ as an $R_\mf p$-module.
 	\end{listalph}
 \end{theorem}
 \begin{proof}
-	We will be very brief. The details are in Eisenbud. Last time we showed that if a morphism $\varphi:M\to N$ induces isomorphisms $\varphi_\mf m:M_\mf m\to N_\mf m$ for each maximal ideal $\mf m\subseteq R$, then $\varphi$ is an isomorphism. Thus, it suffices to show the canonical map
-	\[\varphi:M\to\bigoplus_{\mf p\in\op{Supp}M}M_\mf p\]
-	induces isomorphisms under localization. Namely, localizing by some maximal ideal $\mf m$, we get a map
-	\[\varphi_\mf m:M_\mf m\to\bigoplus_{\mf p\in\op{Supp}M}(M_\mf p)_\mf m.\]
-	The main point, now, is to compute that
-	\[(R/\mf p)_\mf q\cong\begin{cases}
-		0 & \mf p\ne\mf q, \\
-		R_\mf p/\mf pR_\mf p & \mf p=\mf q.
-	\end{cases}\]
-	For (b), the point is to localize a composition series to get the result, again using the above computation.
+	The key is the following lemma.
+	\begin{lemma} \label{lem:localizesimplemodule}
+		Let $R$ be a ring and $\mf p,\mf q\subseteq R$ be maximal ideals. Then
+		\[(R/\mf p)_\mf q=\begin{cases}
+			R_\mf p/\mf p_\mf p & \mf p=\mf q, \\
+			0 & \mf p\ne\mf q.
+		\end{cases}\]
+	\end{lemma}
+	\begin{proof}
+		Because localization is an exact functor, we have that
+		\[(R/\mf p)_\mf q\simeq R_\mf q/\mf p_\mf q.\]
+		Now, $R_\mf q$ is a local ring with maximal ideal $\mf q_\mf q$ by \autoref{prop:localizetolocal}, so we have two cases.
+		\begin{itemize}
+			\item If $\mf p=\mf q$, then we just have $R_\mf p/\mf p_\mf p$, as promised.
+			\item If $\mf p\ne\mf q$, then $\mf q\not\subseteq\mf p$ because $\mf q$ is a maximal ideal, so we can find $u\in\mf q\setminus\mf p$. The point is that $\frac u1\in\mf m_\mf p$ is a unit because $u\in R\setminus\mf p$. It follows
+			\[\mf m_\mf p=R_\mf p\]
+			because $\mf m_\mf p$ contains a unit, so $M_\mf p=0$ has length $0$.
+		\end{itemize}
+		The above computations finish the proof.
+	\end{proof}
+	We now proceed with the proof.
+	\begin{listalph}
+		\item We glue together cases of \autoref{lem:localizesimplemodule}. Fix a composition series
+		\[M\coloneqq M_0\supsetneq M_1\supsetneq\cdots\supsetneq M_n\coloneqq\{0\}.\]
+		Choosing any simple module $R/\mf p$, we note that we can localize this composition series into
+		\[M_\mf p=(M_0)_\mf p\supseteq(M_1)_\mf p\supseteq\cdots\supseteq(M_n)_\mf p=\{0\}.\]
+		Now, for each $1\le k\le n$, we set $R/\mf p_k\cong M_k/M_{k-1}$ so that we can write
+		\[(M_k)_{\mf p_k}/(M_{k-1})_{\mf p}\simeq(M_k/M_{k-1})_{\mf p}\cong(R/\mf p_k)_\mf p=\begin{cases}
+			R_\mf p/\mf p_\mf p & \mf p_k=\mf p, \\
+			0 & \mf p_k\ne\mf p,
+		\end{cases}\]
+		where we have used the fact that localization is exact in the first equality and \autoref{lem:localizesimplemodule} in the last equality. As such, let $k_1>k_2>\ldots>k_m$ denote the indices $k$ with $M_k/M_{k-1}\cong R/\mf p$ so that
+		\[(M_{k_1})_\mf p\supsetneq(M_{k_2})_\mf p\supseteq\cdots\supseteq(M_{k_m})_\mf p\supseteq\{0\}\]
+		is a composition series for $M_\mf p$. Indeed, we see that
+		\[(M_{k_i})_\mf p/(M_{k_i-1})_\mf p=(M_{k_i-1})_\mf p/(M_{k_i-2})_\mf p=\cdots=M_{k_{i-1}+1}/M_{k_{i-1}}=0\]
+		by the construction of $k_i>k_{i-1}$, so $(M_0)_\mf p=(M_{k_1})_\mf p$ and $(M_{k_i})_\mf p/(M_{k_{i+1}})_\mf p\cong R_\mf p/\mf p_\mf p$ is simple for each $i$.
+
+		To finish, we note that $m$ is the length of $M_\mf p$ as an $R_\mf p$-module because we have witnessed such a composition series. But at the same time $m$ is the number of indices $k$ with $M_k/M_{k-1}\cong R/\mf p$, which is the multiplicity of $R/\mf p$ as a composition factor in a composition series of $M$. This finishes.
+
+		\item Let $\varphi$ denote the map
+		\[M\to\bigoplus_{\mf p\in\op{Supp}M}M_\mf p\]
+		given by summing the localization maps. By \autoref{cor:liftinglocal}, it suffices to show that the localized map $\varphi_\mf m$ is an isomorphism for each maximal ideal $\mf m\subseteq R$. Note that $\op{Supp}M$ is finite by \autoref{lem:computefinitesupp}, so we may write
+		\[\Bigg(\bigoplus_{\mf p\in\op{Supp}M}M_\mf p\Bigg)_\mf m=\Bigg(\bigoplus_{\mf p\in\op{Supp}M}M_\mf p\Bigg)\otimes_RR_\mf m\simeq\bigoplus_{\mf p\in\op{Supp}M}M_\mf p\otimes_RR_\mf m=\bigoplus_{\mf p\in\op{Supp}M}(M_\mf p)_\mf m.\]
+		In particular, $\varphi_\mf m$ sends $m/s\in M_\mf m$ to $\varphi(m)/s$, which is $\frac1s(m/1)_{\mf p}\in\big(\bigoplus_\mf pM_\mf p)_\mf m$. Tracking this element through the above isomorphisms, we see that we go to $\big(\frac1s(m/1)\big)_{\mf p}$, so $\varphi_\mf m$ is the sum of the localization maps
+		\[M_\mf m\to (M_\mf p)_\mf m\]
+		as $\mf p$ varies over $\op{Supp}M$.\footnote{Here's a more abstract way to see this: localization is a tensor functor and hence additive, so writing $\varphi=\sum_\mf p\iota_\mf p$ where $\iota_\mf p\colon M\to M_\mf p$ gives $\varphi_\mf m=\sum_\mf p(\iota_\mf p)_\mf m$.} 
+		
+		We now evaluate $(M_\mf p)_\mf m$. We now have two cases.
+		\begin{itemize}
+			\item Take $\mf p\ne\mf m$. Note from (a) that $M_\mf p$ has a composition series as an $R_\mf p$-module where all the composition factors are isomorphic to $R_\mf p/\mf p_\mf p$ as $R_\mf p$-modules. However, pulling back to $R$, we see that $R_\mf p/\mf p_\mf p\cong R/\mf p$ as $R$-modules\footnote{This is induced by the natural map $R\to R_\mf p\onto R_\mf p/\mf p_\mf p$: if $\frac r1=\frac xs\in\mf p_\mf p$ for $x\in\mf p$ and $s\notin\mf p$, then there is $u\notin\mf p$ with $(us)r=ux\in\mf p$, so $r\in\mf p$.} which will give a composition series of $M_\mf p$ with composition factors consisting entirely of $R/\mf p$.
+
+			On the other hand, the length of $(M_\mf p)_\mf m$ as an $R_\mf m$-module is the number of $R/\mf m$s in its composition series. Because $\mf m\ne\mf p$, we see that this is $0$, so $(M_\mf p)_\mf m$ has length $0$, implying
+			\[(M_\mf p)_\mf m=0.\]
+			\item Take $\mf m=\mf p$. Then in fact the localization map $M_\mf p\to(M_\mf p)_\mf p$ is an isomorphism. Indeed, we can construct its inverse as
+			\[\arraycolsep=1.4pt\begin{array}{cccc}
+				& M_\mf p &\to& (M_\mf p)_\mf p \\
+				f\colon & (m/s) &\mapsto& {\textstyle\frac{m/s}1} \\
+				g\colon & m/(us) &\mapsfrom& {\textstyle\frac{m/s}u}
+			\end{array}\]
+			where we can see $g(f(m/s))=g\big(\frac{m/s}1\big)=\frac ms$ and $f\big(g\big(\frac{m/s}u\big)\big)=\frac{m/(us)}1=\frac{(um)/(us)}u=\frac{m/s}u$.
+		\end{itemize}
+		In total, if $\mf m\notin\op{Supp}M$, then $M_\mf m=0$ and $\mf p\ne\mf m$ for each $\mf p\in\op{Supp}M$, so $\varphi_\mf m$ is the zero map from $0$ to $0$. Otherwise, if $\mf m\in\op{Supp}M$, then $\varphi_\mf m$ is zero everywhere except for exactly at $\mf p=\mf m$ where $\varphi_\mf m$ is an isomorphism; so $\varphi_\mf m$ is an isomorphism plus a bunch of zeroes, finishing.
+	\end{listalph}
+	The above finishes the proof.
 \end{proof}
 
 \subsection{Artinian Grab-Bag}
@@ -517,10 +574,14 @@ We split the proof into two parts.
 \subsection{Geometry of Artinian Rings}
 While we're here, we provide some more nice facts.
 \begin{proposition} \label{prop:artiniandecomp}
-	Any Artinian ring is a product of local Artinian rings.
+	Any Artinian ring is a product of finitely many local Artinian rings. In fact, if $R$ is an Artinian ring, then the natural map
+	\[R\to\bigoplus_{\mf p\in\op{Spec}R}R_\mf p\]
+	is an isomorphism.
 \end{proposition}
 \begin{proof}
-	This essentially comes down to modules of finite length being products of localizations over their support.
+	Note Artinian rings $R$ are both Artinian and Noetherian by \autoref{thm:artingrabbag}, so $R$ is an $R$-module of finite length by \autoref{lem:artnoethimpliesfinlength}. Thus, we can use \autoref{thm:finitelengthdecomp} to see that the natural map
+	\[\varphi\colon R\to\bigoplus_{\mf p\in\op{Supp}R}R_\mf p\]
+	is an isomorphism of $R$-modules. Note $\op{Supp}R=\op{Spec}R$ is finite by \autoref{thm:artingrabbag}, so we are just dealing with a summation of finitely many localization maps, which we know to be individually ring maps, so they also sum to a ring map. Thus, $\varphi$ is in fact an isomorphism of rings.
 \end{proof}
 We can even give a geometric view to what we are doing.
 \begin{proposition} \label{prop:artinianisfinite}
