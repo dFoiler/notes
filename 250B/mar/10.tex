@@ -134,59 +134,154 @@ We can then synthesize the above two lemmas to give the following refinement res
 
 \subsection{Completion for Modules}
 We now return to talking about completions. We want to show that $\widehat R_I$ is flat, so we will want to talk about short exact sequences.
-\begin{lemma}
+\begin{lemma} \label{lem:fgcompletionexactness}
 	Fix $R$ a Noetherian ring and an ideal $I$. Further, suppose that we have a short exact sequence
 	\[0\to A\to B\to C\to 0\]
 	of finitely generated $R$-modules. Then we have a short exact sequence
 	\[0\to\widehat A\to\widehat B\to\widehat C\to0\]
-	of completions.
+	of completions at $I$.
 \end{lemma}
 \begin{proof}
-	We start with the short exact sequence
-	\[0\to A\to B\to C\to 0\]
+	To show that
+	\begin{equation}
+		0\to\widehat A\to\widehat B\to\widehat C\to0 \label{eq:desiredses}
+	\end{equation}
+	is a short exact sequence, we will show that $\widehat B\onto\widehat C$ by hand and then use the fact that inverse limits commute with kernels to get exactness at $\widehat A$ and $\widehat B$.
+
+	Let's start with exactness at $\widehat C$ in \autoref{eq:desiredses}. Label our short exact sequence by
+	\[0\to A\stackrel\iota\to B\stackrel\pi\to C\to 0\]
 	and tensor by $-\otimes R/I^s$ to get a right-exact sequence
-	\[A/I^sA\to B/I^sB\to C/I^sC\to0.\]
-	We can show by hand that this gives us a surjection $\widehat B\onto\widehat C$, but we need this to be exact on the left. Well, the next best thing that we can write down is
-	\[0\to\frac A{A\cap I^sB}\to\frac B{I^sB}\to\frac C{I^sC},\]
-	so because taking inverse limits is left exact, we have a left-exact sequence
-	\[0\to\limit\frac A{A\cap I^sB}\to\limit\frac B{I^sB}\to\limit\frac C{I^sC}.\]
-	It remains to show that our left term is $\widehat A$. Well, by the Artin--Rees lemma (!), we see that the filtration
-	\[A\cap I^sB\]
-	is an $I$-stable filtration. In other words, there is an $n$ such that $I^k(A\cap I^nB)=A\cap I^{n+k}B\subseteq I^kA$ for sufficiently large $k$. Applying \autoref{lem:samecompletion} finishes.
+	\begin{equation}
+		A/I^sA\to B/I^sB\to C/I^sC\to0. \label{eq:rightexactseq}
+	\end{equation}
+	With this in mind, fix some $\{c_i\}_{i\in\NN}\in\widehat C$. We want to find $\{b_i\}_{i\in\NN}\in\widehat B$ such that $\pi(b_i)\equiv c_i\pmod{I^iC}$ for all $i\in\NN$. We proceed inductively, starting with $b_0=0$, which is legal because $c_0\equiv0\pmod C$.
+	
+	Now suppose we already have $\{b_i\}_{i<s}$ for $s>0$ which cohere properly, and we construct $b_s$ with $\pi b_s\equiv c_s\pmod{I^sC}$ and $b_s\equiv b_{s-1}\pmod{I^{s-1}B}$. Well, we start by simply guessing: lift $c_s\in C$ up through $\pi\colon B\onto C$ to some $\widetilde b_s\in B$ such that $\pi\widetilde b_s=c_s$. The concern here is that we might not have $\widetilde b_s\equiv b_{s-1}$, but we must be pretty close because
+	\[\pi\big(\widetilde b_s-b_{s-1}+I^{s-1}B\big)=c_s-c_{s-1}+I^{s-1}C=c_{s-1}-c_{s-1}+I^{s-1}C=0+I^{s-1}C.\]
+	Thus, exactness of \autoref{eq:rightexactseq} promises us $a_s\in A$ such that $\iota a+I^{s-1}B=\iota(a+I^{s-1}A)=\widetilde b_s-b_{s-1}+I^{s-1}B$. As such, we set
+	\[b_s\coloneqq\widetilde b_s-\iota a.\]
+	Then $b_s-b_{s-1}\in I^{s-1}B$ by construction of $a$, and $\pi(b_s)=\pi(\widetilde b_s)+\pi(\iota a)\equiv c_s\pmod{I^sC}$ by construction of $\widetilde b_s$.
+
+	We now turn to showing exactness at $\widehat A$ and $\widehat B$ in \autoref{eq:desiredses}. We would like to write down some left-exact sequence to take the limit of, and the best thing we can write down is
+	\begin{equation}
+		0\to A/{\iota^{-1}(I^sB)}\to B/{I^sB}\to C/{I^sC}\to0. \label{eq:almostcompletedses}
+	\end{equation}
+	To see that this is exact, we note that \autoref{eq:rightexactseq} promises us that
+	\[A\to B/I^sB\to C/I^sC\to 0\]
+	is right-exact, so it remains to make the map $A\to B/I^sB$ injective, for which we merely mod out by the kernel. Because $\iota\colon A\to B$ is injective, the kernel of $A\to B/I^sB$ can be simply be written as $\iota^{-1}(I^sB)$.
+
+	We even note that \autoref{eq:almostcompletedses} is natural in $s$: if $t\ge s$, then we induce a morphism of short exact sequences in the obvious way as follows.
+	% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIkEvXFxpb3RhXnstMX0oSV50QikiXSxbMiwwLCJCL0ledEIiXSxbMywwLCJDL0ledEMiXSxbNCwwLCIwIl0sWzAsMSwiMCJdLFsxLDEsIkEvXFxpb3RhXnstMX0oSV5zQikiXSxbMiwxLCJCL0lec0IiXSxbMywxLCJDL0lec1MiXSxbNCwxLCIwIl0sWzAsMV0sWzEsMiwiXFxpb3RhIl0sWzIsMywiXFxwaSJdLFszLDRdLFs1LDZdLFs2LDcsIlxcaW90YSJdLFs3LDgsIlxccGkiXSxbOCw5XSxbMyw4LCIiLDEseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJlcGkifX19XSxbMiw3LCIiLDEseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJlcGkifX19XSxbMSw2LCIiLDEseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJlcGkifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {A/\iota^{-1}(I^tB)} & {B/I^tB} & {C/I^tC} & 0 \\
+		0 & {A/\iota^{-1}(I^sB)} & {B/I^sB} & {C/I^sS} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow["\iota", from=1-2, to=1-3]
+		\arrow["\pi", from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\iota", from=2-2, to=2-3]
+		\arrow["\pi", from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[two heads, from=1-4, to=2-4]
+		\arrow[two heads, from=1-3, to=2-3]
+		\arrow[two heads, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	As such, we are actually inducing morphisms of inverse limits, so because inverse limits commute with inverse limits and in particular commute with limits, we get the left-exact sequence
+	\[0\to\limit\frac A{\iota^{-1}(I^sB)}\stackrel\iota\to\limit\frac B{I^sB}\stackrel\pi\to\limit\frac C{I^sC}.\]
+	To finish, we show that our left term is $\widehat A$. This is an application of the Artin--Rees lemma (!): by \autoref{thm:artinrees}, the filtration
+	\[\iota^{-1}(I^sB)\]
+	is an $I$-stable filtration. In other words, there is an $n\in\NN$ such that $I^k\iota^{-1}(I^nB)=\iota^{-1}(I^{n+k}B)$ for all $k\in\NN$. So, on one hand, exactness of \autoref{eq:rightexactseq} implies
+	\[\iota^{-1}(I^sB)\supseteq I^sA,\]
+	but on the other hand, the above argument yields
+	\[I^sA\supseteq I^s\iota^{-1}(I^nB)\supseteq\iota^{-1}(I^{s+n}B).\]
+	Applying \autoref{lem:samecompletion} finishes.
 \end{proof}
+\begin{remark}
+	We used the condition that $A,B,C$ are finitely generated in the application of \autoref{thm:artinrees}.
+\end{remark}
 The point of this is that we see completion is an exact functor. In fact, as with localization, there is a flat module hiding in the background.
 \completetensor*
 \begin{proof}
-	So we show (a). If $M\cong R$, then we are done. Because tensoring and completion commutes with taking direct sums, we see that (a) remains true for $M\cong R^n$ for $n\in\NN$. Otherwise, because we live in a Noetherian world, $M$ is finitely presented, so we have a right-exact sequence
-	\[G\to F\to M\to 0\]
-	where $F$ and $G$ are both free of finite rank. Tensoring with $\widehat R_I$, we see that
-	\[G\otimes_R\widehat R_I\to G\otimes_R\widehat R_I\to M\otimes_R\widehat R\to0.\]
-	We also have the short exact sequence
-	\[\widehat G_I\to\widehat F_I\to\widehat M_I\to0,\]
-	so we slap them on top of each other to build the following diagram.
-	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJHXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMSwwLCJGXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMiwwLCJNXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMCwxLCJcXHdpZGVoYXQgR19JIl0sWzEsMSwiXFx3aWRlaGF0IEZfSSJdLFsyLDEsIlxcd2lkZWhhdCBNX0kiXSxbMywwLCIwIl0sWzMsMSwiMCJdLFswLDFdLFsxLDJdLFsyLDZdLFszLDRdLFs0LDVdLFs1LDddLFswLDNdLFsxLDRdLFsyLDVdXQ==
-	\[\begin{tikzcd}
-		{G\otimes_R\widehat R_I} & {F\otimes_R\widehat R_I} & {M\otimes_R\widehat R_I} & 0 \\
-		{\widehat G_I} & {\widehat F_I} & {\widehat M_I} & 0
-		\arrow[from=1-1, to=1-2]
-		\arrow[from=1-2, to=1-3]
-		\arrow[from=1-3, to=1-4]
-		\arrow[from=2-1, to=2-2]
-		\arrow[from=2-2, to=2-3]
-		\arrow[from=2-3, to=2-4]
-		\arrow[from=1-1, to=2-1]
-		\arrow[from=1-2, to=2-2]
-		\arrow[from=1-3, to=2-3]
-	\end{tikzcd}\]
-	In particular, the two left maps are isomorphisms, so the right map is also an isomorphism by the Snake lemma.
-
-	We now show (b). We would like to use the previous lemma, but it only works for finitely generated modules instead of general short exact sequences. But have no fear---it suffices to show that the natural inclusion
-	\[J\otimes_R\widehat R_I\to\widehat R_I\]
-	is an inclusion for any finitely generated $J$ by our flatness criterion, % \todo{}
-	which we do have, so we are done.
+	We show the parts individually.
+	\begin{listalph}
+		\item This proof will occur in steps.
+		\begin{enumerate}
+			\item We define the isomorphism. Note that there is at least a canonical morphism $\eta_M\colon\widehat R_I\otimes_RM\to\widehat M_I$ by
+			\[\eta_M\left(\{r_n\}_{n\in\NN}\otimes m\right)\coloneqq\{r_nm\}_{n\in\NN}.\]
+			Technically, we ought to show that the map $\widehat R_I\times M\to\widehat M_I$ given by
+			\[\left(\{r_n\}_{n\in\NN},m\right)\mapsto\{r_nm\}_{n\in\NN}\]
+			is well-defined and $R$-bilinear. We note that this is well-defined because $i>j$ gives $r_i\equiv r_j\pmod{I^j}$ and hence $r_im\equiv r_jm\pmod{I^jM}$, so $\{r_nm\}_{n\in\NN}\in\widehat M_I$. However, we will not bother with checking that this map is $R$-bilinear because look at it.
+	
+			\item We establish naturality for our morphisms. Given an $R$-module morphism $\varphi\colon A\to B$, we can just check that the following naturality square commutes.
+			% https://q.uiver.app/?q=WzAsOCxbMCwwLCJBXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMSwwLCJcXHdpZGVoYXQgQV9JIl0sWzAsMSwiQlxcb3RpbWVzX1JcXHdpZGVoYXQgUl9JIl0sWzEsMSwiXFx3aWRlaGF0IEJfSSJdLFsyLDAsImFcXG90aW1lc1xce3JfblxcfV9uIl0sWzMsMCwiXFx7cl9uYVxcfV9uIl0sWzIsMSwiXFx2YXJwaGkoYSlcXG90aW1lc1xce3JfblxcfV9uIl0sWzMsMSwiXFx7XFx2YXJwaGkocl9uYSlcXH1fbiJdLFswLDEsIlxcZXRhX0EiXSxbMiwzLCJcXGV0YV9CIl0sWzAsMiwiXFx2YXJwaGkiLDJdLFsxLDMsIlxcdmFycGhpIiwyXSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{A\otimes_R\widehat R_I} & {\widehat A_I} & {a\otimes\{r_n\}_n} & {\{r_na\}_n} \\
+				{B\otimes_R\widehat R_I} & {\widehat B_I} & {\varphi(a)\otimes\{r_n\}_n} & {\{\varphi(r_na)\}_n}
+				\arrow["{\eta_A}", from=1-1, to=1-2]
+				\arrow["{\eta_B}", from=2-1, to=2-2]
+				\arrow["\varphi"', from=1-1, to=2-1]
+				\arrow["\varphi"', from=1-2, to=2-2]
+				\arrow[maps to, from=1-3, to=1-4]
+				\arrow[maps to, from=1-4, to=2-4]
+				\arrow[maps to, from=1-3, to=2-3]
+				\arrow[maps to, from=2-3, to=2-4]
+			\end{tikzcd}\]
+			Thus, we have exhibited a natural transformation $\eta_\bullet$ which we would like to upgrade to a natural isomorphism on finitely generated $R$-modules.
+			
+			\item We show that $\eta_\bullet$ is an isomorphism for finitely generated free $R$-modules $R^n$. Indeed, we can track the sequence of isomorphisms
+			\[\arraycolsep=1.4pt\begin{array}{cccccccccccccc}
+				R^n\otimes_R\widehat R_I &\simeq& \widehat R_I^n &=& \big(\limit R/I^s\big)^n &\simeq& \limit (R/I^s)^n &\simeq& \limit R^n/I^sR^n &=& \widehat{R^n}_I   \\
+				(x_i)_i\otimes\{r_s+I^sR\}_s &\mapsto& && \big(\{r_sx_i+I^sR\}_s\big)_i &\mapsto& \big\{(r_sx_i+I^sR)_i\big\}_s &\mapsto& \big\{r_s(x_i)_i+I^sR^n\big\}_s
+			\end{array}\]
+			which we can see is $\eta_{R^n}$. Thus, $\eta_\bullet$ is an isomorphism of finitely generated free $R$-modules.
+	
+			\item Lastly, to show that $\eta_M$ is an isomorphism for arbitrary finitely generated $R$-modules $M$, we note that $R$ being Noetherian implies that $M$ is actually finitely presented, so we can find finitely generated free $R$-modules $F$ and $G$ making the sequence
+			\[G\stackrel\iota\to F\stackrel\pi\to M\to 0\]
+			right-exact. Now, naturality of $\eta_\bullet$ induces the morphism of right-exact sequences as follows.
+			% https://q.uiver.app/?q=WzAsOCxbMCwwLCJHXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMSwwLCJGXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMiwwLCJNXFxvdGltZXNfUlxcd2lkZWhhdCBSX0kiXSxbMCwxLCJcXHdpZGVoYXQgR19JIl0sWzEsMSwiXFx3aWRlaGF0IEZfSSJdLFsyLDEsIlxcd2lkZWhhdCBNX0kiXSxbMywwLCIwIl0sWzMsMSwiMCJdLFswLDEsIlxcaW90YSJdLFsxLDIsIlxccGkiXSxbMiw2XSxbMyw0LCJcXGlvdGEiXSxbNCw1LCJcXHBpIl0sWzUsN10sWzAsMywiXFxldGFfRyJdLFsxLDQsIlxcZXRhX0YiXSxbMiw1LCJcXGV0YV9NIl1d
+			\[\begin{tikzcd}
+				{G\otimes_R\widehat R_I} & {F\otimes_R\widehat R_I} & {M\otimes_R\widehat R_I} & 0 \\
+				{\widehat G_I} & {\widehat F_I} & {\widehat M_I} & 0
+				\arrow["\iota", from=1-1, to=1-2]
+				\arrow["\pi", from=1-2, to=1-3]
+				\arrow[from=1-3, to=1-4]
+				\arrow["\iota", from=2-1, to=2-2]
+				\arrow["\pi", from=2-2, to=2-3]
+				\arrow[from=2-3, to=2-4]
+				\arrow["{\eta_G}", from=1-1, to=2-1]
+				\arrow["{\eta_F}", from=1-2, to=2-2]
+				\arrow["{\eta_M}", from=1-3, to=2-3]
+			\end{tikzcd}\]
+			Now, the two morphisms on the left are isomorphisms by the previous step, so $\eta_M$ is an isomorphism as well. This completes the proof.
+		\end{enumerate}
+		\item It might look like we can just combine (a) with \autoref{lem:fgcompletionexactness} to show flatness straight from the definition, but this only gives the exactness when all relevant modules are finitely generated. However, this is no problem: we use \autoref{thm:flatcondition}. Namely, it suffices to show that the natural map
+		\[J\otimes_R\widehat R_I\to R\otimes_R\widehat R_I\]
+		is injective for all finitely generated $R$-ideals $J\subseteq R$. To show this, we note the short exact sequence
+		\[0\to J\stackrel\iota\to R\stackrel\pi\to R/J\to0\]
+		gives the following diagram because $R$ and $J$ are finitely generated.
+		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIkpcXG90aW1lc19SXFx3aWRlaGF0IFJfSSJdLFsyLDAsIlJcXG90aW1lc19SXFx3aWRlaGF0IFJfSSJdLFsxLDEsIlxcd2lkZWhhdCBKX0kiXSxbMiwxLCJcXHdpZGVoYXQgUl9JIl0sWzMsMCwiKFIvSilcXG90aW1lc19SXFx3aWRlaGF0IFJfSSJdLFszLDEsIlxcd2lkZWhhdHtSL0p9X0kiXSxbNCwwLCIwIl0sWzQsMSwiMCJdLFswLDEsIjAiXSxbMCwxXSxbMSwyLCJcXGlvdGEiXSxbMiw1LCJcXHBpIl0sWzUsN10sWzksM10sWzMsNCwiXFxpb3RhIl0sWzQsNiwiXFxwaSJdLFs2LDhdLFsxLDMsIlxcZXRhX0oiXSxbMiw0LCJcXGV0YV9SIl0sWzUsNiwiXFxldGFfe1IvSn0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			0 & {J\otimes_R\widehat R_I} & {R\otimes_R\widehat R_I} & {(R/J)\otimes_R\widehat R_I} & 0 \\
+			0 & {\widehat J_I} & {\widehat R_I} & {\widehat{R/J}_I} & 0
+			\arrow[from=1-1, to=1-2]
+			\arrow["\iota", from=1-2, to=1-3]
+			\arrow["\pi", from=1-3, to=1-4]
+			\arrow[from=1-4, to=1-5]
+			\arrow[from=2-1, to=2-2]
+			\arrow["\iota", from=2-2, to=2-3]
+			\arrow["\pi", from=2-3, to=2-4]
+			\arrow[from=2-4, to=2-5]
+			\arrow["{\eta_J}", from=1-2, to=2-2]
+			\arrow["{\eta_R}", from=1-3, to=2-3]
+			\arrow["{\eta_{R/J}}", from=1-4, to=2-4]
+		\end{tikzcd}\]
+		Explicitly, the bottom row is exact by \autoref{lem:fgcompletionexactness}, and all vertical morphisms are isomorphisms giving commuting squares by (a), so the top row is exact as well.
+	\end{listalph}
+	The above parts finish the proof.
 \end{proof}
 \begin{remark}[Nir]
-	It is in fact necessary that $M$ be finitely generated. For example, take $R=\ZZ$ and $I=(p)$ and $M=\QQ$. In this case, $\widehat R_I\otimes_RM=\QQ_p$, but $\widehat M_I=0$ because $M/I^sM=\QQ/\left(p^s\right)\QQ=\QQ/\QQ=0$ for all $s$.
+	It is in fact necessary that $M$ be finitely generated. For example, take $R=\ZZ$ and $I=(p)$ and $M=\QQ$. In this case, $\widehat R_I\otimes_RM=\QQ_p$, but $\widehat M_I=0$ because $M/I^sM=\QQ/\left(p^s\right)\QQ=\QQ/\QQ=0$ for all $s\in\NN$.
 \end{remark}
 
 \subsection{Examples of Hensel's Lemma}
