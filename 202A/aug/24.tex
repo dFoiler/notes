@@ -4,6 +4,207 @@
 
 \begin{document}
 
-Words will go here.
+Good morning everyone. This is my first class of the semester.
+
+\subsection{Administrative Notes}
+Here are some housekeeping remarks.
+\begin{itemize}
+	\item The webpage for this class is \texttt{\href{https://math.berkeley.edu/~rieffel/202AannF22.html}{math.berkeley.edu/~rieffel/202AannF22.html}}.
+	\item The midterm date is negotiable. We will have a vote on Friday. The possible dates are Friday 14 October, Monday 17 October, or Wednesday 19 October.
+	\item There will be no vote on the final exam. It is on 15 December at 7PM.
+	\item Homework will be due Fridays by midnight, approximately every week.
+	\item There is no particular text for this course, and any given text covers more than we have time for. That said, we will (very) loosely follow Lang's \textit{Real and Functional Analysis}, but it is helpful to have a number of different expositions around.
+	\item Please wear a mask during lectures and office hours.
+\end{itemize}
+Here is a summary of the course.
+\begin{itemize}
+	\item We will spend the next couple of lectures talking about metric spaces.
+	\item We will then spend the first half of the course on general topology. The second half of the course will be on measure and integration.
+	\item Throughout we will see a little on functional analysis.
+\end{itemize}
+
+\subsection{Metric Spaces}
+Hopefully we remember something about metric spaces. Here's the definition.
+\begin{definition}[Metric] \label{defi:metric}
+	A \textit{metric} $d$ on a set $X$ is a function $d\colon X\times X\to\RR_{\ge0}$ satisfying the following rules for any $x,y,z\in X$.
+	\begin{listalph}
+		\item Zero: $d(x,x)=0$.
+		\item Zero: $d(x,y)=0$ implies $x=y$.
+		\item Symmetry: $d(x,y)=d(y,x)$.
+		\item Triangle inequality: $d(x,y)+d(y,z)\ge d(x,z)$.
+	\end{listalph}
+	We call $(X,d)$ a \textit{metric space}.
+\end{definition}
+We will want some ``almost'' metrics as well. Here are their names.
+\begin{definition}[Semi-metric]
+	A \textit{semi-metric} $d$ on a set $X$ satisfies (a), (c), and (d) of \autoref{defi:metric}. We call $(X,d)$ a \textit{semi-metric space}.
+\end{definition}
+\begin{definition}[Extended metric]
+	An \textit{extended metric} $d$ on a set $X$ is a function $d\colon X\times X\to\RR_{\ge0}$ satisfying (a)--(d) of \autoref{defi:metric}. We call $(X,d)$ an \textit{extended metric space}.
+\end{definition}
+Intuitively, we might want extended metrics if we have points that we never want to be able to get to from other ones.
+
+We can turn spaces with a semi-metric into a space with a metric.
+\begin{lemma} \label{lem:semitometric}
+	Fix a semi-metric space $(X,d)$, and define the relation $\sim$ on $X$ by $x\sim y$ if and only if $d(x,y)=0$. Then $\sim$ is an equivalence relation.
+\end{lemma}
+\begin{proof}
+	We run these checks by hand. Fix any $x,y,z\in X$.
+	\begin{itemize}
+		\item Reflexive: $d(x,x)=0$ means that $x\sim x$.
+		\item Symmetry: if $x\sim y$, then $d(x,y)=0$, so $d(y,x)=0$, so $y\sim x$.
+		\item Transitive: if $x\sim y$ and $y\sim z$, then
+		\[0\le d(x,z)\le d(x,y)+d(y,z)=0,\]
+		so $d(x,z)=0$, so $x\sim z$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+As such, given a semi-metric space $(X,d)$, we may look at the set of equivalence classes under $\sim$, which we will denote $X/\sim$.\footnote{The notation of $/\sim$ is intended to make us think of quotients.}
+\begin{proposition}
+	Fix a semi-metric space $(X,d)$ and define $\sim$ as in \autoref{lem:semitometric}. Then $d$ naturally descends to a metric $\widetilde d$ on $X/\sim$.
+\end{proposition}
+\begin{proof}
+	Let $[x]$ denote the equivalence class of $x\in X$ under $\sim$. We claim that the function
+	\[\widetilde d([x],[y])\coloneqq d(x,y)\]
+	is a well-defined metric. We have the following checks; fix any $x,y,z\in X$.
+	\begin{itemize}
+		\item Well-defined: if $x\sim x'$ and $y\sim y'$, then note that
+		\[d(x,y)\le d(x,x')+d(x',y)=d(x',y)\le d(x',y')+d(y',y)=d(x',y').\]
+		By symmetry, we also have $d(x',y')\le d(x,y)$, so equality follows. So $d$ does descent properly to the quotient $X/\sim$.
+		\item Zero: note that $\widetilde d([x],[y])=0$ if and only if $d(x,y)=0$ if and only if $x\sim y$ if and only if $[x]=[y]$.
+		\item Symmetry: note that
+		\[\widetilde d([x],[y])=d(x,y)=d(y,x)=\widetilde d([y],[x]).\]
+		\item Triangle inequality: note that
+		\[\widetilde d([x],[z])=d(x,z)\le d(x,y)+d(y,z)=\widetilde d([x],[y])+\widetilde d([y],[z]),\]
+		which finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here are some examples of metric spaces.
+\begin{example}
+	Given a connected graph $G=(V,E)$ with a weighting function $w\colon E\to\RR_{\ge0}$, we can build a metric as follows: define the ``shortest-path'' function $d\colon V\times V\to\RR_{\ge0}$ sending two vertices $v,w\in V$ to the length of the shortest path. If the graph $G$ is not connected, we merely have an extended metric.
+\end{example}
+\begin{example}[Euclidean metric] \label{ex:euclidean}
+	The function $d\colon\RR^n\times\RR^n\to\RR_{\ge0}$
+	\[d\big((x_1,\ldots,x_n),(y_1,\ldots,y_n)\big)\coloneqq\sqrt{\sum_{i=1}^n(x_i-y_i)^2}\]
+	is a metric.
+\end{example}
+Observe that it is not completely obvious that \autoref{ex:euclidean} satisfies the triangle inequality, but this will follow from the theory of the next subsections.
+
+\subsection{Norms on Vector Spaces}
+Norms provide convenient ways to build metrics.
+\begin{definition}[Norm]
+	Fix a vector space $V$ over $\RR$ or $\CC$. A norm $\lVert\cdot\rVert\colon V\to\RR_{\ge0}$ is a function satisfying the following, for any $r\in\RR$ and $v,w\in V$.
+	\begin{listalph}
+		\item Zero: $\lVert v\rVert=0$ if and only if $v=0$.
+		\item Scaling: $\lVert rv\rVert=|r|\cdot\lVert v\rVert$.
+		\item Triangle inequality: $\lVert v+w\rVert\le\lVert v\rVert+\lVert w\rVert$.
+	\end{listalph}
+\end{definition}
+\begin{remark}
+	We can probably work with a more general normed field instead of ``merely'' $\RR$ or $\CC$.
+\end{remark}
+And here is our result.
+\begin{proposition}
+	Given a metric space $V$ with a norm $\norm{\cdot}\colon V\to\RR_{\ge0}$, then the function
+	\[d(v,w)\coloneqq\norm{v-w}\]
+	defines a metric on $V$.
+\end{proposition}
+\begin{proof}
+	We run the checks directly. Let $x,y,z\in V$ be points.
+	\begin{itemize}
+		\item Zero: note that $d(x,y)=0$ if and only if $\norm{x-y}=0$ if and only if $x-y=0$ if and only if $x=y$.
+		\item Symmetry: note that
+		\[d(x,y)=\norm{x-y}=|-1|\cdot\norm{y-x}=1\cdot\norm{y-x}=d(y,x).\]
+		\item Triangle inequality: note that
+		\[d(x,z)=\norm{x-z}=\norm{(x-y)+(y-z)}\le\norm{x-y}+\norm{y-z}=d(x,y)+d(y,z),\]
+		which finishes the check.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here are the usual examples.
+\begin{example}
+	Set $V\coloneqq\RR^n$ or $V\coloneqq\CC^n$. Then the following are norms on $V$.
+	\begin{itemize}
+		\item $\norm{(x_1,\ldots,x_n)}_2\coloneqq\left(\sum_{i=1}^n|x_i|^2\right)^{1/2}$.
+		\item $\norm{(x_1,\ldots,x_n)}_1\coloneqq\sum_{i=1}^n|x_i|$.
+	\end{itemize}
+\end{example}
+Here are some more esotetric examples.
+\begin{example}
+	Set $V\coloneqq\RR^n$ or $V\coloneqq\CC^n$. Then
+	\[\norm{(x_1,\ldots,x_n)}_\infty\coloneqq\sup\{|x_1|,\ldots,|x_n|\}\]
+	provides a norm on $V$.
+\end{example}
+\begin{example} \label{ex:pnormonr}
+	Set $V\coloneqq\RR^n$ or $V\coloneqq\CC^n$. Then, given $p\ge1$,
+	\[\norm{(x_1,\ldots,x_n)}_p\coloneqq\Bigg(\sum_{i=1}^n|x_i|^p\Bigg)^{1/p}\]
+	provides a norm on $V$.
+\end{example}
+\begin{remark}
+	Taking the limit as $p\to\infty$ of $\norm f_p$ gives $\norm f_\infty$. This justifies the notation.
+\end{remark}
+\begin{remark}
+	Despite having lots of examples, all of these norms are equivalent in a topological sense.
+\end{remark}
+These normed vector spaces actually allow us to define a metric on any subset.
+\begin{proposition}
+	Given a metric space $(X,d)$ and a subset $Y\subseteq X$, the restriction of $d$ to $Y\times Y$ is a metric.
+\end{proposition}
+\begin{proof}
+	All the requirements for $d$ on $Y\times Y$ are satisfied for any points in $X$, so we are done by doing no work.
+\end{proof}
+\begin{example}
+	Any subset $X\subseteq\RR^n$ has an induced metric by restricting the (say) Euclidean metric.
+\end{example}
+
+\subsection{A Hint of \texorpdfstring{$L^p$}{Lp} Spaces}
+Here is a more complicated example of a metric.
+\begin{example} \label{ex:contfuncnorm}
+	Define $V\coloneqq C([0,1])$ to be the $\RR$-vector space of $\RR$-valued (or $\CC$-valued) continuous functions on $[0,1]$. The following are norms.
+	\begin{itemize}
+		\item $\norm f_\infty\coloneqq\sup\{|f(x)|\colon x\in[0,1]\}$.
+		\item $\norm f_1\coloneqq\int_0^1|f(t)|\,dt$.
+		\item $\norm f_2\coloneqq\left(\int_0^1|f(t)|^2\,dt\right)^{1/2}$.
+		\item More generally, given $p\ge1$
+		\[\norm f_p\coloneqq\left(\int_0^1|f(t)|^p\,dt\right)^{1/p}.\]
+	\end{itemize}
+	These integrals are finite because $[0,1]$ is compact, forcing $f$ to achieve a finite maximum on $[0,1]$.
+\end{example}
+\begin{remark}
+	We can tell the same story for $C(X)$, for any measurable compact space $X$.
+\end{remark}
+\begin{remark} \label{rem:hintoflp}
+	Note the analogy of \autoref{ex:contfuncnorm} with \autoref{ex:pnormonr}. To see this more rigorously, set $X$ to be the finite set $\{1,\ldots,n\}$ so that $C(X)=\RR^n$.
+\end{remark}
+We should probably justify the claims of this subsection, so here is our result.
+\begin{proposition}
+	Define $V\coloneqq C([0,1])$ to be the vector space of $\RR$-valued (or $\CC$-valued) continuous functions on $[0,1]$. Then, given $p\ge1$, the function $\norm{\cdot}_p\colon C\to\RR_{\ge0}$ by
+	\[\norm f\coloneqq\left(\int_0^1|f(t)|^p\,dt\right)^{1/p}\]
+	is a norm.
+\end{proposition}
+\begin{proof}
+	We run the checks directly.
+	\begin{itemize}
+		\item Zero: if $f=0$, then of course $\int_0^1|f(t)|^p\,dt=0$.
+		\item Zero: suppose that $f\in C([0,1])$ has $f(t_0)\ne0$ for any $t_0\in[0,1]$; set $y\coloneqq f(t_0)$. Then $f^{-1}((y/2,3y/2))$ is a nonempty open subset of $X$ and hence contains a nonempty open interval $(a,b)$ with $a<b$. As such,
+		\[\int_X|f(t)|^p\,dt\ge\int_{a}^b|f(t)|^p\,dt\ge\int_{a}^b|y/2|^p\,dt>0,\]
+		so we are done.
+		\item Scaling: given $f\in C([0,1])$ and a scalar $r$, we have
+		\[\norm{rf}=\left(\int_0^1|rf(t)|^p\,dt\right)^{1/p}=\left(|r|^p\int_0^1|f(t)|^p\,dt\right)^{1/p}=|r|\cdot\norm f.\]
+		\item Triangle inequality: we borrow from \href{https://terrytao.wordpress.com/2009/01/09/245b-notes-3-lp-spaces/}{here}. Given $f,g\in C([0,1])$, for psychological reasons we will assume that $f$ and $g$ are nonzero (else this is clear); then $\norm f,\norm g\ne0$, so we may scale everything so that $\norm f+\norm g$. In fact, we may again use scaling to find $a,b\in V$ such that
+		\[f=(1-\theta)a\qquad\text{and}\qquad g=\theta b\]
+		where $\theta\in(0,1)$ and $\norm a=\norm b=1$. Now, the triangle inequality translates into showing
+		\[\int_0^1|(1-\theta)a(t)+\theta b(t)|^p\,dt=\norm{(1-\theta)a+\theta b}^p_p\stackrel?\le\left(\norm{(1-\theta)a}_p+\norm{\theta b}_p\right)^p=1.\]
+		Well, because $p\ge1$, the function $t\mapsto t^p$ is convex, so we get to write
+		\[\int_0^1|(1-\theta)a(t)+\theta b(t)|^p\,dt\le(1-\theta)\int_0^1|a(t)|^p\,dt+\theta\int_0^1|b(t)|^p\,dt,\]
+		which is what we wanted.
+	\end{itemize}
+	The above checks complete the proof; note that the proof of the triangle inequality was nontrivial.
+\end{proof}
+\begin{remark}
+	Now, to show \autoref{rem:hintoflp}, replace all $\int_0^1$ with $\sum_{i=1}^n$ and adjust all the language accordingly. The point is that ``integrating over $[0,1]$'' is analogous to ``integrating over $\{1,\ldots,n\}$.'' A more thorough understanding of measure theory will allow us to rigorize this.
+\end{remark}
+Next class we will talk about completeness.
 
 \end{document}
