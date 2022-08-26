@@ -6,56 +6,193 @@
 
 Today we're talking about completeness of metric spaces.
 
-\subsection{Many Kinds of Morphisms}
+\subsection{Isometries}
 In mathematics, we are interested in objects not in isolation but as they relate to each other. Namely, we are interested also in the maps between our objects.
 
 The philosophy here comes from category theory, where one is really most interested in the ``morphisms'' between ``objects'' instead of the objects themselves. For concreteness, here is a definition of a category.
 \begin{definition}[Category]
-	A \textit{category} $\mathcal C$ consists of a class of objects $\op{Ob}\mathcal C$ and morphisms $\op{Mor}\mathcal C$ such that any two objects $A,B\in\op{Ob}\mathcal C$ have a morphism set $\op{Mor}(A,B)$. This data satisfy the following properties.
+	A \textit{category} $\mathcal C$ consists of a class of objects $\op{Ob}\mathcal C$ and class of morphisms $\op{Mor}\mathcal C$ such that any two objects $A,B\in\op{Ob}\mathcal C$ have a morphism class $\op{Mor}(A,B)$. This data satisfy the following properties.
 	\begin{itemize}
-		\item Given $f\in\op{Mor}(A,B)$ and $g\in\op{Mor}(B,C)$, there is a composition $(g\circ f)\in\op{Mor}(A,C)$.
+		\item Composition: given objects $A,B,C\in\op{Ob}\mathcal C$, there is a binary composition operation
+		\[\circ\colon\op{Mor}(B,C)\times\op{Mor}(A,B)\to\op{Mor}(A,C).\]
+		Explicitly, given $f\in\op{Mor}(A,B)$ and $g\in\op{Mor}(B,C)$, there is a composition $(g\circ f)\in\op{Mor}(A,C)$.
 		\item Given $A\in\op{Ob}\mathcal C$, there is an identity morphism ${\id_A}\in\op{Mor}(A,A)$.
 		\item Identity: any $f\in\op{Mor}(A,B)$ has $f\circ{\id_A}=f={\id_B}\circ f$.
 		\item Associativity: any $f\in\op{Mor}(A,B)$ and $g\in\op{Mor}(B,C)$ and $h\in\op{Mor}(C,D)$ has $(h\circ g)\circ f=h\circ (g\circ f)$.
 	\end{itemize}
 \end{definition}
 \begin{example}
-	There is a category of groups, where the morphisms are group homomorphisms.
+	There is a category of groups, where the morphisms are group homomorphisms. The identity function gives the identity morphism, and composition of functions gives the required composition.
+	
+	For completeness, we check that composition is well-defined: given homomorphisms $f\colon A\to B$ and $g\colon B\to C$, we need $(g\circ f)\colon A\to C$ to be a group homomorphism. Well,
+	\[(g\circ f)(a\cdot a')=g(f(a\cdot a'))=g(f(a)\cdot f(a'))=g(f(a))\cdot g(f(a'))=(g\circ f)(a)\cdot (g\circ f)(a').\]
 \end{example}
-\begin{example}
-	There is a category of metric spaces, where the morphisms will be continuous maps.
-\end{example}
-One can actually specify more carefully what kinds of morphisms we're paying attention to. Here are some kinds of morphisms.
+In our discussion of metric spaces, there are many possible kinds of morphisms for us to consider. Here is the strongest type.
 \begin{definition}[Isometry]
 	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, an \textit{isometry} is a function $f\colon X\to Y$ preserving the metric as
 	\[d_Y(f(x),f(x'))=d_X(x,x').\]
 \end{definition}
-One can check quickly that the composition of two isometries is an isometry.
-\begin{remark}
-	Of course, one can then ask for surjective isometries as well, whose compositions remain surjective. It turns out that being surjective promises an inverse isometry.
+\begin{example}
+	The $90^\circ$ rotation $r\colon\RR^2\to\RR^2$ given by $r(x,y)\mapsto(y,-x)$ is an isometry, where $\RR^2$ is given the Euclidean metric. Indeed, any $(x,y),(x',y')\in\RR^2$ have
+	\begin{align*}
+		d\big(r(x,y),r(x',y')\big) &= d\big((y,-x),(y',-x')\big) \\
+		&= \sqrt{(y-y')^2+(-x--x')^2} \\
+		&= \sqrt{(x-x')^2+(y-y')^2} \\
+		&= d\big((x,y),(x',y')\big).
+	\end{align*}
+\end{example}
+\begin{notation}
+	Fix two metric spaces $(X,d_X)$ and $(Y,d_Y)$. Given a function $f\colon X\to Y$ with extra structure respecting some aspect of the metric, we might write $f\colon(X,d_X)\to(Y,d_Y)$ to emphasize this.
+\end{notation}
+To show that isometries are valid morphisms, we need to check that the identity function ${\id_X}\colon X\to X$ is an isometry (which of course it is) and that the composition of two isometries is an isometry. We check this last one in a quick lemma.
+\begin{lemma}
+	Given two isometries $f\colon(X,d_X)\to(Y,d_Y)$ and $g\colon(Y,d_Y)\to(Z,d_Z)$, the composition $g\circ f$ is an isometry.
+\end{lemma}
+\begin{proof}
+	Well, any two points $x,x'\in X$ have
+	\[d_Z(g(f(x)),g(f(x')))=d_Y(f(x),f(x'))=d_X(x,x'),\]
+	which is what we wanted.
+\end{proof}
+One can restrict further to surjective isometries, where the main point is that (again) the composition of two surjective functions remains surjective. (Note that the identity is of course surjective.) The following is the reason why a surjective isometry is a good notion.
+\begin{lemma}
+	A surjective isometry $f\colon(X,d_X)\to(Y,d_Y)$ is bijective, and its inverse function is also an isometry.
+\end{lemma}
+\begin{proof}
+	To see that $f$ is bijective, we only need to know that $f$ is injective. Well, given $x,x'\in X$, note that $f(x)=f(x')$ if and only if $d_Y(f(x),f(x'))=0$ if and only if $d(x,x')=0$ if and only if $x=x'$.\footnote{In fact, this argument shows that all isometries are injective. We will shortly see that all actually Lipschitz continuous functions are injective.}
+
+	Thus, $f$ is indeed bijective; let $g\colon Y\to X$ be its inverse. We now need to show that $g$ is an isometry. Well, given $y,y'\in Y$, we may find $x,x'\in X$ such that $f(x)=y$ and $f(x')=y'$. Then
+	\[d_X(g(y),g(y'))=d_X((g\circ f)(x),(g\circ f)(x'))=d_X(x,x')\stackrel*=d_Y(f(x),f(x'))=d_Y(y,y'),\]
+	where in $\stackrel*=$ we have used the fact that $f$ is an isometry.
+\end{proof}
+\begin{remark} \label{rem:bijvsiso}
+	The above result is somewhat subtle in its importance: the inverse function of a bijection is only an inverse in the category of sets. The above result is saying that this inverse morphism in the category of sets is lifting to an inverse morphism in the category of metric spaces with isometries as morphisms. In general, it is not always true that bijective morphisms are invertible, as we shall soon see.
 \end{remark}
+
+\subsection{Lipschitz Continuity}
 Isometries are somewhat restrictive, so we might weaken this as follows.
-\begin{definition}[Lipschitz continuous]
+\begin{definition}[Lipschitz continuous] \label{defi:lipcont}
 	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is a \textit{Lipschitz continuous} if and only if there is a constant $c\in\RR$ such that
 	\[d_Y(f(x),f(x'))\le c\cdot d_X(x,x').\]
-	The smallest constant $c$ which works here is called the \textit{Lipschitz constant} for $f$. If $f$ has a Lipschitz continuous inverse, then $f$ is a \textit{Lipschitz isomorphism}.
 \end{definition}
-Again, one checks that the composition of Lipschitz continuous functions and Lipschitz isomorphisms are preserved under composition.
-\begin{remark}
-	A good reason to care about this notion of continuity is that all normed vector spaces of some finite dimension $n$ are Lipschitz isomorphic.
+\begin{remark} \label{rem:lipasratio}
+	Equivalently, we are asking for the ratio
+	\[\frac{d_Y(f(x),f(x'))}{d_X(x,x')}\]
+	to be uniformly bounded above for all $x\ne x'$. Notably, the inequality is trivially satisfied whenever $x=x'$, or equivalently whenever $d(x,x')=0$.
 \end{remark}
+\begin{example}
+	Any isometry $f\colon(X,d_X)\to(Y,d_Y)$ is Lipschitz continuous: indeed, set $c\coloneqq1$ so that, for any $x,x'\in X$,
+	\[d_Y(f(x),f(x'))=d_X(x,x')\le1\cdot d_X(x,x').\]
+\end{example}
+\begin{example} \label{ex:projectislip}
+	Provide $\RR$ and $\RR^2$ their usual Euclidean metrics. Then the projection $\pi\colon\RR^2\to\RR$ by $\pi\colon(x,y)\mapsto x$ is Lipschitz continuous: indeed, set $c\coloneqq1$ so that, for any $(x,y),(x',y')\in\RR^2$, we have
+	\[d_{\RR^2}\big((x,y),(x',y')\big)=\sqrt{(x-x')^2+(y-y')^2}\ge\sqrt{(x-x')^2}=d_\RR(x,x')=d_\RR\big(\pi((x,y)),\pi((x',y'))\big).\]
+\end{example}
+Again, one can see that the identity function ${\id_X}\colon(X,d_X)\to(X,d_X)$ is Lipschitz continuous (with $c\coloneqq1$), and here is our composition check.
+\begin{lemma}
+	If $f\colon(X,d_X)\to(Y,d_Y)$ and $g\colon(Y,d_Y)\to(Z,d_Z)$ are Lipschitz continuous, then the composition $(g\circ f)\colon(X,d_X)\to(Z,d_Z)$ is also Lipschitz continuous.
+\end{lemma}
+\begin{proof}
+	We are given constants $c$ and $d$ such that any $x,x'\in X$ and $y,y'\in Y$ have
+	\[d_Y(f(x),f(x'))\le c\cdot d_X(x,x')\qquad\text{and}\qquad d_Z(g(y),g(y'))\le d\cdot d_Y(y,y').\]
+	As such, we use the constant $cd$ to witness our Lipschitz continuity: any $x,x'\in X$ have
+	\[d_Z(g(f(x)),g(f(x')))\le d\cdot d_Y(f(x),f(x'))\le cd\cdot d_X(x,x'),\]
+	which is what we wanted.
+\end{proof}
+It will be shortly worth our time to talk about the constant $c$ appearing in \autoref{defi:lipcont}.
+\begin{lemma} \label{lem:getlipconst}
+	Fix a Lipschitz continuous function $f\colon(X,d_X)\to(Y,d_Y)$. Then there exists a constant $c_f$ (possibly $-\infty$) such that any real number $c\ge c_f$ is equivalent to the following property: any $x,x'\in X$ have
+	\[d_Y(f(x),f(x'))\le c\cdot d_X(x,x').\]
+\end{lemma}
+\begin{proof}
+	Let $S$ denote the set of all constants $c$ such that any $x,x'\in X$ have
+	\[d_Y(f(x),f(x'))\le c\cdot d_X(x,x').\]
+	Equivalently, using \autoref{rem:lipasratio}, $S$ is the set of upper-bounds for
+	\[R\coloneqq\left\{\frac{d_Y(f(x),f(x'))}{d_X(x,x')}:x,x'\in X,x\ne x'\right\}.\]
+	Now, $S$ is nonempty because $f$ is Lipschitz continuity, so we set $c_f\coloneqq\sup R$ to be the least upper bound for $R$---observe that $c_f=-\infty$ is permissible when $X$ has one point. It is now pretty clear that $S=[c_f,\infty)$.
+\end{proof}
+Note that $c_f$ the property stated in the lemma automatically implies that $c_f$ is the least possible constant and is unique. Being least is immediate (by the backwards direction), and being unique follows from being least. So because we have some uniqueness, we get a definition.
+\begin{definition}[Lipschitz constant]
+	Given a Lipschitz continuous function $f\colon(X,d_X)\to(Y,d_Y)$, the \textit{Lipschitz constant $c_f$ for $f$} is the least real number $c$ such that
+	\[d_Y(f(x),f(x'))\le d_X(x,x').\]
+\end{definition}
+We could, as before, look at surjective Lipschitz continuous functions, but these need not be bijective anymore as shown by \autoref{ex:projectislip}. What's worse is that, as warned possible in \autoref{rem:bijvsiso}, bijective Lipschitz continuous functions need not even have a Lipschitz continuous inverse.
+\begin{exe} \label{exe:sadbijlip}
+	We exhibit a function between metric spaces which is bijective and Lipschitz continuous, but its inverse function is not Lipschitz continuous.
+\end{exe}
+\begin{proof}
+	Set $X\coloneqq(0,1)$ and $Y\coloneqq(1,\infty)$, both metric spaces with the Euclidean (subspace) metric, and set $f\colon(0,\infty)\to(0,\infty)$ by $f\colon x\mapsto1/x$. Notably, $x\in X$ implies $f(x)\in Y$, and $y\in Y$ implies $f(y)\in X$.
+	\begin{itemize}
+		\item Note $f|_Y$ is bijective with inverse $f|_X$ because $f(f(x))=f(1/x)=x$ for all $x\in(0,\infty)$.
+		\item Note $f|_Y$ is Lipschitz continuous: set $c\coloneqq1$ and note that any $y,y'\in Y$ have
+		\[|f(y)-f(y')|=\left|\frac1y-\frac1{y'}\right|=\left|\frac{y-y'}{yy'}\right|\le|y-y'|.\]
+		\item But $f|_X$ is not Lipschitz continuous: suppose for contradiction that $f_X$ is Lipschitz continuous, and use \autoref{lem:getlipconst} to recover the needed constant $c_0$. Then set $c\coloneqq\max\{c_0,4\}$, which must also work as a constant, and set $x\coloneqq1/c$ and $x'\coloneqq3/c$ so that
+		\[|f(x)-f(x')|=\left|c-3c\right|=2c>c\cdot|x-x'|.\]
+		This is a contradiction, so we are done.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}[Nir]
+	In some sense, the problem here is that the definition of Lipschitz continuity allows $d_Y(f(x),f(x'))$ to be ``too small,'' which permits the inverse function to have distances which blow up.
+\end{remark}
+In light of \autoref{exe:sadbijlip}, we introduce a new definition.
+\begin{definition}[Lipschitz isomorphism]
+	Give metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is a \textit{Lipschitz isomorphism} if and only if $f$ is Lipschitz continuous and has an inverse function which is also Lipschitz continuous.
+\end{definition}
+\begin{remark}
+	A good reason to care about this notion of continuity (and isomorphism) is that all normed $\RR$-vector spaces of some finite dimension $n$ are Lipschitz isomorphic.
+	% One cannot hope for them all to be isometric because the two normed $\RR$-vector spaces $(\RR^n,\norm{\cdot}_2)$ and $(\RR^n,\norm{\cdot}_1)$ are not isometric.
+\end{remark}
+
+
+\subsection{Fun with Continuity}
 Here is yet a weaker notion of morphism.
 \begin{definition}[Uniformly continuous]
 	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is a \textit{uniformly continuous} if and only if every $\varepsilon>0$ has some $\delta>0$ such that
-	\[d_X(x,x')<\delta\implies d_Y(f(x),f(x'))<\delta\]
+	\[d_X(x,x')<\delta\implies d_Y(f(x),f(x'))<\varepsilon\]
 	for all $x,x'\in X$.
 \end{definition}
+\begin{example}
+	Any Lipschitz continuous function $f\colon(X,d_X)\to(Y,d_Y)$ is also uniformly continuous: indeed, for any $\varepsilon>0$, set $\delta\coloneqq\max\{c_f,1\}\varepsilon>0$ (where $c_f$ is the Lipschitz constant) so that
+	\[d_X(x,x')<\varepsilon\implies d_Y(f(x),f(x'))\le c_f\cdot d(x,x')<\delta.\]
+\end{example}
+\begin{example}
+	Give $[0,1]$ the Euclidean (subspace) metric, and set $f\colon[0,1]\to[0,1]$ by $f(x)\coloneqq\sqrt x$.
+	\begin{itemize}
+		\item Note $f$ is uniformly continuous because it is continuous on a compact set.
+		\item However, $f$ is not Lipschitz continuous: for any constant $c>0$, set $x=1/(c+1)^2$ and $x'=0$ so that
+		\[\left|\frac{f(x)-f(x')}{x-x'}\right|=\left|\frac{1/(c+1)}{1/(c+1)^2}\right|=|c+1|>c,\]
+		so \autoref{rem:lipasratio} tells us that we are not Lipschitz continuous.
+	\end{itemize}
+\end{example}
 By rearranging quantifiers, we get another useful (but weaker) notion.
 \begin{definition}[Continuous]
 	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is a \textit{continuous} if and only if, at any $x\in X$, all $\varepsilon>0$ have some $\delta_x>0$ such that
 	\[d_X(x,x')<\delta_x\implies d_Y(f(x),f(x'))<\varepsilon.\]
 \end{definition}
-As usual, composition is preserved and so on.
+\begin{example}
+	All uniformly continuous functions $f\colon(X,d_X)\to(Y,d_Y)$ are continuous. Indeed, at any $x_0\in X$ with $\varepsilon>0$, uniform continuity promises $\delta>0$ so that
+	\[|x-x'|<\delta\implies|f(x)-f(x')|<\varepsilon\]
+	for all $x,x'\in X$. Setting $x'$ to $x_0$ recovers continuity.
+\end{example}
+\begin{example}
+	Give $\RR$ the usual Euclidean metric, and set $f\colon\RR\to\RR$ by $f(x)\coloneqq x^2$.
+	\begin{itemize}
+		\item Note $f(x)$ is continuous because it is a polynomial.
+		\item However, $f(x)$ is not uniformly continuous: take $\varepsilon=1$. Now, for any $\delta>0$, set $x=1/\delta$ and $x'=1/\delta+\delta/2$ so that $|x-x'|<\delta$, but
+		\[|f(x)-f(x')|=\left(\frac1\delta+\frac\delta2\right)^2-\frac1{\delta^2}=1+\frac{\delta^2}4>\varepsilon.\]
+	\end{itemize}
+\end{example}
+As usual, the identity function is uniformly continuous and continuous (it's an isometry), and these continuities are preserved by composition. We will have a different way to see that continuous functions remain continuous under composition later, so for now we will focus on uniform continuity.
+\begin{lemma}
+	Fix uniformly continuous morphisms $f\colon(X,d_X)\to(Y,d_Y)$ and $g\colon(Y,d_Y)\to(Z,d_Z)$. Then the function $(g\circ f)$ is uniformly continuous.
+\end{lemma}
+\begin{proof}
+	For any $\varepsilon>0$, the uniform continuity of $g$ promises $\delta_g>0$ such that
+	\[d_Y(y,y')<\delta_g\implies d_Z(g(y),g(y'))<\varepsilon\]
+	for any $y,y'\in Y$. Continuing, the uniform continuity of $f$ promises $\delta_f>0$ such that
+	\[d_X(x,x')<\delta_X\implies d_Y(f(x),f(x'))<\delta_Y\implies d_Z(g(f(x)),g(f(x')))<\varepsilon\]
+	for any $x,x'\in X$, which is what we wanted.
+\end{proof}
 \begin{remark}
 	In some sense, isometries and Lipschitz continuous functions have their definition fundamentally interrelated with the metric. In contrast, the weaker notion of continuity will readily generalize to general topological spaces. Uniform continuity also generalizes to ``uniformities,'' which is a different notion.
 \end{remark}
