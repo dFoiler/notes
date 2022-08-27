@@ -197,21 +197,62 @@ As usual, the identity function is uniformly continuous and continuous (it's an 
 	In some sense, isometries and Lipschitz continuous functions have their definition fundamentally interrelated with the metric. In contrast, the weaker notion of continuity will readily generalize to general topological spaces. Uniform continuity also generalizes to ``uniformities,'' which is a different notion.
 \end{remark}
 
-\subsection{Completeness}
+\subsection{Convergence and Completeness}
 To discuss completeness, we need to talk about convergence.
 \begin{definition}[Converge]
 	Fix a metric space $(X,d)$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ \textit{converges to} $x\in X$ if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
 	\[n>N\implies d(x_n,x)<\varepsilon.\]
-	We might write this as $x_n\to x$ as $n\to\infty$.
+	We might write this as ``$x_n\to x$ as $n\to\infty$'' or ``$\lim_{n\to\infty}x_n=x$.'' In this event, we may say that the sequence $\{x_n\}_{n\in\NN}$ \textit{converges}, and its limit is $x$.
 \end{definition}
+\begin{remark}[Nir] \label{rem:uniqlim}
+	As a sanity check, the limit of a sequence is unique: if $x_n\to x$ and $x_n\to x'$ as $n\to\infty$, then any $\varepsilon>0$ can find some large $n$ so that $d(x_n,x),d(x_n,x')<\varepsilon/2$. As such,
+	\[d(x,x')<d(x_n,x)+d(x_n,x')=\varepsilon\]
+	for any $\varepsilon>0$, so $d(x,x')=0$ and thus $x=x'$ is forced.
+\end{remark}
+We have no reason yet to be convinced that any of our morphisms described previously are good notions, so let's start with continuity.
+\begin{lemma} \label{lem:contpreservesconverge}
+	Fix a continuous function between metric spaces $f\colon(X,d_X)\to(Y,d_Y)$. Then, if the sequence $\{x_n\}_{n\in\NN}\subseteq X$ converges to $x\in X$, then the sequence $\{f(x_n)\}_{n\in\NN}\subseteq Y$ converges to $f(x)\in Y$.
+\end{lemma}
+\begin{proof}
+	For any $\varepsilon>0$,the continuity of $f$ implies that we can find $\delta_x>0$ so that
+	\[d_X(x_n,x)<\delta_x\implies d_Y(f(x_n),f(x))<\varepsilon\]
+	for any $x_n$. But the fact that $x_n\to x$ as $n\to\infty$ means that there is $N>0$ so that
+	\[n>N\implies d_X(x_n,n)\implies d_Y(f(x_n),f(x))<\varepsilon,\]
+	so indeed, $f(x_n)\to f(x)$ as $n\to\infty$.
+\end{proof}
 We would like a notion of convergence which only uses data internal to the sequence, and this leads to the following definition.
 \begin{definition}[Cauchy]
 	Fix a metric space $(X,d)$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ is a \textit{Cauchy sequence} if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
 	\[n,m>N\implies d(x_n,x_m)<\varepsilon.\]
 \end{definition}
-One can check that all convergent sequences are Cauchy, and we in general hope that our Cauchy sequences will converge. As such, we have the following definition.
+It would be rude if continuity was always the best kind of morphism, so this time around preserving Cauchy-ness requires something stronger.
+\begin{lemma} \label{lem:uniformcontpreservecauchy}
+	Fix a uniformly continuous function between metric spaces $f\colon(X,d_X)\to(Y,d_Y)$. Then, if the sequence $\{x_n\}_{n\in\NN}\subseteq X$ is Cauchy, then the sequence $\{f(x_n)\}_{n\in\NN}\subseteq Y$ is also Cauchy.
+\end{lemma}
+\begin{proof}
+	For any $\varepsilon>0$, the uniform continuity of $f$ promises $\delta>0$ so that
+	\[d_X(x_n,x_m)<\delta\implies d(f(x_n),f(x_m))<\varepsilon\]
+	for any $x_n,x_m$. However, the fact that $\{x_n\}_{n\in\NN}$ is Cauchy promises $N$ so that
+	\[n,m>N\implies d_X(x_n,x_m)<\delta\implies d(f(x_n),f(x_m))<\varepsilon,\]
+	which is what we wanted.
+\end{proof}
+\begin{example}
+	Continuous functions do not need to preserve Cauchy sequences: $f\colon(0,\infty)\to(0,\infty)$ by $f(x)\coloneqq 1/x$ is continuous, and the sequence $\{1/n\}_{n\in\NN}\subseteq(0,\infty)$ is Cauchy (it converges to $0$ in $\RR$) even though $\{f(1/n)\}_{n\in\NN}=\{n\}_{n\in\NN}$ certainly does not converge.
+\end{example}
+Anyway, it is quick to check that convergent sequences are Cauchy.
+\begin{lemma}
+	Fix a metric space $(X,d)$. Then all convergent sequences are Cauchy.
+\end{lemma}
+\begin{proof}
+	Suppose that the sequence $\{x_n\}_{n\in\NN}\subseteq X$ converges to $x\in X$. Then, for any $\varepsilon>0$, find $N$ so that
+	\[d(x_n,x)<\varepsilon/2\]
+	for all $n>N$. Then any $n,m>N$ has
+	\[d(x_n,x_m)\le d(x_n,x)+d(x_m,x)<\varepsilon,\]
+	so the sequence $\{x_n\}_{n\in\NN}$ is Cauchy.
+\end{proof}
+We in general hope that our Cauchy sequences converge. As such, we have the following definition.
 \begin{definition}[Complete]
-	A metric space $(X,d)$ is \textit{complete} if and only if every Cauchy sequence in $X$ converges to a point in $X$.	
+	A metric space $(X,d)$ is \textit{complete} if and only if every Cauchy sequence in $X$ converges to a point in $X$.
 \end{definition}
 We are sad when a metric space is not complete, so we hope to have a way to make it complete. The most natural way to do this is by using the notion of density.
 \begin{definition}[Density]
@@ -221,11 +262,14 @@ And here is our completion.
 \begin{definition}[Completion]
 	A \textit{completion} of the metric space $(X,d)$ is a metric space $(\overline X,\overline d)$ equipped with an isometry $\iota\colon X\to\overline X$ such that $(\overline X,\overline d)$ is complete and $\im\iota$ is dense in $\overline X$.
 \end{definition}
-One can show that any metric space has a completion and that they are all isometric and therefore in some sense the same. The uniqueness result will appear on the homework, so for now we will discuss existence.
+One can show that any metric space has a completion and that they are all isometric and therefore in some sense the same. We'll do these separately.
+
+\subsection{Existence of Completions}
+Let's start with existence.
 \begin{theorem}
 	Any metric space $(X,d)$ has a completion.
 \end{theorem}
-\begin{proof}[Sketch]
+\begin{proof}
 	Let $\widetilde X$ denote the set of all Cauchy sequences in $X$. We hope to make $\widetilde X$ into our completion, but this requires a little care. To begin, we have the following lemma.
 	\begin{lemma}
 		Given a metric space $(X,d)$ with two Cauchy sequences $\{x_n\}_{n\in\NN}$ and $\{y_n\}_{n\in\NN}$, then the sequence
@@ -233,13 +277,155 @@ One can show that any metric space has a completion and that they are all isomet
 		converges.
 	\end{lemma}
 	\begin{proof}
-		Omitted.
+		Because $\RR$ is a complete metric space, it suffices to show that the sequence $\{d(x_n,y_n)\}_{n\in\NN}$ is Cauchy. Well, for any $\varepsilon>0$, find a sufficiently large $N$ so that
+		\[n,m>N\implies d(x_n,x_m),d(y_n,y_m)<\varepsilon/2.\]
+		Then any $n,m>N$ has
+		\[d(x_n,y_n)\le d(x_n,x_m)+d(x_m,y_m)+d(y_m,y_n)<\varepsilon+d(y_m,y_n),\]
+		and $d(x_m,y_m)<d(x_n,y_n)+\varepsilon$ as well by symmetry. It follows that any $n,m>N$ has
+		\[\big|d(x_n,y_n)-d(x_m,y_m)\big|<\varepsilon,\]
+		verifying that our sequence is Cauchy.
 	\end{proof}
-	Thus, we define $\widetilde d\colon\widetilde X\times\widetilde X\to\RR_{\ge0}$ be this well-defined function. One can show that $\widetilde d$ is a semi-norm, and so we use \autoref{prop:semitometric} to induce a metric $\overline d$ on $\overline X\coloneqq\widetilde X/{\sim}$.
-	
-	To finish the proof, one has to check that $\overline X$ is in fact a completion. It is somewhat annoying to check that $\overline X$ is complete (though it is not terribly tricky), and the required isometry $\iota\colon X\to\overline X$ is given by
-	\[\iota(x)\coloneqq\{x\}_{n\in\NN},\]
-	which is certainly Cauchy.
+	\begin{remark} \label{rem:metriciscont}
+		Here is a quick motivational remark for the definition of our metric below: if $(X,d)$ is a metric space with $x_n\to x$ and $y_n\to y$ as $n\to\infty$, then we claim $d(x_n,y_n)\to d(x,y)$ as $n\to\infty$. Indeed, for any $\varepsilon>0$, we can find $N$ large enough so that $d(x_n,x),d(y_n,y)<\varepsilon/2$ for any $n>N$. As such,
+		\[d(x_n,y_n)\le d(x_n,x)+d(x,y)+d(y,y_n)<d(x,y)+\varepsilon.\]
+		By symmetry, we get $d(x,y)\le d(x_n,y_n)+\varepsilon$ as well, finishing.
+	\end{remark}
+	Thus, we define $\widetilde d\colon\widetilde X\times\widetilde X\to\RR_{\ge0}$ by
+	\[\widetilde d\left(\{x_n\},\{y_n\}\right)\coloneqq\lim_{n\to\infty}d(x_n,y_n).\]
+	We claim that $\widetilde d$ is a semi-metric on $\widetilde X$. We have the following checks; fix Cauchy sequences $\{x_n\},\{y_n\},\{z_n\}$.
+	\begin{itemize}
+		\item Zero: note
+		\[\widetilde d(\{x_n\},\{x_n\})=\lim_{n\to\infty}d(x_n,x_n)=0.\]
+		\item Symmetry: note
+		\[\widetilde d(\{x_n\},\{y_n\})=\lim_{n\to\infty}d(x_n,y_n)=\lim_{n\to\infty}d(y_n,x_n)=\widetilde d(\{y_n\},\{x_n\}).\]
+		\item Triangle inequality: note
+		\begin{align*}
+			\widetilde d(\{x_n\},\{y_n\})+\widetilde(\{y_n\},\{z_n\}) &= \lim_{n\to\infty}d(x_n,y_n)+\lim_{n\to\infty}d(y_n,z_n) \\
+			&= \lim_{n\to\infty}(d(x_n,y_n)+d(y_n,z_n)) \\
+			&\ge \lim_{n\to\infty}d(x_n,z_n) \\
+			&= \widetilde d(x_n,z_n),
+		\end{align*}
+		where we have implicitly used a number of limit laws.
+	\end{itemize}
+	So because $\widetilde d$ is a semi-metric, \autoref{prop:semitometric} tells us that $\widetilde d$ will descend naturally to a metric $\overline d$ on $\overline X\coloneqq\widetilde X/{\sim}$, where $\{x_n\}\sim\{y_n\}$ if and only if $\widetilde d(\{x_n\},\{y_n\})=0$. We will let $[\{x_n\}]$ denote the equivalence class of the Cauchy sequence $\{x_n\}\in\widetilde X$ in $\overline X$.
+
+	We now show that $(\overline X,\overline d)$ can be made into a completion for $X$.
+	\begin{itemize}
+		\item Given $x\in X$, note that the constant sequence $\{x\}$ is Cauchy (for any $\varepsilon>0$, set $N=0$), so we define $\iota\colon X\to\overline X$ by
+		\[\iota(x)\coloneqq[\{x\}].\]
+		To see that $\iota$ is an isometry, note any $x,x'\in X$ have
+		\[\overline d(\iota(x),\iota(x'))=\widetilde d(\{x\},\{y\})=\lim_{n\to\infty}d(x,y)=d(x,y).\]
+		\item We show that $\im\iota$ is dense in $\overline X$. Indeed, fix some $[\{x_n\}]\in\overline X$ and $\varepsilon>0$. Then there is some $N$ so that $n,m>N$ has
+		\[d(x_n,x_m)<\varepsilon/2.\]
+		Fixing a particular $n_0$ with $n_0>N$, we set $x\coloneqq x_{n_0}$ so that
+		\[\overline d([\{x_n\}],\iota(x))=\widetilde d(\{x_n\},x_{n_0})=\lim_{n\to\infty}d(x_n,x_{n_0}).\]
+		Now, for $n>N$, we have $d(x_n,x_{n_0})<\varepsilon/2$, so we conclude that this limit must be less than $\varepsilon$.
+		\item We show that $(\overline X,\overline d)$ is a complete metric space. Fix a Cauchy sequence $\{\overline x_k\}$ in $\overline X$. To find the Cauchy sequence we are supposed to converge to, we use our density result: for each $k\in\NN$, we can find $y_k\in X$ such that $\overline d(\overline x_k,\iota(y_k))<1/n$.
+
+		We claim that $\{y_k\}$ is Cauchy. Indeed, for any $\varepsilon>0$, we can find $N$ such that $k,\ell>N_0$ has
+		\[\overline d(\overline x_k,\overline x_\ell)<\varepsilon/3.\]
+		Then, setting $N\coloneqq\max\{3/\varepsilon,N_0\}$, we note that $k,\ell>N$ has
+		\[d(y_k,y_\ell)=\overline d(\iota(y_k),\iota(d_\ell))\le\overline d(\overline x_k,\iota(y_k))+\overline d(\overline x_\ell,\iota(y_\ell))+\overline d(\overline x_k,\overline x_\ell)<\varepsilon.\]
+		Lastly, we claim that $\overline x_k\to[\{y_n\}]$ in $\overline X$. Indeed, for any $\varepsilon>0$, find some sufficiently large $N$ so that
+		\[k,\ell>N\implies d(y_k,y_\ell)<\varepsilon/2.\]
+		Then $k>\max\{N,2/\varepsilon\}$ has
+		\[\overline d(\overline x_k,[\{y_n\}])\le\overline d(\overline x_k,\iota(y_k))+\overline d([\{y_n\}],\iota(y_k))<\frac\varepsilon2+\lim_{n\to\infty}d(y_n,y_k).\]
+		Because $k>N$, we have $d(y_n,y_k)<\varepsilon/2$, so the entire right-hand side must be upper-bounded by $\varepsilon$. This finishes.
+	\end{itemize}
+	The above checks complete the proof.
+\end{proof}
+\begin{remark}[Nir]
+	One might complain that we used the completeness of $\RR$ in this proof because one common way to construct the real numbers is as the completion of $\QQ$ under the Euclidean metric. To remedy this, one ought to define the equivalence relation on Cauchy sequences more directly, saying that two Cauchy sequences $\{x_n\}_{n\in\NN}$ and $\{y_n\}_{n\in\NN}$ of real numbers are equivalent under $\sim$ if and only if
+	\[\lim_{n\to\infty}d_\RR(x_n,y_n)=0.\]
+\end{remark}
+
+\subsection{Uniqueness of Completions}
+We now show that any two completions of a metric space $(X,d)$ are isometric, which is our uniqueness result. Here is the main intermediate result.
+\begin{lemma} \label{lem:completionup}
+	Fix a metric space $(X,d)$ and a completion $(\overline X,\overline d)$ with its isometry $\iota\colon(X,d)\to(\overline X,\overline d)$. Then, for any complete metric space $(Y,d')$ and isometry $\varphi\colon(X,d)\to(Y,d')$, there is a unique isometry $\psi\colon(\overline X,\overline d)\to(Y,d')$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiXFxvdmVybGluZSBYIl0sWzEsMSwiWSJdLFswLDEsIlxcaW90YSJdLFswLDIsIlxcdmFycGhpIiwyXSxbMSwyLCJcXHBzaSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		X & {\overline X} \\
+		& Y
+		\arrow["\iota", from=1-1, to=1-2]
+		\arrow["\varphi"', from=1-1, to=2-2]
+		\arrow["\psi", dashed, from=1-2, to=2-2]
+	\end{tikzcd}\]
+\end{lemma}
+\begin{proof}
+	We start by showing the uniqueness of $\psi$. Well, for any $\overline x\in X$, note that any $n\in\NN$ allows us to find $x_n\in X$ with
+	\[\overline d(\overline x,\iota(x_n))<1/n\]
+	because $\im\iota$ is dense in $\overline X$. Now, we notice that $\iota(x_n)\to x$ as $n\to\infty$ because any $\varepsilon>0$ can set $N=1/\varepsilon$. As such, we see that \autoref{lem:contpreservesconverge} applied to any possible $\psi\colon\overline X\to Y$ forces
+	\[\psi(\overline x)=\psi\Big(\lim_{n\to\infty}\iota(x_n)\Big)=\lim_{n\to\infty}\psi(\iota(x_n))=\lim_{n\to\infty}\varphi(x_n).\]
+	Note that, a priori, we do not know if the sequence $\{\varphi(x_n)\}_{n\in\NN}$ converges, but this argument tells us that it must; the limit is unique by \autoref{rem:uniqlim}, so $\psi(\overline x)$ is unique as well.
+
+	We now show that $\psi$ exists. As before, any $\overline x\in X$ can find a sequence $\{x_n\}\subseteq X$ such that $\iota(x_n)\to\overline x$ as $n\to\infty$. Thus, we note that $\{\varphi(x_n)\}$ is Cauchy by \autoref{lem:uniformcontpreservecauchy}, so the completeness of $Y$ gives it a limit; we set
+	\[\psi(\overline x)\coloneqq\lim_{n\to\infty}\varphi(x_n).\]
+	We have the following checks on $\psi$.
+	\begin{itemize}
+		\item Well-defined: if we have two sequences $\{x_n\}$ and $\{x'_n\}$ such that $\iota(x_n)\to x$ and $\iota(x'_n)\to x$ as $n\to\infty$, we need to show that
+		\[\lim_{n\to\infty}\varphi(x_n)=\lim_{n\to\infty}\varphi(x'_n).\]
+		For brevity, set $y$ and $y'$ to be the limits of $\{\varphi(x_n)\}$ and $\{\varphi(x'_n)\}$, respectively. Then, for any $\varepsilon>0$, we note that there is a sufficiently large $N$ such that
+		\[n>N\implies d_Y(y,\varphi(x_n)),d-Y(y',\varphi(x'_n))<\varepsilon/4.\]
+		Further, we can make $N$ even larger so that
+		\[n>N\implies\overline d(\overline x,\iota(x_n)),\overline d(\overline x,\iota(x'_n))<\varepsilon/4.\]
+		As such, any $n>N$ has
+		\begin{align*}
+			d_Y(y,y') &\le d_Y(y,\varphi(x_n))+d_Y(\varphi(x_n),\varphi(x'_n))+d_Y(y',\varphi(x'_n)) \\
+			&< \varepsilon/4+d_X(x_n,x'_n)+\varepsilon/4 \\
+			&= \varepsilon/2+\overline d(\iota(x_n),\iota(x'_n)) \\
+			&\le \varepsilon/2+\overline d(\overline x,\iota(x_n))+\overline d(\overline x,\iota(x'_n)) \\
+			&< \varepsilon.
+		\end{align*}
+		It follows $d_Y(y,y')=0$, so $y=y'$.
+		\item Isometry: given $\overline x,\overline x'\in X$, find sequences $\{x_n\}$ and $\{x'_n\}$ in $X$ so that $\iota(x_n)\to\overline x$ and $\iota(x'_n)\to\overline x'$ as $n\to\infty$. Thus,
+		\begin{align*}
+			d_Y(\psi(\overline x),\psi(\overline x')) &= d_Y\Big(\lim_{n\to\infty}\varphi(x_n),\lim_{n\to\infty}\varphi(x'_n)\Big) \\
+			&\stackrel*= \lim_{n\to\infty}d_Y(\varphi(x_n),\varphi(x'_n)) \\
+			&= \lim_{n\to\infty}d(x_n,x'_n) \\
+			&= \lim_{n\to\infty}\overline d(\iota(x_n),\iota(x'_n)) \\
+			&= \overline d\Big(\lim_{n\to\infty}\iota(x_n),\lim_{n\to\infty}\iota(x'_n)\Big) \\
+			&\stackrel*= \overline d(\overline x,\overline x'),
+		\end{align*}
+		where we have used \autoref{rem:metriciscont} at the $\stackrel*=$.
+		\item For any $x\in X$, we see that the (constant) Cauchy sequence $\{\iota(x)\}$ converges to $\iota(x)$, so
+		\[\psi(\iota(x))=\lim_{n\to\infty}\varphi(x)=\varphi(x).\]
+		It follows $\psi\circ\iota=\varphi$.
+	\end{itemize}
+	Thus, we have finished establishing the existence of an isometry $\psi\colon\overline X\to Y$ such that $\varphi=\psi\circ\iota$.
+\end{proof}
+\begin{remark}
+	One can also replace all isometries with uniformly continuous functions in the statement.
+\end{remark}
+And here is our uniqueness result.
+\begin{theorem}
+	Fix a metric space $(X,d)$ and two completions $\iota\colon(X,d)\to(\overline X,\overline d)$ and $\iota'\colon(X,d)\to(\overline X',\overline d')$. Then there is a surjective isometry $\psi\colon(\overline X,\overline d)\to(\overline X',\overline d')$.
+\end{theorem}
+\begin{proof}
+	Applying \autoref{lem:completionup} twice, we get isometries $\psi\colon(\overline X,\overline d)\to(\overline X',\overline d')$ and $\psi'\colon(\overline X',\overline d')\to(\overline X,\overline d)$ making the following diagrams commute.
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJYIl0sWzEsMCwiXFxvdmVybGluZSBYIl0sWzEsMSwiXFxvdmVybGluZSBYJyJdLFsyLDAsIlgiXSxbMywwLCJcXG92ZXJsaW5lIFgnIl0sWzMsMSwiXFxvdmVybGluZSBYIl0sWzAsMSwiXFxpb3RhIl0sWzAsMiwiXFxpb3RhJyIsMl0sWzEsMiwiXFxwc2kiXSxbMyw0LCJcXGlvdGEnIl0sWzQsNSwiXFxwc2knIl0sWzMsNSwiXFxpb3RhIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		X & {\overline X} & X & {\overline X'} \\
+		& {\overline X'} && {\overline X}
+		\arrow["\iota", from=1-1, to=1-2]
+		\arrow["{\iota'}"', from=1-1, to=2-2]
+		\arrow["\psi", from=1-2, to=2-2]
+		\arrow["{\iota'}", from=1-3, to=1-4]
+		\arrow["{\psi'}", from=1-4, to=2-4]
+		\arrow["\iota"', from=1-3, to=2-4]
+	\end{tikzcd}\]
+	In particular, we see that $\psi'\circ\psi$ makes the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiXFxvdmVybGluZSBYIl0sWzEsMSwiXFxvdmVybGluZSBYIl0sWzAsMSwiXFxpb3RhIl0sWzAsMiwiXFxpb3RhIiwyXSxbMSwyLCJcXHBzaSdcXGNpcmNcXHBzaSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		X & {\overline X} \\
+		& {\overline X}
+		\arrow["\iota", from=1-1, to=1-2]
+		\arrow["\iota"', from=1-1, to=2-2]
+		\arrow["{\psi'\circ\psi}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	However, using \autoref{lem:completionup} again, this isometry $\psi'\circ\psi$ is unique to make the diagram commute, and we could of course put the isometry $\id_{\overline X}$ here if we wanted to. Thus,
+	\[\psi'\circ\psi={\id_{\overline X}}.\]
+	By symmetry, $\psi\circ\psi'=\id_{\overline X'}$, so we do see that $\psi$ and $\psi'$ are inverse isometries. This finishes the proof.
 \end{proof}
 
 \end{document}
