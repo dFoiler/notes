@@ -1,0 +1,148 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we talk about the structure sheaf. To review, so far we have defined the spectrum $\Spec A$ of a ring $A$ and given it a topology. The goal for today is to define its structure sheaf. Here is a motivating example.
+\begin{example}
+	Set $A\coloneqq\CC[x_1,\ldots,x_n]$ so that $\Spec A=\AA^n_k$. Recall that $\{D(f)\}_{f\in A}$ is a base for the Zariski topology, and we would like the functions on this ring to be $A_f$, the rational polynomials which allow some $f$ in the denominator. In other words, these are rational functions on $\CC^n$ whose poles are allowed on $V(\{f\})$ only.
+\end{example}
+
+\subsection{Sheaves}
+Sheaves are largely a topological object, so we will forget that we are interested in the Zariski topology for now. Throughout, $X$ will be a topological space.
+\begin{notation}
+	Given a topological space $X$, we let $\op{Op}X$ denote the poset (category) of its open sets.
+\end{notation}
+Namely, the objects of $\op{Ob}X$ are open sets, and
+\[\op{Mor}(V,U)=\begin{cases}
+	\{*\} & V\subseteq U, \\
+	\emp & \text{else}.
+\end{cases}\]
+Here is our definition.
+\begin{definition}[Presheaf]
+	A \textit{presheaf} $\mathcal F$ on a topological space $X$ valued in a category $\mathcal C$ is a contravariant functor $\mathcal F\colon(\op{Ob}X)\opp\to\mathcal C$. More concretely, $\mathcal F$ has the following data.
+	\begin{itemize}
+		\item Given an open set $U\subseteq X$, we have $\mathcal F(U)\in\mathcal C$.
+		\item Given open sets $V\subseteq U\subseteq X$, we have a restriction map ${\op{res}_{U,V}}\colon\mathcal F(U)\to\mathcal F(V)$ in $\mathcal C$.
+	\end{itemize}
+	This data satisfies the following coherence conditions.
+	\begin{itemize}
+		\item Identity: given an open set $U\subseteq X$, ${\op{res}_{U,U}}=\id_{\mathcal F(U)}$.
+		\item Functoriality: given open sets $W\subseteq V\subseteq U$, the following diagram commutes.
+		% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXG1jIEYoVikiXSxbMSwxLCJcXG1jIEYoVykiXSxbMCwxLCJcXG9we3Jlc31fe1UsVn0iXSxbMSwyLCJcXG9we3Jlc31fe1YsV30iXSxbMCwyLCJcXG9we3Jlc31fe1UsV30iLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F(U)} & {\mc F(V)} \\
+			& {\mc F(W)}
+			\arrow["{\op{res}_{U,V}}", from=1-1, to=1-2]
+			\arrow["{\op{res}_{V,W}}", from=1-2, to=2-2]
+			\arrow["{\op{res}_{U,W}}"', from=1-1, to=2-2]
+		\end{tikzcd}\]
+	\end{itemize}
+\end{definition}
+\begin{notation}
+	We might call an element $f\in\mc F(U)$ a \textit{section over $U$}.
+\end{notation}
+\begin{notation}
+	Given $f\in\mathcal F(U)$, we might write $f|_V\coloneqq\op{res}_{U,V}f.$
+\end{notation}
+\begin{remark}
+	In principle, one can have any target category $\mathcal C$ for our presheaf. However, we will only work $\mathrm{Set}$, $\mathrm{Ab}$, $\mathrm{Ring}$, $\mathrm{Mod}_R$ in this class.
+\end{remark}
+Now that we've defined an algebraic object, we should discuss its morphisms.
+\begin{definition}[Presheaf morphism]
+	Fix a topological space $X$. A \textit{presheaf morphism} between $\mathcal F$ and $\mathcal G$ is a natural transformation $\eta\colon\mathcal F\Rightarrow\mathcal G$. In other words, for each open set $U\subseteq X$, we have a morphism $\eta_U\colon\mathcal F(U)\to\mathcal F(V)$; these morphisms make the following diagram commute.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYoVSkiXSxbMCwxLCJcXG1hdGhjYWwgRihWKSJdLFsxLDAsIlxcbWF0aGNhbCBHKFUpIl0sWzEsMSwiXFxtYXRoY2FsIEcoVikiXSxbMCwyLCJcXGV0YV9VIl0sWzEsMywiXFxldGFfViIsMl0sWzAsMSwiXFxvcHtyZXN9X3tVLFZ9IiwyXSxbMiwzLCJcXG9we3Jlc31fe1UsVn0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F(U)} & {\mathcal G(U)} \\
+		{\mathcal F(V)} & {\mathcal G(V)}
+		\arrow["{\eta_U}", from=1-1, to=1-2]
+		\arrow["{\eta_V}"', from=2-1, to=2-2]
+		\arrow["{\op{res}_{U,V}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+\end{definition}
+We've talked about presheaves a lot; where are sheaves?
+\begin{definition}[Sheaf]
+	Fix a topological space $X$. A presheaf $\mathcal F\colon(\op{Ob}X)\opp\to\mathcal C$ is a \textit{sheaf} if and only if it satisfies the following for any open set $U\subseteq X$ with an open cover $\mc U$.
+	\begin{itemize}
+		\item Identity: if $f_1,f_2\in\mc F(U)$ have $f_1|_V=f_2|_V$ for all $V\in\mc U$, then $f_1=f_2$.
+		\item Gluability: if we have $f_V\in\mc F(V)$ for all $V\in\mc U$ such that
+		\[f_{V_1}|_{V_1\cap V_2}=f_{V_2}|_{V_1\cap V_2}\]
+		for all $V_1,V_2\in\mc U$, then there is $f\in\mc F(U)$ such that $f|_V=f_V$ for all $V\in\mc U$.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	For most of our examples, the identity axiom is easily satisfied: intuitively, the identity axiom says that two sections are equal if and only if they agree locally. However, gluability is usually the tricky one: it requires us to build a function from local behavior.
+\end{remark}
+\begin{remark}
+	Note that the section $f\in\mc F(U)$ promised by the gluability axiom is unique by the identity axiom.
+\end{remark}
+Ok, so we've defined the sheaf as an algebraic object, so here are its morphisms.
+\begin{definition}[Sheaf morphism]
+	A \textit{sheaf morphism} is a morphism of the (underlying) presheaves.
+\end{definition}
+As an aside, we note that we can succinctly write the sheaf conditions in an exact sequence.
+\begin{lemma}
+	Fix a topological space $X$ and presheaf $\mc F\colon(\op{Ob}X)\opp\to\mathcal C$, where $\mathcal C$ is an abelian category or $\mathrm{Grp}$. Then $\mc F$ is a sheaf if and only if the sequence
+	\[\arraycolsep=1.4pt\begin{array}{cccccccccccc}
+		0 &\to& \mc F(U) &\to& \displaystyle\prod_{V\in\mc U}\mc F(V) &\to& \displaystyle\prod_{V_1,V_2\in\mc U}\mc F(V_1\cap V_2) \\
+		  &   & f        &\mapsto& (f|_V)_{V\in\mc U} \\
+		  &   &          &       & (f_V)_{V\in\mc U} &\mapsto& (f_{V_1}|_{V_1\cap V_2}-f_{V_2}|_{V_1\cap V_2})
+	\end{array}\]
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{remark}
+	One might want to continue this left-exact sequence. To see this, we will have to talk about cohomology, which is a task for later in life.
+\end{remark}
+
+\subsection{Sheaf on a Base}
+In light of our sheaf language, we are trying to define a ``structure'' sheaf $\mc O_{\Spec A}$ on $\Spec A$, and we wanted to have
+\[\mc O_{\Spec A}(D(f))=A_f.\]
+We aren't going to be able to specify a presheaf with this data, but we can specify a sheaf. In some sense, the presheaf is unable to build up locally in the way that a sheaf can, so having the data on a base like $\{D(f)\}_{f\in A}$ need not be sufficient to define the full presheaf.
+
+But as alluded to, we can do this for sheaves.
+\begin{definition}[Sheaf on a base]
+	Fix a topological space $X$ and a base $\mc B$ for its topology. Then a \textit{sheaf on a base valued in $\mc C$} is a contravariant functor $F\colon(\mc B)\opp\to\mathcal C$ satisfying a natural gluability and identity axiom. More concretely, for any $B\in\mc B$ with a basic cover $\{B_i\}_{i\in I}$, we have the following.
+	\begin{itemize}
+		\item Identity: if we have $f_1,f_2\in F(B)$ such that $f_1|_{B_i}=f_2|_{B_i}$ for all $B_i$, then $f_1=f_2$.
+		\item Gluability: if we have $f_i\in F(B_i)$ for each $i$ such that $f_i|_{B}=f_j|_{B}$ for each $B\subseteq B_i\cap B_j$, then there is $f\in F(B)$ such that $f|_{B_i}=f_i$ for each $i$.
+	\end{itemize}
+\end{definition}
+Here is our result.
+\begin{proposition} \label{prop:sheaffrombase}
+	Fix a topological space $X$ with a base $\mc B$ for its topology. Given a sheaf on a base $F\colon\mc B\opp\to\mc C$, there is a unique sheaf $\mc F\colon(\op{Op}X)\opp\to\mc C$ extending $F$.
+\end{proposition}
+\begin{proof}
+	We will provide the construction of $\mc F(U)$ for an open set $U\subseteq X$ as
+	\[\mc F(U)=\limit_{B\subseteq U}F(B).\]
+	More concretely, $\mc F(U)$ is made of a large tuple $(f_B)_{B\in\mc B}$ such that $B\subseteq B'$ implies $f_{B'}|_B=f_B$. We will not check that this satisfies the constraints.
+\end{proof}
+\begin{remark}
+	One can also define $\mc F(U)$ as compatible systems of stalks, but we have not defined stalks yet.
+\end{remark}
+\begin{remark}
+	One can show that we can define a morphism of sheaves by only specifying its data on the base. This will appear on the homework.
+\end{remark}
+
+\subsection{Affine Schemes (Finally!)}
+We are now ready to define the structure sheaf.  We use \autoref{prop:sheaffrombase}. Note that $D(f)\subseteq D(g)$ implies $V(g)\subseteq V(f)$, so $I(V(g))\supseteq I(V(f))$, so $f\in\rad g$, so $f^n=ag$ for some positive integer $n$. This implies that $g$ is a unit in $A_g$, so there is a natural restriction map
+\[\op{res}_{D(g),D(f)}\colon A_g\to A_f.\]
+That we have a presheaf on a base is then routine to check.
+
+It remains to check our coherence properties. Fix an open cover
+\[D(f)=\bigcup_{i\in\mc I}D(f_i),\]
+which implies using the previous argument that $f_j^{n_j}=c_jf$ for some positive integer $n_j$ and element $c_j\in A$, and in fact $f^n$ for some large $n$ is in the ideal generated by the $f_j$; one can check that this is equivalent. Now here are our checks.
+\begin{itemize}
+	\item Identity: we may assume that $\mc I$ is finite because the equivalent condition at the end allows us to remove all but finitely many of the $f_i$.
+
+	Now, for identity, it suffices to pick up $s\in D(f)$ with $s|_{D(f_i)}=0$ (in $A_{f_i}$) for all $f_i$, and we want to show $s=0$. Namely, we know $f_i^{n_i}s=0$ (in $A_f$) for some $n_i$ everywhere. However, as stated above, we may write
+	\[f^n=\sum_{i\in\mc I}a_if_i,\]
+	and then taking this equation to a very large power and multiplying through by $s$ forces $f^ns=0$.
+	\item Gluability: we will check this next time.
+\end{itemize}
+The above data then assembles into our structure sheaf.
+
+\end{document}
