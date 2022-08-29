@@ -11,27 +11,81 @@ Let's give some more examples of metric spaces. Let's start with spaces of conti
 \begin{definition}
 	We denote the $\RR$-vector space of $\CC$-valued continuous function from a topological space $X$ as $C(X)$.
 \end{definition}
-And here are our two examples.
-\begin{ex}
+And here are our two examples. The first is off a complete metric space.
+\begin{exe}
 	Give $V\coloneqq C([0,1])$ the uniform norm
 	\[\norm f_\infty\coloneqq\sup\{|f(t)|:t\in[0,1]\}.\]
-	Then $V$ is complete. Indeed, this is merely the statement that a sequence of continuous functions which are uniformly Cauchy will converge uniformly to a continuous function.
-\end{ex}
+	Then $V$ is complete.
+\end{exe}
+\begin{proof}
+	This is merely the statement that a sequence of continuous functions which are uniformly Cauchy will converge uniformly to a continuous function. We will prove this for completeness. Fix a sequence of continuous function $\{f_n\}_{n\in\NN}$ which are Cauchy with respect to $\norm\cdot_\infty$. In other words, for each $\varepsilon>0$, there exists $N_\varepsilon$ so that
+	\[n,m>N_\varepsilon\implies\norm{f_n-f_m}_\infty<\varepsilon,\]
+	which means that $|f_n(t)-f_m(t)|<\varepsilon$ for all $t\in[0,1]$.
+
+	In particular, for any fixed $t\in[0,1]$, the sequence $\{f_n(t)\}_{n\in\NN}$ is Cauchy in $\RR$ (using the same $N_\varepsilon$), so we use the completeness of $\RR$ to let this sequence converge to $f(t)\in\RR$. We have the following checks.
+	\begin{itemize}
+		\item To see that $f_n\to f$ as $n\to\infty$ (under our metric), select any $\varepsilon>0$, and then find $N$ so that
+		\[n,m>N\implies\norm{f_n-f_m}_\infty<\varepsilon/3.\]
+		Further, for any $t\in[0,1]$, we see that we can find a large enough $n_t>N$ so that $|f(t)-f_n(t)|<\varepsilon/3$. But then $n>N$ has
+		\[|f_n(t)-f(t)|\le|f_n(t)-f_{n_t}(t)|+|f_{n_t}(t)-f(t)|<2\varepsilon/3,\]
+		so $\norm{f-f_n}_\infty\le2\varepsilon/3<\varepsilon$.
+		\item To see that $f$ is continuous, fix $t\in[0,1]$ so that we want to show $f$ is continuous at $t$. Well, for any $\varepsilon>0$, find $N$ large enough so that
+		\[n,m>N\implies\norm{f_n-f_m}_\infty<\varepsilon/4.\]
+		Now, select $n_t>N$ large enough so that $|f(t)-f_{n_t}(t)|<\varepsilon/4$, and the continuity of $f_{n_t}$ promises us $\delta>0$ so that
+		\[|t-t'|<\delta\implies|f_{n_t}(t)-f_{n_t}(t')|<\varepsilon/4.\]
+		In particular, for any $t'$ with $|t-t'|<\delta$, find $n_{t'}>N$ large enough so that $|f(t')-f_{n_{t'}}(t')|<\varepsilon/4$, and then we see
+		\[|f(t)-f(t')|\le|f(t)-f_{n_t}(t)|+|f_{n_t}(t)-f_{n_{t}}(t')|+|f_{n_t}(t')-f_{n_{t'}}(t')|+|f_{n_{t'}}(t')-f(t')|<\varepsilon,\]
+		which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+The second example is the same space, but it is no longer complete.
 \begin{example}
-	Give $V\coloneqq C([0,1])$ the $L^1$ norm as
-	\[\norm f_1\coloneqq\int_0^1|f(t)|\,dt.\]
-	Then $V$ is not complete: for each $n\in\NN$, define $f_n$ as the continuous function connecting $(0,1)$ to $(1/2,1)$ to $(1/2+1/n,0)$ to $(1,0)$. Then $f_n$ is trying to converge to a discontinuous function.%\todo{Add image.}
-	% from the following graph.
-	% \begin{center}
-	% 	\begin{asy}
-	% 		draw((1.5,0) -- (0,0) -- (1.5,0));
-	% 		draw((0,1) -- (1/2,1) -- (1/2+1/5,0) -- (1,0), red);
-	% 		label("$f_n$", (1/2,1/2), W, red);
-	% 	\end{asy}
-	% \end{center}
+	Fix $p\ge1$ finite. Give $V\coloneqq C([0,1])$ the $L^p$ norm as
+	\[\norm f_p\coloneqq\int_0^1|f(t)|^p\,dt.\]
+	Then $V$ is not complete.
 \end{example}
+\begin{proof}
+	For each $n\ge2$, define $f_n$ as the piecewise continuous function
+	\[f_n(t)\coloneqq\begin{cases}
+		0 & 0\le t\le \frac12, \\
+		n(t-\frac12) & \frac12\le t\le\frac12+\frac1n, \\
+		1 & \frac12+\frac1n\le t\le1.
+	\end{cases}\]
+	Here is the image.
+	\begin{center}
+		\begin{asy}
+			unitsize(2cm);
+			draw((1.2,0) -- (0,0) -- (0,1.2));
+			draw((0,1) -- (1/2+1/5,1), dashed);
+			draw((1,1) -- (1,0), dashed);
+			draw((0,0) -- (1/2,0) -- (1/2+1/5,1) -- (1,1), red);
+			label("$f_n$", (1/2,1/2), 0.5*W, red);
+			label("$0$", (0,0), S);
+			label("$\frac12$", (1/2,0), S);
+			label("$1$", (1,0), S);
+			label("$1$", (0,1), W);
+		\end{asy}
+	\end{center}
+	The point is that $f_n$ is trying to converge to a discontinuous function. To help us with the proof here, we pick up the following lemma.
+	\begin{lemma}
+		Fix $V\coloneqq C([0,1])$ and some finite $p\ge1$. If we have a convergent sequence $f_n\to f$ as $n\to\infty$ in the $\norm{\cdot}_p$ metric, and $f_n(t)=g(t)$ for all sufficiently large $n$ and $t\in U$ for some open $U\subseteq C([0,1])$, then $f|_U(t)=g(t)$.
+	\end{lemma}
+	\begin{proof}
+		Suppose for the sake of contradiction that we have $t_0\in U$ with $f(t_0)\ne g(t)$; we show that $\{f_n\}$ does not converge to $f$. Set $\varepsilon\coloneqq|f(t_0)-g(t_0)|$, which is nonzero. The continuity of $f-g$ now promises that there is $\delta>0$ for which
+		\[|t-t_0|<\delta\implies|(f-g)(t_0)-(f-g)(t)|<\varepsilon/2,\]
+		so in particular $|(f-g)(t)|\ge\varepsilon/2$. It follows that, for sufficiently large $n$, we have
+		\[\norm{f-f_n}_p=\int_0^1|f(t)-f_n(t)|^p\,dt\ge\int_U|(f-g)(t)|\,dt\ge\int_{U\cap(t_0-\delta,t_0+\delta)}\frac\varepsilon2\,dt.\]
+		Because $U\cap(t_0-\delta,t_0+\delta)$ is open, it has nonzero measure, so this entire right-hand quantity is nonzero, thus violating that $f_n\to f$ as $n\to\infty$.
+	\end{proof}
+	Now suppose for the sake of contradiction that $f_n\to f$ as $n\to\infty$ for some $f\in V$. Then, using $U=(0,1/2)$, we conclude that $f(t)=0$ for all $t\in(0,1/2)$. Similarly, for any $n$, we set $U_n=(1/2_1/n,1)$, so $f_m|_{U_n}$ returns $1$ always for sufficiently large $m$; this then implies $f(t)=1$ for any $t\in U_n$ for any $n$, so $f(t)=1$ for any $t\in(1/2,1)$.
+
+	However, the sequences $a_n\coloneqq\frac12-\frac1n$ and $b_n\coloneqq\frac12+\frac1n$ (for $n\ge3$) have $a_n\to\frac12$ and $b_n\to\frac12$ both as $n\to\infty$ while the continuity of $f$ would require
+	\[0=\lim_{n\to\infty}f(a_n)=f(1/2)=\lim_{n\to\infty}f(b_n)=1,\]
+	which is a contradiction.
+\end{proof}
 \begin{remark}
-	In fact, all $p$-norms $\norm{\cdot}_p$ for finite $p\ge1$ are never complete. This motivates the theory of measure and integration, which will let us specify which functions we actually want to look at.
+	In an attempt to make this metric space complete, we can try to specify which functions we want to look at, which motivates the theory of measure and integration.
 \end{remark}
 \begin{remark}
 	The $\norm{\cdot}_2$ norm on $C(X)$ for some (say) subset $X\subseteq\RR$ with finite measure as coming from an inner product
