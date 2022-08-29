@@ -1,0 +1,162 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We continue lecture by shifting to topology.
+
+\subsection{Metric Topology}
+We close our discussion of metric spaces with a taste of topology. Recall the following definition.
+\contdef*
+\noindent We are going to want to extend this definition to more general topological spaces. To step in that direction, we will want to talk about open sets, so we start with open balls.
+\begin{definition}[Ball]
+	Fix a metric space $(X,d)$. Then the \textit{open ball of radius $r$ centered at $x_0\in X$} is
+	\[B(x_0,r)\coloneqq\{x\in X:d(x,x_0)<r\}.\]
+	The \textit{closed ball} is $\overline{B(x_0,r)}\coloneqq\{x\in X:d(x,x_0)\le r\}$.
+\end{definition}
+We can now restate continuity as follows.
+\begin{defihelper}[Continuous]
+	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is \textit{continuous} at $x\in X$ if and only if, given any nonempty open ball $B(f(x_0),\varepsilon)$, there exists a nonempty open ball $B(x_0,\delta)$ such that
+	\[f(B(x_0,\delta))\subseteq B(f(x_0),\varepsilon).\]
+\end{defihelper}
+Namely, we've really only restated our inequalities.
+
+To continue our generalization, we define the pre-image.
+\begin{definition}[Pre-image]
+	Fix a function $f\colon X\to Y$. Then we define the \textit{pre-image} $f^{-1}\colon\mathcal P(Y)\to\mathcal P(X)$ by
+	\[f^{-1}(B)\coloneqq\{x\in X:f(x)\in B\}.\]
+\end{definition}
+Note that our pre-image notation matches with the notation of an inverse function. In general, no confusion will arise by confusing these two.
+
+As such, let's restate continuity again: observe that $A\subseteq X$ and $B\subseteq Y$ has $f(A)\subseteq B$ if and only if all $a\in A$ have $f(a)\in B$ if and only if all $a\in A$ have $a\in f^{-1}(B)$ if and only if $A\subseteq f^{-1}(B)$.
+\begin{defihelper}[Continuous]
+	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is \textit{continuous} at $x\in X$ if and only if, given any nonempty open ball $B(f(x_0),\varepsilon)$, there exists a nonempty open ball $B(x_0,\delta)$ such that
+	\[B(x_0,\delta)\subseteq f^{-1}(B(f(x_0),\varepsilon)).\]
+\end{defihelper}
+We defined open balls and promised open sets, so now let's define our open sets.
+\begin{definition}[Open set]
+	Fix a metric space $(X,d)$. Then a subset $U\subseteq X$ is \textit{open} if and only if, for each $x\in U$, there exists some $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$. In other words, each point in $U$ has an open ball around it.
+\end{definition}
+\begin{example} \label{ex:openballisopen}
+	Open balls are open sets. Indeed, given an open ball $B(x,r)$, note that any $x_0\in B(x,r)$ has $d(x_0,x)<r$, so we take $\varepsilon\coloneqq r-d(x_0,r)$. To see this works, observe $x'\in B(x_0,\varepsilon)$ will have
+	\[d(x',x)\le d(x',x_0)+d(x_0,x)<\varepsilon+(r-\varepsilon)=r,\]
+	so $B(x_0,\varepsilon)\subseteq B(x,r)$ follows. Here is the image for what just happened.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			pair x = (0, 0);
+			pair x0 = 1.2*dir(30);
+			real r = 2;
+			real eps = 2-1.2;
+			draw(circle(x, r), dashed);
+			draw(circle(x0, eps), dashed+red);
+			draw(x--x+r*dir(180));
+			draw(x0 -- x0+eps*dir(30), red);
+			label("$r$", x+r/2*dir(180), N);
+			label("$\varepsilon$", x0+eps/2*dir(30), dir(120), red);
+			dot("$x$", x, S);
+			dot("$x_0$", x0, S);
+		\end{asy}
+	\end{center}
+\end{example}
+And here is our definition of corresponding definition of continuity.
+\begin{lemma} \label{lem:goodcont1}
+	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is continuous at $x\in X$ if and only if, given any open set $U\subseteq Y$ with $f(x)\in U$, there is an open ball $B(x,\delta)$, such that
+	\[B(x,\delta)\subseteq f^{-1}(U).\]
+\end{lemma}
+\begin{proof}
+	Taking $f$ to be continuous, note that we can find $\varepsilon>0$ such that $B(f(x),\varepsilon)\subseteq U$ because $U$ is open. Thus, continuity promises $\delta>0$ such that
+	\[B(x,\delta)\subseteq f^{-1}(B(f(x),\varepsilon))\subseteq f^{-1}(U).\]
+	Conversely, if $f$ satisfies the conclusion of the statement, we can take $U=B(f(x),\varepsilon)$ for any $\varepsilon>0$ by \autoref{ex:openballisopen}, and the conclusion promises $\delta>0$ such that
+	\[B(x,\delta)\subseteq f^{-1}(U)=f^{-1}(B(f(x),\varepsilon)).\]
+\end{proof}
+It is cleaner to talk about the entire function being continuous instead of at a point.
+\begin{lemma}
+	Given metric spaces $(X,d_X)$ and $(Y,d_Y)$, a function $f\colon X\to Y$ is continuous if and only if, given any open set $U\subseteq Y$ with $f(x)\in U$, the pre-image $f^{-1}(U)$ is open.
+\end{lemma}
+\begin{proof}
+	This is a matter of rearranging our quantifiers correctly. \autoref{lem:goodcont1} tells us that, for all $x\in X$, all open $U\subseteq Y$ with $f(x)\in U$ has some $\delta>0$ such that $B(x,\delta)\subseteq U$. Equivalently, for all open $U\subseteq Y$, any $x\in X$ with $x\in f^{-1}(U)$ has some $\delta>0$ such that $B(x,\delta)\subseteq U$. But by definition of being open, we're just saying that all open $U\subseteq Y$ has $f^{-1}(U)$ also open.
+\end{proof}
+So we have the following definition.
+\begin{definition}[Continuous]
+	A function $f\colon X\to Y$ between metric spaces is \textit{continuous} if and only if, for any open set $U\subseteq Y$, the pre-image $f^{-1}(U)$ is open.
+\end{definition}
+The philosophy here is to try to understand open sets instead of trying to understand the metrics. This is the idea of topology.
+
+\subsection{Open Sets}
+Thus, we are motivated to understand open sets. Here are some basic properties.
+\begin{proposition} \label{prop:topodef}
+	Fix a metric space $(X,d)$, and let $\mathcal T$ be the collection of open sets.
+	\begin{listalph}
+		\item We have $X\in\mathcal T$ and $\emp\in\mathcal T$.
+		\item Arbitrary union: given a collection $\mathcal U\subseteq\mathcal T$, the arbitrary union
+		\[\bigcup_{U\in\mathcal U}U\]
+		is open.
+		\item Finite intersection: given a finite collection $\{U_1,\ldots,Y_n\}\in\mathcal T$, we have
+		\[\bigcap_{i=1}^nU_i\]
+		is open.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We go in sequence.
+	\begin{listalph}
+		\item To show $X\in\mathcal T$, note that any $x\in X$ has $B(x,1)\subseteq X$ by definition. To show $\emp\in\mathcal T$, note that any $x\in\emp$ has $B(x,1)\subseteq\emp$ because there is no $x\in\emp$ at all.
+		\item For any $x\in\bigcup_{U\in\mathcal U}U$, we have $x\in V$ for some particular $V\in\mathcal U$. Then the openness of $V$ tells us we can find $\varepsilon>0$ such that
+		\[B(x,\varepsilon)\subseteq V\subseteq\bigcup_{U\in\mathcal U}U,\]
+		which finishes.
+		\item Fix $x$ in the common intersection. Then, for any $i$, we have $x\in U_i$, so we have some $\varepsilon_i>0$ such that $B(x,\varepsilon_i)\subseteq U$, and so we set
+		\[\varepsilon\coloneqq\min_{1\le i\le n}\varepsilon_i.\]
+		In particular, $\varepsilon>0$ because $n$ is finite, and we have
+		\[B(x,\varepsilon)\subseteq B(x,\varepsilon_i)\subseteq U_i\]
+		for each $i$, so $B(x,\varepsilon)$ is a subset of our intersection.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark}
+	The arbitrary intersection of open sets need not be open: working in $\RR$ with the usual metric,
+	\[\bigcap_{i=1}^\infty B(0,1/n)=\{0\},\]
+	which is not open. (Namely, no $\varepsilon>0$ has $B(x,\varepsilon)\subseteq\{0\}$.)
+\end{remark}
+Motivated by \autoref{prop:topodef}, we have the following definition.
+\begin{definition}[Topology]
+	Fix a set $X$. Then a \textit{topology} $\mathcal T$ on $X$ is a collection of subsets $\mathcal T\subseteq\mathcal P(X)$ satisfying the following.
+	\begin{listalph}
+		\item We have $\emp\in\mathcal T$ and $X\in\mathcal T$.
+		\item Arbitrary union: given a collection $\mathcal U\subseteq\mathcal T$, the arbitrary union $\bigcup_{U\in\mathcal U}U$ lives in $\mathcal T$.
+		\item Finite intersection: given a finite collection $\{U_1,\ldots,U_n\}\subseteq\mathcal T$, the intersection $\bigcap_{i=1}^nU_i$ lives in $\mathcal T$.
+	\end{listalph}
+	We will say that the ordered pair $(X,\mathcal T)$ is a \textit{topological space}. We say that the sets in $\mathcal T$ are \textit{open}.
+\end{definition}
+\begin{example}
+	By \autoref{prop:topodef}, metric spaces with their open sets form a topological space.
+\end{example}
+Here are some more basic examples.
+\begin{defihelper}[Discrete topology] \nirindex{Topology!Discrete}
+	Given a set $X$, the \textit{discrete topology} is the topology $\mathcal P(X)$.
+\end{defihelper}
+\begin{defihelper}[Indiscrete topology] \nirindex{Topology!Indiscrete}
+	Given a set $X$, the \textit{indiscrete topology} is the topology $\{\emp,X\}$.
+\end{defihelper}
+It is fairly routine to check that the above collections form topologies. In fact, they are closed under both arbitrary union and arbitrary intersection.
+\begin{remark}
+	The discrete topology can be defined by the metric $d\colon X\times X\to\RR_{\ge0}$ by
+	\[d(x,x')\coloneqq\begin{cases}
+		1 & x\ne x', \\
+		0 & x=x'.
+	\end{cases}\]
+	Indeed, for any $x\in X$, we see $B(x,1/2)=\{x\}$, so any subset $U\subseteq X$ is the open set
+	\[U=\bigcup_{x\in U}\{x\}=\bigcup_{x\in U}B(x,1/2).\]
+\end{remark}
+\begin{remark}
+	If $\#X\ge2$, the indiscrete topology cannot be given a metric. Indeed, find distinct points $a,b\in X$ and set $r\coloneqq d(a,b)$, so $a\ne b$ implies $r>0$. Now, $a\in B(a,r)$, but $b\notin B(a,r)$, so $B(a,r)$ is an open set distinct from both $\emp$ and $X$.
+\end{remark}
+\begin{remark}
+	One can give topologies a partial order by inclusion. Then the discrete topology is the maximal one (definitionally, any topology is a subset of $\mathcal P(X)$), and the indiscrete topology is the minimal one (definitionally, any topology contains $\emp$ and $X$).
+\end{remark}
+And so here is our general definition of continuity.
+\begin{definition}[Continuous]
+	Fix topological spaces $(X,\mathcal T_X)$ and $(Y,\mathcal T_Y)$. Then a function $f\colon X\to Y$ is \textit{continuous} if and only if, for any $U_Y\in\mathcal T_Y$, we have $f^{-1}(U_Y)\in\mathcal T_X$.
+\end{definition}
+
+\end{document}
