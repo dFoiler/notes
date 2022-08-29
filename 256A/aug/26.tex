@@ -172,12 +172,12 @@ In the affine case, we can be a little more rigorous.
 	which is equivalent to $f(a_1,\ldots,a_n)=0$. So indeed, $f$ vanishes on $(a_1,\ldots,a_n)$ if and only if the corresponding maximal ideal is in $V(\{f\})$.
 \end{example}
 With intuition out of the way, we should probably check that the sets $V(S)$ make a legitimate topology. To begin, here are some basic properties.
-\begin{lemma}
+\begin{lemma} \label{lem:basicvprops}
 	Fix a ring $A$.
 	\begin{listalph}
 		\item If subsets $S,T\subseteq A$ have $S\subseteq T$, then $V(T)\subseteq V(S)$.
 		\item A subset $S\subseteq A$ has $V(S)=V((S))$.
-		\item An ideal $I\subseteq A$ has $V(I)=V(\rad I)$.
+		\item An ideal $\mf a\subseteq A$ has $V(\mf a)=V(\rad I)$.
 	\end{listalph}
 \end{lemma}
 \begin{proof}
@@ -185,63 +185,145 @@ With intuition out of the way, we should probably check that the sets $V(S)$ mak
 	\begin{listalph}
 		\item Note $\mf p\in V(T)$ implies that $T\subseteq\mf p$, which implies $S\subseteq\mf p$, so $\mf p\in V(S)$.
 		\item Surely $S\subseteq(S)$, so $V((S))\subseteq V(S)$. Conversely, if $\mf p\in V(S)$, then $S\subseteq\mf p$, but then the generated ideal $(S)$ must also be contained in $\mf p$, so $\mf p\in V((S))$.
-		\item Surely $I\subseteq\rad I$, so $V(\rad I)\subseteq V(I)$. Conversely, if $\mf p\in V(I)$, then $\mf p\subseteq I$, so
-		\[\mf p\subseteq\bigcap_{\mf q\supseteq I}\mf q=\rad I,\]
-		so $\mf p\in V(\rad I)$.
+		\item Surely $\mf a\subseteq\rad\mf a$, so $V(\rad\mf a)\subseteq V(I)$. Conversely, if $\mf p\in V(\mf a)$, then $\mf p\subseteq\mf a$, so
+		\[\mf p\subseteq\bigcap_{\mf q\supseteq\mf a}\mf q=\rad\mf a,\]
+		so $\mf p\in V(\rad\mf a)$.
 		\qedhere
 	\end{listalph}
 \end{proof}
+\begin{remark}
+	In light of (b) and (c) of \autoref{lem:basicvprops}, we can actually write all closed subsets of $\op{Spec}A$ as $V(\mf a)$ for a radical ideal $\mf a$. We will use this fact freely.
+\end{remark}
 And here are our checks.
-\begin{lemma}
+\begin{lemma} \label{lem:zariskitopcheck}
 	Fix a ring $A$.
 	\begin{listalph}
 		\item $V(A)=\emp$ and $V((0))=\op{Spec}A$.
-		\item Given ideals $I,J\subseteq A$, then $V(I)\cup V(J)=V(IJ)$.
+		\item Given ideals $\mf a,\mf b\subseteq A$, then $V(\mf a)\cup V(\mf b)=V(\mf a\mf b)$.
 		\item Given a collection of ideals $\mathcal I\subseteq\mathcal P(A)$, we have
-		\[\bigcap_{I\in\mathcal I}V(I)=V\left(\sum_{I\in\mathcal I}I\right).\]
+		\[\bigcap_{\mf a\in\mathcal I}V(\mf a)=V\left(\sum_{\mf a\in\mathcal I}\mf a\right).\]
 	\end{listalph}
 \end{lemma}
 \begin{proof}
 	We go in sequence.
 	\begin{listalph}
 		\item All primes are proper, so no prime $\mf p$ has $A\subseteq\mf p$, so $V(A)=\emp$. Also, $0$ is an element of all ideals, so all $\mf p\in\op{Spec}A$ have $(0)\subseteq\mf p$, so $V((0))=\op{Spec}A$.
-		\item Note $IJ\subseteq I,J$, so $V(I)\cup V(J)\subseteq V(IJ)$ follows. Conversely, take $\mf p\in V(IJ)$, and suppose $\mf p\notin V(I)$ so that we need $\mf p\in V(J)$. Well, $\mf p\notin V(I)$ implies $I\not\subseteq\mf p$, so we can find $a\in I\setminus\mf p$. Now, for any $b\in J$, we see
-		\[ab\in IJ\subseteq\mf p,\]
-		so $a\notin\mf p$ forces $b\in\mf p$. Thus, $J\subseteq\mf p$, so $\mf p\in V(J)$.
-		\item Certainly any $J\in\mathcal I$ has $J\subseteq\sum_{I\in\mathcal I}I$, so $V\left(\sum_{I\in\mathcal I}I\right)\subseteq\bigcap_{I\in\mathcal I}V(I)$ follows.
+		\item Note $\mf a\mf b\subseteq\mf a,\mf b$, so $V(\mf a)\cup V(\mf b)\subseteq V(\mf a\mf b)$ follows. Conversely, take $\mf p\in V(\mf a\mf b)$, and suppose $\mf p\notin V(\mf a)$ so that we need $\mf p\in V(\mf b)$. Well, $\mf p\notin V(\mf a)$ implies $\mf a\not\subseteq\mf p$, so we can find $a\in\mf a\setminus\mf p$. Now, for any $b\in\mf b$, we see
+		\[ab\in\mf a\mf b\subseteq\mf p,\]
+		so $a\notin\mf p$ forces $b\in\mf p$. Thus, $\mf b\subseteq\mf p$, so $\mf p\in V(\mf b)$.
+		\item Certainly any $\mf b\in\mathcal I$ has $\mf b\subseteq\sum_{\mf a\in\mathcal I}I$, so $V\left(\sum_{\mf a\in\mathcal I}\mf a\right)\subseteq\bigcap_{\mf a\in\mathcal I}V(\mf a)$ follows.
 		
-		Conversely, suppose $\mf p\in\bigcap_{I\in\mathcal I}V(I)$. Then $I\subseteq\mf p$ for all $I\in\mathcal I$, so $\sum_{I\in\mathcal I}I\subseteq\mf p$ follows. Thus, $\mf p\in V\left(\sum_{I\in\mathcal I}I\right)$.
+		Conversely, suppose $\mf p\in\bigcap_{\mf a\in\mathcal I}V(\mf a)$. Then $\mf a\subseteq\mf p$ for all $\mf a\in\mathcal I$, so $\sum_{\mf a\in\mathcal I}\mf a\subseteq\mf p$ follows. Thus, $\mf p\in V\left(\sum_{\mf a\in\mathcal I}\mf a\right)$.
 		\qedhere
 	\end{listalph}
 \end{proof}
+\begin{remark}
+	For ideals $I,J\subseteq A$, note that $IJ\subseteq I\cap J$. Additionally, $I\cap J\subseteq\rad(IJ)$: if $f\in I\cap J$, then $f^2\in(I\cap J)^2\subseteq IJ$. It follows from \autoref{lem:basicvprops} that
+	\[V(IJ)\supseteq V(I\cap J)\supseteq V(\rad(IJ)),\]
+	so $V(I)\cup V(J)=V(IJ)=V(I\cap J)$. So $V$ does respect some poset structure.
+\end{remark}
 It follows that the collection of vanishing sets is closed under finite union and arbitrary intersection, so they do indeed specify the closed sets of a topology.
 
 \subsection{Easy Nullstellensatz}
-While we're here, let's also generalize \autoref{defi:vansihingideal}.
+While we're here, let's also generalize \autoref{defi:vansihingideal} in the paradigm that $\op{Spec}A$ is the analogue for affine space.
 \begin{definition}
 	Fix a ring $A$. Then, given a subset $Y\subseteq\op{Spec}A$, we define
 	\[I(Y)\coloneqq\bigcap_{\mf p\in Y}\mf p.\]
 \end{definition}
-And here is our nice version of \autoref{thm:nullstellensatz}.
-\begin{proposition}
-	Fix a ring $A$ and an ideal $\mf a\subseteq A$ and a subset $Y\subseteq\op{Spec}A$.
+\begin{remark}
+	To see that this is the correct definition, note we want $f\in I(Y)$ if and only if $f$ vanishes at all points $\mf p\in Y$. We said earlier that the value of $f$ at $\mf p$ should be $f\pmod{\mf p}$ (using the ideas of \autoref{rem:evaluation}), so $f$ vanishes at $\mf p$ if and only if $f\in\mf p$. So we want
+	\[I(Y)=\{f\in A:f\in\mf p\text{ for all }\mf p\in Y\}=\bigcap_{\mf p\in Y}\mf p.\]
+\end{remark}
+As before, we'll write in a few basic properties of $I$.
+\begin{lemma} \label{lem:basiciprops}
+	Fix a ring $A$, and fix subsets $X,Y\subseteq\op{Spec}A$.
 	\begin{listalph}
-		\item The ideal $I(Y)$ is radical.
-		\item We have that
-		\[I(V(\mf a))=\rad\mf a\qquad\text{and}\qquad V(I(Y))=\overline Y,\]
-		where $\overline Y$ means the closure in the Zariski topology (i.e., the ``Zariski closure'').
-		\item There is a one-to-one inclusion-reversing bijection between radical ideals of $A$ and closed subsets of $\op{Spec}A$.
+		\item If $X\subseteq Y$, then $I(Y)\subseteq I(X)$.
+		\item The ideal $I(X)$ is radical.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We go in sequence.
+	\begin{listalph}
+		\item Note
+		\[I(Y)=\bigcap_{\mf p\in Y}\mf p\subseteq\bigcap_{\mf p\in X}\mf p=I(X).\]
+		\item Suppose that $f^n\in I(X)$ for some positive integer $n$, and we need to show $f\in I(X)$. Then $f^n\in\mf p$ for all $\mf p\in X$, so $f\in\mf p$ for all $\mf p\in X$, so $f\in I(X)$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+And here is our nice version of \autoref{thm:nullstellensatz}.
+\begin{proposition} \label{prop:easynullstellensatz}
+	Fix a ring $A$.
+	\begin{listalph}
+		\item Given an ideal $\mf a\subseteq A$, we have $I(V(\mf a))=\rad\mf a$.
+		\item Given a subset $X\subseteq\op{Spec}A$, we have $V(I(X))=\overline X$.
+		\item The functions $V$ and $I$ provide an inclusion-reversing bijection between radical ideals of $A$ and closed subsets of $\op{Spec}A$.
 	\end{listalph}
 \end{proposition}
 \begin{proof}
-	Omitted.
+	We go in sequence.
+	\begin{listalph}
+		\item Observe
+		\[I(V(\mf a))=\bigcap_{\mf p\in V(\mf a)}\mf p=\bigcap_{\mf p\supseteq\mf a}\mf p=\rad\mf a.\]
+		\item Using \autoref{lem:zariskitopcheck}, we find
+		\[\overline X=\bigcap_{V(\mf a)\supseteq X}V(\mf a)=V\Bigg(\sum_{V(\mf a)\supseteq X}\mf a\Bigg).\]
+		Now, $X\subseteq V(\mf a)$ if and only if $\mf a\subseteq\mf p$ for all $\mf p\in X$, which is equivalent to $\mf a\subseteq I(X)$. Thus,
+		\[\overline X=V\Bigg(\sum_{\mf a\subseteq I(X)}\mf a\Bigg)=V(I(X)).\]
+		\item Note that $V$ sends (radical) ideals to closed subsets of $\op{Spec}A$ by the definition of the Zariski topology. Also, $I$ sends (closed) subsets of $\op{Spec}A$ to radical ideals by \autoref{lem:basiciprops}. Additionally, for a closed subset $X\subseteq\op{Spec}A$, we have
+		\[V(I(X))=\overline X=X,\]
+		and for a radical ideal $\mf a$, we have
+		\[I(V(\mf a))=\rad\mf a=\mf a,\]
+		so $I$ and $V$ are in fact mutually inverse.
+		\qedhere
+	\end{listalph}
 \end{proof}
-Here are some more quick remarks.
 \begin{remark}
-	A ring homomorphism $\varphi\colon A\to B$ will induce a continuous map
-	\[\varphi^{-1}\colon\op{Spec}B\to\op{Spec}A.\]
-	We will state this more concretely later.
+	Given $X\subseteq\op{Spec}A$, we claim $I(X)=I(\overline X)$. Well, these are both radical ideals, so it suffices by \autoref{prop:easynullstellensatz} (c) to show $V(I(X))=V(I(\overline X))$, which is clear because these are both $\overline X$.
 \end{remark}
+\begin{remark}
+	Intuitively, what makes proving \autoref{prop:easynullstellensatz} so much easier than \autoref{thm:nullstellensatz} is that we've added extra points to our space in order to track varieties better.
+\end{remark}
+
+\subsection{Some Affine Embeddings}
+As a general rule, we will make continuous maps between our spectra by using ring homomorphisms. Here is the statement.
+\begin{lemma}
+	Given a ring homomorphism $\varphi\colon A\to B$, the pre-image function $\varphi^{-1}\colon\mathcal P(B)\to\mathcal P(A)$ induces a continuous function $\varphi^{-1}\colon\op{Spec}B\to\op{Spec}A$.
+\end{lemma}
+\begin{proof}
+	We begin by showing $\varphi^{-1}\colon\op{Spec}B\to\op{Spec}A$ is well-defined: given a prime $\mf q\subseteq\op{Spec}B$, we claim that $\varphi^{-1}\mf q$ is a prime in $\op{Spec}A$. Well, if $ab\in\varphi^{-1}\mf q$, then $\varphi(a)\varphi(b)\in\mf q$, so $\varphi(a)\in\mf q$ or $\varphi(b)\in\mf q$. So indeed, $\varphi^{-1}\mf q$ is prime.
+
+	We now show that $\varphi^{-1}\colon\op{Spec}B\to\op{Spec}A$ is continuous. It suffices to show that the pre-image of a closed set $V(\mf a)\subseteq\op{Spec}A$ under $\varphi^{-1}$ is a closed set. For concreteness, we will make $\op{Spec}\varphi\colon\op{Spec}B\to\op{Spec}A$ our pre-image map so that we want to show $(\op{Spec}\varphi)^{-1}(V(\mf a))$ is closed. Well,
+	\begin{align*}
+		(\op{Spec}\varphi)^{-1}(V(\mf a)) &= \{\mf q\in\op{Spec}B:(\op{Spec}\varphi)(\mf q)\in V(\mf a)\} \\
+		&= \{\mf q\in\op{Spec}B:\mf a\subseteq(\op{Spec}\varphi)(\mf q)\} \\
+		&= \left\{\mf q\in\op{Spec}B:\mf a\subseteq\varphi^{-1}\mf q\right\}.
+	\end{align*}
+	Now, if $\mf a\subseteq\varphi^{-1}\mf q$, then any $a\in\mf a$ has $\varphi(a)\in\mf q$, so $\varphi(\mf a)\subseteq\mf q$. Conversely, if $\varphi(\mf a)\subseteq\mf q$, then any $a\in\mf a$ has $\varphi(a)\in\mf q$ and hence $a\in\varphi^{-1}\mf q$, so $\mf a\subseteq\varphi^{-1}\mf q$ follows. In total, we see
+	\[(\op{Spec}\varphi)^{-1}(V(\mf a))=\left\{\mf q\in\op{Spec}B:\varphi(\mf a)\subseteq\mf q\right\}=V(\varphi(\mf a)),\]
+	which is closed.
+\end{proof}
+In fact, we have defined a (contravariant) functor.
+\begin{proposition}
+	The mapping $\op{Spec}$ sending rings $A$ to topological spaces $\op{Spec}A$ and ring homomorphisms $\varphi\colon A\to B$ to continuous maps $\op{Spec}\varphi=\varphi^{-1}$ assembles into a functor ${\op{Spec}A}\colon\op{Ring}\opp\to\op{Top}$.
+\end{proposition}
+\begin{proof}
+	Thus far our data is sending objects to objects and morphisms to (flipped) morphisms, so we just need to run the functoriality checks.
+	\begin{itemize}
+		\item Identity: note that $\Spec\id_A$ sends a prime $\mf p\in\op{Spec}A$ to
+		\[(\Spec\id_A)(\mf p)=\id_A^{-1}(\mf p)=\{a\in A:\id_Aa\in\mf p\}=\mf p,\]
+		so indeed, $\Spec\id_A=\id_{\op{Spec}A}$.
+		\item Functoriality: given morphisms $\varphi\colon A\to B$ and $\psi\colon B\to C$, as well as a prime $\mf r\in\Spec C$, we compute
+		\begin{align*}
+			(\Spec(\psi\circ\varphi))(\mf r) &= (\psi\circ\varphi)^{-1}(\mf r) \\
+			&= \{a\in A:\psi(\varphi(a))\in\mf r\} \\
+			&= \left\{a\in A:\varphi(a)\in(\Spec\psi)(\mf r)\right\} \\
+			&= \left\{a\in A:a\in(\Spec\varphi)((\Spec\psi)(\mf r))\right\} \\
+			&= (\Spec\varphi\circ\Spec\psi)(\mf r).
+		\end{align*}
+		So indeed, $\Spec(\psi\circ\varphi)=\Spec\varphi\circ\Spec\psi$.
+		\qedhere
+	\end{itemize}
+\end{proof}
 \begin{example}
 	Fix a ring $A$ and ideal $\mf a\subseteq A$. Then the surjection $A\onto A/\mf a$ induces a natural homeomorphism
 	\[\op{Spec}A/\mf a\cong V(\mf a)=\{\mf p:\mf p\supseteq\mf a\}\]
@@ -260,9 +342,9 @@ Here are some more quick remarks.
 	is given by the localization map $A\to A_f$.
 \end{example}
 \begin{remark}
-	Not every open set is of the form $D(f)$ or even $D(S)$ where $S$ is a multiplicative set. For example,
+	Not every open set is of the form $D(f)$. For example,
 	\[\AA^2_k\setminus\{(0,0)\}\subseteq\AA^2_k\]
-	is an open set.
+	is an open set not in that form.
 \end{remark}
 
 
