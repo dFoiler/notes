@@ -219,7 +219,7 @@ And here are our checks.
 \end{proof}
 \begin{remark}
 	For ideals $I,J\subseteq A$, note that $IJ\subseteq I\cap J$. Additionally, $I\cap J\subseteq\rad(IJ)$: if $f\in I\cap J$, then $f^2\in(I\cap J)^2\subseteq IJ$. It follows from \autoref{lem:basicvprops} that
-	\[V(IJ)\supseteq V(I\cap J)\supseteq V(\rad(IJ)),\]
+	\[V(IJ)\supseteq V(I\cap J)\supseteq V(\rad(IJ))=V(IJ),\]
 	so $V(I)\cup V(J)=V(IJ)=V(I\cap J)$. So $V$ does respect some poset structure.
 \end{remark}
 It follows that the collection of vanishing sets is closed under finite union and arbitrary intersection, so they do indeed specify the closed sets of a topology.
@@ -284,9 +284,9 @@ And here is our nice version of \autoref{thm:nullstellensatz}.
 	Intuitively, what makes proving \autoref{prop:easynullstellensatz} so much easier than \autoref{thm:nullstellensatz} is that we've added extra points to our space in order to track varieties better.
 \end{remark}
 
-\subsection{Some Affine Embeddings}
+\subsection{Some Continuous Maps}
 As a general rule, we will make continuous maps between our spectra by using ring homomorphisms. Here is the statement.
-\begin{lemma}
+\begin{lemma} \label{lem:specmorphism}
 	Given a ring homomorphism $\varphi\colon A\to B$, the pre-image function $\varphi^{-1}\colon\mathcal P(B)\to\mathcal P(A)$ induces a continuous function $\varphi^{-1}\colon\op{Spec}B\to\op{Spec}A$.
 \end{lemma}
 \begin{proof}
@@ -304,7 +304,7 @@ As a general rule, we will make continuous maps between our spectra by using rin
 \end{proof}
 In fact, we have defined a (contravariant) functor.
 \begin{proposition}
-	The mapping $\op{Spec}$ sending rings $A$ to topological spaces $\op{Spec}A$ and ring homomorphisms $\varphi\colon A\to B$ to continuous maps $\op{Spec}\varphi=\varphi^{-1}$ assembles into a functor ${\op{Spec}A}\colon\op{Ring}\opp\to\op{Top}$.
+	The mapping $\op{Spec}$ sending rings $A$ to topological spaces $\op{Spec}A$ and ring homomorphisms $\varphi\colon A\to B$ to continuous maps $\op{Spec}\varphi=\varphi^{-1}$ assembles into a functor ${\op{Spec}}\colon\op{Ring}\opp\to\op{Top}$.
 \end{proposition}
 \begin{proof}
 	Thus far our data is sending objects to objects and morphisms to (flipped) morphisms, so we just need to run the functoriality checks.
@@ -324,27 +324,99 @@ In fact, we have defined a (contravariant) functor.
 		\qedhere
 	\end{itemize}
 \end{proof}
-\begin{example}
-	Fix a ring $A$ and ideal $\mf a\subseteq A$. Then the surjection $A\onto A/\mf a$ induces a natural homeomorphism
-	\[\op{Spec}A/\mf a\cong V(\mf a)=\{\mf p:\mf p\supseteq\mf a\}\]
-	because primes of $A/\mf a$ are approximately primes of $A$ containing $\mf a$. This gives a description of the closed sets of $\op{Spec}A$ as coming from other spectra.
-\end{example}
-\begin{example}
-	A ring homomorphism $A\to k$, where $k$ is a field, induces a map from the single closed point of $\op{Spec}k$ to $\op{Spec}A$. We call the images of these maps the ``$k$-points.''
-\end{example}
-\begin{example}
-	Given a ring $A$ and $f\in A$, the sets
-	\[D(f)\coloneqq(\op{Spec}A)\setminus V(f)=\{\mf p:f\notin\mf p\}\]
-	form a base of the open sets in $\op{Spec}A$. To see this, we can see directly that
-	\[(\op{Spec}A)\setminus V(T)=\bigcup_{f\in T}D(f).\]
-	To turn $D(f)$ into a spectrum, we have $D(f)\cong\op{Spec}A_f$, where $A_f$ refers to the localization of $A$ at $f^\NN$. Notably, the prime ideals of $\op{Spec}A_f$ are the primes of $A$ which are disjoint from $\{f\}$. Notably, the homeomorphism
-	\[\op{Spec}A_f\cong D(f)\]
-	is given by the localization map $A\to A_f$.
-\end{example}
+Here is a quick example.
+\begin{defihelper}[\texorpdfstring{$k$}{k}-points] \nirindex{k-points@$k$-points} \label{defi:kpoint}
+	Given a ring $A$ and field $k$, a \textit{$k$-point} of $\op{Spec}A$ is a ring homomorphism $\iota\colon A\to k$.
+\end{defihelper}
+\begin{remark} \label{rem:getakpoint}
+	To see that \autoref{defi:kpoint} does indeed cut out a single point, note $\iota\colon A\to k$ induces $\Spec\iota\colon\Spec k\to\Spec A$ and therefore picks out a single point of $\Spec A$ because $\Spec k=\{(0)\}$.
+\end{remark}
 \begin{remark}
-	Not every open set is of the form $D(f)$. For example,
+	To see that \autoref{defi:kpoint} is reasonable, let $A=k[x_1,\ldots,x_n]$ so that $\Spec A=\AA^n_k$. Then a map $\iota\colon A\to k$ is determined by $a_i\coloneqq\iota(x_i)$, so we expect this $\iota$ to correspond to the point $(a_1,\ldots,a_n)$. Indeed, \autoref{rem:getakpoint} says we should compute
+	\[(\Spec\iota)((0))=\iota^{-1}((0))=\ker\iota=(x_1-a_1,\ldots,x_n-a_n),\]
+	which does indeed correspond to the point $(a_1,\ldots,a_n)$.
+\end{remark}
+Here is a more elaborate example: closed subsets can be realized as spectra themselves!
+\begin{exe} \label{exe:closedaffinesubscheme}
+	Fix a ring $A$ and ideal $\mf a\subseteq A$. Letting $\pi\colon A\onto A/\mf a$ be the natural projection, we have that
+	\[{\Spec\pi}\colon\Spec A/\mf a\to V(\mf a)\]
+	is a homeomorphism.
+\end{exe}
+\begin{proof}
+	To be more explicit, we claim that the maps
+	\[\arraycolsep=1.4pt\begin{array}{rcl}
+		\Spec A/\mf a &\cong& V(\mf a) \\
+		\mf q &\mapsto& \pi^{-1}\mf q \\
+		\pi(\mf p) &\mapsfrom& \mf p
+	\end{array}\]
+	are continuous inverses. Here are our well-definedness and continuity checks.
+	\begin{itemize}
+		\item That $\mf q\mapsto\pi^{-1}\mf q$ is continuous follows from \autoref{lem:specmorphism}. Note $\pi^{-1}\mf q$ contains $\mf a$ any $a\in\mf q$ has $\pi(a)=[0]_\mf a\in\mf q$.
+		\item For any $\mf p$ containing $\mf a$, we need to show that $\pi(\mf p)$ is prime. Of course, if $\mf p$ is proper, then $\pi(\mf p)$ is proper as well. For the primality check, note $[a]_\mf a\cdot[b]_\mf a\in\pi(\mf p)$ implies $ab\in\mf p+\mf a=\mf p$, so $a\in\mf p$ or $b\in\mf p$, so $[a]_\mf a\in\mf p$ or $[b]_\mf a\in\mf p$.
+		\item To show that $\mf p\mapsto\pi\mf p$ is continuous, note that a closed set $V(\overline S)\subseteq\Spec A/\mf a$ has pre-image
+		\[\pi^{-1}(V(\overline S))=\{\mf p:\pi\mf p\supseteq\overline S\}.\]
+		Now, set $S=\pi^{-1}(\overline S)$. Now $\pi\mf p\supseteq\overline S$ if and only if each $a\in S$ has $\pi(a)\in\pi\mf p$, which is equivalent to $a\in\mf a+\mf p=\mf p$. Thus,
+		\[\pi^{-1}(V(\overline S))=V(S),\]
+		which is closed.
+	\end{itemize}
+	Here are our inverse checks.
+	\begin{itemize}
+		\item Given $\mf p\in V(\mf a)$, note
+		\[\pi^{-1}(\pi\mf p)=\{a\in A:\pi(a)\in\pi\mf p\}=\{a\in A:a\in\mf a+\mf p\}=\mf a+\mf p=\mf p.\]
+		\item Given $\mf q\in\Spec A/\mf a$, note
+		\[\pi\left(\pi^{-1}\mf q\right)=\pi\left(\{a\in A:\pi(a)\in\mf q\}\right).\]
+		Because $\pi\colon A\onto A/\mf a$ is surjective, the output here is just $\mf q$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+% \begin{example}
+% 	Fix a ring $A$ and ideal $\mf a\subseteq A$. Then the surjection $A\onto A/\mf a$ induces a natural homeomorphism
+% 	\[\op{Spec}A/\mf a\cong V(\mf a)=\{\mf p:\mf p\supseteq\mf a\}\]
+% 	because primes of $A/\mf a$ are approximately primes of $A$ containing $\mf a$. This gives a description of the closed sets of $\op{Spec}A$ as coming from other spectra.
+% \end{example}
+% \begin{example}
+% 	A ring homomorphism $A\to k$, where $k$ is a field, induces a map from the single closed point of $\op{Spec}k$ to $\op{Spec}A$. We call the images of these maps the ``$k$-points.''
+% \end{example}
+A similar story exists for open sets, but we must be more careful. Here are our open sets.
+\begin{definition}[Distinguished open sets]
+	Given a ring $A$ and element $f\in A$, we define the \textit{distinguished open set}
+	\[D(f)\coloneqq(\Spec A)\setminus V(\{f\})=\{\mf p\in\Spec A:f\notin\mf p\}.\]
+\end{definition}
+Intuitively, these are the points on which $f$ does not vanish.
+\begin{remark}
+	In fact, the distinguished open sets form a base: any open set takes the form $(\Spec A)\setminus V(S)$ for some $S\subseteq A$, so we write
+	\[(\Spec A)\setminus V(S)=\{\mf p:S\not\subseteq\mf p\}=\bigcup_{f\in S}\{\mf p:f\notin\mf p\}=\bigcup_{f\in S}D(f).\]
+\end{remark}
+Here is our statement.
+\begin{exe}
+	Fix a ring $A$ and element $f\in A$. Letting $\iota\colon A\to A_f$ be the localization map,
+	\[\Spec\iota\colon\Spec A_f\to D(f)\]
+	is a homeomorphism.
+\end{exe}
+\begin{proof}
+	The arguments here are analogous to \autoref{exe:closedaffinesubscheme}. To be explicit, we will say that our maps are
+	\[\arraycolsep=1.4pt\begin{array}{rcl}
+		\Spec A_f &\cong& D(f) \\
+		\mf q &\mapsto& \iota^{-1}\mf q \\
+		\mf pA_f &\mapsfrom& \mf p
+	\end{array}\]
+	and reassure the reader that the checks are fairly routine. For example, the inverse checks are done in \cite[Proposition~2.2]{eisenbud-comm-alg}.
+\end{proof}
+% \begin{example}
+% 	Given a ring $A$ and $f\in A$, the sets
+% 	\[D(f)\coloneqq(\op{Spec}A)\setminus V(f)=\{\mf p:f\notin\mf p\}\]
+% 	form a base of the open sets in $\op{Spec}A$. To see this, we can see directly that
+% 	\[(\op{Spec}A)\setminus V(T)=\bigcup_{f\in T}D(f).\]
+% 	To turn $D(f)$ into a spectrum, we have $D(f)\cong\op{Spec}A_f$, where $A_f$ refers to the localization of $A$ at $f^\NN$. Notably, the prime ideals of $\op{Spec}A_f$ are the primes of $A$ which are disjoint from $\{f\}$. Notably, the homeomorphism
+% 	\[\op{Spec}A_f\cong D(f)\]
+% 	is given by the localization map $A\to A_f$.
+% \end{example}
+\begin{remark}
+	Not every open set is a distinguished open set. For example, taking $k$ algebraically closed,
 	\[\AA^2_k\setminus\{(0,0)\}\subseteq\AA^2_k\]
-	is an open set not in that form.
+	is an open set not in the form $D(f)$; equivalently, we need to show $V(\{f\})\ne\{(x,y)\}$ for any $f\in k[x,y]$. Intuitively, this is impossible because a curve cuts out a one-dimensional variety of $\AA^2_k$, not a zero-dimensional point.
+	
+	Rigorously, we are requiring $f\in k[x,y]$ to have $f\in\mf p$ if and only if $\mf p=(x,y)$. However, $f$ is certainly nonzero and nonconstant, so $f$ has an irreducible factor $\pi$, which means that $f\in(\pi)$, where $(\pi)$ is prime because $k[x,y]$ is a unique factorization domain.
 \end{remark}
 
 
