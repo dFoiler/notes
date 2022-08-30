@@ -47,7 +47,7 @@ Here is our definition.
 	Given $f\in\mathcal F(U)$, we might write $f|_V\coloneqq\op{res}_{U,V}f.$
 \end{notation}
 \begin{remark}
-	In principle, one can have any target category $\mathcal C$ for our presheaf. However, we will only work $\mathrm{Set}$, $\mathrm{Ab}$, $\mathrm{Ring}$, $\mathrm{Mod}_R$ in this class.
+	In principle, one can have any target category $\mathcal C$ for our presheaf. However, we will only work $\mathrm{Set}$, $\mathrm{Ab}$, $\mathrm{Ring}$, $\mathrm{Mod}_R$ in this class. In particular, we will readily assume that $\mc C$ is a concrete category.
 \end{remark}
 Now that we've defined an algebraic object, we should discuss its morphisms.
 \begin{definition}[Presheaf morphism]
@@ -155,28 +155,98 @@ In light of our sheaf language, we are trying to define a ``structure'' sheaf $\
 \[\mc O_{\Spec A}(D(f))=A_f.\]
 We aren't going to be able to specify a presheaf with this data, but we can specify a sheaf. In some sense, the presheaf is unable to build up locally in the way that a sheaf can, so having the data on a base like $\{D(f)\}_{f\in A}$ need not be sufficient to define the full presheaf.
 
-But as alluded to, we can do this for sheaves.
+But as alluded to, we can do this for sheaves. We begin by defining a sheaf on a base.
 \begin{definition}[Sheaf on a base]
-	Fix a topological space $X$ and a base $\mc B$ for its topology. Then a \textit{sheaf on a base valued in $\mc C$} is a contravariant functor $F\colon(\mc B)\opp\to\mathcal C$ satisfying a natural gluability and identity axiom. More concretely, for any $B\in\mc B$ with a basic cover $\{B_i\}_{i\in I}$, we have the following.
+	Fix a topological space $X$ and a base $\mc B$ for its topology. Then a \textit{sheaf on a base valued in $\mc C$} is a contravariant functor $F\colon\mc B\opp\to\mathcal C$ satisfying the following identity and gluability axioms: for any $B\in\mc B$ with a basic cover $\{B_i\}_{i\in I}$, we have the following.
 	\begin{itemize}
 		\item Identity: if we have $f_1,f_2\in F(B)$ such that $f_1|_{B_i}=f_2|_{B_i}$ for all $B_i$, then $f_1=f_2$.
 		\item Gluability: if we have $f_i\in F(B_i)$ for each $i$ such that $f_i|_{B}=f_j|_{B}$ for each $B\subseteq B_i\cap B_j$, then there is $f\in F(B)$ such that $f|_{B_i}=f_i$ for each $i$.
 	\end{itemize}
 \end{definition}
-Here is our result.
+\begin{example}
+	Given a topological space $X$ and a base $\mc B$, any sheaf $\mc F\colon(\op{Op}X)\opp\to\mathcal C$ ``restricts'' to a sheaf on a base $\mc F_\mc B$ by setting $\mc F_\mc B(B)\coloneqq\mc F(B)$ for all $B\in\mc B$ and reusing the same restriction maps. The identity and gluability axioms follow from their (stronger) sheaf counterparts; checking this amounts writing down the axioms.
+\end{example}
+Morphisms are constructed in the obvious way.
+\begin{definition}[Sheaf on a base morphisms]
+	Fix a topological space $X$ and a base $\mc B$ for its topology. Then a \textit{morphism} between two sheaves $F$ and $G$ on the base $\mc B$ is a natural transformation of the (underlying) contravariant functors.
+\end{definition}
+\begin{ex}
+	Given a topological space $X$ and a base $\mc B$, any sheaf morphism $\eta\colon\mc F\to\mc G$ restricts in the obvious way to a morphism $\eta_\mc B\colon\mc F_\mc B\to\mc G_\mc B$ (namely, $(\eta_\mc B)_B=\eta_B$) on the corresponding sheaves on a base. Checking this amounts to saying out loud that the diagram on the left commutes for any $B'\subseteq B$ because it is the same as the diagram on the right.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEZfXFxtYyBCKEIpIl0sWzAsMSwiXFxtYyBGX1xcbWMgQihCJykiXSxbMSwwLCJcXG1jIEdfXFxtYyBCKEIpIl0sWzEsMSwiXFxtYyBHX1xcbWMgQihCJykiXSxbMywwLCJcXG1jIEYoQikiXSxbMywxLCJcXG1jIEYoQicpIl0sWzQsMCwiXFxtYyBHKEIpIl0sWzQsMSwiXFxtYyBHKEInKSJdLFswLDEsIlxcb3B7cmVzfV97QixCJ30iLDJdLFsyLDMsIlxcb3B7cmVzfV97QixCJ30iXSxbMCwyLCIoXFxldGFfXFxtYyBCKV9CIl0sWzEsMywiKFxcZXRhX1xcbWMgQilfe0InfSIsMl0sWzQsNiwiXFxldGFfQiJdLFs1LDcsIlxcZXRhX3tCJ30iLDJdLFs0LDUsIlxcb3B7cmVzfV97QixCJ30iLDJdLFs2LDcsIlxcb3B7cmVzfV97QixCJ30iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F_\mc B(B)} & {\mc G_\mc B(B)} && {\mc F(B)} & {\mc G(B)} \\
+		{\mc F_\mc B(B')} & {\mc G_\mc B(B')} && {\mc F(B')} & {\mc G(B')}
+		\arrow["{\op{res}_{B,B'}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}_{B,B'}}", from=1-2, to=2-2]
+		\arrow["{(\eta_\mc B)_B}", from=1-1, to=1-2]
+		\arrow["{(\eta_\mc B)_{B'}}"', from=2-1, to=2-2]
+		\arrow["{\eta_B}", from=1-4, to=1-5]
+		\arrow["{\eta_{B'}}"', from=2-4, to=2-5]
+		\arrow["{\op{res}_{B,B'}}"', from=1-4, to=2-4]
+		\arrow["{\op{res}_{B,B'}}", from=1-5, to=2-5]
+	\end{tikzcd}\]
+\end{ex}
+We are interested in showing that we can build a sheaf from a sheaf on a base uniquely, but it will turn out to be fruitful to spend a moment to discuss how this behaves on morphisms first for the uniqueness part of this statement.
+\begin{lemma}
+	Fix a topological space $X$ with a base $\mc B$ for its topology. Given shaves $\mc F$ and $\mc G$ on $X$ with values in $\mc C$ and a morphism of the (underlying) sheaves on a base $\eta_\mc B\colon\mc F_\mc B\to\mc G_\mc B$, there is a unique sheaf morphism $\eta\colon\mc F\to\mc G$ such that $(\eta_\mc B)_B=\eta_B$ for each $B\in\mc B$.
+\end{lemma}
+\begin{proof}
+	We show uniqueness before existence.
+	\begin{itemize}
+		\item Uniqueness: fix any open $U\subseteq X$, and we will try to solve for $\eta_U\colon\mc F(U)\to\mc G(U)$. Well, fix a basic open cover $\mc U$ of $U$; then, for any $B\in\mc U$, we need the following diagram to commute.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXG1jIEcoVSkiXSxbMCwxLCJcXG1jIEYoQikiXSxbMSwxLCJcXG1jIEcoQikiXSxbMiwzLCJcXGV0YV9CPShcXGV0YV9cXG1jIEIpX0IiLDJdLFswLDEsIlxcZXRhX1UiXSxbMCwyLCJcXG9we3Jlc31fe1UsQn0iLDJdLFsxLDMsIlxcb3B7cmVzfV97VSxCfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F(U)} & {\mc G(U)} \\
+			{\mc F(B)} & {\mc G(B)}
+			\arrow["{\eta_B=(\eta_\mc B)_B}"', from=2-1, to=2-2]
+			\arrow["{\eta_U}", from=1-1, to=1-2]
+			\arrow["{\op{res}_{U,B}}"', from=1-1, to=2-1]
+			\arrow["{\op{res}_{U,B}}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		In particular, for any $f\in\mc F(U)$, we need $\eta_U(f)|_B=(\eta_\mc B)_B(f|_B)$. Thus, $\eta_U(f)|_B$ is fully specified by the data provided by $\eta_\mc B$, so the identity axiom for $\mc G$ forces $\eta_U(f)$ to be unique.
+		\item Existence: to begin, fix any open $U\subseteq X$, and we will define $\eta_U\colon\mc F(U)\to\mc G(U)$. As alluded to above, we let $\mc U$ be the set of basis elements which are contained in $U$ so that $\mc U$ is a (large) basic cover of $U$.
+		
+		Then, picking up $f\in\mc F(U)$, we will try to use the gluability axiom by setting $g_B\coloneqq(\eta_\mc B)_B(f|_B)$ for each $B\in\mc U$. In particular, for any $B,B'\in\mc U$, any basic $B_0\subseteq B\cap B'$ has
+		\[(g_B|_{B\cap B'})|_{B_0}=g_B|_{B_0}=(\eta_\mc B)_B(f|_B)|_{B_0}=(\eta_{\mc B})_{B_0}(f|_B|_{B_0})=\eta_{B_0}(f|_{B_0})=g_{B_0},\]
+		which is also $(g_{B'}|_{B\cap B'})_{B_0}$ by symmetry, so the identity axiom applied to $B\cap B'$ implies $g_B|_{B\cap B'}=g_{B'}|_{B\cap B'}$. Thus, the gluability axiom applied to $U$ gives us a unique $g\in\mc G(U)$ such that
+		\[g|_B=(\eta_\mc B)_B(f|_B)\]
+		for each basic set $B\subseteq U$. We define $\eta_U(f)\coloneqq g$.
+
+		It remains to show that $\eta$ does in fact assemble into a sheaf morphism. Fix open sets $V\subseteq U$, and we need the following diagram to commute.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXG1jIEcoVSkiXSxbMCwxLCJcXG1jIEYoVikiXSxbMSwxLCJcXG1jIEcoVikiXSxbMiwzLCJcXGV0YV9WIiwyXSxbMCwxLCJcXGV0YV9VIl0sWzAsMiwiXFxvcHtyZXN9X3tVLFZ9IiwyXSxbMSwzLCJcXG9we3Jlc31fe1UsVn0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F(U)} & {\mc G(U)} \\
+			{\mc F(V)} & {\mc G(V)}
+			\arrow["{\eta_V}"', from=2-1, to=2-2]
+			\arrow["{\eta_U}", from=1-1, to=1-2]
+			\arrow["{\op{res}_{U,V}}"', from=1-1, to=2-1]
+			\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		Well, pick up any $f\in\mc F(U)$. Then, for any basic $B\subseteq V\subseteq U$, we see that
+		\[\eta_U(f)|_B=(\eta_\mc B)_B(f|_B)=(\eta_\mc B)_B(f|_V|_B),\]
+		so the uniqueness of $\eta_V(f|_V)$ forces $\eta_V(f|_V)=\eta_U(f)|_U$. This finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Finally, here is our result.
 \begin{proposition} \label{prop:sheaffrombase}
-	Fix a topological space $X$ with a base $\mc B$ for its topology. Given a sheaf on a base $F\colon\mc B\opp\to\mc C$, there is a unique sheaf $\mc F\colon(\op{Op}X)\opp\to\mc C$ extending $F$.
+	Fix a topological space $X$ with a base $\mc B$ for its topology. Given a sheaf on a base $F\colon\mc B\opp\to\mc C$, there is a sheaf $\mc F$ and isomorphism (of sheaves on a base) $\iota\colon F\to\mc F_B$ satisfying the following universal property: any sheaf $\mc G$ with a morphism (of sheaves on a base) $\varphi\colon F\to\mc G_\mc B$ has a unique sheaf morphism $\psi\colon\mc F\to\mc G$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJGIl0sWzEsMCwiXFxtYyBGX1xcbWMgQiJdLFsxLDEsIlxcbWMgR19cXG1jIEIiXSxbMCwxLCJcXGlvdGEiXSxbMCwyLCJcXHZhcnBoaSIsMl0sWzEsMiwiXFxwc2kiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		F & {\mc F_\mc B} \\
+		& {\mc G_\mc B}
+		\arrow["\iota", from=1-1, to=1-2]
+		\arrow["\varphi"', from=1-1, to=2-2]
+		\arrow["\psi_\mc B", from=1-2, to=2-2]
+	\end{tikzcd}\]
 \end{proposition}
 \begin{proof}
 	We will provide the construction of $\mc F(U)$ for an open set $U\subseteq X$ as
 	\[\mc F(U)=\limit_{B\subseteq U}F(B).\]
-	More concretely, $\mc F(U)$ is made of a large tuple $(f_B)_{B\in\mc B}$ such that $B\subseteq B'$ implies $f_{B'}|_B=f_B$. We will not check that this satisfies the constraints.
+	More concretely, $\mc F(U)$ is made of a large tuple $(f_B)_{B\in\mc B}$ such that $B'\subseteq B$ implies $f_B|_{B'}=f_{B'}$. We will not check that this satisfies the constraints.
 \end{proof}
 \begin{remark}
 	One can also define $\mc F(U)$ as compatible systems of stalks, but we have not defined stalks yet.
-\end{remark}
-\begin{remark}
-	One can show that we can define a morphism of sheaves by only specifying its data on the base. This will appear on the homework.
 \end{remark}
 
 \subsection{Affine Schemes (Finally!)}
