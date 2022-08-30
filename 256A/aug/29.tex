@@ -72,6 +72,37 @@ We've talked about presheaves a lot; where are sheaves?
 		for all $V_1,V_2\in\mc U$, then there is $f\in\mc F(U)$ such that $f|_V=f_V$ for all $V\in\mc U$.
 	\end{itemize}
 \end{definition}
+Sheaves of functions will be our key example here. Intuitively, any type of function which can be determined ``locally'' will form a sheaf; for example, here are continuous functions.
+\begin{exe} \label{exe:sheafex}
+	Fix topological spaces $X$ and $Y$. For each $U\subseteq X$, let $\mc F(U)$ denote the set of continuous functions $f\colon U\to Y$, and equip these sets with the natural restriction maps. Then $\mc F$ is a sheaf.
+\end{exe}
+\begin{proof}
+	To begin, here are the functoriality checks.
+	\begin{itemize}
+		\item Identity: for any $f\in\mc F(U)$, we have $f|_U=f$.
+		\item Functoriality: if $W\subseteq V\subseteq U$, any $f\in\mc F(U)$ will have $(f|_V|_W)(w)=f(w)=(f|_W)(w)$ for any $w\in W$, so $f|_V|_W=f|_W$ follows.
+	\end{itemize}
+	Here are sheaf checks. Fix an open cover $\mc U$ of an open set $U\subseteq X$.
+	\begin{itemize}
+		\item Identity: suppose $f_1,f_2\in\mc U$ have $f_1|_V=f_2|_V$ for all $V\in\mc U$. Now, for all $x\in U$, we see $x\in U_x$ for some $U_x\in\mc U$, so
+		\[f_1(x)=(f_1|_{U_x})(x)=(f_2|_{U_x})(x)=f_2(x),\]
+		so $f_1=f_2$ follows.
+		\item Gluability: suppose we have $f_V\in\mc F(V)$ for each $V\in\mc U$ such that $f_{V_1}|_{V_1\cap V_2}=f_{V_2}|_{V_1\cap V_2}$ for each $V_1,V_2\in\mc U$. Now, for each $x\in\mc U$, find $U_x\in\mc U$ with $x\in U_x$ and set
+		\[f(x)\coloneqq f_{U_x}(x).\]
+		Note this is well-defined: if $x\in U_x$ and $x\in U_{x'}$, then $f_{U_x}(x)=f_{U_x}|_{U_x\cap U_x'}(x)=f_{U_x'}|_{U_x\cap U_x'}(x)=f_{U_x'}(x)$. Additionally, we see that, for each $V\in\mc U$ and $x\in V$, we have
+		\[f|_V(x)=f(x)=f_V(x)\]
+		by construction, so we are done.
+
+		Lastly, we need to check that $f$ is continuous. Well, for any open set $V_0\subseteq Y$, we can compute
+		\[f^{-1}(V_0)=\{x\in U:f(x)\in V_0\}=\bigcup_{V\in\mc U}\{x\in V:f(x)\in V_0\}=\bigcup_{V\in\mc U}\{x\in V:f_V(x)\in V_0\}=\bigcup_{V\in\mc U}f_V^{-1}(V_0),\]
+		which is open as the arbitrary union of open sets because $f_V\colon V\to Y$ is a continuous function.
+		\qedhere
+	\end{itemize}
+\end{proof}
+In contrast, sheaves have trouble keeping track of ``global'' information.
+\begin{example}
+	For each $U\subseteq\RR$, let $\mc F(\RR)$ denote the set of bounded continuous functions $f\colon\RR\to\RR$, and equip these sets with the natural restriction maps. Then $\mc F$ is not a sheaf: for each open set $(n-1,n+1)$ for $n\in\NN$, the function $f_{(n-1,n+1)}\coloneqq\id_{(n-1,n=1)}$ is bounded and continuous, but the glued function $f=\id_\RR$ is not bounded on all of $\RR$. (We glued using \autoref{exe:sheafex}, which does force the definition of $f$.)
+\end{example}
 \begin{remark}
 	For most of our examples, the identity axiom is easily satisfied: intuitively, the identity axiom says that two sections are equal if and only if they agree locally. However, gluability is usually the tricky one: it requires us to build a function from local behavior.
 \end{remark}
@@ -85,14 +116,35 @@ Ok, so we've defined the sheaf as an algebraic object, so here are its morphisms
 As an aside, we note that we can succinctly write the sheaf conditions in an exact sequence.
 \begin{lemma}
 	Fix a topological space $X$ and presheaf $\mc F\colon(\op{Ob}X)\opp\to\mathcal C$, where $\mathcal C$ is an abelian category or $\mathrm{Grp}$. Then $\mc F$ is a sheaf if and only if the sequence
-	\[\arraycolsep=1.4pt\begin{array}{cccccccccccc}
-		0 &\to& \mc F(U) &\to& \displaystyle\prod_{V\in\mc U}\mc F(V) &\to& \displaystyle\prod_{V_1,V_2\in\mc U}\mc F(V_1\cap V_2) \\
-		  &   & f        &\mapsto& (f|_V)_{V\in\mc U} \\
-		  &   &          &       & (f_V)_{V\in\mc U} &\mapsto& (f_{V_1}|_{V_1\cap V_2}-f_{V_2}|_{V_1\cap V_2})
-	\end{array}\]
+	\begin{equation}
+		\arraycolsep=1.4pt\begin{array}{cccccccccccc}
+			0 &\to& \mc F(U) &\to& \displaystyle\prod_{V\in\mc U}\mc F(V) &\to& \displaystyle\prod_{V_1,V_2\in\mc U}\mc F(V_1\cap V_2) \\
+			  &   & f        &\mapsto& (f|_V)_{V\in\mc U} \\
+			  &   &          &       & (f_V)_{V\in\mc U} &\mapsto& (f_{V_1}|_{V_1\cap V_2}-f_{V_2}|_{V_1\cap V_2})_{V_1,V_2}
+		\end{array} \label{eq:sheafles}
+	\end{equation}
+	is exact.
 \end{lemma}
 \begin{proof}
-	Omitted.
+	In one direction, suppose that $\mc F$ is a sheaf, and we will show that \autoref{eq:sheafles} is exact for any open cover $\mc U$ of an open set $U$.
+	\begin{itemize}
+		\item Exact at $\mc F(U)$: suppose $f_1,f_2\in\mc F(U)$ have the same image in $\prod_{V\in\mc U}\mc F(V)$. This means that
+		\[f_1|_V=f_2|_V\]
+		for all $V\in\mc U$, so the identity axiom tells us that $f_1=f_2$.
+		\item Exact at $\prod_{V\in\mc U}\mc F(V)$: of course any $f\in\mc F(U)$ goes to $(f|_V)_{V\in\mc U}$, which goes to
+		\[f|_{V_1}|_{V_1\cap V_2}-f|_{V_2}|_{V_1\cap V_2}=f|_{V_1\cap V_2}-f|_{V_1\cap V_2}=0\in\prod_{V_1,V_2\in\mc U}\mc F(V_1\cap V_2)\]
+		and therefore lives in the kernel. Conversely, suppose $(f_V)_{V\in\mc U}$ vanishes in $\prod_{V_1,V_2}\mc F(V_1\cap V_2)$. Rearranging, this means that
+		\[f_{V_1}|_{V_1\cap V_2}=f_{V_2}|_{V_1\cap V_2},\]
+		so the gluability axiom tells us that we can find $f\in\mc F(U)$ such that $f|_V=f_V$. This finishes.
+	\end{itemize}
+	Conversely, suppose that $\mc F$ makes \autoref{eq:sheafles} always exact, and we will show that $\mc F$ is a sheaf. Fix an open cover $\mc U$ of an open set $U$.
+	\begin{itemize}
+		\item Identity: suppose that $f_1,f_2\in\mc F(U)$ have $f_1|_V=f_2|_V$ for any $V\in\mc U$. This means that $f_1$ and $f_2$ have the same image in $\prod_{V\in\mc U}\mc F(V)$, so the exactness of \autoref{eq:sheafles} at $\mc F(U)$ enforces $f_1=f_2$.
+		\item Gluability: suppose that we have $f_V\in\mc F(V)$ for each $V\in\mc U$ in such a way that $f_{V_1}|_{V_1\cap V_2}=f_{V_2}|_{V_1\cap V_2}$ for all $V_1,V_2\in\mc U$. Then the image of $(f_V)_{V\in\mc U}$ in $\prod_{V_1,V_2\in\mc U}\mc F(V_1\cap V_2)$ is
+		\[(f_{V_1}|_{V_1\cap V_2}-f_{V_2}|_{V_1\cap V_2})_{V_1,V_2}=(0)_{V_1,V_2},\]
+		so exactness of \autoref{eq:sheafles} forces there to be $f\in\mc F(U)$ such that $f|_V=f_V$ for each $V\in\mc U$. This finishes.
+		\qedhere
+	\end{itemize}
 \end{proof}
 \begin{remark}
 	One might want to continue this left-exact sequence. To see this, we will have to talk about cohomology, which is a task for later in life.
