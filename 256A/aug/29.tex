@@ -187,7 +187,7 @@ Morphisms are constructed in the obvious way.
 	\end{tikzcd}\]
 \end{ex}
 We are interested in showing that we can build a sheaf from a sheaf on a base uniquely, but it will turn out to be fruitful to spend a moment to discuss how this behaves on morphisms first for the uniqueness part of this statement.
-\begin{lemma}
+\begin{lemma} \label{lem:morphismonbase}
 	Fix a topological space $X$ with a base $\mc B$ for its topology. Given shaves $\mc F$ and $\mc G$ on $X$ with values in $\mc C$ and a morphism of the (underlying) sheaves on a base $\eta_\mc B\colon\mc F_\mc B\to\mc G_\mc B$, there is a unique sheaf morphism $\eta\colon\mc F\to\mc G$ such that $(\eta_\mc B)_B=\eta_B$ for each $B\in\mc B$.
 \end{lemma}
 \begin{proof}
@@ -228,23 +228,122 @@ We are interested in showing that we can build a sheaf from a sheaf on a base un
 		\qedhere
 	\end{itemize}
 \end{proof}
-Finally, here is our result.
+
+\subsection{Extending a Sheaf on a Base}
+We dedicate this subsection to the following result, describing how to extend a sheaf on a base to a full sheaf.
 \begin{proposition} \label{prop:sheaffrombase}
 	Fix a topological space $X$ with a base $\mc B$ for its topology. Given a sheaf on a base $F\colon\mc B\opp\to\mc C$, there is a sheaf $\mc F$ and isomorphism (of sheaves on a base) $\iota\colon F\to\mc F_B$ satisfying the following universal property: any sheaf $\mc G$ with a morphism (of sheaves on a base) $\varphi\colon F\to\mc G_\mc B$ has a unique sheaf morphism $\psi\colon\mc F\to\mc G$ making the following diagram commute.
 	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJGIl0sWzEsMCwiXFxtYyBGX1xcbWMgQiJdLFsxLDEsIlxcbWMgR19cXG1jIEIiXSxbMCwxLCJcXGlvdGEiXSxbMCwyLCJcXHZhcnBoaSIsMl0sWzEsMiwiXFxwc2kiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			F & {\mc F_\mc B} \\
+			& {\mc G_\mc B}
+			\arrow["\iota", from=1-1, to=1-2]
+			\arrow["\varphi"', from=1-1, to=2-2]
+			\arrow["\psi_\mc B", from=1-2, to=2-2]
+		\end{tikzcd} \label{eq:sheaffrombaseup}
+	\end{equation}
+\end{proposition}
+\begin{proof}
+	We begin by providing a construction of $\mc F$. For each open set $U\subseteq X$, define
+	\[\mc F(U)\coloneqq\limit_{B\subseteq U}F(B)=\Bigg\{(f_B)_{B\subseteq U}\in\prod_{B\subseteq U}F(B):f_B|_{B'}=f_{B'}\text{ for each }B'\subseteq B\subseteq U\Bigg\}.\]
+	(Namely, we are implicitly assuming that our target category has limits.) Observe that, when $V\subseteq U$, the natural surjection
+	\[\prod_{B\subseteq U}\mc F(B)\to\prod_{B\subseteq V}\mc F(B)\]
+	induces a map $\mc F(U)\to\mc F(V)$. Indeed, an element $(f_B)_{B\subseteq U}\in\mc F(U)$ gets sent to $(f_B)_{B\subseteq V}$, and it is still the case that $B'\subseteq B\subseteq V$ implies $f_B|_{B'}=f_{B'}$ because actually $B'\subseteq B\subseteq U$. Thus, $(f_B)_{B\subseteq V}\in\mc F(V)$, so we have a well-defined map
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		{\op{res}_{U,V}}\colon & \mc F(U) &\to& \mc F(V) \\
+		& (f_B)_{B\subseteq U} &\mapsto& (f_B)_{B\subseteq V}
+	\end{array}\]
+	which will serve as our restrictions. We start by checking that these data assemble into a presheaf.
+	\begin{itemize}
+		\item When $U=V$, we are sending $(f_B)_{B\subseteq U}\in\mc F(U)$ to itself, so ${\op{res}_{U,U}}=\id_{\mc F(I)}$.
+		\item Given $W\subseteq V\subseteq U$, the diagram
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXG1jIEYoVikiXSxbMSwxLCJcXG1jIEYoVykiXSxbMywwLCIoZl9CKV97Qlxcc3Vic2V0ZXEgVX0iXSxbNCwwLCIoZl9CKV97Qlxcc3Vic2V0ZXEgVn0iXSxbNCwxLCIoZl9CKV97Qlxcc3Vic2V0ZXEgV30iXSxbMCwxLCJcXG9we3Jlc31fe1UsVn0iXSxbMSwyLCJcXG9we3Jlc31fe1YsV30iXSxbMCwyLCJcXG9we3Jlc31fe1UsV30iLDJdLFszLDQsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F(U)} & {\mc F(V)} && {(f_B)_{B\subseteq U}} & {(f_B)_{B\subseteq V}} \\
+			& {\mc F(W)} &&& {(f_B)_{B\subseteq W}}
+			\arrow["{\op{res}_{U,V}}", from=1-1, to=1-2]
+			\arrow["{\op{res}_{V,W}}", from=1-2, to=2-2]
+			\arrow["{\op{res}_{U,W}}"', from=1-1, to=2-2]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow[maps to, from=1-5, to=2-5]
+			\arrow[maps to, from=1-4, to=2-5]
+		\end{tikzcd}\]
+		commutes, which is our functoriality check.
+	\end{itemize}
+	We now show that these data make a sheaf. Fix an open set $U\subseteq X$ with an open cover $\mc U$. To help our constructions, given any open subset $V\subseteq X$, let $\mc B_V$ denote the collection of basis elements $B$ contained in $V$; notably $\mc B_V$ is a basic cover for $V$. Then, for any open $U'\subseteq U$, we let
+	\[\mc S_{U'}\coloneqq\bigcup_{V\subseteq U}\mc S_{U'\cap V}.\]
+	Notably, $\mc S_{U'}$ is a basic cover for $U'$ such that any $B\in\mc S_{U'}$ is contained in some element of $\mc U$.
+	\begin{itemize}
+		\item Identity: suppose that $(f_B)_{B\subseteq U},(g_B)_{B\subseteq U}\in\mc F(U)$ restrict to the same element on any $V\in\mc U$. Now, fix any $B_0\subseteq U$, and we will show $f_{B_0}=g_{B_0}$.
+		
+		Now consider $\mc S_{B_0}$: for each $B'\in\mc S$, we can find $V\in\mc U$ so that $B'\subseteq V$, for which we know
+		\[(f_B)_{B\subseteq V}=(g_B)_{B\subseteq V}.\]
+		In particular $f_{B_0}|_{B'}=f_{B'}=g_{B'}=g_{B_0}|_{B'}$ for any $B\in\mc S$, so the identity axiom for the sheaf on a base $F$ forces $f_{B_0}=g_{B_0}$.
+		\item Gluability: suppose we are given some $(f_{V,B})_{B\subseteq V}\in\mc F(V)$ for each $V\in\mc U$ such that
+		\[(f_{V,B})_{B\subseteq V\cap V'}=(f_{V,B})_{B\subseteq V}|_{V\cap V'}=(f_{V',B})_{B\subseteq V}|_{V\cap V'}=(f_{V',B})_{B\subseteq V\cap V'}\]
+		for any $V,V'\in\mc U$. In other words, for any basic $B\subseteq V\cap V'$, we have $f_{V,B}=f_{V',B}$.
+
+		Now, for any basic $B_0\subseteq U$, we will solve for $f_{B_0}$. Using $\mc S_{B_0}$, note that any $B\in\mc S_{B_0}$ has some $V_B\in\mc U$ such that $B\subseteq V_B$, so we will use $f_{V_B,B}$ at this point. Note that if $B\subseteq V'_B$ as well, then $f_{V_B,B}=f_{V'_B,B}$, so our $f_{V_B,B}$ is independent of $V_B$. Continuing, if we have $B\subseteq B_1\cap B_2$, then
+		\[f_{V_{B_1},B_1}|_{B}=f_{V_{B_1},B}=f_{V_{B_2},B}=f_{V_{B_2},B_2}|_{B},\]
+		so gluability applied to our sheaf $F$ on a base promises us a unique $f_{B_0}$ such that $f_{B_0}|_B=f_{V_B,B}$ for any $B\in\mc S_{B_0}$.
+
+		We now need to show that the $(f_B)_{B\subseteq U}$ assemble into an element of $\mc F(U)$. Namely, if we have $B'_0\subseteq B_0$, we need to show that $f_{B_0}|_{B'_0}=f_{B'_0}$. Well, for any $B\in\mc S_{B_0'}$, we compute
+		\[f_{B_0}|_{B_0'}|_B=f_{B_0}|_B=f_{V_B,B}=f_{B_0}|_B,\]
+		so the uniqueness of $f_{B_0}$ gives the equality.
+	\end{itemize}
+	For our next step, we define $\iota_{B_0}\colon F(B)\to\mc F_\mc B(B_0)$ by
+	\[\iota_{B_0}(f)\coloneqq(f|_B)_{B\subseteq B_0}.\]
+	Here are the checks on $\iota$.
+	\begin{itemize}
+		\item Well-defined: note $\iota_{B_0}(f)$ is an element of $\mc F_\mc B(B_0)$ because $B'\subseteq B\subseteq B_0$ will have $f|_B|_{B'}=f|_{B'}$.
+		\item Natural: if $B\subseteq B'$, then note that the diagrams
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJGKEJfMCkiXSxbMSwwLCJcXG1jIEZfXFxtYyBCKEJfMCkiXSxbMCwxLCJGKEInXzApIl0sWzEsMSwiXFxtYyBGX1xcbWMgQihCJ18wKSJdLFszLDAsImYiXSxbMywxLCJmfF97QidfMH0iXSxbNCwwLCIoZnxfQilfe0JcXHN1YnNldGVxIEJfMH0iXSxbNCwxLCIoZnxfQilfe0JcXHN1YnNldGVxIEInXzB9Il0sWzAsMSwiXFxpb3RhX0IiXSxbMiwzLCJcXGlvdGFfe0InfSIsMl0sWzAsMiwiXFxvcHtyZXN9X3tCLEInfSIsMl0sWzEsMywiXFxvcHtyZXN9X3tCLEInfSJdLFs0LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{F(B_0)} & {\mc F_\mc B(B_0)} && f & {(f|_B)_{B\subseteq B_0}} \\
+			{F(B'_0)} & {\mc F_\mc B(B'_0)} && {f|_{B'_0}} & {(f|_B)_{B\subseteq B'_0}}
+			\arrow["{\iota_B}", from=1-1, to=1-2]
+			\arrow["{\iota_{B'}}"', from=2-1, to=2-2]
+			\arrow["{\op{res}_{B,B'}}"', from=1-1, to=2-1]
+			\arrow["{\op{res}_{B,B'}}", from=1-2, to=2-2]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow[maps to, from=1-5, to=2-5]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-5]
+		\end{tikzcd}\]
+		commute, finishing.
+		\item Injective: suppose that $f,g\in F(B_0)$ have the same image in $\mc F_\mc B(B_0)$. This means that $(f|_B)_{B\subseteq B_0}=(g|_B)_{B\subseteq B_0}$, so $f=f|_{B_0}=g|_{B_0}=g$, so we are done.
+		\item Surjective: fix some $(f_B)_{B\subseteq B_0}\in\mc F_\mc B(B_0)$. Notably, for any basic $B_1,B_2\subseteq B_0$ with some basic  $B\subseteq B_1\cap B_2$, we have
+		\[f_{B_1}|_B=f_B=f_{B_2}|_B,\]
+		so gluability applied to $F$ promises $f\in F(B_0)$ such that $f|_B=f_B$ for all basic $B\subseteq B_0$. So $\iota_{B_0}(f)=(f_B)_{B\subseteq B_0}$.
+	\end{itemize}
+	We now begin showing that $\mc F$ satisfies the universal property. Fix some sheaf $\mc G$ on $X$ with a morphism $\varphi\colon F\to\mc G_\mc B$.
+	
+	In light of \autoref{lem:morphismonbase}, it suffices to show the existence and uniqueness of a morphism $\psi_\mc B\colon\mc F_\mc B\to\mc G_\mc B$ on the base $\mc B$ making \autoref{eq:sheaffrombaseup} commute. Namely, the existence of $\psi_\mc B$ promises a full sheaf morphism $\psi\colon\mc F\to\mc G$ extending via \autoref{lem:morphismonbase}; for uniqueness, two possible $\psi,\psi'\colon\mc F\to\mc G$ with $\psi_\mc B$ and $\psi'_\mc B$ both commuting will enforce $\psi_\mc B=\psi'_\mc B$ and then $\psi=\psi'$ by the uniqueness of \autoref{lem:morphismonbase}.
+
+	Continuing with the proof, we note that the fact that $\iota$ is an isomorphism means that the commutativity of \autoref{eq:sheaffrombaseup} is equivalent to the diagram
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJGIl0sWzEsMCwiXFxtYyBGX1xcbWMgQiJdLFsxLDEsIlxcbWMgR19cXG1jIEIiXSxbMSwwLCJcXGlvdGFeey0xfSIsMl0sWzEsMiwiXFxwc2lfXFxtYyBCIl0sWzAsMiwiXFx2YXJwaGkiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
 		F & {\mc F_\mc B} \\
 		& {\mc G_\mc B}
-		\arrow["\iota", from=1-1, to=1-2]
+		\arrow["{\iota^{-1}}"', from=1-2, to=1-1]
+		\arrow["{\psi_\mc B}", from=1-2, to=2-2]
 		\arrow["\varphi"', from=1-1, to=2-2]
-		\arrow["\psi_\mc B", from=1-2, to=2-2]
 	\end{tikzcd}\]
-\end{proposition}
-\begin{proof}
-	We will provide the construction of $\mc F(U)$ for an open set $U\subseteq X$ as
-	\[\mc F(U)=\limit_{B\subseteq U}F(B).\]
-	More concretely, $\mc F(U)$ is made of a large tuple $(f_B)_{B\in\mc B}$ such that $B'\subseteq B$ implies $f_B|_{B'}=f_{B'}$. We will not check that this satisfies the constraints.
+	commuting. However, the commutativity of this diagram is equivalent to setting $\psi_\mc B\coloneqq\varphi\circ\iota^{-1}$. Thus, uniqueness of $\psi_\mc B$ is immediate, and existence of $\psi_\mc B$ amounts to noting the composition of natural transformations remains a natural transformation.
 \end{proof}
+\begin{remark}
+	The universal property implies that the pair $(\mc F,\iota)$ is unique up to unique isomorphism, for a suitable notion of unique isomorphism. Namely, the usual abstract nonsense arguments with universal properties is able to show that if we have another sheaf $\mc F'$ with isomorphism $\iota'\colon F\to\mc F'_\mc B$ satisfying the universal property, then $\mc F$ and $\mc F'$ are isomorphic. (This isomorphism $\eta\colon\mc F\cong\mc F'$ is unique if we ask for the corresponding diagram
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJGIl0sWzEsMCwiXFxtYyBGX1xcbWMgQiJdLFsxLDEsIlxcbWMgRl9cXG1jIEInIl0sWzAsMSwiXFxpb3RhIl0sWzEsMiwiXFxldGFfXFxtYyBCIl0sWzAsMiwiXFxpb3RhJyIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		F & {\mc F_\mc B} \\
+		& {\mc F_\mc B'}
+		\arrow["\iota", from=1-1, to=1-2]
+		\arrow["{\eta_\mc B}", from=1-2, to=2-2]
+		\arrow["{\iota'}"', from=1-1, to=2-2]
+	\end{tikzcd}\]
+	to commute.)
+\end{remark}
 \begin{remark}
 	One can also define $\mc F(U)$ as compatible systems of stalks, but we have not defined stalks yet.
 \end{remark}
