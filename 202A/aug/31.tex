@@ -168,20 +168,50 @@ However, in general we do not require a base to be closed under finite intersect
 		\end{asy}
 	\end{center}
 \end{example}
-Even though we are not closed under finite intersection, we do have the following.
-\begin{lemma}
-	Fix a set $X$ with a base $\mc B\subseteq\mc P(X)$ for a topology $\mc T$. Then any finite intersection of elements of $\mc B$ is an arbitrary union of elements of $\mc B$.
-\end{lemma}
+Even though bases are not closed under finite intersection, we do have the following.
+\begin{prop}
+	Fix a set $X$ and a collection $\mc B\subseteq\mc P(X)$. Then $\mc B$ is a base if and only if
+	\begin{listalph}
+		\item $X=\bigcup_{B\in\mc B}B$, and
+		\item any $B_1,B_2\in\mc B$ has some collection $\mc U\subseteq\mc B$ such that
+		\[B_1\cap B_2=\bigcup_{B\in\mc U}B.\]
+	\end{listalph}
+\end{prop}
 \begin{proof}
-	The finite intersection must live in $\mc T$ given by $\mc B$, but any element of $\mc T$ is an arbitrary union of elements of $\mc B$.
+	In one direction, suppose that $\mc B$ is a base generating the topology $\mc T$.
+	\begin{listalph}
+		\item Because $X\in\mc T$, we see that $X$ is the union of some subcollection $\mc U\subseteq\mc B$, so it follows
+		\[X=\bigcup_{U\in\mc U}U\subseteq\bigcup_{B\in\mc B}B\subseteq X.\]
+		\item Given $B_1,B_2\in\mc B\subseteq\mc T$, we see that $B_1\cap B_2\in\mc T$, so because $\mc T$ is made of arbitrary unions of $\mc B$, there is a collection $\mc U\subseteq\mc B$ such that
+		\[B_1\cap B_2=\bigcup_{B\in\mc U}B.\]
+	\end{listalph}
+	We now go in the other direction. Suppose $\mc B$ satisfies (a) and (b), and define
+	\[\mc T\coloneqq\Bigg\{\bigcup_{U\in\mc U}U:\mc U\subseteq\mc B\Bigg\}.\]
+	We now check that $\mc T$ is a topology.
+	\begin{itemize}
+		\item Using $\mc U=\emp\subseteq\mc B$, so we see that $\bigcup_{U\in\mc U}U=\emp$ is in $\mc T$. Also, by (a), we have
+		\[X=\bigcup_{B\in\mc B}B\in\mc T.\]
+		\item Arbitrary union: this is the same as the check in \autoref{lem:takearbunion}. Given a collection $\mc U\subseteq\mc T$, each $U\in\mc U$ has some collection $\mc V_U\subseteq\mc B$ such that $\bigcup_{V\in\mc V_U}V=U$. Letting $\mc V\subseteq\mc B$ be the union of all the $\mc V_U$, we see
+		\[\bigcup_{U\in\mc U}U=\bigcup_{U\in\mc U}\bigcup_{V\in\mc V_U}V=\bigcup_{V\in\mc V}V\]
+		lives in $\mc T$.
+		\item Finite intersection: by induction, it suffices to pick up $U_1,U_2\in\mc T$ and show $U_1\cap U_2\in\mc T$. Well, find $\mc B_1,\mc B_2\subseteq\mc B$ such that
+		\[U_1=\bigcup_{B_1\in\mc B_1}B_1\qquad\text{and}\qquad U_2=\bigcup_{B_2\in\mc B_2}B_2,\]
+		which implies
+		\[U_1\cap U_2=\bigcup_{\substack{B_1\in\mc B_1\\B_2\in\mc B_2}}(B_1\cap B_2).\]
+		Now, (b) implies that $B_1\cap B_2$ for any $B_1,B_2\in\mc B$ is a union of elements in $\mc B$, so $B_1\cap B_2\in\mc T$. Thus, $U_1\cap U_2$ is the arbitrary union of elements in $\mc T$, so $U_1\cap U_2\in\mc T$ by the previous check.
+		\qedhere
+	\end{itemize}
 \end{proof}
+\begin{remark}[Nir]
+	Careful readers might realize that we could rearrange the given exposition to show that, given a sub-base $\mc S$, the collection of finite intersections $\mc I^\mc S$ is a base instead of going through \autoref{lem:takearbunion}.
+\end{remark}
 \begin{remark}
 	Of course, any base is also a sub-base. Notably, sub-bases only require that $X=\bigcup_{U\in\mc S}U$, which must be satisfied for bases.
 \end{remark}
 \begin{example}
-	Set $X=\RR$ with the usual topology. Then the open intervals $(a,b)$ form a base for the usual topology (these are our open balls), and the collection
+	Set $X=\RR$ with the usual topology $\mc T$. Then the collection $\mc B$ of open intervals $(a,b)$ form a base for the usual topology (these are our open balls). In contrast, the collection
 	\[\mc S=\{(-\infty,a):a\in\RR\}\cup\{(a,\infty):a\in\RR\}\]
-	forms a sub-base for the usual topology because $(-\infty,b)\cap(a,\infty)=(a,b)$.
+	forms a sub-base for the usual topology. Namely, certainly $\mc S\subseteq\mc T$, and $\mc B\subseteq\mc T(\mc S)$ because of the finite intersection $(-\infty,b)\cap(a,\infty)=(a,b)$ for any $a,b\in\RR$. Namely, $\mc T=\mc T(\mc B)\subseteq\mc T(\mc T(\mc S))=\mc T(\mc S)$ follows.
 \end{example}
 
 \subsection{Induced Topologies}
@@ -207,7 +237,17 @@ We have the following more concrete description.
 \begin{proof}
 	Let $\iota\colon X\into Y$ be the natural embedding. Then we are given the sub-base
 	\[\mc S\coloneqq\left\{\iota^{-1}(U):U\in\mc T_Y\right\}.\]
-	Now, $\iota^{-1}(U)=X\cap U$, and then we can check directly that this collection gives a topology.
+	Now, $\iota^{-1}(U)=X\cap U$, and then we can check directly that this collection $\mc S$ gives a topology and finish by \autoref{rem:topgenitself}. Here are the checks, which should be completely routine by now.
+	\begin{itemize}
+		\item Note $\emp\in\mc T_Y$ implies $\emp=X\cap\emp\in\mc S$. Also, $Y\in\mc T_Y$ implies $X=X\cap Y\in\mc S$.
+		\item Arbitrary union: given a collection $\mc U\subseteq\mc S$, for each $U\in\mc U$ find $U_V\in\mc T_Y$ such that $U=X\cap U_V$. Then
+		\[\bigcup_{U\in\mc U}=U=\bigcup_{U\in\mc U}X\cap U_V=X\cap\underbrace{\bigcup_{U\in\mc U}U_V}_{\in\mc T_Y}\]
+		lives in $\mc S$.
+		\item Finite intersection: given a finite collection $\{U_1,\ldots,U_n\}\subseteq\mc S$, find $V_i\in\mc T_Y$ such that $U_i=X\cap V_i$. Then
+		\[\bigcap_{i=1}^nU_i=\bigcap_{i=1}^n(X\cap V_i)=X\cap\underbrace{\bigcap_{i=1}^nV_i}_{\in\mc T_Y}\]
+		lives in $\mc S$.
+		\qedhere
+	\end{itemize}
 \end{proof}
 
 \end{document}
