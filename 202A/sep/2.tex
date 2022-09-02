@@ -144,18 +144,48 @@ Here is our more concrete description.
 \end{example}
 
 \subsection{Comments on the Dual Space}
-Given a vector space $V$ with a norm $\norm\cdot$, we might be interested in the linear functionals on $V$, but because $V$ is a metric space, we should actually be looking at the continuous linear functional. One can show (in Math 202B) that one has ``plenty'' of linear functionals. Here is an example.
+Given a vector space $V$ with a norm $\norm\cdot$, we might be interested in the linear functionals on $V$, but because $V$ is a metric space, we should actually be looking at the continuous linear functional. One can show (in Math 202B) that one has ``plenty'' of continuous linear functionals. Here is a lemma we will use a few times.
+\begin{lemma} \label{lem:boundediffcont}
+	Let $\norm\cdot$ be a norm on an $\RR$-vector space $V$. Then a linear functional $f\colon V\to\RR$ is continuous if and only if there exists a real number $c>0$ such that
+	\begin{equation}
+		|f(v)|\le c\norm v \label{eq:fisbounded}
+	\end{equation}
+	for all $v\in V$.
+\end{lemma}
+\begin{proof}
+	In one direction, suppose that we can find a real number $c>0$ satisfying \autoref{eq:fisbounded} for all $v\in V$. To show $f$ is continuous, we use \autoref{lem:continuityconverse}: suppose that we have a sequence $\{v_n\}_{n\in\NN}$ such that $v_n\to v$ as $n\to\infty$. Then, for any $\varepsilon>0$, find $N$ such that $n>N$ implies
+	\[\norm{v-v_n}<\varepsilon/c\]
+	so that
+	\[\norm{f(v)-f(v_n)}\le c\norm{v-v_n}<\varepsilon.\]
+	Conversely, suppose that $f$ is continuous. Note that we don't have to worry about $v=0$ because this gives equality. Now, we can find $\delta>0$ such that $\norm{v}<\delta$ implies $|f(v)|<1$. It follows that any nonzero $v\in V$ will have
+	\[\norm{\frac\delta{2\norm v}v}<\delta,\]
+	so we see
+	\[|f(v)|=\frac{2\norm v}\delta\left|f\left(\frac\delta{2\norm v}v\right)\right|\le\frac2\delta\cdot\norm v,\]
+	so $c\coloneqq2/\delta$ will do the trick.
+\end{proof}
+Here is an example.
 \begin{exe}
-	Given $V\coloneqq C([0,1])$ a $p$-norm $\norm{\cdot}_p$ for some $p\ge1$ or $p=\infty$. Then $g\in C([0,1])$ defines the linear functional
-	\[\varphi_g(f)=\int_0^1f(t)g(t)\,dt.\]
+	Give $V\coloneqq C([0,1])$ a $p$-norm $\norm{\cdot}_p$ for some $p\ge1$ or $p=\infty$. Then $g\in C([0,1])$ defines a continuous linear functional
+	\[\varphi_g\colon f\mapsto\int_0^1f(t)g(t)\,dt.\]
 \end{exe}
 \begin{proof}
-	Linearity in $f$ is fairly clear. We omit the check that $\varphi_g\colon C\to\RR$ is continuous.
+	To show $\varphi_g$ is linear, pick up any $r_1,r_2\in\RR$ and $f_1,f_2\in V$; then
+	\[\varphi_g(r_1f_1+r_2f_2)=\int_0^1(r_1f_1+r_2f_2)(t)g(t)\,dt=r_1\int_0^1f_1(t)g(t)\,dt+r_2\int_0^1f_2(t)g(t)\,dt=r_1\varphi_g(f_1)+r_2\varphi_g(f_2).\]
+	Checking continuity is a little more involved. Note $|g|$ is a continuous function on a compact set $[0,1]$ and therefore has a maximum $M$. We now use \autoref{lem:boundediffcont}; we have two cases.
+	\begin{itemize}
+		\item Suppose $p=\infty$. Then, for any $f\in V$, we see
+		\[|\varphi_g(f)|=\left|\int_0^1f(t)g(t)\,dt\right|\le M\int_0^1|f(t)|\,dt\le M\norm f,\]
+		which finishes by \autoref{lem:boundediffcont}.
+		\item Suppose $p\ge1$ is finite. We use H\"older's inequality without proof, which tells us that
+		\[|\varphi_g(f)|=\norm{fg}_1\le\norm f_p\cdot\norm g_{1/(1-1/p)},\]
+		where $\norm g_{1/(1-1/p)}$ is finite because $g$ is continuous on a compact set and hence bounded.
+		\qedhere
+	\end{itemize}
 \end{proof}
 \begin{remark}
 	Despite having a large class of linear functionals for each $p$-norm, the dual spaces for each $p$-norm are not the same. For example, picking any $t_0\in[0,1]$ the functional
-	\[f\mapsto f(t_0)\]
-	is linear and continuous for $\norm{\cdot}_\infty$ but not for $\norm{\cdot}_p$ where $p$ is finite.
+	\[\varphi\colon f\mapsto f(t_0)\]
+	is linear and continuous for $\norm{\cdot}_\infty$ but not for $\norm{\cdot}_p$ where $p$ is finite. To see the continuity at $p=\infty$, use \autoref{lem:boundediffcont}: note $\varphi(f)\le\norm f_\infty$. However, the lack of continuity for $p<\infty$ can be seen by choosing $f$ to have a sharp bump at $t=t_0$, which allows $\varphi(f)$ to be large even if $\norm f_p$ is small.
 \end{remark}
 \begin{remark}
 	Now, we have exhibited many continuous functions
