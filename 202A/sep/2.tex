@@ -1,0 +1,175 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+There are no questions about anything.
+
+\subsection{Closed Sets}
+We begin, as always, with a definition.
+\begin{definition}[Closed]
+	Fix a topological space $(X,\mc T)$. A subset $V\subseteq X$ is \textit{closed} if and only if $(X\setminus V)\in\mc T$.
+\end{definition}
+Here are some basic properties.
+\begin{lemma} \label{lem:closedtop}
+	Fix a topological space $(X,\mc T)$.
+	\begin{listalph}
+		\item The set $\emp$ and $X$ are both closed.
+		\item Arbitrary intersection: given a collection of closed sets $\mc V$, the intersection $\bigcap_{V\in\mc V}V$ is closed.
+		\item Finite union: given a finite collection of closed sets $\{V_1,\ldots,V_n\}$, the union $\bigcup_{i=1}^nV_i$ is closed.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We proceed in sequence.
+	\begin{listalph}
+		\item Note that $X\setminus\emp=X$ and $X\setminus X=\emp$ are both open so $\emp$ and $X$ are closed.
+		\item Arbitrary intersection: observe that
+		\[X\mathbin{\bigg\backslash}\bigcap_{V\in\mc V}=\bigcup_{V\in\mc V}(X\setminus V)\]
+		is an arbitrary union of open sets and therefore open. Thus, $\bigcap_{V\in\mc V}V$ is closed.
+		\item Finite union: observe that
+		\[X\mathbin{\bigg\backslash}\bigcup_{i=1}^nV_i=\bigcap_{i=1}^n(X\setminus V_i)\]
+		is the finite intersection of open sets and therefore open. Thus, $\bigcap_{i=1}^nV_i$ is closed.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark}
+	Observe that both $X$ and $\emp$ are both open and closed. This is allowed.
+\end{remark}
+\begin{example}
+	Fix a metric space $(X,d)$. Then any closed ball $\overline{B(x_0,r)}$ is closed: we need to show
+	\[U\coloneqq X\setminus\overline{B(x_0,r)}=\{x\in X:d(x,x_0)>r\}\]
+	is open. Well, for any $y\in U$, we see $d(y,x_0)>r$, so set $\varepsilon_y\coloneqq r-d(x,x_0)$, so $y'\in B(y,\varepsilon_y)$ has $d(x,y')\ge d(x,y)-d(y,y')>r$. Thus, any $y\in U$ has $B(y,\varepsilon_y)\subseteq U$, finishing.
+\end{example}
+\begin{remark}
+	In $\RR^2$ with the Euclidean metric,
+	\[\bigcup_{\varepsilon<1}^\infty\overline{B(0,\varepsilon)}=\left\{x\in\RR^2:d(0,x)<\varepsilon\text{ for some }\varepsilon<1\right\}=B(0,1)\]
+	is not closed. Indeed, we need to show $U\coloneqq X\setminus B(0,1)=\left\{x\in\RR^2:d(0,x)\ge1\right\}$ is not open. Well, note $(1,0)\in U$, but any $\varepsilon>0$ has $(1-\varepsilon/2,0)\in B((1,0),\varepsilon)$ despite $(1-\varepsilon/2,0)\notin U$. Thus, $U$ is not open.
+\end{remark}
+\begin{remark}
+	One can define a topology by defining its closed sets to satisfy the axioms of \autoref{lem:closedtop}. Then one defines the open sets as the complements of open sets.
+\end{remark}
+Given a general set, we can define the closure as follows.
+\begin{definition}
+	Fix a topological space $(X,\mc T)$. Given a subset $S\subseteq X$, we define the \textit{closure} as
+	\[\overline S\coloneqq\bigcap_{\substack{V\supseteq S\\V\text{ closed}}}V.\]
+\end{definition}
+\begin{lemma}
+	Fix a topological space $(X,\mc T)$. Given a subset $S\subseteq X$, the closure $\overline S$ is the unique smallest closed set containing $S$.
+\end{lemma}
+\begin{proof}
+	Note that
+	\[\overline S\coloneqq\bigcap_{\substack{V\supseteq S\\V\text{ closed}}}V\]
+	is closed as the arbitrary intersection of closed sets, by \autoref{lem:closedtop}. To see that $\overline S$ is a minimal such closed set, note that any closed $V$ containing $S$ must have $\overline S\subseteq V$ by definition of $\overline S$.
+	
+	Lastly, to see that $\overline S$ is unique, note that if we have two minimal closed sets $\overline S_1$ and $\overline S_2$ containing $S$, then note $\overline S_1\cap\overline S_2$ are both closed sets containing $S$ by \autoref{lem:closedtop}, so minimality forces $\overline S_1=\overline S_1\cap\overline S_2=\overline S_2$.
+\end{proof}
+We can move our notion of density from metric spaces to general topology.
+\begin{defi}[Dense]
+	Fix a topological space $(X,\mc T)$. Given subsets $A\subseteq B$, we say $A$ is \textit{dense} in $B$ if and only if $B\subseteq\overline A$.
+\end{defi}
+\begin{remark}
+	We are not requiring that $B$ be closed for the definition of density. For example, $\QQ\subseteq\RR$ is dense in $\QQ$.
+\end{remark}
+
+\subsection{The Product Topology}
+Let's see more examples of induced topologies. We start with the easiest example of the product topology.
+\begin{defihelper}[Product topology]
+	Fix a finite collection of topological spaces $(X_1,\mc T_1)$ and $(X_2,\mc T_2)$. The \textit{product topology} on $X_1\times X_2$ is the topology induced by the canonical projection mappings
+	\[\pi_1\colon X_1\times X_2\to X_1\qquad\text{and}\qquad\pi_2\colon X_1\times X_2\to X_2.\]
+\end{defihelper}
+We now give the following more concrete description of the product topology.
+\begin{lemma} \label{lem:twoprodtop}
+	Fix topological spaces $(X_1,\mc T_1)$ and $(X_2,\mc T_2)$. The product topology $\mc T$ on $X\coloneqq X_1\times X_2$ has a base given by
+	\[\mc B\coloneqq\{U_1\times U_2:U_1\in\mc T_1,U_2\in\mc T_2\}.\]
+\end{lemma}
+\begin{proof}
+	The product topology is the minimal topology making $\pi_1\colon X_1\times X_2\to X_1$ and $\pi_2\colon X_1\times X_2\to X_2$ continuous. Namely, the product topology has a sub-base given by the sets
+	\[\pi_1^{-1}(U_1)=U_1\times X_2\qquad\text{and}\qquad\pi_2^{-1}(U_2)=X_1\times U_2\]
+	for any $U_1\in\mc T_1$ and $U_2\in\mc T_2$. Using \autoref{ex:fininterisbase}, we let $\mc I$ denote the finite intersections of these open sets and note $\mc I$ is a base for our topology.
+	
+	Now, we finish by claiming $\mc B=\mc I$. On one hand, any $U_1\times U_2\in\mc B$ with $U_1\in\mc T_1$ and $U_2\in\mc T_2$ can be written as the finite intersection
+	\[U_1\times U_2=(U_1\times X_2)\cap(X_1\times U_2)=\pi_1^{-1}(U_1)\cap\pi_2^{-1}(U_2)\in\mc I.\]
+	On the other hand, pick finitely many sets of the form $\pi_1^{-1}(U_1)$ and $\pi_2^{-1}(U_2)$; dividing them into their classes, we can write our finite collection of sets as in $\{U_1^{(i)}\times X_2\}_{i=1}^m$ or $\{X_1\times U_2^{(j)}\}_{j=1}^n$. Their intersection is
+	\[\Bigg(\bigcap_{i=1}^mU_1^{(i)}\times X_2\Bigg)\cap\Bigg(\bigcap_{j=1}^nX_1\times U_2^{(j)}\Bigg)=\underbrace{\Bigg(\bigcap_{i=1}^mU_1^{(i)}\Bigg)}_{U_1\coloneqq}\cap\underbrace{\Bigg(\bigcap_{j=1}^nU_2^{(j)}\Bigg)}_{U_2\coloneqq}.\]
+	Now, $U_1\subseteq X_1$ and $U_2\subseteq X_2$ are finite intersection of open sets and therefore open, so our finite intersection takes the form $U_1\times U_2$ and thus lives in $\mc B$.
+\end{proof}
+\begin{remark}
+	Later in life we will discuss measurable sets, which are not quite topologies but will have similar ideas in spirit. For example, they will also care deeply about ``rectangles.''
+\end{remark}
+We can define this more generally.
+\begin{defi}[Product topology]
+	Fix a collection of topological spaces $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$. The \textit{product topology} on $X\coloneqq\prod_{\alpha\in\lambda}X_\alpha$ is induced by the canonical projection maps
+	\[\pi_\alpha\colon X\to X_\alpha.\]
+\end{defi}
+Here is our more concrete description.
+\begin{lemma} \label{lem:prodtopbase}
+	Fix a collection of topological spaces $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$. The product topology on $X\coloneqq\prod_{\alpha\in\lambda}$ has a base
+	\[\mc B\coloneqq\Bigg\{\prod_{\alpha\in\lambda}U_\alpha:U_\alpha\in\mc T_\alpha,U_\alpha=X_\alpha\text{ for all but finitely many }\alpha\Bigg\}.\]
+\end{lemma}
+\begin{proof}
+	We are immediately given the sub-base of $\mc S\coloneqq\{\pi_\alpha^{-1}(U_\alpha):U_\alpha\in\mc T_\alpha\}$. Using \autoref{ex:fininterisbase}, we let $\mc I$ denote the finite intersections of $\mc S$ so that $\mc I$ is a base for our product topology.
+	
+	As before, we finish by claiming $\mc I=\mc B$. To stay organized, we proceed in steps.
+	\begin{itemize}
+		\item We show $\mc B\subseteq\mc I$. Namely, for any $\prod_{\alpha\in\lambda}U_\alpha$ in $\mc B$, we set $\lambda'\coloneqq\{\alpha:U_\alpha\ne X_\alpha\}$, which we know must be finite. Then
+		\[\prod_{\alpha\in\lambda}U_\alpha=\bigcap_{\alpha\in\lambda}\pi^{-1}(U_\alpha)=\bigcap_{\alpha\in\lambda'}\pi_\alpha^{-1}(U_\alpha)\]
+		because $\pi^{-1}(X_\alpha)=X$. The right-hand side is indeed a finite intersection of elements of $\mc S$ and therefore in $\mc I$.
+		\item We show $\mc S\subseteq\mc B$. For a given $\beta$ and $U_\beta\in\mc T_\beta$, set $U_\alpha\coloneqq X_\alpha$ for each $\alpha\ne\beta$. Then we see that
+		\[\pi_\beta^{-1}(U_\beta)=\prod_{\alpha\in\lambda}U_\alpha\]
+		is in $\mc B$ because $U_\alpha=X_\alpha$ for all but a single $\alpha\in\lambda$.
+		\item We show $\mc B$ is closed under finite intersection. By induction, it suffices to pick up $U,U'\in\mc B$ and show that $U\cap U'\in\mc B$. Indeed, write
+		\[U=\prod_{\alpha\in\lambda}U_\alpha\qquad\text{and}\qquad U'=\prod_{\alpha\in\lambda}U'_\alpha,\]
+		where $\lambda_0=\{\alpha:U_\alpha\ne X_\alpha\}$ and $\lambda_0'=\{\alpha:U'_\alpha\ne X_\alpha\}$ are both finite. Then
+		\[U\cap U'=\prod_{\alpha\in\lambda}(U_\alpha\cap U'_\alpha),\]
+		and we have $U_\alpha\cap U'_\alpha=X_\alpha$ whenever $\alpha\notin(\lambda_0\cup\lambda_0')$, which is only finitely many exceptions because both $\lambda_0$ and $\lambda_0$ are finite.
+		\item We show $\mc I\subseteq\mc B$. Indeed, $\mc I$ is made of the finite intersections of $\mc S$, and we see that $\mc B$ does indeed contain the finite intersections of $\mc S$ because $\mc B$ contains the finite intersections of itself, and $\mc S\subseteq\mc B$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	If $\lambda$ is finite, then the arguments of \autoref{lem:twoprodtop} generalize to give the cleaner base
+	\[\Bigg\{\prod_{\alpha\in\lambda}U_\alpha:U_\alpha\in\mc T_\alpha\Bigg\}.\]
+	This also follows directly from \autoref{lem:prodtopbase}, where we note that the ``finitely many exceptions'' actually permits all $\alpha\in\lambda$ to be an exception because $\lambda$ is finite.
+\end{remark}
+% \begin{example}
+% 	The open set $(0,1)^\NN$ is not open in $\RR^\NN$, where we have given $\RR^\NN$ the product topology.
+% \end{example}
+\begin{example}
+	Give $\{0,1\}$ the discrete topology. Then the space $X\coloneqq\{0,1\}^\NN$ given the product topology does not have
+	\[U\coloneqq\prod_{n\in\NN}\{0\}\]
+	open in $X$ even though $\{0\}\subseteq\{0,1\}$ is always open. To see this, we note $U$ has only a single element. On the other hand, for $U$ to be open, \autoref{lem:prodtopbase} tells us $U$ must contain a basis element $B$ of the form
+	\[B\coloneqq\prod_{n\in\NN}U_n\]
+	where $U_n=\{0,1\}$ for all but finitely many $n$. However, $B$ is infinite as the infinite product of sets containing more than $1$ element, so $B\not\subseteq U$.
+\end{example}
+
+\subsection{Comments on the Dual Space}
+Given a vector space $V$ with a norm $\norm\cdot$, we might be interested in the linear functionals on $V$, but because $V$ is a metric space, we should actually be looking at the continuous linear functional. One can show (in Math 202B) that one has ``plenty'' of linear functionals. Here is an example.
+\begin{exe}
+	Given $V\coloneqq C([0,1])$ a $p$-norm $\norm{\cdot}_p$ for some $p\ge1$ or $p=\infty$. Then $g\in C([0,1])$ defines the linear functional
+	\[\varphi_g(f)=\int_0^1f(t)g(t)\,dt.\]
+\end{exe}
+\begin{proof}
+	Linearity in $f$ is fairly clear. We omit the check that $\varphi_g\colon C\to\RR$ is continuous.
+\end{proof}
+\begin{remark}
+	Despite having a large class of linear functionals for each $p$-norm, the dual spaces for each $p$-norm are not the same. For example, picking any $t_0\in[0,1]$ the functional
+	\[f\mapsto f(t_0)\]
+	is linear and continuous for $\norm{\cdot}_\infty$ but not for $\norm{\cdot}_p$ where $p$ is finite.
+\end{remark}
+\begin{remark}
+	Now, we have exhibited many continuous functions
+	\[\varphi_g\colon C([0,1])\to\RR,\]
+	so we can ask for the topology on $C([0,1])$ induced by these. It turns out that this induced topology is much weaker than any individual norm topology; this topology is often called the weak topology determined by $C([0,1])$.
+\end{remark}
+\begin{remark}
+	By the end of the class, we will have a reasonable notion of the dual space of $\norm{\cdot}_1$ and $\norm{\cdot}_2$. The dual space for $\norm{\cdot}_\infty$ will come up in Math 202B.
+\end{remark}
+\begin{remark}
+	Still working with $C([0,1])$ given a specific norm $\norm\cdot_p$, one can show that any $g\in C([0,1])$ has some $r_g\in\RR$ with
+	\[\varphi_g(B(0,1))\subseteq B(0,r_g).\]
+	It turns out to be helpful to be able to consider the product topology on the (very large) product
+	\[\prod_{g\in C([0,1])}B(0,r_g).\]
+\end{remark}
+
+\end{document}
