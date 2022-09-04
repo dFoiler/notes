@@ -145,6 +145,9 @@ The extra data in those morphisms will come from stalks.
 	\[\mc F_p\coloneqq\colimit_{U\ni p}\mc F(U).\]
 	Concretely, elements of $\mc F_p$ are ordered pairs $(U,s)$ where $s\in\mc F(U)$ with $p\in U$, modded out by an equivalence relation $\sim$; here, $(U,s)\sim(U',s')$ if and only if there is $W\subseteq U\cap U'$ such that $s|_W=s'|_W$.
 \end{definition}
+\begin{remark}[Nir]
+	In some sense, the stalk is intended to encode ``local information'' at the point $p\in X$ in a particularly violent way: whenever two functions $s_1\in\mc F(U_1)$ and $s_2\in\mc F(U_2)$ (where $p\in U_1\cap U_2$) are equal locally on some open set $U$ containing $p$, then we identify $s_1$ and $s_2$. As such, $\mc F_p$ can really study functions locally at $p$.
+\end{remark}
 \begin{remark}
 	We go ahead and check that $\sim$ forms an equivalence relation. Fix $(U_i,s_i)$ with $s_i\in\mc F(U_i)$ for $i\in\{1,2,3\}$.
 	\begin{itemize}
@@ -155,64 +158,164 @@ The extra data in those morphisms will come from stalks.
 	\end{itemize}
 \end{remark}
 \begin{definition}[Germ]
-	Fix a presheaf $\mc F$ on a topological space $X$. For a point $p\in X$ and section $s\in\mc F(U)$ with $p\in U$, the \textit{germ of $f$ at $p$} is the element
+	Fix a presheaf $\mc F$ on a topological space $X$. For a point $p\in X$ and section $s\in\mc F(U)$ with $p\in U$, the \textit{germ of $s$ at $p$} is the element
 	\[[(U,s)]\in\mc F_p.\]
 \end{definition}
 \begin{notation}
-	I will write the germ of $f\in\mc F(U)$ at $p\in U$ as $f|_p$. This notation is not standard.
+	I will write the germ of $f\in\mc F(U)$ at $p\in U$ as $f|_p$. This notation is not standard, but I like it because I think of taking the germ of a section at $p$ as analogous to ``restricting'' to the point $p$.
 \end{notation}
-Here are some examples.
-\begin{lemma}
-	Fix a ring $A$. Then $\mc O_{\Spec A,\mf p}=A_\mf p$.
+As a warning, later on, we will want to consider tuples of sections $(f_p)_p$, and we will want to distinguish the notation for an element of this tuple as $f_p$ with the notation for the corresponding germ $f|_p$.
+\begin{remark}
+	As justification for my notation, if $f\in\mc F(U)$ while $p\in V\subseteq U$, then
+	\[f|_p=f|_V|_p\]
+	because $[(U,f)]=[(V,f|_V)]$ can be witnessed by $f|_V=f|_V|_V$.
+\end{remark}
+Here are some examples of stalks.
+\begin{lemma} \label{lem:stalkbybase}
+	Fix a presheaf $\mc F$ on a topological space $X$, and give the topology on $X$ a base $\mc B$. For a point $p\in X$, we have the isomorphism
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		\varphi\colon& \displaystyle\colimit_{B\ni p}\mc F(B) &\simeq& \mc F_p \\
+		& [(B,s)] &\mapsto& [(B,s)]
+	\end{array}\]
+	where the colimit is taken over $B\in\mc B$ such that $p\in B$.
 \end{lemma}
 \begin{proof}
-	Check this directly using the concrete description of our germs. In particular, denominators are allowed to be anything in $A\setminus\mf p$, which is precisely what gives $A_\mf p$.
+	The main point to show that $\varphi$ is well-defined is that the system of maps $\mc F(B)\to\mc F_p$ for each $B\in\mc B$ containing $p$ induce the map $\varphi$ by the universal property. Concretely, if $(B_1,s_1)\sim(B_2,s_2)$, then we can find $B\subseteq B_1\cap B_2$ such that $s_1|_B=s_2|_B$, which means that $[(B_1,s_1)]=[(B_2,s_2)]$ in $\colimit_{B\ni p}\mc F(B)$ implies the equality in $\mc F_p$. Now, any structure that $\varphi$ needs to preserve (e.g., being a homomorphism of some kind) will be immediately preserved.
+
+	We now exhibit the map in the reverse direction. Note that any $U\subseteq X$ containing $p$ can find some basis element $B\in\mc B$ such that $p\in B\subseteq U$. As such, we define $\psi\colon\mc F_p\to\colimit_{B\ni p}\mc F(B)$ by
+	\[\psi\colon[(U,s)]\mapsto[(B,s|_B)].\]
+	To show that this map is well-defined, first note that $\psi$ does not depend on $B$: if we have basis sets $B_1$ and $B_2$ inside $U$ containing $p$, we can find basis sets $B\subseteq B_1\cap B_2$ giving $s|_{B_1}|_B=s|_B=s|_{B_2}|_B$, so
+	\[[(B_1,s|_{B_1})]=[(B_2,s|_{B_2})].\]
+	Second, note that $\psi$ does not depend on the representative of $[(U,s)]$. Indeed, if $(U_1,s_1)\sim(U_2,s_2)$, then we are promised $U\subseteq U_1\cap U_2$ such that $s_1|_U=s_2|_U$. Now, find $B$ contained in $U$ containing $p$, so we see $s_1|_B=s_2|_B$, so
+	\[[(B,s_1|_B)]=[(B,s_2|_B)].\]
+	So we have a well-defined map $\psi$.
+
+	We now show that $\psi$ and $\varphi$ are inverse. In one direction, given some $[(B,s)]$, we note we can write
+	\[\psi(\varphi([(B,s)]))=\psi([(B,s)])=[(B,s)],\]
+	where the last equality is legal because $B$ is a basis set containing $p$ which is contained in $B$. In the other direction, given some $[(U,s)]$, find a basis set $B\subseteq U$ containing $p$ so that
+	\[\varphi(\psi([(U,s)]))=\varphi([(B,s|_B)])=[(B,s|_B)],\]
+	and we note that $[(B,s|_B)]=[(U,s)]$ because $B\subseteq U$ has $s|_B|_B=s|_B$.
 \end{proof}
-Notably, $\mc O_{\Spec A,\mf p}$ is always a local ring. This will be important.
+\begin{lemma}
+	Fix a ring $A$. Then, for any prime $\mf p$, $A_\mf p\simeq\mc O_{\Spec A,\mf p}$ induced by $a\mapsto a|_\mf p$.
+\end{lemma}
+\begin{proof}
+	The point here is that $\OO_{\Spec A,\mf p}$ permits denominators from anyone in $A\setminus\mf p$. In one direction, note that $A=\OO_{\Spec A}(\Spec A)$, so there is a canonical map
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		\OO_{\Spec A}(\Spec A) &\to& \mc O_{\Spec A,\mf p} \\
+		s &\mapsto& s|_{\mf p}
+	\end{array}\]
+	because $\mf p\in\Spec A$. Call this map $\varphi$. Note, for any $f\in A\setminus\mf p$, we see that $\mf p\in D(f)$, so the canonical map
+	\[\OO_{\Spec A}(D(f)) \to \OO_{\Spec A,\mf p}\]
+	permits us to write
+	\[[(\Spec A,f)]\cdot[(D(f),1/f)]=[(D(f),f)]\cdot[(D(f),1/f)]=[(D(f),1)]\]
+	is the unit element of $\OO_{\Spec A,\mf p}$. Thus, $\varphi(f)\in\OO_{\Spec A,\mf p}^\times$ for each $f\in A\setminus\mf p$, so $\varphi$ induces a natural map $\varphi\colon A_\mf p\to\OO_{\Spec A,\mf p}$ sending $a/f$ to $[(D(f),a/f)]$.
+
+	In the other direction, we can directly pick up any $\left[(D(f),a/f^n)\right]\in\OO_{\Spec A,\mf p}$, where we are thinking about the colimit as happening over the distinguished base according to \autoref{lem:stalkbybase}. Now, $\mf p\in D(f)$ is equivalent to $f\notin\mf p$, so $f\in A_\mf p^\times$, so we can define $\psi\colon\OO_{\Spec A,\mf p}\to A_\mf p$ by
+	\[\psi\colon\left[(D(f),a/f^n)\right]\mapsto a/f^n.\]
+	To see that $\psi$ is well-defined, note $(D(f_1),a_1/f_1^{n_1})\sim(D(f_2),a_2/f_2^{n_2})$ means we can find $D(f)\subseteq D(f_1)\cap D(f_2)$ containing $\mf p$ with
+	\[f^n\left(f_2^{n_2}a_1-f_1^{n_1}a_2\right)=0\]
+	in $A$. Rearranging, it follows that $a_1/f_1^{n_1}=a_2/f_2^{n_2}$ in $A_\mf p$.
+
+	We won't bother checking that $\psi$ is a ring map; just look at it. However, we will check that $\psi$ and $\varphi$ are inverses (which tells us that $\psi$ is a ring map automatically). Well, given $a/f\in A_\mf p$, we see
+	\[\psi(\varphi(a/f))=\psi([(D(f),a/f)])=a/f.\]
+	On the other hand, given $[(D(f),a/f^n)]\in\OO_{\Spec A,\mf p}$, write
+	\[\varphi(\psi([(D(f),a/f^n)]))=\varphi\left(a/f^n\right)=[(D(f^n),a/f^n)]=[(D(f),a/f)],\]
+	where the last equality holds because $D(f^n)=(\Spec A)\setminus V((f^n))=(\Spec A)\setminus V(\rad(f^n))=(\Spec A)\setminus V((f))=D(f)$.
+\end{proof}
+\begin{remark} \label{rem:sheafislocalring}
+	Notably, $\mc O_{\Spec A,\mf p}$ is always a local ring, and the maximal ideal $\mf pA_\mf p$ corresponds to germs $[(D(f),a/f)]$ such that $a/f\in\mf pA_\mf p$, or equivalently, such that $a\in\mf p$. Namely, the maximal ideal consists of our germs which vanish at $\mf p$.
+\end{remark}
 \begin{example}
-	Let $X$ be the topological space $\CC$ (or any Riemann surface), and define $\mc O_X$ to be the sheaf of holomorphic functions $X\to\CC$. Then, for any $p\in X$, we have
-	\[\mc O_{X,p}=\Bigg\{\sum_{n=0}^\infty a_n(z-z_0)^n\text{ with positive radius of convergence}\Bigg\}\]
-	essentially by complex analysis. Namely, we are using the fact that holomorphic functions are analytic.
+	Continuing from \autoref{exe:diffgeo}, set $X\coloneqq\CC$ and $\mc O_X$ to be the sheaf of holomorphic functions. Then, for any $z_0\in X$, we have
+	\[\mc O_{X,z_0}=\Bigg\{\sum_{n=0}^\infty a_n(z-z_0)^n\text{ with positive radius of convergence}\Bigg\}.\]
+	Indeed, any germ $[(U,f)]$ with $f$ holomorphic actually has $f$ analytic, so $f$ is equal to a (unique) power series of the given form in some small enough neighborhood. And of course, each power series with positive radius of convergence gives rise to a germ.
 \end{example}
+\begin{remark}[Nir]
+	As in \autoref{rem:sheafislocalring}, we note that $\mc O_{X,z_0}$ is a local ring with maximal ideal
+	\[\mf m_{X,z_0}=\Bigg\{\sum_{n=1}^\infty a_n(z-z_0)^n\text{ with positive radius of convergence}\Bigg\}.\]
+	Of course $\mf m_{X,z_0}\subseteq\OO_{X,z_0}$ is an ideal. Conversely, one can see that any germ $[(f,U)]$ with $f(z_0)\ne0$ is nonzero in some neighborhood around $z_0$ (by continuity) and therefore is invertible in $\OO_{X,z_0}$, so $\OO_{X,z_0}\setminus\mf m_{X,z_0}=\OO_{X,z_0}^\times$.
+\end{remark}
+
+\subsection{Stalk Memory}
 Here is why we care about stalks.
 \begin{idea} \label{idea:stalks}
 	Stalks remember everything about a sheaf.
 \end{idea}
-Here is the rigorization of \autoref{idea:stalks}.
+Again, the reason why we expect \autoref{idea:stalks} to be true is that the stalk is able to remember local information, so having all the local information should be able to recover the original sheaf. Here is a rigorization.
+\begin{proposition} \label{prop:stalkinjection}
+	Fix a sheaf $\mc F$ and a presheaf $\mc G$ on $X$. Also, fix an open subset $U\subseteq X$.
+	\begin{listalph}
+		\item The natural embedding
+		\[\arraycolsep=1.4pt\begin{array}{cccc}
+			\iota\colon& \mc F(U) &\to& \displaystyle\prod_{p\in U}\mc F_p \\
+			& f &\mapsto& (f|_p)_{p\in U}
+		\end{array}\]
+		is injective.
+		\item A tuple $(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p$ is in $\im\iota$ if and only if, for each $p\in U$, there is an open set $U_p$ containing $p$ such that w can find $\widetilde f_p\in\mc F(U_p)$ such that all $q\in U_p$ have $f_q=\widetilde f_p|_q$.
+	\end{listalph}
+\end{proposition}
+\begin{remark}
+	Intuitively, part (b) is saying that all stalks in a small neighborhood come from a single section.
+\end{remark}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item We use the identity axiom on $\mc F$. Suppose that $f,g\in\mc F(U)$ have $f|_p=g|_p$ for all $p\in U$. Thus, for each $p\in U$, we can find $U_p\subseteq U$ containing $p$ such that $f|_{U_p}=g|_{U_p}$.
+
+		Now, $U\subseteq\bigcup_{p\in U}U_p\subseteq U$, so $\{U_p\}_{p\in U}$ is an open cover for $U$, so the identity axiom on $\mc F$ forces $f=g$.
+		
+		\item We use the gluability axiom on $\mc F$. In one direction, suppose $\iota(f)=(f_p)_{p\in U}$ so that $f|_p=f_p$ for each $p\in U$. This means that, for each $p\in U$, we can set $U_p\coloneqq U$ and $\widetilde f_p\coloneqq f\in\mc F(U_p)$ so that any $q\in U_p$ have
+		\[f_q=f|_q=\widetilde f_p|_q.\]
+		In the other direction, suppose we have germs $(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p$ such that any $p\in U$ has an open set $U_p$ and a section $\widetilde f_p\in\mc F(U_p)$ such that $f_q=\widetilde f_p|_q$ for any $q\in U_p$. We claim that
+		\begin{equation}
+			\widetilde f_p|_{U_p\cap U_q}\stackrel?=\widetilde f_q|_{U_p\cap U_q}. \label{eq:getcoherence}
+		\end{equation}
+		Well, for any $r\in U_p\cap U_q$, we know that $\widetilde f_p|_{U_p\cap U_q}|_r=f_r=\widetilde f_q|_{U_p\cap U_q}|_r$, so there is an open set $V_r\subseteq U_p\cap U_q$ containing $r$ such that
+		\[\widetilde f_p|_{U_p\cap U_q}|_{V_r}=\widetilde f_q|_{U_p\cap U_q}|_{V_r}.\]
+		Now, applying the identity axiom of $\mc F$ on the open cover $\{V_r\}_{r\in U_p\cap U_q}$ forces \autoref{eq:getcoherence}. Thus, the gluability axioms grants $f\in\mc F(U)$ such that $f|_{U_p}=\widetilde f_p$ for each $p\in U$, so it follows that
+		\[f|_p=f|_{U_p}|_p=f_p\]
+		for each $p\in U$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+In addition to sections, stalks also remember morphisms.
 \begin{proposition}
 	Fix presheaves $\mc F$ and $\mc G$ on a topological space $X$ with a morphism $\varphi\colon\mc F\to\mc G$.
 	\begin{listalph}
 		\item For any $p\in X$, there is a natural map $\varphi_p\colon\mc F_p\to\mc G_p$.
-		\item Suppose $\mc F$ is a sheaf. Then there is a natural embedding
-		\[\mc F(U)\into\prod_{p\in U}\mc F_p\]
-		taking $f\in\mc F(U)$ to its germs $(f|_p)_{p\in U}$. An element $(f_p)_{p\in U}$ is in the image if and only if, for each $p\in U$, there is an open set $U_p$ containing $p$ such that w can find $\widetilde f_p\in\mc F(U_p)$ such that all $q\in U_p$ have $f_q=(\widetilde f_p)|_q$. Intuitively, we are saying that all stalks in a small neighborhood come from a single section.
-		\item Suppose $\mc G$ is a sheaf. Given morphisms $\varphi_1,\varphi_2\colon\mc F\to\mc G$ such that $(\varphi_1)_p=(\varphi_2)_p$ for all $p\in X$, we have $\varphi_1=\varphi_2$.
+		\item Suppose $\mc G$ is a sheaf. Given presheaf morphisms $\varphi,\varphi'\colon\mc F\to\mc G$ such that $\varphi_p=\varphi'_p$ for all $p\in X$, we have $\varphi=\varphi'$.
 	\end{listalph}
 \end{proposition}
 \begin{proof}
 	We go in sequence.
 	\begin{listalph}
-		\item This follows from category theory. Alternatively, we can write this explicitly as being induced by
-		\[\varphi_p\colon[(U,s)]\mapsto[U,\varphi_U(s)].\]
-		We omit check that this is well-defined.
-		\item The map is an embedding by the identity axiom. The classification of the image comes from the gluability axiom, roughly speaking.
-		\item Fix an open set $U\subseteq X$ so that we need $(\varphi_1)_U=(\varphi_2)_U$. Now, the point is that any $\varphi\colon\mc F\to\mc G$ will make the following diagram commute.
-		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXGRpc3BsYXlzdHlsZVxccHJvZF97cFxcaW4gVX1cXG1jIEZfcCJdLFswLDEsIlxcbWMgRyhVKSJdLFsxLDEsIlxcZGlzcGxheXN0eWxlXFxwcm9kX3twXFxpbiBVfVxcbWMgR19wIl0sWzIsMywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMCwxXSxbMSwzLCJcXHByb2RcXHZhcnBoaV9wIl0sWzAsMiwiXFx2YXJwaGkiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\item It is possible to induce this map from abstract nonsense. Alternatively, we can write this explicitly as being induced by
+		\[\varphi_p\colon[(U,s)]\mapsto[(U,\varphi_U(s))].\]
+		To see that $\varphi_p$ is well-defined, suppose $(U_1,s_1)\sim(U_2,s_2)$ so that we have some $U\subseteq U_1\cap U_2$ with $s_1|_U=s_2|_U$. Then
+		\[\varphi_{U_1}(s_1)|_U=\varphi_U(s_1|_U)=\varphi_U(s_2|_U)=\varphi_{U_2}(s_2)|_U,\]
+		so $(U_1,\varphi_U(s_1))\sim(U_2,\varphi_U(s_2))$. Now, $\varphi_p$ will preserve whatever extra structure we need it to because it is essentially induced by the $\varphi_U$.
+		\item Fix an open set $U\subseteq X$ so that we need $(\varphi_1)_U=(\varphi_2)_U$. Now, the point is that any $\psi\colon\mc F\to\mc G$ will make the diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXGRpc3BsYXlzdHlsZVxccHJvZF97cFxcaW4gVX1cXG1jIEZfcCJdLFswLDEsIlxcbWMgRyhVKSJdLFsxLDEsIlxcZGlzcGxheXN0eWxlXFxwcm9kX3twXFxpbiBVfVxcbWMgR19wIl0sWzMsMCwiZiJdLFszLDEsIlxcdmFycGhpX1VmIl0sWzQsMCwiKGZ8X3ApX3twXFxpbiBVfSJdLFs0LDEsIigoXFx2YXJwaGlfVWYpfF9wKV97cFxcaW4gVX0iXSxbMiwzLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFswLDFdLFsxLDMsIlxccHJvZFxcdmFycGhpX3AiXSxbMCwyLCJcXHZhcnBoaV9VIiwyXSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 		\[\begin{tikzcd}
-			{\mc F(U)} & {\displaystyle\prod_{p\in U}\mc F_p} \\
-			{\mc G(U)} & {\displaystyle\prod_{p\in U}\mc G_p}
+			{\mc F(U)} & {\displaystyle\prod_{p\in U}\mc F_p} && f & {(f|_p)_{p\in U}} \\
+			{\mc G(U)} & {\displaystyle\prod_{p\in U}\mc G_p} && {\psi_Uf} & {((\psi_Uf)|_p)_{p\in U}}
 			\arrow[hook, from=2-1, to=2-2]
 			\arrow[from=1-1, to=1-2]
-			\arrow["{\prod\varphi_p}", from=1-2, to=2-2]
-			\arrow["\varphi"', from=1-1, to=2-1]
+			\arrow["{\prod\psi_p}", from=1-2, to=2-2]
+			\arrow["{\psi_U}"', from=1-1, to=2-1]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow[maps to, from=1-5, to=2-5]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-5]
 		\end{tikzcd}\]
-		Namely, the value of $\varphi_U(f)$ is uniquely determined by the top row of the diagram for all $f\in\mc F(U)$.
+		commute. In particular, if $\varphi_p=\varphi'_p$ for all $p\in X$, then we see that $\varphi_U(f)|_p=\varphi_p(f)=\varphi'_p(f)=\varphi_U(f)|_p$. Thus, the injectivity of the map $\mc G(U)\to\prod_{p\in U}\mc G_p$ of \autoref{prop:stalkinjection} forces $\varphi_U(f)=\varphi_U(f)$.
 		\qedhere
 	\end{listalph}
 \end{proof}
-\begin{remark}
-	The sheaf conditions on (b) and (c) are unnecessary.
-\end{remark}
+% \begin{remark}
+% 	The sheaf conditions on (b) and (c) are unnecessary.
+% \end{remark}
 
 \subsection{Morphisms Between Sheaves}
 We are going to want to do category theory on sheaves, so let's begin. Throughout our target category for our sheaves will be abelian (and concrete).
