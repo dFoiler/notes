@@ -317,21 +317,195 @@ In addition to sections, stalks also remember morphisms.
 % 	The sheaf conditions on (b) and (c) are unnecessary.
 % \end{remark}
 
-\subsection{Morphisms Between Sheaves}
-We are going to want to do category theory on sheaves, so let's begin. Throughout our target category for our sheaves will be abelian (and concrete).
-\begin{remark}
-	We will be able to show that the category of sheaves on an abelian category is an abelian category. However, we will not do this in detail because we are not sadistic.
+\subsection{The Category of Sheaves Is Additive}
+We are going to want to do category theory on sheaves, so let's begin. Our end goal is to show that the category of (pre)sheaves over a topological space $X$ valued in an abelian category is itself abelian. Throughout, our target category for our sheaves will be abelian (and concrete). Explicitly, the target category will essentially be a subcategory of $\mathrm{Mod}_R$ always.
+
+To begin, we need to show that we can give morphisms of sheaves an abelian group structure.
+\begin{lemma} \label{lem:addmorphisms}
+	Fix presheaves $\mc F$ and $\mc G$ on a topological space $X$. Then, given morphisms $\varphi,\psi\colon\mc F\to\mc G$, we can define
+	\[(\varphi+\psi)_U\coloneqq\varphi_U+\psi_U\]
+	for each $U\subseteq X$. Then $(\varphi+\psi)\colon\mc F\to\mc G$ is a presheaf morphism. This operation $+$ makes $\op{Mor}(\mc F,\mc G)$ an abelian group, and composition of morphisms distributes over addition.
+\end{lemma}
+\begin{proof}
+	To check that $\varphi+\psi$ is a presheaf morphism, pick up a containment of open sets $V\subseteq U$, and we need to check that the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYoVSkiXSxbMSwwLCJcXG1jIEcoVSkiXSxbMCwxLCJcXG1jIEYoVikiXSxbMSwxLCJcXG1jIEcoQikiXSxbMCwxLCIoXFx2YXJwaGkrXFxwc2kpX1UiXSxbMiwzLCIoXFx2YXJwaGkrXFxwc2kpX1YiXSxbMCwyLCJcXG9we3Jlc31fe1UsVn0iLDJdLFsxLDMsIlxcb3B7cmVzfV97VSxWfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F(U)} & {\mc G(U)} \\
+		{\mc F(V)} & {\mc G(B)}
+		\arrow["{(\varphi+\psi)_U}", from=1-1, to=1-2]
+		\arrow["{(\varphi+\psi)_V}", from=2-1, to=2-2]
+		\arrow["{\op{res}_{U,V}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	commutes. Well, for any $s\in\mc F(U)$, we note
+	\[(\varphi+\psi)_U(s)|_V=(\varphi_Us+\psi_Us)|_V=\varphi_U(s)|_V+\psi_U(s)|_V\stackrel*=\varphi_V(s|_V)+\psi_V(s|_V)=(\varphi+\psi)_V(s|_V),\]
+	where we have used the fact that $\varphi$ and $\psi$ are presheaf morphisms in $\stackrel*=$.
+
+	To check that $\op{Mor}(\mc F,\mc G)$ is an abelian group under $+$, we note that
+	\[\op{Mor}(\mc F,\mc G)\subseteq\prod_{U\subseteq X}\op{Mor}(\mc F(U),\mc G(U)),\]
+	where the latter is a product group under the same addition operation. We have already established that $\op{Mor}(\mc F,\mc G)$ is closed under the addition operation. So we have two more checks to establish that we have a subgroup.
+	\begin{itemize}
+		\item Zero: the zero element $0\in\op{Mor}(\mc F,\mc G)$ is then made of the zero morphisms $0_U\colon\mc F(U)\to\mc G(U)$. The uniqueness of zero morphisms ensures that $0\colon\mc F\to\mc G$ is a presheaf morphism. Namely, any $V\subseteq U$ and $s\in\mc F(U)$ gives $0_U(s)|_V=0=0_V(s|_V)$.
+		\item Inverses: given a sheaf morphism $\varphi\colon\mc F\to\mc G$, we define $(-\varphi)_U\coloneqq-\varphi_U$ for each $U\subseteq X$. The $(-\varphi)$ assembles into a presheaf morphism: for any $V\subseteq U$ and $s\in\mc F(U)$, we see that $(-\varphi)_U(s)|_V=-\varphi_U(s)|_V=-\varphi_V(s|_V)=(-\varphi)_V(s|_V)$.
+	\end{itemize}
+	It remains to check distributivity. Let $\varphi_1,\varphi_1\colon\mc F\to\mc G$ and $\psi_1,\psi_2\colon\mc G\to\mc H$ be presheaf morphisms. Then, for any $U\subseteq X$ and $s\in\mc F(U)$, we compute
+	\begin{align*}
+		((\psi_1+\psi_2)\circ(\varphi_1+\varphi_2))_U(s) &= (\psi_1+\psi_2)_U\big((\varphi_1+\varphi_2)_U(s)\big) \\
+		&= ((\psi_1)_U+(\psi_2)_U)\big((\varphi_1)_U(s)+(\varphi_2)_U(s)\big) \\
+		&= ((\psi_1)_U+(\psi_2)_U)\big((\varphi_1)_U(s)\big)+((\psi_1)_U+(\psi_2)_U)\big((\varphi_2)_U(s)\big) \\
+		&= (\psi_1\circ\varphi_1)_U(s)+(\psi_2\circ\varphi_1)_U(s)+(\psi_1\circ\varphi_2)_U(s)+(\psi_2\circ\varphi_2)_U(s) \\
+		&= (\psi_1\circ\varphi_1+\psi_2\circ\varphi_1+\psi_1\circ\varphi_2+\psi_2\circ\varphi_2)_U(s),
+	\end{align*}
+	so $(\psi_1+\psi_2)\circ(\varphi_1+\varphi_2)=\psi_1\circ\varphi_1+\psi_2\circ\varphi_1+\psi_1\circ\varphi_2+\psi_2\circ\varphi_2$ follows.
+\end{proof}
+\begin{remark} \label{rem:pretosheaf}
+	Of course, replacing all presheaves with sheaves in \autoref{lem:addmorphisms} makes the statement still true because sheaf morphisms are just presheaf morphisms. This will be a recurring theme.
 \end{remark}
+Continuing, we should define a zero presheaf.
+\begin{definition}[Zero presheaf]
+	Given a topological space $X$, the \textit{zero presheaf} on $X$ is the presheaf $\mc Z$ such that $\mc Z(U)=0$ for all open $U\subseteq X$.
+\end{definition}
+\begin{lemma} \label{lem:presheafzero}
+	The zero presheaf $\mc Z$ on $X$ is the zero object in the category of presheaves on $X$.
+\end{lemma}
+\begin{proof}
+	The restriction maps for $\mc Z$ are all zero maps; the functoriality checks are all immediate because zero maps are unique (namely, ${\id_0}=0$ and $0\circ0=0$). Now, given any presheaf $\mc F$, we need to exhibit unique presheaf morphisms to and from $\mc Z$.
+	\begin{itemize}
+		\item Initial: we show there is a unique sheaf morphism $\varphi\colon\mc Z\to\mc F$. For uniqueness, note that any $U\subseteq X$ needs a map
+		\[\varphi_U\colon\mc Z(U)\to\mc F(U),\]
+		so because $\mc Z(U)=0$ is initial, there is a unique possible map. To check that this data actually assembles into a presheaf morphism, we need to check that any containment of open sets $V\subseteq U$ causes the diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIFooVSkiXSxbMCwxLCJcXG1jIFooVikiXSxbMSwwLCJcXG1jIEYoVSkiXSxbMSwxLCJcXG1jIEYoVikiXSxbMiwwLCIwIl0sWzMsMCwiXFxtYyBGKFUpIl0sWzMsMSwiXFxtYyBGKFYpIl0sWzIsMSwiMCJdLFswLDIsIjAiXSxbMSwzLCIwIl0sWzAsMSwiXFxvcHtyZXN9X3tVLFZ9IiwyXSxbMiwzLCJcXG9we3Jlc31fe1UsVn0iXSxbNCw1LCIwIl0sWzQsN10sWzcsNiwiMCJdLFs1LDZdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc Z(U)} & {\mc F(U)} & 0 & {\mc F(U)} \\
+			{\mc Z(V)} & {\mc F(V)} & 0 & {\mc F(V)}
+			\arrow["0", from=1-1, to=1-2]
+			\arrow["0", from=2-1, to=2-2]
+			\arrow["{\op{res}_{U,V}}"', from=1-1, to=2-1]
+			\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+			\arrow["0", from=1-3, to=1-4]
+			\arrow[from=1-3, to=2-3]
+			\arrow["0", from=2-3, to=2-4]
+			\arrow[from=1-4, to=2-4]
+		\end{tikzcd}\]
+		commutes, which is clear by the uniqueness of our zero maps. Namely, the map $0\to0\to\mc F(V)$ and $0\to\mc F(U)\to\mc F(V)$ must both just be the map $0\to\mc F(V)$.
+		\item Terminal: one merely has to reverse all the arrows in the previous argument. Notably, the zero object $0$ in the target category of $\mc Z$ is terminal in addition to being initial.
+		\qedhere
+	\end{itemize}
+\end{proof}
+As in \autoref{rem:pretosheaf}, we can quickly move the zero presheaf to being the zero sheaf.
+\begin{cor} \label{cor:zerosheaf}
+	The zero presheaf $\mc Z$ on a topological space $X$ is a sheaf and hence the zero object in the category of sheaves on $X$.
+\end{cor}
+\begin{proof}
+	The main point here is that the zero presheaf $\mc Z$ is in fact a sheaf. This is easy to check: fix an open cover $\mc U$ of an open set $U\subseteq V$. If we are given sections $f,g\in\mc Z(U)$, then we don't even need any other conditions to know that
+	\[f=g\in\mc Z(U)=0\]
+	because there is only one element in the zero object. Similarly, given sections $f_V\in\mc Z(V)$ for each $V\in\mc U$, we note that $f_V=0$ everywhere, so we can set $f_U=0\in\mc Z(U)$ so that $f|_V=f_V$; this proves the gluability axiom.
+
+	We now check the universal property. Given any sheaf $\mc F$, we know from \autoref{lem:presheafzero} that there are unique presheaf morphisms $\mc F\to\mc Z$ and $\mc Z\to\mc F$. Because sheaf morphisms are presheaf morphisms, it follows that there are unique sheaf morphisms as well.
+\end{proof}
+To show that our category of (pre)sheaves is additive, it remains to exhibit (finite) products.
+\begin{definition}[Product presheaf]
+	Given presheaves $\mc F_1$ and $\mc F_2$ on a topological space $X$, the \textit{product presheaf} $\mc F_1\times\mc F_2$ by
+	\[(\mc F_1\times\mc F_2)(U)\coloneqq\mc F_1(U)\times\mc F_2(U)\]
+	with the restriction maps induced by $\mc F_1$ and $\mc F_2$.
+\end{definition}
+\begin{lemma}
+	Given presheaves $\mc F_1$ and $\mc F_2$ on $X$, the product presheaf $\mc F_1\times\mc F_2$ is the categorical product.
+\end{lemma}
+\begin{proof}
+	We begin by showing that $\mc F_1\times\mc F_2$ is in fact a presheaf. To be explicit, our restriction maps for opens $V\subseteq U\subseteq X$ are
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		{\op{res}_{U,V}}\colon & (\mc F_1\times\mc F_2)(U) &\to& (\mc F_1\times\mc F_2)(V) \\
+		& (f_1,f_2) &\mapsto& (f_1|_V,f_2|_V).
+	\end{array}\]
+	Here are our presheaf checks.
+	\begin{itemize}
+		\item Identity: with an open $U\subseteq X$ and $(f_1,f_2)\in(\mc F_1\times\mc F_2)(U)$, we have $(f_1,f_2)|_U=(f_1|_U,f_2|U)=(f_1,f_2)$.
+		\item Functoriality: with opens $W\subseteq V\subseteq U$ and $(f_1,f_2)\in(\mc F_1\times\mc F_2)(U)$, we have
+		\[(f_1,f_2)|_V|_W=(f_1|_V|_W,f_2|_V|_W)=(f_1|_W,f_2|_W)=(f_1,f_2)|_W.\]
+	\end{itemize}
+	It remains to show our universal property for products. Given an open $U\subseteq X$, define $(\pi_1)_U\colon(\mc F_1\times\mc F_2)(U)\to\mc F_1(U)$ by projection onto the first coordinate. To show that $\pi_1$ assembles into a presheaf morphism, pick up opens $V\subseteq U\subseteq X$ and $(f_1,f_2)\in(\mc F_1\times\mc F_2)(U)$ and check
+	\[(\pi_1)_U((f_1,f_2))|_V=f_1|_V=(\pi_1)_V((f_1|_V,f_2|_V)).\]
+	We can define the presheaf morphism $\pi_2\colon(\mc F_1\times\mc F_2)\to\mc F_2$ by projection onto the second coordinate, which is a presheaf morphism by symmetry.
+
+	For our presheaf morphism, suppose that we have a presheaf $\mc G$ with maps $\varphi_1\colon\mc G\to\mc F_1$ and $\varphi_2\colon\mc G\to\mc F_2$. We need a unique presheaf morphism $\varphi\colon\mc G\to(\mc F_1\times\mc F_2)$ making the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMSwyLCJcXG1jIEZfMSJdLFsyLDEsIlxcbWMgRl8yIl0sWzEsMSwiXFxtYyBGXzFcXHRpbWVzXFxtYyBGXzIiXSxbMCwwLCJcXG1jIEciXSxbMiwwLCJcXHBpXzEiXSxbMiwxLCJcXHBpXzIiLDJdLFszLDAsIlxcdmFycGhpXzEiLDIseyJjdXJ2ZSI6Mn1dLFszLDEsIlxcdmFycGhpXzIiLDAseyJjdXJ2ZSI6LTJ9XSxbMywyLCJcXHZhcnBoaSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			{\mc G} \\
+			& {\mc F_1\times\mc F_2} & {\mc F_2} \\
+			& {\mc F_1}
+			\arrow["{\pi_1}", from=2-2, to=3-2]
+			\arrow["{\pi_2}"', from=2-2, to=2-3]
+			\arrow["{\varphi_1}"', curve={height=12pt}, from=1-1, to=3-2]
+			\arrow["{\varphi_2}", curve={height=-12pt}, from=1-1, to=2-3]
+			\arrow["\varphi"{description}, dashed, from=1-1, to=2-2]
+		\end{tikzcd} \label{eq:sheafproductup}
+	\end{equation}
+	commute. We show uniqueness and existence separately.
+	\begin{itemize}
+		\item Uniqueness: if $\varphi\colon\mc G\to(\mc F_1\times\mc F_2)$ makes \autoref{eq:sheafproductup} commute, at any given open $U\subseteq X$ and $g\in\mc G(U)$, we must have
+		\[(\pi_1)_U(\varphi_Ug)=(\varphi_1)_U(g)\qquad\text{and}\qquad(\pi_2)_U(\varphi_Ug)=(\varphi_2)_U(g),\]
+		so $\varphi_U(g)\coloneqq((\varphi_1)_Ug,(\varphi_2)_Ug)$ is forced.
+		\item Existence: as above, given an open $U\subseteq X$ and $g\in\mc G(U)$, define
+		\[\varphi_U(g)\coloneqq((\varphi_1)_Ug,(\varphi_2)_Ug).\]
+		We can see, as above, that $(\pi_1)_U\circ\varphi_U=(\varphi_1)_U$ and similar for $\pi_2$, so \autoref{eq:sheafproductup} will commute as long as $\varphi$ actually assembles into a presheaf morphism.
+
+		Well, given $V\subseteq U\subseteq X$ and $g\in\mc G(U)$, note
+		\[\varphi_U(g)|_V=((\varphi_1)_Ug,(\varphi_2)_Ug)|_V=((\varphi_1)_U(g)|_V,(\varphi_2)_U(g)|_V)=((\varphi_1)_V(g|_V),(\varphi_2)_V(g|_V))=\varphi_V(g|_V),\]
+		which finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary} \label{cor:sheafprod}
+	Given sheaves $\mc F_1$ and $\mc F_2$ on $X$, the product presheaf $\mc F_1\times\mc F_2$ is a sheaf and hence the categorical product.
+\end{corollary}
+\begin{proof}
+	As in \autoref{cor:zerosheaf}, the main point is to show that $\mc F_1\times\mc F_2$ is in fact a sheaf. Fix an open cover $\mc U$ of $U$.
+	\begin{itemize}
+		\item Identity: given $(f_1,f_2)\in(\mc F_1\times\mc F_2)(U)$ with $(f_1,f_2)|_V=0$ for all $V\in\mc U$, we see $f_1|_V=f_2|_V=0$ is forced for all $V\in\mc U$, so the identity axiom on $\mc F_1$ and $\mc F_2$ forces $f_1=f_2=0$. Thus, $(f_1,f_2)=0$.
+		\item Gluability: pick up sections $(f_{1,V},f_{2,V})(\mc F_1\times\mc F_2)(V)$ for each $V\in\mc U$ such that any $V,V'\in\mc U$ have
+		\[(f_{1,V}|_{V\cap V'},f_{2,V}|_{V\cap V'})=(f_{1,V},f_{2,V})|_{V\cap V'}=(f_{1,V'},f_{2,V'})|_{V\cap V'}=(f_{1,V'}|_{V\cap V'},f_{2,V'}|_{V\cap V'}).\]
+		Thus, the gluability axiom on $\mc F_1$ and $\mc F_2$ promises $f_1\in\mc F_1(U)$ and $f_2\in\mc F_2(U)$ such that $f_1|_V=f_{1,V}$ and $f_2|_V=f_{2,V}$ for each $V\in\mc U$. Thus, $(f_1,f_2)|_V=(f_1|_V,f_2|_V)=(f_{1,V},f_{2,V})$ for each $V\in\mc U$, as needed.
+	\end{itemize}
+	We now discuss the universal property. This immediately follows from the corresponding statement in the category of presheaves, but for completeness, we will say out loud what's going on. Let $\pi_1\colon(\mc F_1\times\mc F_2)\to\mc F_1$ and $\pi_2\colon(\mc F_1\times\mc F_2)\to\mc F_2$ be the projection (pre)sheaf morphisms.
+	
+	Suppose we have a sheaf $\mc G$ with sheaf morphisms $\varphi_1\colon\mc G\to\mc F_1$ and $\varphi_2\colon\mc G\to\mc F_2$. Then we are promised a unique presheaf morphism $\varphi\colon\mc G\to(\mc F_1\times\mc F_2)$ such that $\varphi_1=\pi_1\circ\varphi$ and $\varphi_2=\pi_2\circ\varphi$. Thus, there is also a unique sheaf morphism $\varphi$ satisfying the same constraint because sheaf morphisms are just presheaf morphisms.
+\end{proof}
+\begin{remark}
+	The above discussion immediately generalizes to arbitrary products, but we will not need these.
+\end{remark}
+\begin{corollary}
+	The category of (pre)sheaves on a topological space $X$ valued in a (concrete) abelian category $\mc C$ is additive.
+\end{corollary}
+\begin{proof}
+	Combine \autoref{lem:addmorphisms}, \autoref{cor:zerosheaf}, and \autoref{cor:sheafprod}.
+\end{proof}
+
+\subsection{Sheaf Kernels}
+We continue working with (pre)sheaves valued in a concrete abelian category. The next step to show that the category is abelian is to exhibit kernels and cokernels. Cokernels will turn out to be difficult, so we begin with kernels.
 \begin{definition}[Presheaf kernel]
 	Given a morphism of presheaves $\varphi\colon\mc F\to\mc G$ on a topological space $X$, we define the \textit{presheaf kernel} as
-	\[(\ker\varphi)(U)\coloneqq\ker(\varphi_U)\]
+	\[(\ker\varphi)(U)\coloneqq\ker\varphi_U\]
 	for each $U\subseteq X$, where restriction maps are induced by $\mc F$. Then $\ker\varphi$ is our \textit{presheaf kernel}.
 \end{definition}
 \begin{lemma}
-	Given a morphism of sheaves $\varphi\colon\mc F\to\mc G$ on a topological space $X$, the presheaf kernel is a sheaf.
+	Given a morphism of presheaves $\varphi\colon\mc F\to\mc G$ on a topological space $X$, the presheaf kernel $\ker\varphi$ is a categorical kernel.
 \end{lemma}
 \begin{proof}
-	Omitted.
+	We haven't actually defined the restriction maps for the presheaf kernel, so we do this now: for each open $U\subseteq X$ with $V\subseteq U$, note $\ker\varphi_U\subseteq\mc F(U)$, so we can restrict the map ${\op{res}_{U,V}}\colon\mc F(U)\to\mc F(V)$ to a map
+	\[\ker\varphi_U\to\mc F(V).\]
+	Now, for any $s\in\ker\varphi_U$, we note that actually $\varphi_V(s|_V)=\varphi_U(s)|_V=0$, so our restriction map restricts to ${\op{res}_{U,V}}\colon\ker\varphi_U\to\ker\varphi_V$ as needed. The presheaf checks on $\ker\varphi$ of identity and functoriality checks are inherited from $\mc F$.
+
+	It remains to check the universal property: we need $\ker\varphi$ to be the limit of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwxLCJcXG1jIEYiXSxbMSwxLCJcXG1jIEciXSxbMSwwLCIwIl0sWzAsMSwiXFx2YXJwaGkiXSxbMiwxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& \mc Z \\
+		{\mc F} & {\mc G}
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+	There is an inclusion $(\ker\varphi)(U)\subseteq\mc F(U)$ for each open $U\subseteq X$, which induces the arrows in the rest of the diagram. Checking the universal property is routine.
 \end{proof}
 Having a kernel gives us a definition.
 \begin{definition}[Injective]
