@@ -175,6 +175,304 @@ Here are some basic properties.
 	Sheafification being a left adjoint means that it preserves limits. Kernels and limits, so we see that the sheafification of the presheaf kernel is just the presheaf kernel again. The point here is that we don't need to sheafify the kernel, which is why we could talk about them before sheafification, but we will not be so lucky with cokernels.
 \end{remark}
 
+\subsection{Sheaf Cokernels}
+Now that we have sheafification, we may continue showing that the category sheaves valued in an abelian category is abelian. For this, we need to understand cokernels.
+\begin{definition}[Sheaf cokernel]
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of presheaves on $X$. Then the \textit{presheaf cokernel} $\coker\varphi$ is the sheaf found by setting
+	\[(\coker^{\op{pre}}\varphi)(U)\coloneqq\coker\varphi_U=\mc G(U)/\im\varphi_U.\]
+	If $\mc F$ and $\mc G$ are sheaves, we define the \textit{sheaf kernel} as the sheafification of the presheaf $\coker^{\op{pre}}\varphi$.
+\end{definition}
+We begin by running our checks on the presheaf cokernel.
+\begin{lemma} \label{lem:presheafcoker}
+	Fix a presheaf morphism $\varphi\colon\mc F\to\mc G$. Then $\coker^{\op{pre}}\varphi$ is a presheaf, and it is the cokernel of $\varphi$ in the category $\mathrm{PreSh}_X$.
+\end{lemma}
+\begin{proof}
+	To begin, we must exhibit our restriction maps. Given open sets $V\subseteq U$ and $[g]\in(\coker^{\op{pre}}\varphi)(U)=\coker\varphi_U$, we define
+	\[\op{res}_{U,V}([g])\coloneqq[g|_V].\]
+	Note this is well-defined: if $[g]=[g']$, then $g-g'\in\im\varphi_U$, so write $g-g'=\varphi_U(f)$ for $f\in\mc F(U)$. Thus, $g|_V-g'|_V=(g-g')|_V=\varphi_U(f)|_V=\varphi_V(f|_V)$ is in the image of $\varphi_V$, so $[g|_V]=[g'|_V]$.
+
+	We quickly check that this data assembles into a presheaf.
+	\begin{itemize}
+		\item Identity: given $g\in(\coker^{\op{pre}}\varphi)(U)$, note $[g]|_U=[g|_U]=[g]$.
+		\item Functoriality: given open sets $W\subseteq V\subseteq U$ and some $g\in(\coker^{\op{pre}}\varphi)(U)$, we see $[g]|_V|_W=[g|_V]|_W=[g|_V|_W]=[g|_W]=[g]|_W$.
+	\end{itemize}
+	It remains to check the universal property: we need $\coker^{\op{pre}}\varphi$ to be the colimit of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMCwxLCJcXHZhcnBoaSJdLFswLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+	\end{tikzcd}\]
+	To begin, we define a morphism $\pi\colon\mc G\to\coker^{\op{pre}}\varphi$. Well, for each open $U\subseteq X$, there is a natural projection $\pi_U\colon\mc G(U)\onto\coker\varphi_U$ by $\pi_U\colon g\mapsto[g]$, which we need to assemble into a natural transformation. Indeed, given open sets $V\subseteq U$ and a section $g\in\mc G(U)$, we compute
+	\[\pi_U(g)|_V=[g]|_V=[g|_V]=\pi_V(g|_V).\]
+	This map $\pi\colon\mc G\to\coker^{\op{pre}}\varphi$ induces the other needed maps $\mc F\to\coker^{\op{pre}}\varphi$ (as $\pi\circ\varphi$) and $\mc Z\to\coker^{\op{pre}}\varphi$ (which is the zero map). Further, note that any open $U\subseteq X$ has $(\pi\circ\varphi)_U=\pi_U\circ\varphi_U=0$ because $\pi_U$ returns $0$ on $\im\varphi_U$; thus, $\pi\circ\varphi=0$. Thus, the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMSwxLCJcXGNva2VyXntcXG9we3ByZX19XFx2YXJwaGkiXSxbMCwxLCJcXHZhcnBoaSJdLFswLDJdLFsxLDMsIlxccGkiLDJdLFsyLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z} & {\coker^{\op{pre}}\varphi}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\pi"', from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	commutes.
+
+	We are now ready to show the universal property. Fix a presheaf $\mc H$ with a map $\psi\colon\mc G\to\mc H$ such that $\psi\circ\varphi=0$. Then we need a unique map $\overline\psi\colon(\coker^{\op{pre}}\varphi)\to\mc H$ such that $\psi=\overline\psi\circ\pi$; i.e., such that the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMSwxLCJcXGNva2VyXntcXG9we3ByZX19XFx2YXJwaGkiXSxbMiwyLCJcXG1jIEgiXSxbMCwxLCJcXHZhcnBoaSJdLFswLDJdLFsxLDMsIlxccGkiLDJdLFsyLDNdLFszLDQsIlxcb3ZlcmxpbmVcXHBzaSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFsxLDQsIlxccHNpIiwwLHsiY3VydmUiOi0yfV0sWzIsNCwiIiwwLHsiY3VydmUiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z} & {\coker^{\op{pre}}\varphi} \\
+		&& {\mc H}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\pi"', from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\overline\psi"{description}, dashed, from=2-2, to=3-3]
+		\arrow["\psi", curve={height=-12pt}, from=1-2, to=3-3]
+		\arrow[curve={height=12pt}, from=2-1, to=3-3]
+	\end{tikzcd}\]
+	commutes. We show uniqueness and existence of $\overline\psi$ separately.
+	\begin{itemize}
+		\item Uniqueness: given an open set $U\subseteq X$ and some $[g]\in(\coker^{\op{pre}})(U)$, we must have
+		\[\overline\psi_U([g])=\overline\psi_U(\pi_Ug)=\psi_U(g),\]
+		so $\overline\psi_U$ is uniquely determined.
+		\item Existence: given an open set $U\subseteq X$ and some $[g]\in(\coker^{\op{pre}}\varphi)(U)$, we simply define
+		\[\overline\psi_U([g])\coloneqq\psi_U(g).\]
+		Note this is well-defined: if $[g]=[g']$, then $g-g'\in\im\varphi_U$, so write $g-g'=\varphi_U(f)$. Then $\psi_U(g)-\psi_U(g')=\psi_U(\varphi_Uf)=0$, so $\psi_U(g)=\psi_U(g')$.
+		
+		Additionally, we note that any $g\in\mc G(U)$ will have $\overline\psi_U(\pi_Ug)=\overline\psi_U([g])=\psi_U(g)$, so we conclude $\overline\psi\circ\pi=\psi$. It remains to show that $\overline\psi$ is actually a presheaf morphism. Well, any open sets $V\subseteq U$ and $[g]\in(\coker^{\op{pre}}\varphi)(U)$ has
+		\[\overline\psi_U([g])|_V=\psi_U(g)|_V=\psi_V(g|_V)=\overline\psi_V([g|_V])=\overline\psi_V([g]|_V),\]
+		finishing.
+		\qedhere
+	\end{itemize}
+\end{proof}
+And now we run the checks on the sheaf kernel.
+\begin{lemma} \label{lem:sheafcoker}
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then $\coker\varphi$ is the cokernel in the category $\mathrm{Sh}_X$.
+\end{lemma}
+\begin{proof}
+	Let $\pi^{\op{pre}}\colon\mc G\to\coker^{\op{pre}}\varphi$ be the projection map of \autoref{lem:presheafcoker} and ${\op{sh}}\colon\coker^{\op{pre}}\varphi\to\coker\varphi$ be the sheafification map. Then we define $\pi\coloneqq{\op{sh}}\circ\pi^{\op{pre}}$, so we claim that this map makes $\coker\varphi$ the colimit of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMCwxLCJcXHZhcnBoaSJdLFswLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+	\end{tikzcd}\]
+	Notably, we have $\pi\circ\varphi={\op{sh}}\circ\pi^{\op{pre}}\circ\varphi={\op{sh}}\circ0=0$, so $\pi$ at least works as a candidate morphism.
+
+	To show the universal property, fix a sheaf $\mc H$ with a map $\psi\colon\mc G\to\mc H$ such that $\psi\circ\varphi=0$. Then we need a unique map $\overline\psi\colon\coker\varphi\to\mc H$ such that $\psi=\overline\psi\circ\pi$, or equivalently, making
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z} & {\coker\varphi} \\
+		&& {\mc H}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\pi"', from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\overline\psi"{description}, dashed, from=2-2, to=3-3]
+		\arrow["\psi", curve={height=-12pt}, from=1-2, to=3-3]
+		\arrow[curve={height=12pt}, from=2-1, to=3-3]
+	\end{tikzcd}\]
+	commute. We show existence and uniqueness separately.
+	\begin{itemize}
+		\item Existence: working in $\mathrm{PreSh}_X$ for a moment, the fact that $\psi\circ\varphi=0$ promises a map $\overline\psi^{\op{pre}}\colon\coker^{\op{pre}}\varphi\to\mc H$ such that $\overline\psi^{\op{pre}}\circ\pi^{\op{sh}}=\psi$. Now, from the definition of sheafification, we get a map $\overline\psi\colon\coker\varphi\to\mc H$ such that
+		\[\overline\psi\circ{\op{sh}}=\overline\psi^{\op{pre}}.\]
+		Thus, $\overline\psi\circ\pi=\overline\psi\circ{\op{sh}}\circ\pi^{\op{pre}}=\overline\psi^{\op{pre}}\circ\pi^{\op{pre}}=\psi$, as needed.
+		\item Uniqueness: suppose $\overline\psi_1,\overline\psi_2\colon\coker\varphi\to\mc H$ have $\psi=\overline\psi_1\circ\pi=\overline\psi_2\circ\pi$. Then we see that actually
+		\[\psi=(\overline\psi_1\circ{\op{sh}})\circ\pi^{\op{pre}}=(\overline\psi_2\circ{\op{sh}})\circ\pi^{\op{pre}},\]
+		but the universal property of $\coker^{\op{pre}}\varphi$ has a uniqueness forcing $\overline\psi_1\circ{\op{sh}}=\overline\psi_2\circ{\op{sh}}$. But then the universal property of sheafification says there is a unique map $\overline\psi\colon\coker\varphi\to\mc H$ such that
+		\[\overline\psi\circ{\op{sh}}=\overline\psi_1\circ{\op{sh}}=\overline\psi_2\circ{\op{sh}},\]
+		so $\overline\psi=\overline\psi_1=\overline\psi_2$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+As before, we take a moment to verify that vanishing cokernel does indeed mean epic.
+\begin{lemma} \label{lem:epiiszerocoker}
+	Let $\mc C$ be a category with a zero object and cokernels. Then a morphism $\varphi\colon A\to B$ is epic if and only if $\coker\varphi$ vanishes.
+\end{lemma}
+\begin{proof}
+	Reverse all the arrows in \autoref{lem:moniciszeroker}. Notably, the dual of the kernel is the cokernel, the dual of a monic map is an epic map, and the dual of the zero object is still the zero object.
+\end{proof}
+
+\subsection{Surjectivity at Stalks}
+We are now ready to fix our surjectivity. Just like injectivity, we can check surjectivity at stalks.
+\begin{lemma} \label{lem:cokerstalk}
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of presheaves on $X$. Then, for any $p$, the projection $\mc G\to\coker^{\op{pre}}\varphi$ induces an isomorphism
+	\[\coker\varphi_p\to(\coker^{\op{pre}}\varphi)_p.\]
+	Thus, if $\mc F$ and $\mc G$ are sheaves, then the projection $\mc G\to\coker\varphi$ induces an isomorphism $\coker\varphi_p\simeq(\coker\varphi)_p$.
+\end{lemma}
+\begin{proof}
+	Let $\pi^{\op{pre}}\colon\mc G\to\coker^{\op{pre}}\varphi$ be the natural projection witnessing that $\coker^{\op{pre}}\varphi$ is the presheaf cokernel.
+
+	To show the second sentence note $\pi^{\op{pre}}$ induces a map $\mc G_p\to(\coker^{\op{pre}}\varphi)_p$ as
+	\[\pi^{\op{pre}}_p\colon[(U,g)]\mapsto[(U,\pi^{\op{pre}}_Ug)].\]
+	Note that, if $[(U,g)]\in\im\varphi_p$, then we can write $[(U,g)]=[(V,\varphi_Vf)]$ for some $f\in\mc F(V)$, so
+	\[\pi^{\op{pre}}_p(f|_p)=(\pi^{\op{pre}}_Vf)|_p=0|_p=0,\]
+	so $\im\varphi_p\subseteq\ker\pi^{\op{pre}}_p$, so we have actually induced a map $\coker\varphi_p\to(\coker^{\op{pre}}\varphi)_p$.
+
+	In the other direction, we define $\varphi_p\colon(\coker^{\op{pre}}\varphi)_p\to\coker\varphi_p$ by
+	\[\varphi_p\colon[(U,[g])]\mapsto(g|_p+\im\varphi_p).\]
+	We do need to check that this is well-defined: if $(U,[g])\sim(U',[g'])$, then we can find $V\subseteq U\cap U'$ such that $[(g-g')|_V]=[g]|_V-[g']|_V=0$, so there is $f\in\mc F(V)$ such that $(g-g')|_V=\varphi_V(f)$. Thus, $g|_p-g'|_p=(g-g')|_p=(g-g')|_V|_p=\varphi_V(f)|_p$ is in $\im\varphi_p$.
+
+	Lastly, we need to check that $\pi^{\op{pre}}_p$ and $\varphi_p$ are inverse. Given $[(U,g)]+\im\varphi_p\in\coker\varphi_p$, we note
+	\[\varphi_p\left(\pi^{\op{pre}}([(U,g)]+\im\varphi_p)\right)=\varphi_p([(U,[g])])=g|_p+\im\varphi_p.\]
+	Conversely, given $[(U,[g])]\in(\coker^{\op{pre}}\varphi)_p$, we note
+	\[\pi^{\op{pre}}_p(\varphi_p([(U,[g])]))=\pi^{\op{pre}}([(U,g)]+\im\varphi_p)=[(U,[g])],\]
+	finishing.
+
+	We now show the last sentence. Let ${\op{sh}}\colon\coker^{\op{pre}}\varphi\to\coker\varphi$ be the sheafification map. Then $\pi_p=({\op{sh}}\circ\pi^{\op{pre}})_p$ we can check to be ${\op{sh}}_p\circ\pi^{\op{pre}}_p$ (by, say, \autoref{rem:stalkfunctor}). Stringing these isomorphisms together, we see
+	\[\coker\varphi_p\to(\coker^{\op{pre}}\varphi)_p\simeq(\coker\varphi)_p,\]
+	which is what we wanted.
+\end{proof}
+And here is our result.
+\begin{proposition} \label{lem:surjonstalks}
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. The following are equivalent.
+	\begin{listalph}
+		\item $\varphi$ is epic.
+		\item $(\coker\varphi)(U)$ vanishes for all open $U\subseteq X$.
+		\item $\varphi_p$ is epic for all $p\in X$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	By \autoref{lem:epiiszerocoker}, these are equivalent to the following.
+	\begin{enumerate}[label=(\alph*')]
+		\item $\coker\varphi$ vanishes.
+		\item $(\coker\varphi)(U)$ vanishes for all open $U\subseteq X$.
+		\item $\coker\varphi_p$ vanishes for all $p\in X$. By \autoref{lem:cokerstalk}, this is equivalent to $(\coker\varphi)_p$ vanishing for all $p\in X$.
+	\end{enumerate}
+	These are equivalent by \autoref{lem:checkzerolocally}.
+\end{proof}
+
+\subsection{The Category of Sheaves Is Abelian}
+Now that our category of sheaves (valued in an abelian category) has kernels and cokernels for our morphisms, we have two more conditions to check.
+\begin{lemma} \label{lem:kercoker}
+	Fix a monic morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then actually $\varphi\colon\mc F\to\mc G$ makes $\mc F$ the kernel of the cokernel $\pi\colon\mc G\to\coker\varphi$.
+\end{lemma}
+\begin{proof}
+	We need to show that $\mc F$ is the limit of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMSwxLCJcXGNva2VyXFx2YXJwaGkiXSxbMCwyLCJcXHBpIl0sWzEsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& {\mc G} \\
+		{\mc Z} & \coker\varphi
+		\arrow["\pi", from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	To begin, note that $\varphi\colon\mc F\to\mc G$ makes the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMSwxLCJcXGNva2VyXFx2YXJwaGkiXSxbMCwwLCJcXG1jIEYiXSxbMCwyLCJcXHBpIl0sWzEsMl0sWzMsMCwiXFx2YXJwaGkiXSxbMywxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z} & \coker\varphi
+		\arrow["\pi", from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+	\end{tikzcd}\]
+	commute by the construction of $\pi\colon\mc G\to\coker\varphi$. We now show that $\mc F$ satisfies the universal property. Fix a sheaf morphism $\psi\colon\mc H\to\mc G$ such that $\pi\circ\psi=0$. Then we need a unique map $\overline\psi\colon\mc H\to\mc F$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMiwxLCJcXG1jIEciXSxbMSwyLCJcXG1jIFoiXSxbMiwyLCJcXGNva2VyXFx2YXJwaGkiXSxbMSwxLCJcXG1jIEYiXSxbMCwwLCJcXG1jIEgiXSxbMCwyLCJcXHBpIl0sWzEsMl0sWzMsMCwiXFx2YXJwaGkiXSxbMywxXSxbNCwzLCJcXG92ZXJsaW5lXFxwc2kiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNCwwLCJcXHBzaSIsMCx7ImN1cnZlIjotMn1dLFs0LDEsIiIsMCx7ImN1cnZlIjoyfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc H} \\
+		& {\mc F} & {\mc G} \\
+		& {\mc Z} & \coker\varphi
+		\arrow["\pi", from=2-3, to=3-3]
+		\arrow[from=3-2, to=3-3]
+		\arrow["\varphi", from=2-2, to=2-3]
+		\arrow[from=2-2, to=3-2]
+		\arrow["\overline\psi"{description}, dashed, from=1-1, to=2-2]
+		\arrow["\psi", curve={height=-12pt}, from=1-1, to=2-3]
+		\arrow[curve={height=12pt}, from=1-1, to=3-2]
+	\end{tikzcd}\]
+	commute; i.e., we need $\psi=\varphi\circ\overline\psi$. We show uniqueness and existence separately.
+	\begin{itemize}
+		\item Uniqueness: this follows because $\varphi$ is monic. Indeed, if $\overline\psi_1,\overline\psi_2$ have $\varphi\circ\overline\psi_1=\psi=\varphi\circ\overline\psi_2$, then $\overline\psi_1=\overline\psi_2$ because $\varphi$ is monic.
+		\item Existence: this is trickier. Let $\pi^{\op{pre}}\colon\mc G\to\coker^{\op{pre}}\varphi$ be the natural projection, and let ${\op{sh}}\colon\coker^{\op{pre}}\varphi\to\coker\varphi$ be the sheafification map.
+		
+		Now, given $U\subseteq X$ and $h\in\mc H(U)$, set $g\coloneqq\psi_U(h)$ for brevity. Notably, we have $\pi_U\circ\psi_U=0$, so $\pi_U(g)=0$. It follows $\pi_p(g|_p)=\pi_U(g)|_p=0$ for each $p\in U$, so $g|_p\in\ker\pi_p$ for each $p\in U$. Now, for each $p\in U$, by \autoref{lem:cokerstalk}, $\ker\pi_p=\im\varphi_p$, and by \autoref{prop:injonstalks}, $\varphi_p$ is monic, so is a unique $f_p\in\mc F_p$ such that
+		\[\varphi_p(f_p)=g|_p.\]
+		We claim that $(f_p)_{p\in U}$ is a system of compatible germs. To begin, choose some representative $f_p=[(U'_p,\widetilde f'_p)]$ and note that we have
+		\[[(U,g)]=g|_p=\varphi_p(f_p)=[(U'_p,\varphi_{U'_p}(\widetilde f'_p))],\]
+		so we can find $U_p\subseteq U'_p$ containing $p$ with $\widetilde f_p=\widetilde f'_p|_{U_p}$ small enough so that $g|_{U_p}=\varphi_{U_p}(\widetilde f_p)$. As such, any $q\in U_p$ has
+		\[\varphi_q(\widetilde f_p|_q)=[(U_p,\varphi_{U_p}(\widetilde f_p))]=[(U_p,g|_{U_p})]=g|_p,\]
+		so $\widetilde f_p|_q=f_q$ follows.
+
+		Thus, \autoref{prop:stalkinjection} promises a unique $f\in\mc F(U)$ such that $f|_p=f_p$ for each $p\in U$. So we define $\overline\psi_U(h)\coloneqq f$ to be the unique element such that
+		\[\varphi_p(\overline\psi_U(h)|_p)=\psi_U(h)|_p\]
+		for all $p\in U$.
+		
+		It remains to show that $\overline\psi$ assembles into a presheaf morphism. Well, for open sets $V\subseteq U$ and $h\in\mc H(U)$, we see that any $p\in V$ will have
+		\[\varphi_p(\overline\psi_U(h)|_V|_p)=\varphi_p(\overline\psi_U(h)|_p)=\psi_U(h)|_p=\psi_V(h|_V)|_p,\]
+		so the uniqueness of $\psi_V(h|_V)$ forces $\overline\psi_U(h)|_V=\psi_V(h|_V)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:cokerker}
+	Fix an epic morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then actually $\varphi\colon\mc F\to\mc G$ makes $\mc G$ the cokernel of the kernel $\iota\colon\ker\varphi\to\mc F$.
+\end{lemma}
+\begin{proof}
+	We need to show that $\mc G$ is the colimit of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMCwxLCJcXG1jIEYiXSxbMCwwLCJcXGtlclxcdmFycGhpIl0sWzEsMCwiXFxtYyBaIl0sWzEsMCwiXFxpb3RhIiwyXSxbMSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\ker\varphi & {\mc Z} \\
+		{\mc F}
+		\arrow["\iota"', from=1-1, to=2-1]
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}\]
+	To begin, note that $\varphi\colon\mc F\to\mc G$ makes the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJcXG1jIEYiXSxbMCwwLCJcXGtlclxcdmFycGhpIl0sWzEsMCwiXFxtYyBaIl0sWzEsMSwiXFxtYyBHIl0sWzEsMCwiXFxpb3RhIiwyXSxbMSwyXSxbMCwzLCJcXHZhcnBoaSJdLFsyLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\ker\varphi & {\mc Z} \\
+		{\mc F} & {\mc G}
+		\arrow["\iota"', from=1-1, to=2-1]
+		\arrow[from=1-1, to=1-2]
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+	commute by the construction of $\iota\colon\ker\varphi\to\mc G$. We are now ready to show that $\mc G$ satisfies the universal property. Fix a sheaf $\mc H$ with a morphism $\psi\colon\mc F\to\mc H$ such that $\psi\circ\iota=0$. We need a unique map $\overline\psi\colon\mc G\to\mc H$ such that $\psi=\overline\psi\circ\varphi$, or equivalently, making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwxLCJcXG1jIEYiXSxbMCwwLCJcXGtlclxcdmFycGhpIl0sWzEsMCwiXFxtYyBaIl0sWzEsMSwiXFxtYyBHIl0sWzIsMiwiXFxtYyBIIl0sWzEsMCwiXFxpb3RhIiwyXSxbMSwyXSxbMCwzLCJcXHZhcnBoaSJdLFsyLDNdLFsyLDQsIiIsMix7ImN1cnZlIjotMn1dLFswLDQsIlxccHNpIiwyLHsiY3VydmUiOjJ9XSxbMyw0LCJcXG92ZXJsaW5lXFxwc2kiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\ker\varphi & {\mc Z} \\
+		{\mc F} & {\mc G} \\
+		&& {\mc H}
+		\arrow["\iota"', from=1-1, to=2-1]
+		\arrow[from=1-1, to=1-2]
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[curve={height=-12pt}, from=1-2, to=3-3]
+		\arrow["\psi"', curve={height=12pt}, from=2-1, to=3-3]
+		\arrow["\overline\psi"{description}, dashed, from=2-2, to=3-3]
+	\end{tikzcd}\]
+	commute. We show uniqueness and existence separately.
+	\begin{itemize}
+		\item Uniqueness: this follows because $\varphi$ is epic. Indeed, if $\overline\psi_1,\overline\psi_2\colon\mc G\to\mc H$ have $\overline\psi_1\circ\varphi=\psi=\overline\psi_2\circ\varphi$, then $\overline\psi_1=\overline\psi_2$ because $\varphi$ is epic.
+		\item Existence: given $U\subseteq X$ and $g\in\mc G(U)$, we define $\overline\psi_U(g)$ by hand. By \autoref{lem:surjonstalks}, we see that $\varphi$ being epic means that $\varphi_p$ is surjective for each $p\in U$, we can find $f_p\in\mc F_p$ with $\varphi_p(f_p)=g|_p$ for each $p$. We now set
+		\[h_p\coloneqq\psi_p(f_p).\]
+		We claim that $h_p$ is independent of the choice for $f_p$. Indeed, if we have $[(U,f)]$ and $[(U',f')]$ in $\mc F_p$ with $[(U,\varphi_Uf)]=[(U',\varphi_{U'}f')]=g|_p$, then there is an open $V\subseteq U\cap U'$ such that $\varphi_V(f|_V-f'|_V)=0$. Thus, $f-f'\in\ker\varphi_V=(\ker\varphi)(V)$, so it follows $\psi_V((f-f')|_V)=0$. Thus, so
+		\[\psi_p([(U,f)])-\psi_p([(U',f')])=\psi_p([(V,\psi_V((f-f')|_V))])=\psi_p([(V,0)])=0.\]
+		Next, we claim that the $(h_p)_{p\in U}$ forms a compatible system of germs. Well, for each $p\in U$, we can find a sufficiently small open set $U_p$ with a lift $\widetilde f_p\in\mc F(U_p)$ such that $\varphi_{U_p}(\widetilde f_p)=g|_{U_p}$. Set $\widetilde h_p\coloneqq\psi_{U_p}(\widetilde f_p)$ so that for each $q\in U_p$ has $\varphi_q(\widetilde f_p|_q)=\varphi_{U_p}(\widetilde f_p)|_q=g|_q$ and thus
+		\[h_q=\psi_q(\widetilde f_p|_q)=\psi_{U_p}(\widetilde f_p)|_q.\]
+		It follows \autoref{prop:stalkinjection} that we have a unique $h\in\mc H(U)$ such that $h|_p=h_p$ for each $p\in U$, so we define $\overline\psi_U(g)\coloneqq h$. Explicitly, $\overline\psi_U(g)$ is the unique element of $\mc H(U)$ such that
+		\[\overline\psi_U(g)|_p=\psi_p\left(\varphi_p^{-1}(g|_p)\right)\]
+		for each $p\in U$.
+
+		We now run checks on $\overline\psi$. To see that we have a morphism $\mc G\to\mc H$, note that any opens $V\subseteq U$ and $g\in\mc G(U)$ will have, for each $p\in U$,
+		\[\overline\psi_U(g)|_V|_p=\overline\psi_U(g)|_p=\psi_p\left(\varphi_p^{-1}(g|_p)\right)=\psi_p\left(\varphi_p^{-1}(g|_V|_p)\right),\]
+		so the uniqueness of $\overline\psi_V(g|_V)$ forces $\overline\psi_U(g)|_V=\overline\psi_V(g|_V)$.
+
+		Lastly, we note that $\psi=\overline\psi\circ\varphi$: for any open $U\subseteq X$ and $f\in\mc F(U)$, all points $p\in U$ give
+		\[\overline\psi_U(\varphi_U(f))|_p=\psi_p\left(\varphi_p^{-1}(\varphi_U(f)|_p)\right)=\psi_p\left(\varphi_p^{-1}(\varphi_p(f|_p))\right)=\psi_p(f|_p)=\psi_U(f)|_p,\]
+		so the injectivity of \autoref{prop:stalkinjection} forces our equality.
+		\qedhere
+	\end{itemize}
+\end{proof}
+And here is our result.
+\begin{theorem}
+	The category $\mathrm{Sh}_X$ of sheaves on a topological space $X$ valued in a (concrete) abelian category $\mc C$ is additive.
+\end{theorem}
+\begin{proof}
+	The category is additive by \autoref{cor:sheavesadditive}. Kernels exist by \autoref{lem:sheafker}, and cokernels exist by \autoref{lem:sheafcoker}. The last conditions to check are \autoref{lem:kercoker} and \autoref{lem:cokerker}.
+\end{proof}
+
 \subsection{Passing to Stalks}
 We are now ready to fix our surjectivity. We start by fixing the image.
 \begin{defi}[Sheaf image]
