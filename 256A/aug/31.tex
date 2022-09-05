@@ -252,7 +252,7 @@ Again, the reason why we expect \autoref{idea:stalks} to be true is that the sta
 			& f &\mapsto& (f|_p)_{p\in U}
 		\end{array}\]
 		is injective.
-		\item A tuple $(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p$ is in $\im\iota$ if and only if, for each $p\in U$, there is an open set $U_p$ containing $p$ such that w can find $\widetilde f_p\in\mc F(U_p)$ such that all $q\in U_p$ have $f_q=\widetilde f_p|_q$.
+		\item A tuple $(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p$ is in $\im\iota$ if and only if, for each $p\in U$, there is an open set $U_p$ containing $p$ such that we can find $\widetilde f_p\in\mc F(U_p)$ such that all $q\in U_p$ have $f_q=\widetilde f_p|_q$.
 	\end{listalph}
 \end{proposition}
 \begin{remark}
@@ -279,8 +279,12 @@ Again, the reason why we expect \autoref{idea:stalks} to be true is that the sta
 		\qedhere
 	\end{listalph}
 \end{proof}
+We are going to want a name for the condition in \autoref{prop:stalkinjection} (b).
+\begin{definition}[Compatible germ]
+	Fix a sheaf $\mc F$ on a topological space $X$. Then, given a subset $U\subseteq X$, a \textit{system of compatible germs} is a tuple $(f_p)_{p\in U}$ such that, for each $p\in U$, there is an open set $U_p$ containing $p$ with a lift $\widetilde f_p\in\mc F(U_p)$ such that all $q\in U_p$ have $f_q=\widetilde f_p|_q$.
+\end{definition}
 In addition to sections, stalks also remember morphisms.
-\begin{proposition}
+\begin{proposition} \label{prop:stalkmorphism}
 	Fix presheaves $\mc F$ and $\mc G$ on a topological space $X$ with a morphism $\varphi\colon\mc F\to\mc G$.
 	\begin{listalph}
 		\item For any $p\in X$, there is a natural map $\varphi_p\colon\mc F_p\to\mc G_p$.
@@ -600,12 +604,39 @@ We briefly convince ourselves that this is the correct definition.
 
 \subsection{Injectivity at Stalks}
 In our stalk philosophy, we might hope we can detect injectivity at stalks. Indeed, we can.
-\begin{lemma}
-	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then, for any $p\in X$, we have
-	\[(\ker\varphi)_p=\ker\varphi_p.\]
+\begin{lemma} \label{lem:kerstalk}
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of presheaves on $X$. Then, for any $p\in X$, the inclusion $(\ker\varphi)\to\mc F$ induces an isomorphism
+	\[(\ker\varphi)_p\simeq\ker\varphi_p.\]
 \end{lemma}
 \begin{proof}
-	Omitted.
+	Let $\iota\colon(\ker\varphi)\to\mc F$ denote the inclusion. Then \autoref{prop:stalkmorphism} grants us a map $\iota_p\colon(\ker\varphi)_p\to\mc F_p$. Now, for any $[(U,f)]\in(\ker\varphi)_p$, we have
+	\[\varphi_p(\iota_p([(U,f)]))=[(U,\varphi_U(\iota_U(f)))]=[(U,0)]=0\]
+	by how these maps are defined in \autoref{prop:stalkmorphism}. Thus, we can restrict the image of $\iota_p$ to $\ker\varphi_p\subseteq\mc F_p$.
+
+	In the other direction, suppose that we have a germ $[(U,f)]\in\ker\varphi_p$ so that $[(U,\varphi_U(f))]=0$, which means there is $V\subseteq U$ containing $p$ such that $\varphi_V(f|_V)=\varphi_U(f)|_V=0$. In particular, $f|_V\in\ker\varphi_V$, so we have $[(V,f|_V)]\in(\ker\varphi)_p$. Thus, we define the map $\pi\colon\ker\varphi_p\to(\ker\varphi)_p$ by
+	\[\pi\colon[(U,f)]\mapsto[(V,f|_V)].\]
+	Note that $\pi$ does not depend on the choice of $V\subseteq U$: if $V'\subseteq U$ also have $\varphi_{V'}(f|_{V'})=0$, then we note $(V,f|_V)\sim(V',f|_{V'})$ because $f|_V|_{V\cap V'}=f|_{V'}|_{V\cap V'}$. Additionally, $\pi$ does not depend on the choice of representative for $[(U,f)]$: if $(U,f)\sim(U',f')$ in $\ker\varphi_p$, then find $V\subseteq U\cap U'$ small enough so that $f|_V=f'|_V$ and $\varphi_V(f|_V)=\varphi_V(f'|_V)=0$ so that $\pi([(U,f)])=[(V,f|_V)]=[(V,f'|_V)]=\pi([(U,f')])$.
+
+	Lastly, we check $\iota_p$ and $\pi$ are inverse. In one direction, given $[(U,f)]\in(\ker\varphi)_p$, we note $\varphi_U(f)=0$, so
+	\[\pi(\iota_p([(U,f)]))=\pi([(U,f)])=[(U,f)].\]
+	In the other direction, given $[(U,f)]\in\ker\varphi_p$, find $V\subseteq U$ small enough so that $\varphi_V(f|_V)=0$. Then
+	\[\iota_p(\pi([(U,f)]))=\iota([(V,f|_V)])=[(V,f|_V)]=[(U,f)],\]
+	finishing.
+\end{proof}
+\begin{lemma} \label{lem:checkzerolocally}
+	Fix a sheaf $\mc F$ on a topological space $X$. The following are equivalent.
+	\begin{listalph}
+		\item $\mc F$ is the zero sheaf.
+		\item $\mc F(U)\simeq0$ for each open $U\subseteq X$.
+		\item $\mc F_p\simeq0$ for each $p\in X$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Our construction of the zero presheaf tells us that (a) implies (c): any germ $[(U,f)]\in\mc Z_p$ has $f\in\mc Z(U)=0$, so $[(U,f)]=0$. Note we are using the fact that isomorphic sheaves have isomorphic stalks. To show that (c) implies (b), we note that $\mc F$ being a sheaf grants us the inclusion
+	\[\mc F(U)\into\prod_{p\in U}\mc F_p\]
+	by \autoref{prop:stalkinjection}. However, the right-hand side is $0$, so the left-hand side must also be $0$.
+
+	Lastly, we show that (b) implies (a). Well, note that the restriction maps $\mc F(U)\to\mc F(V)$ for an inclusion $V\subseteq U$ are forced because zero morphisms are unique. Similarly, letting $\mc Z$ denote the zero sheaf, we have isomorphisms $\varphi_U\colon\mc F(U)\simeq\mc Z(U)$ induced by these zero maps for all $U\subseteq X$, and we thus assemble into a natural isomorphism $\varphi\colon\mc F\to\mc Z$ because the uniqueness of zero maps makes the naturality square commute.
 \end{proof}
 \begin{proposition} \label{prop:injonstalks}
 	Fix a morphism of sheaves $\varphi\colon\mc F\to\mc G$. The following are equivalent.
@@ -616,29 +647,62 @@ In our stalk philosophy, we might hope we can detect injectivity at stalks. Inde
 	\end{listalph}
 \end{proposition}
 \begin{proof}
-	Note (a) is equivalent to $\ker\varphi$ vanishing by \autoref{lem:moniciszeroker}, which just means that $\ker\varphi_U=0$ always. However, $\ker\varphi_U=0$ is equivalent to $\varphi_U$ being monic by using \autoref{lem:moniciszeroker} again. Thus, (a) is equivalent to (b). We omit the proof of the equivalence of (c).
-	% Use the embedding
-	% \[\mc F(U)\into\prod_{p\in U}\mc F_p\]
-	% for each $U\subseteq X$.
+	By \autoref{lem:moniciszeroker}, these are equivalent to the following.
+	\begin{enumerate}[label=(\alph*')]
+		\item $\ker\varphi$ vanishes.
+		\item $(\ker\varphi)(U)$ vanishes for each open $U\subseteq X$.
+		\item $\ker\varphi_p$ vanishes for each $p\in X$. By \autoref{lem:kerstalk}, this is equivalent to $(\ker\varphi_p)$ vanishing for each $p\in X$.
+	\end{enumerate}
+	These are equivalent by \autoref{lem:checkzerolocally}.
 \end{proof}
 \begin{remark}
-	Technically, we only need to know that $\mc F$ is a sheaf for the above argument.
+	Technically, we only need to know that $\mc F$ is a sheaf for \autoref{prop:injonstalks}.
 \end{remark}
-There is also the following result.
+Being careful, one can extend \autoref{prop:injonstalks} as follows.
 \begin{proposition}
-	Fix a morphism of sheaves $\varphi\colon\mc F\to\mc G$. Then $\varphi$ is an isomorphism if and only if $\varphi_U$ is an isomorphism for all $U\subseteq X$ if and only if $\varphi_p$ is an isomorphism for all $p\in X$.
+	Fix a morphism of sheaves $\varphi\colon\mc F\to\mc G$. The following are equivalent.
+	\begin{listalph}
+		\item $\varphi$ is an isomorphism.
+		\item $\varphi_U$ is an isomorphism for each open $U\subseteq X$.
+		\item $\varphi_p$ is an isomorphism for each $p\in X$.
+	\end{listalph}
 \end{proposition}
-\begin{proof}[Sketch]
-	The hard part is showing that if we have isomorphisms at each stalk, then we have an isomorphism of full sheaves. We already know about injectivity, so let's focus on surjectivity. Well, for any $g\in\mc G(U)$, we get a system of compatible germs $(g|_p)_{p\in U}$, and because $\varphi_p$ is an isomorphism, we may set
-	\[f_p\coloneqq\varphi_p^{-1}(f|_p).\]
-	Then we claim that $f_p$ is a set of compatible germs, which gives rise to a section $f\in\mc F(U)$. Indeed, for each $p\in U$, we can find $U_p\subseteq U$ small enough so that $f_p\in\mc F(U_p)$ and $\varphi_{U_p}(f_p)=g|_{U_p}$. Then we simply have to use gluability directly to take these $f_p\in\mc F(U_p)$ to give our section; for this, we need to check
-	\[f_p|_{U_p\cap U_q}=f_q|_{U_p\cap U_q}.\]
-	However, $\varphi_{U_p\cap U_q}$ is injective, so it suffices to throw this through $\varphi$ and check equality there. However, both of these equal
-	\[g|_{U_p\cap U_q}\]
-	when passed through $\varphi$, so we are safe. Note we used the injectivity of $\varphi$ at the end here!
+\begin{proof}
+	To begin, (a) and (b) are equivalent by category theory: natural isomorphisms are just natural transformations whose component morphisms are isomorphisms. The main check here is that the inverse morphisms $\varphi^{-1}(U)\colon\mc G(U)\to\mc F(U)$ cohere into a bona fide natural transformation, which is true because, for any containment $V\subseteq U$, the commutativity of the left diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEYoVSkiXSxbMCwxLCJcXG1jIEYoVikiXSxbMSwwLCJcXG1jIEcoVSkiXSxbMSwxLCJcXG1jIEcoVikiXSxbMywwLCJcXG1jIEYoVSkiXSxbMywxLCJcXG1jIEYoVikiXSxbNCwwLCJcXG1jIEcoVSkiXSxbNCwxLCJcXG1jIEcoVikiXSxbMCwxLCJcXG9we3Jlc31fe1UsVn0iLDJdLFswLDIsIlxcdmFycGhpX1UiXSxbMSwzLCJcXHZhcnBoaV9WIiwyXSxbMiwzLCJcXG9we3Jlc31fe1UsVn0iXSxbNCw1LCJcXG9we3Jlc31fe1UsVn0iLDJdLFs2LDcsIlxcb3B7cmVzfV97VSxWfSJdLFs2LDQsIlxcdmFycGhpXnstMX1fVSIsMl0sWzcsNSwiXFx2YXJwaGleey0xfV9WIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F(U)} & {\mc G(U)} && {\mc F(U)} & {\mc G(U)} \\
+		{\mc F(V)} & {\mc G(V)} && {\mc F(V)} & {\mc G(V)}
+		\arrow["{\op{res}_{U,V}}"', from=1-1, to=2-1]
+		\arrow["{\varphi_U}", from=1-1, to=1-2]
+		\arrow["{\varphi_V}"', from=2-1, to=2-2]
+		\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+		\arrow["{\op{res}_{U,V}}"', from=1-4, to=2-4]
+		\arrow["{\op{res}_{U,V}}", from=1-5, to=2-5]
+		\arrow["{\varphi^{-1}_U}"', from=1-5, to=1-4]
+		\arrow["{\varphi^{-1}_V}", from=2-5, to=2-4]
+	\end{tikzcd}\]
+	is equivalent to the commutativity of the right diagram.
+
+	Additionally, it is also fairly easy that (a) implies (c); fix some $p\in X$. Give $\varphi$ an inverse morphism $\psi$, and we claim that $\varphi_p$ is the inverse of $\psi_p$. Indeed, for any $[(U,f)]\in\mc F_p$, we see
+	\[\psi_p(\varphi_p([(U,f)]))=\psi_p([(U,\varphi_U(f))])=[(U,\psi_U\varphi_U(f))]=[(U,f)].\]
+	By symmetry, we see $\varphi_p\circ\psi_p=\id{\mc G_p}$ as well, finishing.
+
+	Thus, the hard direction is showing that $\varphi_p$ being an isomorphism for all $p\in X$ promises that $\varphi_U$ is an isomorphism for each $U\subseteq X$. \autoref{prop:injonstalks} already tells us that $\varphi_U$ is injective, so we focus on showing $\varphi_U$ is surjective. Well, for any $g\in\mc G(U)$, we get a system of compatible germs $(g|_p)_{p\in U}$ (by \autoref{prop:injonstalks}), so because $\varphi_p$ is an isomorphism, we may set
+	\[f_p\coloneqq\varphi_p^{-1}(g|_p).\]
+	We claim that $f_p$ is a set of compatible germs, which gives rise to a section $f\in\mc F(U)$ by \autoref{prop:injonstalks}. Indeed, for each $p\in U$, we can find $U_p\subseteq U$ small enough so that we can find $\widetilde f_p\in\mc F(U_p)$ with $\widetilde f_p|_p=f_p$. Continuing, we have
+	\[\varphi_p(f_p)=[(U_p,\varphi_{U_p}(\widetilde f_p))]=g|_p,\]
+	so we can shrink $U_p$ further (and restrict $\widetilde f_p$ accordingly) so that $\varphi_{U_p}(f_p)=g|_{U_p}$ as well.
+
+	Now, for any $q\in U_p$, we see that
+	\[\varphi_q(\widetilde f_p|_q)=\varphi_q(\widetilde f_p)|_q=\varphi_{U_p}(\widetilde f_p)|_q=g|_{U_p}|_q=g|_q=\varphi_q(\widetilde f_q),\]
+	so we conclude $\widetilde f_p|_q=\widetilde f_q$ because $\varphi_q$ is an isomorphism. Thus, $(f_p)_{p\in U}$ is a system of compatible germs and therefore lifts to some $f\in\mc F(U)$ with $f|_p=f_p$ everywhere. Thus, $\varphi_U(f)|_p=\varphi_p(f|_p)=\varphi_p(f_p)=g|_p$ for each $p\in X$, so \autoref{prop:injonstalks} gives $\varphi_U(f)=g$.
 \end{proof}
 \begin{remark}
-	We are avoiding surjectivity for the moment because it is a little trickier. In particular, a morphism $\varphi$ will be able to be surjective without being each $\varphi_U$ being surjective. However, surjectivity will still be equivalent to surjectivity on the stalks.
+	We are avoiding surjectivity for the moment because it is a little trickier. In particular, a morphism $\varphi$ will be able to be epic without being each $\varphi_U$ being epic. However, surjectivity will still be equivalent to surjectivity on the stalks.
+\end{remark}
+\begin{remark}
+	It is possible for sheaves to isomorphic stalks but to not be isomorphic. At a high level, any line bundle over $S^1$ has stalks isomorphic to $\RR$, but not all line bundles are homeomorphic (e.g., the M\"obius strip and the trivial line bundle are not homeomorphic). The issue here is that there need not even be a candidate isomorphism between line bundles over $S^1$ at all!
 \end{remark}
 
 \end{document}
