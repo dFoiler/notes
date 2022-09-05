@@ -8,11 +8,9 @@ It is another day.
 \begin{remark}
 	Facts used on the homework from Vakil which are in Vakil without proof should be proven on the homework.
 \end{remark}
-
-\subsection{Sheafification}
-We want to show that the category of abelian sheaves is abelian. We discussed kernels; we still need to discuss cokernels.
+We begin lecture by providing an example which we don't quite have the language to describe yet, but we will elaborate on it more later.\todo{elaborate}
 \begin{example} \label{ex:protoses}
-	Fix $X=\CC$ with the usual topology, and give it the sheaf $\mc O_X$ of holomorphic functions. There is a constant sheaf $\underline\ZZ$ returning $\ZZ$ always. Then there is an exact sequence of sheaves
+	Fix $X=\CC$ with the usual topology, and give it the sheaf $\mc O_X$ of holomorphic functions. There is a constant sheaf $\underline\ZZ$ returning $\ZZ$ at its stalks. Then there is an exact sequence of sheaves
 	\begin{equation}
 		0\to\underline\ZZ\stackrel{2\pi i}\to\OO_X\stackrel{\exp}\to\OO_X^\times\to1 \label{eq:protoses}
 	\end{equation}
@@ -21,49 +19,161 @@ We want to show that the category of abelian sheaves is abelian. We discussed ke
 \begin{remark}
 	Cohomology applied to \autoref{eq:protoses} (with $X$ some smooth projective curve) shows a special case of the Hodge conjecture.
 \end{remark}
-To fix our broken surjectivity, we introduce sheafification.
+The point here is that surjectivity cannot be checked on open sets the way that injectivity can. At some level, the issue here is that the cokernel presheaf is not a sheaf, so we have to apply a sheafification operation to fix this.
 \begin{remark}
 	Setting
 	\[\mc F(U)\coloneqq\im\exp(U)\]
 	makes $\mc F$ a presheaf but does not give a sheaf.
 \end{remark}
-So that's not going to be our sheafification. Here it is.
-\begin{definition}
-	Fix a presheaf $\mc F$ on $X$ valued in a (concrete) category $\mc C$. The \textit{sheafification} of $\mc F$ is a pair $(\mc F^{\op{sh}},{\op{sh}})$ where ${\op{sh}}\colon\mc F\to\mc F^{\op{sh}}$ satisfies the following universal property: any sheaf $\mc G$ with a presheaf morphism $\varphi\colon\mc F\to\mc G$ has a unique morphism $\psi\colon\mc F^{\op{sh}}\to\mc G$ making the following diagram commute.
+
+\subsection{Sheafification}
+We introduce sheafification by its universal property.
+\begin{definition}[Sheafification]
+	Fix a presheaf $\mc F$ on $X$ valued in a (concrete) category $\mc C$. The \textit{sheafification} of $\mc F$ is a pair $(\mc F^{\op{sh}},{\op{sh}})$ where ${\op{sh}}\colon\mc F\to\mc F^{\op{sh}}$ satisfies the following universal property: any sheaf $\mc G$ with a presheaf morphism $\varphi\colon\mc F\to\mc G$ has a unique sheaf morphism $\overline\varphi\colon\mc F^{\op{sh}}\to\mc G$ making the following diagram commute.
 	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgRyJdLFswLDIsIlxcdmFycGhpIiwyXSxbMCwxLCJcXG9we3NofSJdLFsxLDIsIlxccHNpIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
 		{\mc F} & {\mc F^{\op{sh}}} \\
 		& {\mc G}
 		\arrow["\varphi"', from=1-1, to=2-2]
 		\arrow["{\op{sh}}", from=1-1, to=1-2]
-		\arrow["\psi", from=1-2, to=2-2]
+		\arrow["\overline\varphi", from=1-2, to=2-2]
 	\end{tikzcd}\]
 \end{definition}
 Of course, there are some checks we should do before using this object.
 \begin{lemma}
-	The sheafification of a presheaf $\mc F$ on $X$ exists and is unique up to unique isomorphism.
+	The sheafification of a presheaf $\mc F$ on $X$ exists and is unique up to (a suitable notion of) unique isomorphism.
 \end{lemma}
 \begin{proof}
-	The point is to set $\mc F^{\op{sh}}(U)$ to be systems of compatible germs; precisely,
-	\[\mc F^{\op{sh}}(U)\coloneqq\Bigg\{(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p:(f_p)_{p\in U}\text{ are compatible germs}\Bigg\}.\]
-	The sheafification map is as follows.
+	The idea of the construction is to set $\mc F^{\op{sh}}(U)$ to be systems of compatible germs; precisely,
+	\[\mc F^{\op{sh}}(U)\coloneqq\Bigg\{(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p:(f_p)_{p\in U}\text{ is a compatible system of germs}\Bigg\}.\]
+	Given open sets $V\subseteq U$, we define the restriction map
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		{\op{res}_{U,V}}\colon & \mc F^{\op{sh}}(U) &\to& \mc F^{\op{sh}}(V) \\
+		& (f_p)_{p\in U} &\mapsto& (f_p)_{p\in V}
+	\end{array}\]
+	though we do have to check this is well-defined: to show $(f_p)_{p\in V}\in\mc F^{\op{sh}}(V)$, we note $(f_p)_{p\in U}\in\mc F^{\op{sh}}(U)$ promises that each $p\in U$ has $U_p\subseteq U$ containing $p$ with a lift $\widetilde f_p\in\mc F(U_p)$ so that $\widetilde f_p|_q=f_q$ for each $q\in U_p$. As such, each $p\in V$ has $V_p\coloneqq U_p\cap V$ containing $p$ with a lift $\widetilde f_p|_{U_p\cap V}\in\mc F(U_p\cap V)$ so that $\widetilde f_p|_{U_p\cap V}|_q=\widetilde f_p|_q=f_q$ for each $q\in U_p\cap V$. Thus, $(f_p)_{p\in V}$ is indeed a system of compatible germs.
+
+	We now check that $\mc F^{\op{sh}}$ is a presheaf.
+	\begin{itemize}
+		\item Identity: given $(f_p)_{p\in U}\in\mc F^{\op{sh}}(U)$, we see $(f_p)_{p\in U}|_U=(f_p)_{p\in U}$.
+		\item Functoriality: given open sets $W\subseteq V\subseteq U$, we see $(f_p)_{p\in U}|_V|_W=(f_p)_{p\in V}|_W=(f_p)_{p\in W}=(f_p)_{p\in U}|_W$.
+	\end{itemize}
+	Next up, we check that $\mc F^{\op{sh}}$ is a sheaf. Fix an open cover $\mc U$ of an open set $U\subseteq X$.
+	\begin{itemize}
+		\item Identity: suppose that $(f_p)_{p\in U},(g_p)_{p\in U}\in\mc F^{\op{sh}}(U)$ have $(f_p)_{p\in U}|_V=(g_p)_{p\in U}|_V$ for each $V\in\mc U$. Now, for each $q\in U$, there is some $V\in\mc U$ containing $q$, so we note
+		\[(f_p)_{p\in V}=(f_p)_{p\in U}|_V=(g_p)_{p\in U}|_V=(g_p)_{p\in V}\]
+		forces $f_q=g_q$. Thus, $(f_p)_{p\in U}=(g_p)_{p\in U}$.
+		\item Gluability: suppose we have $(f_{V,p})_{p\in V}\in\mc F^{\op{sh}}(V)$ for each $V\in\mc U$ so that
+		\[(f_{V,p})_{p\in V\cap V'}=(f_{V,p})_{p\in V}|_{V\cap V'}=(f_{V',p})_{p\in V'}|_{V\cap V'}=(f_{V',p})_{p\in V\cap V'}.\]
+		Now, for each $q\in U$, find any $V\in\mc U$ containing $q$, and set $f_q\coloneqq f_{V,q}$. Note that this is independent of the choice of $V$: if we have $q\in V\cap V'$ with $V,V'\in\mc U$, then $(f_{V,p})_{p\in V\cap V'}=(f_{V',p})_{p\in V\cap V'}$ tells us that $f_{V,q}=f_{V',q}$. Further, we note that $(f_p)_{p\in U}|_V=(f_p)_{p\in V}=(f_{V,p})_{p\in V}$ for any $V\in\mc U$.
+		
+		So it remains to show that $(f_p)_{p\in U}\in\mc F^{\op{sh}}(U)$. Well, for each $p\in U$, find some $V\in\mc U$ containing $p$. Then $(f_{V,p})_{p\in V}$ is a system of compatible germs, so we can find $U_p\subseteq V$ containing $p$ and a lift $\widetilde f_p\in\mc F(U_p)$ such that
+		\[\widetilde f_{p}|_q=f_{V,q}=f_q\]
+		for each $q\in U_p$. This finishes checking that $(f_p)_{p\in U}$ is a compatible system of germs.
+	\end{itemize}
+	We now begin showing the universal property. The sheafification map is defined as
 	\[\arraycolsep=1.4pt\begin{array}{ccccccccc}
-		{\op{sh}}\colon & \mc F(U) &\to& \mc F^{\op{sh}}(U) \\
+		{\op{sh}_U}\colon & \mc F(U) &\to& \mc F^{\op{sh}}(U) \\
 		& f &\mapsto& (f|_p)_{p\in U}
 	\end{array}\]
-	One can check that this forms a sheaf and satisfies the universal property. The universal property gives the uniqueness.
+	for any open set $U\subseteq X$. Note $f\in\mc F(U)$ does indeed give $(f|_p)_{p\in U}\in\mc F^{\op{sh}}(U)$ because each $p\in U$ can choose $U_p\coloneqq U$ (which contains $p$) with lift $\widetilde f_p\coloneqq f$ so that $\widetilde f_p|_q=f|_q$ for each $q\in U_p$.
+
+	Additionally, it is fairly quick to check that $\op{sh}$ is actually a presheaf morphism: given open sets $V\subseteq U$ and $f\in\mc F(U)$, we compute
+	\[\op{sh}_U(f)|_V=(f|_p)_{p\in U}|_V=(f|_p)_{p\in V}=(f|_V|_p)_{p\in V}=\op{sh}_V(f|_V).\]
+	We are now ready to prove the universal property. Fix any sheaf $\mc G$ with a presheaf morphism $\varphi\colon\mc F\to\mc G$. We need to show there is a unique sheaf morphism $\overline\varphi\colon\mc F^{\op{sh}}\to\mc G$ such that $\varphi=\overline\varphi\circ\op{sh}$. We show these separately.
+	\begin{itemize}
+		\item Uniqueness: fix an open set $U\subseteq X$ and $(f_p)_{p\in U}\in\mc F^{\op{sh}}(U)$, and we will solve for $\overline\varphi_U((f_p)_{p\in U})$. Well, each $p\in U$ has some $U_p\subseteq U$ containing $p$ with a lift $\widetilde f_p\in\mc F(U_p)$ such that $\widetilde f_p|_q=f_q$ for each $q\in U_p$. As such, for each $q\in U$,
+		\[\overline\varphi_U((f_p)_{p\in U})|_{U_q}=\overline\varphi_{U_q}((f_p)_{p\in U}|_{U_q})=\overline\varphi_{U_q}((f_p)_{p\in U_q})=\overline\varphi_{U_q}\big((\widetilde f_q|_p)_{p\in U_q}\big)=\overline\varphi_{U_q}(\op{sh}_{U_q}\widetilde f_q)=\varphi_{U_q}(\widetilde f_q).\]
+		Thus, restrictions $\overline\varphi_U((f_p)_{p\in U})|_{U_q}$ are fixed by $\varphi$, so the identity axiom on $\mc G$ makes $\overline\varphi_U((f_p)_{p\in U})$ unique.
+		\item Existence: fix an open set $U\subseteq X$ and $(f_p)_{p\in U}\in\mc F^{\op{sh}}(U)$, and we will define $\overline\varphi_U((f_p)_{p\in U})$. Well, $(\varphi_pf_p)_{p\in U}$ is a system of compatible germs in $\mc G(U)$ by \autoref{lem:movecompatibles}, so there is a unique $g\in\mc G(U)$ such that $g|_p=\varphi_p(f_p)$ for each $p\in U$. (Uniqueness is by \autoref{prop:stalkinjection}.) Thus, we set $\overline\varphi_U((f_p)_{p\in U})\coloneqq g$ so that $\overline\varphi_U((f_p)_{p\in U})$ is the unique section in $\mc G(U)$ such that
+		\[\overline\varphi_U((f_p)_{p\in U})|_q=\varphi_q(f_q)\]
+		for each $q\in U$. Note any section $f\in\mc F(U)$ has
+		\[(\overline\varphi\circ{\op{sh}})_U(f)|_q=\overline\varphi_U((f|_p)_{p\in U})|_q=\varphi_q(f|_q)=\varphi_U(f)|_q\]
+		for any $q\in U$, so \autoref{prop:stalkinjection} applied to the sheaf $\mc G$ forces equality, implying $\overline\varphi\circ{\op{sh}}=\varphi$.
+
+		So we will be done as soon as we can show $\overline\varphi_U$ is a (pre)sheaf morphism. Well, given open sets $V\subseteq U$ and some $(f_p)_{p\in U}\in\mc F^{\op{sh}}(U)$, we note any $q\in V$ has
+		\[\overline\varphi_U((f_p)_{p\in U})|_V|_q=\overline\varphi_U((f_p)_{p\in U})|_q=\varphi_q(f_q),\]
+		so the uniqueness of $\overline\varphi_V((f_p)_{p\in V})$ forces $\overline\varphi_U((f_p)_{p\in U})|_V=\overline\varphi_V((f_p)_{p\in U}|_V),$ as desired.
+		\qedhere
+	\end{itemize}
 \end{proof}
 Here are some basic properties.
 \begin{proposition}
-	Fix a presheaf $\mc F$ on $X$ with a sheafification ${\op{sh}}\colon\mc F\to\mc F^{\op{sh}}$.
-	\begin{listalph}
-		\item For given $p\in X$, the induced map ${\op{sh}_p}\colon\mc F_p\to(\mc F^{\op{sh}})_p$ on stalks is an isomorphism.
-		\item Sheafification is right adjoint to the forgetful functor from sheaves on $X$ to presheaves on $X$.
-	\end{listalph}
+	Fix a presheaf $\mc F$ on $X$ with a sheafification ${\op{sh}}\colon\mc F\to\mc F^{\op{sh}}$. For given $p\in X$, the induced map ${\op{sh}_p}\colon\mc F_p\to(\mc F^{\op{sh}})_p$ on stalks is an isomorphism.
 \end{proposition}
 \begin{proof}
-	Omitted.
+	We use the explicit description of the sheafification. To be explicit, our map ${\op{sh}_p}\colon\mc F_p\to(\mc F^{\op{sh}})_p$ sends $[(U,f)]$ to $[(U,(f|_q)_{q\in U})]$.
+
+	For the inverse morphism $\pi_p\colon(\mc F^{\op{sh}})_p\to\mc F_p$, we simply send
+	\[\pi_p\colon[(U,(f_q)_{q\in U})]\mapsto f_p.\]
+	Notably, this is well-defined: $[(U,(f_q)_{q\in U})]=[(U',(f_q')_{q\in U})]$, then there is $V\subseteq U\cap U'$ such that $(f_q)_{q\in U})|_V=(f'_q)_{q\in U'}|_V$, which implies $f_p=f'_p$.
+
+	It remains to show that these are inverse. Well, for $[(U,f)]\in\mc F_p$, we see
+	\[\pi_p(\op{sh}_p([(U,f)]))=\pi_p([(U,(f|_q)_{q\in U})])=f|_p.\]
+	And for $[(U,(f_q)_{q\in U})]\in(\mc F^{\op{sH}})_p$, we see
+	\[\op{sh}_p(\pi_p([(U,(f_q)_{q\in U})]))=\op{sh}_p(f_p).\]
+	Now, because $(f_q)_{q\in U}$ is a compatible system of germs, we may find $U_p\subseteq U$ containing $p$ with a lift $\widetilde f_p\in\mc F(U_p)$ such that $\widetilde f_p|_q=f_q$ for each $q\in U_p$. It follows
+	\[\op{sh}_p(f_p)=\op{sh}_p(\widetilde f_p|_p)=[(U_p,(\widetilde f_p|_q)_{q\in U_p})]=[(U_p,(f_q)_{q\in U})]=[(U,(f_q)_{q\in U})],\]
+	finishing this check.
 \end{proof}
+\begin{proposition}
+	Sheafification $\mc F\mapsto\mc F^{\op{sh}}$ defines a functor $(-)^{\op{sh}}\colon\mathrm{PreSh}_X\to\mathrm{Sh}_X$ which is left adjoint to the forgetful functor $U\colon\mathrm{Sh}_X\to\mathrm{PreSh}_X$.
+\end{proposition}
+\begin{proof}
+	We begin by describing the functor $(-)^{\op{sh}}$. We know its behavior on objects, so we still need to know its behavior on morphisms $\eta\colon\mc F\to\mc G$. Well, note that we have a composite map $\mc F\to\mc G\to\mc G^{\op{sh}}$, and $\mc G^{\op{sh}}$ is a sheaf, so the universal property of $\mc F^{\op{sh}}$ induces a unique map $\eta^{\op{sh}}\colon\mc F^{\op{sh}}\to\mc G^{\op{sh}}$ making the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYiXSxbMCwxLCJcXG1jIEciXSxbMSwwLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgR157XFxvcHtzaH19Il0sWzAsMl0sWzEsM10sWzAsMSwiXFxldGEiLDJdLFsyLDMsIlxcZXRhXntcXG9we3NofX0iLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc F^{\op{sh}}} \\
+		{\mc G} & {\mc G^{\op{sh}}}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\eta"', from=1-1, to=2-1]
+		\arrow["{\eta^{\op{sh}}}", dashed, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	commute. We quickly check functoriality.
+	\begin{itemize}
+		\item Identity: note $\id_{\mc F^{\op{sh}}}$ makes the diagram
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYiXSxbMCwxLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgRl57XFxvcHtzaH19Il0sWzAsMl0sWzEsM10sWzAsMSwiXFxpZF97XFxtYyBGfSIsMl0sWzIsMywiXFxpZF97XFxtYyBGXntcXG9we3NofX19IiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F} & {\mc F^{\op{sh}}} \\
+			{\mc F} & {\mc F^{\op{sh}}}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=2-1, to=2-2]
+			\arrow["{\id_{\mc F}}"', from=1-1, to=2-1]
+			\arrow["{\id_{\mc F^{\op{sh}}}}", dashed, from=1-2, to=2-2]
+		\end{tikzcd}\]
+		commute, so by definition, we see $({\id_\mc F})^{\op{sh}}=\id_{\mc F^{\op{sh}}}$.
+		\item Functoriality: given presheaf morphisms $\varphi\colon\mc F\to\mc G$ and $\psi\colon\mc G\to\mc H$, we note that $\psi^{\op{sh}}\circ\varphi^{\op{sh}}$ makes the outer rectangle of
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXG1jIEYiXSxbMCwxLCJcXG1jIEciXSxbMSwwLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgR157XFxvcHtzaH19Il0sWzAsMiwiXFxtYyBIIl0sWzEsMiwiXFxtYyBIXntcXG9we3NofX0iXSxbMCwyXSxbMSwzXSxbMCwxLCJcXHZhcnBoaSJdLFsyLDMsIlxcdmFycGhpXntcXG9we3NofX0iLDJdLFsxLDQsIlxccHNpIl0sWzMsNSwiXFxwc2lee1xcb3B7c2h9fSIsMl0sWzQsNV0sWzIsNSwiXFxwc2lee1xcb3B7c2h9fVxcY2lyY1xcdmFycGhpXntcXG9we3NofX0iLDAseyJjdXJ2ZSI6LTIsInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDQsIlxccHNpXFxjaXJjXFx2YXJwaGkiLDIseyJjdXJ2ZSI6Mn1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F} & {\mc F^{\op{sh}}} \\
+			{\mc G} & {\mc G^{\op{sh}}} \\
+			{\mc H} & {\mc H^{\op{sh}}}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=2-1, to=2-2]
+			\arrow["\varphi", from=1-1, to=2-1]
+			\arrow["{\varphi^{\op{sh}}}"', from=1-2, to=2-2]
+			\arrow["\psi", from=2-1, to=3-1]
+			\arrow["{\psi^{\op{sh}}}"', from=2-2, to=3-2]
+			\arrow[from=3-1, to=3-2]
+			\arrow["{\psi^{\op{sh}}\circ\varphi^{\op{sh}}}", curve={height=-12pt}, dashed, from=1-2, to=3-2]
+			\arrow["\psi\circ\varphi"', curve={height=12pt}, from=1-1, to=3-1]
+		\end{tikzcd}\]
+		commute, so by definition, we see $\psi^{\op{sh}}\circ\varphi^{\op{sh}}=(\psi\circ\varphi)^{\op{sh}}$.
+	\end{itemize}
+	We will not check that the forgetful functor $U$ is a functor; the main point is that it does nothing to morphisms. Also, we will not formally check the adjoint pair, but we will say that it requires exhibit a natural isomorphism
+	\[\op{Mor}_{\mathrm{Sh}_X}(F^{\op{sh}},\mc G)\simeq\op{Mor}_{\mathrm{PreSh}_X}(F,U\mc G)\]
+	where $F\in\mathrm{PreSh}_X$ and $\mc G\in\mathrm{Sh}_X$. And we will describe this isomorphism: if ${\op{sh}}\colon F\to F^{\op{sh}}$ is the sheafification map, the isomorphism is given by
+	\[\arraycolsep=1.4pt\begin{array}{ccc}
+		\op{Mor}_{\mathrm{Sh}_X}(F^{\op{sh}},\mc G) &\simeq& \op{Mor}_{\mathrm{PreSh}_X}(F,U\mc G) \\
+		\varphi &\mapsto& \varphi\circ{\op{sh}} \\
+		\overline\psi &\mapsfrom& \psi
+	\end{array}\]
+	where $\overline\psi$ is the morphism induced by the universal property of sheafification applied to the presheaf morphism $\psi\colon F\to\mc G$. That this is an isomorphism follows from the universal property, and the naturality checks for the adjoint pair are a matter of writing down the squares and checking them.
+\end{proof}
+\begin{remark}
+	Sheafification being a left adjoint means that it preserves limits. Kernels and limits, so we see that the sheafification of the presheaf kernel is just the presheaf kernel again. The point here is that we don't need to sheafify the kernel, which is why we could talk about them before sheafification, but we will not be so lucky with cokernels.
+\end{remark}
 
 \subsection{Passing to Stalks}
 We are now ready to fix our surjectivity. We start by fixing the image.
