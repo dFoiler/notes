@@ -98,7 +98,7 @@ Of course, there are some checks we should do before using this object.
 	\end{itemize}
 \end{proof}
 Here are some basic properties.
-\begin{proposition}
+\begin{proposition} \label{prop:sheafificationstalk}
 	Fix a presheaf $\mc F$ on $X$ with a sheafification ${\op{sh}}\colon\mc F\to\mc F^{\op{sh}}$. For given $p\in X$, the induced map ${\op{sh}_p}\colon\mc F_p\to(\mc F^{\op{sh}})_p$ on stalks is an isomorphism.
 \end{proposition}
 \begin{proof}
@@ -116,6 +116,9 @@ Here are some basic properties.
 	\[\op{sh}_p(f_p)=\op{sh}_p(\widetilde f_p|_p)=[(U_p,(\widetilde f_p|_q)_{q\in U_p})]=[(U_p,(f_q)_{q\in U})]=[(U,(f_q)_{q\in U})],\]
 	finishing this check.
 \end{proof}
+\begin{remark}
+	If $\mc F$ is itself a sheaf, then we can see fairly directly that $\mc F$ satisfies the universal property for $\mc F^{\op{sh}}$. Alternatively, the sheafification map ${\op{sh}}\colon\mc F\to\mc F^{\op{sh}}$ is a sheaf morphism which is an isomorphism on stalks by \autoref{prop:sheafificationstalk} and thus an isomorphism of sheaves by \autoref{prop:isoonstalks}.
+\end{remark}
 \begin{proposition}
 	Sheafification $\mc F\mapsto\mc F^{\op{sh}}$ defines a functor $(-)^{\op{sh}}\colon\mathrm{PreSh}_X\to\mathrm{Sh}_X$ which is left adjoint to the forgetful functor $U\colon\mathrm{Sh}_X\to\mathrm{PreSh}_X$.
 \end{proposition}
@@ -180,7 +183,7 @@ Now that we have sheafification, we may continue showing that the category sheav
 \begin{definition}[Sheaf cokernel]
 	Fix a morphism $\varphi\colon\mc F\to\mc G$ of presheaves on $X$. Then the \textit{presheaf cokernel} $\coker\varphi$ is the sheaf found by setting
 	\[(\coker^{\op{pre}}\varphi)(U)\coloneqq\coker\varphi_U=\mc G(U)/\im\varphi_U.\]
-	If $\mc F$ and $\mc G$ are sheaves, we define the \textit{sheaf kernel} as the sheafification of the presheaf $\coker^{\op{pre}}\varphi$.
+	We define the \textit{sheaf kernel} as the sheafification of the presheaf $\coker^{\op{pre}}\varphi$.
 \end{definition}
 We begin by running our checks on the presheaf cokernel.
 \begin{lemma} \label{lem:presheafcoker}
@@ -466,57 +469,168 @@ Now that our category of sheaves (valued in an abelian category) has kernels and
 	\end{itemize}
 \end{proof}
 And here is our result.
-\begin{theorem}
+\begin{theorem} \label{thm:sheafabelian}
 	The category $\mathrm{Sh}_X$ of sheaves on a topological space $X$ valued in a (concrete) abelian category $\mc C$ is additive.
 \end{theorem}
 \begin{proof}
 	The category is additive by \autoref{cor:sheavesadditive}. Kernels exist by \autoref{lem:sheafker}, and cokernels exist by \autoref{lem:sheafcoker}. The last conditions to check are \autoref{lem:kercoker} and \autoref{lem:cokerker}.
 \end{proof}
 
-\subsection{Passing to Stalks}
-We are now ready to fix our surjectivity. We start by fixing the image.
-\begin{defi}[Sheaf image]
-	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then the \textit{sheaf image $\im\varphi$} of $\varphi$ is the sheafification of the presheaf image
-	\[(\im^{\op{pre}}\varphi)(U)=\im\varphi_U.\]
-\end{defi}
-And now we get the following analogue to \autoref{prop:injonstalks}.
-\begin{proposition}
-	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. The following are equivalent.
-	\begin{listalph}
-		\item $\varphi_p$ is surjective for each $p$.
-		\item $\im\varphi=\mc G$.
-		\item $\varphi\colon\mc F\to\mc G$ is an epimorphism in the category of sheaves.
-	\end{listalph}
+\subsection{Exactness via Stalks}
+It is a general philosophy, well-exhibited by \autoref{thm:sheafabelian}, that we can prove (categorical) facts about sheaves by passing to stalks. Here is an example.
+\begin{proposition} \label{prop:sheafquotient}
+	Let $\varphi\colon\mc F\to\mc G$ be a morphism of presheaves on $X$ valued in an abelian category. Then $\coker\varphi\simeq\coker\varphi^{\op{sh}}$.
 \end{proposition}
 \begin{proof}
-	Omitted. The main point is to hit everything with the universal property and the fact that stalks don't change under sheafification.
+	We merely need to exhibit a candidate isomorphism and then check that it is an isomorphism on stalks. Here is our diagram.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgR157XFxvcHtzaH19Il0sWzMsMCwiXFxjb2tlclxcdmFycGhpIl0sWzMsMSwiXFxjb2tlclxcdmFycGhpXntcXG9we3NofX0iXSxbMiwxLCJcXGNva2VyXntcXG9we3ByZX19XFx2YXJwaGlee1xcb3B7c2h9fSJdLFsyLDAsIlxcY29rZXJee1xcb3B7cHJlfX1cXHZhcnBoaSJdLFswLDEsIlxcdmFycGhpIl0sWzAsMiwiXFxvcHtzaH0iLDJdLFsxLDMsIlxcb3B7c2h9Il0sWzIsMywiXFx2YXJwaGlee1xcb3B7c2h9fSJdLFszLDYsIlxccGknIl0sWzYsNSwiXFxvcHtzaH0iXSxbNyw0LCJcXG9we3NofSJdLFsxLDcsIlxccGkiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} & {\coker^{\op{pre}}\varphi} & \coker\varphi \\
+		{\mc F^{\op{sh}}} & {\mc G^{\op{sh}}} & {\coker^{\op{pre}}\varphi^{\op{sh}}} & {\coker\varphi^{\op{sh}}}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow["{\op{sh}}"', from=1-1, to=2-1]
+		\arrow["{\op{sh}}", from=1-2, to=2-2]
+		\arrow["{\varphi^{\op{sh}}}", from=2-1, to=2-2]
+		\arrow["{\pi'}", from=2-2, to=2-3]
+		\arrow["{\op{sh}}", from=2-3, to=2-4]
+		\arrow["{\op{sh}}", from=1-3, to=1-4]
+		\arrow["\pi", from=1-2, to=1-3]
+	\end{tikzcd}\]
+	Note that the composite $\mc F\to\mc G\to\mc G^{\op{sh}}\to\coker^{\op{pre}}\varphi\to\coker\varphi^{\op{sh}}$ is the zero map because it is the same as the same as
+	\[\mc F\to\underbrace{\mc F^{\op{sh}}\to\mc G^{\op{sh}}\to\coker^{\op{pre}}\varphi^{\op{sh}}}_0\to\coker\varphi^{\op{sh}}.\]
+	Thus, the universal property of $\coker\varphi$ induces a unique sheaf morphism $\psi\colon\coker^{\op{pre}}\varphi\to\coker\varphi^{\op{sh}}$ making
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgR157XFxvcHtzaH19Il0sWzMsMCwiXFxjb2tlclxcdmFycGhpIl0sWzMsMSwiXFxjb2tlclxcdmFycGhpXntcXG9we3NofX0iXSxbMiwxLCJcXGNva2VyXntcXG9we3ByZX19XFx2YXJwaGlee1xcb3B7c2h9fSJdLFsyLDAsIlxcY29rZXJee1xcb3B7cHJlfX1cXHZhcnBoaSJdLFswLDEsIlxcdmFycGhpIl0sWzAsMiwiXFxvcHtzaH0iLDJdLFsxLDMsIlxcb3B7c2h9Il0sWzIsMywiXFx2YXJwaGlee1xcb3B7c2h9fSJdLFszLDYsIlxccGknIl0sWzYsNSwiXFxvcHtzaH0iXSxbNyw0LCJcXG9we3NofSJdLFsxLDcsIlxccGkiXSxbNyw2LCJcXHBzaSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} & {\coker^{\op{pre}}\varphi} & \coker\varphi \\
+		{\mc F^{\op{sh}}} & {\mc G^{\op{sh}}} & {\coker^{\op{pre}}\varphi^{\op{sh}}} & {\coker\varphi^{\op{sh}}}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow["{\op{sh}}"', from=1-1, to=2-1]
+		\arrow["{\op{sh}}", from=1-2, to=2-2]
+		\arrow["{\varphi^{\op{sh}}}", from=2-1, to=2-2]
+		\arrow["{\pi'}", from=2-2, to=2-3]
+		\arrow["{\op{sh}}", from=2-3, to=2-4]
+		\arrow["{\op{sh}}", from=1-3, to=1-4]
+		\arrow["\pi", from=1-2, to=1-3]
+		\arrow["\psi", dashed, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	commute. Now, sheafification promises a unique map $\psi^{\op{sh}}$ making
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIEZee1xcb3B7c2h9fSJdLFsxLDEsIlxcbWMgR157XFxvcHtzaH19Il0sWzMsMCwiXFxjb2tlclxcdmFycGhpIl0sWzMsMSwiXFxjb2tlclxcdmFycGhpXntcXG9we3NofX0iXSxbMiwxLCJcXGNva2VyXntcXG9we3ByZX19XFx2YXJwaGlee1xcb3B7c2h9fSJdLFsyLDAsIlxcY29rZXJee1xcb3B7cHJlfX1cXHZhcnBoaSJdLFswLDEsIlxcdmFycGhpIl0sWzAsMiwiXFxvcHtzaH0iLDJdLFsxLDMsIlxcb3B7c2h9Il0sWzIsMywiXFx2YXJwaGlee1xcb3B7c2h9fSJdLFszLDYsIlxccGknIl0sWzYsNSwiXFxvcHtzaH0iXSxbNyw0LCJcXG9we3NofSJdLFsxLDcsIlxccGkiXSxbNyw2LCJcXHBzaSJdLFs0LDUsIlxccHNpXntcXG9we3NofX0iLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} & {\coker^{\op{pre}}\varphi} & \coker\varphi \\
+		{\mc F^{\op{sh}}} & {\mc G^{\op{sh}}} & {\coker^{\op{pre}}\varphi^{\op{sh}}} & {\coker\varphi^{\op{sh}}}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow["{\op{sh}}"', from=1-1, to=2-1]
+		\arrow["{\op{sh}}", from=1-2, to=2-2]
+		\arrow["{\varphi^{\op{sh}}}", from=2-1, to=2-2]
+		\arrow["{\pi'}", from=2-2, to=2-3]
+		\arrow["{\op{sh}}", from=2-3, to=2-4]
+		\arrow["{\op{sh}}", from=1-3, to=1-4]
+		\arrow["\pi", from=1-2, to=1-3]
+		\arrow["\psi", from=1-3, to=2-3]
+		\arrow["{\psi^{\op{sh}}}", dashed, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	commute. We claim that $\psi^{\op{sh}}$ is the desired isomorphism, for which it suffices by \autoref{prop:isoonstalks} to take stalks at $p\in X$ everywhere. This gives the following diagram.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG1jIEZfcCJdLFsxLDAsIlxcbWMgR19wIl0sWzAsMSwiXFxtYyBGXntcXG9we3NofX1fcCJdLFsxLDEsIlxcbWMgR157XFxvcHtzaH19X3AiXSxbMywwLCIoXFxjb2tlclxcdmFycGhpKV9wIl0sWzMsMSwiKFxcY29rZXJcXHZhcnBoaV57XFxvcHtzaH19KV9wIl0sWzIsMSwiKFxcY29rZXJee1xcb3B7cHJlfX1cXHZhcnBoaV57XFxvcHtzaH19KV9wIl0sWzIsMCwiKFxcY29rZXJee1xcb3B7cHJlfX1cXHZhcnBoaSlfcCJdLFswLDEsIlxcdmFycGhpX3AiXSxbMCwyLCJcXG9we3NofV9wIiwyXSxbMSwzLCJcXG9we3NofV9wIl0sWzIsMywiXFx2YXJwaGlee1xcb3B7c2h9fV9wIl0sWzMsNiwiXFxwaSdfcCJdLFs2LDUsIlxcb3B7c2h9X3AiXSxbNyw0LCJcXG9we3NofV9wIl0sWzEsNywiXFxwaV9wIl0sWzcsNiwiXFxwc2lfcCJdLFs0LDUsIlxccHNpXntcXG9we3NofX1fcCJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F_p} & {\mc G_p} & {(\coker^{\op{pre}}\varphi)_p} & {(\coker\varphi)_p} \\
+		{\mc F^{\op{sh}}_p} & {\mc G^{\op{sh}}_p} & {(\coker^{\op{pre}}\varphi^{\op{sh}})_p} & {(\coker\varphi^{\op{sh}})_p}
+		\arrow["{\varphi_p}", from=1-1, to=1-2]
+		\arrow["{\op{sh}_p}"', from=1-1, to=2-1]
+		\arrow["{\op{sh}_p}", from=1-2, to=2-2]
+		\arrow["{\varphi^{\op{sh}}_p}", from=2-1, to=2-2]
+		\arrow["{\pi'_p}", from=2-2, to=2-3]
+		\arrow["{\op{sh}_p}", from=2-3, to=2-4]
+		\arrow["{\op{sh}_p}", from=1-3, to=1-4]
+		\arrow["{\pi_p}", from=1-2, to=1-3]
+		\arrow["{\psi_p}", from=1-3, to=2-3]
+		\arrow["{\psi^{\op{sh}}_p}", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	All the $\op{sh}_p$ morphisms are isomorphisms by \autoref{prop:sheafificationstalk}, so to show $\psi^{\op{sh}}_p$ is an isomorphism, it suffices to show that $\psi_p$ is an isomorphism. Now, by \autoref{lem:cokerstalk}, we see that $\im\varphi_p$ lives in the kernel of $\mc G_p\to(\coker^{\op{pre}}\varphi)_p$ and analogously for the bottom row. So the fact that the $\op{sh}_p$s are isomorphisms induces the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEdfcC9cXGltXFx2YXJwaGlfcCJdLFswLDEsIlxcbWMgR157XFxvcHtzaH19X3AvXFxpbVxcdmFycGhpX3AiXSxbMSwxLCIoXFxjb2tlcl57XFxvcHtwcmV9fVxcdmFycGhpXntcXG9we3NofX0pX3AiXSxbMSwwLCIoXFxjb2tlcl57XFxvcHtwcmV9fVxcdmFycGhpKV9wIl0sWzAsMSwiXFxvcHtzaH1fcCJdLFsxLDIsIlxcb3ZlcmxpbmVcXHBpJ19wIl0sWzAsMywiXFxvdmVybGluZVxccGlfcCJdLFszLDIsIlxccHNpX3AiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc G_p/\im\varphi_p} & {(\coker^{\op{pre}}\varphi)_p} \\
+		{\mc G^{\op{sh}}_p/\im\varphi_p} & {(\coker^{\op{pre}}\varphi^{\op{sh}})_p}
+		\arrow["{\op{sh}_p}", from=1-1, to=2-1]
+		\arrow["{\overline\pi'_p}", from=2-1, to=2-2]
+		\arrow["{\overline\pi_p}", from=1-1, to=1-2]
+		\arrow["{\psi_p}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	where $\op{sh}_p$ is still an isomorphism because it was an isomorphism before. However, \autoref{lem:cokerstalk} actually tells us that this map $\pi_p$ from $\mc G_p/\im\varphi_p=\coker\varphi_p$ to $(\coker^{\op{pre}}\varphi)_p$ is an isomorphism, and analogous holds for the bottom row, so it follows that $\psi_p$ is an isomorphism. This finishes.
 \end{proof}
 \begin{remark}
-	One can use the above proposition to show that the last map of \autoref{eq:protoses} is an epimorphism.
+	Thinking about cokernels as quotients, \autoref{prop:sheafquotient} roughly says that $(\mc F/\mc G)^{\op{sh}}\simeq(\mc F^{\op{sh}}/\mc G^{\op{sh}})^{\op{sh}}$, where the ``embedding'' $\varphi\colon\mc F\to\mc G$ has been made implicit.
 \end{remark}
-And now we fix the cokernel.
-\begin{definition}[Sheaf cokernel]
-	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then the \textit{sheaf cokernel $\coker\varphi$} of $\varphi$ is the sheafification of the presheaf cokernel
-	\[(\coker^{\op{pre}}\varphi)(U)=\coker\varphi_U.\]
-\end{definition}
-And so we get some nice results by passing to stalks.
-\begin{proposition}
-	The category of sheaves on $X$ valued in an abelian category $\mc C$ is abelian. Notably, we have to use the sheaf kernel and sheaf cokernel.
-\end{proposition}
+As an example application, we define the sheaf image.
+\begin{defi}[Sheaf image]
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of presheaves on $X$. Then the \textit{sheaf image $\im\varphi$} of $\varphi$ is the sheafification of the presheaf image
+	\[(\im^{\op{pre}}\varphi)(U)=\im\varphi_U.\]
+\end{defi}
+We go ahead and check that we have an image presheaf very quickly.
+\begin{lemma}
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of presheaves on $X$. Then $\im^{\op{pre}}\varphi$ is a presheaf on $X$.
+\end{lemma}
 \begin{proof}
-	Pass all the checks to the stalks, where we get what we want for free because $\mc C$ is abelian.
+	We quickly define restriction maps in the obvious way. Given a containment $U\subseteq V$, we define ${\op{res}_{U,V}}\colon\im\varphi_U\to\im\varphi_V$ by restricting ${\op{res}_{U,V}}\colon\mc G(U)\to\mc G(V)$. This is well-defined: if $g\in(\im^{\op{pre}}\varphi)(U)=\im\varphi_U$, then we write $g=\varphi_U(f)$ for some $f\in\mc F(U)$, so $g|_V=\varphi_U(f)|_V=\varphi_V(f|_V)\in\im\varphi_V$.
+
+	Now, here are our presheaf checks.
+	\begin{itemize}
+		\item Identity: note $g\in\im\varphi_U$ has $g|_U=g$.
+		\item Functoriality: given open sets $W\subseteq V\subseteq U$ and $g\in\im\varphi_U$, we have $g|_V|_W=g|_W$.
+		\qedhere
+	\end{itemize}
 \end{proof}
+\begin{remark}
+	Note there is an obvious inclusion $\iota^{\op{pre}}_U\colon(\im^{\op{pre}}\varphi)(U)\to\mc G(U)$ by $g\mapsto g$. This assembles into a presheaf morphism: given open sets $V\subseteq U$ and $g\in(\im^{\op{pre}}\varphi)(U)$, we have
+	\[\iota^{\op{pre}}_U(g)|_V=g|_V=\iota^{\op{pre}}_V(g|_V).\]
+	Thus, when $\mc G$ is a sheaf, sheafification induces a unique sheaf morphism $\iota\colon\im\varphi\to\mc G$.
+\end{remark}
+% And now we get the following analogue to \autoref{prop:injonstalks}.
+% \begin{proposition}
+% 	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. The following are equivalent.
+% 	\begin{listalph}
+% 		\item $\varphi_p$ is surjective for each $p$.
+% 		\item $\im\varphi=\mc G$.
+% 		\item $\varphi\colon\mc F\to\mc G$ is an epimorphism in the category of sheaves.
+% 	\end{listalph}
+% \end{proposition}
+% \begin{proof}
+% 	Omitted. The main point is to hit everything with the universal property and the fact that stalks don't change under sheafification.
+% \end{proof}
+% \begin{remark}
+% 	One can use the above proposition to show that the last map of \autoref{eq:protoses} is an epimorphism.
+% \end{remark}
+% And now we fix the cokernel.
+% \begin{definition}[Sheaf cokernel]
+% 	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$. Then the \textit{sheaf cokernel $\coker\varphi$} of $\varphi$ is the sheafification of the presheaf cokernel
+% 	\[(\coker^{\op{pre}}\varphi)(U)=\coker\varphi_U.\]
+% \end{definition}
+% And so we get some nice results by passing to stalks.
+% \begin{proposition}
+% 	The category of sheaves on $X$ valued in an abelian category $\mc C$ is abelian. Notably, we have to use the sheaf kernel and sheaf cokernel.
+% \end{proposition}
+% \begin{proof}
+% 	Pass all the checks to the stalks, where we get what we want for free because $\mc C$ is abelian.
+% \end{proof}
+We quickly check that our sheaf image is the categorical sheaf.
 \begin{proposition}
-	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$ has
-	\[\im\varphi\simeq\ker\coker\varphi.\]
+	Fix a morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$, and let $\pi\colon\mc G\to\coker\varphi$ be the canonical projection. Then
+	\[\im\varphi\simeq\ker\pi.\]
 \end{proposition}
 \begin{proof}
+	% Let $\pi^{\op{pre}}\colon\mc G\to\coker^{\op{pre}}\varphi$ be the canonical projection. Then we note that, by definition
 	Pass to stalks.
 \end{proof}
+Having defined an image sheaf, we may deal with exactness.
+\begin{definition}[Exact sequence]
+	Fix an abelian category $\mc C$. Then a sequence of maps
+	\[A\stackrel f\to B\stackrel g\to C\]
+	is \textit{exact at $B$} if and only if $\im f\simeq\ker g$. More precisely, this is asking for the image of $f$, thought of as $\iota\colon\im f\to B$, to be a kernel of $g$.
+\end{definition}
+And here is our main result.
 \begin{proposition}
 	A sequence
-	\[0\to\mc F\to\mc G\to\mc H\to0\]
-	of sheaves on $X$ is exact if and only if it is exact at all stalks.
+	\[\mc F\to\mc G\to\mc H\]
+	of sheaves on $X$ is exact (at $\mc G$) if and only if it is exact at all stalks.
 \end{proposition}
 \begin{proof}
 	Unsurprisingly, pass to stalks.
