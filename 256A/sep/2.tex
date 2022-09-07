@@ -618,7 +618,7 @@ We quickly check that our sheaf image is the categorical sheaf.
 \end{proposition}
 \begin{proof}
 	% Let $\pi^{\op{pre}}\colon\mc G\to\coker^{\op{pre}}\varphi$ be the canonical projection. Then we note that, by definition
-	Pass to stalks.
+	Pass to stalks.\todo{}
 \end{proof}
 Having defined an image sheaf, we may deal with exactness.
 \begin{definition}[Exact sequence]
@@ -633,39 +633,161 @@ And here is our main result.
 	of sheaves on $X$ is exact (at $\mc G$) if and only if it is exact at all stalks.
 \end{proposition}
 \begin{proof}
-	Unsurprisingly, pass to stalks.
+	Unsurprisingly, pass to stalks.\todo{}
 \end{proof}
 
 \subsection{Sheaf Functors}
 We now discuss how to build some new sheaves from old.
 \begin{definition}[Direct image sheaf]
-	Fix a continuous map $f\colon X\to Y$ of topological spaces. Given a sheaf $\mc F$ on $X$, we define the \textit{direct image sheaf} on $Y$ to be
-	\[f_*\mc F(V)\coloneqq\mc F\left(f^{-1}(V)\right).\]
+	Fix a continuous map $f\colon X\to Y$ of topological spaces. Given a (pre)sheaf $\mc F$ on $X$, we define the \textit{direct image (pre)sheaf} on $Y$ to be
+	\[f_*\mc F(U)\coloneqq\mc F\left(f^{-1}(U)\right).\]
 \end{definition}
+Here are our checks on the direct image sheaf.
+\begin{lemma}
+	Fix a continuous map $f\colon X\to Y$.
+	\begin{listalph}
+		\item If $\mc F$ is a presheaf on $X$, then $f_*\mc F$ defines a presheaf on $Y$.
+		\item If $\mc F$ is a sheaf on $X$, then $f_*\mc F$ defines a sheaf on $Y$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We do these one at a time.
+	\begin{listalph}
+		\item We begin by defining our restriction maps. Well, if we have open sets $V\subseteq U\subseteq Y$, then $f^{-1}(V)\subseteq f^{-1}(U)\subseteq X$, so there is a restriction map
+		\[{\op{res}_{f^{-1}(U),f^{-1}(V)}}\colon\mc F\left(f^{-1}(U)\right)\to\mc F\left(f^{-1}(V)\right).\]
+		Thus, we set our restriction map $\op{res}_{U,V}\colon f_*\mc F(U)\to f_*\mc F(V)$ as ${\op{res}_{U,V}}\coloneqq\op{res}_{f^{-1}(U),f^{-1}(V)}$.
+
+		Here are our presheaf checks.
+		\begin{itemize}
+			\item Identity: given $s\in f_*\mc F(U)=\mc F\left(f^{-1}(U)\right)$, note $s|_U=s|_{f^{-1}(U)}=s$.
+			\item Functoriality: given open sets $W\subseteq V\subseteq U$ and some $s\in f_*\mc F(U)$, we compute
+			\[f|_V|_W=f|_{f^{-1}(V)}|_{f^{-1}(W)}=f|_{f^{-1}(W)}=f|_W.\]
+		\end{itemize}
+
+		\item Suppose $\mc F$ is a sheaf. We now run our sheaf checks. Fix an open cover $\mc U$ for an open set $U\subseteq Y$. Then define $V\coloneqq f^{-1}(U)$ and $\mc V\coloneq\left\{f^{-1}(U_0):U_0\in\mc U\right\}$; notably, $\mc U$ being an open cover of $U\subseteq Y$ promises that $\mc V$ is an open cover for $V$.
+		\begin{itemize}
+			\item Identity: suppose $s_1,s_2\in f_*\mc F(U)=\mc F(V)$ has
+			\[s_1|_{U_0}=s_2|_{U_0}\]
+			for each $U_0\in\mc U$. Then, moving back to $X$, we have $s_1|_{V_0}=s_2|_{V_0}$ for each $V_0\in\mc V$, so it follows $s_1=s_2$ as sections in $\mc F(V)=f_*\mc F(U)$ by the identity axiom of $\mc F$.
+			\item Gluability: suppose we have sections $s_{U_0}\in f_*\mc F(U_0)=\mc F\left(f^{-1}(U_0)\right)$ for each $U_0\in\mc U$ such that
+			\[s_{U_0}|_{U_0\cap U_0'}=s_{U_0'}|_{U_0\cap U_0'}.\]
+			Moving back to $X$, we have sections $t_{f^{-1}(U_0)}\coloneqq s_{U_0}$ such that
+			\[t_{f^{-1}(U_0)}|_{f^{-1}(U_0)\cap f^{-1}(U_0')}=t_{f^{-1}(U_0')}|_{f^{-1}(U_0)\cap f^{-1}(U_0')}.\]
+			As such, the gluability axiom of $\mc F$ applied to the open cover $\mc V$ promises $s\in\mc F(V)=f_*\mc F(U)$ such that $s|_{U_0}=s|_{f^{-1}(U_0)}=t_{f^{-1}(U_0)}=s_{U_0}$ for each $U_0\in\mc U$. This finishes.
+			\qedhere
+		\end{itemize}
+	\end{listalph}
+\end{proof}
+In fact, we can build a functor out of this.
+\begin{lemma} \label{lem:directimagefunctor}
+	Fix a continuous map $f\colon X\to Y$. Given a morphism $\eta\colon\mc F\to\mc G$ of (pre)sheaves on $X$, there is an induced morphism $f_*\eta\colon f_*\mc F\to f_*\mc G$ of (pre)sheaves on $Y$. This makes $f_*\colon\mathrm{Sh}_X\to\mathrm{Sh}_Y$ into a functor.
+\end{lemma}
+\begin{proof}
+	For open $U\subseteq Y$, define $f_*\eta_U\colon f_*\mc F(U)\to f_*\mc G(U)$ by $f_*\eta_U\coloneqq\eta_{f^{-1}(U)}$. Note this makes sense because
+	\[\eta_{f^{-1}(U)}\colon\mc F\left(f^{-1}(U)\right)\to\mc G\left(f^{-1}(U)\right).\]
+	Observe quickly that $f_*\eta$ is indeed a morphism of (pre)sheaves: given open sets $U'\subseteq U$ and some $s\in f_*\mc F(U)$, we have
+	\[f_*\eta_U(s)|_{U'}=\eta_{f^{-1}(U)}(s)|_{f^{-1}(U')}=\eta_{f^{-1}(U')}(s|_{f^{-1}(U')})=f_*\eta_{U'}(s|_{U'}).\]
+	We now run functoriality checks on the functor $f_*\colon\mathrm{Sh}_X\to\mathrm{Sh}_Y$.
+	\begin{itemize}
+		\item Identity: given a (pre)sheaf $\mc F$ on $X$, an open set $U\subseteq Y$, and a section $s\in f_*\mc F(U)$, we compute
+		\[(f_*{\id_{\mc F}})_U(s)=({\id_{\mc F}})_{f^{-1}(U)}(s)=s=({\id_{f_*\mc F}})_U(s).\]
+		\item Functoriality: given morphisms $\varphi\colon\mc F\to\mc G$ and $\psi\colon\mc G\to\mc H$ of (pre)sheaves on $X$, pick up an open set $U\subseteq Y$ and compute
+		\[f_*(\psi\circ\varphi)_U=(\psi\circ\varphi)_{f^{-1}(U)}=\varphi_{f^{-1}(U)}\circ\psi_{f^{-1}(U)}=f_*\psi\circ f_*\varphi,\]
+		which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
 \begin{remark} \label{rem:directimagefunctor}
-	One can check that, given continuous maps $f\colon X\to Y$ and $g\colon Y\to Z$, we have
-	\[(f\circ g)_*=f_*\circ g_*\]
-	as maps from sheaves to sheaves. As a hint, one should check this on stalks.
+	Given continuous maps $f\colon X\to Y$ and $g\colon Y\to Z$, we have
+	\[(g\circ f)_*=g_*\circ f_*\]
+	as functors $\mathrm{Sh}_X\to\mathrm{Sh}_Z$. To see this, we have two checks. Fix any $U\subseteq Z$ and morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$.
+	\begin{itemize}
+		\item On objects, we see $(g\circ f)_*\mc F(U)=\mc F\left((g\circ f)^{-1}(U)\right)=\mc F\left(f^{-1}(g^{-1}(U))\right)=g_*(f_*\mc F)(U)$.
+		\item On morphisms, we see $(g\circ f)_*\varphi_U=\varphi_{\left((g\circ f)^{-1}(U)\right)}=\varphi_{f^{-1}(g^{-1}(U))}=g_*(f_*\varphi)_U$.
+	\end{itemize}
 \end{remark}
+We can also define an inverse image sheaf.
 \begin{definition}[Inverse image sheaf]
-	Fix a continuous map $f\colon X\to Y$ of topological spaces. Given a sheaf $\mc G$ on $Y$, we define the \textit{inverse image sheaf} $f^{-1}\mc G$ on $X$ to be the sheafification of the presheaf
-	\[U\mapsto\colimit_{V\supseteq f(U)}\mc G(V).\]
+	Fix a continuous map $f\colon X\to Y$ of topological spaces. Given a (pre)sheaf $\mc G$ on $Y$, we define the \textit{inverse image sheaf} $f^{-1}\mc G$ on $X$ to be the sheafification of the presheaf
+	\[f^{-1,\op{pre}}\mc G(U)\coloneqq\colimit_{V\supseteq f(U)}\mc G(V)=\Bigg\{(s_V)_{V\supseteq f(U)}\in\prod_{V\supseteq f(U)}\mc G(V):s_V|_{V'}=s_{V'}\text{ for each }V\supseteq V'\supseteq f(U)\Bigg\}.\]
 \end{definition}
-\begin{remark}
-	One can check, as in \autoref{rem:directimagefunctor}, that $(f\circ g)^{-1}=g^{-1}\circ f^{-1}$ as maps from sheaves to sheaves.
-\end{remark}
-Here is another way to verify our last remark.
+As usual, here are the checks on the inverse image sheaf.
+\begin{lemma}
+	Fix a continuous map $f\colon X\to Y$.
+	\begin{listalph}
+		\item If $\mc G$ is a presheaf on $Y$, then $f^{-1,\op{pre}}\mc G$ defines a presheaf on $X$.
+		\item If $\mc G$ is a sheaf on $Y$, then $f^{-1}\mc G$ defines a sheaf on $X$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Note that (b) is immediate from (a) because $f^{-1}\mc G$ is the sheafification of $f^{-1,\op{pre}}\mc G$. So we will focus on showing (a).
+
+	To begin, we define our restriction maps for open sets $U'\subseteq U$ as
+	\[\arraycolsep=1.4pt\begin{array}{ccccc}
+		\op{res}_{U,U'}\colon& f^{-1,\op{pre}}\mc G(U) &\to& f^{-1,\op{pre}}\mc G(U) \\
+		(s_V)_{V\supseteq f(U)} &\mapsto& (\overline s_V)_{V\supseteq f(U')}
+	\end{array}\]
+	where we are defining $\overline s_V$ as $s_{V'}|_V$, where $V'\supseteq f(U)\cup V$. Notably, the choice of $V'$ here doesn't matter: if we have $V',V''\supseteq f(U)\cup V$, then
+	\[s_{V'}|_V=s_{V'}|_{V'\cap V''}|_V=s_{V'\cap V''}|_V=s_{V''}|_{V'\cap V''}|_V=s_{V''}|_V.\]
+	Additionally, we see $(\overline s_V)\in f^{-1,\op{pre}}\mc G(U)$ because, for any $V\supseteq V'$ where $V_0\supseteq f(U)\cup V$, we see
+	\[\overline s_V|_{V'}=s_{V_0}|_V|_{V'}=s_{V_0}|_{V'}=\overline s_{V'}.\]
+	We now check our presheaf conditions.
+	\begin{itemize}
+		\item Identity: observe that $(s_V)_{V\supseteq f(U)}|_U=(s_V)_{V\supseteq f(U)}$ because $V$ is an open set containing $V\cup f(U)$ for each $V\supseteq f(U)$.
+		\item Functoriality: fix open sets $U''\subseteq U'\subseteq U$ and some $(s_V)_{V\supseteq f(U)}\in f^{-1,\op{pre}}\mc G(U)$. Then, for any $V_{U''}\supseteq f(U'')$, find $V''_{U''}\supseteq f(U)\cup V_{U'}$. Thus,
+		\[(s_V)_{V\supseteq f(U)}|_{U'}|_{U''}=(s_{V''_{U''}}|_{V_{U''}})_{V''_{U''}\supseteq f(U')}|_{U''}=(s_{V''_{U''}}|_{V_{U''}})_{V''_{U''}\supseteq f(U'')}=(s_V)_{V\supseteq f(U)}|_{U''},\]
+		which finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+As before, we actually have a functor.
+\begin{lemma}
+	Fix a continuous map $f\colon X\to Y$. Given a morphism $\eta\colon\mc F\to\mc G$ of sheaves on $Y$, there is an induced morphism $f^{-1}\eta\colon f^{-1}\mc F\to f^{-1}\mc G$ of sheaves on $X$. This makes $f^{-1}\colon\mathrm{Sh}_Y\to\mathrm{Sh}_X$ into a functor.
+\end{lemma}
+\begin{proof}
+	For open $U\subseteq X$ and $(s_V)_{V\supseteq f(U)}\in f^{-1,\op{pre}}\mc F(U)$, define
+	\[f^{-1,\op{pre}}\eta_U\colon(s_V)_{V\supseteq f(U)}\mapsto(\eta_Vs_V)_{V\supseteq f(U)}.\]
+	Notably, $(\eta_Vs_V)_{V\supseteq f(U)}\in f^{-1,\op{pre}}\mc G(U)$ because any containment $V\supseteq V'\supseteq f(U)$ will have $\eta_V(s_V)|_{V'}=\eta_{V'}(s_V|_{V'})=\eta_{V'}(s_{V'})$.
+	
+	Additionally, we can check that this provides a morphism $f^{-1,\op{pre}}\eta\colon f^{-1,\op{pre}}\mc F\to f^{-1,\op{pre}}\mc G$: fix open sets $U'\subseteq U$ and $(s_V)_{V\subseteq f(U)}$. For each open $V\supseteq f(U')$, find an open $V'\supseteq V\cup f(U)$; thus,
+	\begin{align*}
+		f^{-1,\op{pre}}\eta_U\left((s_V)_{V\supseteq f(U)})\right)|_{U'} &= (\eta_Vs_V)_{V\supseteq f(U)}|_{U'} \\
+		&= \big(\eta_{V'}(s_{V'})|_V\big)_{V\supseteq f(U')} \\
+		&= \big(\eta_V((s_{V'})|_V)\big)_{V\supseteq f(U')} \\
+		&= f^{-1,\op{pre}}\eta_{U'}\left((s_V)_{V\supseteq f(U)}|_{U'}\right).
+	\end{align*}
+	We now run the functoriality checks on $f^{-1,\op{pre}}$.
+	\begin{itemize}
+		\item Identity: given a (pre)sheaf $\mc F$ on $X$, we see
+		\[(f^{-1,\op{pre}}{\id_{\mc F}})_U\colon(s_V)_{V\supseteq f(U)}\mapsto(s_V)_{V\supseteq f(U)}.\]
+		\item Functoriality: given morphisms $\varphi\colon\mc F\to\mc G$ and $\psi\colon\mc G\to\mc H$ of (pre)sheaves on $X$, pick up an open set $U\subseteq X$ and some $(s_V)_{V\supseteq f(U)}\in f^{-1,\op{pre}}\mc F$. Then we see
+		\[f^{-1,\op{pre}}(\psi\circ\varphi)\left((s_V)_{V\supseteq f(U)}\right)=(\psi_V\varphi_Vs_V)_{V\supseteq f(U)}=(f^{-1,\op{pre}}\psi\circ f^{-1,\op{pre}}\varphi)_U\left((s_V)_{V\supseteq f(U)}\right).\]
+	\end{itemize}
+	To finish, we define $f^{-1}\eta\coloneqq\left(f^{-1,\op{pre}}\eta\right)^{\op{sh}}$ to be a map $f^{-1}\mc F\to f^{-1}\mc G$. Here are the functoriality checks.
+	\begin{itemize}
+		\item Identity: given a sheaf $\mc F$ on $X$, we see $f^{-1}{\id_{\mc F}}=(f^{-1,\op{pre}}\id_{\mc F})^{\op{sh}}=\id_{f^{-1,\op{pre}}}\mc F^{\op{sh}}=\id_{f^{-1}\mc F}$.
+		\item Functoriality: given morphisms $\varphi\colon\mc F\to\mc G$ and $\psi\colon\mc G\to\mc H$ of sheaves on $X$, we see
+		\[f^{-1}(\varphi\circ\psi)=\left(f^{-1,\op{pre}}(\varphi\circ\psi)\right)^{\op{sh}}=\left(f^{-1,\op{pre}}\varphi\circ f^{-1,\op{pre}}\psi\right)^{\op{sh}}=f^{-1}\varphi\circ f^{-1}\psi,\]
+		finishing.
+		\qedhere
+	\end{itemize}
+\end{proof}
+% \begin{remark}
+% 	As in \autoref{rem:directimagefunctor}, we have $(f\circ g)^{-1}=g^{-1}\circ f^{-1}$ as functors $\mathrm{Sh}_Y\to\mathrm{Sh}_X$.
+% \end{remark}
+% Here is another way to verify our last remark.
+The two sheaves we just introduced are intertwined, as follows.
 \begin{proposition}
 	There is a natural bijection
-	\[\op{Mor}_X\left(f^{-1}\mc G,\mc F\right)\simeq\op{Mor}_Y\left(\mc G,f_*\mc F\right).\]
+	\[\op{Mor}_{\mathrm{Sh}_X}\left(f^{-1}\mc G,\mc F\right)\simeq\op{Mor}_{\mathrm{Sh}_Y}\left(\mc G,f_*\mc F\right).\]
 	In other words, we have a pair of adjoint functors.
 \end{proposition}
 \begin{proof}
-	Omitted.
+	Omitted. See \cite[Exercise~2.7.B]{rising-sea}.\todo{}
 \end{proof}
-\begin{remark}
-	The functor $f^{-1}$ also has a right adjoint, which will appear on the homework. Thus, $f^{-1}$ as a functor is exact.
-\end{remark}
+% \begin{remark}
+% 	The functor $f^{-1}$ also has a right adjoint, which will appear on the homework. Thus, $f^{-1}$ as a functor is exact.
+% \end{remark}
 
 \subsection{More Sheaves}
 Let's see a few more examples, for fun.
