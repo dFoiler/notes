@@ -30,7 +30,7 @@ Here is a more concrete description.
 \end{proof}
 We will be primarily interested in the case with just one function.
 \begin{remark}
-	In the case of one function, which is \autoref{lem:topoindonefunc}, note that we might as well assume that $f\colon X\to Y$ is onto for otherwise we can just pass to the relative topology.
+	In the case of one function, which is \autoref{lem:topoindonefunc}, note that we might as well assume that $f\colon X\to Y$ is onto for otherwise we might as well just pass to the relative topology on $\im f$. To be explicit, we see $U\subseteq Y$ is open if and only if $f^{-1}(U)$ is open if and only if $f^{-1}(U\cap\im f)$ is open if and only if $U\cap\im f$ is open.
 \end{remark}
 We are now ready to define the quotient space.
 \begin{lemma}
@@ -47,12 +47,33 @@ We are now ready to define the quotient space.
 \end{proof}
 With an equivalence relation, we may consider the set of equivalence classes $X/{\sim}$.
 \begin{remark}
-	Conversely, given some partition $P\subseteq\mc P(X)$ of $X$, we can define $f\colon X\to P$ by $f\colon x\mapsto[x]$, where $[x]\in P$ is the element of $P$ containing $x$. The point is that surjective functions give rise to equivalence relations, and equivalence relations give rise to surjective functions.
+	Conversely, given some partition $P\subseteq\mc P(X)$ of $X$, we can define $f\colon X\to P$ by $f\colon x\mapsto[x]$, where $[x]\in P$ is the element of $P$ containing $x$. (Note $[x]\in P$ exists and is well-defined because $P$ is a partition.) The point is that surjective functions give rise to equivalence relations, and equivalence relations give rise to surjective functions.
 \end{remark}
-Anyway, here is the point.
+Anyway, here is our definition.
 \begin{definition}[Quotient topology]
 	Fix an equivalence relation $\sim$ on a set $X$ with a topology $\mc T$. Then the \textit{quotient topology} on $X/{\sim}$ is the final topology for the natural projection $X\onto X/{\sim}$.
 \end{definition}
+It turns out that we can talk about the quotient space by universal property as well.
+\begin{proposition} \label{prop:quotientup}
+	Fix an equivalence relation $\sim$ on a set $X$ with a topology $\mc T$; let $\pi\colon X\onto(X/{\sim})$ be the natural projection. Then, for any continuous map $f\colon X\to Z$ such that any $x\sim x'$ has $f(x)=f(x')$, there is a unique continuous map $\overline f\colon(X/{\sim})\to Z$ such that
+	\[f=\overline f\circ\pi.\]
+\end{proposition}
+\begin{proof}
+	We show uniqueness and existence separately.
+	\begin{itemize}
+		\item Uniqueness: for any $[x]\in(X/{\sim})$, we see that we must have
+		\[\overline f([x])=\overline f(\pi(x))=f(x),\]
+		so $\overline f([x])$ is forced by our other data.
+		\item Existence: for each $[x]\in(X/{\sim})$, define $\overline f([x])\coloneqq f(x)$. Note that this is well-defined: if $[x]=[x']$, then $x\sim x'$, so $f(x)=f(x')$ by hypothesis.
+
+		It remains to show that $\overline f$ is continuous. Well, for an open set $U\subseteq Z$, we note that
+		\[\overline f^{-1}(U)=\{[x]:\overline f([x])\in U\}=\{[x]:f(x)\in U\}=\pi\left(f^{-1}(U)\right).\]
+		Now, $\pi^{-1}\left(\pi\left(f^{-1}(U)\right)\right)=f^{-1}(U)$ because $x\in\pi^{-1}\left(\pi\left(f^{-1}(U)\right)\right)$ if and only if $\pi(x)\in\pi\left(f^{-1}(U)\right)$, which is equivalent to there being $x'\in f^{-1}(U)$ with $\pi(x)=\pi(x')$, which is equivalent to there being $x'$ with $x\sim x'$ while $f(x)=f(x')\in U$.
+		
+		Thus, $\pi^{-1}\left(\pi\left(f^{-1}(U)\right)\right)$ is open, so it follows $\pi\left(f^{-1}(U)\right)\subseteq(X/{\sim})$ is open.
+		\qedhere
+	\end{itemize}
+\end{proof}
 
 \subsection{Homeomorphism}
 Homeomorphisms are isomorphisms in our category $\mathrm{Top}$. To be technical, here is our definition.
@@ -76,25 +97,46 @@ Here are some actual examples.
 	Give $X\coloneqq[0,1]$ the subspace topology, and define the equivalence relation $\sim$ as having equivalence classes $\{0,1\}$ and $\{r\}$ for each $r\in(0,1)$. Then the quotient topology $X/{\sim}$ is homeomorphic to $S^1\subseteq\CC$.
 \end{exe}
 \begin{proof}
-	Our map $f\colon(X/{\sim})\to S^1$ is by $f\colon t\mapsto e^{2\pi it}$.
+	We note that $\sim$ is an equivalence relation because its equivalence classes are a partition. Now, we define the maps
+	\[\arraycolsep=1.4pt\begin{array}{ccc}
+		(X/{\sim}) &\cong& S^1 \\
+		t &\mapsto& e^{2\pi it} \\
+		\theta/2\pi &\mapsfrom& e^{i\theta}
+	\end{array}\]
+	which we can see to be well-defined inverse. Note that $\RR\to\CC$ by $t\mapsto e^{it}$ is continuous by complex analysis (it's in fact holomorphic). Restricting, we get the continuous map $[0,1]\to S^1$, and then we can see that we can mod out by $0\sim1$ because they both go to the same place (using \autoref{prop:quotientup}). One can check by hand that the inverse map is continuous, but we won't bother.
+	% To see that $f$ is continuous, we use \autoref{prop:checkonsubbase}. Well, given an open set $U\subseteq S^1$, we need to show
+	% \[f^{-1}(U)\subseteq X/{\sim}\]
+	% is open for each $z\in\CC$ and $r>0$. Because $S^1$ has the subspace topology, we may write $U=V\cap S^1$ for some open $V\subseteq\CC$.
+	% Now, if we have some $t\in(X/{\sim})$ such that $f(t)\in V$, then the fact that $V\subseteq\CC$ is open promises some $\varepsilon>0$ with $B(f(t),\varepsilon)\subseteq U$. 
 \end{proof}
 For the next few examples, we won't be very rigorous because we haven't provided good definitions of the relevant spaces.
 \begin{ex} \label{ex:cylinder}
 	Give $X\coloneqq[0,2]\times[0,1]$ the subspace topology, and define the equivalence relation $\sim$ as requiring $(0,r)\sim(2,r)$ only. Then $X$ is homeomorphic to a circle by gluing its edges. One might draw $X$ as follows.
 	\begin{center}
 		\begin{asy}
-			unitsize(1cm);
+			unitsize(1.0cm);
 			draw((0,0)--(0,1)--(2,1)--(2,0)--cycle);
 			draw((0,0)--(0,0.65), arrow=EndArrow);
 			draw((2,0)--(2,0.65), arrow=EndArrow);
 		\end{asy}
+		% \begin{asy}
+		% 	import three;
+		% 	unitsize(1.0cm);
+		% 	//create segment
+		% 	path3 segment = (0,1,0) -- (0,1,1);
+		% 	//create surface of revolution
+		% 	surface lampshade = surface(segment, c=O, axis=Z);
+		% 	//draw surface
+		% 	draw(lampshade, gray);
+		% 	draw(segment, black);
+		% \end{asy}
 	\end{center}
 \end{ex}
 \begin{example}
 	Continuing with the drawing style of \autoref{ex:cylinder}, we have that
 	\begin{center}
 		\begin{asy}
-			unitsize(1cm);
+			unitsize(1.0cm);
 			draw((0,0)--(0,1)--(2,1)--(2,0)--cycle);
 			draw((0,0)--(0,0.65), arrow=EndArrow);
 			draw((2,1)--(2,0.35), arrow=EndArrow);
@@ -106,7 +148,7 @@ For the next few examples, we won't be very rigorous because we haven't provided
 	Note that these homeomorphisms do not care for the metric of our spaces. All that matters is the continuity.
 \end{remark}
 \begin{example}
-	Let $X$ be the unit sphere in $\RR^3$ with the subspace topology, and define the equivalence relation on $X$ by $v\sim(-v)$ for each $v\in\RR^3$. Then $X/{\sim}$ turns out to be $\mathbb{RP}^2$, which is hard to visualize.
+	Let $X$ be the unit sphere in $\RR^3$ with the subspace topology, and define the equivalence relation on $X$ by equivalence classes $\{v,-v\}$ for each $v\in X$. Then $X/{\sim}$ turns out to be $\mathbb{RP}^2$, which is hard to visualize.
 \end{example}
 
 \subsection{Group Actions}
@@ -124,23 +166,31 @@ This gives the following definition.
 	\[\varphi_\bullet\colon G\to\op{Aut}(X).\]
 \end{definition}
 \begin{example}
-	The group $\langle\sigma\rangle\simeq\ZZ/2\ZZ$ acts on a normed vector space $V$ by
-	\[\varphi_\sigma\cdot v\coloneqq-v.\]
+	The group $\langle\sigma\rangle\simeq\ZZ/2\ZZ$ acts on a normed vector space $(V,\norm\cdot)$ by sending $\sigma^k$ to
+	\[\varphi_{\sigma^k}\cdot v\coloneqq(-1)^kv.\]
+	Notably, $\varphi_{\sigma^k}$ is continuous and its own inverse for any $k$, so it is a homeomorphism. In fact, we can see directly that $\varphi_{\sigma^k}\circ\varphi_{\sigma^\ell}=\varphi_{\sigma^{k+\ell}}$.
 \end{example}
 Notably, with a group action comes a partition.
 \begin{definition}[Orbit]
-	Let $G$ act on a topological space $X$ by $\varphi_\bullet\colon G\to\op{Aut}(X)$. Then the \textit{orbit} $Gx$ of a point $x\in x$ is the set
+	Let $G$ act on a topological space $X$ by $\varphi_\bullet\colon G\to\op{Aut}(X)$. Then the \textit{$G$-orbit} $Gx$ of a point $x\in x$ is the set
 	\[Gx\coloneqq\{\varphi_g(x):g\in G\}.\]
 	We denote the set of all orbits $\mc O_x$ be $X/G$.
 \end{definition}
-It turns out that the orbits partition $X$, so we can give the set $X/G$ the quotient topology as the final topology of the natural projection $X\onto X/G$.
+\begin{remark}
+	Note that the map $x\mapsto\mc O_x$ is a well-defined (surjective) map $X\to X/G$. In particular, we need to know that $x\in\mc O_{x'}$ implies that $\mc O_x=\mc O_{x'}$ so that there is exactly one orbit containing $x$. Well, $x\in\mc O_{x'}$ means we can find $g_0\in G$ such that $x=\varphi_{g_0}(x')$, so
+	\[\mc O_x=\{\varphi_g(x):g\in G\}=\{\varphi_g(\varphi_{g_0}(x')):g\in G\}=\{\varphi_{gg_0}(x'):g\in G\}\subseteq\mc O_{x'}.\]
+	Conversely, we note that $x'=\varphi_{g_0^{-1}}(x)$, so $\mc O_{x'}\subseteq\mc O_x$ follows, giving equality.
+\end{remark}
+Thus, the $G$-orbits partition $X$, so we can give the set $X/G$ the quotient topology as the final topology of the natural projection $X\onto X/G$.
 \begin{remark}
 	We are about to transition from making topologies to coming up with adjectives which will give ``lots'' of continuous maps to, say, the real numbers. For example, a space $(X,\mc T)$ will be Hausdorff if and only if, for any distinct $x,x'\in X$, there are disjoint open sets $U$ and $U'$ with $x\in U$ and $x'\in U'$. Here is the image.
 	\begin{center}
 		\begin{asy}
 			unitsize(1cm);
-			dot((0,0)); dot((3,0));
+			dot("$x$", (0,0), S); dot("$x'$", (3,0), S);
 			draw(circle((0,0),1), dashed); draw(circle((3,0),1),dashed);
+			label("$U$", (0,-1), S);
+			label("$U'$", (3,-1), S);
 		\end{asy}
 	\end{center}
 	It is easy to check that metric spaces are Hausdorff.
