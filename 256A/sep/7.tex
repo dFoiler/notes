@@ -1,0 +1,147 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 7}
+Let's try defining schemes again.
+
+\subsection{Defining Schemes}
+Here is our definition.
+\begin{definition}[Scheme]
+	A \textit{scheme} is a ringed space $(X,\mc O_X)$ such that, for each $x\in X$, there is an open set $U\subseteq X$ containing $x$ such that the restriction
+	\[(U,\mc O_X|_U)\]
+	is isomorphic (as a locally ringed space) to an affine scheme $(\Spec A,\OO_{\Spec A})$.
+\end{definition}
+The puzzling thing here is to figure out what an isomorphism of locally ringed spaces is. For this, we should define morphisms of locally ringed spaces.
+\begin{definition}[Morphism of locally ringed spaces]
+	Given locally ringed spaces $(X,\mc O_X)$ and $(Y,\mc O_Y)$ locally ringed spaces, a \textit{morphism} is a pair $(f,f^\sharp)$ of a continuous map $f\colon X\to Y$ and a sheaf morphism $f^\sharp\colon\OO_Y\to f_*\OO_Y$. Further, we require that, at each $x\in X$, the induced map\todo{I need stalks on direct image sheaf}
+	\[\OO_{Y,f(x)}\stackrel{f^\sharp_{f(x)}}\to(f_*\OO_X)_{f(x)}\simeq\OO_{X,x}\]
+	is a morphism of local rings; i.e., $f^\sharp_{f(x)}(\mf m_{Y,f(x)})\subseteq\mf m_{X,x}$ or equivalently $(f^\sharp_{f(x)})^{-1}\left(\mc m_{X,x}\right)=\mc m_{Y,f(x)}$.
+\end{definition}
+Concretely, we are asking for a map between the sheaves, but then we notice that the sheaf morphism induces a map of stalks. To preserve this local stalk structure, we will ask for germs vanishing on $f(x)$ to pull back to germs vanishing on $x$.
+\begin{remark}
+	Using the inverse image sheaf instead of the direct image sheaf, we can equivalently think about $f^\sharp$ as
+	\[f^\flat\colon f^{-1}\mc O_Y\to\mc O_X.\]
+	One might want to do this because the stalks of $f^{-1}\mc O_Y$ are nicely behaved by \autoref{rem:invimagestalk}.
+\end{remark}
+Now, an isomorphism of locally ringed spaces is a morphism of locally ringed spaces with an inverse.
+
+\subsection{Geometry Is Opposite Algebra}
+Here is the fun part of our definition of morphisms for locally ringed spaces.
+\begin{proposition} \label{prop:geoisoppalg}
+	The functors
+	\[\arraycolsep=1.4pt\begin{array}{ccc}
+		\mathrm{Rings}\opp &\simeq& \mathrm{AffSch} \\
+		A &\mapsto& (\Spec A,\OO_{\Spec A}) \\
+		\OO_X(X) &\mapsfrom& (X,\OO_X)
+	\end{array}\]
+	define an equivalence of categories.
+\end{proposition}
+\begin{proof}
+	For brevity, let $\OO_A$ denote the structure sheaf of a ring $A$. Now, the leftward map is essentially surjective by definition of an affine scheme, so the main point is that we have to show
+	\[\op{Mor}_{\mathrm{AffSch}}\left((\Spec B,\OO_B),(\Spec A,\OO_A)\right)\cong\op{Hom}_{\mathrm{Ring}}(A,B).\]
+	We define the left and right maps separately.
+	\begin{itemize}
+		\item In one direction, suppose we have a ring homomorphism $f^\sharp\colon A\to B$, and we need to recover a morphism of affine schemes. We already have a continuous map $f\coloneqq\Spec f^\sharp$ going $\Spec B\to\Spec A$.
+	
+		Additionally, we can extend $f^\sharp$ to be a sheaf morphism $f^\sharp\colon\OO_A\to f_*\OO_B$. It is enough to define this morphism on a base: pick up some open $D(s)\subseteq\Spec A$ so that $\OO_A(D(s))=A_s$. It follows
+		\[f_*\OO_B(D(s))=\OO_B\left(f^{-1}(D(s))\right)=\OO_B(D(f^\sharp s))=B_{f^\sharp(s)},\]
+		so there is a natural map $f^\sharp(D(s))\colon A_s\to B_{f^\sharp(s)}$. From here, it's not hard to check that this gives a morphism of sheaves on a base.
+
+		Lastly, we need to check that we actually have a morphism of locally ringed spaces. Well, given $\mf p\in\Spec B$, the stalk map turns out to be
+		\[f^\sharp_{f(\mf p)}\colon A_{f(\mf p)}\to B_\mf p,\]
+		which we can see to be a local ring homomorphism by passing through the maximal ideal $\mf m_{A,f(\mf p)}$ by hand.
+
+		For notation, we define $\Spec f^\sharp$ to be this morphism of local rings $(f,f^\sharp)$.
+
+		\item In the other direction, suppose we have a morphism of affine schemes $(f,f^\sharp)$. Then $f^\sharp$ as a morphism of locally ringed spaces can take global sections to recover a ring homomorphism.
+	\end{itemize}
+	To finish the proof, we have to show that the composition of our two maps is the identity.
+	\begin{itemize}
+		\item Starting with a ring homomorphism, extending it to a morphism of affine schemes, and then restricting it back to a ring homomorphism will overall unsurprisingly do nothing.
+		\item Suppose we start with $(f,f^\sharp)\colon(\Spec B,\OO_B)\to(\Spec A,\OO_A)$ as a morphism of affine schemes. Taking global sections gives
+		\[f^\sharp_{\Spec A}\colon A\to B.\]
+		Define $\varphi\coloneqq f^\sharp_{\Spec A}$. We want to show that $\Spec\varphi=(f,f^\sharp)$. Note we are starting with
+		\[\varphi\colon\OO_A(\Spec A)\to\OO_B(\Spec B).\]
+		Now, fix $\mf p\in\Spec B$ going to some $f(\mf p)\in\Spec A$. Taking stalks everywhere, we see that the diagram
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzAsMSwiQV97ZihcXG1mIHApfSJdLFsxLDEsIkJfXFxtZiBwIl0sWzEsMCwiQiJdLFswLDMsIlxcdmFycGhpIl0sWzEsMiwiZl5cXHNoYXJwX3tmKFxcbWYgcCl9Il0sWzAsMV0sWzMsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			A & B \\
+			{A_{f(\mf p)}} & {B_\mf p}
+			\arrow["\varphi", from=1-1, to=1-2]
+			\arrow["{f^\sharp_{f(\mf p)}}", from=2-1, to=2-2]
+			\arrow[from=1-1, to=2-1]
+			\arrow[from=1-2, to=2-2]
+		\end{tikzcd}\]
+		commutes. In particular, we see that $\varphi^{-1}(\mf p)\subseteq f(\mf p)$ by tracking units through the bottom map. On the other hand, $f^\sharp_{f(\mf p)}$ was assumed to be a local ring homomorphism, so actually $\varphi^{-1}(\mf p)=f(\mf p)$ follows. Thus, $\Spec\varphi\colon\Spec B\to\Spec A$ matches with our continuous map $f$!
+
+		It remains to show that $f^\sharp$ agrees with $\Spec\varphi$ as a morphism of sheaves. Well, it suffices to check that these agree on stalks by \autoref{prop:stalkmorphism}. To begin, we note that $\varphi$ on stalks looks like $\varphi^\sharp_{f(\mf p)}$ making the bottom arrow of the diagram
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFswLDEsIkFfe2YoXFxtZiBwKX0iXSxbMSwxLCJCX1xcbWYgcCJdLFswLDJdLFswLDEsIlxcdmFycGhpIl0sWzEsM10sWzIsMywiIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			A & B \\
+			{A_{f(\mf p)}} & {B_\mf p}
+			\arrow[from=1-1, to=2-1]
+			\arrow["\varphi", from=1-1, to=1-2]
+			\arrow[from=1-2, to=2-2]
+			\arrow[dashed, from=2-1, to=2-2]
+		\end{tikzcd}\]
+		commute. But we can also put $f^\sharp_{f(\mf p)}$ here even though this arrow is unique by the universal property of localization. This finishes this check.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	In some sense, \autoref{prop:geoisoppalg} is intended to be fact-checking: at the end of the day, we really just want
+\end{remark}
+We will quickly provide an example that says that we really do need to pay attention to morphisms of locally ringed spaces.
+\begin{nex}
+	Consider ring homomorphism $\ZZ_p\to\QQ_p$. However, $\Spec\ZZ_p=\{(0),(p)\}$ while $\Spec\QQ_p=\{(0)\}$. From the natural embedding $\iota\colon\ZZ_p\to\QQ_p$, we get a map sending $(0)\mapsto(0)$, and it will not be possible to get a ring homomorphism to send $(0)$ to $(p)$ because this forces $\QQ_p$ to have torsion. Nonetheless, one can upgrade sending $(0)\mapsto(p)$ to a full morphism of sheaves even though it will not be a morphism of locally ringed spaces.
+\end{nex}
+
+\subsection{Scheme Examples}
+Schemes have a lot of data. Let's try to make it more concrete; we'll be satisfied with just two examples today. We won't be very rigorous because we haven't defined gluing yet.
+\begin{remark}
+	Today, we are only gluing two things together at a time because we don't want to worry about the ``cocycle condition'' for gluing.
+\end{remark}
+Our first example is the projective line. Here is the image of our affine cover.
+\begin{center}
+	\begin{asy}
+		unitsize(1.7cm);
+		draw(arc((0,0),1,100,360+80));
+		draw(arc((0,0),1.2,-80,260));
+	\end{asy}
+\end{center}
+Here is the rigorization of our affine cover.
+\begin{ex}[Projective line]
+	Let $R$ be a ring. Then we can glue two copies of $\AA^1_R$ (which is $\Spec R[x]$) as subrings of $\Spec R[x,x^{-1}]$. Then we can identify our copies $\Spec R[x,x^{-1}]$ and $\Spec R[y,y^{-1}]$ by sending $x\mapsto y^{-1}$.
+\end{ex}
+To be rigorous, one should also define our full sheaf on this topological space; this comes from the homework problem explaining how to glue together sheaves.
+
+Here is the image for our next example.
+\begin{center}
+	\begin{asy}
+		unitsize(1cm);
+		draw((0,0)--(2,0));
+		fill(circle((1,0),0.1), white);
+		dot((1,0.1));
+		dot((1,-0.1));
+	\end{asy}
+\end{center}
+Here is the rigorization.
+\begin{example}[Doubled origin]
+	Let $R$ be a ring. Then we can glue two copies of $\AA^1_R$ (which is $\Spec R[x]$) as subrings of $\Spec R[x,x^{-1}]$. Then we can identify our copies $\Spec R[x,x^{-1}]$ and $\Spec R[y,y^{-1}]$ by sending $x\mapsto y$.
+\end{example}
+\begin{remark}
+	Later on, we will add certain adjectives (namely, ``separated'') which disallow the above scheme.
+\end{remark}
+For our last example, we return to elliptic curves.
+\begin{example}
+	We build the elliptic curve carved out by $Y^2Z=X^3-Z^3$. Our two affine patches are
+	\[\Spec\frac{k[x,y]}{\left(y^2-x^3+1\right)}\qquad\text{and}\qquad\Spec\frac{k[x,z]}{\left(z-x^3+z^3\right)}.\]
+	To glue these together, we identify
+	\[\Spec\frac{k[x,y,y^{-1}]}{\left(y^2-x^3+1\right)}\qquad\text{and}\qquad\Spec\frac{k[x,z,z^{-1}]}{\left(z-x^3+z^3\right)}\]
+	by sending $x\mapsto x/z$ and $y\mapsto z^{-1}$.
+\end{example}
+
+\end{document}
