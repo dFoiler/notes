@@ -638,7 +638,7 @@ And here is our main result.
 	Unsurprisingly, pass to stalks.\todo{}
 \end{proof}
 
-\subsection{Sheaf Functors}
+\subsection{The Direct Image Sheaf}
 We now discuss how to build some new sheaves from old.
 \begin{definition}[Direct image sheaf]
 	Fix a continuous map $f\colon X\to Y$ of topological spaces. Given a (pre)sheaf $\mc F$ on $X$, we define the \textit{direct image (pre)sheaf} on $Y$ to be
@@ -704,11 +704,30 @@ In fact, we can build a functor out of this.
 	\[(g\circ f)_*=g_*\circ f_*\]
 	as functors $\mathrm{Sh}_X\to\mathrm{Sh}_Z$. To see this, we have two checks. Fix any $U\subseteq Z$ and morphism $\varphi\colon\mc F\to\mc G$ of sheaves on $X$.
 	\begin{itemize}
-		\item On objects, we see $(g\circ f)_*\mc F(U)=\mc F\left((g\circ f)^{-1}(U)\right)=\mc F\left(f^{-1}(g^{-1}(U))\right)=g_*(f_*\mc F)(U)$.
+		\item On objects, we see $(g\circ f)_*\mc F(U)=\mc F\left((g\circ f)^{-1}(U)\right)=\mc F\left(f^{-1}(g^{-1}(U))\right)=g_*(f_*\mc F)(U)$. Additionally, given $U'\subseteq U$, the restriction map for $(g\circ f)_*\mc F$ is ${\op{res}_{(g\circ f)^{-1}(U),(g\circ f)^{-1}(U')}}$ of $\mc F$. This matches the restriction map for $g_*f_*\mc F$.
 		\item On morphisms, we see $(g\circ f)_*\varphi_U=\varphi_{\left((g\circ f)^{-1}(U)\right)}=\varphi_{f^{-1}(g^{-1}(U))}=g_*(f_*\varphi)_U$.
 	\end{itemize}
 \end{remark}
-We can also define an inverse image sheaf.
+Philosophically, we see that the point of the direct image sheaf is to use a continuous map $f\colon X\to Y$ to take a (pre)sheaf on $X$ to a (pre)sheaf on $Y$. Under our stalk philosophy, we might want something like $(f_*\mc F)_{f(x)}=\mc F_x$, but this need not be the case; essentially, $(f_*\mc F)_{f(x)}$ is a colimit over all open sets containing $f(x)$, but we want to only consider the ones of the form $f^{-1}(U)$ where $x\in U$.
+
+Nonetheless, there is a canonical map.
+\begin{lemma}
+	Fix a continuous map $f\colon X\to Y$ and a (pre)sheaf $\mc F$ on $X$. Then, at any $x\in X$, there is a canonical map
+	\[(f_*\mc F)_{f(x)}\to\mc F_x.\]
+\end{lemma}
+\begin{proof}
+	A germ in $(f_*\mc F)_{f(x)}$ looks like $[(U,s)]$ where $f(x)\in U$ and $s\in f_*\mc F(U)=\mc F\left(f^{-1}(U)\right)$. As such, we will callously define
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		\varphi\colon& (f_*\mc F)_{f(x)} &\to& \mc F_x \\
+		{} & [(U,s)] &\mapsto& \left[(f^{-1}(U),s)\right]
+	\end{array}\]
+	which we will only have to verify is well-defined. Well, suppose $[(s,U)]=[(s',U')]$ in $(f_*\mc F)_{f(x)}$ so that we can find an open $V\subseteq U\cap U'$ such that $s|_V=s'|_V$. Moving back to $\mc F$, this translates to
+	\[s|_{f^{-1}(V)}=s'|_{f^{-1}(V)},\]
+	so $\left[(f^{-1}(U),s)\right]=\left[(f^{-1}(U'),s')\right]$ follows.
+\end{proof}
+
+\subsection{The Inverse Image Sheaf}
+Given a continuous map $f\colon X\to Y$, the direct image sheaf tells us how to take a sheaf on $X$ to a sheaf on $Y$. We can also define an inverse image sheaf.
 \begin{definition}[Inverse image sheaf]
 	Fix a continuous map $f\colon X\to Y$ of topological spaces. Given a (pre)sheaf $\mc G$ on $Y$, we define the \textit{inverse image sheaf} $f^{-1}\mc G$ on $X$ to be the sheafification of the presheaf
 	\[f^{-1,\op{pre}}\mc G(U)\coloneqq\colimit_{V\supseteq f(U)}\mc G(V)=\Bigg\{(s_V)_{V\supseteq f(U)}\in\prod_{V\supseteq f(U)}\mc G(V):s_V|_{V'}=s_{V'}\text{ for each }V\supseteq V'\supseteq f(U)\Bigg\}.\]
@@ -727,7 +746,7 @@ As usual, here are the checks on the inverse image sheaf.
 	To begin, we define our restriction maps for open sets $U'\subseteq U$ as
 	\[\arraycolsep=1.4pt\begin{array}{ccccc}
 		\op{res}_{U,U'}\colon& f^{-1,\op{pre}}\mc G(U) &\to& f^{-1,\op{pre}}\mc G(U) \\
-		(s_V)_{V\supseteq f(U)} &\mapsto& (\overline s_V)_{V\supseteq f(U')}
+		& (s_V)_{V\supseteq f(U)} &\mapsto& (\overline s_V)_{V\supseteq f(U')}
 	\end{array}\]
 	where we are defining $\overline s_V$ as $s_{V'}|_V$, where $V'\supseteq f(U)\cup V$. Notably, the choice of $V'$ here doesn't matter: if we have $V',V''\supseteq f(U)\cup V$, then
 	\[s_{V'}|_V=s_{V'}|_{V'\cap V''}|_V=s_{V'\cap V''}|_V=s_{V''}|_{V'\cap V''}|_V=s_{V''}|_V.\]
@@ -753,7 +772,7 @@ As before, we actually have a functor.
 	
 	Additionally, we can check that this provides a morphism $f^{-1,\op{pre}}\eta\colon f^{-1,\op{pre}}\mc F\to f^{-1,\op{pre}}\mc G$: fix open sets $U'\subseteq U$ and $(s_V)_{V\subseteq f(U)}$. For each open $V\supseteq f(U')$, find an open $V'\supseteq V\cup f(U)$; thus,
 	\begin{align*}
-		f^{-1,\op{pre}}\eta_U\left((s_V)_{V\supseteq f(U)})\right)|_{U'} &= (\eta_Vs_V)_{V\supseteq f(U)}|_{U'} \\
+		f^{-1,\op{pre}}\eta_U\left((s_V)_{V\supseteq f(U)}\right)|_{U'} &= (\eta_Vs_V)_{V\supseteq f(U)}|_{U'} \\
 		&= \big(\eta_{V'}(s_{V'})|_V\big)_{V\supseteq f(U')} \\
 		&= \big(\eta_V((s_{V'})|_V)\big)_{V\supseteq f(U')} \\
 		&= f^{-1,\op{pre}}\eta_{U'}\left((s_V)_{V\supseteq f(U)}|_{U'}\right).
@@ -774,13 +793,12 @@ As before, we actually have a functor.
 		\qedhere
 	\end{itemize}
 \end{proof}
+\begin{remark}
+	As in \autoref{rem:directimagefunctor}, continuous maps $f\colon X\to Y$ and $g\colon Y\to Z$ give $(f\circ g)^{-1}=g^{-1}\circ f^{-1}$ as functors $\mathrm{Sh}_Z\to\mathrm{Sh}_X$. Dealing with limits like this is quite annoying, so we will not check this in detail.
+\end{remark}
 \begin{remark} \label{rem:invimagestalk}
 	The stalks of the inverse image sheaf are just the stalks of the original sheaf. Namely, $\left(f^{-1}\mc G\right)_x=\mc G_{f(x)}$.
 \end{remark}
-% \begin{remark}
-% 	As in \autoref{rem:directimagefunctor}, we have $(f\circ g)^{-1}=g^{-1}\circ f^{-1}$ as functors $\mathrm{Sh}_Y\to\mathrm{Sh}_X$.
-% \end{remark}
-% Here is another way to verify our last remark.
 The two sheaves we just introduced are intertwined, as follows.
 \begin{proposition}
 	There is a natural bijection
