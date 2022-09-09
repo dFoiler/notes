@@ -1,0 +1,119 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 9}
+
+The fun continues. The next problem set is going to be long but only in words, not in what we actually have to prove. We are being told not to be intimidated.
+
+\subsection{Normal Spaces}
+Last class we briefly mentioned the Hausdorff property.
+\begin{definition}[Hausdroff]
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is \textit{Hausdorff} if and only if, for any two distinct points $x,x'\in X$, there are disjoint open sets $U$ and $U'$ such that $x\in U$ and $x'\in U'$.
+\end{definition}
+\begin{example}
+	A metric space $(X,d)$ is Hausdorff. Indeed, given distinct points $x,x'\in X$, we have $d(x,x')>0$, so we set $r\coloneqq\frac12d(x,x')$. Then $x\in B(x,r)$ and $x'\in B(x',r)$ (which are open sets by \autoref{ex:openballisopen}), we see $B(x,r)\cap B(x',r)=\emp$. Indeed, if we had $y\in B(x,r)\cap B(x',r)$, then we must have
+	\[d(x,x')\le d(x,y)+d(x',y)<2r=d(x,x'),\]
+	which is a contradiction.
+\end{example}
+Here is another adjective.
+\begin{definition}[Normal]
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is \textit{Hausdorff} if and only if, for any two disjoint closed sets $V,V'\subseteq X$, there are disjoint open sets $U$ and $U'$ such that $V\in U$ and $V'\in U'$.
+\end{definition}
+\begin{remark}
+	Thus, we see that Hausdorff is approximately the normal property with singleton sets.
+\end{remark}
+It is not completely obvious that metric spaces are normal, but we will see that they are.
+
+\subsection{Urysohn's Lemma: Metric Spaces}
+Here is the main result for today.
+\begin{restatable}[Urysohn's lemma]{theorem}{urythm} \label{thm:ury}
+	Fix a topological space $(X,\mc T)$. If $(X,\mc T)$ is normal, then for any disjoint closed subsets $V_0,V_1\subseteq X$, there is a continuous function $f\colon X\to[0,1]$ such that $f(V_0)=\{0\}$ and $f(V_1)=\{1\}$.
+\end{restatable}
+So the point here is to realize \autoref{rem:adjectivemotivation}, where being normal is implying that we have ``lots'' of continuous functions.
+\begin{remark}
+	Certainly if a topological space $(X,\mc T)$ satisfies the conclusion of \autoref{thm:ury}, then $(X,\mc T)$ is normal. Indeed, for any disjoint closed subsets $V_0,V_1\subseteq X$, pick up the promised continuous function $f$. Then
+	\[V_0\subseteq f^{-1}((-1/2,1/2))\qquad\text{and}\qquad V_1\subseteq f^{-1}((1/2,3/2))\]
+	are disjoint open sets; namely, $f^{-1}((-1/2,1/2))\cap f^{-1}((1/2,3/2))=f^{-1}\big((-1/2,1/2)\cap(1/2,3/2)\big)=f^{-1}(\emp)=\emp$.
+\end{remark}
+Let's see \autoref{thm:ury} for metric spaces. We pick up the following definition.
+\begin{definition}
+	Fix a metric space $(X,d)$. Then we define, for any $x\in X$ and nonempty subset $A\subseteq X$,
+	\[d_A(x)\coloneqq\inf_{a\in A}d(x,a).\]
+\end{definition}
+\begin{remark}
+	The infimum here exists because $A$ is nonempty, so the set $\{d(x,a):a\in A\}$ is nonempty (and bounded below by $0$).
+\end{remark}
+\begin{remark} \label{rem:zerolocusofda}
+	If $A\subseteq X$ is dense, then we can check that $d_A$ is constantly zero, so it is possible for $d_A$ to vanish without being all of $X$. In fact, we can check that
+	\[d_A^{-1}(\{0\})=\overline A.\]
+\end{remark}
+The image is that $d_A(x)$ is the distance from $x$ to $A$.
+\begin{center}
+	\begin{asy}
+		unitsize(1cm);
+		fill(circle((0,0),1), lightgray);
+		draw(circle((0,0),1), dashed);
+		label("$A$", (1,0), E);
+		dot("$x$", (-3,0), W);
+		draw((-3,0) -- (-1,0), red);
+		label("$d_A(x)$", (-2,0), N);
+	\end{asy}
+\end{center}
+We have the following continuity check.
+\begin{lemma}
+	Fix a metric space $(X,d)$. Then, for any nonempty subset $A\subseteq X$, the function $d_A\colon X\to\RR$ is Lipschitz continuous.
+\end{lemma}
+\begin{proof}
+	Fix any $x,y\in X$. Then, for any given $a\in A$, we find that
+	\[d_A(x)\le d(x,a)\le d(x,y)+d(y,a).\]
+	Thus, $d_A(x)-d(x,y)\le d(y,a)$ for all $a\in A$, so we conclude that
+	\[d_A(x)-d(x,y)\le\inf_{a\in A}d(y,a)=d_A(y),\]
+	so $d_A(x)-d_A(y)\le d(x,y)$. By symmetry, we also have $d_A(y)-d_A(x)\le d(x,y)$, so it follows
+	\[\big|d_A(x)-d_A(y)\big|\le d(x,y),\]
+	which is what we need for our Lipschitz continuous.
+\end{proof}
+Let's now show \autoref{thm:ury} for metric spaces.
+\begin{proposition}
+	Fix a metric space $(X,d)$. For any disjoint closed subsets $V_0,V_1\subseteq X$, there is a continuous function $f\colon X\to[0,1]$ such that $f(V_0)=\{0\}$ and $f(V_1)=\{1\}$.
+\end{proposition}
+\begin{proof}
+	The point is to use the Lipschitz continuous functions $d_{V_0},d_{V_1}$. Then we define
+	\[f(x)\coloneqq\frac{d_{V_0}(x)}{d_{V_0}(x)+d_{V_1}(x)}.\]
+	One can check that this does not have division-by-zero problems. Namely, $d_{V_0}(x)=d_{V_1}(x)=0$ forces $x\in V_0\cap V_1$ because $V_0$ and $V_1$ are closed by \autoref{rem:zerolocusofda}.
+	
+	We now run our checks. Because the quotient of two continuous functions is still continuous, we see that $f$ is continuous. Additionally, some easy bounding gives $\im f\subseteq[0,1]$. Also see that $x\in V_0$ gives $d_{V_0}(x)=0$ and hence $f(x)=0$; analogously, $x\in V_1$ gives $d_{V_1}(x)=1$ and hence $f(x)=1$.
+\end{proof}
+
+\subsection{Urysohn's Lemma: The General Case}
+We will not prove the general case of \autoref{thm:ury} today, but we will make some progress. Here is a useful lemma.
+\begin{lemma} \label{lem:usenormal}
+	Fix a normal topological space $(X,\mc T)$. Given a closed subset $V\subseteq X$ and an open subset $U_0\subseteq X$ with $V\subseteq U$, there is an open set $U$ such that
+	\[V\subseteq U\subseteq\overline U\subseteq U_0.\]
+\end{lemma}
+\begin{proof}
+	Because $V\subseteq U_0$, we define $V'\coloneqq X\setminus U_0$, which is closed because $U_0$ is open. Further, $V'\subseteq X\setminus U_0\subseteq X\setminus V$ forces $V\cap V'=\emp$. Thus, using the normality of $(X,\mc T)$, we are promised disjoint open sets $U$ and $U'$ such that
+	\[V\subseteq U\qquad\text{and}\qquad V'\subseteq U'.\]
+	In particular, we see that
+	\[U\subseteq X\setminus U'\]
+	while $X\setminus U'$ is closed by definition. Thus, by definition of the closure, $\overline U\subseteq X\setminus U'\subseteq X\setminus V'=U_0$. This finishes the proof.
+\end{proof}
+And here is the result.
+\urythm*
+\begin{proof}
+	To begin, define $U_1\coloneqq X\setminus V_1$, which is open because $V_1$ is closed; notably $V_0\subseteq U_1$. The idea here is that the points of $U_1$ we may allow $f$ to take values less than $1$. Now, by \autoref{lem:usenormal}, we find $U_{1/2}$ with
+	\[V_0\subseteq U_{1/2}\subseteq\overline{U_{1/2}}\subseteq U_1.\]
+	Intuitively, we are going to let $f$ take values of less than $1/2$ on $U_{1/2}$. Using \autoref{lem:usenormal} again, we can find $U_{1/2}$ with
+	\[V_0\subseteq U_{1/4}\subseteq\overline{U_{1/4}}\subseteq U_{1/2},\]
+	and now our function will take values less than $1/4$ on $U_{1/4}$. On the other side, we can use the containment $\overline{U_{1/2}}\subseteq U_1$ in \autoref{lem:usenormal} to find $U_{3/4}$ such that
+	\[\overline{U_{1/2}}\subseteq U_{3/4}\subseteq\overline{U_{3/4}}\subseteq U_1,\]
+	and here $U_{3/4}$ our function should take values less than $3/4.$
+
+	We can then continue the process for eights, so on and so forth. Let's describe what we have at the end of this inductive process. Set $\Delta\coloneqq\left\{k/2^n:0\le k\le 2^n\right\}$ to be the set of dyadic rationals in $[0,1]$. Then each $r\in\Delta$, we get an open set $U_r$; by the above process, we know that $r,s\in\Delta$ with $r<s$ has
+	\[\overline{U_r}\subseteq U_s.\]
+	This then defines the needed function by continuity.
+\end{proof}
+
+\end{document}
