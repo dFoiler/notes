@@ -7,6 +7,9 @@
 \section{September 9}
 
 The fun continues. The next problem set is going to be long but only in words, not in what we actually have to prove. We are being told not to be intimidated.
+\begin{remark} \label{rem:adjectivemotivation}
+	We are about to transition from making topologies to coming up with adjectives which will give ``lots'' of continuous maps to, say, the real numbers. A rigorization of this shall be provided shortly.
+\end{remark}
 
 \subsection{Normal Spaces}
 Last class we briefly mentioned the Hausdorff property.
@@ -18,27 +21,54 @@ Last class we briefly mentioned the Hausdorff property.
 	\[d(x,x')\le d(x,y)+d(x',y)<2r=d(x,x'),\]
 	which is a contradiction.
 \end{example}
+Here is the image
+\begin{center}
+	\begin{asy}
+		unitsize(1cm);
+		dot("$x$", (0,0), S); dot("$x'$", (3,0), S);
+		draw(circle((0,0),1), dashed); draw(circle((3,0),1),dashed);
+		label("$U$", (0,-1), S);
+		label("$U'$", (3,-1), S);
+	\end{asy}
+\end{center}
 Here is another adjective.
 \begin{definition}[Normal]
 	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is \textit{Hausdorff} if and only if, for any two disjoint closed sets $V,V'\subseteq X$, there are disjoint open sets $U$ and $U'$ such that $V\in U$ and $V'\in U'$.
 \end{definition}
 \begin{remark}
-	Thus, we see that Hausdorff is approximately the normal property with singleton sets.
+	Intuitively, Hausdorff is approximately the normal property with singleton sets.
 \end{remark}
+Here is the image.
+\begin{center}
+	\begin{asy}
+		unitsize(1cm);
+		fill(circle((0,0),1),lightgray);
+		draw(circle((0,0),1));
+		fill(circle((4,0),1),lightgray);
+		draw(circle((4,0),1));
+		draw(circle((0,0),1.5), dashed);
+		draw(circle((4,0),1.5), dashed);
+		label("$V$", (0,0));
+		label("$V'$", (4,0));
+		label("$U$", (0,-1.5), S);
+		label("$U'$", (4,-1.5), S);
+	\end{asy}
+\end{center}
 It is not completely obvious that metric spaces are normal, but we will see that they are.
 
-\subsection{Urysohn's Lemma: Metric Spaces}
 Here is the main result for today.
 \begin{restatable}[Urysohn's lemma]{theorem}{urythm} \label{thm:ury}
 	Fix a topological space $(X,\mc T)$. If $(X,\mc T)$ is normal, then for any disjoint closed subsets $V_0,V_1\subseteq X$, there is a continuous function $f\colon X\to[0,1]$ such that $f(V_0)=\{0\}$ and $f(V_1)=\{1\}$.
 \end{restatable}
-So the point here is to realize \autoref{rem:adjectivemotivation}, where being normal is implying that we have ``lots'' of continuous functions.
-\begin{remark}
+\noindent So the point here is to realize \autoref{rem:adjectivemotivation}, where being normal is implying that we have ``lots'' of continuous functions.
+\begin{remark} \label{rem:uryconv}
 	Certainly if a topological space $(X,\mc T)$ satisfies the conclusion of \autoref{thm:ury}, then $(X,\mc T)$ is normal. Indeed, for any disjoint closed subsets $V_0,V_1\subseteq X$, pick up the promised continuous function $f$. Then
 	\[V_0\subseteq f^{-1}((-1/2,1/2))\qquad\text{and}\qquad V_1\subseteq f^{-1}((1/2,3/2))\]
-	are disjoint open sets; namely, $f^{-1}((-1/2,1/2))\cap f^{-1}((1/2,3/2))=f^{-1}\big((-1/2,1/2)\cap(1/2,3/2)\big)=f^{-1}(\emp)=\emp$.
+	are disjoint open sets; namely, these are open because $f$ is continuous, and they are disjoint because $f^{-1}((-1/2,1/2))\cap f^{-1}((1/2,3/2))=f^{-1}\big((-1/2,1/2)\cap(1/2,3/2)\big)=f^{-1}(\emp)=\emp$.
 \end{remark}
-Let's see \autoref{thm:ury} for metric spaces. We pick up the following definition.
+
+\subsection{Urysohn's Lemma: Metric Spaces}
+Let's see \autoref{thm:ury} for metric spaces, which will prove that metric spaces are normal by \autoref{rem:uryconv}. We pick up the following definition.
 \begin{definition}
 	Fix a metric space $(X,d)$. Then we define, for any $x\in X$ and nonempty subset $A\subseteq X$,
 	\[d_A(x)\coloneqq\inf_{a\in A}d(x,a).\]
@@ -46,24 +76,20 @@ Let's see \autoref{thm:ury} for metric spaces. We pick up the following definiti
 \begin{remark}
 	The infimum here exists because $A$ is nonempty, so the set $\{d(x,a):a\in A\}$ is nonempty (and bounded below by $0$).
 \end{remark}
-\begin{remark} \label{rem:zerolocusofda}
-	If $A\subseteq X$ is dense, then we can check that $d_A$ is constantly zero, so it is possible for $d_A$ to vanish without being all of $X$. In fact, we can check that
-	\[d_A^{-1}(\{0\})=\overline A.\]
-\end{remark}
 The image is that $d_A(x)$ is the distance from $x$ to $A$.
 \begin{center}
 	\begin{asy}
 		unitsize(1cm);
 		fill(circle((0,0),1), lightgray);
 		draw(circle((0,0),1), dashed);
-		label("$A$", (1,0), E);
+		label("$A$", (1,0), W);
 		dot("$x$", (-3,0), W);
 		draw((-3,0) -- (-1,0), red);
 		label("$d_A(x)$", (-2,0), N);
 	\end{asy}
 \end{center}
 We have the following continuity check.
-\begin{lemma}
+\begin{lemma} \label{lem:distiscont}
 	Fix a metric space $(X,d)$. Then, for any nonempty subset $A\subseteq X$, the function $d_A\colon X\to\RR$ is Lipschitz continuous.
 \end{lemma}
 \begin{proof}
@@ -75,22 +101,57 @@ We have the following continuity check.
 	\[\big|d_A(x)-d_A(y)\big|\le d(x,y),\]
 	which is what we need for our Lipschitz continuous.
 \end{proof}
+As a sanity-check that this function behaves like it should, we pick up the following.
+\begin{lemma} \label{lem:zerolocusofda}
+	Fix a metric space $(X,d)$. Then, for any nonempty subset $A\subseteq X$, we have
+	\[d_A^{-1}(\{0\})=\overline A.\]
+\end{lemma}
+\begin{proof}
+	Certainly $A\subseteq d_A^{-1}(\{0\})$ because $d_A(a)=0$ for all $a\in A$. (In particular, $d_A(x)\ge0$ everywhere, and $a\in A$ implies that $d_A(a)\le d(a,a)=0$.) Because $d_A$ is continuous by \autoref{lem:distiscont}, we see $d_A^{-1}(\{0\})$ is closed, so containing $A$ forces
+	\[\overline A\subseteq d_A^{-1}(\{0\}).\]
+	Conversely, suppose that $x\notin X\setminus\overline A$, and we show that $d_A(x)>0$. Indeed, $X\setminus\overline A$ is open, so there is some open ball $B(x,\varepsilon)$ with $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq X\setminus\overline A$. It follows $B(x,\varepsilon)\cap\overline A=\emp$, so
+	\[d(a,x)\ge\varepsilon\]
+	for all $a\in A$. Thus, $d_A(x)\ge\varepsilon>0$, so $d_A(x)\ne0$.
+\end{proof}
+\begin{example}
+	If $A\subseteq X$ is a dense subset, then $\overline A=X$, so $d_A\colon X\to\RR$ is the constantly zero function.
+\end{example}
+\begin{example}
+	If $A\subseteq X$ is closed, then $\overline A=A$ by \autoref{ex:closureofclosed}, so $d_A^{-1}(\{0\})=A$. In other words, we have $x\in A$ if and only if $d_A(x)=0$.
+\end{example}
 Let's now show \autoref{thm:ury} for metric spaces.
-\begin{proposition}
+\begin{proposition} \label{prop:metricury}
 	Fix a metric space $(X,d)$. For any disjoint closed subsets $V_0,V_1\subseteq X$, there is a continuous function $f\colon X\to[0,1]$ such that $f(V_0)=\{0\}$ and $f(V_1)=\{1\}$.
 \end{proposition}
 \begin{proof}
 	The point is to use the Lipschitz continuous functions $d_{V_0},d_{V_1}$. Then we define
 	\[f(x)\coloneqq\frac{d_{V_0}(x)}{d_{V_0}(x)+d_{V_1}(x)}.\]
-	One can check that this does not have division-by-zero problems. Namely, $d_{V_0}(x)=d_{V_1}(x)=0$ forces $x\in V_0\cap V_1$ because $V_0$ and $V_1$ are closed by \autoref{rem:zerolocusofda}.
+	Note that defining $f\colon X\to\RR$ does not have division-by-zero problems: because $d_{V_0}(x),d_{V_1}(x)\ge0$, the only way to get zero in the denominator is by $d_{V_0}(x)=d_{V_1}(x)=0$. However, this forces $x\in V_0\cap V_1$ by \autoref{lem:zerolocusofda} because $V_0$ and $V_1$ are closed, but in fact $V_0\cap V_1=\emp$.
 	
-	We now run our checks. Because the quotient of two continuous functions is still continuous, we see that $f$ is continuous. Additionally, some easy bounding gives $\im f\subseteq[0,1]$. Also see that $x\in V_0$ gives $d_{V_0}(x)=0$ and hence $f(x)=0$; analogously, $x\in V_1$ gives $d_{V_1}(x)=1$ and hence $f(x)=1$.
+	We now run our checks on $f$.
+	\begin{itemize}
+		\item Because the quotient of two continuous functions is still continuous, we see that $f$ is continuous.
+		\item Using the fact that $d_A(x)\ge0$ for any nonempty $A\subseteq X$ and $x\in X$, we find
+		\[f(x)=\frac{d_{V_0}(x)}{d_{V_0}(x)+d_{V_1}(x)}\ge0,\]
+		and
+		\[f(x)=1-\frac{d_{V_1}(x)}{d_{V_0}(x)+d_{V_1}(x)}\le1,\]
+		so $\im f\subseteq[0,1]$.
+		\item If $x\in V_0$, then $d_{V_0}(x)=0$, so $f(x)=0/(0+d_{V_1}(x))=0$. If $x\in V_1$, then $d_{V_1}(x)=0$, so $f(x)=d_{V_0}(x)/(d_{V_0}(x)+0)=1$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+And here is our check.
+\begin{corollary}
+	Any metric space $(X,d)$ is normal.
+\end{corollary}
+\begin{proof}
+	Plug \autoref{prop:metricury} into \autoref{rem:uryconv}.
 \end{proof}
 
 \subsection{Urysohn's Lemma: The General Case}
 We will not prove the general case of \autoref{thm:ury} today, but we will make some progress. Here is a useful lemma.
 \begin{lemma} \label{lem:usenormal}
-	Fix a normal topological space $(X,\mc T)$. Given a closed subset $V\subseteq X$ and an open subset $U_0\subseteq X$ with $V\subseteq U$, there is an open set $U$ such that
+	Fix a normal topological space $(X,\mc T)$. Given a closed subset $V\subseteq X$ and an open subset $U_0\subseteq X$ with $V\subseteq U_0$, there is an open set $U$ such that
 	\[V\subseteq U\subseteq\overline U\subseteq U_0.\]
 \end{lemma}
 \begin{proof}
@@ -103,17 +164,17 @@ We will not prove the general case of \autoref{thm:ury} today, but we will make 
 And here is the result.
 \urythm*
 \begin{proof}
-	To begin, define $U_1\coloneqq X\setminus V_1$, which is open because $V_1$ is closed; notably $V_0\subseteq U_1$. The idea here is that the points of $U_1$ we may allow $f$ to take values less than $1$. Now, by \autoref{lem:usenormal}, we find $U_{1/2}$ with
+	To begin, define $U_1\coloneqq X\setminus V_1$, which is open because $V_1$ is closed; notably $V_0\subseteq U_1$. The idea here is that the points of $U_1$ will take value at most $1$. Now, by \autoref{lem:usenormal}, we find $U_{1/2}$ with
 	\[V_0\subseteq U_{1/2}\subseteq\overline{U_{1/2}}\subseteq U_1.\]
-	Intuitively, we are going to let $f$ take values of less than $1/2$ on $U_{1/2}$. Using \autoref{lem:usenormal} again, we can find $U_{1/2}$ with
+	Intuitively, we are going to let $f$ take values at most $1/2$ on $U_{1/2}$. Using \autoref{lem:usenormal} again, we can find $U_{1/2}$ with
 	\[V_0\subseteq U_{1/4}\subseteq\overline{U_{1/4}}\subseteq U_{1/2},\]
-	and now our function will take values less than $1/4$ on $U_{1/4}$. On the other side, we can use the containment $\overline{U_{1/2}}\subseteq U_1$ in \autoref{lem:usenormal} to find $U_{3/4}$ such that
+	and now our function will take values at most $1/4$ on $U_{1/4}$. On the other side, we can use the containment $\overline{U_{1/2}}\subseteq U_1$ in \autoref{lem:usenormal} to find $U_{3/4}$ such that
 	\[\overline{U_{1/2}}\subseteq U_{3/4}\subseteq\overline{U_{3/4}}\subseteq U_1,\]
 	and here $U_{3/4}$ our function should take values less than $3/4.$
 
 	We can then continue the process for eights, so on and so forth. Let's describe what we have at the end of this inductive process. Set $\Delta\coloneqq\left\{k/2^n:0\le k\le 2^n\right\}$ to be the set of dyadic rationals in $[0,1]$. Then each $r\in\Delta$, we get an open set $U_r$; by the above process, we know that $r,s\in\Delta$ with $r<s$ has
 	\[\overline{U_r}\subseteq U_s.\]
-	This then defines the needed function by continuity.
+	This then defines the needed function by continuity. We will finish this proof next class.
 \end{proof}
 
 \end{document}
