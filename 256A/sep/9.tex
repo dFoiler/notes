@@ -8,4 +8,122 @@
 
 The fun continues.
 
+\subsection{Modules}
+We are not going to need modules for quite some time, but we will go ahead and define them now.
+\begin{definition}[Module]
+	Fix a scheme $(X,\OO_X)$. Then an \textit{$\OO_X$-module} is a sheaf $\mc F$ on $X$ with sheaf morphisms for addition $+\colon\mc F\times\mc F\to\mc F$ and a scalar multiplication $\cdot\colon\OO_X\times\mc F\to\mc F$.
+\end{definition}
+\begin{remark}
+	In particular, for each $U\subseteq X$, we see $\mc F(U)$ is an $\OO_X(U)$-module.
+\end{remark}
+We will remark that one can define kernels, cokernels, and images as we did for sheaves values in general abelian categories, so the category of $\OO_X$-modules is again an abelian category. We refer to \cite[\S2.6.3]{rising-sea}.
+
+\subsection{Gluing Schemes}
+Here is the main idea.
+\begin{definition}[Open subscheme]
+	Fix a scheme $(X,\OO_X)$ and an open subset $U\subseteq X$. Then we define the scheme $(U,\OO_X|_U)$ to be an \textit{open subscheme}.
+\end{definition}
+Checking that we in fact have a scheme is annoying but not particularly hard; one merely has to restrict the affine open cover to $U$.
+\begin{example}
+	Given an affine scheme $(\Spec A,\OO_{\Spec A})$, we note that taking $U\coloneqq D(f)$ has
+	\[(U,\OO_{\Spec A}|_U)=(\Spec A_f,\OO_{\Spec A_f}),\]
+	where we are using \autoref{exe:distinguishedisaffine}.
+\end{example}
+Before we define gluing, we should pick up the following.
+\begin{proposition} \label{prop:morphismtoaffine}
+	Fix a scheme $(X,\OO_X)$. Given an affine scheme $(\Spec A,\OO_A)$, we can define
+	\[\op{Mor}_{\mathrm{Sch}_X}((X,\OO_X),(\Spec A,\OO_A))\simeq\op{Hom}_{\mathrm{Ring}}(A,\OO_X(X)).\]
+\end{proposition}
+This is intended to generalize \autoref{prop:geoisoppalg}.
+\begin{remark}
+	Reversing the arguments in \autoref{prop:morphismtoaffine} is no longer true.
+\end{remark}
+\autoref{prop:morphismtoaffine} will follow from the following, where we let the open cover $\mc U$ below comes from the affine open cover.
+\begin{proposition}
+	Fix schemes $(X,\OO_X)$ and $(Y,\OO_Y)$. Let $\mc U$ be an open cover for $X$; then, given scheme morphisms $\varphi_U\colon U\to Y$ of such that
+	\[\varphi_U|_{U\cap U'}=\varphi_{U'}|_{U\cap U'},\]
+	there is a unique scheme morphism $\varphi\colon X\to Y$ such that $\varphi|_U=\varphi_U$.
+\end{proposition}
+\begin{proof}
+	Apply force.
+\end{proof}
+So far we've glued together morphisms. It remains to glue together schemes. This will be similar to the way that we glue together sheaves.
+\begin{proposition}
+	Fix schemes $(X_i,\OO_i)$ for each $i\in I$, with an open subset $U_{ij}\subseteq X_i$ for each $i$, where $X_{ii}=X_i$; let $X_{ij}$ be the induced open subscheme. Further, pick up some isomorphisms $f_{ji}\colon X_{ij}\to X_{ji}$ satisfying the cocycle condition
+	\[f_{ki}=f_{kj}\circ f_{ji},\]
+	on $X_{ij}\cap X_{ik}$, where we implicitly assume that $f_{ji}(X_{ij}\cap X_{ik})\subseteq X_{ji}$. Then there is a unique scheme $X$ covered by open subschemes $U_i\subseteq X$, equipped with isomorphisms $\varphi_i\colon X_i\to U_i$ such that $\varphi_i|_{X_{ij}}=\varphi_j\circ f_{ji}$ and $\varphi_i(X_i)\cap\varphi_j(X_j)=\varphi_i(X_{ij})=\varphi_J(X_{ji})$.
+\end{proposition}
+\begin{proof}
+	Glue the topological space first using the cocycle condition. Second, glue the sheaves together as described earlier. Lastly, $X$ is a scheme by using the affine open covers of the various $X_i$. The uniqueness up to unique isomorphism of $X$ follows by keeping track of all the data.
+\end{proof}
+
+\subsection{Projective Space by Gluing}
+Fix a ring $R$. Let's define $\PP_R^n$ by gluing $n+1$ different affine sets $\AA^n_R$. Intuitively, we want to define projective space to have the topological space of homogeneous coordinates
+\[[X_0:X_1:\ldots:X_n],\]
+and we would like the $i$th affine piece of this space to be given by
+\[\left(\frac{X_0}{X_i},\frac{X_1}{X_i},\ldots,\frac{X_n}{X_i}\right).\]
+Notably, this has killed a coordinate with $X_i/X_i=1$.
+
+As such, to glue properly, we define the $i$th affine piece to be
+\[X_i\coloneqq\Spec R\left[x_{0/i},x_{1/i},\ldots,x_{(i-1)/i},x_{(i+1)/i},\ldots,x_{n/i}\right].\]
+To glue this $X_i$ piece to the $X_j$ piece, we need to force $x_{j/i}$ to be nonzero (namely, to invert it), so we look at the open subscheme
+\[X_{ij}\coloneqq\Spec R\left[x_{0/i},x_{1/i},\ldots,x_{(i-1)/i},x_{(i+1)/i},\ldots,x_{n/i},x_{j/i}^{-1}\right].\]
+To glue these open subschemes directly, we remember that $x_{i/j}$ is supposed to mean $X_i/X_j$ as a quotient not always defined, so we define our isomorphism as
+\[\arraycolsep=1.4pt\begin{array}{cccc}
+	f_{ji}\colon& X_{ij} &\to& X_{ji} \\
+	& x_{k/i} &\mapsto& x_{k/j}/x_{i/j}
+\end{array}\]
+from which we can pretty directly check the cocycle condition. (The $f_{ji}$ is an isomorphism because we can see its inverse is $f_{ij}$.) This gives us our definition.
+\begin{definition}[Projective space]
+	Fix a ring $R$. Then we define \textit{projective $n$-space over $R$}, denoted $\PP^n_R$ to be the scheme obtained from the above gluing data.
+\end{definition}
+\begin{remark}
+	One can see that
+	\[\OO_{\PP^n_R}(\PP^n_R)=R.\]
+	Indeed, any global section $s\in\OO_{\PP^n_R}(\PP^n_R)$ must restrict to each affine open set $X_i$; however, looking at our gluing data $X_i$ and $X_j$ tells us that we cannot use a non-constant polynomial because having any positive degree (in, say $x_{i/j}$), would induce a denominator when pushing to $X_i$. Thus, $\PP^n_R$ is not an affine scheme unless $n=0$, for we would be asserting that $\PP^n_R$ is the affine scheme $\Spec R$.
+\end{remark}
+
+\subsection{Projective Schemes from \texorpdfstring{$\mathrm{Proj}$} {Proj}}
+Another way to look at projective schemes is to approach them from graded rings.
+\begin{definition}[Graded rings]
+	An \textit{$\NN$-graded ring} $S$ is a ring $S$ equipped with a decomposition
+	\[S=\bigoplus_{d\ge0}S_d\]
+	such that $S_k\cdot S_k\subseteq S_{k+\ell}$ for any $k,\ell\ge0$.
+\end{definition}
+\begin{example}
+	Take $S\coloneqq R[x_0,\ldots,x_n]$ graded by degree; namely, $S_k$ is the set of homogeneous polynomials of degree $k$.
+\end{example}
+\begin{example}
+	If $S$ is a graded ring, and $I\subseteq S$ is a homogeneous ideal, then $S/I$ is a graded ring, where we take $(S/I)_n=S_n/I_n$.
+\end{example}
+\begin{example}
+	If $S$ is a graded ring, and $f\in S_n$, then $S_f$ is a $\ZZ$-graded ring, where we are allowing negative degrees coming from $1/f$.
+\end{example}
+We now construct $\op{Proj}S$. Intuitively, we want to have $\op{Proj}R[x_0,\ldots,x_n]=\PP^n_R$ and $\op{Proj}S[x_0,\ldots,x_n]/I=V(I)$ when $I$ is a homogeneous ideal.
+
+The main point here is to retell the affine story but adding the word homogeneous everywhere.
+\begin{defihelper}[\textrm{Proj}] \nirindex{Proj@\textrm{Proj}}
+	Given a graded ring $S$, we define
+	\[\op{Proj}S\coloneqq\left\{\mf p\subseteq S:\mf p\in\Spec R,\mf p\text{ homogeneous},\mf p\not\supseteq S_+\right\}.\]
+\end{defihelper}
+Having defined a version of our spectrum, we should give it a Zariski topology.
+\begin{defihelper}[Zariski topology] \nirindex{Zariski topology!for \textrm{Proj}}
+	Fix a graded ring $S$. Given a homogeneous ideal $\mf a\subseteq S$, define
+	\[V(\mf a)\coloneqq\{\mf p\in\op{Proj}S:\mf p\supseteq\mf a\}.\]
+\end{defihelper}
+One can again check that this makes a topology. In fact, given $f\in S$, we can define
+\[D_+(f)\coloneqq(\op{Proj}S)\setminus V((f))\]
+and then check that this makes a basis for our topology, essentially for the same reason.
+\begin{remark}
+	One can check that the map
+	\[\arraycolsep=1.4pt\begin{array}{ccc}
+		D_+(f) &\simeq& \Spec (S_f)_0 \\
+		\mf p &\mapsto& (\mf pS_f)\cap(S_f)_0
+	\end{array}\]
+	is a homeomorphism.
+\end{remark}
+As such, we give the open set $D_+(f)$ the structure sheaf $\OO_{\Spec((S_f)_0)}$. To glue these together, we choose the affine open subset
+\[\Spec((S_f)_0)_{g^{\deg f}/f^{\deg g}}\subseteq\Spec(S_f)_0\]
+and identify them with $\Spec(S_{fg})_0$.
+
 \end{document}
