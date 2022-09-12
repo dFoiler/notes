@@ -1,0 +1,133 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 12}
+
+There are still no questions.
+
+\subsection{Urysohn's Lemma: The General Case}
+We continue the proof from last class.
+\urythm*
+\begin{proof}
+	To begin, define $U_1\coloneqq X\setminus V_1$, which is open because $V_1$ is closed; notably $V_0\subseteq U_1$. The idea here is that the points of $U_1$ will take value at most $1$. Now, by \autoref{lem:usenormal}, we find $U_{1/2}$ with
+	\[V_0\subseteq U_{1/2}\subseteq\overline{U_{1/2}}\subseteq U_1.\]
+	Intuitively, we are going to let $f$ take values at most $1/2$ on $U_{1/2}$. Using \autoref{lem:usenormal} again, we can find $U_{1/2}$ with
+	\[V_0\subseteq U_{1/4}\subseteq\overline{U_{1/4}}\subseteq U_{1/2},\]
+	and now our function will take values at most $1/4$ on $U_{1/4}$. On the other side, we can use the containment $\overline{U_{1/2}}\subseteq U_1$ in \autoref{lem:usenormal} to find $U_{3/4}$ such that
+	\[\overline{U_{1/2}}\subseteq U_{3/4}\subseteq\overline{U_{3/4}}\subseteq U_1,\]
+	and here $U_{3/4}$ our function should take values less than $3/4$.
+
+	We can then continue the process for eights and then off to infinity. Let's describe what we have at the end of this inductive process. Set $\Delta\coloneqq\left\{k/2^n:0< k\le 2^n\right\}$ to be the set of ``dyadic'' rationals in $(0,1]$; notably $\Delta$ is dense in $[0,1]$.\footnote{The fact we need is that $a,b\in[0,1]$ with $a<b$ have $r\in\Delta$ between them. Well, multiply $b-a$ by a suitably large power of $2$ so that $2^n(b-a)>1$, so there is an integer $k$ in this interval between $2^na$ and $2^nb$, so $a<k/2^n<b$.} Then each $r\in\Delta$, we get an open set $U_r\subseteq X$. These have the following properties.
+	\begin{itemize}
+		\item Any $r,s\in\Delta$ with $r<s$ has $\overline{U_r}\subseteq U_s$.
+		\item By construction $U_1=X\setminus V_1$.
+		\item Also, $V_0\subseteq U_r$ for all $r\in\Delta$.
+	\end{itemize}
+	We now define
+	\[f(x)\coloneqq\begin{cases}
+		1 & x\in V_1, \\
+		\inf\{r\in\Delta:x\in U_r\} & x\notin V_1,
+	\end{cases}\]
+	where $x\notin V_1$ in the second case promises $x\in U_1$ so that the infimum in the second line makes sense. We now run the following checks on $f$.
+	\begin{itemize}
+		\item Note that $\im f(x)\subseteq\overline\Delta=[0,1]$.
+		\item By the construction of these open sets, we have $f(x)=1$ if $x\in V_1$.
+		\item Further, $f(x)<r$ for all $r\in\Delta$ if $x\in V_0$, so $f(x)=0$ for $x\in V_0$.
+		\item It remains to check that $f$ is continuous. For this, we use \autoref{prop:checkonsubbase} to check the continuity on a subbase. Specifically, we use sets of the form $[0,a)$ and $(a,1]$ for $a\in(0,1)$. Indeed, note $[0,a)\cap(b,1]=(a,b)$, so intersections of these can give all open intervals strictly contained $[0,1]$; adding in the ``open'' intervals $[0,a)$ and $(a,0]$ make all the open intervals in $[0,1]$, which are a basis for our topology.
+		
+		We now proceed with our check; fix some $a\in(0,1)$.
+		\begin{itemize}
+			\item Note that $x\in X$ has $f(x)<a$ if and only if there is some $r\in\Delta$ such that $f(x)<r<a$ (by density of $\Delta$) if and only if there is some $r\in\Delta$ such that $x\in U_r$ and $r<a$ (by definition of the infimum). As such,
+			\[f^{-1}([0,a))=\bigcup_{r<a}U_r.\]
+			\item Note that $x\in X$ has $f(x)>a$ if and only if there is an $r,s\in\Delta$ with $f(x)>r>s>a$ (by density). It follows $x\notin U_r$, which contains $\overline{U_s}$, so $x\notin\overline{U_s}$ for some $s\in\Delta$ with $s>a$.
+			
+			On the other hand, $x\notin\overline{U_s}$ for some $s\in\Delta$ with $s>a$ implies that $x\notin U_r$ for any $r\in\Delta$ with $r>s>a$, so it follows $f(x)\ge s>a$.
+
+			Thus, $f(x)>a$ if and only if $x\notin\overline{U_s}$ for $s\in\Delta$ with $s>a$, implying
+			\[f^{-1}((a,1])=\bigcup_{s>a}(X\setminus\overline{U_s}).\]
+		\end{itemize}
+	\end{itemize}
+	The above checks complete the proof.
+\end{proof}
+\begin{remark}
+	We could not have $f$ output to $\QQ\cap[0,1]$ because we used the completeness of $\RR$ in the construction of $f$.
+\end{remark}
+\begin{remark}
+	It is somewhat noticeable that we have not discussed sequences at all in this class yet, even though they were featured prominently in metric space topology. The reason we have been avoiding them is that we prefer to use open sets and not points to study general topological spaces.
+\end{remark}
+
+\subsection{Bounded Functions}
+We are going to want a little functional analysis before we continue.
+\begin{definition}[Bounded]
+	Fix a metric space $(X,d)$ and a nonempty set $A$. A subset $A\subseteq X$ is \textit{bounded} if and only if there is an open ball $B(x,r)$ containing $A$. More generally, a function $f\colon A\to X$ is \textit{bounded} if and only if $\im f\subseteq X$ is bounded, and we let $B(A,X)$ denote the set of all bounded functions $f\colon A\to X$.
+\end{definition}
+We will be particularly interested in the case where $X$ is a normed vector space.
+
+The point of defining bounded functions is that we can provide them with a metric.
+\begin{definition}[Uniform metric]
+	Fix a nonempty set $X$ and a metric space $(Y,d)$. Then the \textit{uniform metric} is the function $\widetilde d\colon B(X,Y)^2\to\RR_{\ge0}$ defined by
+	\[\widetilde d(f,g)\coloneqq\sup\{d(f(x),g(x)):x\in X\}.\]
+\end{definition}
+\begin{lemma}
+	Fix a set $X$ and a metric space $(Y,d)$. Then the uniform metric $\widetilde d$ on $B(X,Y)$ is a metric.
+\end{lemma}
+\begin{proof}
+	Here are our checks; fix $f,g,h\in B(X,Y)$.
+	\begin{itemize}
+		\item Well-defined: because $f$ and $g$ bounded, we can find open balls $B(a,r)$ and $B(b,s)$ containing $\im f$ and $\im g$ respectively. It follows that, for any $x\in X$, we have
+		\[d(f(x),g(x))\le d(f(x),a)+d(a,b)+d(b,g(x))\le r+d(a,b)+s,\]
+		so the set $\{d(f(x),g(x)):x\in X\}$ has an upper bound and hence a supremum.
+		\item Nonnegative: fixing a particular $x\in X$, note $\widetilde d(f,g)\ge d(f(x),g(x))\ge0$.
+		\item Zero: note $\widetilde d(f,f)$ is $\sup\{d(f(x),f(x)):x\in X\}=\sup\{0:x\in X\}=0$.
+		\item Zero: note $\widetilde d(f,g)=0$ implies that $\sup\{d(f(x),g(x)):x\in X\}=0$, so $d(f(x),g(x))\le0$ for all $x\in X$, so $d(f(x),g(x))=0$ for all $x\in X$, so $f(x)=g(x)$ for all $x\in X$.
+		\item Symmetric: note
+		\[\widetilde d(f,g)=\sup\{d(f(x),g(x)):x\in X\}=\sup\{d(g(x),f(x)):x\in X\}=\widetilde d(g,f).\]
+		\item Triangle inequality: note that
+		\[d(f(x),h(x))\le d(f(x),g(x))+d(g(x),h(x))=\widetilde d(f,g)+\widetilde d(g,h)\]
+		for all $x\in X$, so it follows $\widetilde d(f,h)\le\widetilde d(f,g)+\widetilde d(g,h)$ by taking the supremum.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here is why we like this metric.
+\begin{proposition} \label{prop:completeboundedfuncs}
+	Fix a set $X$ and a complete metric space $(Y,d)$. Then $B(X,Y)$ given the uniform metric is complete.
+\end{proposition}
+\begin{proof}
+	Fix a Cauchy sequence $\{f_n\}_{n\in\NN}$ in $B(X,Y)$. Namely, for all $\varepsilon>0$, there exists some $N$ so that
+	\[n,m>N\implies d(f_n(x),f_m(x))<\varepsilon\]
+	for all $x\in X$. In particular, fixing some particular $x\in X$, we see that $\{f_n(x)\}_{n\in\NN}$ is a Cauchy sequence in $Y$, so the completeness of $Y$ promises some limit $f(x)$.
+
+	It remains to check that the data of $f$ assembles to a function $f\in B(X,Y)$. Well, any (fixed) $\varepsilon>0$ promises an $N$ so that $n,m>N$ forces $d(f_n(x),f_m(x))<\varepsilon$ for all $x\in X$. Now, fixing some $x\in X$, any $\delta>0$ has some $N'$ large enough so that $m>N'$ has $d(f_m(x),f(x))<\delta$, meaning that $n,m>\max\{N,N'\}$ gives
+	\[d(f_n(x),f(x))\le d(f_n(x),f_m(x))+d(f_m(x),f(x))<\varepsilon+\delta\]
+	for all $\delta>0$. Thus, fixing some $n>N$, we see $d(f_n(x),f(x))\le\varepsilon$ for all $x\in X$.
+
+	To finish, we note $f_n\in B(X,Y)$ is bounded, so there is an open ball $B(a,r)$ containing $\im f_n$. Thus, for all $x\in X$,
+	\[d(a,f(x))\le d(a,f_n(x))+d(f_n(x),f(x))<r+\varepsilon,\]
+	so $\im f\subseteq B(a,r+\varepsilon)$.
+\end{proof}
+We close with the following result.
+\begin{proposition}
+	Fix a topological space $(X,\mc T)$ and a metric space $(Y,d)$. Let $B_c(X,Y)\subseteq B(X,Y)$ denote the metric subspace of bounded continuous functions $f\colon X\to Y$. Then $B_c(X,Y)$ is a closed subspace of $B(X,Y)$. In particular, if $(Y,d)$ is complete, then $B_c(X,Y)$ is also complete.
+\end{proposition}
+\begin{proof}
+	Note that the second claim follows from the first claim by \autoref{cor:closediscomplete}; thus, we focus on the first claim. For this, we use \autoref{lem:metricclosed}: fix a sequence $\{f_n\}_{n\in\NN}$ of bounded continuous functions such that $f_n\to f$ as $n\to\infty$ where $f\colon X\to Y$ is just some bounded function. We need to show that $f$ is continuous.
+
+	Well, fix an open set $U\subseteq Y$ so that we need to show $f^{-1}(U)\subseteq X$ is open. For this, we pick up any element $x\in f^{-1}(U)$, and we find an open neighborhood $U_x\subseteq f^{-1}(U)$ containing $x$; this will finish because it shows
+	\[f^{-1}(U)\subseteq\bigcup_{x\in U}U_x\subseteq f^{-1}(U),\]
+	so $f^{-1}(U)$ is the arbitrary union of open sets.
+
+	We now proceed with the proof directly.
+	\begin{enumerate}
+		\item Because $f(x)\in U$, and $U$ is open, there is some $\varepsilon>0$ such that $B(f(x),\varepsilon)\subseteq U$.
+		\item Because $\{f_n\}_{n\in\NN}$ converges to $f$, there is a sufficiently large $N$ so that $n>N$ has $d(f_n(y),f(y))<\varepsilon/2$ for all $y\in X$. Fix some $n>N$.
+		\item Now, for all $y\in f_n^{-1}(B(f(x),\varepsilon/2))$, we see
+		\[d(f(y),f(x))\le d(f(y),f_n(y))+d(f_n(y),f(x))<\varepsilon/2+\varepsilon/2=\varepsilon,\]
+		so $f(y)\in U$. As such, we see that $f_n^{-1}(B(f(x),\varepsilon/2))$ is open (because $f_n$ is continuous), it contains $x$, and it is contained in $f^{-1}(U)$.
+	\end{enumerate}
+	The above open neighborhood completes the proof of the first sentence.
+\end{proof}
+
+\end{document}
