@@ -35,8 +35,14 @@ We start by describing a scheme by focusing on its topological space.
 \begin{definition}[Irreducible]
 	A scheme $(X,\mc O_X)$ is \textit{irreducible} if and only if $X$ is irreducible as a topological space. In other words, we require $X$ to be nonempty, and if $X=V_1\cup V_2$ for closed subsets $V_1,V_2\subseteq X$, then one of the $V_1=X$ or $V_2=X$.
 \end{definition}
+\begin{example} \label{ex:closurepoint}
+	Let $X$ be a topological space. Then, for any $x\in X$, the subset $\overline{\{x\}}\subseteq X$ is irreducible: if closed sets $V_1,V_2\subseteq X$ have $\overline{\{x\}}\in V_1\cup V_2$, then $x\in V_1$ or $x\in V_2$, so $\overline{\{x\}}\subseteq V_1$ or $\overline{\{x\}}\subseteq V_2$.
+\end{example}
 \begin{example}
-	The scheme $\Spec k[x,y]/(xy)$ is connected but not irreducible. The picture is
+	Projective space $\PP^n_R$ is irreducible.\todo{What.}
+\end{example}
+\begin{nex} \label{nex:speckxymodxy}
+	The scheme $\Spec k[x,y]/(xy)$ is connected but not irreducible. The picture is as follows.
 	\begin{center}
 		\begin{asy}
 			unitsize(0.5cm);
@@ -44,8 +50,8 @@ We start by describing a scheme by focusing on its topological space.
 			draw((0,2)--(0,-2));
 		\end{asy}
 	\end{center}
-	Notably, $\Spec k[x,y]/(xy)$ is connected, but it is the union of $V(x)$ and $V(y)$.
-\end{example}
+	We will explain this example in more detail shortly in \autoref{rem:explainspeckxymodxy}.
+\end{nex}
 We like compact topological spaces, so here is the scheme analogue.
 \begin{definition}[Quasicompact]
 	A scheme $(X,\OO_X)$ is \textit{quasicompact} if and only if any open cover of the topological space $X$ has a finite subcover.
@@ -54,7 +60,7 @@ We like compact topological spaces, so here is the scheme analogue.
 	The scheme $\Spec A$ is quasicompact.
 \end{example}
 \begin{nex}
-	The infinite disjoint union $\bigsqcup_{i=1}^\infty\Spec A_i$ is not quasicompact.
+	The infinite disjoint union $\bigsqcup_{i=1}^\infty\Spec A_i$ is not quasicompact.\todo{Explain with gluing.}
 \end{nex}
 \begin{nex}
 	The scheme $\op{Proj}k[x_1,x_2,\ldots]$ is not quasicompact.
@@ -69,7 +75,7 @@ Having discussed the entire topological space, we might be interested in studyin
 	Fix a topological space $X$. An \textit{irreducible component} is a maximal irreducible subset of $X$.
 \end{definition}
 Here are some quick facts.
-\begin{lemma}
+\begin{lemma} \label{lem:componentsexist}
 	Fix a topological space $X$.
 	\begin{listalph}
 		\item If a subset $V\subseteq X$ is irreducible, then $V$ is connected.
@@ -131,10 +137,10 @@ Here is another nice result.
 	\end{itemize}
 \end{proof}
 Even though irreducible components are a little weird in typical point-set topology, they are of interest in scheme theory.
-\begin{lemma}
-	Fix a ring $A$ and an ideal $I\subseteq A$.
+\begin{lemma} \label{lem:affineirredcomps}
+	Fix a ring $A$.
 	\begin{listalph}
-		\item The subset $V(I)\subseteq\Spec A$ is irreducible if and only if $\rad I$ is prime.
+		\item Given an ideal $I\subseteq A$, the subset $V(I)\subseteq\Spec A$ is irreducible if and only if $\rad I$ is prime.
 		\item The irreducible components of $X$ are
 		\[\{V(\mf p):\mf p\in\Spec A\text{ is a minimal prime}\}.\]
 	\end{listalph}
@@ -142,48 +148,85 @@ Even though irreducible components are a little weird in typical point-set topol
 \begin{proof}
 	As usual, we go in sequence.
 	\begin{listalph}
-		\item The point is that $I\subseteq JK$ for ideals $J$ and $K$ should imply $I\subseteq J$ or $I\subseteq K$.
-		\item Take the maximal ideals among those whose radical is prime and apply $V$.
+		\item We have two claims to show.
+		\begin{itemize}
+			\item Suppose that $\mf p\coloneqq\rad I$ is prime. Then \autoref{prop:easynullstellensatz} tells us
+			\[V(I)=V(\rad I)=V(\mf p)=V(I(\{\mf p\}))=\overline{\{\mf p\}},\]
+			which is irreducible by \autoref{ex:closurepoint}.
+			\item Suppose that $V(I)$ is irreducible; by replacing $I$ with $\rad I$, we may assume that $I$ is radical. We want to show that $I$ is prime. Well, if $a,b\in A$ have $ab\in I$, we want to show $a\notin I$ and $b\notin I$. Well, $ab\in I$ means any $\mf p$ containing $V(I)$ contains $(ab)$, so
+			\[V(I)\subseteq V(ab)=V((a))\cup V((b))\]
+			using \autoref{lem:zariskitopcheck}. Because $V(I)$ is irreducible, we conclude that $V(I)\subseteq V((a))$ without loss of generality. Thus, $\rad((a))\subseteq\rad I=I$ by \autoref{prop:easynullstellensatz}, so $a\in I$.
+		\end{itemize}
+		\item The inclusion reversing-bijection of \autoref{prop:easynullstellensatz} takes prime ideals $\mf p\subseteq A$ to $V(\mf p)$, which we have seen is an irreducible closed subset; and it takes closed subsets $X\subseteq\Spec A$, which we know must take the form $V(\mf p)$ for a prime $\mf p$, to a prime ideal $I(X)=I(V(\mf p))=\rad\mf p=\mf p$.
+
+		Thus, the inclusion-reversing bijection restricts to an inclusion-reversing bijection between prime ideals of $A$ and irreducible closed subsets of $\Spec A$. Thus, the maximal irreducible closed subsets of $\Spec A$ correspond (under this bijection) to minimal prime ideals of $A$.
+		
+		The claim follows, upon remarking that irreducible components are equal to their closure and hence closed (by \autoref{lem:componentsexist} (b)), so maximal irreducible closed subsets are just maximal irreducible subsets.
 		\qedhere
 	\end{listalph}
 \end{proof}
-\begin{example}
-	Projective space $\PP^n_R$ is irreducible.
-\end{example}
+\begin{remark} \label{rem:explainspeckxymodxy}
+	We are now ready to explain \autoref{nex:speckxymodxy}.
+	\begin{itemize}
+		\item Not irreducible: note that any prime $\mf p\in\Spec k[x,y]/(xy)$ contains $xy=0\in\mf p$, so $(x)\subseteq\mf p$ or $(y)\subseteq\mf p$. On the other hand, $(x)$ and $(y)$ are primes (with quotients isomorphic to $k[t]$), so $(x)$ and $(y)$ are our minimal primes. Thus, \autoref{lem:affineirredcomps} tells us that $V((x))$ and $V((y))$ are our irreducible components; in particular, the entire space is not irreducible.
+		\item Connected: note $(x,y)\in V((x))$ and $(x,y)\in V((y))$, so the connected component of $(x,y)$ contains $V((x))\cup V((y))$, which is the entire space because we have taken the union of our irreducible components (and all points live in some irreducible component by \autoref{lem:componentsexist}). So the full space is connected.
+	\end{itemize}
+\end{remark}
 
-\subsection{Generalizing Points}
+\subsection{Closed and Generic Points}
 We like our topological spaces to be Hausdorff, but we have seen that this need not happen in our schemes. So let's keep track of the good points we try to be Hausdorff
 \begin{definition}[Closed point]
 	Fix a topological space $X$. Then a point $x\in X$ is a \textit{closed point} if and only if $\overline{\{x\}}=\{x\}$.
 \end{definition}
+In the variety setting, we are more interested in counting closed points, which correspond to the ``actual'' points on our variety. As such, we might hope that we have ``lots'' of closed points in our schemes, and under suitable smallness conditions, we do.
+\begin{lemma}
+	Let $(X,\OO_X)$ be a quasicompact scheme. Then any nonempty closed subset $V\subseteq X$ contains a closed point.
+\end{lemma}
+\begin{proof}
+	Note that this is essentially ring theory for affine schemes: for an affine scheme $(\Spec A,\OO_{\Spec A})$, we see that a closed subset $V(I)\subseteq\Spec A$ being nonempty forces $I$ to be proper, so $I$ is contained in some maximal ideal $\mf m$. So $\mf m\in V(I)$ while \autoref{prop:easynullstellensatz} says
+	\[\overline{\{\mf m\}}=V(I(\{\mf m\}))=V(\mf m)=\{\mf m\}\]
+	because $\mf m$ is maximal.
+
+	We now attack the general case. Because $X$ has an affine open cover, the quasicompactness condition gives $V$ (which is closed in a quasicompact space and hence quasicompact) a finite affine open cover $\{U_i\}_{i=1}^n$ so that we have rings $A_i$ such that
+	\[(U_i,\OO_X|_{U_i})\cong(\Spec A_i,\OO_{\Spec A_i})\]
+	for each $i$. We may assume that none of the $\{V\cap U_i\}_{i=1}^n$ is contained in the union of the other, for otherwise we could remove the offending $U_i$.\footnote{Here we implicitly use the fact that there are only finitely many $U_i$.} Now,
+	\[U_1\cap\Bigg(V\cap\bigcap_{i=1}^n(X\setminus U_i)\Bigg)\]
+	is a closed subset of $U_1$, so because $(U_1,\OO_X|_{U_1})$ is an affine scheme, it will have a closed point $p\in U_1$.
+
+	Notably, $p\in V$ by construction, so it remains to show that $\{p\}\subseteq X$ is closed. Well, $\{p\}\subseteq U_1$ is closed, so $U_1\setminus\{p\}\subseteq U_1$ is open, so there is some open set $U'\subseteq X$ such that $U'\cap U_1=U_1\setminus\{p\}$. It follows that
+	\[X\setminus\{p\}=(U_1\setminus\{p\})\cup\bigcup_{i=2}^nU_i\]
+	because $p\notin U_i$ for any $i\ne1$; in particular, $X\setminus\{p\}\subseteq X$ is open, finishing.
+\end{proof}
 \begin{remark}
-	In the variety setting, we are more interested in counting closed points, which correspond to the ``actual'' points on our variety.
-\end{remark}
-\begin{remark}
-	In a quasicompact scheme, all closed subsets contain a closed point, so we have ``lots'' of closed points to work with. There are examples of schemes with no closed points.
+	Sadly, there are examples of schemes with no closed points.
 \end{remark}
 Having kept track of our closed points, we don't want to shame our ``unclosed points,'' so we give them a name as well.
 \begin{definition}[Generic point]
-	Fix a topological space $X$. Then a point $x\in X$ is a \textit{generic point} for an irreducible subset $V\subseteq X$ if and only if $V=\overline{\{x\}}$.
+	Fix a topological space $X$. Then a point $x\in X$ is a \textit{generic point} of an irreducible subset $V\subseteq X$ if and only if $V=\overline{\{x\}}$.
 \end{definition}
 \begin{example}
-	Given a ring $A$, the point $\mf p\in\Spec A$ is the (unique!) generic point of $V(\mf p)$. For example, $(0)$ is the generic point for $\Spec R$ whenever $R$ is an integral domain.
+	Given a ring $A$, the point $\mf p\in\Spec A$ is the (unique!) generic point of $V(\mf p)$. Indeed, certainly $V(\mf p)=V(I(\{\mf p\}))=\overline{\{\mf p\}}$. On the other hand, if some $\mf q$ has
+	\[V(\mf p)=\overline{\{\mf q\}}=V(\mf q),\]
+	then $\mf p\supseteq\mf q$ and $\mf q\supseteq\mf p$, so $\mf p=\mf q$.
+\end{example}
+\begin{example}
+	Fix an integral domain $A$. Then $(0)$ is the generic point for $\Spec A$. Notably, $\overline{\{(0)\}}=V((0))=\Spec A$.
 \end{example}
 The relationship between generic points will be important to keep track of.
 \begin{defihelper}[Specialization, generalization] \nirindex{Specialization} \nirindex{Generalization}
 	Fix a topological space $X$ and two points $x,y\in X$. We say that $x$ is a \textit{specialization} of $y$ (or equivalently, $y$ is a \textit{generalization} of $x$) if and only if $x\in\overline{\{y\}}$.
 \end{defihelper}
 \begin{example}
-	Given a ring $A$, we see that $\mf q\in V(\mf p)=\overline{\{\mf p\}}$ if and only if $\mf q\supseteq\mf p$.
+	Given a ring $A$, we see that $\mf q\in\overline{\{\mf p\}}=V(\mf p)$ if and only if $\mf q\supseteq\mf p$.
 \end{example}
 This provides a sort of ordering on our space. Closed points are the most ``specific,'' so let's keep track of the most generic.
 \begin{definition}[Generic point]
-	Fix a topological space $X$. A point $\xi\in X$ is a \textit{generic point} if and only if the only point specializing to $\xi$ is $\xi$.
+	Fix a topological space $X$. A point $\xi\in X$ is a \textit{generic point} if and only if the only point specializing to $\overline{\{\xi\}}$ is $\xi$.
 \end{definition}
 \begin{remark}
-	Now let $(X,\OO_X)$ be a scheme. If $Z\subseteq X$ is an irreducible closed subset, then there is a unique generic point $\xi\in X$ such that $\overline{\{\xi\}}=Z$.
+	Now let $(X,\OO_X)$ be a scheme. If $Z\subseteq X$ is an irreducible closed subset, then there is a unique generic point $\xi\in X$ such that $\overline{\{\xi\}}=Z$.\todo{Show this.}
 \end{remark}
-By looking at our partially ordered set, we see As such, there is a bijection between generic points of $X$ and irreducible components of $X$.
+As such, we have upgraded \autoref{lem:affineirredcomps} to a bijection between generic points of $X$ and irreducible components of $X$ in a general scheme.
 
 \subsection{Noetherian Conditions}
 Noetherian rings are good, so we will want to push this to our schemes as well.
