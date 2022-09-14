@@ -59,8 +59,8 @@ We like compact topological spaces, so here is the scheme analogue.
 \begin{example}
 	The scheme $\Spec A$ is quasicompact.
 \end{example}
-\begin{nex}
-	The infinite disjoint union $\bigsqcup_{i=1}^\infty\Spec A_i$ is not quasicompact.\todo{Explain with gluing.}
+\begin{nex} \label{nex:notquasicompactscheme}
+	The infinite disjoint union $\bigsqcup_{i=1}^\infty\Spec\ZZ$ is not quasicompact.\todo{Explain with gluing.}
 \end{nex}
 \begin{nex}
 	The scheme $\op{Proj}k[x_1,x_2,\ldots]$ is not quasicompact.
@@ -179,7 +179,7 @@ We like our topological spaces to be Hausdorff, but we have seen that this need 
 	Fix a topological space $X$. Then a point $x\in X$ is a \textit{closed point} if and only if $\overline{\{x\}}=\{x\}$.
 \end{definition}
 In the variety setting, we are more interested in counting closed points, which correspond to the ``actual'' points on our variety. As such, we might hope that we have ``lots'' of closed points in our schemes, and under suitable smallness conditions, we do.
-\begin{lemma}
+\begin{lemma} \label{lem:enoughclosedpoints}
 	Let $(X,\OO_X)$ be a quasicompact scheme. Then any nonempty closed subset $V\subseteq X$ contains a closed point.
 \end{lemma}
 \begin{proof}
@@ -259,31 +259,90 @@ We saw in \autoref{ex:uniquegenericforaffine} that in fact every irreducible clo
 \subsection{Noetherian Conditions}
 Noetherian rings are good, so we will want to push this to our schemes as well.
 \begin{definition}[Locally Noetherian]
-	A scheme $(X,\OO_X)$ is \textit{locally Noetherian} if and only if $X$ has an open cover $\{U_\alpha\}_{\alpha\in\lambda}$ where each $(U_\alpha,\OO_X|_{U_\alpha})$ is isomorphic to $\Spec A_\alpha$ where $A_\alpha$ is a Noetherian ring.
+	A scheme $(X,\OO_X)$ is \textit{locally Noetherian} if and only if $X$ has an open cover $\mc U$ where each $U\in\mc U$ has $(U,\OO_X|_U)$ isomorphic to the affine scheme of a Noetherian ring.
 \end{definition}
 Noetherian is about making infinite things finite, so we want to add a quasicompact condition this.
 \begin{definition}[Noetherian]
 	A scheme $(X,\OO_X)$ is \textit{Noetherian} if and only if $X$ is quasicompact and locally Noetherian.
 \end{definition}
+\begin{example}
+	The scheme from \autoref{nex:notquasicompactscheme} is locally Noetherian (it's the infinite disjoint union of $\Spec\ZZ$s, and $\ZZ$ is Noetherian), but it is not quasicompact and hence not Noetherian.
+\end{example}
+There is also a separate notion of a Noetherian topological space.
+\begin{definition}[Noetherian]
+	A topological space $X$ is \textit{Noetherian} if and only if the subsets of $X$ satisfy the descending chain condition.
+\end{definition}
+\begin{example} \label{ex:noetherianringisnoetherian}
+	If $A$ is a Noetherian ring, then $\Spec A$ is a Noetherian topological space: given a totally ordered set $\lambda$, any descending chain of closed subsets $\{V_\alpha\}_{\alpha\in\lambda}$ gives an ascending chain of $A$-ideals $\{I(V_\alpha)\}_{\alpha\in\lambda}$. Because $A$ is Noetherian, $\{I(V_\alpha)\}_{\alpha\in\lambda}$ must stabilize past some $\beta$, so for $\alpha\ge\beta$, we have $I(V_\alpha)=I(V_\beta)$, so
+	\[V_\alpha=\overline{V_\alpha}=V(I(V_\alpha))=V(I(V_\beta))=\overline{V_\beta}=V_\beta,\]
+	so the descending chain of closed subsets stabilizes past $\beta$.
+\end{example}
+\begin{nex}
+	Given a field, $k$, the ring $A\coloneqq k[x_1,x_2,x_3,\ldots]/\left(x_1,x_2^2,x_3^3,\ldots\right)$ makes $\Spec A$ a Noetherian topological space even though $A$ is not a Noetherian ring.
+	\begin{itemize}
+		\item Observe that any prime ideal $\mf p\in\Spec A$ must contain $x_k^k=0$ for each $k\ge1$, so $x_k\in\mf p$. Thus, $\mf m\coloneqq(x_1,x_2,x_3,\ldots)$ is contained in $\mf p$, but $\mf m$ is maximal in $A$ because $A/\mf m\cong k$. So we conclude that $\mf p=\mf m$, meaning that $\Spec A=\{\mf m\}$ has a single point and so is Noetherian as a topological space.
+		\item The ascending chain
+		\[(x_1)\subsetneq(x_1,x_2)\subsetneq(x_1,x_2,x_3)\subsetneq\cdots\]
+		shows that $A$ is not a Noetherian ring.
+	\end{itemize}
+\end{nex}
+Having seen that Noetherian rings give Noetherian spaces, we might hope that a similar result holds for schemes. As in \autoref{lem:enoughclosedpoints}, we must add a quasicompactness hypothesis.
+\begin{lemma} \label{lem:noetherianspace}
+	If $(X,\OO_X)$ is a Noetherian scheme, then $X$ is a Noetherian topological space.
+\end{lemma}
+\begin{proof}
+	As usual, give $X$ an affine open cover $\mc U$ where the affine schemes are from Noetherian rings; we may make $\mc U$ finite because $X$ is quasicompact. Now, let $\lambda$ be a totally ordered set, and pick up some descending chain $\{V_\alpha\}_{\alpha\in\lambda}$ of closed subsets of $X$.
+
+	Now, for each $U\in\mc U$, so we see that $\{U\cap V_\alpha\}_{\alpha\in\lambda}$ is a descending chain of closed subsets of the affine open set $U$, so because $(U,\OO_X|_U)$ is the affine scheme of a Noetherian ring, \autoref{ex:noetherianringisnoetherian} tells us that $\{U\cap V_\alpha\}$ will stabilize after some $\beta_U$. Thus, we set
+	\[\beta\coloneqq\max\{\beta_U:U\in\mc U\},\]
+	which exists because $\mc U$ is finite. Then any $\alpha\ge\beta$ and $U\in\mc U$ will have
+	\[V_\alpha\cap U=V_{\beta_U}\cap U=V_\beta\cap U,\]
+	so $V_\alpha=V_\beta$ after taking the union over $\mc U$. So indeed, our descending chain stabilized after $\beta$.
+\end{proof}
 \begin{remark}
-	If $(X,\OO_X)$ is Noetherian as a scheme, then $X$ is Noetherian as a topological space. Namely, being Noetherian as a topological space means that the closed subsets have the descending chain condition.
+	More generally, the above proof shows that a finite union of Noetherian topological spaces is a Noetherian topological space.
 \end{remark}
 \begin{remark}
 	There are some nice philosophical remarks in \cite[Section~3.6.21]{rising-sea} about when we might care about non-Noetherian things.
 \end{remark}
-As usual, here are some quick facts.
+As a benefit to keeping things finite, we have the following.
+\begin{lemma} \label{lem:opensarecompact}
+	Fix a Noetherian topological space $X$. Then any open subset $U\subseteq X$ is quasicompact.
+\end{lemma}
+\begin{proof}
+	We proceed by contraposition. Suppose that we can find an open cover $\mc V$ of $U$ with no finite subcover. In other words, any finite subset of $\mc V$ cannot cover $U$, so we can build some strictly ascending chain of open subsets
+	\[V_1\subsetneq V_1\cup V_2\subsetneq V_1\cup V_2\cup V_3\subsetneq\cdots\]
+	by choosing each $V_n\in\mc V$ inductively to not be contained in $\bigcup_{k<n}V_k$. (If no such $V_n$ existed, then we would have $U=\bigcup_{V\in\mc V}V\subseteq\bigcup_{k<n}V_k$, granting a finite open subcover.) For brevity, define
+	\[V'_n\coloneqq\bigcup_{k\le n}V_k\]
+	so that $\{V'_n\}_{n\ge1}$ is a strictly ascending chain of open subsets. Taking complements, we see that $\{X\setminus V'_n\}_{n\ge1}$ is a strictly descending chain of closed subsets, which means that our space $X$ is not Noetherian.
+\end{proof}
+Here are some applications to affine open subschemes.
 \begin{lemma}
 	Fix a scheme $(X,\OO_X)$.
 	\begin{listalph}
-		\item If $(X,\OO_X)$ is locally Noetherian (respectively, Noetherian), then any open subset $U\subseteq X$ makes a locally Noetherian (respectively, Noetherian) scheme $(U,\OO_X|_U)$.
-		\item If $(X,\OO_X)$ is locally Noetherian, then $\OO_{X,x}$ is a Noetherian ring for any $x\in X$.
+		\item If $(X,\OO_X)$ is locally Noetherian, then any open subset $U\subseteq X$ makes a locally Noetherian subscheme $(U,\OO_X|_U)$.
+		\item If $(X,\OO_X)$ is Noetherian, then any open subset $U\subseteq X$ makes a Noetherian subscheme $(U,\OO_X|_U)$.
+		\item All stalks $\mc O_{X,p}$ of a locally Noetherian scheme $(X,\OO_X)$ are Noetherian rings.
 	\end{listalph}
 \end{lemma}
 \begin{proof}
 	We go in sequence.
 	\begin{listalph}
-		\item Reduce to the affine case, where we are roughly saying that localizations of Noetherian rings are Noetherian. The Noetherian part comes from tracking through quasicompactness.
-		\item Again, check at an affine cover, and we reduce to saying that the localization of a Noetherian ring is Noetherian.
+		\item As usual, begin by giving $X$ an affine open cover $\mc U$, and use the locally Noetherian condition to promise that each $V\in\mc U$ has $\varphi^V\colon(V,\OO_X|_V)\cong(\Spec A_V,\OO_{\Spec A_V})$ for a Noetherian ring $A_U$.
+
+		Now, pick up some $V\in\mc U$ and focus on $U\cap V$; it suffices to cover $U\cap V$ with affine open subschemes of Noetherian rings. Notably, $\varphi^V$ makes $U\cap V$ an open subset of $(\Spec A_V,\OO_{\Spec A_V})$. In particular, using the distinguished open base of $\Spec A_V$, we can write
+		\[\varphi^V(U\cap V)=\bigcup_{f\in F_V}D(f),\]
+		where $F_V\subseteq A_V$ is some subset. Now let $U_f\subseteq U\cap V$ be the pre-image of $D(f)$ under the homeomorphism $\varphi^V$, and we can use our isomorphism to give the scheme isomorphisms
+		\[(U\cap V,\OO_X|_U|_{U\cap V})\cong(D(f),\OO_{\Spec A_U}|_{D(f)})\cong(\Spec A_{U,f},\OO_{\Spec_{A_{U,f}}}),\]
+		where we have used \autoref{lem:restrictmorphism} for the first isomorphism and \autoref{lem:openbasescheme} for the second isomorphism. Now, $A_{U,f}$ is the localization of the Noetherian ring and hence Noetherian. This is what we wanted.
+
+		\item This follows directly from (a) and \autoref{lem:opensarecompact}: by (a), we see that $(U,\OO_X|_U)$ is locally Noetherian, and because $X$ is a Noetherian topological space by \autoref{lem:noetherianspace}, \autoref{lem:opensarecompact} tells us that $U$ is quasicompact as a topological space. It follows $(U,\OO_X|_U)$ is a Noetherian scheme.
+
+		\item For our point $p\in X$, the locally Noetherian condition promises an open set $U\subseteq X$ containing $p$ and a Noetherian ring $A$ such that
+		\[(U,\OO_X|_U)\cong(\Spec A,\OO_{\Spec A}).\]
+		Now, \autoref{lem:invimagestalk} tells us that
+		\[\OO_{X,p}\simeq(\OO_X|_U)_p=\OO_{\Spec A,p},\]
+		which is $A_\mf p$ by \autoref{lem:affinestalk}. This ring $A_\mf p$ is Noetherian because $A$ is Noetherian.
 		\qedhere
 	\end{listalph}
 \end{proof}
