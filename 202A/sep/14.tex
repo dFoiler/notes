@@ -1,0 +1,85 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 14}
+
+The march continues.
+
+\subsection{The Tietze Extension Theorem}
+Here is the main result for today.
+\begin{theorem}[Tietze extension] \label{thm:tie}
+	Fix a normal topological space $(X,\mc T)$, and give some closed subset $A\subseteq X$ the relative topology from $X$. Given a continuous function $f\colon A\to\RR$, there exists a continuous function $\widetilde f\colon X\to\RR$ such that $\widetilde f|_A=f$. In fact, if $\im f\subseteq[a,b]$, then we may enforce $\im\widetilde f\subseteq[a,b]$ as well.
+\end{theorem}
+This property is quite special to $\RR$ shared by a few other spaces.
+\begin{example}
+	Take $X\coloneqq\overline{B(0,1)}\subseteq\RR^2$ given the relative topology, and let $A=\del X$ be the boundary, which is the unit circle. Then the identity function $\id_A\colon A\to A$ does not extend continuously to a function $\widetilde{\id_A}\colon X\to A$. To see this rigorously, take a course in algebraic topology.
+\end{example}
+\begin{example}
+	Of course, any set $Y$ given the indiscrete topology will be such that a continuous function $f\colon A\to Y$ can be extended to continuously to a function $\widetilde f\colon X\to Y$ because all functions to $Y$ are continuous for free.
+\end{example}
+\begin{remark}
+	The condition of $\im f\subseteq[a,b]$ might as well be replaced by $\im f\subseteq[0,1]$ by using the homeomorphism $\RR\to\RR$ by $x\mapsto(x-a)/(b-b)$ which will send $[a,b]$ to $[0,1]$.
+\end{remark}
+Here is a lemma which will help the proof of \autoref{thm:tie}.
+\begin{lemma} \label{lem:techtie}
+	Fix a normal topological space $(X,\mc T)$, and give some closed subset $A\subseteq X$ the relative topology from $X$. Given a continuous function $f\colon A\to[0,r]$ (where $r>0$), there exists a continuous function $g\colon X\to[0,r/3]$ such that
+	\[0\le f(a)-g(a)\le2r/3\]
+	for each $a\in A$.
+\end{lemma}
+\begin{proof}
+	Set $B \coloneqq\{x\in A:f(x)\le r/3\}=f^{-1}([0,r/3])$ and $C \coloneqq\{x\in A:f(x)\ge 2r/3\}=f^{-1}([(2r/3,r])$. Both $B,C\subseteq A$ and $C$ are closed because they are the pre-image of closed subsets under $f\colon A\to\RR$. In fact, by the relative topology, we can write $B=B'\cap A$ where $B'\subseteq X$ is closed. However, $B'$ and $A$ are both closed in $X$, so $B\subseteq X$ is closed. Similar holds for $C$.
+	
+	Thus, so Urysohn's lemma provides a continuous function $g\colon X\to[0,1]$ such that $g|_B=0$ and $g|_C=1$. As such, we define $g\colon X\to[0,r/3]$ by
+	\[g(x)\coloneqq(r/3)\cdot g(x),\]
+	which is still continuous because the map $x\mapsto(r/3)x$ is a homeomorphism $[0,1]\to[0,r/3]$ by \autoref{ex:closedintervalhomeo}. We can now see that $g$ satisfies the needed properties. Fix some $a\in A$.
+	\begin{itemize}
+		\item If $a\in B$, then $g(a)=0$ while $f(a)\le r/3$, so $0\le f(a)-g(a)\le r/3$.
+		\item If $a\in C$, then $g(a)=r/3$ while $f(a)\in[2r/3,r]$, so $0\le f(a)-g(a)\le 2r/3$.
+		\item Lastly, $a\notin B$ and $a\notin C$ means that $r/3<f(a)<2r/3$ while $0\le g(a)\le r/3$, so it follows $0\le f(a)-g(a)\le 2r/3$ still.
+	\end{itemize}
+	The above checks finish.
+\end{proof}
+We now show the following special case of \autoref{thm:tie}.
+\begin{prop}
+	Fix a normal topological space $(X,\mc T)$, and give some closed subset $A\subseteq X$ the relative topology from $X$. Given a continuous function $f\colon A\to[0,1]$, there exists a continuous function $\widetilde f\colon X\to[0,1]$ such that $\widetilde f|_A=f$.
+\end{prop}
+\begin{proof}
+	For brevity, define $\sigma\coloneqq2/3$. Taking $r=1$ in \autoref{lem:techtie}, we get a function $g_1\colon X\to[0,1/3]$ with
+	\[0\le f(a)-g_1(a)\le\sigma\]
+	for all $a\in A$, so define $\widetilde f_1\coloneqq g_1$. Next applying \autoref{lem:techtie} to $(f-\widetilde f_1|_A)\colon A\to[0,\sigma]$ with $r=\sigma$, we get promised a function $g_2\colon X\to[0,\sigma/3]$ with
+	\[0\le f(a)-\widetilde f_1(a)-g_2(a)\le\sigma^2\]
+	for any $a\in A$, so define $\widetilde f_2\coloneqq\widetilde f_1+g_2$.
+	
+	In general, suppose given a function $\widetilde f_n\colon X\to[0,1]$ with
+	\[0\le f(a)-\widetilde f_n(a)\le\sigma^n\]
+	for $a\in A$, we can use \autoref{lem:techtie} to $(f-\widetilde f_n|_A)\colon A\to[0,\sigma^n]$ to get a function $g_{n+1}\colon X\to[0,\sigma^n/3]$ with
+	\[0\le f(a)-\widetilde f_n(a)-g_{n+1}(a)\le\sigma^{n+1}\]
+	for $a\in A$, allowing us to then set $\widetilde f_{n+1}\coloneqq\widetilde f_n+g_{n+1}$.
+
+	Applying the above process inductively, we get a function
+	\[\widetilde f_n=\sum_{k=1}^ng_k\]
+	going to $[0,1]$ such that $\norm{g_k}_\infty\le\sigma^{k-1}/3$ and $0\le f(a)-\widetilde f_n(a)\le(2/3)^n$ for each $a\in A$ and $n\ge1$. Notably, using the uniform metric $d_u$, we see that any $n\ge m$ has
+	\[d_u(\widetilde f_n,\widetilde f_m)=\sup_{x\in X}\Bigg(\sum_{k=m+1}^ng_k(x)\Bigg)\le\sum_{k=m+1}^n\frac13\sigma^{k-1}
+	\le\frac{\sigma^m}3\sum_{k=0}^\infty\sigma^k=\frac{\sigma^m}3\cdot\frac1{1-\sigma}=\left(\frac23\right)^m,
+	\]
+	which gets arbitrarily small. Thus, $\{\widetilde f_n\}_{n\in\NN}$ is a Cauchy sequence: for any $\varepsilon>0$, we can find $N$ with $n>N$ having $(2/3)^n<\varepsilon$, meaning $n,m\ge N$ will have $d_u(\widetilde f_n,\widetilde f_m)<\varepsilon$. Now, because $[0,1]\subseteq\RR$ is a closed subset of a complete metric space and hence complete by \autoref{cor:closediscomplete}, the sequence $\{\widetilde f_n\}_{n\in\NN}$ converges to a continuous function $\widetilde f\colon X\to[0,1]$ by \autoref{prop:contiscomplete}.
+
+	It remains to check that $\widetilde f|_A=f$. Well, any $a\in A$ and $n\in\NN$ have
+	\[|f(a)-\widetilde f(a)|\le|f(a)-\widetilde f_n(a)|+|\widetilde f_n(a)-\widetilde f(a)|\le\left(\frac23\right)^n+|\widetilde f_n(a)-f(a)|.\]
+	Because $\widetilde f_n\to f$ as $n\to\infty$ under the metric $d_u$, we see that $|\widetilde f_n(a)-f(a)|\to0$ as $n\to\infty$. Additionally, $(2/3)^n\to0$ as $n\to\infty$, so the entire right-hand side goes to $0$ as $n\to\infty$, meaning that $|f(a)-\widetilde f(a)|<\varepsilon$ for all $\varepsilon>0$. Thus, $f(a)=\widetilde f(a)$ for each $a\in A$.
+\end{proof}
+
+\subsection{The Tietze Extension Theorem: Proof}
+And here is the proof of the general case of \autoref{thm:tie}.
+\begin{proof}[Proof of \autoref{thm:tie}]
+	Fix a continuous function $f\colon A\to\RR$. Note that there is a homeomorphism $\varphi\colon\RR\cong(0,1)$, so we name composite
+	\[A\stackrel f\to\RR\stackrel\varphi\cong(0,1)\subseteq[0,1]\]
+	$g$ and then extend it to a function $\widetilde g\colon X\to[0,1]$. We would like to go back to $(0,1)$ and then back to $\RR$, but it is possible for $0,1\in\im g$.
+
+	Isolating the problem, we set $B_0\coloneqq\widetilde g^{-1}(\{0\})$ and $B_1\coloneqq\widetilde g^{-1}(\{1\})$ and note that $A\cap (B_0\cup B_1)=\emp$ because $\widetilde g(A)=g(A)\subseteq(0,1)$. Now, by normality of $X$, we get promised disjoint open subsets $U_1,U_2\subseteq X$ containing $B_0$ and $B_1$. We will finish this proof next class.
+\end{proof}
+
+\end{document}
