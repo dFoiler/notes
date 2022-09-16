@@ -1,0 +1,63 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 16}
+
+We continue the proof from last class.
+
+\subsection{The Tietze Extension Theorem: Proof}
+And here is the proof of the general case of \autoref{thm:tie}.
+\tiethm*
+\begin{proof}
+	Fix a continuous function $f\colon A\to\RR$. Note that there is a homeomorphism $\varphi\colon\RR\cong(0,1)$, so we name composite
+	\[A\stackrel f\to\RR\stackrel\varphi\cong(0,1)\subseteq[0,1]\]
+	$g$ and then extend it to a function $\widetilde g\colon X\to[0,1]$ by \autoref{prop:finitetie}. We would like to go back to $(0,1)$ and then back to $\RR$, but it is possible for $0,1\in\im g$.
+
+	Isolating the problem, we set $B_0\coloneqq\widetilde g^{-1}(\{0\})$ and $B_1\coloneqq\widetilde g^{-1}(\{1\})$ and note that $A\cap (B_0\cup B_1)=\emp$ because $\widetilde g(A)=g(A)\subseteq(0,1)$. Now, by normality of $X$, we get promised disjoint open subsets $U_0',U_1'\subseteq X$ containing $B_0$ and $B_1$; similarly, we get promised an open set $U$ containing $A$ disjoint from $B_0\cup B_1$, so we set $U_0\coloneqq U\cap U_0$ and $U_1\coloneqq U\cap U_0$.
+	
+	Now, by \autoref{thm:ury}, we can find continuous functions $k_1\colon X\to[0,1]$ and $k_2\colon X\to[0,1]$ such that $k_1|_{B_0}=1/8$ and $k_1|_{X\setminus(\widetilde g^{-1}([0,1/4))\cap(X\setminus A))}=0$ and similar for $k_2$. Thus, the desired lift is $\widetilde g+k_1-k_2$, which does not have $0$ nor $1$ in its range, and we can pull this back along $\varphi$ to $\RR$ to give the lift $\widetilde f$.
+\end{proof}
+
+\subsection{Existence of Completions, Again}
+We quickly provide another proof of the existence of completions. We begin with the following example.
+\begin{example} \label{ex:embedintocomplete}
+	Given any topological space $(X,\mc T)$, the metric space $(B_c(X,\RR),d_u)$ of bounded continuous functions is complete by \autoref{prop:contiscomplete} because $\RR$ is complete.
+\end{example}
+\qedhere More generally, we will want to remember the following definition.
+\begin{definition}[Banach space]
+	A normed vector space $(V,\norm\cdot)$ is a \textit{Banach space} if and only if it is complete.
+\end{definition}
+As such, we pick up the following tool.
+\begin{lemma} \label{lem:completionfromembedding}
+	Fix an isometry $f\colon(X,d)\to(Y,d_Y)$ of metric spaces such that $(Y,d_Y)$ is complete. Then $\overline{f(X)}$ equipped with the induced metric from $Y$ is a complete metric space, and it is actually a completion of $(X,d)$ when equipped with the natural embedding $\iota\colon X\to\overline{f(X)}$ from $f$.
+\end{lemma}
+\begin{proof}
+	For brevity, define $\overline X\coloneqq\overline{f(X)}$ and set $\overline d$ to be the metric on $\overline X$ induced by $(Y,d_Y)$. In particular, $\overline X\subseteq Y$ is a closed subset, and so $(\overline X,\overline d)$ is complete by \autoref{cor:closediscomplete}. Now, note that $\iota\colon(X,d)\to(\overline X,\overline d)$ is an isometry because, for any $x,x'\in X$,
+	\[d(x,x')=d_Y(f(x),f(x'))=d_Y(\iota(x),\iota(x'))=\overline d(\iota(x),\iota(x'))\]
+	using our various restriction maps.
+
+	Lastly, we have to show that $\im\iota\subseteq\overline X$ is dense. Well, by \autoref{lem:denseformetricspaces}, it suffices to note
+	\[\overline{\im\iota}=\overline{f(X)}=\overline X,\]
+	which is what we wanted.
+\end{proof}
+We are now ready to prove \autoref{thm:completionexists}.
+\completionexists*
+\begin{proof}
+	Let our metric space be $(X,d)$. For each $x\in X$, define $f_x(y)\coloneqq d(x,y)$. To embed $f_x$ into $B_c(X,\RR)$, we would need $f_x$ to be bounded, but it need not be. To fix this, we choose a base-point $x_0\in X$, and define
+	\[h_x\coloneqq f_x-f_{x_0}.\]
+	In particular, any $y\in X$ will have $|h_x(y)|=|d(x,y)-d(x_0,y)|\le d(x,x_0)$, so $h_x$ is bounded, and it is continuous as the sum of two continuous functions. More explicitly, for any $\varepsilon>0$, take $\delta=\varepsilon$ so that $d(x_1,x_2)<\delta$ implies
+	\[|h_x(x_1)-h_x(x_2)|=|d(x,x_1)-d(x,x_2)|\le d(x_1,x_2)<\delta=\varepsilon.\]
+	We now need to show that the map $h_\bullet\colon(X,d)\to(B_c(X,\RR),d_u)$ is an isometry. Indeed,
+	\[d_u\left(h_{x_1},h_{x_2}\right)=\sup_{x\in X}\{h_{x_1}(x)-h_{x_2}(x)\}=\sup_{x\in X}\{d(x_1,x)-d(x_2,x)\}.\]
+	This is certainly upper-bounded by $d(x_1,x_2)$ by the triangle inequality, and we do achieve $d(x_1,x_2)$ at $x=x_2$ because $d(x_1,x_2)-d(x_2,x_2)=d(x_1,x_2)$. So indeed, $d_u(h_{x_1},h_{x_2})=d(x_1,x_2)$.
+
+	Thus, we have provided an isometry $h_\bullet\colon(X,d)\to(B_c(X,\RR),d_u)$ from $(X,d)$ to the complete metric space $(B_c(X,\RR),d_u)$ (see \autoref{ex:embedintocomplete}), so $\overline{h_\bullet(X)}$ is a completion for $(X,d)$ by \autoref{lem:completionfromembedding}.
+\end{proof}
+\begin{remark}
+	Despite the above construction, it is actually fairly non-obvious what functions really are in $\overline{h_\bullet(X)}$.
+\end{remark}
+
+\end{document}
