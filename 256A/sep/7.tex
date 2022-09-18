@@ -5,38 +5,239 @@
 \begin{document}
 
 \section{September 7}
-Let's try defining schemes again.
+Today we define schemes.
 
-\subsection{Defining Schemes}
-We begin by defining a locally ringed space.
+\subsection{Locally Ringed Spaces}
+Schemes will be a special kind of locally ringed space, so we take a moment to define these.
 \begin{definition}[Locally ringed space]
-	A \textit{locally ringed space} is a sheaf of rings $\mc O_X$ on a topological space $X$ such that all stalks are local rings.
+	A \textit{locally ringed space} is an ordered pair $(X,\OO_X)$ of a topological space $X$ and sheaf of rings $\mc O_X$ such that all stalks are local rings.
 \end{definition}
 \begin{example}
 	Affine schemes are locally ringed spaces by \autoref{lem:affinestalk}.
 \end{example}
-Here is our definition.
-\begin{definition}[Scheme]
-	A \textit{scheme} is a ringed space $(X,\mc O_X)$ such that, for each $x\in X$, there is an open set $U\subseteq X$ containing $x$ such that the restriction
-	\[(U,\mc O_X|_U)\]
-	is isomorphic (as a locally ringed space) to an affine scheme $(\Spec A,\OO_{\Spec A})$.
-\end{definition}
-The puzzling thing here is to figure out what an isomorphism of locally ringed spaces is. For this, we should define morphisms of locally ringed spaces.
-\begin{definition}[Morphism of locally ringed spaces]
-	Given locally ringed spaces $(X,\mc O_X)$ and $(Y,\mc O_Y)$ locally ringed spaces, a \textit{morphism} is a pair $(f,f^\sharp)$ of a continuous map $f\colon X\to Y$ and a sheaf morphism $f^\sharp\colon\OO_Y\to f_*\OO_Y$. Further, we require that, at each $x\in X$, the induced map
-	\[\OO_{Y,f(x)}\stackrel{f^\sharp_{f(x)}}\to(f_*\OO_X)_{f(x)}\to\OO_{X,x}\]
-	is a morphism of local rings; i.e., $f^\sharp_{f(x)}(\mf m_{Y,f(x)})\subseteq\mf m_{X,x}$ or equivalently $(f^\sharp_{f(x)})^{-1}\left(\mf m_{X,x}\right)=\mf m_{Y,f(x)}$.
+\begin{example}
+	Fix a locally ringed space $(X,\OO_X)$. For any open subset $U\subseteq X$, we see that $(U,\OO_X|_U)$ is a locally ringed space as well. Namely, $\OO_X|_U$ is certainly a sheaf of rings on $U$, and by \autoref{lem:invimagestalk} tells us that any $x\in U$ makes
+	\[(\OO_X|_U)_x=\OO_{X,x}\]
+	a local ring, so all stalks are indeed local rings.
+\end{example}
+Having been introduced to a new algebraic object, one should ask how to define a morphism. This is somewhat subtle. We begin by just giving the definition.
+\begin{definition}[Morphism of locally ringed spaces] \label{def:ringspacemorphism}
+	Given locally ringed spaces $(X,\mc O_X)$ and $(Y,\mc O_Y)$ locally ringed spaces, a \textit{morphism} is a pair $(\varphi,\varphi^\sharp)$ of a continuous map $\varphi\colon X\to Y$ and a sheaf morphism $\varphi^\sharp\colon\OO_Y\to f_*\OO_X$. Further, we require that, at each $x\in X$, the induced map
+	\[\arraycolsep=1.4pt\begin{array}{cccccc}
+		\OO_{Y,\varphi(x)} &\stackrel{\varphi^\sharp_{\varphi(x)}}\to& (\varphi_*\OO_X)_{\varphi(x)} &\to& \OO_{X,x} \\
+		{[(V,s)]} &\mapsto& \left[(V,\varphi^\sharp_V(s))\right] &\mapsto& \varphi^\sharp_V(s)|_x
+	\end{array}\]
+	is a morphism of local rings; i.e., the image of $\mf m_{Y,\varphi(x)}$ is contained in $\mf m_{X,x}$, or equivalently the pre-image of $\mf m_{X,x}$ is $\mf m_{Y,\varphi(x)}$.
 \end{definition}
 Notably, the last map $(f_*\OO_X)_{f(x)}\to\OO_{X,x}$ above is the canonical map of \autoref{lem:directimagestalk}.
-
-Concretely, we are asking for a map between the sheaves, but then we notice that the sheaf morphism induces a map of stalks. To preserve this local stalk structure, we will ask for germs vanishing on $f(x)$ to pull back to germs vanishing on $x$.
 \begin{remark}
 	Using the inverse image sheaf instead of the direct image sheaf, we can use \autoref{prop:invdiradjunction} to think about $f^\sharp$ as
 	\[f^\flat\colon f^{-1}\mc O_Y\to\mc O_X.\]
 	One might want to do this because the stalks of $f^{-1}\mc O_Y$ are nicely behaved by \autoref{lem:invimagestalk}.
 \end{remark}
-Now, an isomorphism of locally ringed spaces is a morphism of locally ringed spaces with an inverse.
+We take a moment to provide two ways to motivate \autoref{def:ringspacemorphism}.
+\begin{enumerate}
+	\item On the algebraic side, it will turn out that this definition makes the only morphisms of affine schemes (which are locally ringed spaces) come from ring homomorphisms, so we can ``check'' that this definition is the correct one.
 
+	To help see why \autoref{def:ringspacemorphism} looks the way that it does a ring homomorphism $f\colon A\to B$ gives rise to a continuous map $\varphi\colon\Spec B\to\Spec A$, but the function data still goes to $A\to B$. This explains why $\varphi^\sharp$ should go $\OO_Y\to\varphi_*\OO_X$.
+
+	Lastly, we can view the local ring condition as checking that we cohere with the ``local'' part of a locally ringed space.
+
+	\item On the geometric side, we should imagine that a morphism of locally ringed spaces is like a map $\varphi\colon X\to Y$ of manifolds, where $\OO_X$ and $\OO_Y$ are the sheaf of holomorphic functions on each. Then the sheaf morphism
+	\[\OO_Y\to\varphi_*\OO_X\]
+	is saying that a holomorphic function $f\colon V\to\CC$ (for some open $V\subseteq Y$) should pull back through $\varphi$ to a differential function
+	\begin{equation}
+		\varphi^{-1}(V)\stackrel\varphi\to V\stackrel f\to\CC \label{eq:pullbackholofuncs}
+	\end{equation}
+	which is simply true. Importantly, there isn't really a way to take a holomorphic function $X\to\CC$ and ``push it'' through $\varphi$ to a holomorphic function $Y\to\CC$.
+
+	Lastly, the local ring condition is saying that a germ $f\in\OO_{Y,\varphi(x)}$ will vanish at $\varphi(x)$ will pull back via \autoref{eq:pullbackholofuncs} to a germ in $\OO_{X,x}$ which vanishes at $x$. Again, this is simply true.
+\end{enumerate}
+Here are some quick checks on locally ringed spaces.
+\begin{lemma}
+	All locally ringed spaces equipped with the defined morphisms makes a category.
+\end{lemma}
+\begin{proof}
+	Here is the extra data we need to define.
+	\begin{itemize}
+		\item Identity: given a locally ringed space $(X,\OO_X)$, we define $\id_{(X,\OO_X)}$ as given by the continuous map ${\id_X}\colon X\to X$ and sheaf morphism ${\id_{\OO_X}}\colon\OO_X\to\OO_X$. (Notably, ${(\id_X)_*\OO_X}$ is the same as $\OO_X$ by \autoref{lem:directimagefunctor}.) Checking stalks, we see that any $x\in X$ has
+		\[\arraycolsep=1.4pt\begin{array}{ccccc}
+			\OO_{X,x} &\stackrel{\id_{\OO_X,x}}\to& ((\id_{\OO_X})_*\OO_X)_x &\to& \OO_{X,x} \\
+			{[(U,s)]} &\mapsto& [(U,s)] &\mapsto& [(U,s)] 
+		\end{array}\]
+		is the identity and hence a map of local rings.
+		\item Composition: given two morphisms $(\varphi,\varphi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$ and $(\psi,\psi^\sharp)\colon(Y,\OO_Y)\to(Z,\OO_Z)$, we define the composition as having the continuous map $\psi\circ\varphi\colon X\to Y$ and sheaf morphism
+		\[\OO_Z\stackrel{\psi^\sharp}\to\psi_*\OO_Y\stackrel{\psi_*\varphi^\sharp}\to\psi_*\varphi_*\OO_X.\]
+		Notably, $\psi_*\varphi_*\OO_X=(\psi\circ\varphi)_*\OO_X$ by \autoref{rem:directimagefunctor}, so at least all of our data look correct.
+
+		Checking stalks, fix $x\in X$ and $[(U,s)]\in\mf m_{Z,\psi(\varphi(z))}$. Because $(\varphi,\varphi^\sharp)$ and $(\psi,\psi^\sharp)$ are morphisms of locally ringed spaces, we see that $[(\psi^{-1}U,\psi^\sharp_Uz)]\in\mf m_{Y,\varphi(z)}$, so
+		\[\left[((\psi\circ\varphi)^{-1}U,(\psi_*\varphi^\sharp\circ\psi^\sharp)_Us)\right]=\left[(\varphi^{-1}\psi^{-1}U,\varphi^\sharp_{\psi^{-1}U}\psi^\sharp_Us)\right]\in\mf m_{X,x},\]
+		which finishes the check.
+	\end{itemize}
+	We have the following coherence checks.
+	\begin{itemize}
+		\item Identity: given a morphism $(\varphi,\varphi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$, we compute
+		\[(\varphi,\varphi^\sharp)\circ\id_{(X,\OO_X)}=\left(\varphi\circ{\id_X},\varphi_*{\id_{\OO_X}}\circ\varphi^\sharp\right)=\left(\varphi\circ{\id_X},{\id_{\varphi_*\OO_X}}\circ\varphi^\sharp\right)=(\varphi,\varphi^\sharp),\]
+		and
+		\[{\id_{Y,\OO_Y}}\circ(\varphi,\varphi^\sharp)=\left({\id_Y}\circ\varphi,({\id_Y})_*\varphi^\sharp\circ{\id_{\OO_Y}}\right)=\left({\id_Y}\circ\varphi,\varphi^\sharp\circ{\id_{\OO_Y}}\right)=(\varphi,\varphi^\sharp).\]
+		\item Associativity: given morphisms $(\alpha,\alpha^\sharp)\colon(A,\OO_A)\to(B,\OO_B)$ and $(\beta,\beta^\sharp)\colon(B,\OO_B)\to(C,\OO_C)$ and $(\gamma,\gamma^\sharp)\colon(C,\OO_C)\to(D,\OO_D)$, we compute
+		\begin{align*}
+			(\gamma,\gamma^\sharp)\circ\big((\beta,\beta^\sharp)\circ(\alpha,\alpha^\sharp)\big) &= (\gamma,\gamma^\sharp)\circ(\beta\circ\alpha,\beta_*\alpha^\sharp\circ\beta^\sharp) \\
+			&= (\gamma\circ\beta\circ\alpha,\gamma_*\beta_*\alpha^\sharp\circ\gamma_*\beta^\sharp\circ\gamma^\sharp) \\
+			&= (\gamma\circ\beta,\gamma_*\beta^\sharp\circ\gamma^\sharp)\circ(\alpha,\alpha^\sharp) \\
+			&= \big((\gamma,\gamma^\sharp)\circ(\beta,\beta^\sharp)\big)\circ(\alpha,\alpha^\sharp),
+		\end{align*}
+		finishing.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma}
+	A morphism of locally ringed spaces $(\varphi,\varphi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$ is an isomorphism if and only if $\varphi$ is a homeomorphism and $\varphi^\sharp$ is an isomorphism of sheaves.
+\end{lemma}
+\begin{proof}
+	Let $\psi\colon Y\to X$ be the inverse continuous map for $\varphi$. Also, for each $V\subseteq\OO_Y$, define the morphism $\psi^\sharp_V\colon\OO_Y(V)\to\psi_*\OO_X(V)$ as the inverse of the morphism
+	\[\varphi^\sharp_{\varphi(V)}\colon\OO_X(\varphi(V))\to\varphi_*\OO_Y(\varphi(V))\]
+	which makes sense because $\psi^{-1}(V)=\varphi(V)$ and $\varphi^{-1}(\varphi(V))=V$. To check that $\psi^\sharp$ assembles into a sheaf morphism, we note that open subsets $V'\subseteq V\subseteq Y$ make the left diagram below
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1koVikiXSxbMSwwLCJcXHBzaV8qXFxPT19YKFYpIl0sWzAsMSwiXFxPT19ZKFYnKSJdLFsxLDEsIlxccHNpXypcXE9PX1goVicpIl0sWzMsMCwiXFx2YXJwaGlfKlxcT09fWShcXHZhcnBoaShWKSkiXSxbNCwwLCJcXE9PX1goXFx2YXJwaGkoVikpIl0sWzMsMSwiXFx2YXJwaGlfKlxcT09fWShcXHZhcnBoaShWJykpIl0sWzQsMSwiXFxPT19YKFxcdmFycGhpKFYnKSkiXSxbMCwxLCJcXHBzaV5cXHNoYXJwX1YiXSxbMiwzLCJcXHBzaV5cXHNoYXJwX3tWJ30iXSxbMCwyLCJcXG9we3Jlc31fe1YsVid9IiwyXSxbMSwzLCJcXG9we3Jlc31fe1YsVid9Il0sWzUsNCwiXFx2YXJwaGleXFxzaGFycF97XFx2YXJwaGkoVil9IiwyXSxbNyw2LCJcXHZhcnBoaV5cXHNoYXJwX3tcXHZhcnBoaShWJyl9IiwyXSxbNCw2LCJcXG9we3Jlc31fe1xcdmFycGhpKFYpLFxcdmFycGhpKFYnKX0iLDJdLFs1LDcsIlxcb3B7cmVzfV97XFx2YXJwaGkoViksXFx2YXJwaGkoVicpfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(V)} & {\psi_*\OO_X(V)} && {\varphi_*\OO_Y(\varphi(V))} & {\OO_X(\varphi(V))} \\
+		{\OO_Y(V')} & {\psi_*\OO_X(V')} && {\varphi_*\OO_Y(\varphi(V'))} & {\OO_X(\varphi(V'))}
+		\arrow["{\psi^\sharp_V}", from=1-1, to=1-2]
+		\arrow["{\psi^\sharp_{V'}}", from=2-1, to=2-2]
+		\arrow["{\op{res}_{V,V'}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}_{V,V'}}", from=1-2, to=2-2]
+		\arrow["{\varphi^\sharp_{\varphi(V)}}"', from=1-5, to=1-4]
+		\arrow["{\varphi^\sharp_{\varphi(V')}}"', from=2-5, to=2-4]
+		\arrow["{\op{res}_{\varphi(V),\varphi(V')}}"', from=1-4, to=2-4]
+		\arrow["{\op{res}_{\varphi(V),\varphi(V')}}", from=1-5, to=2-5]
+	\end{tikzcd}\]
+	commute because it is the same as the one on the right. Additionally, we can quickly check that we have a morphism of locally ringed spaces; by \autoref{rem:naturalmapisiso}, we are actually given that any $x\in X$ has
+	\[\OO_{Y,\varphi(x)}\to(\varphi_*\OO_X)_{\varphi(x)}\simeq\OO_{X,x}\]
+	is a map of local rings. Inverting this map, we see that any $y\in Y$ has
+	\[\OO_{X,\psi(y)}\to(\psi_*\OO_Y)_{\psi(y)}\simeq\OO_{Y,y}\]
+	is also a map of local rings.
+
+	It remains to see that $(\psi,\psi^\sharp)$ is actually the inverse of $(\varphi,\varphi^\sharp)$. On one side, we see that
+	\[(\varphi,\varphi^\sharp)\circ(\psi,\psi^\sharp)=(\varphi\circ\psi,\varphi_*\psi^\sharp\circ\varphi^\sharp).\]
+	Now, $\varphi\circ\psi=\id_Y$ by definition of $\psi$, and for any $U\subseteq X$, we note $\psi^\sharp_{\varphi^{-1}(U)}=(\varphi^\sharp_U)^{-1}$ by definition of $\psi^\sharp$. So the above is indeed $\id_{(Y,\OO_Y)}$. The other side inverse check is entirely symmetric.
+\end{proof}
+
+\subsection{\texorpdfstring{$K$}{ K}-points}
+The morphism of a locally ringed space contains a lot of data, so it will be helpful to see all this data go to use. Here's an example.
+\begin{definition}[Residue field]
+	Fix a locally ringed space $(X,\OO_X)$. Given a point $x\in X$, define $\mf m_x\subseteq\OO_{X,x}$ to be the unique maximal ideal of $\OO_{X,x}$. Then the \textit{residue field} of $x$ is $k(x)\coloneqq\OO_{X,x}/\mf m_x$.
+\end{definition}
+\begin{exe}
+	Fix a locally ringed space $(X,\OO_X)$ and a field $K$. Then the data of a morphism of locally ringed spaces $(\varphi,\varphi^\sharp)\colon(\Spec K,\OO_{\Spec K})\to(X,\OO_X)$ can be equivalently presented as a point $p\in X$ equipped with an inclusion $\iota\colon k(p)\to K$.
+\end{exe}
+Intuitively, we are saying that morphisms from the affine scheme over $K$ correspond to ``$K$-points of $X$,'' for a suitable definition of $K$-points.
+\begin{proof}
+	Let $M$ be the set of morphisms $(\varphi,\varphi^\sharp)\colon(\Spec K,\OO_{\Spec K})\to(X,\OO)$, and let $P$ be the set of ordered pairs $(p,\iota)$ where $p\in X$ is a point and $\iota\colon k(p)\into K$ is an embedding. We exhibit a bijection between $M$ and $P$. Here are the maps.
+	\begin{itemize}
+		\item We exhibit a map $\alpha\colon M\to P$. Well, given a morphism $(\varphi,\varphi^\sharp)\colon(\Spec K,\OO_{\Spec K})\to(X,\OO)$, we have an underlying continuous map $\varphi\colon\Spec K\to X$ and sheaf morphism $\varphi^\sharp\colon\OO\to\varphi_*\OO_{\Spec K}$.
+		
+		Now, $(0)\in\Spec K$, so we {set $p\coloneqq\varphi((0))$}. Then {$\varphi^\sharp$ will provide a map}
+		\[\OO_p\stackrel{\varphi^\sharp_p}\to(\varphi_*\OO_{\Spec K})_{p}\to\OO_{\Spec K,(0)}\cong K_{(0)}=K.\]
+		This is supposed to be a map of local rings, so the pre-image of the maximal ideal $(0)\subseteq K$ is supposed to equal $\mf m_p$, so we actually induce an embedding $\iota\colon\OO_p/\mf m_p\into K$. Thus, we set $\alpha((\varphi,\varphi^\sharp))=(p,\iota)$.
+
+		\item We exhibit a map $\beta\colon P\to M$. We are provided with a point $p\in X$ and an inclusion $\OO_p/\mf m_p\to K$. Here is the defining data.
+		\begin{itemize}
+			\item Define $\varphi\colon\Spec K\to X$ by {$\varphi((0))\coloneqq p$}. To see that this continuous, note any open subset $U\subseteq X$ containing $p$ have $\varphi^{-1}(U)=\{(0)\}=\Spec K$, which is open. Otherwise, the open subset $U\subseteq X$ does not contain $p$, so $\varphi^{-1}(U)=\emp$, which is still open.
+			\item Given an open subset $U\subseteq X$, we define $\varphi^\sharp_U\colon\OO(U)\to\varphi_*\OO_{\Spec K}(U)$. If $U$ does not contain $p$, then
+			\[\varphi_*\OO_{\Spec K}(U)=\OO_{\Spec K}\left(\varphi^{-1}(U)\right)=\OO_{\Spec K}(\emp)=0,\]
+			so we set $\varphi^\sharp_U$ to be the zero map. Otherwise, when $U$ contains $p$, we see
+			\[\varphi_*\OO_{\Spec K}(U)=\OO_{\Spec K}\left(\varphi^{-1}(U)\right)=\OO_{\Spec K}(\Spec K)=K,\]
+			so we need to exhibit a map $\varphi^\sharp_U\colon\OO(U)\to K$. For this, we use the composite map
+			\[\arraycolsep=1.4pt\begin{array}{ccccccc}
+				\OO(U) &\to& \OO_p &\to& \OO_p/\mf m_p &\stackrel\iota\to& K \\
+				s &\mapsto& s|_p &\mapsto& (s|_p+\mf m_p) &\mapsto& \iota(s|_p+\mf m_p)
+			\end{array}\]
+			as our $\varphi^\sharp_U$.
+		\end{itemize}
+		We quickly check that $\varphi^\sharp$ assembles into a map of sheaves. Fix open sets $U'\subseteq U$, and we want the diagram
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PKFUpIl0sWzAsMSwiXFxPTyhVJykiXSxbMSwwLCJcXHZhcnBoaV8qXFxPT197XFxTcGVjIEt9KFUpIl0sWzEsMSwiXFx2YXJwaGlfKlxcT09fe1xcU3BlYyBLfShVJykiXSxbMCwyLCJcXHZhcnBoaV5cXHNoYXJwX1UiXSxbMCwxLCJcXG9we3Jlc31fe1UsVSd9IiwyXSxbMSwzLCJcXHZhcnBoaV5cXHNoYXJwX3tVJ30iXSxbMiwzLCJcXG9we3Jlc31fe1UsVSd9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}
+				{\OO(U)} & {\varphi_*\OO_{\Spec K}(U)} \\
+				{\OO(U')} & {\varphi_*\OO_{\Spec K}(U')}
+				\arrow["{\varphi^\sharp_U}", from=1-1, to=1-2]
+				\arrow["{\op{res}_{U,U'}}"', from=1-1, to=2-1]
+				\arrow["{\varphi^\sharp_{U'}}", from=2-1, to=2-2]
+				\arrow["{\op{res}_{U,U'}}", from=1-2, to=2-2]
+			\end{tikzcd} \label{eq:definingbetadiagram}
+		\end{equation}
+		to commute. We have two cases.
+		\begin{itemize}
+			\item If $p\notin U'$, then $\varphi_*\OO_{\Spec K}(U')=0$, so \autoref{eq:definingbetadiagram} commutes for free.
+			\item If $p\in U'$, then $p\in U$ as well, so \autoref{eq:definingbetadiagram} becomes the diagram
+			% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PKFUpIl0sWzAsMSwiXFxPTyhVJykiXSxbMSwwLCJLIl0sWzEsMSwiSyJdLFszLDAsInMiXSxbNCwwLCJcXGlvdGEoc3xfcCtcXG1mIG1fcCkiXSxbMywxLCJzfF97VSd9Il0sWzQsMSwiXFxpb3RhKHN8X3ArXFxtZiBtX3ApIl0sWzAsMiwiXFx2YXJwaGleXFxzaGFycF9VIl0sWzAsMSwiXFxvcHtyZXN9X3tVLFUnfSIsMl0sWzEsMywiXFx2YXJwaGleXFxzaGFycF97VSd9Il0sWzIsMywiXFxvcHtyZXN9X3tVLFUnfSJdLFs0LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\OO(U)} & K && s & {\iota(s|_p+\mf m_p)} \\
+				{\OO(U')} & K && {s|_{U'}} & {\iota(s|_p+\mf m_p)}
+				\arrow["{\varphi^\sharp_U}", from=1-1, to=1-2]
+				\arrow["{\op{res}_{U,U'}}"', from=1-1, to=2-1]
+				\arrow["{\varphi^\sharp_{U'}}", from=2-1, to=2-2]
+				\arrow["{\op{res}_{U,U'}}", from=1-2, to=2-2]
+				\arrow[maps to, from=1-4, to=2-4]
+				\arrow[maps to, from=1-4, to=1-5]
+				\arrow[maps to, from=1-5, to=2-5]
+				\arrow[maps to, from=2-4, to=2-5]
+			\end{tikzcd}\]
+			which does indeed commute.
+		\end{itemize}
+		Next we check that $(\varphi,\varphi^\sharp)$ assembles into a morphism of locally ringed spaces. For this we have to check that, for any $\mf p\in\Spec K$, the composite
+		\[\OO_{\varphi(\mf p)} \stackrel{\varphi^\sharp_p}\to (\varphi_*\OO_{\Spec K})_{\varphi(\mf p)} \to (\OO_{\Spec K})_\mf p\]
+		is a map of local rings. Notably, the only point we have to check this is on $\mf p=(0)$ because $\Spec K=\{(0)\}$, and $\varphi((0))=p$, so we are checking that
+		\[\arraycolsep=1.4pt\begin{array}{cccccccccc}
+			\OO_{p} &\stackrel{\varphi^\sharp_p}\to& (\varphi_*\OO_{\Spec K})_{p} &\to& (\OO_{\Spec K})_0 \\
+			{[(U,s)]} &\mapsto& \big[(U,\iota(s|_p+\mf m_p))\big] &\mapsto& \big[(\varphi^{-1}(U),\iota(s|_p+\mf m_p))\big]
+		\end{array}\]
+		is a map of local rings. Notably, $\varphi^{-1}(U)=\{(0)\}=\Spec K=D(1)$, so we can chain the above composite with the isomorphism $(\OO_{\Spec K})_0\cong K_{(0)}=K$, which will send $[(D(1),\overline s)]$ to $\overline s$. So we are showing that
+		\[\arraycolsep=1.4pt\begin{array}{ccc}
+			\OO_{p} &\to& K \\
+			{[(U,s)]} &\mapsto& \iota(s|_p+\mf m_p)
+		\end{array}\]
+		is a map of local rings. (Namely, isomorphisms are maps of local rings, so we can ``unchain'' the above map with the previous isomorphisms to recover the needed map of local rings.) Well, the pre-image of the maximal ideal $(0)\subseteq K$ consists of sections $s_p\in\OO_p$ such that $\iota(s_p+\mf m_p)=0$; because $\iota$ is injective, we see that this is equivalent to $s_p\in\mf m_p$.
+		
+		So indeed, the pre-image of the maximal ideal $(0)$ is $\mf m_p$, verifying that we have a map of local rings. As such, we may define $\beta((p,\iota))\coloneqq(\varphi,\varphi^\sharp)$.
+	\end{itemize}
+	We now have to show that $\alpha$ and $\beta$ are inverses.
+	\begin{itemize}
+		\item Fix some $(p,\iota)\in P$. We show that $(\alpha\circ\beta)((p,\iota))=(p,\iota)$. Set $(\varphi,\varphi^\sharp)\coloneqq\beta((p,\iota))$, and we need to compute $\alpha((\varphi,\varphi^\sharp))$. To start, by construction, we see
+		\[\varphi((0))=p,\]
+		as it should be. To solve for $\iota$, we note that above we tracked through the map
+		\[\arraycolsep=1.4pt\begin{array}{cccccccccc}
+			\OO_{p} &\stackrel{\varphi^\sharp_p}\to& (\varphi_*\OO_{\Spec K})_{p} &\to& (\OO_{\Spec K})_0 &\cong& K_{(0)} &=& K \\
+			{[(U,s)]} &\mapsto& \big[(U,\iota(s|_p+\mf m_p))\big] &\mapsto& \big[(\varphi^{-1}(U),\iota(s|_p+\mf m_p))\big] &\mapsto&  & & \iota(s|_p+\mf m_p)
+		\end{array}\]
+		as having kernel $\mf m_p$, so the induced map $\OO_p/\mf m_p\to K$ is just $(s_p+\mf m_p)\mapsto\iota(s_p+\mf m_p)$. Thus, this map induced by $\alpha((\varphi,\varphi^\sharp))$ is exactly $\iota$, as needed.
+		\item Fix some $(\varphi,\varphi^\sharp)\in M$. We show that $(\beta\circ\alpha)((\varphi,\varphi^\sharp))=(\varphi,\varphi^\sharp)$. Set $(p,\iota)\coloneqq\alpha((\varphi,\varphi^\sharp))$ and $(\psi,\psi^\sharp)\coloneqq\beta((p,\iota))$, and we will show $(\psi,\psi^\sharp)=(\varphi,\varphi^\sharp)$. By construction, we see $\psi((0))=p$, so we get $\psi=\varphi$ immediately.
+
+		To show $\psi^\sharp=\varphi^\sharp$, we need to show that $\psi^\sharp_U=\varphi^\sharp_U$ as functions $\OO(U)\to\varphi_*\OO_{\Spec K}(U)$ for each open $U\subseteq X$. We have two cases.
+		\begin{itemize}
+			\item If $p\notin U$, then $\varphi_*\OO_{\Spec K}(U)=\OO_{\Spec K}\left(\varphi^{-1}(U)\right)=\OO_{\Spec K}(\emp)=0$, so $\psi^\sharp_U$ and $\varphi^\sharp_U$ must both be the zero map because $0$ is terminal.
+			\item Otherwise, we have $p\in U$; note that $\varphi^\sharp_U,\psi^\sharp_U\colon\OO(U)\to K$ now. By definition, $\psi^\sharp_U$ sends a section $s\in\OO(U)$ to $\iota(s|_p+\mf m_p)$; by definition, $\iota$ sends some $s|_p+\mf m_p$ down the composite
+			\[\arraycolsep=1.4pt\begin{array}{ccccccccc}
+				\OO_p &\stackrel{\varphi^\sharp_p}\to& (\varphi_*\OO_{\Spec K})_{p} &\to& \OO_{\Spec K,(0)} &\cong& K_{(0)} &=& K \\
+				{[(U,s)]} &\mapsto& \big[(U,\varphi^\sharp_U(s))\big] &\mapsto& \big[(\varphi^{-1}(U),\varphi^\sharp_U(s))\big] &\mapsto& & & \varphi^\sharp_U(s)
+			\end{array}\]
+			which verifies that $\psi^\sharp_U$ is sending $s\in\OO(U)$ all the way to $\varphi^\sharp_U(s)$.
+		\end{itemize}
+		From the above, it follows that $\psi^\sharp_U=\varphi^\sharp_U$, which finishes this last check.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	There is a similar story one can tell for $K[\varepsilon]/(\varepsilon^2)$, where we can see that we will also want to keep track of some differential information from the $\varepsilon$.
+\end{remark}
+
+\subsection{Schemes}
+We finally arrive at the definition of a scheme.
+\begin{definition}[Scheme]
+	A \textit{scheme} is a ringed space $(X,\mc O_X)$ such that, for each $x\in X$, there is an open set $U\subseteq X$ containing $x$ such that the restriction
+	\[(U,\mc O_X|_U)\]
+	is isomorphic (as a locally ringed space) to an affine scheme $(\Spec A,\OO_{\Spec A})$.
+\end{definition}
 Here are some quick facts about this definition.
 \begin{lemma} \label{lem:openbasescheme}
 	Fix a ring $A$ and a distinguished open set $D(f)\subseteq\Spec A$. Then
