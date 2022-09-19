@@ -1,0 +1,166 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 16}
+
+Bump, bump, bump.
+
+\subsection{Fiber Products}
+Here is today's main result.
+\begin{theorem} \label{thm:fibexist}
+	Fix two $S$-schemes $X$ and $Y$. Then the fiber product $X\times_SY$ exists.
+\end{theorem}
+\begin{remark}
+	Even if $X$ and $Y$ are Noetherian, it does not necessarily follow that $X\times_SY$ is Noetherian. For example, taking $\Spec\overline\QQ$ and $\Spec\overline\QQ$ are both Noetherian, but the fiber product turns out to be
+	\[\Spec\overline\QQ\otimes_\QQ\overline\QQ.\]
+	In particular, this is zero-dimensional but has infinitely many points and is therefore not Noetherian.
+\end{remark}
+The fiber product is a purely categorical construct, which is the limit of the diagram as follows.
+% https://q.uiver.app/?q=WzAsMyxbMCwxLCJYIl0sWzEsMCwiWSJdLFsxLDEsIlMiXSxbMCwyXSxbMSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	& Y \\
+	X & S
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=1-2, to=2-2]
+\end{tikzcd}\]
+In other words, there are canonical projection maps $X\times_SY\to X$ and $X\times_SY\to Y$ with a suitable universal property. As usual, the universal property means that this is unique up to unique isomorphism.
+\begin{remark}
+	Even without knowing that $X\times_SY$ exists, we may note that we have a natural isomorphism
+	\[\op{Mor}_S(Z,X\times_SY)\cong\op{Mor}_S(Z,X)\times_{\op{Mor}_S(Z,S)}\op{Mor}_S(Z,Y)\]
+	coming straight from the universal property. In other words, the $Z$-points of an $S$-fiber product is just going to be the product of the two $S$-points. In this way, we can view the below proof as asking for a particular functor (on the right here) to be representable, which will be enlightening after some thought.
+	% EH ch 6, V 10.1
+\end{remark}
+Schemes are made of affine schemes, so we will begin with affine schemes, with the hope of patching these together later.
+\begin{lemma}
+	Fix affine schemes $X$, $Y$, and $S$, with $X=\Spec A$ and $Y=\Spec B$ and $S=\Spec R$. Then
+	\[X\times_SY=\Spec A\otimes_RB.\]
+\end{lemma}
+\begin{proof}
+	Notably, the canonical maps $X\to S$ and $Y\to S$ makes $A$ and $B$ into $R$-algebras. To see this, we simply compute, for some scheme $S$,
+	\begin{align*}
+		\op{Mor}_S(Z,\Spec A\otimes_RS) &\simeq \op{Hom}_R(A\otimes_RS,\OO_Z(Z)) \\
+		&\simeq \op{Hom}_R(A,\OO_Z(Z)) \times_{\op{Hom}_R(R,\OO_Z(Z))} \op{Hom}_R(B,\OO_Z(Z)),
+	\end{align*}
+	which unravels into the correct thing. This finishes by the Yoneda lemma. One can write out all of this as some diagram-chase, but it is equivalent to the above computation.
+\end{proof}
+\begin{remark}
+	One can view the above proof as basically preserving the fact that $A\otimes_RB$ is the fiber product of $A$ and $B$ as $R$-algebras.
+\end{remark}
+We now begin our gluing. Here is the key case to glue.
+\begin{lemma} \label{lem:keyfibercase}
+	Fix affine schemes $X$ and $S$ and a scheme $Y$, where $X$ and $Y$ are $S$-schemes. Then the fiber product exists.
+\end{lemma}
+We hope that a gluing will be able to give $X\times_SY$ for $S$ affine and $X$ and $Y$ arbitrary, from which the general case will follow by gluing $S$.
+
+To prove \autoref{lem:keyfibercase}, we will want to glue to get up to $Y$, so we have the following smaller case.
+\begin{lemma} \label{lem:helpkeycase}
+	Fix affine schemes $X$ and $S$ and a scheme $Y$, where $X$ and $Y$ are $S$-schemes. Given an open embedding $Y\into Y'$, if $X\times_SY'$ exists, then $X\times_SY$ also exists as
+	\[X\times_SY=\pi^{-1}_{Y'}(Y),\]
+	where $\pi_{Y'}\colon X\times_SY'\to Y'$ is the canonical map.
+\end{lemma}
+\begin{proof}[Sketch]
+	We use the universal property a bunch of times. Then
+	% https://q.uiver.app/?q=WzAsNixbMCwyLCJYIl0sWzEsMSwiWSciXSxbMSwyLCJTIl0sWzAsMSwiWFxcdGltZXNfU1knIl0sWzEsMCwiWSJdLFswLDAsIlxccGleey0xfV97WSd9KFkpIl0sWzAsMl0sWzEsMl0sWzMsMCwiXFxwaV9YIl0sWzMsMSwiXFxwaV9ZIiwyXSxbNSw0LCJcXHBpX1kiXSxbNSwzXSxbNCwxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\pi^{-1}_{Y'}(Y)} & Y \\
+		{X\times_SY'} & {Y'} \\
+		X & S
+		\arrow[from=3-1, to=3-2]
+		\arrow[from=2-2, to=3-2]
+		\arrow["{\pi_X}", from=2-1, to=3-1]
+		\arrow["{\pi_Y}"', from=2-1, to=2-2]
+		\arrow["{\pi_Y}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+	we can show has the top and bottom squares are both pullback squares, so the full rectangle is a pullback square, which finishes.
+\end{proof}
+We can now prove \autoref{lem:keyfibercase}.
+\begin{proof}[Proof of \autoref{lem:keyfibercase}]
+	Give $Y$ the affine open cover $\{Y_\alpha\}_{\alpha\in\lambda}$, writing $Y_{\alpha\beta}\coloneqq Y_\alpha\cap Y_\beta$ as a subset of $Y_\alpha$ to prepare for our gluing. Now, we see that \autoref{lem:helpkeycase} grants us schemes
+	\[X\times_SY_{\alpha\beta}\subseteq X\times_SY_\alpha\qquad\text{and}\qquad X\times_SY_{\beta\alpha}\subseteq X\times_SY_\beta,\]
+	which must be identified because $Y_{\alpha\beta}=Y_{\beta\alpha}$. These identified schemes are going to satisfy the cocycle condition because these fiber products are unique up to unique isomorphism.
+
+	To see the cocycle condition more concretely, we can just say out loud that we have the scheme
+	\[X\times_SY_{\alpha\beta\gamma}=(X\times_SY_{\alpha\beta})\cap(X\times_SY_{\alpha\gamma})\subseteq X\times_SY_\alpha.\]
+	On the other side, we have a similar computation for $Y_{jik}$ and $Y_{kij}$, so chaining these diagrams together will identify the needed isomorphisms by the uniqueness of our various isomorphisms.
+
+	At this point, we have been glued together a (unique) scheme $W$ with ``compatible'' open embeddings $X\times_SY_\alpha\into W$. It remains to verify that $W$ is our fiber product $X\times_SY$. Our map $\pi_X\colon W\to X$ is induced by projecting down to $X$ in all the glued components; our map $\pi_Y\colon W\to Y$ is made by gluing the various maps $\pi_\alpha\colon W\to Y_\alpha$ (which appear from the projections $X\times_SY_\alpha\to Y_\alpha$).
+	
+	We now verify the universal property. Fix morphisms $\varphi_X\colon Z\to X$ and $\varphi_Y\colon Y\to Z$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMSwyLCJYIl0sWzIsMSwiWSJdLFsyLDIsIlMiXSxbMCwwLCJaIl0sWzEsMSwiVyJdLFswLDJdLFsxLDJdLFszLDAsIlxcdmFycGhpX1giLDIseyJjdXJ2ZSI6Mn1dLFszLDEsIlxcdmFycGhpX1kiLDAseyJjdXJ2ZSI6LTJ9XSxbNCwxLCJcXHBpX1kiLDJdLFs0LDAsIlxccGlfWCJdLFszLDQsIiIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		Z \\
+		& W & Y \\
+		& X & S
+		\arrow[from=3-2, to=3-3]
+		\arrow[from=2-3, to=3-3]
+		\arrow["{\varphi_X}"', curve={height=12pt}, from=1-1, to=3-2]
+		\arrow["{\varphi_Y}", curve={height=-12pt}, from=1-1, to=2-3]
+		\arrow["{\pi_Y}"', from=2-2, to=2-3]
+		\arrow["{\pi_X}", from=2-2, to=3-2]
+		\arrow[dashed, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	commute, and we want to induce a unique arrow where the dashed arrow is. The big diagram commuting gives an internal commuting diagram
+	% https://q.uiver.app/?q=WzAsNSxbMSwyLCJYIl0sWzIsMSwiWV9cXGFscGhhIl0sWzIsMiwiUyJdLFswLDAsIlpfXFxhbHBoYSJdLFsxLDEsIlhcXHRpbWVzX1NZX1xcYWxwaGEiXSxbMCwyXSxbMSwyXSxbMywwLCJcXHZhcnBoaV9YIiwyLHsiY3VydmUiOjJ9XSxbMywxLCJcXHZhcnBoaV9ZIiwwLHsiY3VydmUiOi0yfV0sWzQsMSwiXFxwaV9ZIiwyXSxbNCwwLCJcXHBpX1giXSxbMyw0LCJcXHZhcnBoaV9cXGFscGhhIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{Z_\alpha} \\
+		& {X\times_SY_\alpha} & {Y_\alpha} \\
+		& X & S
+		\arrow[from=3-2, to=3-3]
+		\arrow[from=2-3, to=3-3]
+		\arrow["{\varphi_X}"', curve={height=12pt}, from=1-1, to=3-2]
+		\arrow["{\varphi_Y}", curve={height=-12pt}, from=1-1, to=2-3]
+		\arrow["{\pi_Y}"', from=2-2, to=2-3]
+		\arrow["{\pi_X}", from=2-2, to=3-2]
+		\arrow["{\varphi_\alpha}"{description}, dashed, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	with $Z_\alpha\coloneqq\varphi_Y^{-1}(Y_\alpha)$, where we have already used the universal property to construct the unique morphism $\varphi_\alpha$ making the diagram commute. This gives maps
+	\[Z_\alpha\to X\times_SY_\alpha\subseteq W,\]
+	and we just show that these various maps will be compatible to give us a unique map $Z\to W$. One can track through all the various universal properties to show that we have in fact induced a unique map making the original diagram commute.
+
+	We now show that we can in fact glue the morphisms $Z_\alpha\to W$. Well, set $Z_{\alpha\beta}\coloneqq\varphi_Y^{-1}(Y_{\alpha\beta})$ to be $Z_\alpha\cap Z_\beta$, and we can see that the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJaX3tcXGFscGhhXFxiZXRhfSJdLFsxLDEsIlhcXHRpbWVzX1NZX3tcXGFscGhhXFxiZXRhfSJdLFsyLDEsIlhcXHRpbWVzX1NZX1xcYWxwaGEiXSxbMSwyLCJYXFx0aW1lc19TWV9cXGJldGEiXSxbMSwzXSxbMSwyXSxbMCwxXSxbMCwzLCJcXHZhcnBoaV9cXGJldGEiLDIseyJjdXJ2ZSI6Mn1dLFswLDIsIlxcdmFycGhpX1xcYWxwaGEiLDAseyJjdXJ2ZSI6LTJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{Z_{\alpha\beta}} \\
+		& {X\times_SY_{\alpha\beta}} & {X\times_SY_\alpha} \\
+		& {X\times_SY_\beta}
+		\arrow[from=2-2, to=3-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=1-1, to=2-2]
+		\arrow["{\varphi_\beta}"', curve={height=12pt}, from=1-1, to=3-2]
+		\arrow["{\varphi_\alpha}", curve={height=-12pt}, from=1-1, to=2-3]
+	\end{tikzcd}\]
+	commutes, which finishes.
+\end{proof}
+Note that the same proof will show that we can build the fiber product for $X\times_SY$ when $S$ is affine and $X$ and $Y$ are arbitrary; namely, nowhere did we use in the proof that $X$ was affine (only that the fiber products $X\times_SY_\alpha$ exist), so we can just apply the same gluing process.
+
+Lastly, here is the general case.
+\begin{proof}[Proof of \autoref{thm:fibexist}]
+	Give $S$ an affine open cover $\{S_\alpha\}_{\alpha\in\lambda}$, with our natural maps $f_X\colon X\to S$ and $f_Y\colon Y\to S$. Then we set $X_\alpha\coloneqq f_X^{-1}(S_\alpha)$ and similar for $Y_\alpha$. By previous work, we have the fiber products $X_\alpha\times_{S_\alpha}Y_\alpha$, so we can just glue these together as usual.
+\end{proof}
+A little more rigorously, the following result aids the above gluing.
+\begin{lemma}
+	Fix schemes $X$ and $Y$ over a scheme $S$. If $S\subseteq S'$ is an affine open embedding of schemes such that $X\times_{S'}Y$ exists, we have
+	\[f_X^{-1}(S)\times_Sf_Y^{-1}(S)=(f_X\circ\pi_X)^{-1}(S')=(f_Y\circ\pi_Y)^{-1}(S').\]
+\end{lemma}
+The intuition is that the above lemma should be pulling back the required fiber product along the various legs of the following diagram.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJYXFx0aW1lc197Uyd9WSJdLFsxLDAsIlkiXSxbMCwxLCJYIl0sWzEsMSwiUyciXSxbMCwxXSxbMSwzXSxbMCwyXSxbMiwzXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{X\times_{S'}Y} & Y \\
+	X & {S'}
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=2-2]
+	\arrow[from=1-1, to=2-1]
+	\arrow[from=2-1, to=2-2]
+\end{tikzcd}\]
+This will give the intersection data in the gluing for \autoref{thm:fibexist}, which will finish the gluing.
+\begin{remark}
+	We will provide a more categorical viewpoint of this construction next class. This categorical viewpoint will be helpful for when we want to define the grassmanian.
+	% V 10.1.8
+\end{remark}
+
+\end{document}
