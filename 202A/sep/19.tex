@@ -1,0 +1,144 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 16}
+
+There are questions today.
+
+\subsection{Compact Hausdorff Spaces}
+Last class we saw in \autoref{ex:compactnotclosed} that compact subsets of a topological space need not be compact. It turns out that compact subsets of Hausdorff spaces are in fact closed. Let's see this.
+\begin{lemma} \label{lem:separationforcompacthaus}
+	Fix a Hausdorff topological space $(X,\mc T)$, and let $A\subseteq X$ be compact. Then, for any $x\notin A$, there are disjoint open sets $U$ and $V$ with $A\subseteq U$ and $x\in V$.
+\end{lemma}
+\begin{proof}
+	For each $y\in(X\setminus A)$, the Hausdorff condition promises disjoint open sets $V_y$ and $U_y$ such that $y\in U_y$ and $x\in V_y$. We would like to take the union of all the $U_y$ and the intersection of all the $U_x$, but the arbitrary intersection of open sets need not be open.
+
+	To fix this, we note that $\{U_y\}_{y\in A}$ are some open sets which cover $A$, so the compactness of $A$ allows us some finite subset $Y\subseteq A$ such that $\{U_y\}_{y\in Y}$ covers $A$. As such, we set
+	\[U\coloneqq\bigcup_{y\in Y}U_y\qquad\text{and}\qquad V\coloneqq\bigcap_{y\in Y}V_y.\]
+	Here are our checks.
+	\begin{itemize}
+		\item Both $U$ and $V$ are open because these are a finite union and a finite intersection of open sets, respectively.
+		\item By construction of $Y$, we see that $A\subseteq U$.
+		\item Note $x\in V_y$ for all $y\in Y\subseteq A$, so $x\in V$ as well.
+		\item Lastly, we see that $U$ and $V$ are disjoint: for each $z\in U$, we can find some $y\in Y$ such that $z\in U_y$, but then $z\notin V_y$ by construction, so $z\notin V$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary}
+	Fix a Hausdorff topological space $(X,\mc T)$, and let $A\subseteq X$ be compact. Then $A$ is closed.
+\end{corollary}
+\begin{proof}
+	For each $x\notin A$, \autoref{lem:separationforcompacthaus} grants us an open subset $V_x$ containing $x$ which is disjoint from $A$. It follows $V_x\subseteq X\setminus A$, so we may say
+	\[(X\setminus A)\subseteq\bigcup_{y\in X\setminus A}V_y\subseteq\bigcup_{y\in X\setminus A}(X\setminus A)=X\setminus A,\]
+	so $X\setminus A=\bigcup_{y\in X\setminus A}V_y$ shows that $X\setminus A$ is a union of open sets and therefore open. It follows that $A$ is closed.
+\end{proof}
+\begin{corollary} \label{cor:compacthausisregular}
+	Fix a compact Hausdorff topological space $(X,\mc T)$. Then all closed subsets $A\subseteq X$ and $x\notin A$ have disjoint open subsets $U$ and $V$ with $A\subseteq U$ and $x\in V$.
+\end{corollary}
+\begin{proof}
+	\autoref{lem:closedincompactiscompact} says that $A$ is compact, so \autoref{lem:separationforcompacthaus} finishes.
+\end{proof}
+The above property is useful enough to deserve a definition.
+\begin{definition}[Regular]
+	A topological space $(X,\mc T)$ is \textit{regular} if and only if each closed subset $A\subseteq X$ and $x\notin A$ have disjoint open subsets $U$ and $V$ with $A\subseteq U$ and $x\in V$.
+\end{definition}
+\begin{example}
+	Every compact Hausdorff space is regular by \autoref{cor:compacthausisregular}.
+\end{example}
+\begin{example}
+	Any normal, Hausdorff space is regular. For example, metric spaces are regular.
+\end{example}
+In fact, compact Hausdorff spaces are not just regular but also normal.
+\begin{proposition}
+	Fix a compact Hausdorff space $(X,\mc T)$. Then $(X,\mc T)$ is normal.
+\end{proposition}
+\begin{proof}
+	Fix disjoint closed subsets $A$ and $B$. Then $A$ and $B$ are compact by \autoref{lem:closedincompactiscompact}.
+
+	Now, for any $y\in B$, we see $y\notin A$, so \autoref{lem:separationforcompacthaus} grants us disjoint open subsets $U_y$ and $V_y$ such that $U_y$ contains $A$ and $V_y$ contains $y$. As before, we see $\{V_y\}_{y\in B}$ forms an open cover of $B$, so the compactness of $B$ promises a finite subset $Y\subseteq B$ such that $\{V_y\}_{y\in Y}$ still covers $B$. Thus, we set
+	\[U\coloneqq\bigcap_{y\in Y}U_y\qquad\text{and}\qquad V\coloneqq\bigcup_{y\in Y}V_y.\]
+	Here are our checks again.
+	\begin{itemize}
+		\item Note $U$ is open as a finite intersection of open sets. Similarly, $V$ is open as a union of open sets.
+		\item By construction $A\subseteq U_y$ for each $y$, so $A\subseteq U$.
+		\item By construction $\{V_y\}_{y\in Y}$ covers $B$, so $B\subseteq V$.
+		\item Lastly, to see that $U$ and $V$ are disjoint, note that any $z\in V$ has $z\in V_y$ for some $y\in Y$, so $z\notin U_y$, so $z\notin U$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Compact Images}
+We continue our fact-collection for compact spaces.
+\begin{lemma} \label{lem:compactimage}
+	Fix a continuous map $f\colon(X,\mc T_X)\to(Y,\mc T_Y)$. If $(X,\mc T_X)$ is compact, then $\im f\subseteq Y$ is also compact.
+\end{lemma}
+\begin{proof}
+	For psychological reasons, we may assume that $\im f=Y$, though we will not do this.
+
+	Suppose we have an open cover $\{V_\alpha\}_{\alpha\in\lambda}\subseteq\mc T_Y$ for $\im f$. Then we set
+	\[\mc U\coloneqq\left\{f^{-1}(V_\alpha)\right\}_{\alpha\in\lambda}\]
+	In particular, the continuity of $f$ promises that everyone is $\mc U$ is open. We claim $\mc U$ covers $X$: for any $x\in X$, we see $f(x)\in\im f$, so $f(x)\in V_\alpha$ for some $\alpha\in\lambda$, so $x\in f^{-1}(V_\alpha)\in\mc U$.
+
+	Thus, the compactness of $X$ promises a finite subset $\lambda'\subseteq\lambda$ so that $\left\{f^{-1}(V_\alpha)\right\}_{\alpha\in\lambda'}$ is still an open cover for $X$. Thus, we can see that the finite collection of open subsets
+	\[\{V_\alpha\}_{\alpha\in\lambda'}\subseteq\{V_\alpha\}_{\alpha\in\lambda}\]
+	still covers $\im f$. Indeed, for any $y\in\im f$, find $x\in X$ with $f(x)=y$, so place $x\in f^{-1}(V_\alpha)$ for some $\alpha\in\lambda'$, so $y\in V_\alpha$.
+\end{proof}
+\begin{corollary}
+	Fix a continuous function $f\colon\RR\to\RR$. Then, for any closed interval $[a,b]$, $f$ achieves its maximum on $[a,b]$.
+\end{corollary}
+\begin{proof}
+	Note that $f([a,b])$ is compact, and $\RR$ is Hausdorff, so $f([a,b])$ is also closed. Further, $f([a,b])$ is bounded because it is compact. Thus, $f([a,b])$ has all of its limit points and in particular contains its supremum.
+\end{proof}
+We take a moment to use this machinery to build an easier test for homeomorphisms; namely, we manifest \autoref{rem:betterhomeo}.
+\begin{proposition}
+	Fix a compact topological space $(X,\mc T_X)$ and a Hausdorff topological space $(Y,\mc T_Y)$. Then any continuous bijection $f\colon X\to Y$ is a homeomorphism.
+\end{proposition}
+\begin{proof}
+	The bijectivity of $f$ promises some inverse function $g\colon Y\to X$, which we need to show is continuous. Well, for an open subset $U\subseteq X$, we need to show that $g^{-1}(U)$ is open. But because $g$ is the inverse of $f$, we see
+	\[g^{-1}(U)=\{y\in Y:g(y)\in U\}=\{f(x)\in Y:g(f(x))\in U\}=f(U),\]
+	so we need to show that $f(U)$ is open. Taking compliments, we set $A\coloneqq X\setminus U$ so that $A$ is closed, and we will show that $f(A)$ is closed; this will finish because the bijectivity of $f$ forces
+	\[f(U)=f(X\setminus A)=f(X)\setminus f(A)=Y\setminus f(A)\]
+	to be open.
+
+	We are now ready to finish the proof. Because $(X,\mc T_X)$ is compact, $A$ being closed implies that $A$ is compact by \autoref{lem:closedincompactiscompact}. It follows by \autoref{lem:compactimage} that $f(A)$ is compact, so because $(Y,\mc T_Y)$ is Hausdorff, we see \autoref{lem:separationforcompacthaus} forces $f(A)$ to be closed. This finishes.
+\end{proof}
+
+\subsection{Compactness via Closed Sets}
+It will be helpful to be able to discuss compact sets in terms of closed sets.
+\begin{lemma} \label{lem:coverbycomplements}
+	A set $X$ is covered by a collection $\mc S\subseteq\mc P(X)$ if and only if
+	\[\bigcap_{S\in\mc S}(X\setminus S)=\emp.\]
+\end{lemma}
+\begin{proof}
+	Note
+	\[\bigcap_{S\in\mc S}(X\setminus S)=X{\mathbin\bigg\backslash}\bigcup_{S\in\mc S}X,\]
+	which is empty if and only if $\bigcup_{S\in\mc S}X=X$.
+\end{proof}
+\begin{corollary} \label{cor:closedcompac}
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is compact if and only if any collection of closed subsets $\mc V$ with $\bigcap_{V\in\mc V}V=\emp$ has some finite subcollection $\mc V'\subseteq\mc V$ with $\bigcap_{V\in\mc V'}V=\emp$.
+\end{corollary}
+\begin{proof}
+	If $X$ is compact, then note any collection of closed subsets $\mc V$ with $\bigcap_{V\in\mc V}V=\emp$ has
+	\[X=X{\mathbin\bigg\backslash}\bigcap_{V\in\mc V}V=\bigcup_{V\in\mc V}(X\setminus V),\]
+	so $\mc U=\{(X\setminus V):V\in\mc V\}$ is an open cover. Thus, we can find a finite subset $\mc V'\subseteq\mc V$ such that $\mc U'=\{(X\setminus V):V\in\mc V'\}$ covers $X$, so it follows that $\bigcap_{V\in\mc V'}V=\emp$ by taking complements, as above.
+
+	Conversely, we show that $X$ is compact. Well, pick up an open cover $\mc U$ of $X$. Then \autoref{lem:coverbycomplements} says that $\mc V=\{(X\setminus V):V\in\mc V\}$ has $\bigcap_{V\in\mc V}V=\emp$. By hypothesis on $X$, we get some finite subcollection $\mc U'\subseteq\mc U$ such that $\bigcap_{U\in\mc U'}(X\setminus U)=\emp$, so \autoref{lem:coverbycomplements} says $\mc U'$ covers $X$.
+\end{proof}
+It will be useful to have some language to describe this.
+\begin{definition}[Finite intersection property]
+	Fix a set $X$. A collection $\mc S\subseteq\mc P(X)$ has the \textit{finite intersection property} if and only if any nonempty finite subcollection $\mc S'\subseteq\mc S$ has
+	\[\bigcap_{S\in\mc S'}S\ne\emp.\]
+\end{definition}
+In particular, we get the following.
+\begin{proposition}
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is compact if and only if any collection $\mc V$ of closed subsets with the finite intersection property has
+	\[\bigcap_{V\in\mc V}V\ne\emp.\]
+\end{proposition}
+\begin{proof}
+	Applying contraposition to the conclusion, we are saying that any collection $\mc V$ with $\bigcap_{V\in\mc V}V=\emp$ has some finite subcollection $\mc V'\subseteq\mc V$ with $\bigcap_{V\in\mc V'}V=\emp$. This is equivalent to $(X,\mc T)$ being compact by \autoref{cor:closedcompac}.
+\end{proof}
+
+\end{document}
