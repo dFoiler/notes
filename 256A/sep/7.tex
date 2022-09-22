@@ -97,7 +97,7 @@ Thus, an isomorphism of locally ringed spaces is, of course, an isomorphism in t
 \end{lemma}
 \begin{proof}
 	Note that $(\varphi,\varphi^\sharp)$ is a morphism of locally ringed spaces already because any $x\in X$ has
-	\[\OO_{Y,\varphi(x)}\stackrel{\varphi^\sharp_{f(x)}}\to\]
+	\[\OO_{Y,\varphi(x)}\stackrel{\varphi^\sharp_{\varphi(x)}}\to(\varphi_*\OO_{X})_{\varphi(x)}\to\OO_{X,x}\]
 	is a string of isomorphisms: the former is an isomorphism because $\varphi^\sharp$ is, and the last is an isomorphism by \autoref{rem:naturalmapisiso}. Thus, this is a map of local rings for free.
 
 	We now construct the inverse for $(\varphi,\varphi^\sharp)$. Let $\psi\colon Y\to X$ be the inverse continuous map for $\varphi$. Also, for each $V\subseteq\OO_Y$, define the morphism $\psi^\sharp_V\colon\OO_Y(V)\to\psi_*\OO_X(V)$ as the inverse of the morphism
@@ -402,6 +402,376 @@ We will quickly provide an example that says that we really do need to pay atten
 \begin{nex}
 	Consider ring homomorphism $\ZZ_p\to\QQ_p$. However, $\Spec\ZZ_p=\{(0),(p)\}$ while $\Spec\QQ_p=\{(0)\}$. From the natural embedding $\iota\colon\ZZ_p\to\QQ_p$, we get a map sending $(0)\mapsto(0)$, and it will not be possible to get a ring homomorphism to send $(0)$ to $(p)$ because this forces $\QQ_p$ to have torsion. Nonetheless, one can upgrade sending $(0)\mapsto(p)$ to a full morphism of sheaves even though it will not be a morphism of locally ringed spaces.
 \end{nex}
+
+\subsection{Extending Geometry Is Opposite Algebra}
+It turns out that we can extend \autoref{prop:geoisoppalg} to work with general locally ringed spaces. We will state this as an adjunction of two functors. Here are our two functors.
+\begin{lemma}
+	The mapping $(X,\OO_X)\mapsto\OO_X(X)$ defines the action of a functor
+	\[\Gamma\colon\mathrm{LocRingSpace}\to\mathrm{Ring}\opp\]
+	on objects.
+\end{lemma}
+\begin{proof}
+	Given a morphism $(\varphi,\varphi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$, we induce a morphism
+	\[\OO_Y(Y)\stackrel{\varphi^\sharp_Y}\to\varphi_*\OO_X(Y)=\OO_X(X),\]
+	so we define $\Gamma((\varphi,\varphi^\sharp))\coloneqq\varphi^\sharp_Y$. Here are our functoriality checks.
+	\begin{itemize}
+		\item Identity: note that ${\id_{(X,\OO_X)}}=({\id_X},{\id_{\OO_X}})$, so this will induce the morphism $\Gamma({\id_{(X,\OO_X)}})=({\id_{\OO_X}})_X=\id_{\OO_X(X)}$.
+		\item Functoriality: given morphisms $(\varphi,\varphi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$ and $(\psi,\psi^\sharp)\colon(Y,\OO_Y)\to(Z,\OO_Z)$, we note the composite $(\psi,\psi^\sharp)\circ(\varphi,\varphi^\sharp)$ taken through $\Gamma$ acts as
+		\[\OO_Z(Z)\stackrel{\psi^\sharp_Z}\to\psi_*\OO_Y(Z)\stackrel{(\psi_*\varphi^\sharp)_{Z}}\to\psi_*\varphi_*\OO_X(Z)=\OO_X(X)\]
+		on global sections. Now, we can see that this composite is $\varphi^\sharp_Y\circ\psi^\sharp_Z=\Gamma((\varphi,\varphi^\sharp))\circ \Gamma((\psi,\psi^\sharp))$ on global sections.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:spec}
+	The mapping $A\mapsto(\Spec A,\OO_{\Spec A})$ defines the action of a functor
+	\[\Spec\colon\mathrm{Ring}\opp\to\mathrm{LocRingSpace}\]
+	on objects.
+\end{lemma}
+\begin{proof}
+	Given a ring homomorphism $f\colon A\to B$, we need to induce a morphism $(\varphi,\varphi^\sharp)\colon(\Spec B,\OO_{\Spec B})\to(\Spec A,\OO_{\Spec A})$. For brevity, given a ring $R$, we will define $\OO_R\coloneqq\OO_{\Spec R}$.
+	\begin{itemize}
+		\item On topological spaces, we define $\varphi\coloneqq f^{-1}$ to be our continuous map $\Spec B\to\Spec A$. This is continuous by \autoref{lem:specmorphism} and functorial by \autoref{lem:specmorphism}.
+		\item On sheaves, it suffices to induce the morphism $\varphi^\sharp\colon\OO_A\to\varphi_*\OO_B$ on the distinguished base $\{D(a)\}_{a\in A}$ by \autoref{lem:specmorphism}. Well, given $a\in A$, we can compute
+		\[\varphi^{-1}(D(a))=\{\mf q\in\Spec B:a\notin f^{-1}\mf q\}=\left\{\mf p\in\Spec A:f(a)\notin\mf q\right\}=D(f(a)),\]
+		so $\varphi^\sharp_{D(a)}$ is a map $A_a\to B_{f(a)}$. However, this is induced directly from the localization map $A\to B\to B_{f(a)}$ upon noting that $a\in A$ goes to a unit $f(a)\in B_{f(a)}$.
+
+		To finish, we do need to check that this is a morphism of sheaves on a base. Suppose $D(a')\subseteq D(a)$, which means that there is a canonical localization map $A_a\simeq A_{S(D(a))}\to A_{S(D(a'))}\simeq A_{a'}$. (Namely, $a\in A_{a'}^\times$.) Then we see that the left diagram of
+		% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiXFxPT19BKEQoYSkpIl0sWzAsMSwiXFxPT19BKEQoYScpKSJdLFsxLDAsIlxcdmFycGhpXypcXE9PX0IoRChhKSkiXSxbMSwxLCJcXHZhcnBoaV8qXFxPT19CKEQoYScpKSJdLFszLDAsIkFfYSJdLFszLDEsIkFfe2EnfSJdLFs0LDAsIkJfe2YoYSl9Il0sWzQsMSwiQl97ZihhJyl9Il0sWzUsMCwiYS8xIl0sWzUsMSwiYS8xIl0sWzYsMCwiZihhKS8xIl0sWzYsMSwiZihhKS8xIl0sWzAsMiwiXFx2YXJwaGleXFxzaGFycF97RChhKX0iXSxbMSwzLCJcXHZhcnBoaV5cXHNoYXJwX3tEKGEnKX0iXSxbMCwxLCJcXG9we3Jlc31fe0QoYSksRChhJyl9IiwyXSxbMiwzLCJcXG9we3Jlc31fe0QoYSksRChhJyl9Il0sWzQsNiwiZiJdLFs0LDVdLFs1LDcsImYiXSxbNiw3XSxbOCwxMCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxMCwxMSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs4LDksIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbOSwxMSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\OO_A(D(a))} & {\varphi_*\OO_B(D(a))} && {A_a} & {B_{f(a)}} & {x} & {f(x)} \\
+			{\OO_A(D(a'))} & {\varphi_*\OO_B(D(a'))} && {A_{a'}} & {B_{f(a')}} & {x/1} & {f(x)/1}
+			\arrow["{\varphi^\sharp_{D(a)}}", from=1-1, to=1-2]
+			\arrow["{\varphi^\sharp_{D(a')}}", from=2-1, to=2-2]
+			\arrow["{\op{res}_{D(a),D(a')}}"', from=1-1, to=2-1]
+			\arrow["{\op{res}_{D(a),D(a')}}", from=1-2, to=2-2]
+			\arrow["f", from=1-4, to=1-5]
+			\arrow[from=1-4, to=2-4]
+			\arrow["f", from=2-4, to=2-5]
+			\arrow[from=1-5, to=2-5]
+			\arrow[maps to, from=1-6, to=1-7]
+			\arrow[maps to, from=1-7, to=2-7]
+			\arrow[maps to, from=1-6, to=2-6]
+			\arrow[maps to, from=2-6, to=2-7]
+		\end{tikzcd}\]
+		commutes because it is the same as the middle diagram.
+	\end{itemize}
+	To finish our construction, we need to know that $(\varphi,\varphi^\sharp)\colon(\Spec B,\OO_B)\to(\Spec A,\OO_A)$ assembles into a map of locally ringed spaces. Namely, we need to verify that, for each $\mf q\in\Spec B$, the map
+	\[\arraycolsep=1.4pt\begin{array}{cccccccc}
+		\OO_{A,\varphi(\mf q)} &\stackrel{\varphi^\sharp_\mf q}\to& (\varphi_*\OO_B)_\mf q &\to& \OO_{B,\mf q} \\
+		\left[(D(a),s/a^m)\right] &\mapsto& \left[(D(a),f(s)/f(a)^m)\right] &\mapsto& \left[(D(f(a)),f(s)/f(a)^m)\right]
+	\end{array}\]
+	is a map of local rings; notably, we are using \autoref{lem:stalkbybase} to define the stalk on the distinguished base. Well, given $\left[(D(a),s/a^m)\right]\in\mf m_{\varphi(\mf q)}$ implies that $s\in\varphi(\mf q)=f^{-1}(\mf q)$, so $f(s)\in\mf q$, so $\left[(D(f(a)),f(s)/f(a)^m)\right]\in\mf m_\mf q$.
+
+	Thus, we define $\Spec f\coloneqq(\varphi,\varphi^\sharp)$. It remains to run our functoriality checks.
+	\begin{itemize}
+		\item Identity: note that $f=\id_A$ makes $\varphi\colon\Spec A\to\Spec A$ the identity \autoref{lem:specmorphism}, and each $a\in A$ induces the localization map $A_a\to A_{f(a)}$, which we can see visually is just the identity map. Thus, $\varphi^\sharp_{D(a)}$ is the identity for each distinguished base element $D(a)$, so $\varphi^\sharp\colon\OO_A\to\varphi_*\OO_A$ is just the identity by \autoref{lem:morphismonbase}.
+
+		Thus, $(\varphi,\varphi^\sharp)$ is the identity morphism on the locally ringed space $(\Spec A,\OO_A)$.
+		
+		\item Functoriality: fix ring morphisms $f\colon A\to B$ and $g\colon B\to C$ yielding morphisms of locally ringed spaces $(\varphi,\varphi^\sharp)\colon(\Spec B,\OO_B)\to(\Spec A,\OO_A)$ and $(\psi,\psi^\sharp)\colon(\Spec C,\OO_C)\to(\Spec B,\OO_B)$. For brevity, we will also define $(\gamma,\gamma^\sharp)=\Spec(g\circ f)$ to be the morphism induced by the composite. We need to show $(\gamma,\gamma^\sharp)=(\varphi,\varphi^\sharp)\circ(\psi,\psi^\sharp)$.
+
+		We already know we are functorial on the level of topological spaces (i.e., $\gamma=\varphi\circ\psi$) by \autoref{lem:specmorphism}. Then on sheaves, we need to check that $\gamma^\sharp=\varphi_*\psi^\sharp\circ\varphi^\sharp$. Well, for some distinguished open set $D(a)\subseteq\Spec A$, our composite is
+		\[(\varphi_*\psi^\sharp\circ\varphi^\sharp)_{D(a)}=\psi^\sharp_{\varphi^{-1}(D(a))}\circ\varphi^\sharp_{D(a)}=\psi^\sharp_{D(f(a))}\circ\varphi^\sharp_{D(a)}\]
+		using computations above. Unwrapping our construction, we see that this composite is the composite of the localized maps
+		\[A_a\stackrel f\to B_{f(a)}\stackrel g\to C_{g(f(a))},\]
+		which of course is just the single map $A_a\to C_{g(f(a))}$ induced by localizing $g\circ f$. So we do indeed match with $\gamma^\sharp$ on the base, so we have an equality of sheaves on the base by \autoref{lem:morphismonbase}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+We now exhibit the first of our natural maps.
+\begin{lemma} \label{lem:gammaspec}
+	We exhibit a map $\varepsilon_\bullet\colon\id_{\mathrm{Ring}}\Rightarrow\Gamma\Spec$.
+\end{lemma}
+\begin{proof}
+	Fix an object $A$. To begin, we compute
+	\[\Gamma((\Spec A,\OO_{\Spec A}))=\OO_{\Spec A}(\Spec A)=A,\]
+	so we set $\varepsilon_A\coloneqq\id_A$.
+	% The naturality check picks some ring morphism $f\colon A\to B$ and notes that the diagram
+	% % https://q.uiver.app/?q=WzAsNCxbMSwwLCJcXEdhbW1hKChcXFNwZWMgQSxcXE9PX3tcXFNwZWMgQX0pKSJdLFsxLDEsIlxcR2FtbWEoKFxcU3BlYyBCLFxcT09fe1xcU3BlYyBCfSkpIl0sWzAsMCwiQSJdLFswLDEsIkIiXSxbMCwxLCJcXEdhbW1hKFxcU3BlYyBmKSJdLFsyLDMsImYiLDJdLFsyLDAsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsMSwiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% \[\begin{tikzcd}
+	% 	A & {\Gamma((\Spec A,\OO_{\Spec A}))} \\
+	% 	B & {\Gamma((\Spec B,\OO_{\Spec B}))}
+	% 	\arrow["{\Gamma(\Spec f)}", from=1-2, to=2-2]
+	% 	\arrow["f"', from=1-1, to=2-1]
+	% 	\arrow[Rightarrow, no head, from=1-1, to=1-2]
+	% 	\arrow[Rightarrow, no head, from=2-1, to=2-2]
+	% \end{tikzcd}\]
+	% commutes because setting $(\varphi,\varphi^\sharp)=\Spec f$ has $\Gamma(\Spec f)=\varphi^\sharp_{\Spec A}=\varphi^\sharp_{D(1)}=\id_A$.
+\end{proof}
+Going in the other direction is a little more subtle because we need to construct a morphism of locally ringed spaces from a morphism of just the global sections. For example, we will need to construct a continuous map, so we will need access to some open sets. Here are the ones we will need.
+\begin{lemma} \label{lem:someopensupp}
+	Fix a locally ringed space $(X,\OO_X)$. Then, for some $f\in\OO_X(X)$, the subset
+	\[X_f\coloneqq\left\{p\in X:f|_p\in\OO_{X,p}^\times\right\}\]
+	is open in $X$.
+\end{lemma}
+\begin{proof}
+	For each $p\in X_f$, we need to provide an open neighborhood $U_p\subseteq X_f$ containing $p$. Well, we are given $f|_p\in\OO_{X,p}^\times$, so there is some germ $g_p$ such that
+	\[g_p\cdot f|_p=1.\]
+	In particular, giving $g_p$ a sufficiently restricted representative, we can find an open subset $U_p$ containing $p$ and some $g\in\OO_X(U_p)$ such that
+	\[g\cdot f|_{U_p}=1.\]
+	In particular, any $q\in U_p$ will thus have $g|_q\cdot f|_q=1$, so $f|_q\in\OO_{X,q}^\times$, so $q\in X_f$. Thus, $U_p\subseteq X_f$ does the trick.
+\end{proof}
+Here is another quick fact we will want.
+\begin{lemma} \label{lem:finvertsinxf}
+	Fix a locally ringed space $(X,\OO_X)$. For some $f\in\OO_X(X)$, consider the open set $X_f$ of \autoref{lem:someopensupp}. Then $f\in\OO_X(X_f)^\times$.
+\end{lemma}
+\begin{proof}
+	For each $p\in X_f$, we know that $f|_p\in\OO_{X,p}$ is a unit, so find $g_p\in\OO_{X,p}$ with $f|_p\cdot g_p=1$. We claim that $(g_p)_{p\in X_f}$ is a compatible system of germs. Well, for each $p\in U$, the equation
+	\[f|_p\cdot g_p=1\]
+	promises an open set $U_p\subseteq X_f$ containing $p$ and a lift $\widetilde g_p\in\OO_X(U_p)$ such that $f|_{U_p}\cdot\widetilde g_p=1$. Thus, for any $q\in U_p$, we see
+	\[f|_q\cdot\widetilde g_p|_q=1,\]
+	so uniqueness of multiplicative inverses forces $\widetilde g_p|_q=g_q$. This finishes the compatibility check.
+
+	Thus, we are granted $g\in\OO_X(X_f)$ such that $(fg)|_p=f|_p\cdot g|_p=1$ for each $p\in X_f$. It follows that $fg=1$ by \autoref{prop:stalkinjection}, so we have witnessed $f\in\OO_X(X_f)^\times$.
+\end{proof}
+And here is the result.
+\begin{lemma} \label{lem:specgamma}
+	We exhibit a map $\eta_\bullet\colon\id_{\mathrm{LocRingSpace}}\Rightarrow\Spec\Gamma$.
+\end{lemma}
+\begin{proof}
+	Fix a locally ringed space $(X,\OO_X)$ so that we need to exhibit a map
+	\[\varepsilon_X\colon(X,\OO_X)\to(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)}).\]
+	We define this map in pieces.
+	\begin{itemize}
+		\item We need a continuous map $\varphi\colon X\to\Spec\OO_X(X)$. Well, given $p\in X$, we define $\varphi(p)\in\Spec\OO_X(X)$ as the kernel of the composite
+		\[\OO_X(X)\to\OO_{X,p}\onto\OO_{X,p}/\mf m_{X,p}.\]
+		This kernel makes a prime ideal because modding out by it induces a subring of $\OO_{X,p}/\mf m_{X,p}$, which must be an integral domain.
+
+		To see that $\varphi$ is continuous, it suffices to check on the distinguished open base. Well, for some $f\in\OO_X(X)$, we see that
+		\[\varphi^{-1}(D(f))=\{p\in X:\varphi(p)\in D(f)\}=\{p\in X:f\notin\varphi(p)\}=\{p\in X:f|_p\notin\mf m_{X,p}\}.\]
+		However, this last condition is equivalent to $f|_p\in\OO_{X,p}^\times$, so our pre-image is the open set $X_f$ by \autoref{lem:someopensupp}.
+
+		\item Next we need a sheaf morphism $\varphi^\sharp\colon\OO_{\Spec\OO_X(X)}\to\varphi_*\OO_X$. By \autoref{lem:morphismonbase}, it suffices to exhibit $\varphi^\sharp$ on the distinguished base of $\OO_{\Spec\OO_X(X)}$. Well, for some $f\in\OO_X(X)$, we need a map
+		\[\OO_X(X)_f\simeq\OO_{\Spec\OO_X(X)}(D(f))\to\OO_X\left(\varphi^{-1}(D(f))\right)=\OO_X(X_f).\]
+		Now, there is the obvious restriction map $\OO_X(X)\to\OO_X(X_f)$, and $f\in\OO_X(X_f)^\times$ by \autoref{lem:finvertsinxf} will exhibit the required map $\varphi^\sharp_{D(f)}\colon\OO_X(X)_f\to\OO_X(X_f)$.
+
+		We now check that we have built a morphism of sheaves on the distinguished base. Well, given that $D(f')\subseteq D(f)$ for $f,f'\in\OO_X(X)$, we see that the diagram
+		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiXFxPT197XFxTcGVjXFxPT19YKFgpfShEKGYpKSJdLFswLDEsIlxcT09fe1xcU3BlY1xcT09fWChYKX0oRChmJykpIl0sWzEsMCwiXFxPT19YKFgpX2YiXSxbMSwxLCJcXE9PX1goWClfe2YnfSJdLFsyLDAsIlxcT09fWChYX2YpIl0sWzIsMSwiXFxPT19YKFhfe2YnfSkiXSxbNCwwLCJhXFxjZG90IGZeey1ufSJdLFs0LDEsImFcXGNkb3QgZl57LW59Il0sWzUsMCwiYXxfe1hfZn1cXGNkb3QoZnxfe1hfZn0pXnstbn0iXSxbNSwxLCJhfF97WF97Zid9fVxcY2RvdChmfF97WF97Zid9fSleey1ufSJdLFswLDEsIlxcb3B7cmVzfV97RChmKSxEKGYnKX0iLDJdLFswLDIsIlxcc2ltZXEiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsNSwiXFxvcHtyZXN9X3tYX2YsWF97Zid9fSIsMl0sWzIsNF0sWzMsNV0sWzYsOCwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNyw5LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzgsOSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\OO_{\Spec\OO_X(X)}(D(f))} & {\OO_X(X)_f} & {\OO_X(X_f)} && {a\cdot f^{-n}} & {a|_{X_f}\cdot(f|_{X_f})^{-n}} \\
+			{\OO_{\Spec\OO_X(X)}(D(f'))} & {\OO_X(X)_{f'}} & {\OO_X(X_{f'})} && {a\cdot f^{-n}} & {a|_{X_{f'}}\cdot(f|_{X_{f'}})^{-n}}
+			\arrow["{\op{res}_{D(f),D(f')}}", from=1-1, to=2-1]
+			\arrow["\simeq"{description}, draw=none, from=1-1, to=1-2]
+			\arrow["\simeq"{marking}, draw=none, from=2-1, to=2-2]
+			\arrow["{\op{res}_{X_f,X_{f'}}}"', from=1-3, to=2-3]
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=2-2, to=2-3]
+			\arrow[maps to, from=1-5, to=1-6]
+			\arrow[maps to, from=1-5, to=2-5]
+			\arrow[maps to, from=2-5, to=2-6]
+			\arrow[maps to, from=1-6, to=2-6]
+		\end{tikzcd}\]
+		commutes, so we have uniquely induced $\varphi^\sharp$ by \autoref{lem:morphismonbase}.
+	\end{itemize}
+	We should also verify that $(\varphi,\varphi^\sharp)$ assembles into a morphism of locally ringed spaces. Fixing a point $p\in X$, we need to show
+	\[\arraycolsep=1.4pt\begin{array}{cccccccc}
+		(\OO_{\Spec\OO_X(X)})_{\varphi(p)} &\stackrel{\varphi^\sharp_{\varphi(p)}}\to& (\varphi_*\OO_X)_{\varphi(p)} &\to& \OO_{X,p} \\
+		{[(D(f),s/f^n)]} &\mapsto& \left[(D(f),s|_{X_f}\cdot(f|_{X_f})^{-n})\right] &\mapsto& \left[(X_f,s|_{X_f}\cdot(f|_{X_f})^{-n})\right]
+	\end{array}\]
+	is a map of local rings; notably, we are using \autoref{lem:stalkbybase} to define the stalk on the distinguished base. Well, $[(D(f),s/f^n)]\in\mf m_{\varphi(p)}$ implies $s\in\varphi(p)$, so $s|_p\in\mf m_p$, so $\left[(X_f,s|_{X_f}\cdot(f|_{X_f})^{-n})\right]\in\mf m_p$. Thus, we have indeed defined a morphism $\eta_{X,\OO_X}\coloneqq(\varphi,\varphi^\sharp)$.
+	% It remains to check naturality. Fix a morphism $(\pi,\pi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$, and we need the diagram
+	% % https://q.uiver.app/?q=WzAsNCxbMCwwLCIoWCxcXE9PX1gpIl0sWzEsMCwiKFxcU3BlY1xcT09fWChYKSxcXE9PX3tcXFNwZWNcXE9PX1goWCl9KSJdLFsxLDEsIihcXFNwZWNcXE9PX1koWSksXFxPT197XFxTcGVjXFxPT19ZKFkpfSkiXSxbMCwxLCIoWSxcXE9PX1kpIl0sWzAsMywiKFxccGksXFxwaV5cXHNoYXJwKSIsMl0sWzEsMiwiXFxTcGVjXFxHYW1tYShcXHBpLFxccGleXFxzaGFycCkiXSxbMCwxLCJcXGV0YV97KFgsXFxPT19YKX0iXSxbMywyLCJcXGV0YV97KFksXFxPT19ZKX0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% \[\begin{tikzcd}
+	% 	{(X,\OO_X)} & {(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})} \\
+	% 	{(Y,\OO_Y)} & {(\Spec\OO_Y(Y),\OO_{\Spec\OO_Y(Y)})}
+	% 	\arrow["{(\pi,\pi^\sharp)}"', from=1-1, to=2-1]
+	% 	\arrow["{\Spec\Gamma(\pi,\pi^\sharp)}", from=1-2, to=2-2]
+	% 	\arrow["{\eta_{(X,\OO_X)}}", from=1-1, to=1-2]
+	% 	\arrow["{\eta_{(Y,\OO_Y)}}", from=2-1, to=2-2]
+	% \end{tikzcd}\]
+	% to commute. For brevity, let $f\colon\OO_Y(Y)\to\OO_X(X)$ be $\Gamma(\pi,\pi^\sharp)=\pi^\sharp_Y$ and $(\varpi,\varpi^\sharp)\coloneqq\Spec f$. We also set $(\alpha,\alpha^\sharp)\coloneqq\eta_{(X,\OO_X)}$ and $(\beta,\beta^\sharp)\coloneqq\eta_{(Y,\OO_Y)}$.
+	% There are now two checks.
+	% \begin{itemize}
+	% 	\item On topological spaces, we want the diagram
+	% 	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJYIl0sWzEsMCwiXFxTcGVjXFxPT19YIl0sWzAsMSwiWSJdLFsxLDEsIlxcU3BlY1xcT09fWSJdLFsyLDAsInAiXSxbMywwLCJcXHtmOmZ8X3BcXGluXFxtZiBtX3BcXH0iXSxbMiwxLCJcXHBpKHApIl0sWzMsMSwiXFx7ZzpnfF97XFxwaShwKX1cXGluXFxtZiBtX3tcXHBpKHApfVxcfSJdLFswLDEsIlxcYWxwaGEiXSxbMCwyLCJcXHBpIiwyXSxbMiwzLCJcXGJldGEiXSxbMSwzLCJcXHZhcnBpIl0sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% 	\[\begin{tikzcd}
+	% 		X & {\Spec\OO_X} & p & {\ker(\OO_X(X)\to\mf m_p)} \\
+	% 		Y & {\Spec\OO_Y} & {\pi(p)} & {\ker(\OO_Y(Y)\to\mf m_{\pi(p)})}
+	% 		\arrow["\alpha", from=1-1, to=1-2]
+	% 		\arrow["\pi"', from=1-1, to=2-1]
+	% 		\arrow["\beta", from=2-1, to=2-2]
+	% 		\arrow["\varpi", from=1-2, to=2-2]
+	% 		\arrow[maps to, from=1-3, to=1-4]
+	% 		\arrow[maps to, from=1-3, to=2-3]
+	% 		\arrow[maps to, from=2-3, to=2-4]
+	% 	\end{tikzcd}\]
+	% 	to commute. Now, we need to compute $\varpi(\{r:r|_p\in\mf m_p\})$, which is $f^{-1}(\{r:r|_p\in\mf m_p\})$, which is
+	% 	\[\varpi(\{r:r|_p\in\mf m_p\})=f^{-1}(\{r:r|_p\in\mf m_p\})=\left\{s:\pi^\sharp_Y(s)|_p\in\mf m_p\right\}.\]
+	% 	However, because $\pi^\sharp$ assembles into a morphism of locally ringed spaces, $\pi^\sharp_Y(s)|_p\in\mf m_p$ is equivalent to $s|_{\pi(p)}\in\mf m_{\pi(p)}$. This finishes our check.
+	% 	\item On sheaves, we want the diagram
+	% 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX3tcXFNwZWNcXE9PX1koWSl9Il0sWzEsMCwiXFxiZXRhXypcXE9PX1kiXSxbMCwxLCJcXHZhcnBpXypcXE9PX3tcXFNwZWNcXE9PX1goWCl9Il0sWzEsMSwiXFx2YXJwaV8qXFxhbHBoYV8qXFxPT19YIl0sWzAsMiwiXFx2YXJwaV5cXHNoYXJwIiwyXSxbMSwzLCJcXGJldGFfKlxccGleXFxzaGFycCJdLFswLDEsIlxcYmV0YV5cXHNoYXJwIl0sWzIsMywiXFx2YXJwaV8qXFxhbHBoYV5cXHNoYXJwIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% 	\[\begin{tikzcd}
+	% 		{\OO_{\Spec\OO_Y(Y)}} & {\beta_*\OO_Y} \\
+	% 		{\varpi_*\OO_{\Spec\OO_X(X)}} & {\varpi_*\alpha_*\OO_X}
+	% 		\arrow["{\varpi^\sharp}"', from=1-1, to=2-1]
+	% 		\arrow["{\beta_*\pi^\sharp}", from=1-2, to=2-2]
+	% 		\arrow["{\beta^\sharp}", from=1-1, to=1-2]
+	% 		\arrow["{\varpi_*\alpha^\sharp}", from=2-1, to=2-2]
+	% 	\end{tikzcd}\]
+	% 	to commute. We will show this on the distinguished open base, which is enough by \autoref{lem:morphismonbase}. Fix some $b\in\OO_Y(Y)$. Note $\mf q\in\varpi^{-1}(D(b))$ if and only if $f^{-1}\mf q\in D(b)$ if and only if $b\notin f^{-1}\mf q$ if and only if $f(b)\notin\mf q$ if and only if $\mf q\in D(f(b))$. Thus, tracking the diagram around, we are looking at
+	% 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX3tcXFNwZWNcXE9PX1koWSl9KEQoYikpIl0sWzEsMCwiXFxPT19ZKFlfYikiXSxbMCwxLCJcXE9PX3tcXFNwZWNcXE9PX1goWCl9KEQoZihiKSkpIl0sWzEsMSwiXFxPT19YKFhfe2YoYil9KSJdLFswLDIsIlxcdmFycGleXFxzaGFycF97RChiKX0iLDJdLFsxLDMsIlxccGleXFxzaGFycF97WV9ifSJdLFswLDEsIlxcYmV0YV5cXHNoYXJwX3tEKGIpfSJdLFsyLDMsIlxcYWxwaGFeXFxzaGFycF97RChmKGIpKX0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% 	\[\begin{tikzcd}
+	% 		{\OO_{\Spec\OO_Y(Y)}(D(b))} & {\OO_Y(Y_b)} \\
+	% 		{\OO_{\Spec\OO_X(X)}(D(f(b)))} & {\OO_X(X_{f(b)})}
+	% 		\arrow["{\varpi^\sharp_{D(b)}}"', from=1-1, to=2-1]
+	% 		\arrow["{\pi^\sharp_{Y_b}}", from=1-2, to=2-2]
+	% 		\arrow["{\beta^\sharp_{D(b)}}", from=1-1, to=1-2]
+	% 		\arrow["{\alpha^\sharp_{D(f(b))}}", from=2-1, to=2-2]
+	% 	\end{tikzcd}\]
+	% 	where we have used the computations of $\alpha^\sharp$ and $\beta^\sharp$ in their constructions on the distinguished base. Beginning to unravel our definitions, we note $\varpi^\sharp_{D(b)}$ is the map $\OO_Y(Y)_b\to\OO_X(X)_{f(b)}$ coming from localizing $\pi^\sharp_Y$. So we see that the diagram
+	% 	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1koWSlfYiJdLFsxLDAsIlxcT09fWShZX2IpIl0sWzAsMSwiXFxPT19YKFgpX3tcXHBpXlxcc2hhcnBfWShiKX0iXSxbMSwxLCJcXE9PX1goWF97ZihiKX0pIl0sWzIsMCwici9iXm4iXSxbMywwLCJyfF97RChiKX1cXGNkb3QoYnxfe0QoYil9KV57LW59Il0sWzIsMSwiXFxwaV5cXHNoYXJwX1kocikvXFxwaV5cXHNoYXJwX1koYilebiJdLFszLDEsIlxccGleXFxzaGFycF9ZKHIpfF97RChmKGIpKX1cXGNkb3QoXFxwaV5cXHNoYXJwX1koYil8X3tEKGYoYikpfSleey1ufSJdLFswLDIsIlxcdmFycGleXFxzaGFycF97RChiKX0iLDJdLFsxLDMsIlxccGleXFxzaGFycF97WV9ifSJdLFswLDEsIlxcYmV0YV5cXHNoYXJwX3tEKGIpfSJdLFsyLDMsIlxcYWxwaGFeXFxzaGFycF97RChmKGIpKX0iXSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% 	\[\begin{tikzcd}
+	% 		{\OO_Y(Y)_b} & {\OO_Y(Y_b)} & {r/b^n} & {r|_{D(b)}\cdot(b|_{D(b)})^{-n}} \\
+	% 		{\OO_X(X)_{\pi^\sharp_Y(b)}} & {\OO_X(X_{f(b)})} & {\pi^\sharp_Y(r)/\pi^\sharp_Y(b)^n} & {\pi^\sharp_Y(r)|_{D(f(b))}\cdot(\pi^\sharp_Y(b)|_{D(f(b))})^{-n}}
+	% 		\arrow["{\varpi^\sharp_{D(b)}}"', from=1-1, to=2-1]
+	% 		\arrow["{\pi^\sharp_{Y_b}}", from=1-2, to=2-2]
+	% 		\arrow["{\beta^\sharp_{D(b)}}", from=1-1, to=1-2]
+	% 		\arrow["{\alpha^\sharp_{D(f(b))}}", from=2-1, to=2-2]
+	% 		\arrow[maps to, from=1-3, to=1-4]
+	% 		\arrow[maps to, from=1-4, to=2-4]
+	% 		\arrow[maps to, from=1-3, to=2-3]
+	% 		\arrow[maps to, from=2-3, to=2-4]
+	% 	\end{tikzcd}\]
+	% 	commutes, which finishes this check.
+	% 	\qedhere
+	% \end{itemize}
+\end{proof}
+We are now ready to show the main result.
+\begin{theorem} \label{thm:biggeoisalgopp}
+	Given a locally ringed space $(X,\OO_X)$ and a ring $A$, there is a natural bijection
+	\[\arraycolsep=1.4pt\begin{array}{ccccc}
+		\op{Hom}((X,\OO_X),(\Spec A,\OO_{\Spec A})) &\simeq& \op{Hom}(A,\OO_X(X)) \\
+		(\varphi,\varphi^\sharp) &\mapsto& A=\OO_{\Spec A}(A)\to\OO_X(X) \\
+		(X,\OO_X)\to(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})\stackrel{\Spec f}\to(\Spec A,\OO_{\Spec A}) &\mapsfrom& f
+	\end{array}\]
+	where we are using the natural maps constructed in \autoref{lem:gammaspec} and \autoref{lem:specgamma}.
+\end{theorem}
+\begin{proof}
+	Naturality will follow easily from what we've already done as soon as we show that these are inverses. We have two checks.
+	\begin{itemize}
+		\item Beginning with a ring homomorphism $f\colon A\to\OO_X(X)$, for brevity set $(\varphi,\varphi^\sharp)\coloneqq\Spec f$ and $\eta_X=(\psi,\psi^\sharp)$. Now, we are studying the composite
+		\[(X,\OO_X)\stackrel{(\psi,\psi^\sharp)}\to(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})\stackrel{(\varphi,\varphi^\sharp)}\to(\Spec A,\OO_{\Spec A}).\]
+		We are interested in what this composite looks like on global sections. On sheaves, we are looking at
+		\[\OO_{\Spec A}\stackrel{\varphi^\sharp}\to\varphi_*\OO_{\Spec\OO_X(X)}\stackrel{\varphi_*\psi^\sharp}\to\varphi_*\psi_*\OO_X.\]
+		However, on global sections, this simplifies to
+		\[\underbrace{\OO_{\Spec A}(\Spec A)}_A\stackrel{\varphi^\sharp_{D(1)}}\to\underbrace{\OO_{\Spec\OO_X(X)}(\Spec\OO_X(X))}_{\OO_X(X)}\stackrel{\psi^\sharp_{D(1)}}\to\OO_X(X).\]
+		Expanding out our definitions, $\varphi^\sharp_{D(1)}$ is supposed to be $f$ localized at $1$, but this is just $f$; also, $\psi^\sharp_{D(1)}$ is supposed to be some localized restriction map, but it is just the identity. So indeed, our composite is $f$.
+
+		\item Begin with a morphism of locally ringed spaces $(\pi,\pi^\sharp)\colon(X,\OO_X)\to(\Spec A,\OO_{\Spec A})$. Under $\Gamma$, this gives rise to the ring homomorphism $\pi^\sharp_{\Spec A}\colon A\to\OO_X(X)$; set $f\coloneqq\pi^\sharp_{\Spec A}$ and $(\varphi,\varphi^\sharp)=\Spec f$. Going backward, we label our natural map by $\eta_{(X,\OO_X)}$ by $(\alpha,\alpha^\sharp)\colon(X,\OO_X)\to(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})$, and we want to show that $(\pi,\pi^\sharp)$ agrees with the composite
+		\[(X,\OO_X)\stackrel{(\alpha,\alpha^\sharp)}\to(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})\stackrel{(\varphi,\varphi^\sharp)}\to(\Spec A,\OO_{\Spec A}).\]
+		As before, there are two checks.
+		\begin{itemize}
+			\item On topological spaces, we want the diagram
+			% https://q.uiver.app/?q=WzAsNixbMCwwLCJYIl0sWzEsMCwiXFxTcGVjXFxPT19YKFgpIl0sWzEsMSwiXFxTcGVjIEEiXSxbMiwwLCJwIl0sWzMsMCwiXFxrZXIoXFxPT19YKFgpXFx0b1xcbWYgbV9wKSJdLFszLDEsIlxccGkocCkiXSxbMCwyLCJcXHBpIiwyXSxbMSwyLCJcXHZhcnBoaSJdLFswLDEsIlxcYWxwaGEiXSxbMyw0LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				X & {\Spec\OO_X(X)} & p & {\ker(\OO_X(X)\to\mf m_p)} \\
+				& {\Spec A} && {\pi(p)}
+				\arrow["\pi"', from=1-1, to=2-2]
+				\arrow["\varphi", from=1-2, to=2-2]
+				\arrow["\alpha", from=1-1, to=1-2]
+				\arrow[maps to, from=1-3, to=1-4]
+				\arrow[maps to, from=1-3, to=2-4]
+			\end{tikzcd}\]
+			to commute. As such, recalling $\varphi$ is given by $f^{-1}$, we compute
+			\begin{align*}
+				f^{-1}(\ker(\OO_X(X)\to\mf m_p)) &= f^{-1}(\{r\in\OO_X(X):r|_p\in\mf m_p\}) \\
+				&= \{a\in A:f(a)|_p\in\mf m_p\} \\
+				&= \{a\in A:\pi^\sharp_{\Spec A}(a)|_p\in\mf m_p\}.
+			\end{align*}
+			However, $(\pi,\pi^\sharp)$ being a morphism of locally ringed spaces says that $\pi^\sharp_{\Spec A}(a)|_p\in\mf m_p$ is equivalent to $a|_{\pi(p)}\in\mf m_{\pi(p)}$.
+			
+			Now, for a prime $\mf p\in\Spec A$, we have $a|_{\mf p}\in\mf m_{\mf p}=\mf pA_\mf p$ if and only if $fa\in\mf p$ for some $f\notin\mf p$, which is equivalent to $a\in\mf p$. Thus, we do indeed get out $\pi(p)$ from the above computation, as needed.
+
+			\item On sheaves, we want the diagram
+			% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX3tcXFNwZWMgQX0iXSxbMSwxLCJcXHBpXypcXE9PX1giXSxbMSwwLCJcXHZhcnBoaV8qXFxPT197XFxTcGVjXFxPT19YKFgpfSJdLFswLDEsIlxccGleXFxzaGFycCIsMl0sWzAsMiwiXFx2YXJwaGleXFxzaGFycCJdLFsyLDEsIlxcYWxwaGFeXFxzaGFycCJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\OO_{\Spec A}} & {\varphi_*\OO_{\Spec\OO_X(X)}} \\
+				& {\pi_*\OO_X}
+				\arrow["{\pi^\sharp}"', from=1-1, to=2-2]
+				\arrow["{\varphi^\sharp}", from=1-1, to=1-2]
+				\arrow["{\varphi_*\alpha^\sharp}", from=1-2, to=2-2]
+			\end{tikzcd}\]
+			to commute, which at least see makes sense from the above topological check. By \autoref{lem:morphismonbase}, it suffices to check this on the distinguished base of $\Spec A$, so fix some $a\in A$. Plugging in $D(a)$, we want the diagram
+			% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX3tcXFNwZWMgQX0oRChhKSkiXSxbMSwxLCJcXHBpXypcXE9PX1goRChhKSkiXSxbMSwwLCJcXHZhcnBoaV8qXFxPT197XFxTcGVjXFxPT19YKFgpfShEKGEpKSJdLFswLDEsIlxccGleXFxzaGFycF97RChhKX0iLDJdLFswLDIsIlxcdmFycGhpXlxcc2hhcnBfe0QoYSl9Il0sWzIsMSwiKFxcdmFycGhpXypcXGFscGhhXlxcc2hhcnApX3tEKGEpfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\OO_{\Spec A}(D(a))} & {\varphi_*\OO_{\Spec\OO_X(X)}(D(a))} \\
+				& {\pi_*\OO_X(D(a))}
+				\arrow["{\pi^\sharp_{D(a)}}"', from=1-1, to=2-2]
+				\arrow["{\varphi^\sharp_{D(a)}}", from=1-1, to=1-2]
+				\arrow["{(\varphi_*\alpha^\sharp)_{D(a)}}", from=1-2, to=2-2]
+			\end{tikzcd}\]
+			to commute. Recalling the computations from \autoref{lem:spec}, we see that $\varphi^{-1}(D(a))=D(f(a))$, and the map $\varphi^\sharp_{D(a)}\colon A_a\to\OO_X(X)_{f(a)}$ is induced by localizing $f$. Similarly, the definition of $\alpha^\sharp$ says that $(\varphi_*\alpha^\sharp)_{D(a)}=\alpha^\sharp_{D(f(a))}$ is the localization of the restriction map $\OO_X(X)\to\OO_X(X_{f(a)})$. So we are staring at the diagram
+			% https://q.uiver.app/?q=WzAsMyxbMCwwLCJBX2EiXSxbMSwxLCJcXE9PX1goWF97ZihhKX0pIl0sWzEsMCwiXFxPT19YKFgpX3tmKGEpfSJdLFswLDEsIlxccGleXFxzaGFycF97RChhKX0iLDJdLFswLDIsImYiXSxbMiwxLCJcXG9we3Jlc31fe1gsWF97ZihhKX19Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{A_a} & {\OO_X(X)_{f(a)}} \\
+				& {\OO_X(X_{f(a)})}
+				\arrow["{\pi^\sharp_{D(a)}}"', from=1-1, to=2-2]
+				\arrow["f", from=1-1, to=1-2]
+				\arrow["{\op{res}_{X,X_{f(a)}}}", from=1-2, to=2-2]
+			\end{tikzcd}\]
+			which commutes because $f=\pi^\sharp_{\Spec A}$. Indeed, this triangle is the localization of the diagram
+			% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX3tcXFNwZWMgQX0oXFxTcGVjIEEpIl0sWzEsMCwiXFxPT19YKFgpIl0sWzAsMSwiXFxPT197XFxTcGVjIEF9KEQoYSkpIl0sWzEsMSwiXFxPT19YKFhfe1xccGleXFxzaGFycF97XFxTcGVjIEF9KGEpfSkiXSxbMCwxLCJcXHBpXlxcc2hhcnBfe1xcU3BlYyBBfSJdLFsxLDMsIlxcb3B7cmVzfV97WCxYX3tcXHBpXlxcc2hhcnBfe1xcU3BlYyBBfShhKX19Il0sWzAsMiwiXFxvcHtyZXN9X3tcXFNwZWMgQSxEKGEpfSIsMl0sWzIsMywiXFxwaV5cXHNoYXJwX3tEKGEpfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\OO_{\Spec A}(\Spec A)} & {\OO_X(X)} \\
+				{\OO_{\Spec A}(D(a))} & {\OO_X(X_{\pi^\sharp_{\Spec A}(a)})}
+				\arrow["{\pi^\sharp_{\Spec A}}", from=1-1, to=1-2]
+				\arrow["{\op{res}_{X,X_{\pi^\sharp_{\Spec A}(a)}}}", from=1-2, to=2-2]
+				\arrow["{\op{res}_{\Spec A,D(a)}}"', from=1-1, to=2-1]
+				\arrow["{\pi^\sharp_{D(a)}}", from=2-1, to=2-2]
+			\end{tikzcd}\]
+			at $a\in A$.
+		\end{itemize}
+	\end{itemize}
+	The above checks show that we have defined inverse morphisms. There are two naturality checks.
+	\begin{itemize}
+		\item Given a ring homomorphism $h\colon B\to A$, we see that the diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG9we0hvbX0oKFgsXFxPT19YKSwoXFxTcGVjIEEsXFxPT197XFxTcGVjIEF9KSkiXSxbMSwwLCJcXG9we0hvbX0oQSxcXE9PX1goWCkpIl0sWzEsMSwiXFxvcHtIb219KEIsXFxPT19YKFgpKSJdLFszLDAsImYiXSxbMywxLCJmXFxjaXJjIGgiXSxbMiwwLCJcXFNwZWMgZlxcY2lyY1xcZXRhX3soWCxcXE9PX1gpfSJdLFsyLDEsIlxcU3BlYyAoZlxcY2lyYyBoKVxcY2lyY1xcZXRhX3soWCxcXE9PX1gpfSJdLFswLDEsIlxcb3B7SG9tfSgoWCxcXE9PX1gpLChcXFNwZWMgQixcXE9PX3tcXFNwZWMgQn0pKSJdLFsxLDIsIi1cXGNpcmMgaCJdLFszLDUsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMyw0LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDYsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCw3LCJcXFNwZWMgaFxcY2lyYy0iXSxbMCwxLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzcsMiwiXFxzaW1lcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[column sep=small]
+			{\op{Hom}((X,\OO_X),(\Spec A,\OO_{\Spec A}))} & {\op{Hom}(A,\OO_X(X))} & {\Spec f\circ\eta_{(X,\OO_X)}} & f \\
+			{\op{Hom}((X,\OO_X),(\Spec B,\OO_{\Spec B}))} & {\op{Hom}(B,\OO_X(X))} & {\Spec (f\circ h)\circ\eta_{(X,\OO_X)}} & {f\circ h}
+			\arrow["{-\circ h}", from=1-2, to=2-2]
+			\arrow[maps to, from=1-4, to=1-3]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-3]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow["{\Spec h\circ-}", from=1-1, to=2-1]
+			\arrow["\simeq"{marking}, draw=none, from=1-1, to=1-2]
+			\arrow["\simeq"{marking}, draw=none, from=2-1, to=2-2]
+		\end{tikzcd}\]
+		commutes.
+		\item Given a scheme morphism $(\pi,\pi^\sharp)\colon(Y,\OO_Y)\to(X,\OO_X)$, we see that the diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG9we0hvbX0oKFgsXFxPT19YKSwoXFxTcGVjIEEsXFxPT197XFxTcGVjIEF9KSkiXSxbMSwwLCJcXG9we0hvbX0oQSxcXE9PX1goWCkpIl0sWzEsMSwiXFxvcHtIb219KEEsXFxPT19YKFkpKSJdLFszLDAsIlxcR2FtbWEoKFxcdmFycGhpLFxcdmFycGhpXlxcc2hhcnApKSJdLFszLDEsIlxcR2FtbWEoKFxcdmFycGhpLFxcdmFycGhpXlxcc2hhcnApXFxjaXJjKFxccGksXFxwaV5cXHNoYXJwKSkiXSxbMiwwLCIoXFx2YXJwaGksXFx2YXJwaGleXFxzaGFycCkiXSxbMiwxLCIoXFx2YXJwaGksXFx2YXJwaGleXFxzaGFycClcXGNpcmMoXFxwaSxcXHBpXlxcc2hhcnApIl0sWzAsMSwiXFxvcHtIb219KChZLFxcT09fWSksKFxcU3BlYyBBLFxcT09fe1xcU3BlYyBBfSkpIl0sWzEsMiwiXFxHYW1tYSgoXFxwaSxcXHBpXlxcc2hhcnApKVxcY2lyYy0iXSxbNSwzLCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsNCwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDQsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw2LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzAsNywiLVxcY2lyYyhcXHBpLFxccGleXFxzaGFycCkiXSxbMCwxLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzcsMiwiXFxzaW1lcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[column sep=small]
+			{\op{Hom}((X,\OO_X),(\Spec A,\OO_{\Spec A}))} & {\op{Hom}(A,\OO_X(X))} & {(\varphi,\varphi^\sharp)} & {\Gamma((\varphi,\varphi^\sharp))} \\
+			{\op{Hom}((Y,\OO_Y),(\Spec A,\OO_{\Spec A}))} & {\op{Hom}(A,\OO_X(Y))} & {(\varphi,\varphi^\sharp)\circ(\pi,\pi^\sharp)} & {\Gamma((\varphi,\varphi^\sharp)\circ(\pi,\pi^\sharp))}
+			\arrow["{\Gamma((\pi,\pi^\sharp))\circ-}", from=1-2, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-3, to=2-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow["{-\circ(\pi,\pi^\sharp)}", from=1-1, to=2-1]
+			\arrow["\simeq"{marking}, draw=none, from=1-1, to=1-2]
+			\arrow["\simeq"{marking}, draw=none, from=2-1, to=2-2]
+		\end{tikzcd}\]
+		commutes.
+	\end{itemize}
+	The above checks complete the proof.
+\end{proof}
+As a nice consequence, we get a pretty nice check for a scheme to be affine.
+\begin{corollary}
+	If $(X,\OO_X)$ is an affine scheme, then the map $\varepsilon_X\colon(X,\OO_X)\to(\OO_X(X),\OO_{\Spec\OO_X(X)})$ of \autoref{lem:specgamma} is an isomorphism.
+\end{corollary}
+\begin{proof}
+	Because $(X,\OO_X)$ is affine, there is some ring $A$ with an isomorphism $(\varphi,\varphi^\sharp)\colon(\Spec A,\OO_{\Spec A})\cong(X,\OO_X)$. However, on global sections, we see are granted an isomorphism
+	\[\Gamma((\varphi,\varphi^\sharp))\colon\OO_X(X)\to A.\]
+	Set $f\coloneqq\Gamma((\varphi,\varphi^\sharp))$, so applying $\Spec$ gives us the composite
+	\[(X,\OO_X){(\varphi,\varphi^\sharp)^{-1}}\cong(\Spec A,\OO_{\Spec A})\stackrel{\Spec f}\cong(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)}),\]
+	which on global sections behaves as
+	\[\OO_X(X)\stackrel{(\varphi^\sharp_{\Spec A})^{-1}}\cong\OO_{\Spec A}(A)=A\stackrel f\cong\OO_X(X),\]
+	where this composite is just the identity by definition.
+
+	Thus, we have induced an isomorphism $(X,\OO_X)\cong(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})$ which is the identity on global sections. Applying \autoref{thm:biggeoisalgopp}, we see that $\Spec$ of the identity is still the identity, so this morphism is just given by $\varepsilon_X$.
+\end{proof}
 
 \subsection{Scheme Examples}
 Schemes have a lot of data. Let's try to make it more concrete; we'll be satisfied with just two examples today. We won't be very rigorous because we haven't defined gluing yet.
