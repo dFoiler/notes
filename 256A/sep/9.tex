@@ -18,35 +18,178 @@ We are not going to need modules for quite some time, but we will go ahead and d
 \end{remark}
 We will remark that one can define kernels, cokernels, and images as we did for sheaves values in general abelian categories, so the category of $\OO_X$-modules is again an abelian category. We refer to \cite[\S2.6.3]{rising-sea}.
 
-\subsection{Gluing Schemes}
-Here is the main idea.
+\subsection{Gluing Scheme Morphisms}
+We are going to want to build new schemes from old ones. Because all schemes are covered by affine schemes, our primary way of making schemes is going to be by gluing (especially affine) schemes together. Because affine schemes make open sets, we are going to want to glue ``open subschemes.''
 \begin{definition}[Open subscheme]
 	Fix a scheme $(X,\OO_X)$ and an open subset $U\subseteq X$. Then we define the scheme $(U,\OO_X|_U)$ to be an \textit{open subscheme}.
 \end{definition}
-Checking that we in fact have a scheme is annoying but not particularly hard; one merely has to restrict the affine open cover to $U$.
+In particular, $(U,\OO_X|_U)$ is still a scheme, as we saw in \autoref{cor:getopensubscheme}.
 \begin{example}
 	Given an affine scheme $(\Spec A,\OO_{\Spec A})$, we note that taking $U\coloneqq D(f)$ has
 	\[(U,\OO_{\Spec A}|_U)=(\Spec A_f,\OO_{\Spec A_f}),\]
 	where we are using \autoref{exe:distinguishedisaffine}.
 \end{example}
-Before we define gluing, we should pick up the following.
-\begin{proposition} \label{prop:morphismtoaffine}
-	Fix a scheme $(X,\OO_X)$. Given an affine scheme $(\Spec A,\OO_A)$, we can define
-	\[\op{Mor}_{\mathrm{Sch}_X}((X,\OO_X),(\Spec A,\OO_A))\simeq\op{Hom}_{\mathrm{Ring}}(A,\OO_X(X)).\]
-\end{proposition}
-This is intended to generalize \autoref{prop:geoisoppalg}.
-\begin{remark}
-	Reversing the arguments in \autoref{prop:morphismtoaffine} is no longer true.
+As a taste of how we glue schemes, we will start by gluing scheme morphisms. To be able to glue, we need to be able to restrict, so here is our restriction.
+\begin{lemma} \label{lem:restrictlocringspacemorphism}
+	Fix a scheme morphism $(\varphi,\varphi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$ and an open subset $U\subseteq X$. Then $(\varphi|_U,\varphi^\sharp|_U)$ assembles into a scheme morphism $(U,\OO_X|_U)\to(Y,\OO_Y)$.
+\end{lemma}
+\begin{proof}
+	The restriction of a continuous function is still continuous, so $\varphi|_U\colon U\to Y$ is still continuous. We now define $\varphi^\sharp|_U\colon\OO_Y\to(\varphi|_U)_*(\OO_X|_U)$: for each open $V\subseteq Y$, we see $(\varphi|_U)^{-1}(V)=U\cap\varphi^{-1}(V)$, so we want a map $\OO_Y(V)\to\OO_X(U\cap\varphi^{-1}(V))$, so we define $(\varphi^\sharp|_U)_V$ as the composite
+	\[\OO_Y(V)\stackrel{\varphi^\sharp_V}\to\OO_X\left(\varphi^{-1}(V)\right)\stackrel{\op{res}_{\varphi^{-1}V,U\cap\varphi^{-1}V}}\to\OO_X\left(U\cap\varphi^{-1}(V)\right).\]
+	To see that $\varphi^\sharp|_U$ assembles into a sheaf morphism, fix open sets $V'\subseteq V\subseteq U$, and we note the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1koVikiXSxbMCwxLCJcXE9PX1koVicpIl0sWzEsMCwiKFxcdmFycGhpfF9VKV8qKFxcT09fWHxfVSkoVikiXSxbMSwxLCIoXFx2YXJwaGl8X1UpXyooXFxPT19YfF9VKShWJykiXSxbMiwzLCJcXG9we3Jlc31fe1YsVid9Il0sWzAsMSwiXFxvcHtyZXN9X3tWLFYnfSIsMl0sWzAsMiwiKFxcdmFycGhpXlxcc2hhcnB8X1UpX1YiXSxbMSwzLCIoXFx2YXJwaGleXFxzaGFycHxfVSlfe1YnfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(V)} & {(\varphi|_U)_*(\OO_X|_U)(V)} \\
+		{\OO_Y(V')} & {(\varphi|_U)_*(\OO_X|_U)(V')}
+		\arrow["{\op{res}_{V,V'}}", from=1-2, to=2-2]
+		\arrow["{\op{res}_{V,V'}}"', from=1-1, to=2-1]
+		\arrow["{(\varphi^\sharp|_U)_V}", from=1-1, to=1-2]
+		\arrow["{(\varphi^\sharp|_U)_{V'}}", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	commutes because it is the same as 
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXE9PX1koVikiXSxbMCwxLCJcXE9PX1koVicpIl0sWzEsMCwiXFxPT19YKFxcdmFycGhpXnstMX0oVikpIl0sWzEsMSwiXFxPT19YKFxcdmFycGhpXnstMX0oVicpKSJdLFsyLDAsIlxcT09fWChVXFxjYXBcXHZhcnBoaV57LTF9KFYpKSJdLFsyLDEsIlxcT09fWChVXFxjYXBcXHZhcnBoaV57LTF9KFYnKSkiXSxbMiwzLCJcXG9we3Jlc31fe1xcdmFycGhpXnstMX1WLFxcdmFycGhpXnstMX1WJ30iXSxbMCwxLCJcXG9we3Jlc31fe1YsVid9IiwyXSxbMCwyLCJcXHZhcnBoaV5cXHNoYXJwX1YiXSxbMSwzLCJcXHZhcnBoaV5cXHNoYXJwX3tWJ30iXSxbNCw1LCJcXG9we3Jlc31fe1VcXGNhcFxcdmFycGhpXnstMX1WLFVcXGNhcFxcdmFycGhpXnstMX1WJ30iXSxbMiw0LCJcXG9we3Jlc30iXSxbMyw1LCJcXG9we3Jlc30iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(V)} & {\OO_X(\varphi^{-1}(V))} & {\OO_X(U\cap\varphi^{-1}(V))} \\
+		{\OO_Y(V')} & {\OO_X(\varphi^{-1}(V'))} & {\OO_X(U\cap\varphi^{-1}(V'))}
+		\arrow["{\op{res}_{\varphi^{-1}V,\varphi^{-1}V'}}", from=1-2, to=2-2]
+		\arrow["{\op{res}_{V,V'}}"', from=1-1, to=2-1]
+		\arrow["{\varphi^\sharp_V}", from=1-1, to=1-2]
+		\arrow["{\varphi^\sharp_{V'}}", from=2-1, to=2-2]
+		\arrow["{\op{res}_{U\cap\varphi^{-1}V,U\cap\varphi^{-1}V'}}", from=1-3, to=2-3]
+		\arrow["{\op{res}}", from=1-2, to=1-3]
+		\arrow["{\op{res}}", from=2-2, to=2-3]
+	\end{tikzcd}\]
+	where now the left square commutes because $\varphi^\sharp$ is a sheaf morphism, and the right diagram commutes because $\OO_X$ is a sheaf.
+	\begin{remark} \label{rem:restrictlocringspacemorphism}
+		If we only wanted a morphism of ringed spaces, then we could end the proof here. We remark here to point out that we can also restrict ``morphisms of ringed spaces.''
+	\end{remark}
+	It remains to check that $(\varphi|_U,\varphi^\sharp|_U)$ assembles into a morphism of locally ringed spaces. Well, fixing some point $p\in U$, we want to show that the composite
+	\[\arraycolsep=1.4pt\begin{array}{ccccccccc}
+		\OO_{Y,\varphi(p)} &\stackrel{(\varphi^\sharp|_U)_{\varphi(p)}}\to& ((\varphi|_U)_*\OO_X)_{\varphi(p)} &\to& (\OO_X|_U)_p \\
+		{[(V,s)]} &\mapsto& [(V,\varphi^\sharp_V(s)|_{U\cap\varphi^{-1}V})] &\mapsto& [(U\cap\varphi^{-1}V,\varphi^\sharp_V(s)|_{U\cap\varphi^{-1}V})]
+	\end{array}\]
+	is a map of local rings. It will suffice to show that the diagram
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJcXE9PX3tZLFxcdmFycGhpKHApfSJdLFsxLDEsIihcXHZhcnBoaV8qXFxPT19YKV97XFx2YXJwaGkocCl9Il0sWzIsMSwiXFxPT197WCxwfSJdLFswLDAsIlxcT09fe1ksXFx2YXJwaGkocCl9Il0sWzEsMCwiKFxcdmFycGhpfF9VKV8qKFxcT09fWHxfVSlfe1xcdmFycGhpKHApfSJdLFsyLDAsIihcXE9PX1h8X1UpX3AiXSxbMyw0LCIoXFx2YXJwaGleXFxzaGFycHxfVSlfe1xcdmFycGhpKHApfSJdLFs0LDVdLFsxLDJdLFswLDEsIlxcdmFycGhpXlxcc2hhcnBfcCJdLFszLDAsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_{Y,\varphi(p)}} & {(\varphi|_U)_*(\OO_X|_U)_{\varphi(p)}} & {(\OO_X|_U)_p} \\
+		{\OO_{Y,\varphi(p)}} & {(\varphi_*\OO_X)_{\varphi(p)}} & {\OO_{X,p}}
+		\arrow["{(\varphi^\sharp|_U)_{\varphi(p)}}", from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=2-2, to=2-3]
+		\arrow["{\varphi^\sharp_{\varphi(p)}}", from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+		\arrow[Rightarrow, no head, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	commutes. Notably, $[(U\cap\varphi^{-1}V,\varphi^\sharp_V(s)|_{U\cap\varphi^{-1}V})]=[(\varphi^{-1}V,\varphi^\sharp_V(s)]$. Additionally, \autoref{lem:invimagestalk} (combined with the notation that $\OO_X|_U$ refers to the inverse image presheaf) tells us that $(\OO_X|_U)_p\simeq\OO_{X,p}$ by $[(V,s)]\mapsto[(V,s)]$. Thus, we can track through the above diagram as
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJbKFYscyldIl0sWzEsMSwiWyhWLFxcdmFycGhpXlxcc2hhcnBfVihzKSldIl0sWzIsMSwiWyhcXHZhcnBoaV57LTF9VixcXHZhcnBoaV5cXHNoYXJwX1YocykpXSJdLFswLDAsIlsoVixzKV0iXSxbMSwwLCJbKFYsXFx2YXJwaGleXFxzaGFycF9WKHMpfF97VVxcY2FwXFx2YXJwaGleey0xfVZ9KV0iXSxbMiwwLCJbKFVcXGNhcFxcdmFycGhpXnstMX1WLFxcdmFycGhpXlxcc2hhcnBfVihzKXxfe1VcXGNhcFxcdmFycGhpXnstMX1WfSldIl0sWzMsNCwiKFxcdmFycGhpXlxcc2hhcnB8X1UpX3tcXHZhcnBoaShwKX0iLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxLDIsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCwxLCJcXHZhcnBoaV5cXHNoYXJwX3AiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsMCwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNSwyLCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{[(V,s)]} & {[(V,\varphi^\sharp_V(s)|_{U\cap\varphi^{-1}V})]} & {[(U\cap\varphi^{-1}V,\varphi^\sharp_V(s)|_{U\cap\varphi^{-1}V})]} \\
+		{[(V,s)]} & {[(V,\varphi^\sharp_V(s))]} & {[(\varphi^{-1}V,\varphi^\sharp_V(s))]}
+		\arrow["{(\varphi^\sharp|_U)_{\varphi(p)}}", maps to, from=1-1, to=1-2]
+		\arrow[maps to, from=1-2, to=1-3]
+		\arrow[maps to, from=2-2, to=2-3]
+		\arrow["{\varphi^\sharp_{\varphi(p)}}", maps to, from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+		\arrow[Rightarrow, no head, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	which does indeed commute.
+\end{proof}
+\begin{remark} \label{rem:restrictmorphismlocringspace}
+	From the above proof, it will be worth our time to keep the commutative diagram
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJcXE9PX3tZLFxcdmFycGhpKHApfSJdLFsxLDEsIihcXHZhcnBoaV8qXFxPT19YKV97XFx2YXJwaGkocCl9Il0sWzIsMSwiXFxPT197WCxwfSJdLFswLDAsIlxcT09fe1ksXFx2YXJwaGkocCl9Il0sWzEsMCwiKFxcdmFycGhpfF9VKV8qKFxcT09fWHxfVSlfe1xcdmFycGhpKHApfSJdLFsyLDAsIihcXE9PX1h8X1UpX3AiXSxbMyw0LCIoXFx2YXJwaGleXFxzaGFycHxfVSlfe1xcdmFycGhpKHApfSJdLFs0LDVdLFsxLDJdLFswLDEsIlxcdmFycGhpXlxcc2hhcnBfcCJdLFszLDAsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_{Y,\varphi(p)}} & {(\varphi|_U)_*(\OO_X|_U)_{\varphi(p)}} & {(\OO_X|_U)_p} \\
+		{\OO_{Y,\varphi(p)}} & {(\varphi_*\OO_X)_{\varphi(p)}} & {\OO_{X,p}}
+		\arrow["{(\varphi^\sharp|_U)_{\varphi(p)}}", from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=2-2, to=2-3]
+		\arrow["{\varphi^\sharp_p}", from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+		\arrow[Rightarrow, no head, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	in a safe place. Notably, the proof of the commutativity of this diagram does not need to know that $(\varphi,\varphi^\sharp)$ is actually a morphism of local rings.
 \end{remark}
-\autoref{prop:morphismtoaffine} will follow from the following, where we let the open cover $\mc U$ below comes from the affine open cover.
+And now we can glue morphisms.
+% \begin{proposition} \label{prop:morphismtoaffine}
+% 	Fix a scheme $(X,\OO_X)$. Given an affine scheme $(\Spec A,\OO_A)$, we can define
+% 	\[\op{Mor}_{\mathrm{Sch}_X}((X,\OO_X),(\Spec A,\OO_A))\simeq\op{Hom}_{\mathrm{Ring}}(A,\OO_X(X)).\]
+% \end{proposition}
+% This is intended to generalize \autoref{thm:geoisoppalg}.
+% \begin{remark}
+% 	Reversing the arguments in \autoref{prop:morphismtoaffine} is no longer true.
+% \end{remark}
+% \autoref{prop:morphismtoaffine} will follow from the following, where we let the open cover $\mc U$ below comes from the affine open cover.
 \begin{proposition}
-	Fix schemes $(X,\OO_X)$ and $(Y,\OO_Y)$. Let $\mc U$ be an open cover for $X$; then, given scheme morphisms $\varphi_U\colon U\to Y$ of such that
-	\[\varphi_U|_{U\cap U'}=\varphi_{U'}|_{U\cap U'},\]
-	there is a unique scheme morphism $\varphi\colon X\to Y$ such that $\varphi|_U=\varphi_U$.
+	Fix schemes $(X,\OO_X)$ and $(Y,\OO_Y)$. Let $\{U_\alpha\}_{\alpha\in\lambda}$ be an open cover for $X$; then, given scheme morphisms $(\varphi_\alpha,\varphi^\sharp_\alpha)\colon(U_\alpha,\OO_X|_{U_\alpha})\to Y$ such that any $\alpha,\beta\in\lambda$ have
+	\[(\varphi_\alpha,\varphi^\sharp_\alpha)|_{U_\alpha\cap U_\beta}=(\varphi_\beta,\varphi^{\sharp}_\beta)|_{U_\alpha\cap U_\beta},\]
+	there is a unique scheme morphism $(\varphi,\varphi^\sharp)\colon (X,\OO_X)\to (Y,\OO_Y)$ such that $(\varphi,\varphi^\sharp)|_{U_\alpha}=(\varphi_\alpha,\varphi^{\sharp}_\alpha)$.
 \end{proposition}
 \begin{proof}
-	Apply force.
+	Notably, we are using \autoref{lem:restrictmorphism} to discuss the restriction of our morphisms. We show uniqueness and existence separately.
+	\begin{itemize}
+		\item Uniqueness: suppose that we have two scheme morphisms $(\varphi,\varphi^\sharp),(\psi,\psi^\sharp)\colon(X,\OO_X)\to(Y,\OO_Y)$ which restrict to $(\varphi_\alpha,\varphi^{\sharp}_\alpha)$ on each $U\in\mc U$. On the level of topological spaces, we see that any $p\in X$ has $p\in U_\alpha$ for some $\alpha$, so
+		\[\varphi(p)=\varphi_\alpha(p)=\psi(p).\]
+		On the level of sheaves, pick up some open subset $V\subseteq Y$. Because $(\varphi,\varphi^\sharp)|_{U_\alpha}=(\varphi_\alpha,\varphi^\sharp_\alpha)$, we are promised that the diagram
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXE9PX1koVikiXSxbMSwwLCJcXHZhcnBoaV8qXFxPT19YKFYpIl0sWzIsMCwiXFxPT19YKFxcdmFycGhpXnstMX0oVikpIl0sWzAsMSwiXFxPT19YKFYpIl0sWzEsMSwiKFxcdmFycGhpX1xcYWxwaGEpXyooXFxPT19YfF97VV9cXGFscGhhfSkoVikiXSxbMiwxLCJcXE9PX1goVV9cXGFscGhhXFxjYXBcXHZhcnBoaV57LTF9KFYpKSJdLFsxLDIsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsMSwiXFx2YXJwaGleXFxzaGFycF9WIl0sWzAsMywiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMyw0LCIoXFx2YXJwaGleXFxzaGFycF9cXGFscGhhKV9WIl0sWzQsNSwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw1LCJcXG9we3Jlc31fe1xcdmFycGhpXnstMX1WLFVfXFxhbHBoYVxcY2FwXFx2YXJwaGleey0xfVZ9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}
+				{\OO_Y(V)} & {\varphi_*\OO_X(V)} & {\OO_X(\varphi^{-1}(V))} \\
+				{\OO_Y(V)} & {(\varphi_\alpha)_*(\OO_X|_{U_\alpha})(V)} & {\OO_X(U_\alpha\cap\varphi^{-1}(V))}
+				\arrow[Rightarrow, no head, from=1-2, to=1-3]
+				\arrow["{\varphi^\sharp_V}", from=1-1, to=1-2]
+				\arrow[Rightarrow, no head, from=1-1, to=2-1]
+				\arrow["{(\varphi^\sharp_\alpha)_V}", from=2-1, to=2-2]
+				\arrow[Rightarrow, no head, from=2-2, to=2-3]
+				\arrow["{\op{res}_{\varphi^{-1}V,U_\alpha\cap\varphi^{-1}V}}", from=1-3, to=2-3]
+			\end{tikzcd} \label{eq:definesheafmapglue}
+		\end{equation}
+		commutes for each $\alpha\in\lambda$. In particular, tracking some $s\in\OO_X(V)$ through, we see that
+		\[\varphi^\sharp_V(s)|_{U_\alpha\cap\varphi^{-1}V}=\varphi^\sharp_\alpha(s)\]
+		for each $\alpha\in\lambda$, so the identity axiom on $\OO_X$ uniquely determines $\varphi^\sharp(s)$. Thus, $\varphi^\sharp_V$ is uniquely determined.
+
+		\item Existence: On the level of topological spaces, we pick up any $p\in X$ and find some $U_\alpha$ containing $p$, so we define $\varphi(p)\coloneqq\varphi_\alpha(p)$. This is well-defined because $p\in U_\alpha\cap U_\beta$ implies
+		\[\varphi_\alpha(p)=\varphi_\alpha|_{U_\alpha\cap U_\beta}(p)=\varphi_\beta|_{U_\alpha\cap U_\beta}(p)=\varphi_\beta(p).\]
+		Additionally, $\varphi$ is continuous because any open $V\subseteq Y$ will have
+		\[\varphi^{-1}(V)=\bigcup_{\alpha\in\lambda}\{p\in U_\alpha:\varphi(p)\in V\}=\bigcup_{\alpha\in\lambda}\{p\in U_\alpha:\varphi_\alpha(p)\in V\}=\bigcup_{\alpha\in\lambda}\varphi^{-1}_\alpha(V),\]
+		and $\varphi^{-1}_\alpha(V)$ is open in $U_\alpha$ and hence in $X$, so this arbitrary union remains open.
+
+		It remains to define our map on the level of sheaves. Fix some $s\in\OO_Y(V)$. Using the diagram of \autoref{eq:definesheafmapglue} as our intuition, we define $s_\alpha\coloneqq(\varphi_\alpha^\sharp)_V(s)\in\OO_X(U_\alpha\cap\varphi^{-1}(V))$, which we would like to glue. Well, for any $\alpha,\beta\in\lambda$, we see that
+		\begin{align*}
+			s_\alpha|_{U_\alpha\cap U_\beta\cap\varphi^{-1}(V)} &= (\varphi_\alpha^\sharp)_V(s)|_{U_\alpha\cap U_\beta\cap\varphi^{-1}(V)} \\
+			&= (\varphi_\alpha^\sharp|_{U_\alpha\cap U_\beta})_V(s) \\
+			&= (\varphi_\beta^\sharp|_{U_\alpha\cap U_\beta})_V(s) \\
+			&= (\varphi_\beta^\sharp)_V(s)|_{U_\alpha\cap U_\beta\cap\varphi^{-1}(V)} \\
+			&= s_\alpha|_{U_\alpha\cap U_\beta\cap\varphi^{-1}(V)},
+		\end{align*}
+		so the $\{s_\alpha\}_{\alpha\in\lambda}$ on the open cover $\{U_\alpha\cap\varphi^{-1}V\}_{\alpha\in\lambda}$ of $\varphi^{-1}(V)$ grants a unique $s\in\varphi_*\OO_X(V)$ such that $s|_{U_\alpha\cap\varphi^{-1}V}=s_\alpha$. In other words, $\varphi^\sharp_V(s)\in\OO_X(\varphi^{-1}(V))$ should be uniquely defined to have
+		\begin{equation}
+			\varphi^\sharp_V(s)|_{U_\alpha\cap\varphi^{-1}(V)}=(\varphi^\sharp_\alpha)_V(s). \label{eq:definegluedsheafmorphism}
+		\end{equation}
+		We now run our checks.
+		\begin{itemize}
+			\item Sheaf morphism: given open sets $V'\subseteq V\subseteq Y$, we see that
+			\begin{align*}
+				\big(\varphi^\sharp_V(s)|_{V'}\big)|_{U_\alpha\cap\varphi^{-1}(V')} &= \varphi^\sharp_V(s)|_{U_\alpha\cap\varphi^{-1}(V)}|_{U_\alpha\cap\varphi^{-1}(V')} \\
+				&=(\varphi^\sharp_\alpha)_V(s)|_{U_\alpha\cap\varphi^{-1}(V')} \\
+				&= (\varphi^\sharp_\alpha)_{V'}(s|_{V'})|_{U_\alpha\cap\varphi^{-1}(V')}
+			\end{align*}
+			for each $\alpha\in\lambda$, so $\varphi^\sharp_V(s)|_{V'}=(\varphi^\sharp_\alpha)_{V'}(s|_{V'})$ follows.
+			\item Ring morphism: we won't write this out, but one should just use the uniqueness of \autoref{eq:definegluedsheafmorphism} to verify the various properties for a ring morphism. For example, $(\varphi^\sharp_\alpha)_V(1)=1$ everywhere because we have ring maps, so it follows $\varphi^\sharp_V(s)$ by uniqueness. Similarly,
+			\[(\varphi^\sharp_\alpha)_V(ax+by)=(\varphi^\sharp_\alpha)_V(a)\cdot(\varphi^\sharp_\alpha)_V(x)+(\varphi^\sharp_\alpha)_V(b)\cdot(\varphi^\sharp_\alpha)_V(y)\]
+			because $(\varphi^\sharp_\alpha)_V$ is a ring map, so gluing all $\alpha\in\lambda$ forces $\varphi^\sharp_V(ax+by)=\varphi^\sharp_V(a)\varphi^\sharp_V(x)+\varphi^\sharp_V(b)\varphi^\sharp_V(y)$.
+			\item Restrictions: we show that $(\varphi,\varphi^\sharp)|_{U_\alpha}=(\varphi_\alpha,\varphi^\sharp_\alpha)$ as morphisms of ringed spaces. (Namely, the algorithm to restrict from \autoref{lem:restrictlocringspacemorphism} also works for ringed spaces, as noted in \autoref{rem:restrictlocringspacemorphism}.) On the level of topological spaces, by construction we have $\varphi|_{U_\alpha}(p)=\varphi_\alpha(p)$ for each $p\in U_\alpha$. On the level of sheaves, we note that the map $(\varphi^\sharp)|_{U_\alpha}\colon\OO_Y\to(\varphi|_{U_\alpha})_*\OO_X$ by definition sends $s\in\OO_Y(V)$ to
+			\[((\varphi^\sharp)|_{U_\alpha})_V(s)=\varphi^\sharp_V(s)|_{U_\alpha\cap\varphi^{-1}V}=(\varphi^\sharp_\alpha)_V(s),\]
+			where the last equality is by \autoref{eq:definegluedsheafmorphism}. This finishes.
+			\item Locally ringed space: we show that $(\varphi,\varphi^\sharp)$ is a morphism of locally ringed spaces. Well, for some $p\in X$, place $p$ in some $U\coloneqq U_\alpha$, and we note that we want the bottom row of the diagram in \autoref{rem:restrictmorphismlocringspace} to be a map of local rings. Thus, it suffices for the top row of the diagram in \autoref{rem:restrictmorphismlocringspace} to be a map of local rings, but this is clear because $\varphi^\sharp|_{U_\alpha}=\varphi^\sharp_\alpha$ and $\varphi|_U=\varphi_\alpha$ already makes
+			\[\OO_{Y,\varphi(p)}\stackrel{(\varphi_\alpha^\sharp)_{\varphi(p)}}\to((\varphi_\alpha)_*(\OO_X|_{U_\alpha})_{\varphi_\alpha(p)}\to(\OO_X)_p\]
+			a map of local rings because $(\varphi_\alpha,\varphi^\sharp_\alpha)$ is a morphism of locally ringed spaces.
+		\end{itemize}
+		The above checks complete the proof.
+		\qedhere
+	\end{itemize}
 \end{proof}
+
+\subsection{Gluing Schemes}
 So far we've glued together morphisms. It remains to glue together schemes. This will be similar to the way that we glue together sheaves.
 \begin{proposition}
 	Fix schemes $(X_i,\OO_i)$ for each $i\in I$, with an open subset $U_{ij}\subseteq X_i$ for each $i$, where $X_{ii}=X_i$; let $X_{ij}$ be the induced open subscheme. Further, pick up some isomorphisms $f_{ji}\colon X_{ij}\to X_{ji}$ satisfying the cocycle condition

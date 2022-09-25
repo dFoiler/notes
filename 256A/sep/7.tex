@@ -317,8 +317,8 @@ Here are some quick facts about this definition.
 	\end{tikzcd}\]
 	because all the maps are just localization maps in various orders. In particular, all elements in the top row can be written in the form $s/a^m$ for some $s\in A$ and $m\in\NN$, which makes all maps on the top the identity. Then transporting this element to the bottom row, all elements become exactly $s/a^m$, so the diagram is indeed commuting.
 \end{proof}
-\begin{cor}
-	Fix a scheme $(X,\OO_X)$. Then any open subset $U\subseteq X$ induces an open subscheme $(U,\OO_X|_U)$.
+\begin{cor} \label{cor:getopensubscheme}
+	Fix a scheme $(X,\OO_X)$. Then any open subset $U\subseteq X$ induces an ``open subscheme'' $(U,\OO_X|_U)$.
 \end{cor}
 \begin{proof}
 	The affine case follows from \autoref{lem:openbasescheme}. The general case follows by reducing to an affine open cover.
@@ -333,8 +333,8 @@ Here are some quick facts about this definition.
 \end{proof}
 
 \subsection{Geometry Is Opposite Algebra}
-Here is the fun part of our definition of morphisms for locally ringed spaces.
-\begin{proposition} \label{prop:geoisoppalg}
+We are going to build towards the following result.
+\begin{restatable}{theorem}{geoisalgopp} \label{thm:geoisoppalg}
 	The functors
 	\[\arraycolsep=1.4pt\begin{array}{ccc}
 		\mathrm{Rings}\opp &\simeq& \mathrm{AffSch} \\
@@ -342,69 +342,8 @@ Here is the fun part of our definition of morphisms for locally ringed spaces.
 		\OO_X(X) &\mapsfrom& (X,\OO_X)
 	\end{array}\]
 	define an equivalence of categories.
-\end{proposition}
-\begin{proof}
-	For brevity, let $\OO_A$ denote the structure sheaf of a ring $A$. Now, the leftward map is essentially surjective by definition of an affine scheme, so the main point is that we have to show
-	\[\op{Mor}_{\mathrm{AffSch}}\left((\Spec B,\OO_B),(\Spec A,\OO_A)\right)\cong\op{Hom}_{\mathrm{Ring}}(A,B).\]
-	We define the left and right maps separately.
-	\begin{itemize}
-		\item In one direction, suppose we have a ring homomorphism $f^\sharp\colon A\to B$, and we need to recover a morphism of affine schemes. We already have a continuous map $f\coloneqq\Spec f^\sharp$ going $\Spec B\to\Spec A$.
-	
-		Additionally, we can extend $f^\sharp$ to be a sheaf morphism $f^\sharp\colon\OO_A\to f_*\OO_B$. It is enough to define this morphism on a base: pick up some open $D(s)\subseteq\Spec A$ so that $\OO_A(D(s))=A_s$. It follows
-		\[f_*\OO_B(D(s))=\OO_B\left(f^{-1}(D(s))\right)=\OO_B(D(f^\sharp s))=B_{f^\sharp(s)},\]
-		so there is a natural map $f^\sharp(D(s))\colon A_s\to B_{f^\sharp(s)}$. From here, it's not hard to check that this gives a morphism of sheaves on a base.
-
-		Lastly, we need to check that we actually have a morphism of locally ringed spaces. Well, given $\mf p\in\Spec B$, the stalk map turns out to be
-		\[f^\sharp_{f(\mf p)}\colon A_{f(\mf p)}\to B_\mf p,\]
-		which we can see to be a local ring homomorphism by passing through the maximal ideal $\mf m_{A,f(\mf p)}$ by hand.
-
-		For notation, we define $\Spec f^\sharp$ to be this morphism of local rings $(f,f^\sharp)$.
-
-		\item In the other direction, suppose we have a morphism of affine schemes $(f,f^\sharp)$. Then $f^\sharp$ as a morphism of locally ringed spaces can take global sections to recover a ring homomorphism.
-	\end{itemize}
-	To finish the proof, we have to show that the composition of our two maps is the identity.
-	\begin{itemize}
-		\item Starting with a ring homomorphism, extending it to a morphism of affine schemes, and then restricting it back to a ring homomorphism will overall unsurprisingly do nothing.
-		\item Suppose we start with $(f,f^\sharp)\colon(\Spec B,\OO_B)\to(\Spec A,\OO_A)$ as a morphism of affine schemes. Taking global sections gives
-		\[f^\sharp_{\Spec A}\colon A\to B.\]
-		Define $\varphi\coloneqq f^\sharp_{\Spec A}$. We want to show that $\Spec\varphi=(f,f^\sharp)$. Note we are starting with
-		\[\varphi\colon\OO_A(\Spec A)\to\OO_B(\Spec B).\]
-		Now, fix $\mf p\in\Spec B$ going to some $f(\mf p)\in\Spec A$. Taking stalks everywhere, we see that the diagram
-		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzAsMSwiQV97ZihcXG1mIHApfSJdLFsxLDEsIkJfXFxtZiBwIl0sWzEsMCwiQiJdLFswLDMsIlxcdmFycGhpIl0sWzEsMiwiZl5cXHNoYXJwX3tmKFxcbWYgcCl9Il0sWzAsMV0sWzMsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-		\[\begin{tikzcd}
-			A & B \\
-			{A_{f(\mf p)}} & {B_\mf p}
-			\arrow["\varphi", from=1-1, to=1-2]
-			\arrow["{f^\sharp_{f(\mf p)}}", from=2-1, to=2-2]
-			\arrow[from=1-1, to=2-1]
-			\arrow[from=1-2, to=2-2]
-		\end{tikzcd}\]
-		commutes. In particular, we see that $\varphi^{-1}(\mf p)\subseteq f(\mf p)$ by tracking units through the bottom map. On the other hand, $f^\sharp_{f(\mf p)}$ was assumed to be a local ring homomorphism, so actually $\varphi^{-1}(\mf p)=f(\mf p)$ follows. Thus, $\Spec\varphi\colon\Spec B\to\Spec A$ matches with our continuous map $f$!
-
-		It remains to show that $f^\sharp$ agrees with $\Spec\varphi$ as a morphism of sheaves. Well, it suffices to check that these agree on stalks by \autoref{prop:stalkmorphism}. To begin, we note that $\varphi$ on stalks looks like $\varphi^\sharp_{f(\mf p)}$ making the bottom arrow of the diagram
-		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFswLDEsIkFfe2YoXFxtZiBwKX0iXSxbMSwxLCJCX1xcbWYgcCJdLFswLDJdLFswLDEsIlxcdmFycGhpIl0sWzEsM10sWzIsMywiIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-		\[\begin{tikzcd}
-			A & B \\
-			{A_{f(\mf p)}} & {B_\mf p}
-			\arrow[from=1-1, to=2-1]
-			\arrow["\varphi", from=1-1, to=1-2]
-			\arrow[from=1-2, to=2-2]
-			\arrow[dashed, from=2-1, to=2-2]
-		\end{tikzcd}\]
-		commute. But we can also put $f^\sharp_{f(\mf p)}$ here even though this arrow is unique by the universal property of localization. This finishes this check.
-		\qedhere
-	\end{itemize}
-\end{proof}
-\begin{remark}
-	In some sense, \autoref{prop:geoisoppalg} is intended to be fact-checking: at the end of the day, we really just want the categorical equivalence and don't care much for its proof.
-\end{remark}
-We will quickly provide an example that says that we really do need to pay attention to morphisms of locally ringed spaces.
-\begin{nex}
-	Consider ring homomorphism $\ZZ_p\to\QQ_p$. However, $\Spec\ZZ_p=\{(0),(p)\}$ while $\Spec\QQ_p=\{(0)\}$. From the natural embedding $\iota\colon\ZZ_p\to\QQ_p$, we get a map sending $(0)\mapsto(0)$, and it will not be possible to get a ring homomorphism to send $(0)$ to $(p)$ because this forces $\QQ_p$ to have torsion. Nonetheless, one can upgrade sending $(0)\mapsto(p)$ to a full morphism of sheaves even though it will not be a morphism of locally ringed spaces.
-\end{nex}
-
-\subsection{Extending Geometry Is Opposite Algebra}
-It turns out that we can extend \autoref{prop:geoisoppalg} to work with general locally ringed spaces. We will state this as an adjunction of two functors. Here are our two functors.
+\end{restatable}
+\noindent It turns out that we can extend \autoref{thm:geoisoppalg} to work with general locally ringed spaces. We will state this as an adjunction of two functors. Here are our two functors.
 \begin{lemma}
 	The mapping $(X,\OO_X)\mapsto\OO_X(X)$ defines the action of a functor
 	\[\Gamma\colon\mathrm{LocRingSpace}\to\mathrm{Ring}\opp\]
@@ -546,12 +485,12 @@ And here is the result.
 		Now, there is the obvious restriction map $\OO_X(X)\to\OO_X(X_f)$, and $f\in\OO_X(X_f)^\times$ by \autoref{lem:finvertsinxf} will exhibit the required map $\varphi^\sharp_{D(f)}\colon\OO_X(X)_f\to\OO_X(X_f)$.
 
 		We now check that we have built a morphism of sheaves on the distinguished base. Well, given that $D(f')\subseteq D(f)$ for $f,f'\in\OO_X(X)$, we see that the diagram
-		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiXFxPT197XFxTcGVjXFxPT19YKFgpfShEKGYpKSJdLFswLDEsIlxcT09fe1xcU3BlY1xcT09fWChYKX0oRChmJykpIl0sWzEsMCwiXFxPT19YKFgpX2YiXSxbMSwxLCJcXE9PX1goWClfe2YnfSJdLFsyLDAsIlxcT09fWChYX2YpIl0sWzIsMSwiXFxPT19YKFhfe2YnfSkiXSxbNCwwLCJhXFxjZG90IGZeey1ufSJdLFs0LDEsImFcXGNkb3QgZl57LW59Il0sWzUsMCwiYXxfe1hfZn1cXGNkb3QoZnxfe1hfZn0pXnstbn0iXSxbNSwxLCJhfF97WF97Zid9fVxcY2RvdChmfF97WF97Zid9fSleey1ufSJdLFswLDEsIlxcb3B7cmVzfV97RChmKSxEKGYnKX0iLDJdLFswLDIsIlxcc2ltZXEiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsNSwiXFxvcHtyZXN9X3tYX2YsWF97Zid9fSIsMl0sWzIsNF0sWzMsNV0sWzYsOCwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNyw5LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzgsOSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiXFxPT197XFxTcGVjXFxPT19YKFgpfShEKGYpKSJdLFswLDEsIlxcT09fe1xcU3BlY1xcT09fWChYKX0oRChmJykpIl0sWzEsMCwiXFxPT19YKFgpX2YiXSxbMSwxLCJcXE9PX1goWClfe2YnfSJdLFsyLDAsIlxcT09fWChYX2YpIl0sWzIsMSwiXFxPT19YKFhfe2YnfSkiXSxbNCwwLCJhXFxjZG90IGZeey1ufSJdLFs0LDEsImFcXGNkb3QgZl57LW59Il0sWzUsMCwiYXxfe1hfZn1cXGNkb3QoZnxfe1hfZn0pXnstbn0iXSxbNSwxLCJhfF97WF97Zid9fVxcY2RvdChmfF97WF97Zid9fSleey1ufSJdLFswLDEsIlxcb3B7cmVzfV97RChmKSxEKGYnKX0iLDJdLFswLDIsIlxcc2ltZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsNSwiXFxvcHtyZXN9X3tYX2YsWF97Zid9fSIsMl0sWzIsNF0sWzMsNV0sWzYsOCwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNyw5LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzgsOSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 		\[\begin{tikzcd}
 			{\OO_{\Spec\OO_X(X)}(D(f))} & {\OO_X(X)_f} & {\OO_X(X_f)} && {a\cdot f^{-n}} & {a|_{X_f}\cdot(f|_{X_f})^{-n}} \\
 			{\OO_{\Spec\OO_X(X)}(D(f'))} & {\OO_X(X)_{f'}} & {\OO_X(X_{f'})} && {a\cdot f^{-n}} & {a|_{X_{f'}}\cdot(f|_{X_{f'}})^{-n}}
-			\arrow["{\op{res}_{D(f),D(f')}}", from=1-1, to=2-1]
-			\arrow["\simeq"{description}, draw=none, from=1-1, to=1-2]
+			\arrow["{\op{res}_{X_f,X_{f'}}}"', from=1-1, to=2-1]
+			\arrow["\simeq"{marking}, draw=none, from=1-1, to=1-2]
 			\arrow["\simeq"{marking}, draw=none, from=2-1, to=2-2]
 			\arrow["{\op{res}_{X_f,X_{f'}}}"', from=1-3, to=2-3]
 			\arrow[from=1-2, to=1-3]
@@ -757,6 +696,9 @@ We are now ready to show the main result.
 	\end{itemize}
 	The above checks complete the proof.
 \end{proof}
+\begin{remark}
+	The asymmetry of \autoref{thm:biggeoisalgopp} (namely, we can only map out of general schemes) is intentionally. Indeed, it will turn out that control over maps out of an affine scheme to a particular scheme $(X,\OO_X)$ is enough information to fully recover the scheme $(X,\OO_X)$; one can get a feel from this because maps from $(\Spec,\OO_{\Spec K})$ reads off all $K$-points of $(X,\OO_X)$.
+\end{remark}
 As a nice consequence, we get a pretty nice check for a scheme to be affine.
 \begin{corollary}
 	If $(X,\OO_X)$ is an affine scheme, then the map $\varepsilon_X\colon(X,\OO_X)\to(\OO_X(X),\OO_{\Spec\OO_X(X)})$ of \autoref{lem:specgamma} is an isomorphism.
@@ -772,6 +714,63 @@ As a nice consequence, we get a pretty nice check for a scheme to be affine.
 
 	Thus, we have induced an isomorphism $(X,\OO_X)\cong(\Spec\OO_X(X),\OO_{\Spec\OO_X(X)})$ which is the identity on global sections. Applying \autoref{thm:biggeoisalgopp}, we see that $\Spec$ of the identity is still the identity, so this morphism is just given by $\varepsilon_X$.
 \end{proof}
+And now here is our last result.
+\geoisalgopp*
+\begin{proof}
+	The leftward functor $\Spec$ is essentially surjective by definition of an affine scheme, so it remains to show that $\Spec$ is fully faithful. Namely, we must show
+	\[\op{Mor}_{\mathrm{AffSch}}\left((\Spec B,\OO_{\Spec B}),(\Spec A,\OO_{\Spec A})\right)\cong\op{Hom}_{\mathrm{Ring}}(A,B).\]
+	Because $\OO_{\Spec B}(\Spec B)=B$, this follows directly from \autoref{thm:biggeoisalgopp}.
+	% We define the left and right maps separately.
+	% \begin{itemize}
+	% 	\item In one direction, suppose we have a ring homomorphism $f^\sharp\colon A\to B$, and we need to recover a morphism of affine schemes. We already have a continuous map $f\coloneqq\Spec f^\sharp$ going $\Spec B\to\Spec A$.
+	% 	Additionally, we can extend $f^\sharp$ to be a sheaf morphism $f^\sharp\colon\OO_A\to f_*\OO_B$. It is enough to define this morphism on a base: pick up some open $D(s)\subseteq\Spec A$ so that $\OO_A(D(s))=A_s$. It follows
+	% 	\[f_*\OO_B(D(s))=\OO_B\left(f^{-1}(D(s))\right)=\OO_B(D(f^\sharp s))=B_{f^\sharp(s)},\]
+	% 	so there is a natural map $f^\sharp(D(s))\colon A_s\to B_{f^\sharp(s)}$. From here, it's not hard to check that this gives a morphism of sheaves on a base.
+	% 	Lastly, we need to check that we actually have a morphism of locally ringed spaces. Well, given $\mf p\in\Spec B$, the stalk map turns out to be
+	% 	\[f^\sharp_{f(\mf p)}\colon A_{f(\mf p)}\to B_\mf p,\]
+	% 	which we can see to be a local ring homomorphism by passing through the maximal ideal $\mf m_{A,f(\mf p)}$ by hand.
+	% 	For notation, we define $\Spec f^\sharp$ to be this morphism of local rings $(f,f^\sharp)$.
+	% 	\item In the other direction, suppose we have a morphism of affine schemes $(f,f^\sharp)$. Then $f^\sharp$ as a morphism of locally ringed spaces can take global sections to recover a ring homomorphism.
+	% \end{itemize}
+	% To finish the proof, we have to show that the composition of our two maps is the identity.
+	% \begin{itemize}
+	% 	\item Starting with a ring homomorphism, extending it to a morphism of affine schemes, and then restricting it back to a ring homomorphism will overall unsurprisingly do nothing.
+	% 	\item Suppose we start with $(f,f^\sharp)\colon(\Spec B,\OO_B)\to(\Spec A,\OO_A)$ as a morphism of affine schemes. Taking global sections gives
+	% 	\[f^\sharp_{\Spec A}\colon A\to B.\]
+	% 	Define $\varphi\coloneqq f^\sharp_{\Spec A}$. We want to show that $\Spec\varphi=(f,f^\sharp)$. Note we are starting with
+	% 	\[\varphi\colon\OO_A(\Spec A)\to\OO_B(\Spec B).\]
+	% 	Now, fix $\mf p\in\Spec B$ going to some $f(\mf p)\in\Spec A$. Taking stalks everywhere, we see that the diagram
+	% 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzAsMSwiQV97ZihcXG1mIHApfSJdLFsxLDEsIkJfXFxtZiBwIl0sWzEsMCwiQiJdLFswLDMsIlxcdmFycGhpIl0sWzEsMiwiZl5cXHNoYXJwX3tmKFxcbWYgcCl9Il0sWzAsMV0sWzMsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% 	\[\begin{tikzcd}
+	% 		A & B \\
+	% 		{A_{f(\mf p)}} & {B_\mf p}
+	% 		\arrow["\varphi", from=1-1, to=1-2]
+	% 		\arrow["{f^\sharp_{f(\mf p)}}", from=2-1, to=2-2]
+	% 		\arrow[from=1-1, to=2-1]
+	% 		\arrow[from=1-2, to=2-2]
+	% 	\end{tikzcd}\]
+	% 	commutes. In particular, we see that $\varphi^{-1}(\mf p)\subseteq f(\mf p)$ by tracking units through the bottom map. On the other hand, $f^\sharp_{f(\mf p)}$ was assumed to be a local ring homomorphism, so actually $\varphi^{-1}(\mf p)=f(\mf p)$ follows. Thus, $\Spec\varphi\colon\Spec B\to\Spec A$ matches with our continuous map $f$!
+	% 	It remains to show that $f^\sharp$ agrees with $\Spec\varphi$ as a morphism of sheaves. Well, it suffices to check that these agree on stalks by \autoref{prop:stalkmorphism}. To begin, we note that $\varphi$ on stalks looks like $\varphi^\sharp_{f(\mf p)}$ making the bottom arrow of the diagram
+	% 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFswLDEsIkFfe2YoXFxtZiBwKX0iXSxbMSwxLCJCX1xcbWYgcCJdLFswLDJdLFswLDEsIlxcdmFycGhpIl0sWzEsM10sWzIsMywiIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	% 	\[\begin{tikzcd}
+	% 		A & B \\
+	% 		{A_{f(\mf p)}} & {B_\mf p}
+	% 		\arrow[from=1-1, to=2-1]
+	% 		\arrow["\varphi", from=1-1, to=1-2]
+	% 		\arrow[from=1-2, to=2-2]
+	% 		\arrow[dashed, from=2-1, to=2-2]
+	% 	\end{tikzcd}\]
+	% 	commute. But we can also put $f^\sharp_{f(\mf p)}$ here even though this arrow is unique by the universal property of localization. This finishes this check.
+	% 	\qedhere
+	% \end{itemize}
+\end{proof}
+\begin{remark}
+	In some sense, \autoref{thm:geoisoppalg} is intended to be fact-checking: at the end of the day, we really just want the categorical equivalence and don't care much for its proof.
+\end{remark}
+We will quickly provide an example that says that we really do need to pay attention to morphisms of locally ringed spaces.
+\begin{nex}
+	Consider ring homomorphisms $\ZZ_p\to\QQ_p$. Notably, $\Spec\ZZ_p=\{(0),(p)\}$ while $\Spec\QQ_p=\{(0)\}$. From the natural embedding $\iota\colon\ZZ_p\to\QQ_p$, we get a map sending $(0)\mapsto(0)$, and it will not be possible to get a ring homomorphism to send $(0)$ to $(p)$ because this forces $\QQ_p$ to have torsion. Nonetheless, one can upgrade sending $(0)\mapsto(p)$ to a full morphism of sheaves even though it will not be a morphism of locally ringed spaces.
+\end{nex}
 
 \subsection{Scheme Examples}
 Schemes have a lot of data. Let's try to make it more concrete; we'll be satisfied with just two examples today. We won't be very rigorous because we haven't defined gluing yet.
