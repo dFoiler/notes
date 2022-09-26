@@ -120,7 +120,7 @@ And now we can glue morphisms.
 % \end{remark}
 % \autoref{prop:morphismtoaffine} will follow from the following, where we let the open cover $\mc U$ below comes from the affine open cover.
 \begin{proposition}
-	Fix schemes $(X,\OO_X)$ and $(Y,\OO_Y)$. Let $\{U_\alpha\}_{\alpha\in\lambda}$ be an open cover for $X$; then, given scheme morphisms $(\varphi_\alpha,\varphi^\sharp_\alpha)\colon(U_\alpha,\OO_X|_{U_\alpha})\to Y$ such that any $\alpha,\beta\in\lambda$ have
+	Fix schemes $(X,\OO_X)$ and $(Y,\OO_Y)$. Let $\{U_\alpha\}_{\alpha\in\lambda}$ be an open cover for $X$; then, given scheme morphisms $(\varphi_\alpha,\varphi^\sharp_\alpha)\colon(U_\alpha,\OO_X|_{U_\alpha})\to (Y,\OO_Y)$ such that any $\alpha,\beta\in\lambda$ have
 	\[(\varphi_\alpha,\varphi^\sharp_\alpha)|_{U_\alpha\cap U_\beta}=(\varphi_\beta,\varphi^{\sharp}_\beta)|_{U_\alpha\cap U_\beta},\]
 	there is a unique scheme morphism $(\varphi,\varphi^\sharp)\colon (X,\OO_X)\to (Y,\OO_Y)$ such that $(\varphi,\varphi^\sharp)|_{U_\alpha}=(\varphi_\alpha,\varphi^{\sharp}_\alpha)$.
 \end{proposition}
@@ -189,14 +189,261 @@ And now we can glue morphisms.
 	\end{itemize}
 \end{proof}
 
-\subsection{Gluing Schemes}
-So far we've glued together morphisms. It remains to glue together schemes. This will be similar to the way that we glue together sheaves.
-\begin{proposition}
-	Fix schemes $(X_i,\OO_i)$ for each $i\in I$, with an open subset $U_{ij}\subseteq X_i$ for each $i$, where $X_{ii}=X_i$; let $X_{ij}$ be the induced open subscheme. Further, pick up some isomorphisms $f_{ji}\colon X_{ij}\to X_{ji}$ satisfying the cocycle condition
-	\[f_{ki}=f_{kj}\circ f_{ji},\]
-	on $X_{ij}\cap X_{ik}$, where we implicitly assume that $f_{ji}(X_{ij}\cap X_{ik})\subseteq X_{ji}$. Then there is a unique scheme $X$ covered by open subschemes $U_i\subseteq X$, equipped with isomorphisms $\varphi_i\colon X_i\to U_i$ such that $\varphi_i|_{X_{ij}}=\varphi_j\circ f_{ji}$ and $\varphi_i(X_i)\cap\varphi_j(X_j)=\varphi_i(X_{ij})=\varphi_J(X_{ji})$.
+\subsection{Gluing Sheaves}
+So far we've glued together morphisms. It remains to glue together schemes. Unsurprisingly, this will happen in two steps: we will first glue the topological spaces (which is comparatively easy) and then we will glue the sheaves. Gluing sheaves is hard enough on its own, so we will discuss how to do that now.
+\begin{lemma}[Vakil~2.5.D] \label{lem:gluesheaf}
+	Fix a topological space $X$ with an open cover $\{U_\alpha\}_{\alpha\in\lambda}$. Suppose we have sheaves $\mc F_\alpha$ on $U_\alpha$, along with isomorphisms $\varphi_{\alpha\beta}\colon\mc F_\alpha|_{U_\alpha\cap U_\beta}\to\mc F_\beta|_{U_\alpha\cap U_\beta}$ (with $\varphi_{\alpha\alpha}$ the identity) that agree on triple overlaps such that
+	\[\varphi_{\beta\gamma}\circ\varphi_{\alpha\beta}=\varphi_{\alpha\gamma}\qquad\text{on}\qquad U_i\cap U_j\cap U_k.\]
+	Then these sheaves can be glued together into a sheaf $\mc F$ on $X$ (unique up to unique isomorphism) equipped with isomorphisms $\pi_\alpha\colon\mc F|_{U_\alpha}\to\mc F_\alpha$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEZ8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMCwxLCJcXG1jIEZ8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMSwwLCJcXG1jIEZfXFxhbHBoYXxfe1VfXFxhbHBoYVxcY2FwIFVfXFxiZXRhfSJdLFsxLDEsIlxcbWMgRl9cXGJldGF8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMiwzLCJcXHZhcnBoaV97XFxhbHBoYVxcYmV0YX0iXSxbMCwyLCJcXHBpX1xcYWxwaGEiXSxbMSwzLCJcXHBpX1xcYmV0YSJdLFswLDEsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F|_{U_\alpha\cap U_\beta}} & {\mc F_\alpha|_{U_\alpha\cap U_\beta}} \\
+		{\mc F|_{U_\alpha\cap U_\beta}} & {\mc F_\beta|_{U_\alpha\cap U_\beta}}
+		\arrow["{\varphi_{\alpha\beta}}", from=1-2, to=2-2]
+		\arrow["{\pi_\alpha}", from=1-1, to=1-2]
+		\arrow["{\pi_\beta}", from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+	\end{tikzcd}\]
+\end{lemma}
+\begin{proof}
+	Because $X=\bigcup_{\alpha\in\lambda}U_\alpha$, we may set
+	\[\mc B\coloneqq\bigcup_{\alpha\in\lambda}\{\text{open }U\subseteq X:U\subseteq U_\alpha\}\]
+	to be a basis for $X$. (Indeed, for any open $U\subseteq X$, we have $U=\bigcup_{\alpha\in\lambda}(U\cap U_\alpha)$ where $U\cap U_\alpha\in\mc B$ for each $\alpha$.) The point is to build $\mc F$ as a sheaf on the base $\mc B$.
+
+	For each $B\in\mc B$, make some arbitrary choice and set $\alpha(B)\in\lambda$ to be such that $B\subseteq U_{\alpha(B)}$. We now define
+	\[F(B)\coloneqq\mc F_{\alpha(B)}(B).\]
+	To define our restriction maps, we note that $B'\subseteq B$ implies that $B'\subseteq U_{\alpha(B)}\cap U_{\alpha(B')}$, so the sheaf isomorphism
+	\[\varphi_{\alpha(B),\alpha(B')}\colon\mc F_{\alpha(B)}|_{U_{\alpha(B)}\cap U_{\alpha(B')}}\to\mc F_{\alpha(B')}|_{U_{\alpha(B)}\cap U_{\alpha(B')}}\]
+	grants us an isomorphism
+	\[\varphi_{\alpha(B),\alpha(B')}(B')\colon\mc F_{\alpha(B)}(B')\to\mc F_{\alpha(B')}(B'),\]
+	so we may define our restriction map as the composite
+	\[\mc F_{\alpha(B)}(B)\stackrel{\op{res}_{B,B'}}\to\mc F_{\alpha(B)}(B')\stackrel{\varphi_{\alpha(B),\alpha(B')}(B')}\to\mc F_{\alpha(B')}(B').\]
+	For concreteness, denote this composite by $r_{B,B'}$. We now check that $F$ assembles to a presheaf on the base $\mc B$.
+	\begin{itemize}
+		\item Identity: given $B\in\mc B$, our restriction to $B$ is the composite
+		\[\mc F_{\alpha(B)}(B)\stackrel{\op{res}_{B,B}}\to\mc F_{\alpha(B)}(B)\stackrel{\varphi_{\alpha(B),\alpha(B)}(B')}\to\mc F_{\alpha(B)}(B),\]
+		but both these maps are the identity (the first because $\mc F_{\alpha(B)}$ is a sheaf, and the second by hypothesis on the $\varphi_\bullet$).
+		\item Functoriality: given basis elements $B''\subseteq B'\subseteq B$, we are interested in showing that the following diagram
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXG1jIEZfe1xcYWxwaGEoQil9KEIpIl0sWzEsMCwiXFxtYyBGX3tcXGFscGhhKEIpfShCJykiXSxbMiwwLCJcXG1jIEZfe1xcYWxwaGEoQicpfShCJykiXSxbMiwxLCJcXG1jIEZfe1xcYWxwaGEoQicpfShCJycpIl0sWzIsMiwiXFxtYyBGX3tcXGFscGhhKEInJyl9KEInJykiXSxbMSwxLCJcXG1jIEZfe1xcYWxwaGEoQil9KEInJykiXSxbMCw1LCJcXG9we3Jlc31fe0IsQicnfSIsMl0sWzAsMSwiXFxvcHtyZXN9X3tCLEInfSJdLFsxLDIsIlxcdmFycGhpX3tcXGFscGhhKEIpLFxcYWxwaGEoQicpfShCJykiXSxbMiwzLCJcXG9we3Jlc31fe0InLEInJ30iXSxbNSwzLCJcXHZhcnBoaV97XFxhbHBoYShCKSxcXGFscGhhKEInKX0oQicnKSJdLFsxLDUsIlxcb3B7cmVzfV97QicsQicnfSJdLFs1LDQsIlxcdmFycGhpX3tcXGFscGhhKEIpLFxcYWxwaGEoQicnKX0oQicnKSIsMl0sWzMsNCwiXFx2YXJwaGlfe1xcYWxwaGEoQicpLFxcYWxwaGEoQicnKX0oQicnKSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}[{column sep=6em}]
+				{\mc F_{\alpha(B)}(B)} & {\mc F_{\alpha(B)}(B')} & {\mc F_{\alpha(B')}(B')} \\
+				& {\mc F_{\alpha(B)}(B'')} & {\mc F_{\alpha(B')}(B'')} \\
+				&& {\mc F_{\alpha(B'')}(B'')}
+				\arrow["{\op{res}_{B,B''}}"', from=1-1, to=2-2]
+				\arrow["{\op{res}_{B,B'}}", from=1-1, to=1-2]
+				\arrow["{\varphi_{\alpha(B),\alpha(B')}(B')}", from=1-2, to=1-3]
+				\arrow["{\op{res}_{B',B''}}", from=1-3, to=2-3]
+				\arrow["{\varphi_{\alpha(B),\alpha(B')}(B'')}", from=2-2, to=2-3]
+				\arrow["{\op{res}_{B',B''}}", from=1-2, to=2-2]
+				\arrow["{\varphi_{\alpha(B),\alpha(B'')}(B'')}"', from=2-2, to=3-3]
+				\arrow["{\varphi_{\alpha(B'),\alpha(B'')}(B'')}", from=2-3, to=3-3]
+			\end{tikzcd} \label{eq:gluefunctorial}
+		\end{equation}
+		commutes. Namely, the top row is $r_{B,B'}$, the right column is $r_{B',B''}$, and we want to know that the composite of these is the diagonal $r_{B,B''}$.
+
+		Now, the top-left triangle of \autoref{eq:gluefunctorial} commutes by the functoriality of the (pre)sheaf $\mc F_{\alpha(B)}$. The square of \autoref{eq:gluefunctorial} commutes because $\varphi_{\alpha(B),\alpha(B')}$ is a (pre)sheaf morphism. Lastly, the bottom-right triangle of \autoref{eq:gluefunctorial} commutes because $\varphi_{\alpha(B),\alpha(B'')}=\varphi_{\alpha(B'),\alpha(B'')}\circ\varphi_{\alpha(B),\alpha(B')}$ by the cocycle condition.
+	\end{itemize}
+	It remains to check that we have a sheaf on the base. Fix some $B\in\mc B$ with a basic cover $\{B_i\}_{i\in I}\subseteq\mc B$. For brevity, set $\beta_i\coloneqq\alpha(B_i)$ and $\beta\coloneqq\alpha(B)$.
+	\begin{itemize}
+		\item Identity: suppose $s,s'\in F(B)$ have $r_{B,B_i}(s)=r_{B,B_i}(s')$ for each $i\in I$. Expanding out what restriction really means here, we are saying that $s,s'\in\mc F_{\beta}(B)$ has
+		\[\varphi_{\beta,\beta_i}(B_i)(\op{res}_{B,B_i}(s))=\varphi_{\beta,\beta_i}(B_i)(\op{res}_{B,B_i}(s'))\]
+		as elements of $\mc F_{\beta_i}(B_i)$. Undoing the isomorphism, we see that
+		\[\op{res}_{B,B_i}(s)=\op{res}_{B,B_i}(s')\]
+		as elements of $\mc F_{\beta}(B_i)$. Thus, the identity axiom of $\mc F_\beta$ forces $s=s'$.
+		\item Gluability: suppose we have $s_i\in F(B_i)$ for each $i\in I$ such that
+		\[r_{B_i,B'}(s_i)=r_{B_j,B'}(s_j)\]
+		for each $i,j\in I$ and basis element $B'\subseteq B_i\cap B_j$. Notably, $B'\subseteq B_i\subseteq U_{\alpha(B_i)}$ implies that $B'\in\mc B$, so we might as well assume this for $B'=B_i\cap B_j$. Expanding out the restriction, we are asserting
+		\[\varphi_{\beta_i,\alpha(B')}(B')(\op{res}_{B_i,B'}(s_i))=\varphi_{\beta_j,\alpha(B')}(B')(\op{res}_{B_j,B'}(s_j)).\]
+		Hitting both sides with $\varphi_{\alpha(B'),\beta}(B_i)$ (which is legal because $B'\subseteq B$ after all), the cocycle condition gives
+		\[\varphi_{\beta_i,\beta}(B')(\op{res}_{B_i,B'}(s_i))=\varphi_{\beta_j,\beta}(B')(\op{res}_{B_j,B'}(s_j)).\]
+		Using the fact that the $\varphi$ are sheaf morphisms, this is equivalent to
+		\[\op{res}_{B_i,B'}(\varphi_{\beta_i,\beta}(B_i)(s_i))=\op{res}_{B_j,B'}(\varphi_{\beta_j,\beta}(B_j)(s_j)).\]
+		Setting $t_i\coloneqq\varphi_{\beta_i,\beta}(B_i)(s_i)\in\mc F_\beta(B_i)$, we see that $t_i|_{B_i\cap B_j}=t_j|_{B_i\cap B_j}$ for each $i,j\in I$, so gluability on $\mc F_\beta$ gives some $s\in\mc F_\beta(B)$ such that
+		\[s|_{B_i}=\varphi_{\beta_i,\beta}(B_i)(s_i)\]
+		for each $i\in I$. Equivalently, we have
+		\[r_{B,B_i}(s)=\varphi_{\beta,\beta_i}(B_i)(\op{res}_{B,B_i}(s))=s_i,\]
+		which is what we wanted.
+	\end{itemize}
+	Thus, $F$ does indeed define a sheaf on the base $\mc B$, which extends to a sheaf $\mc F$ (unique up to unique isomorphism) by \autoref{prop:sheaffrombase}. Here are our last checks on $\mc F$.
+	\begin{itemize}
+		\item We exhibit an isomorphism $\pi_\alpha\colon\mc F|_{U_\alpha}\to\mc F_\alpha$ for each $\alpha\in\lambda$. Indeed, for any $B\subseteq U_\alpha$, note $B\in\mc B$, so we define $\pi_\alpha(B)$ as the composite
+		\[\mc F|_{U_\alpha}(B)=\mc F(B)=F(B)=\mc F_{\alpha(B)}(B)\stackrel{\varphi_{\alpha(B),\alpha}(B)}\to\mc F_\alpha(B),\]
+		where $\varphi_{\alpha(B),\alpha}(B)$ makes sense because $B\subseteq U_{\alpha(B)}\cap U_\alpha$.
+		
+		Now, to see that $\pi_\alpha$ assembles into a natural transformation, we suppose $B'\subseteq B\subseteq U_\alpha$ and draw the diagram
+		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiXFxtYyBGfF97VV9cXGFscGhhfShCKSJdLFsxLDAsIlxcbWMgRihCKSJdLFsyLDAsIkYoQikiXSxbMywwLCJcXG1jIEZfe1xcYWxwaGEoQil9KEIpIl0sWzQsMCwiXFxtYyBGX1xcYWxwaGEoQikiXSxbMCwxLCJcXG1jIEZ8X3tVX1xcYWxwaGF9KEInKSJdLFsxLDEsIlxcbWMgRihCJykiXSxbMiwxLCJGKEInKSJdLFszLDEsIlxcbWMgRl97XFxhbHBoYShCJyl9KEInKSJdLFs0LDEsIlxcbWMgRl9cXGFscGhhKEInKSJdLFszLDQsIlxcdmFycGhpX3tcXGFscGhhKEIpLFxcYWxwaGF9KEIpIl0sWzAsMSwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwyLCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDMsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNV0sWzUsNiwiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNiw3LCIiLDIseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs3LDgsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsOCwicl97QixCJ30iLDJdLFs0LDksIlxcb3B7cmVzfV97QixCJ30iXSxbOCw5LCJcXHZhcnBoaV97XFxhbHBoYShCJyksXFxhbHBoYX0oQicpIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F|_{U_\alpha}(B)} & {\mc F(B)} & {F(B)} & {\mc F_{\alpha(B)}(B)} & {\mc F_\alpha(B)} \\
+			{\mc F|_{U_\alpha}(B')} & {\mc F(B')} & {F(B')} & {\mc F_{\alpha(B')}(B')} & {\mc F_\alpha(B')}
+			\arrow["{\varphi_{\alpha(B),\alpha}(B)}", from=1-4, to=1-5]
+			\arrow[Rightarrow, no head, from=1-1, to=1-2]
+			\arrow[Rightarrow, no head, from=1-2, to=1-3]
+			\arrow[Rightarrow, no head, from=1-3, to=1-4]
+			\arrow[from=1-1, to=2-1]
+			\arrow[Rightarrow, no head, from=2-1, to=2-2]
+			\arrow[Rightarrow, no head, from=2-2, to=2-3]
+			\arrow[Rightarrow, no head, from=2-3, to=2-4]
+			\arrow["{r_{B,B'}}"', from=1-4, to=2-4]
+			\arrow["{\op{res}_{B,B'}}", from=1-5, to=2-5]
+			\arrow["{\varphi_{\alpha(B'),\alpha}(B')}"', from=2-4, to=2-5]
+		\end{tikzcd}\]
+		which we would like to commute. Well, we compute directly that
+		\begin{align*}
+			\varphi_{\alpha(B'),\alpha}(B')\circ r_{B,B'} &= \varphi_{\alpha(B'),\alpha}(B')\circ\varphi_{\alpha(B),\alpha(B')}(B')\circ{\op{res}_{B,B'}} \\
+			&= \varphi_{\alpha(B),\alpha}(B')\circ{\op{res}_{B,B'}} \\
+			&= {\op{res}_{B,B'}}\circ\varphi_{\alpha(B),\alpha}(B).
+		\end{align*}
+		Lastly, we note that $\pi_\alpha$ is component-wise an isomorphism, so it follows that $\pi_\alpha$ is an isomorphism on the level of sheaves.
+
+		\item We show that the diagram
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEZ8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMCwxLCJcXG1jIEZ8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMSwwLCJcXG1jIEZfXFxhbHBoYXxfe1VfXFxhbHBoYVxcY2FwIFVfXFxiZXRhfSJdLFsxLDEsIlxcbWMgRl9cXGJldGF8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMiwzLCJcXHZhcnBoaV97XFxhbHBoYVxcYmV0YX0iXSxbMCwyLCJcXHBpX1xcYWxwaGEiXSxbMSwzLCJcXHBpX1xcYmV0YSJdLFswLDEsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc F|_{U_\alpha\cap U_\beta}} & {\mc F_\alpha|_{U_\alpha\cap U_\beta}} \\
+			{\mc F|_{U_\alpha\cap U_\beta}} & {\mc F_\beta|_{U_\alpha\cap U_\beta}}
+			\arrow["{\varphi_{\alpha\beta}}", from=1-2, to=2-2]
+			\arrow["{\pi_\alpha}", from=1-1, to=1-2]
+			\arrow["{\pi_\beta}", from=2-1, to=2-2]
+			\arrow[Rightarrow, no head, from=1-1, to=2-1]
+		\end{tikzcd}\]
+		commutes. Indeed, for any $B\subseteq U_\alpha\cap U_\beta$, we have $B\in\mc B$, and as such we compute
+		\begin{align*}
+			\pi_\beta(B)\circ\pi_\alpha(B)^{-1} &= \varphi_{\alpha(B),\beta}(B)\circ\varphi_{\alpha(B),\alpha}(B)^{-1} \\
+			&= \varphi_{\alpha(B),\beta}(B)\circ\varphi_{\alpha,\alpha(B)}(B) \\
+			&= \varphi_{\alpha,\beta}(B),
+		\end{align*}
+		where the last two equalities hold by the cocycle condition.
+		\qedhere
+	\end{itemize}
+\end{proof}
+This sheaf we just built satisfies the following universal property.
+\begin{proposition} \label{prop:gluesheafup}
+	Work in the context of \autoref{lem:gluesheaf}. Given any sheaf $\mc G$ on $X$ with maps $\gamma_\alpha\colon\mc G|_{U_\alpha}\to\mc F_\alpha$ making the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEZ8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMCwxLCJcXG1jIEZ8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMSwwLCJcXG1jIEZfXFxhbHBoYXxfe1VfXFxhbHBoYVxcY2FwIFVfXFxiZXRhfSJdLFsxLDEsIlxcbWMgRl9cXGJldGF8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMiwzLCJcXHZhcnBoaV97XFxhbHBoYVxcYmV0YX0iXSxbMCwyLCJcXHBpX1xcYWxwaGEiXSxbMSwzLCJcXHBpX1xcYmV0YSJdLFswLDEsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc G|_{U_\alpha\cap U_\beta}} & {\mc F_\alpha|_{U_\alpha\cap U_\beta}} \\
+		{\mc G|_{U_\alpha\cap U_\beta}} & {\mc F_\beta|_{U_\alpha\cap U_\beta}}
+		\arrow["{\varphi_{\alpha\beta}}", from=1-2, to=2-2]
+		\arrow["{\gamma_\alpha}", from=1-1, to=1-2]
+		\arrow["{\gamma_\beta}", from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+	\end{tikzcd}\]
+	commute, there is a unique map $\gamma\colon\mc G\to\mc F$ such that $\gamma_\alpha=\pi_\alpha\circ\gamma|_{U_\alpha}$.
 \end{proposition}
 \begin{proof}
+	We continue to work with the explicit description of $\mc F$ as coming from the sheaf $F$ on the base $\mc B$. We show existence and uniqueness of $\gamma$ separately.
+	\begin{itemize}
+		\item Uniqueness: on the base $\mc B$, for any $B\in\mc B$ with $B\subseteq U_{\alpha(B)}$, we see that $\gamma_B$ must have
+		\[\gamma_B=(\pi_{\alpha(B)}^{-1})_B\circ(\gamma_{\alpha(B)})_B,\]
+		so $\gamma$ is uniquely determined on the base $\mc B$. It follows from \autoref{lem:morphismonbase} that $\gamma$ is unique.
+		\item Existence: on the base $\mc B$, for any $B\in\mc B$ with $B\subseteq U_{\alpha(B)}$, we set
+		\[\gamma_B\coloneqq(\pi_{\alpha(B)}^{-1})_B\circ(\gamma_{\alpha(B)})_B.\]
+		We claim that $\gamma$ will at least assemble into a morphism of sheaves $\mc G_\mc B\to\mc F_\mc B$ on sheaves on the base $\mc B$. Well, given $B'\subseteq B\subseteq U_\alpha$ for $\alpha=\alpha(B)$, we need the diagram
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXG1jIEcoQikiXSxbMCwxLCJcXG1jIEcoQicpIl0sWzEsMCwiXFxtYyBGX3tcXGFscGhhKEIpfShCKSJdLFsxLDEsIlxcbWMgRl97XFxhbHBoYShCJyl9KEInKSJdLFsyLDAsIlxcbWMgRihCKSJdLFsyLDEsIlxcbWMgRihCJykiXSxbMCwxLCJcXG9we3Jlc31fe0IsQid9IiwyXSxbMCwyLCJcXGdhbW1hX3tcXGFscGhhKEIpfShCKSJdLFsxLDMsIlxcZ2FtbWFfe1xcYWxwaGEoQicpfShCJykiXSxbNCwyLCJcXHBpX3tcXGFscGhhKEIpfShCKSIsMl0sWzUsMywiXFxwaV97XFxhbHBoYShCKX0oQicpIiwyXSxbNCw1LCJcXG9we3Jlc31fe0IsQid9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc G(B)} & {\mc F_{\alpha(B)}(B)} & {\mc F(B)} \\
+			{\mc G(B')} & {\mc F_{\alpha(B')}(B')} & {\mc F(B')}
+			\arrow["{\op{res}_{B,B'}}"', from=1-1, to=2-1]
+			\arrow["{\gamma_{\alpha(B)}(B)}", from=1-1, to=1-2]
+			\arrow["{\gamma_{\alpha(B')}(B')}", from=2-1, to=2-2]
+			\arrow["{\pi_{\alpha(B)}(B)}"', from=1-3, to=1-2]
+			\arrow["{\pi_{\alpha(B)}(B')}"', from=2-3, to=2-2]
+			\arrow["{\op{res}_{B,B'}}", from=1-3, to=2-3]
+		\end{tikzcd}\]
+		to commute. Well, we expand this diagram into
+		% https://q.uiver.app/?q=WzAsOSxbMCwwLCJcXG1jIEcoQikiXSxbMiwwLCJcXG1jIEZfe1xcYWxwaGEoQil9KEIpIl0sWzAsMiwiXFxtYyBHKEInKSJdLFsyLDIsIlxcbWMgRl97XFxhbHBoYShCJyl9KEInKSJdLFsyLDEsIlxcbWMgRl97XFxhbHBoYShCKX0oQicpIl0sWzQsMCwiXFxtYyBGKEIpIl0sWzQsMSwiXFxtYyBGKEInKSJdLFs0LDIsIlxcbWMgRihCJykiXSxbMCwxLCJcXG1jIEcoQicpIl0sWzAsMSwiXFxnYW1tYV97XFxhbHBoYShCKX0oQikiXSxbMSw0LCJcXG9we3Jlc31fe0IsQid9Il0sWzQsMywiXFx2YXJwaGlfe1xcYWxwaGEoQiksXFxhbHBoYShCJyl9KEInKSJdLFsyLDMsIlxcZ2FtbWFfe1xcYWxwaGEoQicpfShCJykiLDJdLFs1LDEsIlxccGlfe1xcYWxwaGEoQil9KEIpIiwyXSxbNiw0LCJcXHBpX3tcXGFscGhhKEIpfShCJykiLDJdLFs1LDYsIlxcb3B7cmVzfV97QixCJ30iXSxbNiw3LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs3LDMsIlxccGlfe1xcYWxwaGEoQicpfShCJykiXSxbOCw0LCJcXGdhbW1hX3tcXGFscGhhKEIpfShCJykiXSxbMCw4LCJcXG9we3Jlc31fe0IsQid9IiwyXSxbOCwyLCIiLDIseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc G(B)} && {\mc F_{\alpha(B)}(B)} && {\mc F(B)} \\
+			{\mc G(B')} && {\mc F_{\alpha(B)}(B')} && {\mc F(B')} \\
+			{\mc G(B')} && {\mc F_{\alpha(B')}(B')} && {\mc F(B')}
+			\arrow["{\gamma_{\alpha(B)}(B)}", from=1-1, to=1-3]
+			\arrow["{\op{res}_{B,B'}}", from=1-3, to=2-3]
+			\arrow["{\varphi_{\alpha(B),\alpha(B')}(B')}", from=2-3, to=3-3]
+			\arrow["{\gamma_{\alpha(B')}(B')}"', from=3-1, to=3-3]
+			\arrow["{\pi_{\alpha(B)}(B)}"', from=1-5, to=1-3]
+			\arrow["{\pi_{\alpha(B)}(B')}"', from=2-5, to=2-3]
+			\arrow["{\op{res}_{B,B'}}", from=1-5, to=2-5]
+			\arrow[Rightarrow, no head, from=2-5, to=3-5]
+			\arrow["{\pi_{\alpha(B')}(B')}", from=3-5, to=3-3]
+			\arrow["{\gamma_{\alpha(B)}(B')}", from=2-1, to=2-3]
+			\arrow["{\op{res}_{B,B'}}"', from=1-1, to=2-1]
+			\arrow[Rightarrow, no head, from=2-1, to=3-1]
+		\end{tikzcd}\]
+		and check commutativity square-by-square: the top squares commute because $\gamma_{\alpha(B)}$ and $\pi_{\alpha(B)}$ are natural transformations, and the bottom squares commute by coherence of the $\gamma$ and $\pi$.
+
+		In total, we are thus promised some sheaf morphism $\gamma$ such that $\gamma_B=(\pi_{\alpha(B)}^{-1})_B\circ(\gamma_{\alpha(B)})_B$ for each $B\in\mc B$. We claim that $\gamma\circ\pi_\alpha=\gamma_\alpha$ for each $\alpha$, for which it suffices to check on the base $\mc B$. Well, for any fixed $B\in\mc B$, we are asking for
+		\[(\pi_{\alpha(B)}^{-1})_B\circ(\gamma_{\alpha(B)})_B\circ\pi_\alpha=\gamma_\alpha,\]
+		which translates into the diagram
+		% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXG1jIEcoQikiXSxbMCwxLCJcXG1jIEcoQikiXSxbMSwwLCJcXG1jIEZfe1xcYWxwaGEoQil9KEIpIl0sWzEsMSwiXFxtYyBGX1xcYWxwaGEoQikiXSxbMiwwLCJcXG1jIEYoQikiXSxbMiwxLCJcXG1jIEYoQikiXSxbMCwyLCJcXGdhbW1hX3tcXGFscGhhKEIpfSJdLFsyLDMsIlxcdmFycGhpX3tcXGFscGhhKEIpLFxcYWxwaGF9KEIpIl0sWzEsMywiXFxnYW1tYV97XFxhbHBoYX0oQikiLDJdLFsyLDQsIlxccGlfe1xcYWxwaGEoQil9KEIpIl0sWzMsNSwiXFxwaV9cXGFscGhhKEIpIiwyXSxbNCw1LCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\mc G(B)} & {\mc F_{\alpha(B)}(B)} & {\mc F(B)} \\
+			{\mc G(B)} & {\mc F_\alpha(B)} & {\mc F(B)}
+			\arrow["{\gamma_{\alpha(B)}}", from=1-1, to=1-2]
+			\arrow["{\varphi_{\alpha(B),\alpha}(B)}", from=1-2, to=2-2]
+			\arrow["{\gamma_{\alpha}(B)}"', from=2-1, to=2-2]
+			\arrow["{\pi_{\alpha(B)}(B)}", from=1-2, to=1-3]
+			\arrow["{\pi_\alpha(B)}"', from=2-2, to=2-3]
+			\arrow[Rightarrow, no head, from=1-3, to=2-3]
+			\arrow[Rightarrow, no head, from=1-1, to=2-1]
+		\end{tikzcd}\]
+		commuting, which holds by the coherence of $\pi$ and $\gamma$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	Reversing the direction of the $\gamma$s in \autoref{prop:gluesheafup} gives another universal property: given any sheaf $\mc G$ on $X$ with maps $\gamma_\alpha\colon\mc F_\alpha\to\mc G|_{U_\alpha}$ making the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEZfXFxhbHBoYXxfe1VfXFxhbHBoYVxcY2FwIFVfXFxiZXRhfSJdLFswLDEsIlxcbWMgRl9cXGJldGF8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMSwwLCJcXG1jIEd8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMSwxLCJcXG1jIEd8X3tVX1xcYWxwaGFcXGNhcCBVX1xcYmV0YX0iXSxbMCwxLCJcXHZhcnBoaV97XFxhbHBoYVxcYmV0YX0iLDJdLFswLDIsIlxcZ2FtbWFfXFxhbHBoYSJdLFsxLDMsIlxcZ2FtbWFfXFxiZXRhIl0sWzIsMywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F_\alpha|_{U_\alpha\cap U_\beta}} & {\mc G|_{U_\alpha\cap U_\beta}} \\
+		{\mc F_\beta|_{U_\alpha\cap U_\beta}} & {\mc G|_{U_\alpha\cap U_\beta}}
+		\arrow["{\varphi_{\alpha\beta}}"', from=1-1, to=2-1]
+		\arrow["{\gamma_\alpha}", from=1-1, to=1-2]
+		\arrow["{\gamma_\beta}", from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	commute, there is a unique map $\gamma\colon\mc F\to\mc G$ such that $\gamma_\alpha\circ\pi_\alpha=\gamma|_{U_\alpha}$.
+\end{remark}
+
+\subsection{Gluing Schemes}
+We are finally ready to glue schemes.
+\begin{proposition}
+	Fix a collection of schemes $(X_\alpha,\OO_\alpha)$ for each $\alpha\in\lambda$, with an open subset $U_{\alpha\beta}\subseteq X_\alpha$ for each $\alpha,\beta\in\lambda$, where $X_{\alpha\alpha}=X_\alpha$; let $(X_{\alpha\beta},\OO_{\alpha\beta})\coloneqq(U_{\alpha\beta},\OO_{X_\alpha}|_{U_{\alpha\beta}})$ be the induced open subscheme. Further, pick up some isomorphisms $(\varphi_{\alpha\beta},\varphi_{\alpha\beta}^\sharp)\colon (X_{\alpha\beta},\OO_{\alpha\beta})\to (X_{\beta\alpha},\OO_{\beta\alpha})$ satisfying the ``cocycle condition''
+	\[(\varphi_{\alpha\gamma},\varphi_{\alpha\gamma}^\sharp)=(\varphi_{\beta\gamma},\varphi_{\beta\gamma}^\sharp)\circ(\varphi_{\alpha\beta},\varphi_{\alpha\beta}^\sharp),\]
+	on $(U_{\alpha\beta}\cap U_{\alpha\gamma},\OO_{X_\alpha}|_{U_{\alpha\beta}\cap U_{\alpha\gamma}})\subseteq X_\alpha$, where we implicitly assume that $\varphi_{\alpha\beta}(U_{\alpha\beta}\cap U_{\alpha\gamma})\subseteq U_{\beta\gamma}$. Then there is a scheme $(X,\OO)$ equipped with an open cover $\{U_\alpha\}_{\alpha\in\lambda}$ and isomorphisms $(\iota_\alpha,\iota_\alpha^\sharp)\colon (X_\alpha,\OO_\alpha)\to(U_\alpha,\OO|_{U_\alpha})$ covering $X$ such that
+	\begin{itemize}
+		\item $(\iota_\alpha,\iota_\alpha^\sharp)|_{X_{\alpha\beta}}=(\iota_\beta,\iota_\beta^\sharp)|_{X_{\beta\alpha}}\circ(\varphi_{\alpha\beta},\varphi^\sharp_{\alpha\beta})$, and
+		\item $U_\alpha\cap U_\beta=\iota_\alpha(X_{\alpha\beta})=\iota_\beta(X_{\beta\alpha})$.
+	\end{itemize}
+\end{proposition}
+\begin{proof}
+	As a quick aside, we note that setting $\alpha=\beta=\gamma$ in the cocycle condition tells us that $(\varphi_{\alpha\alpha},\varphi_{\alpha\alpha}^\sharp)$ is the identity. Then setting $\alpha=\gamma$ in the cocycle condition tells us that $(\varphi_{\alpha\beta},\varphi_{\alpha\beta}^\sharp)$ is the inverse of $(\varphi_{\beta\alpha},\varphi_{\beta\alpha}^\sharp)$.
+
+	We begin by gluing the topological space. Let $\widetilde X$ denote the disjoint union of the $X_\alpha$s, equipped with inclusions $\widetilde\jmath_\alpha\colon X_\alpha\to\widetilde X$. Then we define the equivalence relation $\sim$ by taking $x_\alpha\in U_{\alpha\beta}$ and identifying $\widetilde\jmath_\alpha x_\alpha\sim\widetilde\jmath_\beta\varphi_{\alpha\beta}x_\alpha$. Quickly, we show $\sim$ forms an equivalence relation.
+	\begin{itemize}
+		\item Reflexive: note $x_\alpha\in U_{\alpha\alpha}$ has $\widetilde\jmath_\alpha x_\alpha\sim\widetilde\jmath_\alpha x_\alpha$.
+		\item Symmetric: given $\widetilde\jmath_\alpha x_\alpha\sim\widetilde\jmath_\beta\varphi_{\alpha\beta}x_\alpha$, we set $x_\beta\coloneqq\varphi_{\alpha\beta}x_\alpha$ so that $x_\alpha=\varphi_{\beta\alpha}x_\beta$, from which
+		\[\jmath_\beta\varphi_{\alpha\beta}x_\alpha=\widetilde\jmath_\beta x_\beta\sim\widetilde\jmath_\alpha\varphi_{\beta\alpha}x_\beta=\widetilde\jmath_\alpha x_\alpha\]
+		follows.
+		\item Transitive: given $\widetilde\jmath_\alpha x_\alpha\sim\widetilde\jmath_\beta\varphi_{\alpha\beta}x_\alpha$ and $\widetilde\jmath_\beta\varphi_{\alpha\beta}x_\alpha\sim\widetilde\jmath_\gamma\varphi_{\beta\gamma}\varphi_{\alpha\beta}x_\alpha$, we see that $\varphi_{\beta\gamma}\circ\varphi_{\alpha\beta}=\varphi_{\alpha\gamma}$, so it follows
+		\[\widetilde\jmath_\alpha x_\alpha\sim\widetilde\jmath_\gamma\varphi_{\alpha\gamma}x_\alpha=\widetilde\jmath_\gamma\varphi_{\beta\gamma}\varphi_{\alpha\beta}x_\alpha.\]
+	\end{itemize}
+	Thus, we give $X\coloneqq\widetilde X/{\sim}$ the quotient topology, where $\pi\colon \widetilde X\onto X$ is the canonical projection. Let $\jmath_\alpha\colon X_\alpha\to X$ be the composite $\pi\circ\widetilde\jmath_\alpha$. In particular, $U\subseteq X$ is open if and only if $\pi^{-1}(U)\subseteq\widetilde X$ is open, which is true if and only if $\jmath_\alpha^{-1}(U)\subseteq X_\alpha$ is open for each $\alpha\in\lambda$. We now have two topological checks.
+	\begin{itemize}
+		\item Note that $\jmath_\beta(x_\beta)\in\jmath_\alpha(X_\alpha)$ if and only if $\widetilde\jmath_\beta(x_\beta)\sim\widetilde\jmath_\alpha(x_\alpha)$ for some $x_\alpha\in X_\alpha$. But the only elements in $\widetilde\jmath_\beta(X_\beta)$ which can be identified with an element of $\widetilde\jmath_\beta(X_\beta)$ live in $U_{\beta\alpha}$, so $x_\beta\in U_{\beta\alpha}$. Conversely, if $x_\beta\in U_{\beta\alpha}$ give
+		\[\widetilde\jmath_\beta x_\beta\sim\widetilde\jmath_\alpha\varphi_{\beta\alpha}x_\beta.\]
+		It follows that $\jmath_\beta(X_\beta)\cap\jmath_\alpha(X_\alpha)=\jmath_\beta(U_{\beta\alpha})$. Analogously, we get $\jmath_\alpha(X_\alpha)\cap\jmath_\beta(X_\beta)=\jmath_\alpha(U_{\alpha\beta})$.
+		\item We show $\jmath_\alpha\colon X_\alpha\to X$ is an open embedding (i.e., with open image and a homeomorphism onto its image). To begin, note that $\jmath_\alpha$ is injective: we have $\widetilde\jmath_\alpha x_\alpha\sim\widetilde\jmath_\alpha x_\alpha'$ if and only if $x_\alpha=\varphi_{\alpha\alpha}x_\alpha'$, from which $x_\alpha=x_\alpha'$ follows.
+		
+		Continuing, note $\im\jmath_\alpha$ is open because $\jmath_\beta^{-1}(\im\jmath_\alpha)=U_{\beta\alpha}\subseteq X_\beta$ is always open by construction. Lastly, $\jmath_\alpha$ is an open map: for any open subset $U\subseteq X_\alpha$, we see that
+		\[\jmath_\beta^{-1}(\jmath_\alpha(U))=\{x_\beta\in U_{\beta\alpha}:\varphi_{\alpha\beta}x_\beta\in U\}=\varphi_{\beta\alpha}^{-1}(U)\]
+		is open for each $\beta$, so $\jmath_\alpha(U)$ is in fact open.
+	\end{itemize}
+	Thus, we now set $\iota_\alpha\colon X_\alpha\to\im\jmath_\alpha$ to be the map $\jmath_\alpha$ restricted to its image.
+
+	It remains to glue our structure sheaves together. By construction of $X$, the map $\pi$ is surjective, and $\widetilde X$ is covered by the sets $\widetilde\iota_\alpha(X_\alpha)$, so $X$ is covered by the sets $U_\alpha\coloneqq\iota_\alpha(X_\alpha)$; note that this is an open cover because $U_\alpha$ is open by the above check.
+
+	Now, we can take each structure sheaf $\OO_\alpha$ and push it to the sheaf $\mc F_\alpha\coloneqq(\iota_\alpha)_*\OO_\alpha$ on $U_\alpha$. Then for any $\alpha,\beta\in\lambda$, we define the sheaf morphism $\psi_{\alpha\beta}\coloneqq$
+
 	Glue the topological space first using the cocycle condition. Second, glue the sheaves together as described earlier. Lastly, $X$ is a scheme by using the affine open covers of the various $X_i$. The uniqueness up to unique isomorphism of $X$ follows by keeping track of all the data.
 \end{proof}
 
