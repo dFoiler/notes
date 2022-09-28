@@ -1,0 +1,130 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 28}
+
+Today we discuss compactness for metric spaces.
+
+\subsection{Totally Bounded Spaces}
+Here is a quick lemma.
+\begin{lemma} \label{lem:compact-is-tot-bounded}
+	Fix a compact metric space $(X,d)$. For any $\varepsilon>0$, there are finitely many points $\{x_i\}_{i=1}^n$ such that
+	\[X=\bigcup_{i=1}^nB(x_i,\varepsilon).\]
+\end{lemma}
+\begin{proof}
+	Note that of course
+	\[X=\bigcup_{x\in X}\{x\}\subseteq\bigcup_{x\in X}B(x,\varepsilon)=X,\]
+	so $\{B(x,\varepsilon)\}_{x\in X}$ is an open cover for $X$ (see \autoref{ex:openballisopen}). The result follows by extracting a finite subcover.
+\end{proof}
+This is a pretty nice finiteness property for a metric space to have, so we give it a name.
+\begin{definition}[Totally bounded]
+	Fix a metric space $(X,d)$. A subset $A\subseteq X$ is \textit{totally bounded} if and only if any $\varepsilon>0$ has a finite set $\{x_i\}_{i=1}^n\subseteq A$ for which
+	\[A\subseteq\bigcup_{i=1}^nB(x_i,\varepsilon).\]
+	If $X$ is totally bounded, we say that $(X,d)$ is totally bounded.
+\end{definition}
+\begin{example}
+	Any compact metric space is totally bounded by \autoref{lem:compact-is-tot-bounded}.
+\end{example}
+It's going to turn out that totally bounded is pretty close to compactness. Here is a quick sanity check.
+\begin{lemma}
+	A totally bounded metric space $(X,d)$, and $A\subseteq X$, then $A$ with is totally bounded.
+\end{lemma}
+\begin{proof}
+	For any $\varepsilon>0$, we see that there is a finite set $S\subseteq X$ for which
+	\[X=\bigcup_{x\in S}^nB(x,\varepsilon)\]
+	because $(X,d)$ is totally bounded. Now, let $T\subseteq S$ be the subset for which $B(x,\varepsilon)\cap A\ne\emp$ for each $x\in S$, and we then find some $y_x\in B(x,\varepsilon)\cap A$ for each $x\in T$. We now claim that
+	\[A\subseteq\bigcup_{x\in T}^mB(y_x,\varepsilon),\]
+	which will finish the proof. Indeed, if $a\in A$, then $a\in X$, so we can find some $x_0\in S$ with $a\in B(x_0,\varepsilon/2)$. It follows that
+	\[d(a,y_{x_0})\le d(a,x_0)+d(x_0,y_{x_0})<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+	so we get
+	\[a\in B(y_{x_0},\varepsilon)\subseteq\bigcup_{x\in T}B(y_x,\varepsilon),\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma}
+	Fix a metric space $(X,d)$ and a subset $A\subseteq X$ which is totally bounded. Then $\overline A$ is also totally bounded.
+\end{lemma}
+\begin{proof}
+	Fix any $\varepsilon>0$. Because $A$ is totally bounded, we may find $\{a_i\}_{i=1}^n\subseteq A$ for which
+	\[A\subseteq\bigcup_{i=1}^nB(a_i,\varepsilon/2).\]
+	We now claim that
+	\[\overline A\stackrel?\subseteq\bigcup_{i=1}^nB(a_i,\varepsilon),\]
+	which will finish the proof. Indeed, if $x\in\overline A$, then \autoref{lem:betterclosure} tells us that $B(x,\varepsilon/2)\cap\overline A$ is nonempty, so place $a\in A\cap B(x,\varepsilon/2)$. By hypothesis on the $a_i$, there exists some $a_i$ such that $a\in B(a_i,\varepsilon/2)$ as well, so
+	\[d(x,a_i)\le d(x,a)+d(a,a_i)<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+	so
+	\[x\in B(a_i,\varepsilon)\subseteq\bigcup_{i=1}^nB(a_i,\varepsilon).\]
+	The claim follows.
+\end{proof}
+
+\subsection{Nets}
+It will be beneficial to us to be able to talk about nets for convergence instead of just sequences.
+\begin{definition}[Directed set]
+	A partially ordered set $\Lambda$ is a \textit{directed set} if and only if any $a,b\in\Lambda$ have some $c\in\Lambda$ for which $c\ge a,b$.
+\end{definition}
+\begin{example}
+	Any totally ordered set is a directed set. In particular, any $a,b\in\Lambda$ will have $a\ge b$ or $b\ge a$, so we just set $c$ to be the larger of the two.
+\end{example}
+\begin{definition}[Net]
+	Fix a topological space $(X,\mc T)$. Given a directed set $\Lambda$, a net is a $\Lambda$-indexed sequence $\{x_\alpha\}_{\alpha\in\Lambda}$ in $X$.
+\end{definition}
+\begin{definition}[Cluster point]
+	Fix a topological space $(X,\mc T)$ and a net $\{x_\alpha\}_{\alpha\in\Lambda}$. Then $x\in X$ is a \textit{cluster point} if and only if, for any open subset $U$ containing $x$ and $\alpha\in\Lambda$, there is some $\alpha'>\alpha$ for which $x_{\alpha'}\in U$.
+\end{definition}
+\begin{remark} \label{rem:cluster-is-limit}
+	Fix a metric space $(X,d)$. Then a cluster point $x$ of a Cauchy sequence $\{x_n\}_{n\in\NN}$ in $X$ is in fact a limit point. Indeed, for any $\varepsilon>0$, find some $N_1$ for which $m,n\ge N_1$ has $d(x_m,x_n)<\varepsilon/2$. Additionally, being a cluster point means there is $N_2$ with $d(x,x_{N_2})<\varepsilon/2$. Thus, setting $N\coloneqq\max\{N_1,N_2\}$, any $n>\max\{N_1,N_2\}$ has
+	\[d(x_n,x)\le d(x_n,x_{N_2})+d(x_{N_2},x)<\frac\varepsilon2+\frac\varepsilon2=\varepsilon.\]
+\end{remark}
+Here is the application to metric spaces.
+\begin{proposition} \label{prop:nets-cluster}
+	Fix a compact topological space $(X,\mc T)$. Then any net $\{x_\alpha\}_{\alpha\in\Lambda}$ has a cluster point.
+\end{proposition}
+\begin{proof}
+	Define
+	\[A_\alpha\coloneqq\{x_\beta:\beta>\alpha\}.\]
+	Observe $\beta\ge\alpha$ implies $A_\beta\subseteq A_\alpha$, so $A_\beta\subseteq\overline{A_\alpha}$, so $\overline{A_\beta}\subseteq\overline{A_\alpha}$.
+
+	Additionally, we note that any finite subset of the $A_\alpha$ have a nonempty intersection. Indeed, for any finite $S\subseteq\Lambda$, inductively applying the fact that $\Lambda$ is a directed set promises us some $\omega\in\Lambda$ with $\omega\ge\alpha$ for each $\alpha\in S$. It follows that $x_\omega\in A_\alpha$ for each $\alpha\in S$, so
+	\[\bigcap_{n\in S}A_n,\]
+	contains $x_\omega$ and hence is not empty.
+
+	Now, because $A_\alpha\subseteq\overline{A_\alpha}$, we see that the $\overline{A_\alpha}$ also have the finite intersection property: for any finite $S\subseteq\Lambda$, see
+	\[\emp\ne\bigcap_{\alpha\in S}A_\alpha\subseteq\bigcap_{\alpha\in S}\overline{A_\alpha},\]
+	But now the $\overline{A_\alpha}$ are closed, so the compactness of $X$ (!) tells us that there is an element
+	\[x\in\bigcap_{\alpha\in\Lambda}\overline{A_\alpha}\]
+	by \autoref{prop:compactviafip}.
+	
+	It remains to check that $x$ is a cluster point. Indeed, for any open set $U$ containing $x$, we see that $x\in\overline{A_\alpha}$ and so $U\cap A_\alpha\ne\emp$ for each $\alpha$ by \autoref{lem:betterclosure}. As such, for any $\alpha\in\Lambda$, we are being promised $U\cap A_\alpha\ne\emp$, so there is $x_\beta$ with $\beta\ge\alpha$ with $x_\beta\in U$. This finishes.
+\end{proof}
+\begin{corollary} \label{cor:compact-is-complete}
+	Any compact metric space $(X,d)$ is complete.
+\end{corollary}
+\begin{proof}
+	Fix a Cauchy sequence $\{x_n\}_{n\in\NN}$ of $X$. Because $X$ is compact as a topological space, \autoref{prop:nets-cluster} promises us some cluster point $x\in X$. But then $x$ is our limit point by \autoref{rem:cluster-is-limit}.
+\end{proof}
+
+\subsection{A ``Metric'' Completeness}
+Here is our capstone result: a converse for \autoref{lem:compact-is-tot-bounded} combined with \autoref{cor:compact-is-complete}.
+\begin{theorem}
+	Fix a metric space $(X,d)$. If $X$ is complete and totally bounded, then $X$ is compact.
+\end{theorem}
+\begin{proof}
+	Suppose that $X$ is compact and totally bounded. We show that $X$ is not complete. Because $X$ is not compact, we can find an open cover $\mc U$ of $X$ with no finite subcover.
+	
+	Notice that, for any fixed $\varepsilon>0$, being totally bounded means we can find some finite $S\subseteq X$ for which $X$ is covered by the $\{B(x,\varepsilon)\}_{x\in S}$. If it were the case that each $x\in S$ has $B(x,\varepsilon)$ covered by some finite cover $\{U_{x,i}\}_{i=1}^{n_x}\in\mc U$, then we could write
+	\[X\subseteq\bigcup_{x\in S}B(x,\varepsilon)\subseteq\bigcup_{x\in S}\Bigg(\bigcup_{i=1}^{n_x}U_{x,i}\Bigg),\]
+	giving our finite subcover of $\mc U$. However, this violates the fact that $\mc U$ has no finite subcover, so there must be some $x\in S$ not covered by any finite subset of $\mc U$.
+
+	We can run the above argument starting with $\varepsilon=1/2$, and find our $x_1$. Then we replace $X$ with $B(x_1,1/2)$ where $B(x_1,1/2)$ has no finite subcover by $\mc U$, so running the argument with $\varepsilon=1/2^2$ on the totally bounded space $B(x_1,1/2)$ grants us $x_2\in B(x_1,1/2)$ such that $B(x_2,1/2^2)$ still has no finite subcover by $\mc U$. Going again, we run the argument with $\varepsilon1/2^3$ on the totally bounded space $B(x_2,1/2^3)$, so we get a totally bounded ball $B(x_3,1/2^3)$ with no finite subcover by $\mc U$.
+	
+	We can continue this process inductively, which gives a sequence $\{x_n\}_{n\in\NN}$ such that each $n\in\NN$ has $B(x_n,1/2^n)$ with no finite cover by $\mc U$ and
+	\[d(x_n,x_{n+1})\le 1/2^n.\]
+	A standard argument shows that $\{x_n\}_{n\in\NN}$ is a Cauchy sequence.\footnote{For any $m\ge n$, note that $d(x_m,x_n)\le\sum_{k=n}^{m-1}d(x_{k+1},x_k)\le\sum_{k=n}^{m-1}1/2^k<\sum_{k=n}^\infty1/2^k=1/2^{n-1}$. Namely, we see that $m,n\to\infty$ makes $d(x_m,x_n)\to0$.} To finish the proof, we claim that it has no limit point.
+
+	Indeed, suppose for the sake of contradiction that $x_n\to x$ as $n\to\infty$. Then we find some $U\in\mc U$ containing $x$, and by definition of a set being open, we can find some open ball $B(x,\varepsilon)$ contained in $U$. We now find some $n$ large enough so that $1/2^n<\varepsilon/2$ and $d(x_n,x)<\varepsilon/2$ so that any $y\in B(x_n,1/2^n)$ has
+	\[d(x,y)\le d(x,x_n)+d(x_n,y)<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+	so $y\in B(x,\varepsilon)$. It follows $B(x_n,1/2^n)\subseteq B(x,\varepsilon)\subseteq U$, which is a contradiction to the construction of $B(x_n,1/2^n)$. This completes the proof.
+\end{proof}
+
+\end{document}
