@@ -7,61 +7,308 @@
 \section{September 19}
 
 Bump, bump, bump.
+\begin{warn}
+	Today we will begin more aggressively notating a scheme $(X,\OO_X)$ by its topological space $X$, where the structure sheaf will always be $\OO_X$. Similarly, a morphism $\varphi\colon X\to Y$ refers to its continuous map, and the map of structure sheaves is $\varphi^\sharp\colon\OO_Y\to\varphi_*\OO_X$.
+\end{warn}
 
 \subsection{Fiber Products}
-Here is today's main result.
+Here is our definition.
+\begin{definition}[Fiber product]
+	Fix a category $\mc C$. Then, given morphisms $\psi_X\colon X\to S$ and $\psi_Y\colon Y\to S$, the \textit{fiber product} $X\times_SY$ is the limit of the following diagram.
+	% https://q.uiver.app/?q=WzAsMyxbMSwxLCJTIl0sWzEsMCwiWCJdLFswLDEsIlkiXSxbMSwwLCJcXHBzaV9YIl0sWzIsMCwiXFxwc2lfWSIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& X \\
+		Y & S
+		\arrow["{\psi_X}", from=1-2, to=2-2]
+		\arrow["{\psi_Y}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+\end{definition}
+\begin{example} \label{ex:set-fp}
+	In the category $\mathrm{Set}$, one can show that
+	\[X\times_SY=\{(x,y)\in X\times Y:\psi_X(x)=\psi_Y(y)\},\]
+	where the projections are the canonical ones.
+\end{example}
+\begin{notation}
+	Given a fiber product $X\times_SY$ in a category, we call the resulting square
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJYIl0sWzAsMSwiWSJdLFsxLDEsIlMiXSxbMCwwLCJYXFx0aW1lc19TWSJdLFszLDFdLFsxLDJdLFszLDBdLFswLDJdLFszLDIsIiIsMSx7InN0eWxlIjp7Im5hbWUiOiJjb3JuZXIifX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{X\times_SY} & X \\
+		Y & S
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	a \textit{pullback square}.
+\end{notation}
+And here is our main result.
 \begin{theorem} \label{thm:fibexist}
 	Fix two $S$-schemes $X$ and $Y$. Then the fiber product $X\times_SY$ exists.
 \end{theorem}
 \begin{remark}
-	Even if $X$ and $Y$ are Noetherian, it does not necessarily follow that $X\times_SY$ is Noetherian. For example, taking $\Spec\overline\QQ$ and $\Spec\overline\QQ$ are both Noetherian, but the fiber product turns out to be
+	Even if $X$ and $Y$ are Noetherian, it does not follow that $X\times_SY$ is Noetherian. For example, taking $\Spec\overline\QQ$ and $\Spec\overline\QQ$ are both Noetherian, but the fiber product turns out to be
 	\[\Spec\overline\QQ\otimes_\QQ\overline\QQ.\]
-	In particular, this is zero-dimensional but has infinitely many points and is therefore not Noetherian.
+	Namely, $\Spec\overline\QQ\otimes_\QQ\overline\QQ$ is zero-dimensional but has infinitely many points and is therefore not Noetherian.
 \end{remark}
-The fiber product is a purely categorical construct, which is the limit of the diagram as follows.
-% https://q.uiver.app/?q=WzAsMyxbMCwxLCJYIl0sWzEsMCwiWSJdLFsxLDEsIlMiXSxbMCwyXSxbMSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-\[\begin{tikzcd}
-	& Y \\
-	X & S
-	\arrow[from=2-1, to=2-2]
-	\arrow[from=1-2, to=2-2]
-\end{tikzcd}\]
-In other words, there are canonical projection maps $X\times_SY\to X$ and $X\times_SY\to Y$ with a suitable universal property. As usual, the universal property means that this is unique up to unique isomorphism.
-\begin{remark}
-	Even without knowing that $X\times_SY$ exists, we may note that we have a natural isomorphism
-	\[\op{Mor}_S(Z,X\times_SY)\cong\op{Mor}_S(Z,X)\times_{\op{Mor}_S(Z,S)}\op{Mor}_S(Z,Y)\]
-	coming straight from the universal property. In other words, the $Z$-points of an $S$-fiber product is just going to be the product of the two $S$-points. In this way, we can view the below proof as asking for a particular functor (on the right here) to be representable, which will be enlightening after some thought.
-	% EH ch 6, V 10.1
-\end{remark}
-Schemes are made of affine schemes, so we will begin with affine schemes, with the hope of patching these together later.
-\begin{lemma}
-	Fix affine schemes $X$, $Y$, and $S$, with $X=\Spec A$ and $Y=\Spec B$ and $S=\Spec R$. Then
-	\[X\times_SY=\Spec A\otimes_RB.\]
+% The fiber product is a purely categorical construct, which is the limit of the diagram as follows.
+% % https://q.uiver.app/?q=WzAsMyxbMCwxLCJYIl0sWzEsMCwiWSJdLFsxLDEsIlMiXSxbMCwyXSxbMSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+% \[\begin{tikzcd}
+% 	& Y \\
+% 	X & S
+% 	\arrow[from=2-1, to=2-2]
+% 	\arrow[from=1-2, to=2-2]
+% \end{tikzcd}\]
+% In other words, there are canonical projection maps $X\times_SY\to X$ and $X\times_SY\to Y$ with a suitable universal property. As usual, the universal property means that this is unique up to unique isomorphism.
+We will provide one proof of \autoref{thm:fibexist} today and another next class involving the representability of functors. To get a taste for this functor business, we note that we can concretely describe the functor of points for the fiber product.
+\begin{lemma} \label{lem:repr-fp}
+	Fix a category $\mc C$ and two maps $\psi_X\colon X\to S$ and $\psi_Y\colon Y\to S$ such that the fiber product $X\times_SY$ exists. Then, for any $Z\in\mc C$ with a map $\psi_Z\colon Z\to S$,
+	\[\op{Mor}_S(Z,X\times_SY)\cong\op{Mor}_S(Z,X)\times_{\op{Mor}_S(Z,S)}\op{Mor}_S(Z,Y).\]
+	Here, $\op{Mor}_S$ refers to morphisms in the category over $S$.
 \end{lemma}
 \begin{proof}
-	Notably, the canonical maps $X\to S$ and $Y\to S$ makes $A$ and $B$ into $R$-algebras. To see this, we simply compute, for some scheme $S$,
-	\begin{align*}
-		\op{Mor}_S(Z,\Spec A\otimes_RS) &\simeq \op{Hom}_R(A\otimes_RS,\OO_Z(Z)) \\
-		&\simeq \op{Hom}_R(A,\OO_Z(Z)) \times_{\op{Hom}_R(R,\OO_Z(Z))} \op{Hom}_R(B,\OO_Z(Z)),
-	\end{align*}
-	which unravels into the correct thing. This finishes by the Yoneda lemma. One can write out all of this as some diagram-chase, but it is equivalent to the above computation.
+	This follows straight from the universal property. Namely, let $\pi_X\colon X\times_SY\to X$ and $\pi_Y\colon X\times_SY\to Y$ be the canonical projections. Using \autoref{ex:set-fp}, we are really just asking for an isomorphism
+	\[\op{Mor}_S(Z,X\times_SY)\cong\{(\varphi_X,\varphi_Y)\in\op{Mor}_S(Z,X)\times\op{Mor}_S(Z,Y):\psi_X\circ\varphi_X=\psi_Y\circ\varphi_Y\}\]
+	matching up with the projections. Namely, observe that we have a map from the left to the right simply taking a map $\varphi\mapsto(\pi_X\circ\varphi,\pi_Y\circ\varphi)$, which works because
+	\[\psi_X\circ\pi_X\circ\varphi=\psi_Y\circ\pi_Y\circ\varphi\]
+	should both be $\psi_Z$. In the reverse direction, we can take a pair of maps $\varphi_X\colon Z\to X$ and $\varphi_Y\colon Z\to Y$ such that $\psi_X\circ\varphi_X=\psi_Y\circ\varphi_Y$ and recover a unique map $\varphi\colon Z\to X\times_SY$ (by the universal property) such that $\pi_X\circ\varphi=\varphi_X$ and $\pi_Y\circ\varphi_Y$.
+\end{proof}
+The difficulty will be in actually finding a scheme which can represent the functor
+\[\op{Mor}_S(-,X)\times_{\op{Mor}_S(-,S)}\op{Mor}_S(-,Y).\]
+Namely, even though we are sure that this object is unique up to unique isomorphism (by \autoref{thm:yo-lem}), it is not actually clear that it exists at all!
+% \begin{remark}
+% 	Even without knowing that $X\times_SY$ exists, we may note that we have a natural isomorphism
+% 	\[\op{Mor}_S(Z,X\times_SY)\cong\op{Mor}_S(Z,X)\times_{\op{Mor}_S(Z,S)}\op{Mor}_S(Z,Y)\]
+% 	coming straight from the universal property. In other words, the $Z$-points of an $S$-fiber product is just going to be the product of the two $S$-points. In this way, we can view the below proof as asking for a particular functor (on the right here) to be representable, which will be enlightening after some thought.
+% 	% EH ch 6, V 10.1
+% \end{remark}
+
+\subsection{They Exist}
+We will now start marching toward a proof of \autoref{thm:fibexist}. Schemes are made of affine schemes, so we will begin with affine schemes, with the hope of patching these together later.
+\begin{lemma} \label{lem:affine-fp}
+	Fix affine schemes $X$, $Y$, and $S$, with $X=\Spec A$ and $Y=\Spec B$ and $S=\Spec R$. Then we may set
+	\[X\times_SY=\Spec A\otimes_RB,\]
+	where the canonical projections $X\times_SY\to X$ and $X\times_SY\to Z$ are induced by the canonical inclusions $\iota_A\colon A\to A\otimes_RB$ and $\iota_B\colon B\to A\otimes_RB$.
+\end{lemma}
+\begin{proof}
+	Let $f_A\colon R\to A$ and $f_B\colon R\to B$ be the maps associated to the maps $\psi_A\colon X\to S$ and $\psi_B\colon Y\to S$. Now, for some scheme $Z$ over $S$ by $\psi_Z$, and we see that
+	\[\op{Mor}_S(Z,\Spec A\otimes_RB)\simeq\op{Hom}_R(A\otimes_RB,\OO_Z(Z))\]
+	by \autoref{thm:biggeoisalgopp}. Now, it is a fact of commutative algebra\todo{} that $R$-algebras maps $\varphi\colon A\otimes_RS\to\OO_Z(Z)$ are in bijection with pairs of $R$-algebra maps $\varphi_A\colon A\to\OO_Z(Z)$ and $\varphi_B\colon A\to\OO_Z(Z)$ such that $\varphi_A=\varphi\circ\iota_A$ and $\varphi_B=\varphi\circ\iota_B$. In other words, we have a natural isomorphism
+	\[\op{Mor}_S(Z,\Spec A\otimes_RB)\simeq\op{Hom}_R(A,\OO_Z(Z))\times_{\op{Hom}_R(R,\OO_Z(Z))}\op{Hom}_R(B,\OO_Z(Z)).\]
+	Applying the adjunction again, we see
+	\[\op{Mor}_S(Z,\Spec A\otimes_RB)\simeq\op{Mor}_S(Z,X)\times_{\op{Mor}_S(Z,S)}\op{Mor}_S(Z,Y),\]
+	which finishes by \autoref{lem:repr-fp}.
+	% Notably, the canonical maps $X\to S$ and $Y\to S$ makes $A$ and $B$ into $R$-algebras. To see this, we simply compute, for some scheme $S$,
+	% \begin{align*}
+	% 	\op{Mor}_S(Z,\Spec A\otimes_RS) &\simeq \op{Hom}_R(A\otimes_RS,\OO_Z(Z)) \\
+	% 	&\simeq \op{Hom}_R(A,\OO_Z(Z)) \times_{\op{Hom}_R(R,\OO_Z(Z))} \op{Hom}_R(B,\OO_Z(Z)),
+	% \end{align*}
+	% which unravels into the correct thing. This finishes by the Yoneda lemma. One can write out all of this as some diagram-chase, but it is equivalent to the above computation.
 \end{proof}
 \begin{remark}
-	One can view the above proof as basically preserving the fact that $A\otimes_RB$ is the fiber product of $A$ and $B$ as $R$-algebras.
+	One can view the above proof as basically preserving the fact that $A\otimes_RB$ is the fiber coproduct of $A$ and $B$ as $R$-algebras.
 \end{remark}
 We now begin our gluing. Here is the key case to glue.
 \begin{lemma} \label{lem:keyfibercase}
-	Fix affine schemes $X$ and $S$ and a scheme $Y$, where $X$ and $Y$ are $S$-schemes. Then the fiber product exists.
+	Fix schemes $X$ and $Y$ over $S$. Given an open cover $\mc U$ of $Y$, if the fiber products $X\times_SU$ exists for each open subscheme $U\in\mc U$, then the fiber product $X\times_SY$ also exists. (The implicit scheme map $U\to S$ is induced by appending the open embedding $U\into X$ to get $U\into X\to S$.)
 \end{lemma}
-We hope that a gluing will be able to give $X\times_SY$ for $S$ affine and $X$ and $Y$ arbitrary, from which the general case will follow by gluing $S$.
+Here is why we care about \autoref{lem:keyfibercase}.
+\begin{corollary}
+	Fix schemes $X$ and $Y$ over an affine scheme $S$. Then the fiber product $X\times_SY$ exists.
+\end{corollary}
+\begin{proof}
+	We have two steps.
+	\begin{enumerate}
+		\item Suppose that $X$ and $S$ are affine. Then we can give $Y$ an affine open cover $\mc U$, and we know that the fiber product $X\times_SU$ exists because now everything is affine, so \autoref{lem:affine-fp} is good enough. It follows that $X\times_SY$ also exists by \autoref{lem:keyfibercase}.
+		\item Suppose that $S$ is affine. Then we can give $X$ an affine open cover $\mc U$, and we know that the fiber product $U\times_SY$ exists by the previous point. So again, $X\times_SY$ exists by applying the form \autoref{lem:keyfibercase} achieved by swapping the $X$s and $Y$s.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+We will figure out how to glue together over $S$ at the last step.
 
-To prove \autoref{lem:keyfibercase}, we will want to glue to get up to $Y$, so we have the following smaller case.
+To prove \autoref{lem:keyfibercase}, we have the following smaller cases.
+\begin{lemma}
+	Fix a scheme morphism $\varphi\colon X\to Y$. Then, for any open $U\subseteq Y$, the square
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJYIl0sWzEsMSwiWSJdLFswLDAsIlxcdmFycGhpXnstMX1VIl0sWzAsMSwiVSJdLFswLDEsIlxcdmFycGhpIl0sWzIsMywiXFx2YXJwaGl8X3tcXHZhcnBoaV57LTF9VX0iLDJdLFsyLDAsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzMsMSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\varphi^{-1}U} & X \\
+		U & Y
+		\arrow["\varphi", from=1-2, to=2-2]
+		\arrow["{\varphi|_{\varphi^{-1}U}}"', from=1-1, to=2-1]
+		\arrow[hook, from=1-1, to=1-2]
+		\arrow[hook, from=2-1, to=2-2]
+	\end{tikzcd}\]
+	is a pullback square.
+\end{lemma}
+\begin{proof}
+	Label our maps as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJYIl0sWzEsMSwiWSJdLFswLDAsIlxcdmFycGhpXnstMX1VIl0sWzAsMSwiVSJdLFswLDEsIlxcdmFycGhpIl0sWzIsMywiXFx2YXJwaGl8X3tcXHZhcnBoaV57LTF9VX0iLDJdLFsyLDAsIlxcaW90YSIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzMsMSwiXFxqbWF0aCIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\varphi^{-1}U} & X \\
+		U & Y
+		\arrow["\varphi", from=1-2, to=2-2]
+		\arrow["{\varphi|_{\varphi^{-1}U}}"', from=1-1, to=2-1]
+		\arrow["\iota", hook, from=1-1, to=1-2]
+		\arrow["\jmath", hook, from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Observe that the right arrow of the diagram is induced as $(\varphi,\varphi^\sharp)|_U$ by \autoref{lem:restrictmorphism}. The horizontal arrows are the open embeddings of \autoref{ex:open-embed-morphism}, and the diagram commutes by \autoref{rem:open-embed-commutes}.
+
+	It remains to show the universal property. Suppose that $Z$ is a scheme with morphisms $\psi_X\colon Z\to X$ and $\psi_U\colon Z\to U$ such that $\varphi\circ\psi_X=\jmath\circ\psi_U$. We need a unique scheme morphism $\psi\colon Z\to\varphi^{-1}U$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMiwxLCJYIl0sWzIsMiwiWSJdLFsxLDEsIlxcdmFycGhpXnstMX1VIl0sWzEsMiwiVSJdLFswLDAsIloiXSxbMCwxLCJcXHZhcnBoaSJdLFsyLDMsIlxcdmFycGhpfF97XFx2YXJwaGleey0xfVV9Il0sWzIsMCwiXFxpb3RhIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMywxLCJcXGptYXRoIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNCwwLCJcXHBzaV9YIiwwLHsiY3VydmUiOi0yfV0sWzQsMywiXFxwc2lfWSIsMix7ImN1cnZlIjoyfV0sWzQsMiwiXFxwc2kiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			Z \\
+			& {\varphi^{-1}U} & X \\
+			& U & Y
+			\arrow["\varphi", from=2-3, to=3-3]
+			\arrow["{\varphi|_{\varphi^{-1}U}}", from=2-2, to=3-2]
+			\arrow["\iota"', hook, from=2-2, to=2-3]
+			\arrow["\jmath"', hook, from=3-2, to=3-3]
+			\arrow["{\psi_X}", curve={height=-12pt}, from=1-1, to=2-3]
+			\arrow["{\psi_U}"', curve={height=12pt}, from=1-1, to=3-2]
+			\arrow["\psi"{description}, dashed, from=1-1, to=2-2]
+		\end{tikzcd} \label{eq:open-embed-fp}
+	\end{equation}
+	commute. We show uniqueness and existence separately.
+	\begin{itemize}
+		\item Uniqueness: on topological spaces, we require any $z\in Z$ to $\psi(z)=\iota(\psi(z))=\psi_X(z)$, so $\psi$ is uniquely determined topologically. On sheaves, we note that we need the diagram
+		% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX1giXSxbMSwwLCJcXGlvdGFfKihcXE9PX1h8X3tcXHZhcnBoaV57LTF9VX0pIl0sWzEsMSwiXFxPT19aIl0sWzAsMSwiXFxpb3RhXlxcc2hhcnAiXSxbMCwyLCJcXHBzaV5cXHNoYXJwX1giLDJdLFsxLDIsIlxcaW90YV8qXFxwc2leXFxzaGFycCJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\OO_X} & {\iota_*(\OO_X|_{\varphi^{-1}U})} \\
+			& {\OO_Z}
+			\arrow["{\iota^\sharp}", from=1-1, to=1-2]
+			\arrow["{\psi^\sharp_X}"', from=1-1, to=2-2]
+			\arrow["{\iota_*\psi^\sharp}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		to commute. In particular, for open subset $V\subseteq\varphi^{-1}U$, we see that $\iota^\sharp_V=\op{res}_{V,\varphi^{-1}UV}$ is just the identity, so we are asking for the diagram
+		% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX1goVikiXSxbMSwwLCJcXE9PX1goVikiXSxbMSwxLCJcXE9PX1oiXSxbMCwxLCJcXGlvdGFeXFxzaGFycF9WIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwyLCIoXFxwc2leXFxzaGFycF9YKV9WIiwyXSxbMSwyLCJcXHBzaV5cXHNoYXJwX1YiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\OO_X(V)} & {\OO_X(V)} \\
+			& {\OO_Z}
+			\arrow["{\iota^\sharp_V}", Rightarrow, no head, from=1-1, to=1-2]
+			\arrow["{(\psi^\sharp_X)_V}"', from=1-1, to=2-2]
+			\arrow["{\psi^\sharp_V}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		to commute, which we can see forces $\psi_V$.
+		\item Existence: we follow the above formula. Define $\psi(z)\coloneqq\psi_X(z)\in X$. Notably, this makes sense because $\varphi(\psi_X(z))=\psi_Y(z)\in U$, so $\psi_X(z)\in\varphi^{-1}U$. Now, \autoref{eq:open-embed-fp} commutes on topological spaces by tracking everything through:
+		\[\iota(\psi(z))=\psi(z)=\psi_X(z)\qquad\text{and}\qquad\varphi(\psi(z))=\varphi(\psi_Z(z))=\psi_Y(z).\]
+		On sheaves, for any open $V\subseteq\varphi^{-1}U$, we need a map $\psi_V\colon\OO_{\varphi^{-1}U}(V)\to\psi_*\OO_Z(V)$, but $\OO_{\varphi^{-1}U}(V)=\OO_X(\varphi^{-1}U\cap V)$ and $\psi_*\OO_Z(V)=\OO_Z(\psi^{-1}V)=\OO_Z(\psi_X^{-1}V)$. However, we note that $\im\psi_X\subseteq\varphi^{-1}U$ as discussed previously, so we define our map as the composite
+		\[\OO_{\varphi^{-1}U}(V)=\OO_X(\varphi^{-1}U\cap V)\stackrel{(\psi_X^\sharp)_{\varphi^{-1}U\cap V}}\to(\psi_X)_*\OO_Z(\varphi^{-1}U\cap V)=\OO_Z(\psi_X^{-1}V).\]
+		We now run the necessary checks.
+		\begin{itemize}
+			\item Sheaf morphism: given open subsets $V'\subseteq V$, we see that the diagram
+			% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX3tcXHZhcnBoaV57LTF9VX0oVikiXSxbMCwxLCJcXE9PX3tcXHZhcnBoaV57LTF9VX0oVicpIl0sWzEsMCwiXFxPT19YKFxcdmFycGhpXnstMX1VXFxjYXAgVikiXSxbMSwxLCJcXE9PX1goXFx2YXJwaGleey0xfVVcXGNhcCBWJykiXSxbMiwwLCIoXFxwc2lfWClfKlxcT09fWihcXHZhcnBoaV57LTF9VVxcY2FwIFYpIl0sWzIsMSwiKFxccHNpX1gpXypcXE9PX1ooXFx2YXJwaGleey0xfVVcXGNhcCBWJykiXSxbMywwLCJcXE9PX1ooXFxwc2leey0xfV9YVikiXSxbMywxLCJcXE9PX1ooXFxwc2leey0xfV9YVicpIl0sWzAsMiwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsIlxcb3B7cmVzfSIsMl0sWzIsMywiXFxvcHtyZXN9IiwyXSxbNCw1LCJcXG9we3Jlc30iLDJdLFsyLDQsIihcXHBzaV9YXlxcc2hhcnApX3tcXHZhcnBoaV57LTF9VVxcY2FwIFZ9Il0sWzMsNSwiKFxccHNpX1heXFxzaGFycClfe1xcdmFycGhpXnstMX1VXFxjYXAgVid9Il0sWzYsNywiXFxvcHtyZXN9Il0sWzQsNiwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNSw3LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\OO_{\varphi^{-1}U}(V)} & {\OO_X(\varphi^{-1}U\cap V)} & {(\psi_X)_*\OO_Z(\varphi^{-1}U\cap V)} & {\OO_Z(\psi^{-1}_XV)} \\
+				{\OO_{\varphi^{-1}U}(V')} & {\OO_X(\varphi^{-1}U\cap V')} & {(\psi_X)_*\OO_Z(\varphi^{-1}U\cap V')} & {\OO_Z(\psi^{-1}_XV')}
+				\arrow[Rightarrow, no head, from=1-1, to=1-2]
+				\arrow[Rightarrow, no head, from=2-1, to=2-2]
+				\arrow["{\op{res}}"', from=1-1, to=2-1]
+				\arrow["{\op{res}}"', from=1-2, to=2-2]
+				\arrow["{\op{res}}"', from=1-3, to=2-3]
+				\arrow["{(\psi_X^\sharp)_{\varphi^{-1}U\cap V}}", from=1-2, to=1-3]
+				\arrow["{(\psi_X^\sharp)_{\varphi^{-1}U\cap V'}}", from=2-2, to=2-3]
+				\arrow["{\op{res}}", from=1-4, to=2-4]
+				\arrow[Rightarrow, no head, from=1-3, to=1-4]
+				\arrow[Rightarrow, no head, from=2-3, to=2-4]
+			\end{tikzcd}\]
+			commutes, where the only square which isn't made of horizontal identities is a naturality square for $\psi^\sharp_X$.
+			\item Morphism of locally ringed spaces: this is essentially inherited directly from $\psi^\sharp_X$. Given $z\in Z$, we need to know that the composite
+			\[\arraycolsep=1.4pt\begin{array}{cccccc}
+				\OO_{\varphi^{-1}U,\psi(z)} &\stackrel{\psi^\sharp_{\psi(z)}}\to& (\psi_*\OO_Z)_{\psi(z)} &\to& \OO_{Z,z} \\
+				{[(V,s)]} &\mapsto& [(V,(\psi_X^\sharp)_{\varphi^{-1}U\cap V}(s))] &\mapsto& (\psi_X^\sharp)_{\varphi^{-1}U\cap V}(s)|_z
+			\end{array}\]
+			is a map of local rings. Well, we note that any $[(V,s)]\in\OO_{\varphi^{-1}U,\psi(z)}$ is canonically also a germ in $\OO_{X,\psi(z)}$, and the fact that $\psi_Z$ is a morphism of locally ringed spaces tells us $(\psi_X^\sharp)_{\varphi^{-1}U\cap V}(s)|_z\in\mf m_{Z,z}$, which is what we wanted.
+			\item Commutes: we already checked that the needed diagram \autoref{eq:open-embed-fp} commutes on the level of topological spaces, so we just need to check that it commutes on the level of sheaves. This has two checks.
+			\begin{itemize}
+				\item We verify that
+				% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX1UiXSxbMSwwLCJcXHZhcnBoaV8qXFxPT197XFx2YXJwaGleey0xfVV9Il0sWzEsMSwiKFxccHNpX1UpXypcXE9PX1oiXSxbMCwyLCJcXHBzaV9VXlxcc2hhcnAiLDJdLFswLDEsIlxcdmFycGhpXlxcc2hhcnAiXSxbMSwyLCJcXHBzaV5cXHNoYXJwIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+				\[\begin{tikzcd}
+					{\OO_U} & {\varphi_*\OO_{\varphi^{-1}U}} \\
+					& {(\psi_U)_*\OO_Z}
+					\arrow["{\psi_U^\sharp}"', from=1-1, to=2-2]
+					\arrow["{\varphi^\sharp}", from=1-1, to=1-2]
+					\arrow["{\varphi_*\psi^\sharp}", from=1-2, to=2-2]
+				\end{tikzcd}\]
+				commutes. Indeed, for any open subset $V\subseteq U$, we could verify that
+				% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXE9PX1UoVikiXSxbMSwwLCJcXE9PX3tcXHZhcnBoaV57LTF9VX0oXFx2YXJwaGleey0xfVVcXGNhcCBWKSJdLFsxLDEsIlxcT09fWihcXHBzaV57LTF9VikiXSxbMiwwLCJzIl0sWzMsMCwiXFx2YXJwaGleXFxzaGFycF9WKHMpIl0sWzMsMSwiKFxccHNpXlxcc2hhcnBfWClfe1xcdmFycGhpXnstMX1VXFxjYXAgVn0oXFx2YXJwaGleXFxzaGFycF9WcykiXSxbMCwyLCIoXFxwc2lfVV5cXHNoYXJwKV9WIiwyXSxbMCwxLCJcXHZhcnBoaV5cXHNoYXJwX1YiXSxbMSwyLCJcXHBzaV5cXHNoYXJwX3tcXHZhcnBoaV57LTF9VVxcY2FwIFZ9Il0sWzMsNCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMyw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+				\[\begin{tikzcd}
+					{\OO_U(V)} & {\OO_{\varphi^{-1}U}(\varphi^{-1}U\cap V)} & s & {\varphi^\sharp_V(s)} \\
+					& {\OO_Z(\psi^{-1}V)} && {(\psi^\sharp_X)_{\varphi^{-1}U\cap V}(\varphi^\sharp_Vs)}
+					\arrow["{(\psi_U^\sharp)_V}"', from=1-1, to=2-2]
+					\arrow["{\varphi^\sharp_V}", from=1-1, to=1-2]
+					\arrow["{\psi^\sharp_{\varphi^{-1}U\cap V}}", from=1-2, to=2-2]
+					\arrow[maps to, from=1-3, to=1-4]
+					\arrow[maps to, from=1-4, to=2-4]
+					\arrow[maps to, from=1-3, to=2-4]
+				\end{tikzcd}\]
+				commutes appropriately using the given commuting square.
+				\item We verify that 
+				% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX1giXSxbMSwwLCJcXGlvdGFfKlxcT09fe1xcdmFycGhpXnstMX1VfSJdLFsxLDEsIihcXHBzaV9YKV8qXFxPT19aIl0sWzAsMiwiKFxccHNpX1heXFxzaGFycCkiLDJdLFswLDEsIlxcaW90YV5cXHNoYXJwIl0sWzEsMiwiXFxpb3RhXypcXHBzaV5cXHNoYXJwIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+				\[\begin{tikzcd}
+					{\OO_X} & {\iota_*\OO_{\varphi^{-1}U}} \\
+					& {(\psi_X)_*\OO_Z}
+					\arrow["{(\psi_X^\sharp)}"', from=1-1, to=2-2]
+					\arrow["{\iota^\sharp}", from=1-1, to=1-2]
+					\arrow["{\iota_*\psi^\sharp}", from=1-2, to=2-2]
+				\end{tikzcd}\]
+				commutes. Indeed, for any open subset $V\subseteq U$, we could verify that
+				% https://q.uiver.app/?q=WzAsMyxbMCwwLCJcXE9PX1goVikiXSxbMSwwLCJcXE9PX3tcXHZhcnBoaV57LTF9VX0oXFx2YXJwaGleey0xfVVcXGNhcCBWKSJdLFsxLDEsIlxcT09fWihcXHBzaV9YXnstMX1WKSJdLFswLDIsIihcXHBzaV9YXlxcc2hhcnApX1YiLDJdLFswLDEsIlxcaW90YV5cXHNoYXJwX1YiXSxbMSwyLCJcXHBzaV5cXHNoYXJwX3tcXHZhcnBoaV57LTF9VVxcY2FwIFZ9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+				\[\begin{tikzcd}
+					{\OO_X(V)} & {\OO_{\varphi^{-1}U}(\varphi^{-1}U\cap V)} \\
+					& {\OO_Z(\psi_X^{-1}V)}
+					\arrow["{(\psi_X^\sharp)_V}"', from=1-1, to=2-2]
+					\arrow["{\iota^\sharp_V}", from=1-1, to=1-2]
+					\arrow["{\psi^\sharp_{\varphi^{-1}U\cap V}}", from=1-2, to=2-2]
+				\end{tikzcd}\]
+				commutes directly from the construction of $\psi^\sharp$.
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	The above checks complete the proof.
+\end{proof}
 \begin{lemma} \label{lem:helpkeycase}
-	Fix affine schemes $X$ and $S$ and a scheme $Y$, where $X$ and $Y$ are $S$-schemes. Given an open embedding $Y\into Y'$, if $X\times_SY'$ exists, then $X\times_SY$ also exists as
-	\[X\times_SY=\pi^{-1}_{Y'}(Y),\]
-	where $\pi_{Y'}\colon X\times_SY'\to Y'$ is the canonical map.
+	Fix schemes $X$ and $Y$ over a scheme $S$. Given an open subset $U\subseteq Y$, if $X\times_SY$ exists, then $X\times_SU$ also exists.
 \end{lemma}
 \begin{proof}[Sketch]
+	To begin, label our relevant maps as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJZIl0sWzEsMCwiWCJdLFsxLDEsIlMiXSxbMCwwLCJYXFx0aW1lc19TWSJdLFsxLDIsIlxccHNpX1giXSxbMCwyLCJcXHBzaV9ZIl0sWzMsMSwiXFxwaV9YIl0sWzMsMCwiXFxwaV9ZIiwyXSxbMywyLCIiLDAseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{X\times_SY} & X \\
+		Y & S
+		\arrow["{\psi_X}", from=1-2, to=2-2]
+		\arrow["{\psi_Y}", from=2-1, to=2-2]
+		\arrow["{\pi_X}", from=1-1, to=1-2]
+		\arrow["{\pi_Y}"', from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	Our fiber product is going to be $\pi_Y^{-1}(U)$, which induces the restricted ring map $\pi_U\coloneqq\pi_Y|_{\pi_Y^{-1}U}$ by \autoref{lem:restrictmorphism}. This gives us the diagram
+	% https://q.uiver.app/?q=WzAsNixbMSwxLCJZIl0sWzIsMCwiWCJdLFsyLDEsIlMiXSxbMSwwLCJYXFx0aW1lc19TWSJdLFswLDAsIlxccGlfWV57LTF9KFUpIl0sWzAsMSwiVSJdLFsxLDIsIlxccHNpX1giXSxbMCwyLCJcXHBzaV9ZIl0sWzMsMSwiXFxwaV9YIl0sWzMsMCwiXFxwaV9ZIiwyXSxbNSwwLCJcXGptYXRoIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNCwzLCJcXGlvdGEiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFs0LDUsIlxccGlfVSIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\pi_Y^{-1}(U)} & {X\times_SY} & X \\
+		U & Y & S
+		\arrow["{\psi_X}", from=1-3, to=2-3]
+		\arrow["{\psi_Y}", from=2-2, to=2-3]
+		\arrow["{\pi_X}", from=1-2, to=1-3]
+		\arrow["{\pi_Y}"', from=1-2, to=2-2]
+		\arrow["\jmath", hook, from=2-1, to=2-2]
+		\arrow["\iota", hook, from=1-1, to=1-2]
+		\arrow["{\pi_U}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	which we can see commutes on the left by \autoref{rem:open-embed-commutes}.
+
+	As an intermediate step, we claim that
+	% https://q.uiver.app/?q=WzAsNCxbMSwxLCJZIl0sWzEsMCwiWFxcdGltZXNfU1kiXSxbMCwwLCJcXHBpX1leey0xfShVKSJdLFswLDEsIlUiXSxbMSwwLCJcXHBpX1kiLDJdLFszLDAsIlxcam1hdGgiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFsyLDEsIlxcaW90YSIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzIsMywiXFxwaV9VIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\pi_Y^{-1}(U)} & {X\times_SY} \\
+		U & Y
+		\arrow["{\pi_Y}"', from=1-2, to=2-2]
+		\arrow["\jmath", hook, from=2-1, to=2-2]
+		\arrow["\iota", hook, from=1-1, to=1-2]
+		\arrow["{\pi_U}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	is a pullback square.
+
 	We use the universal property a bunch of times. Then
 	% https://q.uiver.app/?q=WzAsNixbMCwyLCJYIl0sWzEsMSwiWSciXSxbMSwyLCJTIl0sWzAsMSwiWFxcdGltZXNfU1knIl0sWzEsMCwiWSJdLFswLDAsIlxccGleey0xfV97WSd9KFkpIl0sWzAsMl0sWzEsMl0sWzMsMCwiXFxwaV9YIl0sWzMsMSwiXFxwaV9ZIiwyXSxbNSw0LCJcXHBpX1kiXSxbNSwzXSxbNCwxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
