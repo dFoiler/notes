@@ -1,0 +1,132 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 3}
+
+It's spooky season. We begin class by finishing the proof of \autoref{thm:ascoli}. I have edited the proof from yesterday for continuity reasons.
+
+\subsection{Locally Compact Spaces}
+Here is our definition.
+\begin{definition}[Locally compact]
+	A topological space $(X,\mc T)$ is \textit{locally compact} if and only if each point $x\in X$ has some open subset $U\in\mc T$ containing $x$ such that $\overline U$ is compact.
+\end{definition}
+\begin{example}
+	The set of real numbers $\RR$ with the usual topology is locally compact. Indeed, any $x\in\RR$ has the open neighborhood $(x-1,x+1)$ with closure $[x-1,x+1]$, and $[x-1,x+1]$ is compact.
+\end{example}
+\begin{example}
+	For the same reason, the space $[a,b)$ is also locally compact.
+\end{example}
+\begin{remark}
+	Even though compact Hausdorff spaces are normal (by \autoref{prop:comp-haus-is-normal}), locally compact Hausdorff spaces do not have to be.
+\end{remark}
+For today, we are going to look at only locally compact Hausdorff spaces.
+\begin{lemma} \label{lem:better-loc-compact}
+	Fix a locally compact Hausdorff space $(X,\mc T)$. Then any $x\in X$ and open subset $U\in\mc T$ containing $x$ has some open subset $U_x\subseteq X$ containing $x$ such that $\overline{U_x}$ is compact and $\overline{U_x}\subseteq U$.
+\end{lemma}
+\begin{proof}
+	We begin by finding our promised $U'$ containing $x$ with $\overline{U'}$ compact. Thus, it suffices to find some open subset $V$ containing $x$ such that $\overline V$ is compact and $\overline V\subseteq U\cap U'$, but now we see that
+	\[\overline{U\cap U'}\subseteq\overline{U'}\]
+	is a closed subset of the compact space $\overline{U'}$ and therefore compact by \autoref{lem:closedincompactiscompact}. In particular, we can replace $U$ with $U\cap U'$ and assume that $\overline U$ is compact.
+
+	Now, let $\del U\coloneqq\overline U\setminus U$ be the boundary of $U$. Notably, $\del U$ is a closed subset of the compact space $\overline U$, so $\del U$ is compact by \autoref{lem:closedincompactiscompact}. Because $\{x\}$ is a closed subset in $U$ (note $X\setminus\{x\}$ is open, so $U\setminus\{x\}$ is open in the relative topology), the fact that compact Hausdorff spaces are normal (\autoref{prop:comp-haus-is-normal}) grants open subsets $U_x$ and $U_{\del}$ of $\overline U$ with $x\in U_x$ and $\del U\subseteq U_\del$.
+
+	Now, $U_x\subseteq\overline U\setminus U_\del\subseteq\overline U\setminus{\del U}$, so we see $\overline{U_x}\subseteq\overline U\setminus U_\del$ because $\overline U\setminus U_\del$ is a closed subset of $\overline U$. Further, $\overline{U_x}$ is a closed subset of a compact space $\overline U$, so $\overline{U_x}$ is compact by \autoref{lem:closedincompactiscompact}, so we are done.
+\end{proof}
+\begin{remark}
+	\autoref{lem:better-loc-compact} basically says that open subspaces of locally compact Hausdorff spaces are locally compact.
+\end{remark}
+We can extend the previous result past points to full compact sets.
+\begin{proposition} \label{prop:best-loc-compact}
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and some compact subset $C\subseteq X$. Then any open subset $U$ containing $C$ has some open subset $U_C$ containing $C$ such that $\overline{U_C}$ is compact and $\overline{U_C}\subseteq U$.
+\end{proposition}
+\begin{proof}
+	We use \autoref{lem:better-loc-compact}. For each $x\in C$, find some $U_x$ by \autoref{lem:better-loc-compact} with $U_x$ containing $x$ with $\overline{U_x}$ compact and $\overline{U_x}\subseteq U$. Then we see that
+	\[C\subseteq\bigcup_{x\in C}U_x,\]
+	so we have provided an open cover for $C$, so we can choose finitely many $\{x_i\}_{i=1}^n\subseteq C$ with $U_i\coloneqq U_{x_i}$ so that
+	\[C\subseteq\bigcup_{i=1}^nU_i\subseteq U_C.\]
+	Now, we see that
+	\[\overline{\bigcup_{i=1}^nU_i}=\bigcup_{i=1}^n\overline{U_i}\]
+	is a compact subset of $U$ because being compact is closed under finite unions (by inductively applying \autoref{ex:finite-union-compacts}), so $\bigcup_{i=1}^nU_i$ is the required open subset.
+\end{proof}
+
+\subsection{Supports}
+A nice thing about locally compact Hausdorff spaces is that they let us talk about supports.
+\begin{definition}[Support]
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and a normed vector space $(V,\norm\cdot)$. Then the \textit{support} of a continuous function $f\colon X\to V$ is
+	\[\op{supp}f\coloneqq\overline{\{x\in X:f(x)\ne0\}}.\]
+\end{definition}
+Notably, $\{x\in X:f(x)\ne0\}=f^{-1}(V\setminus\{0\})$ is the pre-image of an open subset and is therefore open by the continuity of $f$. In particular, normed vector spaces are metric spaces and therefore Hausdorff, so $\{0\}\subseteq V$ is in fact a closed subset.
+
+Here are some quick checks about the support.
+\begin{lemma} \label{lem:linear-combo-supp}
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and a normed $k$-vector space $(V,\norm\cdot)$. Then, given two continuous functions $f,g\in C(X,V)$ and $a,b\in k$, we have that
+	\[\op{supp}(af+bg)\subseteq(\op{supp}f\cup\op{supp}g)\]
+\end{lemma}
+\begin{proof}
+	Because $\op{supp}f\cup\op{supp}g$ is the union of two closed sets, it's closed, so it suffices by definition of the closure to show that
+	\[\{x\in X:(af+bg)(x)\ne0\}\stackrel?\subseteq(\op{supp}f\cup\op{supp}g).\]
+	Well, if $f(x)=0$ and $g(x)=0$, then we see $(af+bg)(x)=af(x)+bg(x)=0$, so $x\notin\op{supp}(af+bg)$. Applying contraposition, we see $x\in\op{supp}(af+bg)$ implies $f(x)\ne0$ or $g(x)\ne0$, so $x\in\op{supp}f$ or $x\in\op{supp}g$.
+\end{proof}
+\begin{lemma} \label{lem:mult-supp}
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and a normed $k$-algebra $(R,\norm\cdot)$. Then, given two continuous functions $f,g\in C(X,R)$ and $a,b\in k$, we have that
+	\[\op{supp}fg\subseteq(\op{supp}f\cap\op{supp}g)\]
+\end{lemma}
+\begin{proof}
+	Again, because $\op{supp}f\cap\op{supp}g$ is the intersection of closed sets, it's closed, so it suffices to show that
+	\[\{x\in X:(fg)(x)\ne0\}\stackrel?\subseteq(\op{supp}f\cap\op{supp}g).\]
+	Well, if $f(x)=0$ or $g(x)=0$, then $(fg)(x)=f(x)g(x)=0$. Thus, by contraposition, if $(fg)(x)=0$, then $f(x)\ne0$ and $g(x)\ne0$, so $x\in(\op{supp}f\cap\op{supp}g)$.
+\end{proof}
+We tend to like small things, so here are our small functions.
+\begin{definition}[Compact support]
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and a normed vector space $(V,\norm\cdot)$. A continuous function $f\colon X\to V$ has \textit{compact support} if and only if its support is compact. We let $C_c(X,V)$ denote the continuous functions of compact support.
+\end{definition}
+Here is a quick sanity check.
+\begin{lemma}
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and a normed $k$vector space $(V,\norm\cdot)$. Then $C_c(X,V)$ is a $k$-subspace of $C(X,V)$. If $V$ is a normed $k$-algebra, then $C_c(X,V)$ is a $k$-subalgebra.
+\end{lemma}
+\begin{proof}
+	We have the following checks.
+	\begin{itemize}
+		\item Zero: note that the zero function $z\colon X\to V$ by $z(x)=0$ for all $x\in X$ has
+		\[\{x\in X:z(x)\ne0\}=\emp.\]
+		The closure of the empty set is still empty (certainly $\overline\emp\subseteq\emp$ by definition of the closure), so we conclude that $\op{supp}z=\emp$. Now, $\emp$ is compact because any open cover can take the empty subcover, which is certainly finite. Thus, $z\in C_c(X,C)$.
+		\item Linear combination: given $f,g\in C_c(X,V)$ and $a,b\in k$, we see from \autoref{lem:linear-combo-supp} that $\op{supp}(af+bg)$ is a closed subset of $\op{supp}f\cup\op{supp}g$. However, $\op{supp}f\cup\op{supp}g$ is the union of two compact sets and therefore compact by \autoref{ex:finite-union-compacts}, so $\op{supp}(af+bg)$ is a closed subset of a compact space and hence compact by \autoref{lem:closedincompactiscompact}.
+		\item Multiplication: given $f,g\in C_c(X,V)$, we see from \autoref{lem:mult-supp} that $\op{supp}(fg)$ is a closed subset of
+		\[\op{supp}f\cap\op{supp}g\subseteq\op{supp}f.\]
+		However, $\op{supp}f$ is compact, so $\op{supp}fg$ is a closed subset of a compact space and hence compact by \autoref{lem:closedincompactiscompact}.
+	\end{itemize}
+	The first two checks tell us that we have a subspace, and the last check uses the algebra structure to get a subalgebra.
+\end{proof}
+Of course, we would like to know that there are a nontrivial number of functions of compact support, so here we go.
+\begin{proposition}
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and a normed vector space $(V,\norm\cdot)$. For any compact subset $C\subseteq X$ and open subset $U\subseteq X$ containing $C$, there is a continuous function $f\colon X\to\RR$ of compact support such that $f|_C=1$ and $f|_{X\setminus U}=0$.
+\end{proposition}
+\begin{proof}
+	The point is to apply \autoref{thm:ury}. By \autoref{prop:best-loc-compact}, we may find an open subset $V$ containing $C$ such that $\overline V$ is compact and $\overline V\subseteq U$. Then we see $C$ and $\overline V\setminus V$ are disjoint closed subsets of $\overline V$---note $C$ is closed because $X$ is Hausdorff, using \autoref{cor:compact-in-haus-is-closed}.
+	
+	Thus, because $\overline V$ is a normal space (it's compact and Hausdorff, so \autoref{prop:comp-haus-is-normal} applies), we are promised a continuous function $f_{\overline V}\colon\overline V\to\RR$ such that $f_{\overline V}|_C=1$ and $f_{\overline V}|_{\overline V\setminus V}=0$. We now extend $\overline V$ to all of $X$ by
+	\[f(x)\coloneqq\begin{cases}
+		f_{\overline V}(x) & x\in\overline V, \\
+		0 & x\notin\overline V.
+	\end{cases}\]
+	Indeed, if $x\in C$, we see $x\in\overline V$, so $f(x)=1$; similarly, if $x\notin U$, then $x\notin\overline V$ and so $f(x)=0$. Lastly, to see that $f$ is continuous, we pick up some open closed $W\subseteq V$; we have the following cases.
+	\begin{itemize}
+		\item If $0\notin W$, then we see that $f(x)\in W$ forces $x\in\overline V$, so
+		\[f^{-1}(W)=f^{-1}_{\overline V}(W)\]
+		is a closed subset of $\overline V$ by the continuity of $f_{\overline V}$. Closed subsets of closed subspaces are still closed, though, so we see that $f^{-1}(W)$ is closed in $X$.
+		\item If $0\in W$, then we do casework. If $x\in\overline V$, then actually $x\in f_{\overline V}^{-1}(W)$, which is closed in $\overline V$ and hence closed in $X$ by continuity of $f_{\overline V}$. Otherwise, $x\notin\overline V$, but then we see that $x\in X\setminus V$ as well; conversely, if $x\in\overline V\setminus V$, then either $x\in\overline V$ and so $f_{\overline V}(x)=0\in W$, or $x\notin\overline V$ and so $f(x)=0\in W$.
+
+		In total, we see
+		\[f^{-1}(\{0\})=f_{\overline V}(W)\cup(X\setminus V)\]
+		is the union of closed sets and thus closed.
+	\end{itemize}
+	Lastly, we see that $\op{supp}f\subseteq\overline V$, so $\op{supp}f$ is a closed subset of a compact set, so we conclude $\op{supp}f$ is compact by \autoref{lem:closedincompactiscompact}, so $f$ has compact support.
+\end{proof}
+\begin{remark}
+	By \autoref{prop:contiscomplete}, the space of bounded continuous functions $X\to\RR$ is complete under $\norm\cdot_\infty$. We note that $C_c(X,\RR)$ is a subalgebra, but it is not a closed subset. It turns out that its closure is $C_\infty(X,\RR)$, which is the space of functions which vanish at infinity: namely, for any $\varepsilon>0$, there is a compact set $C\subseteq X$ such that $|f(x)|\le\varepsilon$ for each $x\notin C$.
+\end{remark}
+
+\end{document}
