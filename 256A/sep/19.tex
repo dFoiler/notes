@@ -310,7 +310,7 @@ We are also going to want to take bigger fiber products and find small ones insi
 		\arrow["\iota", hook, from=1-1, to=1-2]
 		\arrow["\jmath", hook, from=2-1, to=2-2]
 	\end{tikzcd}\]
-	Observe that the right arrow of the diagram is induced as $(\varphi,\varphi^\sharp)|_U$ by \autoref{lem:restrictmorphism}. The horizontal arrows are the open embeddings of \autoref{ex:open-embed-morphism}, and the diagram commutes by \autoref{rem:open-embed-commutes}.
+	Observe that the right arrow of the diagram is induced as $(\varphi,\varphi^\sharp)|_U$ by \autoref{lem:restrictmorphism}. The horizontal arrows are the open embeddings of \autoref{ex:open-embed-morphism}, and the diagram commutes by \autoref{rem:better-restriction}.
 
 	It remains to show the universal property. Suppose that $Z$ is a scheme with morphisms $\psi_X\colon Z\to X$ and $\psi_U\colon Z\to U$ such that $\varphi\circ\psi_X=\jmath\circ\psi_U$. We need a unique scheme morphism $\psi\colon Z\to\varphi^{-1}U$ making the diagram
 	% https://q.uiver.app/?q=WzAsNSxbMiwxLCJYIl0sWzIsMiwiWSJdLFsxLDEsIlxcdmFycGhpXnstMX1VIl0sWzEsMiwiVSJdLFswLDAsIloiXSxbMCwxLCJcXHZhcnBoaSJdLFsyLDMsIlxcdmFycGhpfF97XFx2YXJwaGleey0xfVV9Il0sWzIsMCwiXFxpb3RhIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMywxLCJcXGptYXRoIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNCwwLCJcXHBzaV9YIiwwLHsiY3VydmUiOi0yfV0sWzQsMywiXFxwc2lfWSIsMix7ImN1cnZlIjoyfV0sWzQsMiwiXFxwc2kiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
@@ -487,11 +487,15 @@ And now we manifest what we mean by ``small fiber products inside large ones.''
 		\arrow["\iota", hook, from=1-1, to=1-2]
 		\arrow["{\pi_U}"', from=1-1, to=2-1]
 	\end{tikzcd}\]
-	which we can see commutes on the left by \autoref{rem:open-embed-commutes}. Now, the right square is a pullback square by construction of $X\times_SY$, and the left square is a pullback square by \autoref{lem:open-fp}, so the larger rectangle is a pullback square by \autoref{lem:smalls-to-big-pullback}. This completes the proof.
+	which we can see commutes on the left by \autoref{rem:better-restriction}. Now, the right square is a pullback square by construction of $X\times_SY$, and the left square is a pullback square by \autoref{lem:open-fp}, so the larger rectangle is a pullback square by \autoref{lem:smalls-to-big-pullback}. This completes the proof.
 \end{proof}
 
-\subsection{Fiber Products: Gluing}
-We now begin our gluing. Here is the key case to glue.
+\subsection{Fiber Products: Gluing the Factors}
+We now begin our gluing. Here is the key idea to keep track of.
+\begin{idea}
+	After checking the affine case, the gluing follows by chasing universal properties around.
+\end{idea}
+Indeed, we will have to do no actual algebra in the argument that follows. For this subsection, we will glue along the factors of the fiber product; here is the statement.
 \begin{lemma} \label{lem:keyfibercase}
 	Fix schemes $X$ and $Y$ over $S$. Given an open cover $\mc U$ of $Y$, if the fiber products $X\times_SU$ exists for each open subscheme $U\in\mc U$, then the fiber product $X\times_SY$ also exists. (The implicit scheme map $U\to S$ is induced by appending the open embedding $U\into X$ to get $U\into X\to S$.)
 \end{lemma}
@@ -509,64 +513,254 @@ Here is why we care about \autoref{lem:keyfibercase}.
 \end{proof}
 We now prove \autoref{lem:keyfibercase}.
 \begin{proof}[Proof of \autoref{lem:keyfibercase}]
-	Give $Y$ the affine open cover $\{Y_\alpha\}_{\alpha\in\lambda}$, writing $Y_{\alpha\beta}\coloneqq Y_\alpha\cap Y_\beta$ as a subset of $Y_\alpha$ to prepare for our gluing. Now, we see that \autoref{cor:sub-fp} grants us schemes
-	\[X\times_SY_{\alpha\beta}\subseteq X\times_SY_\alpha\qquad\text{and}\qquad X\times_SY_{\beta\alpha}\subseteq X\times_SY_\beta,\]
-	which must be identified because $Y_{\alpha\beta}=Y_{\beta\alpha}$. These identified schemes are going to satisfy the cocycle condition because these fiber products are unique up to unique isomorphism.
-
-	To see the cocycle condition more concretely, we can just say out loud that we have the scheme
-	\[X\times_SY_{\alpha\beta\gamma}=(X\times_SY_{\alpha\beta})\cap(X\times_SY_{\alpha\gamma})\subseteq X\times_SY_\alpha.\]
-	On the other side, we have a similar computation for $Y_{jik}$ and $Y_{kij}$, so chaining these diagrams together will identify the needed isomorphisms by the uniqueness of our various isomorphisms.
-
-	At this point, we have been glued together a (unique) scheme $W$ with ``compatible'' open embeddings $X\times_SY_\alpha\into W$. It remains to verify that $W$ is our fiber product $X\times_SY$. Our map $\pi_X\colon W\to X$ is induced by projecting down to $X$ in all the glued components; our map $\pi_Y\colon W\to Y$ is made by gluing the various maps $\pi_\alpha\colon W\to Y_\alpha$ (which appear from the projections $X\times_SY_\alpha\to Y_\alpha$).
+	Unsurprisingly, we begin by giving $Y$ the promised open cover $\{Y_\alpha\}_{\alpha\in\lambda}$. To prepare for gluing, we write $Y_{\alpha\beta}\coloneqq Y_\alpha\cap Y_\beta$ for any $\alpha,\beta\in\lambda$ and think of $Y_{\alpha\beta}$ as a subset of $Y_\alpha$ with embedding $\jmath_{\alpha\beta}\colon Y_{\alpha\beta}\to Y_\alpha$. We proceed in steps.
+	\begin{enumerate}
+		\item By hypothesis on the open cover $\{Y_\alpha\}_{\alpha\in\lambda}$, there are fiber products $W_\alpha\coloneqq X\times_SY_\alpha$; label our pullback square as
+		% https://q.uiver.app/?q=WzAsNCxbMCwxLCJYIl0sWzEsMSwiUyJdLFsxLDAsIllfXFxhbHBoYSJdLFswLDAsIlhcXHRpbWVzX1NZX1xcYWxwaGEiXSxbMywyLCJcXHBpX3tZLFxcYWxwaGF9Il0sWzMsMCwiXFxwaV97WCxcXGFscGhhfSIsMl0sWzIsMSwiXFxwc2lfWXxfe1lfXFxhbHBoYX0iXSxbMCwxLCJcXHBzaV9YIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{W_\alpha} & {Y_\alpha} \\
+			X & S
+			\arrow["{\pi_{Y,\alpha}}", from=1-1, to=1-2]
+			\arrow["{\pi_{X,\alpha}}"', from=1-1, to=2-1]
+			\arrow["{\psi_Y|_{Y_\alpha}}", from=1-2, to=2-2]
+			\arrow["{\psi_X}"', from=2-1, to=2-2]
+		\end{tikzcd}\]
+		where we explicitly recognize that the canonical map $Y_\alpha\to S$ is the embedding $\jmath_\alpha\colon Y_\alpha\to Y$ followed by $\psi_\alpha$, which is the restriction $\psi_\alpha|_{Y_\alpha}$ (using \autoref{rem:better-restriction}).
+		
+		\item The construction in \autoref{cor:sub-fp} grants us fiber products
+		\[W_{\alpha\beta}\coloneqq(X\times_SY_{\alpha\beta})\coloneqq\pi_{Y,\alpha}^{-1}(Y_{\alpha\beta}).\]
+		For brevity, we label the canonical maps as $\pi_{X,\alpha\beta}\coloneqq\pi_{X,\alpha}|_{\pi^{-1}_{Y,\alpha}(Y_{\alpha\beta})}$ and $\pi_{Y,\alpha\beta}\coloneqq\pi_{Y,\alpha}|_{\pi^{-1}_{Y,\alpha}(Y_{\alpha\beta})}$. Now, $Y_{\alpha\beta}=Y_{\beta\alpha}$ by construction, so we must have a canonical isomorphism $W_{\alpha\beta}\simeq W_{\beta\alpha}$. Namely, the universal property of the fiber product promises a unique isomorphism $\varphi_{\alpha\beta}\colon W_{\alpha\beta}\to W_{\beta\alpha}$ such that
+		% https://q.uiver.app/?q=WzAsNSxbMiwyLCJTIl0sWzIsMSwiWV97XFxhbHBoYVxcYmV0YX0iXSxbMSwyLCJYIl0sWzEsMSwiWFxcdGltZXNfU1lfe1xcYmV0YVxcYWxwaGF9Il0sWzAsMCwiWFxcdGltZXNfU1lfe1xcYWxwaGFcXGJldGF9Il0sWzIsMCwiXFxwc2lfWCIsMl0sWzEsMCwiXFxwc2lfWXxfe1lfe1xcYWxwaGFcXGJldGF9fSJdLFszLDEsIlxccGlfe1ksXFxiZXRhXFxhbHBoYX0iLDJdLFszLDIsIlxccGlfe1gsXFxiZXRhXFxhbHBoYX0iXSxbNCwzLCJcXHZhcnBoaV97XFxhbHBoYVxcYmV0YX0iLDFdLFs0LDEsIlxccGlfe1ksXFxhbHBoYVxcYmV0YX0iLDAseyJjdXJ2ZSI6LTJ9XSxbNCwyLCJcXHBpX3tYLFxcYWxwaGFcXGJldGF9IiwyLHsiY3VydmUiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{W_{\alpha\beta}} \\
+			& {W_{\beta\alpha}} & {Y_{\alpha\beta}} \\
+			& X & S
+			\arrow["{\psi_X}"', from=3-2, to=3-3]
+			\arrow["{\psi_Y|_{Y_{\alpha\beta}}}", from=2-3, to=3-3]
+			\arrow["{\pi_{Y,\beta\alpha}}"', from=2-2, to=2-3]
+			\arrow["{\pi_{X,\beta\alpha}}", from=2-2, to=3-2]
+			\arrow["{\varphi_{\alpha\beta}}"{description}, from=1-1, to=2-2]
+			\arrow["{\pi_{Y,\alpha\beta}}", curve={height=-12pt}, from=1-1, to=2-3]
+			\arrow["{\pi_{X,\alpha\beta}}"', curve={height=12pt}, from=1-1, to=3-2]
+		\end{tikzcd}\]
+		commutes. For example, when $\alpha=\beta$, we see that $Y_{\alpha\beta}=Y_\alpha=Y_\beta$, and the identity morphism will work for $\varphi_{\alpha\beta}$, so we must have $\varphi_{\alpha\beta}=\id_{Y_\alpha}$.
 	
-	We now verify the universal property. Fix morphisms $\varphi_X\colon Z\to X$ and $\varphi_Y\colon Y\to Z$ making the diagram
-	% https://q.uiver.app/?q=WzAsNSxbMSwyLCJYIl0sWzIsMSwiWSJdLFsyLDIsIlMiXSxbMCwwLCJaIl0sWzEsMSwiVyJdLFswLDJdLFsxLDJdLFszLDAsIlxcdmFycGhpX1giLDIseyJjdXJ2ZSI6Mn1dLFszLDEsIlxcdmFycGhpX1kiLDAseyJjdXJ2ZSI6LTJ9XSxbNCwxLCJcXHBpX1kiLDJdLFs0LDAsIlxccGlfWCJdLFszLDQsIiIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}
-		Z \\
-		& W & Y \\
-		& X & S
-		\arrow[from=3-2, to=3-3]
-		\arrow[from=2-3, to=3-3]
-		\arrow["{\varphi_X}"', curve={height=12pt}, from=1-1, to=3-2]
-		\arrow["{\varphi_Y}", curve={height=-12pt}, from=1-1, to=2-3]
-		\arrow["{\pi_Y}"', from=2-2, to=2-3]
-		\arrow["{\pi_X}", from=2-2, to=3-2]
-		\arrow[dashed, from=1-1, to=2-2]
-	\end{tikzcd}\]
-	commute, and we want to induce a unique arrow where the dashed arrow is. The big diagram commuting gives an internal commuting diagram
-	% https://q.uiver.app/?q=WzAsNSxbMSwyLCJYIl0sWzIsMSwiWV9cXGFscGhhIl0sWzIsMiwiUyJdLFswLDAsIlpfXFxhbHBoYSJdLFsxLDEsIlhcXHRpbWVzX1NZX1xcYWxwaGEiXSxbMCwyXSxbMSwyXSxbMywwLCJcXHZhcnBoaV9YIiwyLHsiY3VydmUiOjJ9XSxbMywxLCJcXHZhcnBoaV9ZIiwwLHsiY3VydmUiOi0yfV0sWzQsMSwiXFxwaV9ZIiwyXSxbNCwwLCJcXHBpX1giXSxbMyw0LCJcXHZhcnBoaV9cXGFscGhhIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}
-		{Z_\alpha} \\
-		& {X\times_SY_\alpha} & {Y_\alpha} \\
-		& X & S
-		\arrow[from=3-2, to=3-3]
-		\arrow[from=2-3, to=3-3]
-		\arrow["{\varphi_X}"', curve={height=12pt}, from=1-1, to=3-2]
-		\arrow["{\varphi_Y}", curve={height=-12pt}, from=1-1, to=2-3]
-		\arrow["{\pi_Y}"', from=2-2, to=2-3]
-		\arrow["{\pi_X}", from=2-2, to=3-2]
-		\arrow["{\varphi_\alpha}"{description}, dashed, from=1-1, to=2-2]
-	\end{tikzcd}\]
-	with $Z_\alpha\coloneqq\varphi_Y^{-1}(Y_\alpha)$, where we have already used the universal property to construct the unique morphism $\varphi_\alpha$ making the diagram commute. This gives maps
-	\[Z_\alpha\to X\times_SY_\alpha\subseteq W,\]
-	and we just show that these various maps will be compatible to give us a unique map $Z\to W$. One can track through all the various universal properties to show that we have in fact induced a unique map making the original diagram commute.
+		\item We are going to glue the schemes $W_{\alpha}$ along the isomorphisms $\varphi_{\alpha\beta}$, but we must check the cocycle condition. This is most clearly seen by manually checking triple intersections: given $\alpha,\beta,\gamma\in\lambda$, set $Y_{\alpha\beta\gamma}\coloneqq Y_\alpha\cap Y_\beta\cap Y_\gamma=Y_{\alpha\beta}\cap Y_{\alpha\gamma}$ so that \autoref{cor:sub-fp} grants us a fiber product
+		\[W_{\alpha\beta\gamma}\coloneqq X\times_SY_{\alpha\beta\gamma}=\pi_{Y,\alpha}^{-1}(Y_{\alpha\beta\gamma})=\underbrace{\pi_{Y,\alpha}^{-1}(Y_{\alpha\beta})}_{W_{\alpha\beta}}\cap\underbrace{\pi_{Y,\alpha}^{-1}(Y_{\alpha\gamma})}_{W_{\beta\alpha}}.\]
+		Notably, $W_{\alpha\beta\gamma}=W_{\alpha\gamma\beta}$. Again, we will label the canonical maps as $\pi_{X,\alpha\beta\gamma}\coloneqq\pi_{X,\alpha}|_{W_{\alpha\beta\gamma}}$ and $\pi_{Y,\alpha\beta\gamma}\coloneqq\pi_{Y,\alpha}|_{W_{\alpha\beta\gamma}}$.
 
-	We now show that we can in fact glue the morphisms $Z_\alpha\to W$. Well, set $Z_{\alpha\beta}\coloneqq\varphi_Y^{-1}(Y_{\alpha\beta})$ to be $Z_\alpha\cap Z_\beta$, and we can see that the diagram
-	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJaX3tcXGFscGhhXFxiZXRhfSJdLFsxLDEsIlhcXHRpbWVzX1NZX3tcXGFscGhhXFxiZXRhfSJdLFsyLDEsIlhcXHRpbWVzX1NZX1xcYWxwaGEiXSxbMSwyLCJYXFx0aW1lc19TWV9cXGJldGEiXSxbMSwzXSxbMSwyXSxbMCwxXSxbMCwzLCJcXHZhcnBoaV9cXGJldGEiLDIseyJjdXJ2ZSI6Mn1dLFswLDIsIlxcdmFycGhpX1xcYWxwaGEiLDAseyJjdXJ2ZSI6LTJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}
-		{Z_{\alpha\beta}} \\
-		& {X\times_SY_{\alpha\beta}} & {X\times_SY_\alpha} \\
-		& {X\times_SY_\beta}
-		\arrow[from=2-2, to=3-2]
-		\arrow[from=2-2, to=2-3]
-		\arrow[from=1-1, to=2-2]
-		\arrow["{\varphi_\beta}"', curve={height=12pt}, from=1-1, to=3-2]
-		\arrow["{\varphi_\alpha}", curve={height=-12pt}, from=1-1, to=2-3]
-	\end{tikzcd}\]
-	commutes, which finishes.
+		\item Because $Y_{\alpha\beta\gamma}=Y_{\beta\gamma\alpha}$, we see that there is a unique morphism $W_{\beta\gamma\alpha}\to W_{\beta\gamma\alpha}$ making the diagram
+		% https://q.uiver.app/?q=WzAsNSxbMiwyLCJTIl0sWzEsMiwiWCJdLFsyLDEsIllfe1xcYWxwaGFcXGJldGFcXGdhbW1hfSJdLFsxLDEsIldfe1xcYWxwaGFcXGJldGFcXGdhbW1hfSJdLFswLDAsIldfe1xcYmV0YVxcZ2FtbWFcXGFscGhhfSJdLFsxLDAsIlxccHNpX1giLDJdLFs0LDMsIiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs0LDIsIlxccGlfe1ksXFxiZXRhXFxnYW1tYVxcYWxwaGF9IiwwLHsiY3VydmUiOi0yfV0sWzMsMiwiXFxwaV97WSxcXGFscGhhXFxiZXRhXFxnYW1tYX0iLDJdLFsyLDAsIlxccHNpX1l8X3tZX3tcXGFscGhhXFxiZXRhXFxnYW1tYX19Il0sWzMsMSwiXFxwaV97WCxcXGFscGhhXFxiZXRhXFxnYW1tYX0iXSxbNCwxLCJcXHBpX3tYLFxcYmV0YVxcZ2FtbWFcXGFscGhhfSIsMix7ImN1cnZlIjoyfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}
+				{W_{\beta\gamma\alpha}} \\
+				& {W_{\alpha\beta\gamma}} & {Y_{\alpha\beta\gamma}} \\
+				& X & S
+				\arrow["{\psi_X}"', from=3-2, to=3-3]
+				\arrow[dashed, from=1-1, to=2-2]
+				\arrow["{\pi_{Y,\beta\gamma\alpha}}", curve={height=-12pt}, from=1-1, to=2-3]
+				\arrow["{\pi_{Y,\alpha\beta\gamma}}"', from=2-2, to=2-3]
+				\arrow["{\psi_Y|_{Y_{\alpha\beta\gamma}}}", from=2-3, to=3-3]
+				\arrow["{\pi_{X,\alpha\beta\gamma}}", from=2-2, to=3-2]
+				\arrow["{\pi_{X,\beta\gamma\alpha}}"', curve={height=12pt}, from=1-1, to=3-2]
+			\end{tikzcd} \label{eq:trip-intersect-fp}
+		\end{equation}
+		commute. However, we claim that we can put $\varphi_{\beta\alpha}|_{W_{\beta\gamma\alpha}}$ into the dashed arrow to make the diagram commute. At the very least, note we can induce a restricted morphism $\varphi_{\beta\alpha}|_{W_{\beta\gamma\alpha}}\colon W_{\beta\gamma\alpha}\to W_{\alpha\beta\gamma}$: note that
+		\begin{align*}
+			\varphi_{\beta\alpha}^{-1}(W_{\alpha\beta\gamma}) &= \{w\in W_{\beta\alpha}:\varphi_{\beta\alpha}w\in W_{\alpha\beta\gamma}\} \\
+			&= \{w\in W_{\beta\alpha}:\pi_{Y,\alpha}\varphi_{\beta\alpha}w\in Y_\alpha\cap Y_\beta\cap Y_\gamma\} \\
+			&= \{w\in W_{\beta\alpha}:\pi_{Y,\beta}w\in Y_\alpha\cap Y_\beta\cap Y_\gamma\} \\
+			&= W_{\beta\gamma\alpha},
+		\end{align*}
+		so we get the needed morphism by restricting as in \autoref{lem:restrictmorphism}.
+		
+		There are now two checks; let $\iota_{\alpha\beta\gamma}\coloneqq W_{\alpha\beta\gamma}\subseteq W_{\alpha\beta}$ be the canonical embeddings.
+		\begin{itemize}
+			\item We check that the top triangle of \autoref{eq:trip-intersect-fp} commutes with $\varphi_{\beta\alpha}|_{W_{\beta\alpha\gamma}}$ in the dashed arrow. Unraveling everything, we are asking for the diagram
+			% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXHBpX3tZLFxcYmV0YX1eey0xfShZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YVxcY2FwIFlfXFxnYW1tYSkiXSxbMSwwLCJcXHBpX3tZLFxcYmV0YX1eey0xfShZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YSkiXSxbMiwwLCJZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YSJdLFsyLDEsIllfXFxhbHBoYVxcY2FwIFlfXFxiZXRhIl0sWzEsMSwiXFxwaV97WSxcXGFscGhhfV57LTF9KFlfXFxhbHBoYVxcY2FwIFlfXFxiZXRhKSJdLFswLDEsIlxccGlfe1ksXFxhbHBoYX1eey0xfShZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YVxcY2FwIFlfXFxnYW1tYSkiXSxbMCw1LCJcXHZhcnBoaV97XFxiZXRhXFxhbHBoYX18X3tXX3tcXGJldGFcXGFscGhhXFxnYW1tYX19Il0sWzEsNCwiXFx2YXJwaGlfe1xcYmV0YVxcYWxwaGF9Il0sWzIsMywiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCwzLCJcXHBpX3tZLFxcYWxwaGFcXGJldGF9Il0sWzEsMiwiXFxwaV97WSxcXGJldGFcXGFscGhhfSJdLFswLDEsIlxcam1hdGhfe1xcYmV0YVxcYWxwaGFcXGdhbW1hfSJdLFs1LDQsIlxcam1hdGhfe1xcYWxwaGFcXGJldGFcXGdhbW1hfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\pi_{Y,\beta}^{-1}(Y_\alpha\cap Y_\beta\cap Y_\gamma)} & {\pi_{Y,\beta}^{-1}(Y_\alpha\cap Y_\beta)} & {Y_\alpha\cap Y_\beta} \\
+				{\pi_{Y,\alpha}^{-1}(Y_\alpha\cap Y_\beta\cap Y_\gamma)} & {\pi_{Y,\alpha}^{-1}(Y_\alpha\cap Y_\beta)} & {Y_\alpha\cap Y_\beta}
+				\arrow["{\varphi_{\beta\alpha}|_{W_{\beta\alpha\gamma}}}", from=1-1, to=2-1]
+				\arrow["{\varphi_{\beta\alpha}}", from=1-2, to=2-2]
+				\arrow[Rightarrow, no head, from=1-3, to=2-3]
+				\arrow["{\pi_{Y,\alpha\beta}}", from=2-2, to=2-3]
+				\arrow["{\pi_{Y,\beta\alpha}}", from=1-2, to=1-3]
+				\arrow["{\jmath_{\beta\alpha\gamma}}", from=1-1, to=1-2]
+				\arrow["{\jmath_{\alpha\beta\gamma}}", from=2-1, to=2-2]
+			\end{tikzcd}\]
+			to commute. The right square commutes by construction of $\varphi_{\alpha\beta}$, and the left square commutes by \autoref{rem:better-restriction}.
+			\item We check that the left triangle of \autoref{eq:trip-intersect-fp} commutes with $\varphi_{\beta\alpha}|_{W_{\beta\alpha\gamma}}$ in the dashed arrow. Unraveling everything, we want
+			% https://q.uiver.app/?q=WzAsNixbMCwwLCJcXHBpX3tZLFxcYmV0YX1eey0xfShZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YVxcY2FwIFlfXFxnYW1tYSkiXSxbMSwwLCJcXHBpX3tZLFxcYmV0YX1eey0xfShZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YSkiXSxbMiwwLCJYIl0sWzIsMSwiWCJdLFsxLDEsIlxccGlfe1ksXFxhbHBoYX1eey0xfShZX1xcYWxwaGFcXGNhcCBZX1xcYmV0YSkiXSxbMCwxLCJcXHBpX3tZLFxcYWxwaGF9XnstMX0oWV9cXGFscGhhXFxjYXAgWV9cXGJldGFcXGNhcCBZX1xcZ2FtbWEpIl0sWzAsNSwiXFx2YXJwaGlfe1xcYmV0YVxcYWxwaGF9fF97V197XFxiZXRhXFxhbHBoYVxcZ2FtbWF9fSJdLFsxLDQsIlxcdmFycGhpX3tcXGJldGFcXGFscGhhfSJdLFsyLDMsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsMywiXFxwaV97WCxcXGFscGhhXFxiZXRhfSJdLFsxLDIsIlxccGlfe1gsXFxiZXRhXFxhbHBoYX0iXSxbMCwxLCJcXGptYXRoX3tcXGJldGFcXGFscGhhXFxnYW1tYX0iXSxbNSw0LCJcXGptYXRoX3tcXGFscGhhXFxiZXRhXFxnYW1tYX0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{\pi_{Y,\beta}^{-1}(Y_\alpha\cap Y_\beta\cap Y_\gamma)} & {\pi_{Y,\beta}^{-1}(Y_\alpha\cap Y_\beta)} & X \\
+				{\pi_{Y,\alpha}^{-1}(Y_\alpha\cap Y_\beta\cap Y_\gamma)} & {\pi_{Y,\alpha}^{-1}(Y_\alpha\cap Y_\beta)} & X
+				\arrow["{\varphi_{\beta\alpha}|_{W_{\beta\alpha\gamma}}}", from=1-1, to=2-1]
+				\arrow["{\varphi_{\beta\alpha}}", from=1-2, to=2-2]
+				\arrow[Rightarrow, no head, from=1-3, to=2-3]
+				\arrow["{\pi_{X,\alpha\beta}}", from=2-2, to=2-3]
+				\arrow["{\pi_{X,\beta\alpha}}", from=1-2, to=1-3]
+				\arrow["{\jmath_{\beta\alpha\gamma}}", from=1-1, to=1-2]
+				\arrow["{\jmath_{\alpha\beta\gamma}}", from=2-1, to=2-2]
+			\end{tikzcd}\]
+			to commute. Again, the right square commutes by construction of the $\varphi_{\beta\alpha}$, and the left square commutes by \autoref{rem:better-restriction}.
+		\end{itemize}
+
+		\item We are now ready to verify the cocycle condition. Essentially, we are asking for the diagram
+		% https://q.uiver.app/?q=WzAsMyxbMCwwLCJXX3tcXGFscGhhXFxiZXRhXFxnYW1tYX0iXSxbMSwwLCJXX3tcXGJldGFcXGdhbW1hXFxhbHBoYX0iXSxbMSwxLCJXX3tcXGdhbW1hXFxhbHBoYVxcYmV0YX0iXSxbMCwxLCJcXHZhcnBoaV97XFxhbHBoYVxcYmV0YX18X3tXX3tcXGFscGhhXFxiZXRhXFxnYW1tYX19Il0sWzEsMiwiXFx2YXJwaGlfe1xcYmV0YVxcZ2FtbWF9fF97V197XFxiZXRhXFxnYW1tYVxcYWxwaGF9fSJdLFswLDIsIlxcdmFycGhpX3tcXGFscGhhXFxnYW1tYX18X3tXX3tcXGFscGhhXFxiZXRhXFxnYW1tYX19IiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{W_{\alpha\beta\gamma}} & {W_{\beta\gamma\alpha}} \\
+			& {W_{\gamma\alpha\beta}}
+			\arrow["{\varphi_{\alpha\beta}|_{W_{\alpha\beta\gamma}}}", from=1-1, to=1-2]
+			\arrow["{\varphi_{\beta\gamma}|_{W_{\beta\gamma\alpha}}}", from=1-2, to=2-2]
+			\arrow["{\varphi_{\alpha\gamma}|_{W_{\alpha\beta\gamma}}}"', from=1-1, to=2-2]
+		\end{tikzcd}\]
+		to commute. By construction of $\varphi_{\alpha\gamma}|_{W_{\alpha\beta\gamma}}$, it suffices to show we can place the composite $\varphi_{\beta\gamma}|_{W_{\beta\gamma\alpha}}\circ\varphi_{\alpha\beta}|_{W_{\alpha\beta\gamma}}$ into the dashed arrow of
+		% https://q.uiver.app/?q=WzAsNSxbMiwyLCJTIl0sWzEsMiwiWCJdLFsyLDEsIllfe1xcYWxwaGFcXGJldGFcXGdhbW1hfSJdLFsxLDEsIldfe1xcZ2FtbWFcXGFscGhhXFxiZXRhfSJdLFswLDAsIldfe1xcYWxwaGFcXGJldGFcXGdhbW1hfSJdLFsxLDAsIlxccHNpX1giLDJdLFs0LDMsIiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs0LDIsIlxccGlfe1ksXFxhbHBoYVxcYmV0YVxcZ2FtbWF9IiwwLHsiY3VydmUiOi0yfV0sWzMsMiwiXFxwaV97WSxcXGdhbW1hXFxhbHBoYVxcYmV0YX0iLDJdLFsyLDAsIlxccHNpX1l8X3tZX3tcXGFscGhhXFxiZXRhXFxnYW1tYX19Il0sWzMsMSwiXFxwaV97WCxcXGdhbW1hXFxhbHBoYVxcYmV0YX0iXSxbNCwxLCJcXHBpX3tYLFxcYWxwaGFcXGJldGFcXGdhbW1hfSIsMix7ImN1cnZlIjoyfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{W_{\alpha\beta\gamma}} \\
+			& {W_{\gamma\alpha\beta}} & {Y_{\alpha\beta\gamma}} \\
+			& X & S
+			\arrow["{\psi_X}"', from=3-2, to=3-3]
+			\arrow[dashed, from=1-1, to=2-2]
+			\arrow["{\pi_{Y,\alpha\beta\gamma}}", curve={height=-12pt}, from=1-1, to=2-3]
+			\arrow["{\pi_{Y,\gamma\alpha\beta}}"', from=2-2, to=2-3]
+			\arrow["{\psi_Y|_{Y_{\alpha\beta\gamma}}}", from=2-3, to=3-3]
+			\arrow["{\pi_{X,\gamma\alpha\beta}}", from=2-2, to=3-2]
+			\arrow["{\pi_{X,\alpha\beta\gamma}}"', curve={height=12pt}, from=1-1, to=3-2]
+		\end{tikzcd}\]
+		to make the diagram commute. For this, we note that checking the commutativity of the two needed triangles comes down to writing the diagrams
+		% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiV197XFxhbHBoYVxcYmV0YVxcZ2FtbWF9Il0sWzAsMSwiV197XFxiZXRhXFxnYW1tYVxcYWxwaGF9Il0sWzAsMiwiV197XFxnYW1tYVxcYWxwaGFcXGJldGF9Il0sWzEsMCwiWV97XFxhbHBoYVxcYmV0YVxcZ2FtbWF9Il0sWzEsMSwiWV97XFxiZXRhXFxhbHBoYVxcZ2FtbWF9Il0sWzEsMiwiWV97XFxnYW1tYVxcYWxwaGFcXGJldGF9Il0sWzMsMCwiV197XFxhbHBoYVxcYmV0YVxcZ2FtbWF9Il0sWzMsMSwiV197XFxiZXRhXFxnYW1tYVxcYWxwaGF9Il0sWzMsMiwiV197XFxnYW1tYVxcYWxwaGFcXGJldGF9Il0sWzQsMCwiWCJdLFs0LDEsIlgiXSxbNCwyLCJYIl0sWzAsMSwiXFx2YXJwaGlfe1xcYWxwaGFcXGJldGF9fF97V197XFxhbHBoYVxcYmV0YVxcZ2FtbWF9fSIsMl0sWzAsMywiXFxwaV97WSxcXGFscGhhXFxiZXRhXFxnYW1tYX0iXSxbMyw0LCIiLDIseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDQsIlxccGlfe1ksXFxiZXRhXFxnYW1tYVxcYWxwaGF9Il0sWzEsMiwiXFx2YXJwaGlfe1xcYmV0YVxcZ2FtbWF9fF97V197XFxiZXRhXFxnYW1tYVxcYWxwaGF9fSIsMl0sWzIsNSwiXFxwaV97WSxcXGdhbW1hXFxhbHBoYVxcYmV0YX0iXSxbNCw1LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs5LDEwLCIiLDIseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxMCwxMSwiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNiw5LCJcXHBpX3tYLFxcYWxwaGFcXGJldGFcXGdhbW1hfSJdLFs3LDEwLCJcXHBpX3tYLFxcYmV0YVxcZ2FtbWFcXGFscGhhfSJdLFs4LDExLCJcXHBpX3tYLFxcZ2FtbWFcXGFscGhhXFxiZXRhfSJdLFs2LDcsIlxcdmFycGhpX3tcXGFscGhhXFxiZXRhfXxfe1dfe1xcYWxwaGFcXGJldGFcXGdhbW1hfX0iLDJdLFs3LDgsIlxcdmFycGhpX3tcXGJldGFcXGdhbW1hfXxfe1dfe1xcYmV0YVxcZ2FtbWFcXGFscGhhfX0iLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{W_{\alpha\beta\gamma}} & {Y_{\alpha\beta\gamma}} && {W_{\alpha\beta\gamma}} & X \\
+			{W_{\beta\gamma\alpha}} & {Y_{\beta\alpha\gamma}} && {W_{\beta\gamma\alpha}} & X \\
+			{W_{\gamma\alpha\beta}} & {Y_{\gamma\alpha\beta}} && {W_{\gamma\alpha\beta}} & X
+			\arrow["{\varphi_{\alpha\beta}|_{W_{\alpha\beta\gamma}}}"', from=1-1, to=2-1]
+			\arrow["{\pi_{Y,\alpha\beta\gamma}}", from=1-1, to=1-2]
+			\arrow[Rightarrow, no head, from=1-2, to=2-2]
+			\arrow["{\pi_{Y,\beta\gamma\alpha}}", from=2-1, to=2-2]
+			\arrow["{\varphi_{\beta\gamma}|_{W_{\beta\gamma\alpha}}}"', from=2-1, to=3-1]
+			\arrow["{\pi_{Y,\gamma\alpha\beta}}", from=3-1, to=3-2]
+			\arrow[Rightarrow, no head, from=2-2, to=3-2]
+			\arrow[Rightarrow, no head, from=1-5, to=2-5]
+			\arrow[Rightarrow, no head, from=2-5, to=3-5]
+			\arrow["{\pi_{X,\alpha\beta\gamma}}", from=1-4, to=1-5]
+			\arrow["{\pi_{X,\beta\gamma\alpha}}", from=2-4, to=2-5]
+			\arrow["{\pi_{X,\gamma\alpha\beta}}", from=3-4, to=3-5]
+			\arrow["{\varphi_{\alpha\beta}|_{W_{\alpha\beta\gamma}}}"', from=1-4, to=2-4]
+			\arrow["{\varphi_{\beta\gamma}|_{W_{\beta\gamma\alpha}}}"', from=2-4, to=3-4]
+		\end{tikzcd}\]
+		(the left rectangle is the top triangle, and the right rectangle is the left triangle), and we note that everything commutes by construction of the morphisms on the left.
+		
+		\item The above steps allow us to glue together the $W_\alpha$ along the isomorphisms $\varphi_{\alpha\beta}$ to get a single scheme $W$ by \autoref{prop:glue-schemes}. Explicitly, $W$ has an open cover $\{W_\alpha'\}_{\alpha\in\lambda}$ and embeddings $\iota_\alpha'\colon W_\alpha\cong W_{\alpha'}$ such that $\iota_\alpha'(W_{\alpha\beta})=W_\alpha\cap W_\beta$ and $\iota_\beta'\circ\varphi_{\alpha\beta}=\iota_\alpha'|_{W_{\alpha\beta}}$.
+		
+		However, the only property we needed for $W_\alpha$ is that it is the fiber product of $X\times_SY_\alpha$, so we will (for psychological reasons) go ahead and identify $W_\alpha$ with its image in $W$ so that $W$ has an open subscheme $W_\alpha\subseteq W$ which is a fiber product of $X\times_SY_\alpha$.
+
+		Notably, the gluing process, along with the above identification, tells us that $W_\alpha\cap W_\beta$ was isomorphic to both $\iota_\alpha'(W_{\alpha\beta})$ and $\iota_\beta'(W_{\beta\alpha})$ and therefore serves as a fiber product $X\times_SY_{\alpha\beta}$. However, earlier we had to use the isomorphism $\varphi_{\alpha\beta}$ to translate between these two, but $\iota_\beta'\circ\varphi_{\alpha\beta}=\iota_\alpha'$ tells us that $\varphi_{\alpha\beta}$ becomes literally the identity in $W$.
+
+		Now, we had maps $\pi_{X,\alpha}\colon W_\alpha\to X$ for each $\alpha\in\lambda$ such that
+		\[\pi_{X,\alpha}|_{W_{\alpha\beta}}=\pi_{X,\beta}|_{W_{\beta\alpha}}\circ\varphi_{\alpha\beta},\]
+		which again upon identifying everything into $W$ will glue by \autoref{prop:glue-morphisms} to grant us a unique morphism $\pi_X\colon W\to X$ such that $\pi_X|_{W_{\alpha}}=\pi_{X,\alpha}$.
+
+		Continuing, we note that we had maps $\pi_{Y,\alpha}\colon W_\alpha\to Y_\alpha$ for each $\alpha\in\lambda$ such that
+		\begin{equation}
+			\pi_{Y,\alpha}|_{W_{\alpha\beta}}=\pi_{Y,\beta}|_{W_{\beta\alpha}}\circ\varphi_{\alpha\beta}. \label{eq:pi-y-gluing}
+		\end{equation}
+		Once we've identified everything into $W$, \autoref{eq:pi-y-gluing} tells us that the morphisms $\pi_{Y,\alpha}$ glue together by \autoref{prop:glue-morphisms} to a unique morphism $\pi_Y\colon W\to Y$ such that $\pi_Y|_{W_\alpha}=\pi_{Y,\alpha}$. (Technically, one must post-compose $\pi_{Y,\alpha}$ with the embedding $Y_\alpha\into Y$ first, and then note that we can also post-compose \autoref{eq:pi-y-gluing} with $Y_{\alpha\beta}\into Y$, but this causes no problems.)
+
+		We take a moment to recognize that $\pi_Y^{-1}(Y_\alpha)=W_\alpha$. Indeed, if $w\in W$ has $\pi_Y(w)\in Y_\alpha$, then we can at least place $w$ in some $W_\beta$ so that $\pi_Y(w)=\pi_{Y,\beta}(w)\in Y_\beta$. But then $\pi_{Y,\beta}(w)\in Y_{\alpha\beta}$, so $w\in W_{\alpha\beta}\subseteq W_\beta$, so $w\in W_\alpha$.
+		
+		\item We now verify the universal property. Fix morphisms $\varphi_X\colon Z\to X$ and $\varphi_Y\colon Y\to Z$ making the diagram
+		% https://q.uiver.app/?q=WzAsNSxbMSwyLCJYIl0sWzIsMSwiWSJdLFsyLDIsIlMiXSxbMCwwLCJaIl0sWzEsMSwiVyJdLFswLDIsIlxccHNpX1giLDJdLFsxLDIsIlxccHNpX1kiXSxbMywwLCJcXHZhcnBoaV9YIiwyLHsiY3VydmUiOjJ9XSxbMywxLCJcXHZhcnBoaV9ZIiwwLHsiY3VydmUiOi0yfV0sWzQsMSwiXFxwaV9ZIiwyXSxbNCwwLCJcXHBpX1giXSxbMyw0LCIiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}
+				Z \\
+				& W & Y \\
+				& X & S
+				\arrow["{\psi_X}"', from=3-2, to=3-3]
+				\arrow["{\psi_Y}", from=2-3, to=3-3]
+				\arrow["{\varphi_X}"', curve={height=12pt}, from=1-1, to=3-2]
+				\arrow["{\varphi_Y}", curve={height=-12pt}, from=1-1, to=2-3]
+				\arrow["{\pi_Y}"', from=2-2, to=2-3]
+				\arrow["{\pi_X}", from=2-2, to=3-2]
+				\arrow[dashed, from=1-1, to=2-2]
+			\end{tikzcd} \label{eq:glue-factors-fp-up}
+		\end{equation}
+		commute, and we want to induce a unique morphism $\varphi\colon Z\to W$ making the diagram commute. We show uniqueness and existence separately.
+		\begin{itemize}
+			\item Uniqueness: suppose we have some $\varphi\colon Z\to W$ making \autoref{eq:glue-factors-fp-up} commute. Restricting $Y$ with $Y_\alpha$, we see that $\varphi_Y$ will restrict to $\varphi_{Y,\alpha}\coloneqq\varphi_Y|_{\varphi_Y^{-1}Y_\alpha}$ by \autoref{lem:restrictmorphism}. Similarly, we should replace $W$ with $\pi_Y^{-1}(Y_\alpha)=W_\alpha$ so that $\pi_Y$ becomes $\pi_{Y,\alpha}$ and $\pi_X$ becomes $\pi_{X,\alpha}$, and we should replace $Z$ with $Z_\alpha\coloneqq\varphi_Y^{-1}(Y_\alpha)$. Notably, $\varphi|_{Z_\alpha}\colon Z_\alpha\to W_\alpha$ makes sense as restricted by \autoref{lem:restrictmorphism}. Lastly, we should replace $\varphi_X$ with $\varphi_{X,\alpha}\coloneqq\varphi_X|_{Z_\alpha}$.
+
+			In total functoriality of restricting morphisms tells us that the diagram
+			% https://q.uiver.app/?q=WzAsNSxbMCwwLCJaX1xcYWxwaGEiXSxbMSwxLCJXX1xcYWxwaGEiXSxbMiwxLCJZX1xcYWxwaGEiXSxbMiwyLCJTIl0sWzEsMiwiWCJdLFswLDEsIlxcdmFycGhpX1xcYWxwaGEiLDFdLFswLDIsIlxcdmFycGhpX3tZLFxcYWxwaGF9IiwwLHsiY3VydmUiOi0yfV0sWzAsNCwiXFx2YXJwaGlfe1gsXFxhbHBoYX0iLDIseyJjdXJ2ZSI6Mn1dLFsxLDIsIlxccGlfe1ksXFxhbHBoYX0iLDJdLFsxLDQsIlxccGlfe1gsXFxhbHBoYX0iXSxbMiwzLCJcXHBzaV97WSxcXGFscGhhfSJdLFs0LDMsIlxccHNpX1giLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{Z_\alpha} \\
+				& {W_\alpha} & {Y_\alpha} \\
+				& X & S
+				\arrow["{\varphi|_{Z_\alpha}}"{description}, from=1-1, to=2-2]
+				\arrow["{\varphi_{Y,\alpha}}", curve={height=-12pt}, from=1-1, to=2-3]
+				\arrow["{\varphi_{X,\alpha}}"', curve={height=12pt}, from=1-1, to=3-2]
+				\arrow["{\pi_{Y,\alpha}}"', from=2-2, to=2-3]
+				\arrow["{\pi_{X,\alpha}}", from=2-2, to=3-2]
+				\arrow["{\psi_{Y,\alpha}}", from=2-3, to=3-3]
+				\arrow["{\psi_X}"', from=3-2, to=3-3]
+			\end{tikzcd}\]
+			commutes; namely, the two triangles commute by applying \autoref{rem:scheme-restriction-functorial} everywhere---the top triangle has restricted $Y$ to $Y_\alpha$, and the left triangle has restricted $W$ to $W_\alpha$. However, we note that the above diagram features a pullback square, so the morphisms $\varphi|_{Z_\alpha}\colon Z_\alpha\to W_\alpha$ are uniquely determined. It follows that the morphisms $\varphi|_{Z_{\alpha}}\colon Z_\alpha\to W$ are uniquely determined, so \autoref{prop:glue-morphisms} tells us that $\varphi$ itself is uniquely determined.
+			\item Existence: we unwrap the construction above. Setting variables as in the previous step (except $\varphi$ of course), we see that the diagram
+			% https://q.uiver.app/?q=WzAsNixbMiwwLCJZX1xcYWxwaGEiXSxbMSwxLCJaIl0sWzIsMSwiWSJdLFsxLDIsIlgiXSxbMiwyLCJTIl0sWzAsMCwiWl9cXGFscGhhIl0sWzEsMiwiXFx2YXJwaGlfWSJdLFswLDIsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzIsNCwiXFxwc2lfWSJdLFsxLDMsIlxcdmFycGhpX1giXSxbMyw0LCJcXHBzaV9YIl0sWzUsMSwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNSwzLCJcXHZhcnBoaV97WCxcXGFscGhhfSIsMix7ImN1cnZlIjoyfV0sWzUsMCwiXFx2YXJwaGlfe1ksXFxhbHBoYX0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{Z_\alpha} && {Y_\alpha} \\
+				& Z & Y \\
+				& X & S
+				\arrow["{\varphi_Y}", from=2-2, to=2-3]
+				\arrow[hook, from=1-3, to=2-3]
+				\arrow["{\psi_Y}", from=2-3, to=3-3]
+				\arrow["{\varphi_X}", from=2-2, to=3-2]
+				\arrow["{\psi_X}", from=3-2, to=3-3]
+				\arrow[hook, from=1-1, to=2-2]
+				\arrow["{\varphi_{X,\alpha}}"', curve={height=12pt}, from=1-1, to=3-2]
+				\arrow["{\varphi_{Y,\alpha}}", from=1-1, to=1-3]
+			\end{tikzcd}\]
+			commutes for any $\alpha\in\lambda$, by the functoriality of restriction (namely, apply \autoref{rem:scheme-restriction-functorial} everywhere). However, this will induce a unique morphism $\varphi_\alpha\colon Z\to W_\alpha$ making the diagram
+			% https://q.uiver.app/?q=WzAsNSxbMiwyLCJTIl0sWzIsMSwiWV9cXGFscGhhIl0sWzAsMCwiWl9cXGFscGhhIl0sWzEsMSwiV19cXGFscGhhIl0sWzEsMiwiWCJdLFsyLDEsIlxcdmFycGhpX3tZLFxcYWxwaGF9IiwwLHsiY3VydmUiOi0yfV0sWzIsMywiXFx2YXJwaGlfXFxhbHBoYSIsMV0sWzIsNCwiXFx2YXJwaGlfe1gsXFxhbHBoYX0iLDIseyJjdXJ2ZSI6Mn1dLFszLDQsIlxccGlfe1gsXFxhbHBoYX0iXSxbMywxLCJcXHBpX3tZLFxcYWxwaGF9IiwyXSxbMSwwLCJcXHBzaV9ZIl0sWzQsMCwiXFxwc2lfWCIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{Z_\alpha} \\
+				& {W_\alpha} & {Y_\alpha} \\
+				& X & S
+				\arrow["{\varphi_{Y,\alpha}}", curve={height=-12pt}, from=1-1, to=2-3]
+				\arrow["{\varphi_\alpha}"{description}, from=1-1, to=2-2]
+				\arrow["{\varphi_{X,\alpha}}"', curve={height=12pt}, from=1-1, to=3-2]
+				\arrow["{\pi_{X,\alpha}}", from=2-2, to=3-2]
+				\arrow["{\pi_{Y,\alpha}}"', from=2-2, to=2-3]
+				\arrow["{\psi_{Y,\alpha}}", from=2-3, to=3-3]
+				\arrow["{\psi_X}"', from=3-2, to=3-3]
+			\end{tikzcd}\]
+			commute. To glue the morphisms $\varphi_\alpha$ together, we restrict our diagram to $Y_\alpha\cap Y_\beta$. Then we replace $W_\alpha$ with $W_\alpha\cap W_\beta$ and $Z_\alpha$ with $Z_\alpha\cap Z_\beta$, so functoriality of restriction (namely, \autoref{rem:scheme-restriction-functorial}) tells us that
+			% https://q.uiver.app/?q=WzAsNSxbMiwyLCJTIl0sWzIsMSwiWV9cXGFscGhhXFxjYXAgWV9cXGJldGEiXSxbMCwwLCJaX1xcYWxwaGFcXGNhcCBaX1xcYmV0YSJdLFsxLDEsIldfXFxhbHBoYVxcY2FwIFdfXFxiZXRhIl0sWzEsMiwiWCJdLFsyLDEsIlxcdmFycGhpX3tZfXxfe1pfXFxhbHBoYVxcY2FwIFpfXFxiZXRhfSIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIlxcdmFycGhpX1xcYWxwaGF8X3taX1xcYWxwaGFcXGNhcCBaX1xcYmV0YX0iLDFdLFsyLDQsIlxcdmFycGhpX3tYfXxfe1pfXFxhbHBoYVxcY2FwIFpfXFxiZXRhfSIsMix7ImN1cnZlIjoyfV0sWzMsNCwiXFxwaV97WH18X3tXX1xcYWxwaGFcXGNhcCBXX1xcYmV0YX0iXSxbMywxLCJcXHBpX3tZfXxfe1dfXFxhbHBoYVxcY2FwIFdfXFxiZXRhfSIsMl0sWzEsMCwiXFxwc2lfWXxfe1dfXFxhbHBoYVxcY2FwIFdfXFxiZXRhfSJdLFs0LDAsIlxccHNpX1giLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+			\[\begin{tikzcd}
+				{Z_\alpha\cap Z_\beta} \\
+				& {W_\alpha\cap W_\beta} & {Y_\alpha\cap Y_\beta} \\
+				& X & S
+				\arrow["{\varphi_{Y}|_{Z_\alpha\cap Z_\beta}}", curve={height=-12pt}, from=1-1, to=2-3]
+				\arrow["{\varphi_\alpha|_{Z_\alpha\cap Z_\beta}}"{description}, from=1-1, to=2-2]
+				\arrow["{\varphi_{X}|_{Z_\alpha\cap Z_\beta}}"', curve={height=12pt}, from=1-1, to=3-2]
+				\arrow["{\pi_{X}|_{W_\alpha\cap W_\beta}}", from=2-2, to=3-2]
+				\arrow["{\pi_{Y}|_{W_\alpha\cap W_\beta}}"', from=2-2, to=2-3]
+				\arrow["{\psi_Y|_{W_\alpha\cap W_\beta}}", from=2-3, to=3-3]
+				\arrow["{\psi_X}"', from=3-2, to=3-3]
+			\end{tikzcd}\]
+			commutes. However, the morphism $Z_\alpha\cap Z_\beta\to W_\alpha\cap W_\beta$ is unique making this diagram commute because the square is a pullback square, under our identification of $W_\alpha\subseteq W$. (Namely, our projections are $\pi_{Y,\alpha\beta}=\pi_{Y,\alpha}|_{W_{\alpha\beta}}=\pi_Y|_{W_\alpha\cap W_\beta}$, and similar for $X$.) Thus, swapping all $\alpha$s and $\beta$s in the above diagram changes nothing except this morphism, so we conclude that
+			\[\varphi_\alpha|_{Z_\alpha\cap Z_\beta}=\varphi_\beta|_{Z_\alpha\cap Z_\beta}\]
+			for any $\alpha,\beta\in\lambda$. Because the $Y_\alpha$ cover $Y$, we see that the $Z_\alpha$ cover $Z$, so we do indeed glue into a morphism $\varphi\colon Z\to W$ such that $\varphi|_{Z_\alpha}=\varphi_\alpha$. (Technically, to glue, we have to post-compose with the embeddings into $W$ everywhere, but this causes no problems.)
+
+			Now, for any $Z_\alpha$, we see that
+			\[(\pi_Y\circ\varphi)|_{Z_\alpha}=\pi_Y|_{W_\alpha}\circ\varphi|_{Z_\alpha}=\pi_{Y,\alpha}\circ\varphi_\alpha=\varphi_{Y,\alpha}=\varphi_Y|_{Z_\alpha}\]
+			by repeatedly using functoriality of restriction (\autoref{rem:scheme-restriction-functorial}). Because the $\{Z_\alpha\}_{\alpha\in\lambda}$ form an open cover of $Z$, \autoref{prop:glue-morphisms} tells us that $\pi_Y\circ\varphi=\varphi_Y$. Replacing all $Y$s with $X$s in the above argument tells us that $\pi_X\circ\varphi=\varphi_X$.
+		\end{itemize}
+	\end{enumerate}
+	The above steps have been able to glue together a fiber product and show it satisfies the universal property. This finishes.
 \end{proof}
-Note that the same proof will show that we can build the fiber product for $X\times_SY$ when $S$ is affine and $X$ and $Y$ are arbitrary; namely, nowhere did we use in the proof that $X$ was affine (only that the fiber products $X\times_SY_\alpha$ exist), so we can just apply the same gluing process.
 
+\subsection{Fiber Products: Gluing the Base}
 Lastly, here is the general case.
 \begin{proof}[Proof of \autoref{thm:fibexist}]
 	Give $S$ an affine open cover $\{S_\alpha\}_{\alpha\in\lambda}$, with our natural maps $f_X\colon X\to S$ and $f_Y\colon Y\to S$. Then we set $X_\alpha\coloneqq f_X^{-1}(S_\alpha)$ and similar for $Y_\alpha$. By previous work, we have the fiber products $X_\alpha\times_{S_\alpha}Y_\alpha$, so we can just glue these together as usual.
