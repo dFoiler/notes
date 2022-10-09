@@ -8,53 +8,160 @@
 
 We continue to study things which go bump in the night.
 
+\subsection{The Affine Communication Lemma}
+One annoying thing about our locally Noetherian definition is that we are being forced to choose a very special affine open cover.
+
+In fact, in the discussion that follows, we will want to check many properties as being affine-local, so we will go ahead and state the relevant lemma now.
+\begin{lemma}[Affine communication] \label{lem:affine-comm}
+	Fix a scheme $(X,\OO_X)$, and let $P$ be a class of its affine open subschemes. Suppose the following conditions are met.
+	\begin{listroman}
+		\item If $U\in P$, then $U_f\in P$ for any $f\in\OO_X(U)$.
+		\item Given an affine open subscheme $U\subseteq X$ with some elements $f_1,\ldots,f_n\in\OO_X(U)$ generating $\OO_X(U)$, if $U_{f_i}\in P$ for each $i$, then $U\in P$.
+		\item There is an affine open cover $\{U_\alpha\}_{\alpha\in\lambda}$ such that $U_\alpha\in P$ for each $\alpha$.
+	\end{listroman}
+	Then $P$ contains all affine open subsets of $X$.
+\end{lemma}
+\begin{remark} \label{rem:topological-affine-comm-ii}
+	To explain (ii), we note that $(f_1,\ldots,f_n)=\OO_X(U)$ if and only if the $U_{f_i}$ cover $U$. Set $A\coloneqq\OO_X(U)$ for brevity, and let $\varphi\colon(U,\OO_X|_U)\cong(\Spec A,\OO_{\Spec A})$ be the canonical isomorphism.
+	\begin{itemize}
+		\item Suppose the $U_{f_i}$ cover $U$; set $A\coloneqq\OO_X(U)$ for brevity. Passing through $\varphi$, we are told that the sets $D(f_i)$ cover $\Spec A$, and we want to show that $(f_1,\ldots,f_n)=A$. Well, each prime $\mf p$ does not contain at least of the $f_i$ by our cover, so $(f_1,\ldots,f_n)$ is contained in no maximal ideal, so this ideal is not proper, so $(f_1,\ldots,f_n)=A$.
+		\item Conversely, suppose $(f_1,\ldots,f_n)=A$. Then no prime $\mf p\in\Spec A$ contains all the $f_i$, so the $D(f_i)$ cover $\Spec A$. Passing back through $\varphi$, it follows that the $U_{f_i}$ cover $U$.
+	\end{itemize}
+\end{remark}
+The proof of this result rests on the following result, interesting in its own right.
+\begin{lemma} \label{lem:simul-distinguish}
+	Fix a scheme $(X,\OO_X)$ and affine open subschemes $(\Spec A,\OO_{\Spec A})\cong (U,\OO_X|_U)\subseteq (X,\OO_X)$ and $(\Spec B,\OO_{\Spec B})\cong (V,\OO_X|_V)\subseteq (X,\OO_X)$. Then, for any $p\in U\cap V$, we can find an open subset $W\subseteq U\cap V$ containing $p$ such that $W\subseteq U$ and $W\subseteq V$ both make $W$ in to a distinguished open subscheme.
+\end{lemma}
+\begin{proof}
+	We follow \cite[Proposition~5.3.1]{rising-sea}. Without loss of generality, we may use \autoref{cor:the-affine-iso} to make $A=\OO_X|_U(U)=\OO_X(U)$ and $B=\OO_X|_V(V)=\OO_X(V)$, where the corresponding scheme isomorphisms are the canonical ones.
+	
+	Namely, as we computed in \autoref{lem:specgamma}, the underlying homeomorphism associates $D(f)\subseteq\Spec A$ with $U_f$ where $f\in\OO_X(U)=A$ (and similar for $V$), so we will elect to work with the open subsets which look like as our ``distinguished open sets.'' In particular, because we still have a homeomorphism, the fact that distinguished opens $D(f)$ make a basis of the topology on $\Spec A$ means that the open subsets $U_f$ will make a basis of the topology on $U$.
+
+	Now, $U\cap V\subseteq U$ is an open subset containing $p$, so we begin by giving it a distinguished open $U_{f}\subseteq U\cap V$ containing $p$, where $f\in A$. Continuing, $U_{f}\cap V\subseteq V$ is an open subset containing $p$, so we may next find some $g\in B$ such that $V_g\subseteq U_{f}\cap V$ containing $p$.
+	
+	It might look like we're in an infinite loop, but we're not: $V_g\subseteq U_{f}$ means that $g\in\OO_X(V)$ will restrict to some element $g'$ in $\OO_X(U_{f})\simeq D(f)=\OO_X(U)_{f}$, so we let $g'\coloneqq g''/f^n$. Now, we compute
+	\begin{align*}
+		V_g &= U_f\cap\{x\in X:g|_x\notin\mf m_{X,x}\} \\
+		&= \left\{x\in U_f:g''/f^n|_x\notin\mf m_{X,x}\right\} \\
+		&\stackrel*= \{x\in U_f:g''|_x\notin\mf m_{X,x}\} \\
+		&= \{x\in U:(fg'')|_x\notin\mf m_{X,x}\} \\
+		&= U_{fg''},
+	\end{align*}
+	which is what we wanted. Namely, $\stackrel*=$ holds by thinking as in an affine scheme: a prime $\mf p\in\Spec\OO_X(U)_f$ has $g''/f^n\notin\mf p$ if and only if $g''\notin\mf p$,
+\end{proof}
+We are now ready to prove \autoref{lem:affine-comm}
+\begin{proof}[Proof of \autoref{lem:affine-comm}]
+	We follow \cite[Lemma~5.3.2]{rising-sea}. Use (iii) to pick up an affine open cover $\{U_\alpha\}_{\alpha\in\lambda}$ of $X$.
+	
+	Now, fix any affine open subscheme $U\subseteq X$, and we need to show $U\in P$. For each $\alpha$ and $p\in U\cap U_\alpha$, we can use \autoref{lem:simul-distinguish} to find some open subset $V_{\alpha,p}\subseteq U\cap U_\alpha$ containing which is simultaneously a distinguished open set of both $U$ and $U_\alpha$. Notably, each $V_{\alpha,p}$ is a distinguished open subset of $U_\alpha$, so $V_{\alpha,p}\in P$ by (i).
+
+	Now, we recognize that we have an open cover
+	\[U=\bigcup_{\alpha\in\lambda}(U\cap U_\alpha)=\bigcup_{\alpha\in\lambda}\bigcup_{p\in U\cap U_\alpha}V_{\alpha,p}.\]
+	However, $U$ is an affine open subscheme and therefore quasicompact, so we extract a finite subcover. Because these are all distinguished open sets of $U$, we may write our open subcover as $\{U_{f_i}\}_{i=1}^n\subseteq P$ where $\{f_i\}_{i=1}^n\subseteq\OO_X(U)$.
+	
+	Continuing, $U$ is covered by the $U_{f_i}$, so we claim that $(f_1,\ldots,f_n)=\OO_X(U)$; set $A\coloneqq\OO_X(U)$ for brevity. Letting $\varphi\colon(U,\OO_X|_U)\cong(\Spec A,\OO_{\Spec A})$, we are told that the sets $D(f_i)$ cover $\Spec A$, and we want to show that $(f_1,\ldots,f_n)=A$. Well, each prime $\mf p$ does not contain at least of the $f_i$ by our cover, so $(f_1,\ldots,f_n)$ is contained in no maximal ideal, so this ideal is not proper, so $(f_1,\ldots,f_n)=A$. It follows that $U\in P$ by (ii).
+\end{proof}
+
 \subsection{A Better Noetherian}
-One annoying thing about our locally Noetherian definition is that we are being forced to choose a very special affine open cover. However, we can remove this stress because it turns out all affine open subsets will be Noetherian.
-\begin{proposition}
-	Fix a locally Noetherian scheme $(X,\OO_X)$. Then any affine open subset $U\subseteq X$ with $(U,\OO_X|_U)\cong\Spec A$ for a ring $A$ has $A$ a Noetherian ring.
+As a first application of \autoref{lem:affine-comm}, we fix our definition of a locally Noetherian scheme.
+\begin{proposition} \label{prop:better-local-noetherian}
+	Fix a locally Noetherian scheme $(X,\OO_X)$. Then any affine open subset $U\subseteq X$ with $(U,\OO_X|_U)\cong(\Spec A,\OO_{\Spec A})$ for a ring $A$ has $A$ a Noetherian ring.
 \end{proposition}
 \begin{proof}
-	Fix an affine open cover $\mc U$ for $U$ making everything Noetherian. By intersecting $\Spec A$ with this open cover, we can pick up a finite subcover contained in particular distinguished open sets $D(f_i)$ for various $f_i\in A$. As such, we see that the $A_{f_i}$ are Noetherian because they are contained form our open cover.
+	We use \autoref{lem:affine-comm}. Call an affine open subscheme $U\subseteq X$ ``good'' if and only if $\OO_X(U)$ is Noetherian. Because $(U,\OO_X|_U)\cong(\Spec A,\OO_{\Spec A})$ induces $\OO_X(U)\cong A$ on global sections, we are interested in showing that all affine open subschemes of $X$ are good. We now run the checks of \autoref{lem:affine-comm}.
+	\begin{listroman}
+		\item Suppose an affine open subscheme $U\subseteq X$ has $\OO_X(U)$ Noetherian. Then, for any $f\in\OO_X(U)$, the canonical isomorphism of \autoref{cor:the-affine-iso} tells us that $\OO_X(U_f)\simeq\OO_X(U)_f$, so we see that $U_f$ is good because the localization of a Noetherian ring is still Noetherian.
+		\item Fix an affine open subscheme $U\subseteq X$ with elements $f_1,\ldots,f_n\in\OO_X(U)$ generating $\OO_X(U)$ such that $U_{f_i}$ is good for each $P$. For brevity, set $A\coloneqq\OO_X(U)$, and we are given that $A_{f_i}=\OO_X(U)_{f_i}\simeq\OO_X(U_{f_i})$ (using the canonical isomorphism of \autoref{cor:the-affine-iso}) is Noetherian for each $i$.
 
-	We now upgrade to $A$. Suppose $I\subseteq A$ is an ideal. Then each $IA_{f_i}$ is finitely generated, so find finitely many elements in $I$ which generate $IA_{f_i}$ as an $A_{f_i}$-ideal (by clearing denominators as necessary). All these elements combine to give a finitely generated ideal $J$, which we want to show equals $I$. Namely, we have $J\subseteq I$ of course, and
-	\[JA_{f_i}=IA_{f_i}\]
-	for each $i$. Intuitively, what's going on here is that $J$ and $I$ are ``sheaves'' with a morphism $J\subseteq I$ which is an isomorphism on our open cover, so they should be the same ideal.
+		We need to show that $A$ is Noetherian, so pick up some ideal $I\subseteq A$, and we need to show that $I$ is Noetherian. Well, for each $i$, we see $IA_{f_i}\subseteq A_{f_i}$ is an ideal and must be finitely generated, so find generators $\{x_{i,1},\ldots,x_{i,n_i}\}$. Now, for each $x_{i,j}$, we may write
+		\[x_{i,j}=\frac{y_{i,j}}{f_i^{e_{i,j}}}\]
+		where $y_{i,j}\in I$, and we see that the $y_{i,j}$ will also generate $IA_{f_i}$ as an $A_{f_i}$-module by just multiplying the necessary linear combinations by $1/f_i^{e_{i,j}}$ as is necessary.
 
-	Let's see this rigorously. In particular, by taking the direct limit over our localizations, we see
-	\[IA_\mf p=JA_\mf p\]
-	by essentially taking stalks. Now, suppose $x\in I\setminus J$, and set
-	\[\mf a\coloneqq\{a\in A:ax\in J\}.\]
-	We can check $\mf a\subseteq A$ is an ideal, and $\mf a$ is proper because $1\notin\mf a$; as such, put $\mf a$ inside a maximal ideal $\mf m$. However,
-	\[IA_\mf m=JA_\mf m,\]
-	which is going to give us a contradiction: indeed, we get $s\notin\mf m$ with $sx\in J$ because $x\in IA_\mf m=JA_\mf m$, which is a contradiction to the construction of $\mf m$.
+		Now, let $J$ be the ideal generated by the $y_{i,j}$ over all $i$ and $j$, which is finitely generated because there are only finitely many $i$ and only finitely many $j$ for each $i$. Thus, we claim $I=J$, which will finish the proof.
+
+		On one hand, we note $J\subseteq I$ because the generators of $J$ are contained in $I$. In the other direction, we note that any $a\in I$ can be embedded as $a/1\in IA_{f_i}$, for which we use our above generators $y_{i,j}$ to write
+		\[\frac a1=\sum_{j=1}^{n_i}\frac{a_{i,j}y_{i,j}}{f_i^{d_{i,j}}}\]
+		for some $a_{i,j}\in A$ and $d_{i,j}\in\NN$. Collecting denominators on the right-hand side and using the equality in $A_{f_i}$, there is some $N_i$ such that
+		\[f^{N_i}a=\sum_{j=1}^{n_i}b_{i,j}y_{i,j}\in J\]
+		for some $b_{i,j}\in A$.
+
+		We are now essentially done. Note that
+		\[\emp=V(A)=V((f_1,\ldots,f_n))=V(\rad(f_1,\ldots,f_n))=V\left((f_1^{N_1},\ldots,f_n^{N_n})\right),\]
+		so it follows $(f_1^{N_1},\ldots,f_n^{N_n})=A$, so we may find $c_1,\ldots,c_n\in A$ such that $\sum_{i=1}^nc_if_i^{N_i}=1$, so
+		\[a=\sum_{i=1}^nc_i\left(f_i^{N_i}a\right)\in J.\]
+		This finishes showing that $I\subseteq J$.
+		\item Note that we are promised an open cover by good affine open subschemes by hypothesis on $(X,\OO_X)$.
+	\end{listroman}
+	Thus, \autoref{lem:affine-comm} kicks in and finishes the proof.
 \end{proof}
 \begin{cor}
 	Fix a ring $A$. Then $(\Spec A,\OO_{\Spec A})$ is locally Noetherian if and only if $A$ is Noetherian.
 \end{cor}
 \begin{proof}
-	Note $\Spec A\subseteq\Spec A$ makes $(\Spec A,\OO_{\Spec A})$ an affine open subset of itself.
+	If $A$ is Noetherian, then we use the affine open cover $\{(\Spec A,\OO_{\Spec A})\}$ of $(\Spec A,\OO_{\Spec A})$ to show that $(\Spec A,\OO_{\Spec A})$ is locally Noetherian by definition. Conversely, if $(\Spec A,\OO_{\Spec A})$ is locally Noetherian, then its affine open subscheme $(\Spec A,\OO_{\Spec A})$ must give $A=\OO_{\Spec A}(\Spec A)$ Noetherian.
 \end{proof}
-\begin{remark}
-	The above result says that being ``locally Noetherian'' can be checked locally. It will turn out that this is a general notion, but we will not discuss this generalization for some time.
-\end{remark}
 
 \subsection{Reduced Schemes}
 Here is the definition.
 \begin{definition}[Reduced]
 	A scheme $(X,\OO_X)$ is \textit{reduced} if and only if each $p\in X$ give a reduced local ring $\OO_{X,p}$; i.e., we are asking for $\op{nilrad}\OO_{X,p}=(0)$.
 \end{definition}
-\begin{remark}
-	On the homework, we will show that being reduced is equivalent to showing that $\OO_X(U)$ is reduced for all open $U\subseteq X$.
-\end{remark}
-\begin{example}
-	The affine ring $\PP^n_k$ is reduced because its affine open patches are reduced.
+\begin{example} \label{ex:reduced-affine-scheme}
+	Fix a reduced ring $A$; we claim that $(\Spec A,\OO_{\Spec A})$ is a reduced scheme. Indeed, by \autoref{lem:affinestalk}, it suffices to show that $A_\mf p$ is reduced for any prime $\mf p\in\Spec A$. Well, suppose $a/x\in A_\mf p$ (where $x\notin\mf p$) has $(a/x)^n=0$ for some $n\in\NN$; if $n=0$, there is nothing to say. Otherwise, $a^n/x^n=0$, so $ya^n=0$ for some $y\notin\mf p$. Multiplying both sides by $y^{n-1}$, we conclude $(ay)^n=0$, so $ay=0$, so $a/x=0$.
 \end{example}
+We can also think about reduced schemes on the level of open sets.
+\begin{lemma} \label{lem:reduced-on-sets}
+	A scheme $(X,\OO_X)$ is reduced if and only if $\OO_X(U)$ is a reduced ring for each open subset $U\subseteq X$.
+\end{lemma}
+\begin{proof}
+	We show our implications separately.
+	\begin{itemize}
+		\item Suppose that $\OO_X(U)$ is reduced for each open $U\subseteq X$. Given $p\in X$, we need to show that $\OO_{X,p}$ is also reduced. Well, fix some germ $f_p\in\OO_{X,p}$ for $p\in U$ such that $f_p^n=0$ for some $n\in\NN$; we need to show that $f_p=0$.
+	
+		Well, write $f_p=[(U,f)]$ so that $f\in\mc F(U)$ where $U$ contains $p$. Then we see
+		\[[(U,0)]=0=f_p^n=[(U,f)]^n=[(U,f^n)]\]
+		implies that {there is some open subset $V\subseteq U$ containing $p$ such that $f^n|_V=0$}. Thus, $(f|_V)^n=0$, so $f|_V=0$ because $\OO_X(V)$ is reduced. It follows
+		\[f_p=[(U,f)]=[(V,f|_V)]=0,\]
+		which is what we wanted.
+	
+		\item Suppose that $\OO_{X,p}$ is reduced for all $p\in X$. Then, for each open set $U\subseteq X$, we need to show that $\OO_X(U)$ is also reduced. Well, suppose that $f\in\OO_X(U)$ has $f^n=0$ for some $n\in\NN$. We need to show that $f=0$.
+	
+		For this, we note that all $p\in U$ will have
+		\[(f|_p)^n=\left(f^n\right)|_p=0|_p=0\in\OO_{X,p},\]
+		so because $\OO_{X,p}$ is reduced, we conclude that $f|_p=0$. Thus, $f$ lives in the kernel of the natural map
+		\[\arraycolsep=1.4pt\begin{array}{ccc}
+			\OO_X(U) &\to& \displaystyle\prod_{p\in U}\OO_{X,p} \\
+			f &\mapsto& (f|_p)_{p\in U}
+		\end{array}\]
+		which is actually injective because $\OO_X$ is a sheaf. It follows that $f=0$.
+		\qedhere
+	\end{itemize}
+\end{proof}
 \begin{remark}
-	In particular, it turns out that an affine scheme $\Spec A$ is reduced if and only if $A$ is reduced. This is also on the homework.
+	For example, if a ring $A$ makes $(\Spec A,\OO_{\Spec A})$ into a reduced scheme, then we see $A=\OO_{\Spec A}(\Spec A)$ is a reduced ring. This provides the converse to \autoref{ex:reduced-affine-scheme}.
 \end{remark}
 \begin{nex}
-	The scheme $\Spec k[x,y]/(x^2)$ is not reduced because of the stalk at $(x)$.
+	For example, the scheme $\Spec k[x,y]/(x^2)$ is not reduced because its ring of global sections is $k[x,y]/(x^2)$, which is not reduced.
 \end{nex}
+We can also think of the reduced condition on the level of affine open subschemes.
+\begin{lemma}
+	Fix a scheme $(X,\OO_X)$. The following are equivalent.
+	\begin{listalph}
+		\item $(X,\OO_X)$ is reduced.
+		\item $\OO_X(U)$ is a reduced ring for every affine open subscheme $U\subseteq X$.
+		\item There is an affine open cover $\mc U$ of $X$ such that $\OO_X(U)$ is reduced for each $U\in\mc U$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Of course, (a) implies (b) by \autoref{lem:reduced-on-sets}, and (b) implies (c) by choosing any affine open cover $X$.
+	
+	Lastly, we show that (c) implies (a). Fix our affine open cover $\mc U$, where $\mc U$ is made of affine rings. Well, for any $p\in X$, we need to show that $\OO_{X,p}$ is reduced. For this, pick up some affine open subscheme $U\subseteq X$ containing $p$, where $\OO_X(U)$ is a reduced ring. Then, using the canonical isomorphism of \autoref{cor:the-affine-iso},
+	\[(U,\OO_X|_U)\cong(\Spec\OO_X(U),\OO_X|_U)\]
+	is a reduced scheme by \autoref{ex:reduced-affine-scheme}. Thus, the stalk $(\OO_X|_U)_p$ is a reduced, but this is canonically isomorphic to $\OO_{X,p}$ by \autoref{lem:invimagestalk}, so we are done.
+\end{proof}
+\begin{example} \label{ex:proj-is-reduced}
+	Projective space $\PP^n_k$ is reduced because its affine open patches are reduced.
+\end{example}
 Being reduced is a nice property, so we might want to force schemes to be reduced.
 \begin{definition}[Reduced scheme associted]
 	Given a scheme $(X,\OO_X)$, the \textit{reduced scheme associated} to $(X,\OO_X)$ is the scheme $(X,\OO_X/\mc N)$, where $\mc N(U)\coloneqq\{s\in\OO_X(U):s|_x\in\OO_{X,x}\text{ is nilpotent}\}$ for each $U\subseteq X$.
@@ -72,7 +179,7 @@ This satisfies the following universal property.
 	\end{tikzcd}\]
 \end{lemma}
 \begin{proof}
-	Omitted.
+	On the homework.
 \end{proof}
 \begin{example}
 	The reduced scheme associated to $\Spec k[x,y]/(x^2)$ just becomes $\Spec k[y]$. Intuitively, we are ``deleting'' all of our differential information.
@@ -81,41 +188,75 @@ This satisfies the following universal property.
 \subsection{Integral Schemes}
 Here is the definition.
 \begin{definition}[Integral]
-	A scheme $(X,\OO_X)$ is \textit{integral} if and only if all open subsets $U\subseteq X$ give an integral domain $\OO_X(U)$.
+	A scheme $(X,\OO_X)$ is \textit{integral} if and only if all nonempty open subsets $U\subseteq X$ give an integral domain $\OO_X(U)$.
 \end{definition}
-\begin{remark}
-	Note that $X$ being integral will imply that each $\OO_{X,x}$ is an integral domain by taking the direct limit, but the converse does not hold.
+\begin{remark} \label{rem:integral-at-stalks}
+	Note that $X$ being integral will imply that each $\OO_{X,x}$ is an integral domain: if $f,g\in\OO_{X,x}$ are germs with $fg=0$ while $f\ne0$, we need to show $g=0$. Well, find a sufficiently small $W$ containing $x$ so that we can define $f=[(W,\widetilde f)]$ and $g=[(W,\widetilde g)]$. Now, we see $\widetilde f\cdot\widetilde g$ needs to restrict to the zero germ, so restrict $W$ enough so that $\widetilde f\widetilde g=0$. However, $\widetilde f\ne0$ because $f\ne0$, so we must instead have $\widetilde g=0$, which finishes.
 \end{remark}
-\begin{proposition}
+\begin{proposition} \label{prop:integral-is-reduced-irred}
 	A scheme $(X,\OO_X)$ is integral if and only if $(X,\OO_X)$ is reduced and irreducible.
 \end{proposition}
 \begin{proof}
-	In the forward direction, note that $(X,\OO_X)$ is easily reduced. Further, if $(X,\OO_X)$ is not irreducible, then we have two proper closed subsets $V_1,V_2\subseteq X$ covering $X$. This grants nonempty open subsets $U_1,U_2\subseteq X$, and we can force these to be disjoint. It follows
-	\[\OO_X(U_1\cup U_2)=\OO_X(U_1)\times\OO_X(U_2)\]
-	is not integral.
+	We show the directions separately.
+	\begin{itemize}
+		\item In the forward direction, note that $(X,\OO_X)$ is easily reduced: indeed, all stalks are reduced because they are all integral domains by \autoref{rem:integral-at-stalks}. Further, if $(X,\OO_X)$ is not irreducible, then we have two proper closed subsets $V_1,V_2\subseteq X$ covering $X$. Setting $U_\bullet\coloneqq X\setminus V_\bullet$, we see that $U_1\cap U_2=\emp$ while $U_1,U_2\ne\emp$.
 
-	In the other direction, suppose $(X,\OO_X)$ is irreducible and integral. Well, we have an open subset $U\subseteq X$ and nonzero $f,g\in\OO_X(U)$ with $fg=0$. We now define
-	\[V(a)\coloneqq\{x\in U:g_x\in\mf m_x\},\]
-	and we can check that $V(f)$ and $V(g)$ are going to be closed subsets of $U$. Because $X$ is irreducible, $U$ is as well, so $U= V(g)\cup V(f)$ forces $U$ to be contained in one of these closed subsets, so without loss of generality take $U=V(f)$. Going down to an affine open patch makes $V(f)$ equal to a full spectrum $\Spec A$, so we conclude
-	\[f\in\bigcap_{\mf p\in\Spec A}\mf p=\op{nilrad}A.\]
-	But being reduced now forces $f=0$, finishing.
+		Now, we let $u_1\in\OO_X(U_1)$ and $u_2\in\OO_X(U_2)$ correspond to the units. However, $u_1|_{U_1\cap U_2}=0|_{U_1\cap U_2}$, so we can glue $u_1$ and $0$ together into some $e_1\in\OO_X(U_1\cup U_2)$. Similarly, $0|_{U_1\cap U_2}=u_2|_{U_1\cap U_2}$ let us glue $0$ and $u_2$ into some $e_2\in\OO_X(U_1\cup U_2)$.
+
+		Thus, we see that $\OO_X(U_1\cup U_2)$ is not an integral domain: note $e_1|_{U_1}\ne0$ and $e_2|_{U_2}\ne0$, so $e_1,e_2\ne0$, but
+		\[(e_1e_2)|_{U_1}=(u_1\cdot0)=0\qquad\text{and}\qquad(e_1e_2)|_{U_2}=(0\cdot u_2)=0,\]
+		so $e_1e_2=0$ by gluing.
+		\item In the other direction, suppose $(X,\OO_X)$ is irreducible and reduced. Well, fix any open subset $U\subseteq X$ and $f,g\in\OO_X(U)$ such that $fg=0$. We now define
+		\[V(a)\coloneqq\{x\in U:g_x\in\mf m_x\},\]
+		and we see that $V(f)$ and $V(g)$ are going to be closed subsets of $U$ because they are the complement of the open ones in \autoref{lem:someopensupp}.
+		
+		Continuing, because $X$ is irreducible, $U$ is as well by \autoref{lem:someopensupp}, so $U= V(g)\cup V(f)$ forces $U$ to be contained in one of these closed subsets, so without loss of generality take $U=V(f)$. We are now ready to claim $f=0$, which will finish.
+		
+		Because $U$ is an open subscheme, it suffices to show that $f=0$ on an affine open subcover $\{U_\alpha\}_{\alpha\in\lambda}$ of $U$. Well, for each $\alpha\in\lambda$, let $f_\alpha\coloneqq f|_{U_\alpha}$, and we see that $U_\alpha\subseteq U=V(f)$ implies that $f|_p\in\mf m_p$ for each $p\in U_\alpha$. Thus, using the canonical isomorphism $\varepsilon\colon(U,\OO_X|_U)\cong(\Spec\OO_X(U),\OO_{\Spec\OO_X(U)})$ of \autoref{cor:the-affine-iso}, we see
+		\[\OO_X(U)_p\simeq\colimit_{U_h\ni p}\OO_X(U_h)\stackrel\varepsilon\simeq\colimit_{D(h)\ni\varepsilon(p)}\OO_X(U)_h\simeq\OO_X(U)_{\varepsilon(p)}\]
+		where we have also used \autoref{lem:affinestalk}. Thus, we see $f/1\in\mf p\OO_X(U)_\mf p$ for each prime $\mf p\in\Spec\OO_X(U)$, so
+		\[f\in\bigcap_{\mf p\in\Spec A}\mf p=\op{nilrad}A.\]
+		But $\OO_X(U)$ is reduced as a ring because $(X,\OO_X)$ is a reduced scheme by \autoref{lem:reduced-on-sets}, so now forces $f=0$.
+		\qedhere
+	\end{itemize}
 \end{proof}
+We are now prepared to give some examples.
 \begin{example}
-	A reduced scheme whose stalks are integral domains even though $X$ is not irreducible will not make $X$ in total integral. Somehow being integral is a more global property.
+	A reduced scheme whose stalks are integral domains even though $X$ is not irreducible will not make $X$ in total integral. Somehow being integral is a more global property, which the irreducibility tracks.
 \end{example}
-Here is a good property of integral schemes.
-\begin{proposition}
-	An integral scheme $(X,\OO_X)$ has a unique generic point $\xi$ for $X$. Then
-	\[\OO_{X,\xi}=\op{Frac}\OO_X(U)\]
-	for any $U\subseteq X$.
-\end{proposition}
+\begin{example}
+	Projective space $\PP^n_k$ is integral: this is reduced by \autoref{ex:proj-is-reduced} and irreducible by \autoref{ex:proj-is-irred}.
+\end{example}
+\begin{example} \label{ex:affine-integral-scheme}
+	Fix an integral domain $A$. Then $(\Spec A,\OO_{\Spec A})$ is reduced because $A$ is reduced (\autoref{ex:reduced-affine-scheme}), and $\Spec A$ is irreducible with generic point $(0)$ by using \autoref{ex:closurepoint}:
+	\[\overline{\{(0)\}}=V((0))=\{\mf p\in\Spec A:0\in\mf p\}=\Spec A.\]
+\end{example}
+The above example inspires us into the following.
+\begin{lemma} \label{lem:get-function-field}
+	An integral scheme $(X,\OO_X)$ has a unique generic point $\xi$ for $X$. Then the following are true.
+	\begin{itemize}
+		\item If $(X,\OO_X)$ is affine, then $\OO_{X,\xi}\simeq\op{Frac}\OO_X(X)$.
+		\item For any affine open subscheme $U\subseteq X$, we have $\OO_{X,\xi}\simeq\op{Frac}\OO_X(U)$. In particular, the stalk $\OO_{X,\xi}$ is a field.
+	\end{itemize}
+\end{lemma}
 \begin{proof}
-	The existence of $\xi$ comes from the fact that irreducible components (which here is only $X$) have a unique generic point. The second claim follows by taking the direct limit over our $U$, trying to get down to the generic point.
+	Because $X$ is irreducible by \autoref{prop:integral-is-reduced-irred}, we see that the closed irreducible subset $X$ of $X$ has a unique generic point $\xi$ by \autoref{lem:uniq-generic}. We now show the remaining claims in sequence.
+	\begin{itemize}
+		\item Note that $(0)$ is the generic point of $\Spec\OO_X(X)$ as shown in \autoref{ex:affine-integral-scheme}, so we see that the canonical isomorphism of \autoref{cor:the-affine-iso} gives
+		\[\OO_{X,\xi}\simeq\OO_{\Spec\OO_X(X),(0)}\simeq\OO_X(X)_{(0)}.\]
+		Namely, the first isomorphism holds because $\xi$ must be taken to a point in $\Spec\OO_X(X)$ whose closure is the entire space, which is just $(0)$ by uniqueness of the generic point in \autoref{lem:uniq-generic}; the second isomorphism holds by \autoref{lem:affinestalk}. The claim now follows upon noticing $\op{Frac}\OO_X(X)=\op{Frac}\OO_X(X)$.
+		\item Given an affine open subscheme $U\subseteq X$, we note that $U\cap\overline{\{\xi\}}\ne\emp$ forces $U\cap\{\xi\}\ne\emp$ by properties of the closure, so $\xi\in U$. Thus, we see
+		\[\OO_{X,\xi}\simeq(\OO_X|_U)_\xi\simeq\op{Frac}\OO_X(U),\]
+		where the first isomorphism is by \autoref{lem:invimagestalk}, and the second isomorphism is by the above.
+		\qedhere
+	\end{itemize}
 \end{proof}
+\begin{remark}
+	In general, it is not true that $\OO_{X,\xi}$ is the fraction field of $\OO_X(U)$ for any open subset $U\subseteq X$. For example, take $X\coloneqq\PP^1_k$. To begin, recall $\OO_X(X)\simeq k$ from \autoref{rem:global-proj-sections}, so $\op{Frac}\OO_X(X)=k$. However, recalling we can build $\PP^1_k$ by gluing together $\Spec k[x]$s, we see that the function field should be $\op{Frac}k[x]=k(x)$ by \autoref{lem:get-function-field}.
+\end{remark}
 So we get the following nice definition.
 \begin{definition}[Function field]
-	An integral scheme $(X,\OO_X)$ with generic point $\xi$ has \textit{function field}
-	\[\OO_{X,\xi}\coloneqq\op{Frac}\OO_X(X)\]\todo{Should this have Frac?}
+	An integral scheme $(X,\OO_X)$ with generic point $\xi$ has \textit{function field} $\OO_{X,\xi}$.
 \end{definition}
 The point here is that we can retrieve the field out from some $\Spec k[x,y]$, say. This also allows us to define regular functions.
 \begin{definition}[Regular]
@@ -134,10 +275,13 @@ The idea to define a closed subscheme is to instead keep track of the morphism w
 	A scheme morphism $(f,f^\sharp)\colon(Z,\OO_Z)\to(X,\OO_X)$ is a \textit{closed immersion} if and only if the following two conditions hold.
 	\begin{itemize}
 		\item The map $f\colon Z\to X$ is a homeomorphism from $Z$ onto a closed subset of $X$.
-		\item The map $f^\sharp\colon\OO_X\to f_*\OO_Z$ is epic.\todo{Germs should pull back to germs.}
+		\item The map $f^\sharp\colon\OO_X\to f_*\OO_Z$ is epic.
 	\end{itemize}
 	If in fact $Z\subseteq X$ is a closed subset, then we will say $Z$ is a closed subscheme.
 \end{definition}
+\begin{remark}
+	The geometric intuition behind requiring $f^\sharp\colon\OO_X\to f_*\OO_Z$ to be epic is that we want holomorphic functions on a closed subset $V\subseteq\CC$ to pull back to meromorphic ones on $\CC$. Locally, this means that a germ of a holomorphic function on $V$ should come from a germ on a holomorphic function on $X$, which is exactly what this sheaf morphism being epic means.
+\end{remark}
 The main point here is that we would like our closed immersions in the affine case to be induced by $A\onto A/I$ as in \autoref{exe:closedaffinesubscheme}.
 \begin{proposition} \label{prop:affineclosedsubschemes}
 	Fix an affine scheme $(X,\OO_X)\coloneqq(\Spec A,\OO_{\Spec A})$.
