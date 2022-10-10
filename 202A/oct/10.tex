@@ -1,0 +1,77 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 10}
+
+The midterm exam is coming. It will cover topology things.
+
+\subsection{The Lebesgue Premeasure}
+We continue with our attempts to construct measures.
+\begin{prop}
+	Fix a left-continuous, increasing function $\alpha\colon\RR\to\RR$, and let $\mc P\subseteq\mc P(\RR)$ as the prering of half-open intervals $[a,b)$ for $a<b$. Then
+	\[\mu_\alpha([a,b))\coloneqq\alpha(b)-\alpha(a)\]
+	is a premeasure on $\mc P$.
+\end{prop}
+\begin{proof}
+	Quickly, note that the fact that $\alpha$ is increasing implies that $\mu([a,b))=\alpha(b)-\alpha(a)\ge0$ for any $[a,b)\in\mc P$.
+	
+	Fix some $[a,b)\in\mc P$ which has been decomposed into an infinite disjoint union
+	\[[a,b)=\bigsqcup_{i=1}^\infty[a_i,b_i).\]
+	We need to show that $\mu_\alpha([a,b))$ is the sum of all the $\mu_\alpha([a_i,b_i))$s. We will show our two inequalities separately.
+	\begin{itemize}
+		\item In the easy direction, we show $\sum_{i=1}^\infty\mu_\alpha([a_i,b_i))\le\mu_\alpha([a,b))$. It suffices to show that, for any $n\in\NN$, we have
+		\[\sum_{i=1}^n\mu_\alpha([a_i,b_i))\stackrel?\le\mu_\alpha([a,b)),\]
+		which will finish by taking the limit as $n\to\infty$. Well, let $\sigma\colon\{1,\ldots,n\}\to\{1,\ldots,n\}$ be the permutation such that $a_{\sigma(1)}\le a_{\sigma(2)}\le\cdots\le a_{\sigma(n)}$. Notably, $a_{\sigma(i)}\le a_{\sigma(i+1)}$ implies that $b_{\sigma(i)}\le a_{\sigma(i+1)}$ because $[a_{\sigma(i)},b_{\sigma(i)})\cap[a_{\sigma(i+1)},b_{\sigma(i+1)})=\emp$ requires $a_{\sigma(i+1)}\notin[a_{\sigma(i)},b_{\sigma(i)})$.
+
+		Thus, $b_{\sigma(i)}\le a_{\sigma(i+1)}$ implies $\alpha(b_{\sigma(i)})\le\alpha(a_{\sigma(i+1)})$, so
+		\[\sum_{i=1}^n\mu_\alpha([a_i,b_i))=\sum_{i=1}^n\big(\alpha(b_{\sigma(i)})-\alpha(a_{\sigma(i)})\big)=-\alpha(a_{\sigma(1)})+\sum_{i=1}^{n-1}\big(-\alpha(a_{\sigma(i)})+\alpha(b_{\sigma(i+1)})\big)+\alpha(b_{\sigma(n)})\]
+		has $-\alpha(a_{\sigma(i)})+\alpha(b_{\sigma(i+1)})\le0$ for each $i$. Finishing up,
+		\[\sum_{i=1}^n\mu_\alpha([a_i,b_i))\le-\alpha(a_{\sigma(1)})+\alpha(b_{\sigma(n)})\le\alpha(b)-\alpha(a)=\mu_\alpha([a,b)),\]
+		where we have used $a\le a_{\sigma(1)}$ and $b_{\sigma(n)}\le b$ in our bounding.
+		\item In the difficult direction, we show $\mu_\alpha([a,b))\le\sum_{i=1}^\infty\mu_\alpha([a_i,b_i))$. Fix any $\varepsilon>0$, and we will actually show $\mu_\alpha([a,b))\le\sum_{i=1}^\infty\mu_\alpha([a_i,b_i))+\varepsilon$, which will be enough upon sending $\varepsilon\to0^+$.
+
+		To set up the proof, set $\varepsilon_i\coloneqq\varepsilon/2^{i+1}$ so that
+		\[\sum_{i=1}^\infty\varepsilon_i=\sum_{i=1}^\infty\frac\varepsilon{2^{i+1}}=\frac\varepsilon2\sum_{i=1}^\infty\frac1{2^i}=\frac\varepsilon2.\]
+		(This is a surprise tool which will help us later.)
+
+		We now proceed in steps. The idea, is to approximate all of our $[a_i,b_i)$ by open intervals to use compactness of closed intervals.
+
+		\begin{enumerate}
+			\item Find some $b'\le b$ such that $\alpha(b)-\varepsilon/2\le\alpha(b')\le\alpha(b)$, using the left-continuity of $\alpha$. Similarly, for each $i\in\NN$, we may select $a_i'<a_i$ such that $\alpha(a_i)-\varepsilon_i\le\alpha(a_i')\le\alpha(a_i)$. Thus,
+			\[\bigcup_{i=1}^\infty(a_i',b_i)\supseteq\bigcup_{i=1}^\infty[a_i,b_i)\supseteq[a,b)\supseteq[a,b'].\]
+			Thus, we have given $[a,b']$ a countable open cover! So compactness (!) provides us with a finite subcover given by indices $\{i_1,\ldots,i_n\}$. Letting $N$ be the largest of the indices, then, we see that
+			\[\bigcup_{i=1}^N(a_i',b_i)\supseteq\bigcup_{k=1}^n(a_{i_k}',b_{i_k})\supseteq[a,b'].\]
+			
+			\item We now inductively relabel our intervals. Some open interval must contain $a$, so we find $j_1\in\{1,\ldots,N\}$ so that $a\in(a_{j_1}',b_{j_1})$. If $b_{j_1}>b'$, then we are done because we have covered $[a,b']$. Otherwise, $b_{j_1}\in[a,b']$, so we find $j_2\in\{1,\ldots,N\}$ so that $b_{j_1}\in(a_{j_2}',b_{j_2})$. If $b_{j_2}>b'$, then we are done because we have covered $[a,b']$; otherwise we find $j_3$ and continue.
+	
+			The above inductive process must terminate because each of the $j_i$ are distinct---at each point, $b_{j_i}$ is strictly greater than all previous $b_{j_\bullet}$s---and we were already promised that the indices up to $N$ will produce a finite subcover. So we have produced some open cover
+			\[\bigcup_{k=1}^m(a_{j_k}',b_{j_k})\supseteq[a,b'].\]
+			
+			\item We are finally able to give the argument that everyone always wants to. Observe that
+			\[\sum_{k=1}^m\big(\alpha(b_{j_k})-\alpha(a_{j_k}')\big) = -\alpha(a_{j_1}')+\sum_{k=1}^{m-1}\big(\alpha(b_{j_k})-\alpha(a_{j_{k+1}}')\big)+\alpha(b_{j_m})\]
+			by some re-indexing. However, $a_{j_{k+1}}'<b_{j_k}$, so $\alpha(b_{j_k})-\alpha(a_{j_{k+1}}')\ge0$ always, so
+			\[\sum_{k=1}^m\big(\alpha(b_{j_k})-\alpha(a_{j_k}')\big)\ge\alpha(b_{j_m})-\alpha(a_{j_1}')\ge\alpha(b')-\alpha(a),\]
+			where at the end we have used the fact that $b_{j_m}\ge b'$ and $a'\ge a_{j_1}$. But now $\alpha(b')\ge\alpha(b)-\varepsilon/2$, so we get
+			\begin{equation}
+				\sum_{k=1}^m\big(\alpha(b_{j_k})-\alpha(a_{j_k}')\big)\ge\alpha(b)-\alpha(a)-\varepsilon/2. \label{eq:leb-premeas-hard-1}
+			\end{equation}
+			
+			\item Now, on the other side, we write
+			\[\sum_{k=1}^m\big(\alpha(b_{j_k})-\alpha(a_{j_k}')\big)\le\sum_{k=1}^m\big(\alpha(b_{j_k})-\alpha(a_{j_k})+\varepsilon_{j_k}\big)2,\]
+			using the fact that $\alpha(a_{j_k}')\ge\alpha(a_{j_k})-\varepsilon_{j_k}$. We can now just add in all the indices to get
+			\begin{equation}
+				\sum_{k=1}^m\big(\alpha(b_{j_k})-\alpha(a_{j_k}')\big)\le\sum_{i=1}^\infty\big(\alpha(b_{i})-\alpha(a_{i})\big)+\sum_{i=1}^\infty\varepsilon_i\le\sum_{i=1}^\infty\mu_\alpha([a_i,b_{i}))+\frac\varepsilon2. \label{eq:leb-premeas-hard-2}
+			\end{equation}
+			
+			\item In total, we combine \autoref{eq:leb-premeas-hard-1} and \autoref{eq:leb-premeas-hard-2} to get
+			\[\sum_{i=1}^\infty\mu_\alpha([a_{i},b_{i}))+\varepsilon\ge\mu_\alpha([a,b)).\]
+			Sending $\varepsilon\to0^+$ finishes the proof.
+			\qedhere
+		\end{enumerate}
+	\end{itemize}
+\end{proof}
+
+\end{document}
