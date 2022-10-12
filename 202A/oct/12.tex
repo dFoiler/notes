@@ -1,0 +1,93 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 12}
+
+The midterm exam is still coming. It is closed-book. Only bring writing implements. He might ask for definitions, statements of theorems, proofs of theorems, and relatively quick applications of theorems.
+
+\subsection{Premeasure Subtraction}
+Last class, in \autoref{prop:leb-premeasure}, we showed that $\mu_\alpha\colon\mc P\to[0,\infty]$ gave a suitable premeasure. We are now going to embark on a somewhat long story to show that $\mu_\alpha$ (and premeasures in general) can turn into a full measure.
+
+To begin our journey, we pick up some annoying facts about prerings and premeasures.
+\begin{lemma} \label{lem:inductive-prering-subtract}
+	Fix a set $X$ and a prering $\mc P$. For any set $E\in\mc P$ and some $\{E_i\}_{i=1}^m\subseteq P$, there exist finitely many $\{F_j\}_{j=1}^n\subseteq P$ which are pairwise disjoint and satisfy
+	\[E{\mathbin\bigg\backslash}\bigcup_{i=1}^mE_i=\bigsqcup_{j=1}^nF_j.\]
+\end{lemma}
+\begin{proof}
+	We induct on $m$, using the prering condition. When $m=0$, set $F_1=E$, and there is nothing else to say.
+
+	Now suppose that we can write
+	\[E{\mathbin\bigg\backslash}\bigcup_{i=1}^mE_i=\bigsqcup_{j=1}^nF_j.\]
+	Picking up some other $E_{m+1}\in\mc P$, we note
+	\[E{\mathbin\bigg\backslash}\bigcup_{i=1}^{m+1}E_i=\Bigg(E{\mathbin\bigg\backslash}\bigcup_{i=1}^mE_i\Bigg)\setminus E_{m+1}=\Bigg(\bigsqcup_{j=1}^mF_j\Bigg)\cap(X\setminus E_{m+1})\stackrel*=\bigcup_{j=1}^m(F_j\cap(X\setminus E_{m+1}))=\bigcup_{j=1}^m(F_j\setminus E_{m+1})\]
+	where we have used the distributivity of intersection over union in $\stackrel*=$. For each $j$, because $\mc P$ is a prering, we may find pairwise disjoint $\{G_{j,k}\}_{k=1}^{m_j}\subseteq\mc P$ such that
+	\[F_j\setminus E_{m+1}=\bigsqcup_{k=1}^{m_j}G_{j,k}\]
+	so that
+	\[E{\mathbin\bigg\backslash}\bigcup_{i=1}^{m+1}E_i=\bigcup_{j=1}^m\bigcup_{k=1}^{m_j}G_{j,k}.\]
+	We now claim that the $\{G_{j,k}\}$ are pairwise disjoint, which will finish the proof. Indeed, if we can find $x\in G_{j,k}\cap G_{j',k'}$, then $G_{j,k}\subseteq F_j$ and $G_{j',k'}\subseteq F_{j'}$ tells us $x\in F_j\cap F_{j'}$, so $j=j'$ because the $F_\bullet$ are pairwise disjoint. Thus, $x\in G_{j,k}\cap G_{j,k'}$ further implies $k=k'$ because the $G_{j,\bullet}$ are pairwise disjoint. So $(j,k)=(j',k')$, and we are done.
+\end{proof}
+\begin{lemma} \label{lem:fin-additive-is-monotone}
+	Fix a prering $\mc P$ on $X$ and a finitely additive function $\mu\colon\mc P\to[0,\infty]$. Given $E,F\in\mc P$, then $\mu(E)\ge\mu(E\cap F)$. In particular, if $E\supseteq F$, then $\mu(E)\ge\mu(F)$.
+\end{lemma}
+\begin{proof}
+	Note that an element of $E$ is always exactly one of in $F$ or not, so $E=(E\cap F)\sqcup(E\setminus F)$. Now, we use the prering condition on $\mc P$ to write
+	\[E\setminus F=\bigsqcup_{i=1}^nG_i\]
+	for some pairwise disjoint $G_1,\ldots,G_n\in\mc P$. We also note that $G_i\subseteq X\setminus F$ for each $i$, so $G_i\cap(E\cap F)=\emp$ for each $i$, so the sets $(E\cap F),G_1,\ldots,G_n$ are pairwise disjoint and grant
+	\[\mu(E)=\mu(E\cap F)+\sum_{i=1}^n\mu(G_i).\]
+	However, $\mu(G_i)\ge0$ always, so the first assertion follows. The second assertion follows upon noticing $E\supseteq F$ implies $E\cap F=F$.
+\end{proof}
+The above result motivates the following definition.
+\begin{definition}[Monotone]
+	Fix a collection $\mc F$ of subsets of a set $X$. A function $\mu\colon\mc F\to[0,\infty]$ is \textit{monotone} if and only if any $E,F\in\mc F$ with $E\subseteq F$ have $\mu(E)\le\mu(F)$.
+\end{definition}
+\begin{example}
+	Finitely additive premeasures on prerings are monotone by \autoref{lem:fin-additive-is-monotone}.
+\end{example}
+
+\subsection{Subadditivty}
+We now pick up some subadditivity lemmas.
+\begin{lemma} \label{lem:almost-subadditive}
+	Fix a prering $\mc P$ on $X$ and a finitely additive function $\mu\colon\mc P\to[0,\infty]$. Given $E\in\mc P$ and some pairwise disjoint $\{E_i\}_{i=1}^n\subseteq\mc P$ such that $E_i\subseteq E$ for such $i$, we have
+	\[\sum_{i=1}^n\mu(E_i)\le\mu(E).\]
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:inductive-prering-subtract}, we note that we may write
+	\[E{\mathbin\bigg\backslash}\bigcup_{i=1}^nE_i=\bigsqcup_{j=1}^mF_j\]
+	for pairwise disjoint $\{F_j\}_{j=1}^m\subseteq\mc P$. We now note that all the $E_i$ and $F_j$ are pairwise disjoint from each other: note that $E_i\cap E_j\ne\emp$ implies $i=j$ by hypothesis on the $E_\bullet$, and $F_i\cap F_j\ne\emp$ implies $i=j$ by hypothesis on the $F_\bullet$. Further, we note that $E_i\cap F_j\subseteq E_i\cap(E\setminus E_i)=\emp$ for each $i$ and $j$, by construction of the $F_j$.
+
+	In total, we see that we have a disjoint union
+	\[E=\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)\sqcup\Bigg(\bigsqcup_{j=1}^mF_j\Bigg),\]
+	so the finite additivity of $\mu$ tells us
+	\[\mu(E)=\sum_{i=1}^n\mu(E_i)+\sum_{j=1}^m\mu(F_j)\ge\sum_{i=1}^n\mu(E_i),\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma}
+	Fix a prering $\mc P$ on $X$ and a finitely additive function $\mu\colon\mc P\to[0,\infty]$. Given $E\in\mc P$ and some $\{F_j\}_{j=1}^m\subseteq\mc P$ covering $E$, we have
+	\[\mu(E)\le\sum_{j=1}^m\mu(F_j).\]
+\end{lemma}
+\begin{proof}
+	To begin, we note $E=\bigcup_{j=1}^m(E\cap F_j)$, so we note that it suffices for
+	\[\mu(E)\le\sum_{k=1}^m\mu(E\cap F_j),\]
+	which will finish because $\mu(E\cap F_j)\le\mu(F_j)$ for each $j$ by \autoref{lem:fin-additive-is-monotone}. Thus, we just replace each $F_j$ with $E\cap F_j$ so that $E=\bigcup_{j=1}^mF_j$.
+	
+	Next, we force the $F_j$ to be disjoint, using \autoref{lem:inductive-prering-subtract} to write
+	\[H_j\coloneqq F_j\setminus\bigcup_{k=1}^{j-1}F_k=\bigsqcup_{k=1}^{n_j}G_{j,k}\]
+	where the $G_{j,k}\subseteq H_j$ live in $\mc P$ and are pairwise disjoint for each fixed $j$. Now, we note that each $x\in E$ will live in some $F_j$ with least $j$, so $x\in H_j$ for this $j$, so the $H_j$ cover $E$.
+
+	We now note that all the $G_{j,k}$ are disjoint. Indeed, if $x\in G_{j,k}\cap G_{j',k'}$, we see that $G_{j,k}\subseteq H_j$ and $G_{j',k'}\subseteq H_{j'}$, so $x\in H_j\subseteq H_{j'}$. If $j\ne j'$, say that $j<j'$ without loss of generality, so $x\in H_j\subseteq F_j$ while $x\in H_{j'}$ has $H_{j'}$ disjoint from $F_j$, so we have a contradiction. So instead we see $j=j'$, so $x\in G_{j,k}\cap G_{j,k'}$, and it follows that $k=k'$ because the $G_{j,\bullet}$ are disjoint.
+
+	In total, we see that
+	\[E=\bigsqcup_{j=1}^m\bigsqcup_{k=1}^{n_j}G_{j,k},\]
+	so the finitely additive condition tells us that
+	\[\mu(E)=\sum_{j=1}^m\sum_{k=1}^{n_k}G_{j,k}.\]
+	However, we note that the $G_{j,k}$ are disjoint for any fixed $j$ and have $G_{j,k}\subseteq F_j$ for each $k$, so we see that
+	\[\sum_{k=1}^{n_k}\mu(G_{j,k})\le\mu(F_j)\]
+	for each $j$ by \autoref{lem:almost-subadditive}, so we conclude
+	\[\mu(E)=\sum_{j=1}^m\sum_{k=1}^{n_k}G_{j,k}\le\sum_{j=1}^m\mu(F_j),\]
+	which is what we wanted.
+\end{proof}
+
+\end{document}
