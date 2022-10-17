@@ -171,7 +171,7 @@ We now show that we are affine-local on the target. We will appeal to \autoref{p
 	\[X\cong\Spec A/I\to\Spec A\]
 	for some ideal $I\subseteq A$. In particular, we see that $\pi^\sharp$ is surjective on global sections by composing the above morphisms, which means that $\OO_X(X)$ is in fact finitely generated as an $A$-algebra by $\pi^\sharp$ (in fact, with one generator).
 \end{proof}
-\begin{lemma}
+\begin{lemma} \label{lem:closed-embed-base-change}
 	The class of closed embeddings is preserved by base change.
 \end{lemma}
 \begin{proof}
@@ -198,128 +198,349 @@ We now show that we are affine-local on the target. We will appeal to \autoref{p
 	\qedhere
 \end{proof}
 
+\subsection{Locally Closed Embeddings Are Reasonable}
+While we're talking about embeddings, we'll go ahead and show that locally closed embeddings have the usual adjectives.
+\begin{remark}
+	Locally closed embeddings are a closed embedding followed by an open embedding, both of which are monic by \autoref{lem:closed-monic} and \autoref{cor:open-embed-monic}, respectively. Because the composite of monomorphisms remains monic, we see that locally closed embeddings are monic; for example, they are quasiseparated by \autoref{ex:mono-is-qs}.
+\end{remark}
+\begin{lemma} \label{lem:loc-closed-becomes-closed-embed}
+	A locally closed embedding with closed image (topologically!) is a closed embedding.
+\end{lemma}
+\begin{proof}
+	Fix a locally closed embedding $\pi\colon X\to Y$ with closed image. By definition, we can factor $\pi$ as $\pi=\iota\circ\pi'$, where $\pi'\colon X\to U$ is a closed embedding, and $\iota\colon U\to Y$ is an open embedding. We have two checks.
+	\begin{itemize}
+		\item Topologically, both $\pi'$ and $\iota$ are homeomorphisms onto their image, so their composite is as well: let $\iota_0\colon U\to U$ be the continuous inverse of $\iota$, and let $\pi'_0\colon\iota(X)\to X$ be the continuous inverse of $\pi'$.
+		
+		Then we note $\iota_0|_{\pi'(X)}\colon\pi'(X)\to\pi'(X)$ is still a continuous function, and we can check that $\pi'_0\circ\iota_0|_{\pi'(X)}$ is the inverse we're looking for, which is a matter of writing down the equations and remembering $\iota\circ\iota_0$ and $\iota_0\circ\iota$ and $\pi\circ\pi_0$ and $\pi_0\circ\pi$ are all identities.
+
+		\item On the structure sheaf, we need to check that $\pi^\sharp\colon\OO_Y\to\pi_*\OO_X$ is surjective on stalks. By \autoref{rem:zero-out-of-image}, we only have to check this on $\overline{\im\pi}=\im\pi$. Well, for some $x\in X$, we pick up some germ $[(V,f)]\in(\pi_*\OO_X)_{\pi(x)}$, which means $f\in\OO_X(\pi^{-1}V)$.
+
+		Because $\pi$ factors through $U$, we see that $\pi(x)\in U$, so we may restrict $V$ to $V\cap U$, meaning we may assume $V\subseteq U$, so actually $[(V,f)]\in(\pi'_*\OO_X)_{\pi'(x)}$. However, $\pi'$ is a closed embedding, so $(\pi')^\sharp\colon\OO_Y|_U\to(\pi'_*\OO_X)$ is surjective on stalks, so we may find $[(W,g)]\in\OO_Y|_U$ such that
+		\[\pi^\sharp_{f(x)}([(W,g)])=[(W,\pi^\sharp_Wg)]=[(W,(\pi')^\sharp_Wg)]=(\pi')^\sharp_{f(x)}([W,g])=[(V,f)],\]
+		which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+It turns out that being preserved by composition is the hardest check, so we will do it last. Let's begin with local on the target.
+\begin{lemma}
+	The class of locally closed embeddings is affine-local on the target.
+\end{lemma}
+\begin{proof}
+	Fix a scheme morphism $\pi\colon X\to Y$ and an affine open cover $\{Y_\alpha\}_{\alpha\in\lambda}$ of $Y$. In one direction, if $\pi$ is a locally closed embedding, then we have an open subscheme $U\subseteq Y$ such that $\pi$ factors through $\pi'\colon X\to U$ as a closed embedding. Now, for any open $V\subseteq Y$, we see that $\pi|_{\pi^{-1}V}$ becomes
+	\[\pi^{-1}V\stackrel{\pi'|_{\pi^{-1}V}}\to(U\cap V)\into V.\]
+	Notably, $\pi'|_{\pi^{-1}V}=\pi'|_{(\pi')^{-1}(U\cap V)}$ is a closed embedding by \autoref{lem:closed-emb-affine-local-1}, and $U\cap V\into V$ remains an open embedding (it's still an embedding of open subsets, and the structure sheaves continue to match), so we see that $\pi|_{\pi^{-1}V}$ is still a locally closed embedding.
+	
+	In the other direction, give $Y$ an affine open cover $\{Y_\alpha\}_{\alpha\in\lambda}$ such that the restrictions $\pi_\alpha\colon X_\alpha\to Y_\alpha$ are all locally closed embeddings, where $X_\alpha\coloneqq\pi^{-1}Y_\alpha$. This means that we are promised open subschemes $U_\alpha\subseteq Y_\alpha$ such that each $\pi_\alpha$ factors as
+	\[X_\alpha\stackrel{\pi'_\alpha}\to U_\alpha\into Y_\alpha,\]
+	where $\pi'_\alpha$ is a closed embedding. Thus, we set
+	\[U\coloneqq\bigcup_{\alpha\in\lambda}U_\alpha.\]
+	Notably, $U$ is covered by the $U_\alpha$, and $X_\alpha\subseteq(\pi'_\alpha)^{-1}(U_\alpha)\subseteq\pi^{-1}Y_\alpha=X_\alpha$, so in fact $\pi$ factors through $U$ as $\pi'$ as
+	\[X\stackrel{\pi'}\to U\into Y.\]
+	Further, we see that the restrictions $\pi'|_{\pi^{-1}U_\alpha}\colon X_\alpha\to U_\alpha$ are all closed embeddings, so \autoref{lem:closed-emb-affine-local-2} says that $\pi'$ is a closed embedding, which finishes.
+\end{proof}
+Now, here is base-change.
+\begin{lemma}
+	The class of locally closed embeddings is preserved by base change.
+\end{lemma}
+\begin{proof}
+	Fix a closed embedding $\iota\colon X\to U$ and an open embedding $\jmath\colon Z\to U$. Additionally, picking up some auxiliary scheme $Z$ with a map $\varphi\colon Z\to Y$, we would like to show that the induced map $X\times_YZ\to Z$ in
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJaIl0sWzEsMSwiWSJdLFswLDEsIlgiXSxbMCwwLCJYXFx0aW1lc19ZWiJdLFswLDEsIlxccGkiXSxbMiwxLCJcXGptYXRoXFxjaXJjXFxpb3RhIl0sWzMsMF0sWzMsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			{X\times_YZ} & Z \\
+			X & Y
+			\arrow["\varphi", from=1-2, to=2-2]
+			\arrow["\jmath\circ\iota", from=2-1, to=2-2]
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-1, to=2-1]
+		\end{tikzcd} \label{eq:start-loc-closed-fp}
+	\end{equation}
+	is also a locally closed embedding. For this, we expand the diagram into
+	% https://q.uiver.app/?q=WzAsNixbMiwwLCJaIl0sWzIsMSwiWSJdLFsxLDAsIlxcdmFycGhpXnstMX1VIl0sWzAsMSwiWCJdLFsxLDEsIlUiXSxbMCwwLCJYXFx0aW1lc19ZWiJdLFswLDEsIlxcdmFycGhpIl0sWzIsMCwiXFxqbWF0aCciXSxbNCwxLCJcXGptYXRoIl0sWzMsNCwiXFxpb3RhIl0sWzIsNCwiXFx2YXJwaGknIl0sWzUsMywiXFxwaSIsMl0sWzUsMiwiXFxpb3RhJyIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{X\times_YZ} & {\varphi^{-1}U} & Z \\
+		X & U & Y
+		\arrow["\varphi", from=1-3, to=2-3]
+		\arrow["{\jmath'}", from=1-2, to=1-3]
+		\arrow["\jmath", from=2-2, to=2-3]
+		\arrow["\iota", from=2-1, to=2-2]
+		\arrow["{\varphi'}", from=1-2, to=2-2]
+		\arrow["\pi"', from=1-1, to=2-1]
+		\arrow["{\iota'}", dashed, from=1-1, to=1-2]
+	\end{tikzcd}\]
+	where we note that the map $\iota'$ is induced to make the diagram commute because the right square is a pullback square, so we can plug the commutative diagram \autoref{eq:start-loc-closed-fp} into it. In particular, we have that the projection $X\times_YZ\to Z$ is $\jmath'\circ\iota'$.
+
+	Now, we note that the left square is a pullback square by \autoref{lem:smalls-to-big-pullback}. As such, because $\iota$ is a closed embedding, and closed embeddings are preserved by base change by \autoref{lem:closed-embed-base-change}, we know that $\iota'$ is also a closed embedding. So we have written the map $X\times_YZ\to Z$ as the composite $\jmath'\circ\iota'$ where $\iota'$ is a closed embedding and $\jmath'$ an open embedding, which shows that $\jmath'\circ\iota'$ is a locally closed embedding.
+\end{proof}
+We begin with composition.
+\begin{lemma}
+	Suppose that $\jmath\colon X\to V$ is an open embedding, and $\iota\colon V\to Y$ is a closed embedding. Then the composite $(\iota\circ\jmath)\colon X\to Y$ is a locally closed embedding.
+\end{lemma}
+\begin{proof}
+	For psychological ease, we identify $V$ topologically with its image in $Y$, and we identify $X$ topologically with its image in $V$ (and thus in $Y$) as well. In particular, on the level of topological spaces, $X$ is an open subset of the closed subspace $V\subseteq Y$, so we can {find an open subset $U\subseteq Y$ such that $X=U\cap V$}. Let $\jmath'\colon U\into Y$ be the corresponding open embedding, and we claim that we can induce a closed embedding $\iota\colon X\to U$ making the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJYIl0sWzEsMCwiViJdLFsxLDEsIlkiXSxbMCwxLCJVIl0sWzAsMSwiXFxqbWF0aCJdLFsxLDIsIlxcaW90YSJdLFszLDIsIlxcam1hdGgnIl0sWzAsMywiXFxpb3RhJyIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			X & V \\
+			U & Y
+			\arrow["\jmath", from=1-1, to=1-2]
+			\arrow["\iota", from=1-2, to=2-2]
+			\arrow["{\jmath'}", from=2-1, to=2-2]
+			\arrow["{\iota'}"', from=1-1, to=2-1]
+		\end{tikzcd} \label{eq:loc-emb-square}
+	\end{equation}
+	commute; this will finish because it implies that $\iota\circ\jmath=\jmath'\circ\iota'$ is the composite of a closed embedding followed by an open embedding and therefore a locally closed embedding.
+
+	At the very least, note that $X=V\cap U$ is a closed subset of $U$, so we will simply define $\iota'\colon X\to U$ as the identity on topological spaces. In particular, we have that $\iota'$ is a homeomorphism from $X$ onto a closed subset of $U$. We also see that \autoref{eq:loc-emb-square} now commutes on the level of topological spaces because all the maps are the identity on the level of topological spaces.
+
+	It remains to talk about sheaves. In particular, for each open subset $U'\subseteq U$, we must exhibit a map $(\iota')^\sharp_{U'}\colon\OO_U(U')\to\iota'_*\OO_X(U')$. Well, we note that $\OO_U(U')=\OO_Y(U)$, and $\iota'_*\OO_X(U')=\OO_X(X\cap U')=\OO_V(X\cap U')$ (note $X\cap U'$ is open in $V$), so we define our map $(\iota')^\sharp_{U'}$ as either of the diagonal morphisms in
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1koVScpIl0sWzEsMCwiXFxPT19WKFUnXFxjYXAgVikiXSxbMSwxLCJcXE9PX1YoVSdcXGNhcCBYKSJdLFswLDEsIlxcT09fWShVJ1xcY2FwIFUpIl0sWzAsMSwiXFxpb3RhXlxcc2hhcnBfe1UnfSJdLFsxLDIsIlxcb3B7cmVzfSJdLFszLDIsIlxcaW90YV5cXHNoYXJwX3tVJ1xcY2FwIFV9Il0sWzAsMywiXFxvcHtyZXN9IiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(U')} & {\OO_V(U'\cap V)} \\
+		{\OO_Y(U'\cap U)} & {\OO_V(U'\cap X)}
+		\arrow["{\iota^\sharp_{U'}}", from=1-1, to=1-2]
+		\arrow["{\op{res}}", from=1-2, to=2-2]
+		\arrow["{\iota^\sharp_{U'\cap U}}", from=2-1, to=2-2]
+		\arrow["{\op{res}}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	where the diagram commutes because $\iota^\sharp$ is a sheaf morphism. To see that $(\iota')^\sharp$ assembles into a sheaf map, we pick up open sets $U''\subseteq U'$ and note that the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1koVScpIl0sWzEsMCwiXFxPT19WKFUnXFxjYXAgVikiXSxbMSwxLCJcXE9PX1YoVScnXFxjYXAgVikiXSxbMCwxLCJcXE9PX1koVScnKSJdLFsyLDAsIlxcT09fVihVJ1xcY2FwIFgpIl0sWzIsMSwiXFxPT19WKFUnJ1xcY2FwIFgpIl0sWzMsMCwiXFxpb3RhJ18qXFxPT19YKFUnKSJdLFszLDEsIlxcaW90YSdfKihVJycpIl0sWzAsMSwiXFxpb3RhXlxcc2hhcnBfe1UnfSJdLFsxLDIsIlxcb3B7cmVzfSJdLFszLDIsIlxcaW90YV5cXHNoYXJwX3tVJyd9Il0sWzAsMywiXFxvcHtyZXN9IiwyXSxbMSw0LCJcXG9we3Jlc30iXSxbMiw1LCJcXG9we3Jlc30iXSxbNCw1LCJcXG9we3Jlc30iXSxbNCw2LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs1LDcsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzYsNywiXFxvcHtyZXN9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(U')} & {\OO_V(U'\cap V)} & {\OO_V(U'\cap X)} & {\iota'_*\OO_X(U')} \\
+		{\OO_Y(U'')} & {\OO_V(U''\cap V)} & {\OO_V(U''\cap X)} & {\iota'_*(U'')}
+		\arrow["{\iota^\sharp_{U'}}", from=1-1, to=1-2]
+		\arrow["{\op{res}}", from=1-2, to=2-2]
+		\arrow["{\iota^\sharp_{U''}}", from=2-1, to=2-2]
+		\arrow["{\op{res}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}}", from=1-2, to=1-3]
+		\arrow["{\op{res}}", from=2-2, to=2-3]
+		\arrow["{\op{res}}", from=1-3, to=2-3]
+		\arrow[Rightarrow, no head, from=1-3, to=1-4]
+		\arrow[Rightarrow, no head, from=2-3, to=2-4]
+		\arrow["{\op{res}}", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	commutes: the left square commutes by naturality of $\iota^\sharp$, and the middle square commutes because everything is just restrictions of the same sheaf $\OO_V$.
+
+	Further, we see that we assemble into a morphism of locally ringed spaces: for any point $p\in X\subseteq U$, we need to know that the composite
+	\[\arraycolsep=1.4pt\begin{array}{ccccc}
+		\OO_{U,p} &\stackrel{(\iota')^\sharp_p}\to& (\iota'_*\OO_{X})_p &\to& \OO_{X,p} \\
+		{[(U',s)]} &\mapsto& [(U',(\iota')^\sharp_{U'}(s))] &\mapsto& [(U'\cap X,(\iota')^\sharp_{U'}(s))]
+	\end{array}\]
+	is a map of local rings. To begin, we note that $(\iota')^\sharp_{U'}(s)=\iota^\sharp_{U'}(s)|_{U'\cap X}$, where the restriction takes place in $\OO_V$, so the entire germ is just $\iota^\sharp_{U'}(s)|_p$. Thus, the above map is
+	\[[U',s]\mapsto\iota^\sharp_{U'}(s)|_p,\]
+	which we can see is a map of local rings directly because $\iota^\sharp$ is a map of local rings, so any germ on the right side living in $\mf m_{U,p}$ is actually living in $\mf m_{Y,p}$ and will therefore go to $\mf m_{V,p}$ under $\iota^\sharp$. (We are implicitly using the fact that stalks of a restriction sheaf, which is how open embeddings are defined, are identified with stalks of the original sheaf.)
+
+	Lastly, we need to show that our diagram commutes. We already know that it commutes on the level of topological spaces. On the level of sheaves, we pick up some open subset $U'\subseteq Y$, and we need the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1koVScpIl0sWzEsMCwiXFxPT19WKFZcXGNhcCBVJykiXSxbMSwxLCJcXE9PX1goVlxcY2FwIFUnKSJdLFswLDEsIlxcT09fe1UnfShVXFxjYXAgVScpIl0sWzAsMSwiXFxpb3RhXlxcc2hhcnBfe1UnfSJdLFswLDMsIlxcb3B7cmVzfSIsMl0sWzEsMiwiXFxvcHtyZXN9Il0sWzMsMiwiKFxcaW90YScpXlxcc2hhcnBfe1VcXGNhcCBVJ30iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(U')} & {\OO_V(V\cap U')} \\
+		{\OO_{U'}(U\cap U')} & {\OO_X(X\cap U')}
+		\arrow["{\iota^\sharp_{U'}}", from=1-1, to=1-2]
+		\arrow["{\op{res}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}}", from=1-2, to=2-2]
+		\arrow["{(\iota')^\sharp_{U\cap U'}}", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	commutes because it is the same as the larger diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJcXE9PX1koVScpIl0sWzEsMSwiXFxPT19WKFZcXGNhcCBVXFxjYXAgVScpIl0sWzAsMSwiXFxPT19ZKFVcXGNhcCBVJykiXSxbMiwxLCJcXE9PX1YoWFxcY2FwIFUnKSJdLFsxLDAsIlxcT09fVihWXFxjYXAgVScpIl0sWzAsMiwiXFxvcHtyZXN9IiwyXSxbMiwxLCJcXGlvdGFeXFxzaGFycF97VVxcY2FwIFUnfSJdLFsxLDMsIlxcb3B7cmVzfSJdLFswLDQsIlxcaW90YV5cXHNoYXJwX3tVJ30iXSxbNCwzLCJcXG9we3Jlc30iXSxbNCwxLCJcXG9we3Jlc30iLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_Y(U')} & {\OO_V(V\cap U')} \\
+		{\OO_Y(U\cap U')} & {\OO_V(V\cap U\cap U')} & {\OO_V(X\cap U')}
+		\arrow["{\op{res}}"', from=1-1, to=2-1]
+		\arrow["{\iota^\sharp_{U\cap U'}}", from=2-1, to=2-2]
+		\arrow["{\op{res}}", from=2-2, to=2-3]
+		\arrow["{\iota^\sharp_{U'}}", from=1-1, to=1-2]
+		\arrow["{\op{res}}", from=1-2, to=2-3]
+		\arrow["{\op{res}}"', from=1-2, to=2-2]
+	\end{tikzcd}\]
+	where now the square commutes by naturality of $\iota^\sharp$, and the triangle commutes because everything is a restriction in $\OO_V$.
+\end{proof}
+\begin{corollary} \label{cor:loc-closed-embed-composite}
+	The class of locally closed embeddings is preserved by composition.
+\end{corollary}
+\begin{proof}
+	Let our closed embeddings be $X_1\to X_2$ and $X_2\to X_3$, where we decompose $X_1\to X_2$ into a closed embedding $\iota_1\colon X_1\to U_1$ and an open embedding $\jmath_1\colon U_1\to X_2$, and we do similar for the map $X_2\to X_3$. Then the composite $X_1\to X_3$ is just
+	\[X_1\stackrel{\iota_1}\to U_1\stackrel{\jmath_1}\to X_2\stackrel{\iota_2}\to U_2\stackrel{\jmath_2}\to X_2.\]
+	Now, {the composite $\iota_2\circ\jmath_1$ of an open embedding followed by a closed embedding is actually a locally closed embedding as shown in the previous lemma}, so we can write it as $\jmath_2'\circ\iota_1'$ where $\jmath_2'$ is a closed embedding and $\iota_1'$ is an open embedding.
+	
+	It follows that the full composite $X_1\to X_3$ is the open embedding $\iota_1'\circ\iota_1$ (this is still an open embedding because we're still a homeomorphism onto an open set, and the structure sheaves still match) followed by the closed embedding $\jmath_2\circ\jmath_2'$ (recall closed embeddings are preserved by composition by \autoref{cor:closed-embed-compose}), which in total is a locally closed embedding.
+\end{proof}
+
+
 \subsection{Separated Morphisms}
 We are moving towards defining varieties, for which we need to define separated morphisms. Hartshorne proves some difficult criterion for morphisms to be separated and proper, but many of the corollaries of the criterion can be proven without it, so we will avoid proving the criterion for now.
-\begin{remark}
-	Fix a topological space $X$. Then $X$ being Hausdorff if and only if the diagonal map $\Delta X\to X\times X$ (by $x\mapsto(x,x)$) makes $\Delta(X)\subseteq X\times X$ a closed subset.
-\end{remark}
-One shows the above remark by winding the definitions around. Separated is going to be the correct analogue for Hausdorff for schemes (recall that the Zariski topology is somewhat terrible), using the above ideas.
 
-These comments are intended to motivate us to look at diagonal morphisms.
-\begin{proposition} \label{prop:diag-is-local-closed}
-	Fix a scheme morphism $\pi\colon X\to Y$.
-	\begin{listalph}
-		\item Suppose $X=\Spec A$ and $Y=\Spec B$ are affine. Then the induced diagonal map $\Delta\colon X\to X\times_YX$ (induced by $\id_X\colon X\to X$) is a closed embedding.
-		\item In general, $\pi$ is a locally closed embedding.
-	\end{listalph}
-\end{proposition}
+Anyway, in some sense, a scheme or morphism being separated is the correct analogue of being Hausdorff. However, the statement of the Hausdorff condition requires talking about points and open sets, local to the space, so we will want a more morphism-oriented point of view.
+\begin{lemma}
+	A topological space $X$ is Hausdorff if and only if the diagonal map $\Delta\colon X\to X\times X$ given by $x\mapsto(x,x)$ has closed image.
+\end{lemma}
 \begin{proof}
-	We go in sequence.
-	\begin{listalph}
-		\item On the level of rings, we are looking at the diagram
-		% https://q.uiver.app/?q=WzAsNSxbMSwxLCJBXFxvdGltZXNfQkEiXSxbMiwxLCJBIl0sWzEsMiwiQSJdLFsyLDIsIkIiXSxbMCwwLCJBIl0sWzEsMF0sWzMsMV0sWzMsMl0sWzIsMF0sWzQsMSwiIiwyLHsiY3VydmUiOi0xLCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDIsIiIsMix7ImN1cnZlIjoxLCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDQsIiIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-		\[\begin{tikzcd}
-			A \\
-			& {A\otimes_BA} & A \\
-			& A & B
-			\arrow[from=2-3, to=2-2]
-			\arrow[from=3-3, to=2-3]
-			\arrow[from=3-3, to=3-2]
-			\arrow[from=3-2, to=2-2]
-			\arrow[curve={height=-6pt}, Rightarrow, no head, from=1-1, to=2-3]
-			\arrow[curve={height=6pt}, Rightarrow, no head, from=1-1, to=3-2]
-			\arrow[dashed, from=2-2, to=1-1]
-		\end{tikzcd}\]
-		so that we want to show that $A\otimes_BA\to A$ induces a closed embedding, which means we want to show that this induced map is surjective. However, this is pretty direct because the map is by $a_1\otimes a_2\mapsto a_1a_2$.
-		\item To show that we have a locally closed embedding, we need to find the requested intermediate open embedding $U\subseteq X\times_YX$. It suffices to glue these things together on small open affine subsets.
-
-		As such, we begin by giving $Y$ an affine open cover $\{V_\alpha\}$, and then we give $X$ an affine cover $\{U_{\alpha\beta}\}$ where each open affine is a subset of $\pi^{-1}V_\alpha$ where $V_\alpha\subseteq Y$ is one of the subsets in the affine open cover of $Y$. Thus, $X\times_YX$ is covered by
-		\[U_{\alpha\beta_1}\times_{V_\alpha}U_{\alpha\beta_2}=U_{\alpha\beta_1}\times_YU_{\alpha,\beta_2}.\]
-		One can show that $\Delta(X)$ will now be contained in the union of the ``diagonal'' elements $U_{\alpha\beta}\times_YU_{\alpha\beta}$.
-
-		Now, for any given point $p\in\Delta(X)$, find some $U_{\alpha\beta}$ containing $p$, and we can show that $\Delta$ now restricts to
-		\[\Delta\colon U_{\alpha\beta}\to U_{\alpha\beta}\times_YU_{\alpha\beta},\]
-		which is now a closed embedding. Thus, we have a locally closed embedding on $\Delta(X)$.
+	We have two implications.
+	\begin{itemize}
+		\item Suppose $X$ is Hausdorff. We need to show $(X\times X)\setminus\Delta(X)$ is open. Well, for any $(x,x')\in (X\times X)\setminus\Delta(X)$, we see $x\ne x'$, so we are promised disjoint open subsets $U,U'\subseteq X$ containing $x$ and $x'$ respectively. It follows that $(U\times U')\cap\Delta(X)=\emp$ (any intersection would witness some $y\in U\cap U'$) and contains $(x,x')$. Thus, any $(x,x')$ has been given an open neighborhood $U\times U'\subseteq(X\times X)\setminus\Delta(X)$, finishing.
+		\item Suppose $\Delta(X)\subseteq X\times X$ is closed. Then, for any distinct $x,x'\in X$, we see $(x,x')\notin\Delta(X)$. But $(X\times X)\setminus\Delta(X)$ is open, so we can write it out using the distinguished base as
+		\[(X\times X)\setminus\Delta(X)=\bigcup_{\alpha\in\lambda}(U_\alpha\times U_\alpha')\]
+		for open subsets $U_\alpha,U_\alpha'\subseteq X$. So say $(x,x')\in U_\alpha\times U_\alpha'$, so $x\in U_\alpha$ and $x'\in U_\alpha'$. Further, $(U_\alpha\times U_\alpha')\cap\Delta(X)\ne\emp$, so we again see that $U_\alpha\cap U_\alpha'=\emp$, so we are done.
 		\qedhere
-	\end{listalph}
+	\end{itemize}
 \end{proof}
-And now here is our definition.
+Thus, we are motivated into the following definition.
 \begin{definition}[Separated]
-	A scheme morphism $\pi\colon X\to Y$ is \textit{separated} if and only if $\Delta\colon X\to X\times_YX$ is a closed embedding. A scheme $X$ is \textit{separated} if and only if the map $X\to\Spec\ZZ$ is separated.
+	A scheme morphism $\pi\colon X\to Y$ is \textit{separated} if and only if $\Delta\pi\colon X\to X\times_YX$ is a closed embedding. An $S$-scheme $X$ is \textit{separated} if and only if the map $X\to S$ is separated; for example, a scheme $X$ is separated if and only if the map $X\to\Spec\ZZ$ is separated.
 \end{definition}
-\begin{example}
-	Morphisms of affine schemes are separated by \autoref{prop:diag-is-local-closed}.
-\end{example}
-\begin{example}
-	It turns out that affine morphisms are separated.
-\end{example}
-\begin{example}
-	Monomorphisms $\pi\colon X\to Y$ are separated: indeed, the diagonal morphism $\Delta\pi$ is an isomorphism by \autoref{lem:monic-means-diag-iso}, which is a closed embedding by \autoref{ex:iso-is-closed}. For example, open embeddings are separated by \autoref{cor:open-embed-monic}, and closed embeddings are separated by \autoref{lem:closed-monic}.
-\end{example}
-\begin{corollary} \label{cor:separated-by-diag}
-	A scheme morphism $\pi\colon X\to Y$ is separated if and only if $\Delta(X)\subseteq X\times_YX$ is closed topologically.
-\end{corollary}
-\begin{proof}
-	This follows straight from \autoref{prop:diag-is-local-closed}.
-\end{proof}
-\begin{corollary}
-	Separated morphisms $\pi\colon X\to Y$ are quasiseparated.
-\end{corollary}
-\begin{proof}
-	The diagonal map is a closed embedding and hence quasicompact.
-\end{proof}
-\begin{remark}
-	Being separated is local on the target because we check if something is a closed embedding on the target.
+\begin{remark} \label{rem:sep-is-reasonable}
+	As usual, the class of separated morphisms is preserved by composition, is preserved by base change, and is affine-local on the target. Here are the checks.
+	\begin{itemize}
+		\item The class of closed embeddings is preserved by composition by \autoref{cor:closed-embed-compose} and by base change by \autoref{lem:closed-embed-base-change}, so the class of separated morphisms is as well by \autoref{lem:diagonal-composition}.
+		\item The class of closed embeddings is preserved by base change by \autoref{lem:closed-embed-base-change}, so the class of separated morphisms is as well by \autoref{lem:diagonal-base-change}.
+		\item Lastly, the class of closed embeddings is affine-local on the target by \autoref{cor:closed-emb-affine-local} and by base change by \autoref{lem:closed-embed-base-change}, so the class of separated morphisms is as well by \autoref{lem:diagonal-affine-local}.
+	\end{itemize}
 \end{remark}
+\begin{remark}
+	As a sanity check, separated morphisms $\pi\colon X\to Y$ are quasiseparated. Indeed, the diagonal morphism $\Delta\pi\colon X\to X\times_YX$ is a closed embedding and hence quasicompact by \autoref{ex:closed-is-qc}, so we conclude $\pi$ is quasiseparated by \autoref{lem:mainqslemma}.
+\end{remark}
+\begin{example} \label{ex:mono-is-sep}
+	Monomorphisms $\pi\colon X\to Y$ are separated: indeed, the diagonal morphism $\Delta\pi$ is an isomorphism by \autoref{lem:monic-means-diag-iso}, which is a closed embedding by \autoref{ex:iso-is-closed}. For example, isomorphisms are separated, open embeddings are separated by \autoref{cor:open-embed-monic}, and closed embeddings are separated by \autoref{lem:closed-monic}.
+\end{example}
+We're defining separated as having $\Delta\pi$ being a closed embedding, but we might want $\Delta\pi$ to just have closed image from our topological motivation. These turn out to be the same; to see this, we note that the diagonal morphism isn't just any morphism.
+\begin{lemma} \label{lem:morphism-of-affine-is-sep}
+	Fix a morphism $\pi\colon X\to Y$ of affine schemes. Then the induced diagonal map $\Delta\pi\colon X\to X\times_YX$ is a closed embedding.
+\end{lemma}
+\begin{proof}
+	For brevity, set $\Delta\coloneqq\Delta\pi$. Because isomorphisms are closed embeddings by \autoref{ex:iso-is-closed}, and closed embeddings are preserved by composition by \autoref{cor:closed-embed-compose}, it suffices to show that a morphism of affine schemes $\pi\colon\Spec B\to\Spec A$ makes $\Delta\colon\Spec B\to(\Spec B\times_{\Spec A}\Spec B)$ a closed embedding.
+	
+	Well, let $f\colon A\to B$ be the ring map associated to $\pi$ by \autoref{thm:geoisoppalg}, and we see we may set
+	\[\Spec B\times_{\Spec A}\Spec B=\Spec B\otimes_AB\]
+	by \autoref{lem:affine-fp}, where the canonical projections are given by the ring maps $i_1,i_2\colon B\to B\otimes_AB$ by $\iota_1\colon b\mapsto b\otimes1$ and $\iota_2\colon b\mapsto1\otimes b$. Now, the diagonal map $\Delta$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJcXFNwZWMgQiJdLFsxLDEsIlxcU3BlYyBCXFxvdGltZXNfQUIiXSxbMiwxLCJcXFNwZWMgQiJdLFsxLDIsIlxcU3BlYyBCIl0sWzIsMiwiXFxTcGVjIEEiXSxbMCwxLCJcXERlbHRhIiwxXSxbMCwyLCIiLDEseyJjdXJ2ZSI6LTIsImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsMywiIiwxLHsiY3VydmUiOjIsImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMl0sWzIsNCwiXFxwaSIsMl0sWzMsNCwiXFxwaSJdLFsxLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\Spec B} \\
+		& {\Spec B\otimes_AB} & {\Spec B} \\
+		& {\Spec B} & {\Spec A}
+		\arrow["\Delta"{description}, from=1-1, to=2-2]
+		\arrow[curve={height=-12pt}, Rightarrow, no head, from=1-1, to=2-3]
+		\arrow[curve={height=12pt}, Rightarrow, no head, from=1-1, to=3-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow["\pi"', from=2-3, to=3-3]
+		\arrow["\pi", from=3-2, to=3-3]
+		\arrow[from=2-2, to=3-2]
+	\end{tikzcd}\]
+	commute becomes the diagonal morphism $d\colon B\otimes_AB\to B$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJCIl0sWzEsMSwiQlxcb3RpbWVzX0FCIl0sWzIsMSwiQiJdLFsxLDIsIkIiXSxbMiwyLCJBIl0sWzEsMCwiZCIsMV0sWzAsMiwiIiwxLHsiY3VydmUiOi0yLCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDMsIiIsMSx7ImN1cnZlIjoyLCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDEsImlfMiJdLFs0LDIsImYiXSxbNCwzLCJmIiwyXSxbMywxLCJpXzEiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		B \\
+		& {B\otimes_AB} & B \\
+		& B & A
+		\arrow["d"{description}, from=2-2, to=1-1]
+		\arrow[curve={height=-12pt}, Rightarrow, no head, from=1-1, to=2-3]
+		\arrow[curve={height=12pt}, Rightarrow, no head, from=1-1, to=3-2]
+		\arrow["{i_2}", from=2-3, to=2-2]
+		\arrow["f", from=3-3, to=2-3]
+		\arrow["f"', from=3-3, to=3-2]
+		\arrow["{i_1}"', from=3-2, to=2-2]
+	\end{tikzcd}\]
+	commute, which we see must be surjective because $d\circ i_2=\id_B$. Thus, $\Delta\colon\Spec B\to\Spec B\otimes_AB$ is associated to the surjection $d\colon B\otimes_AB\to B$ and is therefore a closed embedding by \autoref{prop:affineclosedsubschemes}.
+\end{proof}
+\begin{example} \label{ex:affine-is-sep}
+	\autoref{lem:morphism-of-affine-is-sep} tells us that morphisms of affine schemes are automatically separated. Because the class of separated morphisms is affine-local on the target by \autoref{rem:sep-is-reasonable}, we see that all affine morphisms are separated by \autoref{rem:affine-from-local-on-target}.
+\end{example}
+\begin{lemma} \label{lem:diag-is-local-closed}
+	Fix a scheme morphism $\varphi\colon X\to Y$. Then the diagonal morphism $\Delta\varphi\colon X\to X\times_YX$ is a locally closed embedding.
+\end{lemma}
+\begin{proof}
+	To show that we have a locally closed embedding, we need to find the requested intermediate open embedding $U\subseteq X\times_YX$. The idea is to reduce to the affine case, \autoref{lem:morphism-of-affine-is-sep}. For brevity, let $\Delta\coloneqq\Delta\varphi$, let $\pi_1,\pi_2\colon X\times_YX\to X$ be the canonical projections, and let $\pi\colon X\times_YX\to Y$ be $\pi\coloneqq\varphi\circ\pi_1=\varphi\circ\pi_2$.
+
+	We begin by giving $Y$ an affine open cover $\{Y_\alpha\}$ and set $X_\alpha\coloneqq\varphi^{-1}Y_\alpha$ so that \autoref{lem:fp-open-cover-base} says that the pre-images
+	\[\pi^{-1}(Y_\alpha)\simeq X_\alpha\times_{Y_\alpha}X_\alpha\]
+	cover $X\times_YX$. Continuing, give each $X_\alpha\coloneqq\pi^{-1}Y_\alpha$ an affine cover $\{X_{\alpha\beta}\}_{\beta\in\lambda_\alpha}$ so that two applications of \autoref{lem:keyfibercase}, or alternatively staring at the diagram
+	% https://q.uiver.app/?q=WzAsOSxbMiwyLCJZX1xcYWxwaGEiXSxbMiwxLCJYX1xcYWxwaGEiXSxbMSwyLCJYX1xcYWxwaGEiXSxbMiwwLCJYX3tcXGFscGhhXFxiZXRhXzF9Il0sWzAsMiwiWF97XFxhbHBoYVxcYmV0YV8yfSJdLFsxLDEsIlxccGleey0xfVlfXFxhbHBoYSJdLFsxLDAsIlxccGlfMV57LTF9KFhfe1xcYWxwaGFcXGJldGFfMX0pIl0sWzAsMSwiXFxwaV8yXnstMX0oWF97XFxhbHBoYVxcYmV0YV8yfSkiXSxbMCwwLCJcXHBpXzFeey0xfShYX3tcXGFscGhhXFxiZXRhXzF9KVxcY2FwXFxwaV8yXnstMX0oWF97XFxhbHBoYVxcYmV0YV8yfSkiXSxbNSwxLCJcXHBpXzEiLDJdLFs1LDIsIlxccGlfMiJdLFs2LDMsIlxccGlfMSJdLFsyLDAsIlxcdmFycGhpIl0sWzEsMCwiXFx2YXJwaGkiXSxbMywxLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFs2LDUsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzQsMiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNyw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFs3LDQsIlxccGlfMiJdLFs4LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzgsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			{\pi_1^{-1}(X_{\alpha\beta_1})\cap\pi_2^{-1}(X_{\alpha\beta_2})} & {\pi_1^{-1}(X_{\alpha\beta_1})} & {X_{\alpha\beta_1}} \\
+			{\pi_2^{-1}(X_{\alpha\beta_2})} & {\pi^{-1}Y_\alpha} & {X_\alpha} \\
+			{X_{\alpha\beta_2}} & {X_\alpha} & {Y_\alpha}
+			\arrow["{\pi_1}"', from=2-2, to=2-3]
+			\arrow["{\pi_2}", from=2-2, to=3-2]
+			\arrow["{\pi_1}", from=1-2, to=1-3]
+			\arrow["\varphi", from=3-2, to=3-3]
+			\arrow["\varphi", from=2-3, to=3-3]
+			\arrow[hook, from=1-3, to=2-3]
+			\arrow[hook, from=1-2, to=2-2]
+			\arrow[hook, from=3-1, to=3-2]
+			\arrow[hook, from=2-1, to=2-2]
+			\arrow["{\pi_2}", from=2-1, to=3-1]
+			\arrow[hook, from=1-1, to=1-2]
+			\arrow[hook, from=1-1, to=2-1]
+		\end{tikzcd} \label{eq:cover-fp}
+	\end{equation}
+	says that we can cover $\pi^{-1}Y_\alpha$ by open subschemes of the form
+	\[\pi_1^{-1}(X_{\alpha\beta_1})\cap\pi_2^{-1}(X_{\alpha\beta_2})\simeq X_{\alpha\beta_1}\times_{Y_\alpha}X_{\alpha\beta_2}.\]
+	Notably, the bottom-right square of \autoref{eq:cover-fp} is a pullback square as mentioned previously, and the remaining squares are induced by \autoref{eq:open-embed-fp}; notably, the open embedding $\pi_1^{-1}X_{\alpha\beta}\to\pi^{-1}Y_\alpha$ makes sense because any $z\in\pi_1^{-1}X_{\alpha\beta}$ has $\pi(z)=\varphi(\pi_1(z))\in\varphi(X_\alpha)\subseteq Y_\alpha$.
+
+	At this point, we set
+	\[U\coloneqq\bigcup_{\alpha\in\lambda}\bigcup_{\beta\in\lambda_\alpha}\big(\underbrace{\pi_1^{-1}(X_{\alpha\beta})\cap\pi_2^{-1}(X_{\alpha\beta})}_{U_{\alpha\beta}\coloneqq}\big).\]
+	In particular, we see that $U\subseteq X\times_YX$ is open. We claim that $\Delta(X)\subseteq U$, topologically. Indeed, any point $x\in X$ will have $x\in X_{\alpha\beta}$ for some $\alpha\in\lambda$ and $\beta\in\lambda_\alpha$, and then we see $\pi_1(\Delta(x))=\pi_2(\Delta(x))=x\in X_{\alpha\beta}$, so $\Delta(x)\in U_{\alpha\beta}$.
+
+	Thus, \autoref{rem:factor-through-open} tells us that $\Delta$ factors as
+	\[X\stackrel{\Delta'}\to U\into X\times_YX,\]
+	where $U\into X\times_YX$ is a closed embedding. It remains to show that $\Delta'\colon X\to U$ is a closed embedding. Because closed embeddings are affine-local on the target by \autoref{cor:closed-emb-affine-local}, it suffices to show that the restrictions $\Delta'_{\alpha\beta}\colon\Delta^{-1}U_{\alpha\beta}\to U_{\alpha\beta}$ are all closed embeddings.
+
+	To see this, we claim $\Delta^{-1}U_{\alpha\beta}=X_{\alpha\beta}$. Above we've already seen $\Delta(X_{\alpha\beta})\subseteq U_{\alpha\beta}$. In the other direction, if $x\in\Delta^{-1}U_{\alpha\beta}$, then $\pi_1\Delta(x)\in X_{\alpha\beta}$ by definition of $U_{\alpha\beta}$, so $x\in X_{\alpha\beta}$ by definition of $\Delta$, which is what we wanted. Thus, we are left trying to show that
+	\[\Delta|_{X_{\alpha\beta}}\colon X_{\alpha\beta}\to U_{\alpha\beta}\]
+	are closed embeddings. However, $U_{\alpha\beta}\simeq X_{\alpha\beta}\times_{Y_\alpha}X_{\alpha\beta}$, where the canonical projections are given by $\pi_1|_{U_{\alpha\beta}},\pi_2|_{U_{\alpha\beta}}\colon U_{\alpha\beta}\to X_{\alpha\beta}$, as we said when we constructed $U$. So the fact that
+	\[\pi_\bullet|_{U_{\alpha\beta}}\circ\Delta|_{X_{\alpha\beta}}=(\pi_\bullet\circ\Delta)|_{X_{\alpha\beta}}={\id_X}|_{X_{\alpha\beta}}=\id_{X_{\alpha\beta}}\]
+	for each $\pi_\bullet$, using the functoriality of restriction (from \autoref{rem:scheme-restriction-functorial}), tells us that $\Delta|_{X_{\alpha\beta}}$ is the diagonal morphism of the morphism of affine schemes $\varphi|_{X_{\alpha\beta}}\colon X_{\alpha\beta}\to Y_\alpha$. So $\Delta|_{X_{\alpha\beta}}$ is a closed embedding by \autoref{lem:morphism-of-affine-is-sep}. This finishes.
+\end{proof}
+\begin{corollary} \label{cor:separated-by-diag}
+	A scheme morphism $\pi\colon X\to Y$ is separated if and only if $\Delta\pi(X)\subseteq X\times_YX$ is closed topologically.
+\end{corollary}
+\begin{proof}
+	By \autoref{lem:diag-is-local-closed}, $\Delta\pi$ is a locally closed embedding, so $\Delta\pi(X)$ being closed makes $\Delta\pi$ is a closed embedding by \autoref{lem:loc-closed-becomes-closed-embed}.
+\end{proof}
+As an application, we show that separated morphisms satisfy cancellation, like quasiseparated morphisms (\autoref{lem:qs-cancellation}).
+\begin{lemma} \label{lem:cancel-sep}
+	Fix scheme morphisms $\varphi\colon X\to Y$ and $\psi\colon Y\to Z$. If the composite $\psi\circ\varphi$ is separated, then $\varphi$ is also separated.
+\end{lemma}
+\begin{proof}
+	The key to the proof is to draw the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJYIl0sWzEsMCwiWFxcdGltZXNfWVgiXSxbMiwwLCJZIl0sWzIsMSwiWVxcdGltZXNfWlkiXSxbMSwxLCJYXFx0aW1lc19aWCJdLFsyLDMsIlxcRGVsdGFcXHBzaSJdLFswLDEsIlxcRGVsdGFcXHZhcnBoaSJdLFswLDQsIlxcRGVsdGEoXFxwc2lcXHZhcnBoaSkiLDJdLFs0LDNdLFsxLDQsIlxcZGVsdGEiXSxbMSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		X & {X\times_YX} & Y \\
+		& {X\times_ZX} & {Y\times_ZY}
+		\arrow["\Delta\psi", from=1-3, to=2-3]
+		\arrow["\Delta\varphi", from=1-1, to=1-2]
+		\arrow["{\Delta(\psi\varphi)}"', from=1-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow["\delta", from=1-2, to=2-2]
+		\arrow[from=1-2, to=1-3]
+	\end{tikzcd}\]
+	where the right square is the pullback square of \autoref{lem:magic-diagram}. In particular, \autoref{lem:diag-is-local-closed} tells us that $\delta$ is a locally closed embedding. Now, $\Delta(\psi\circ\varphi)$ is a closed embedding because $\psi\circ\varphi$ is separated, so $\Delta(\psi\circ\varphi)(X)$ is a closed subset of $X\times_ZX$, so
+	\[\delta^{-1}(\Delta(\psi\circ\varphi)(X))=\delta^{-1}(\delta(\Delta\varphi(X)))\subseteq X\times_YX\]
+	is also a closed subset by the continuity of $\delta$. However, $\delta$ is the composite of morphisms which are homeomorphisms onto their images, so $\delta$ is a homeomorphism onto its image (to be formal, use the arguments of \autoref{lem:loc-closed-becomes-closed-embed}). Thus,
+	\[\Delta(\psi\circ\varphi)(X)=\delta(\Delta\varphi(X))\subseteq\im\delta\]
+	tells us that $\delta^{-1}(\delta(\Delta\varphi(X)))=\Delta\varphi(X)$ is a closed subset of $X\times_YX$, so $\varphi$ is in fact separated by \autoref{cor:separated-by-diag}.
+\end{proof}
+Cancellation allows us to check that being separated is a reasonable notion for $S$-schemes.
+\begin{corollary} \label{cor:sep-over-sep-is-sep}
+	Let $S$ be a separated scheme. Then an $S$-scheme $X$ is separated over $S$ if and only if $X$ is separated (over $\Spec\ZZ$).
+\end{corollary}
+\begin{proof}
+	Let $\varphi\colon X\to S$ be the promised map. Recall that $\Spec\ZZ$ is final by \autoref{cor:spec-z-final}, so we have unique maps $\tau_S\colon S\to\Spec\ZZ$ and $\tau_X\colon X\to\Spec\ZZ$ which notably satisfy
+	\[\tau_X=\tau_S\circ\varphi\]
+	by the uniqueness of $\tau_X$. Because $S$ is separated, we see $\tau_S$ is separated.
+
+	Now, if $X$ is separated over $S$, then $\varphi$ is separated, so $\tau_X$ is separated because separated morphisms are preserved by composition by \autoref{rem:sep-is-reasonable}; thus, $X$ is separated. Conversely, if $X$ is separated, then $\tau_X$ is separated, so $\varphi$ is separated by \autoref{lem:cancel-sep}; thus, $X$ is separated over $S$.
+\end{proof}
 Here is a more extended example.
 \begin{exe}
-	Glue the affine schemes $\Spec k[x]$ and $\Spec k[y]$ by the isomorphism $\Spec k[x,x^{-1}]\simeq\Spec k[y,y^{-1}]$, which makes a scheme $X$. This scheme is not separated over $\Spec k$.
+	The affine $k$-line with doubled origin is not separated over $\Spec k$.
 \end{exe}
 \begin{proof}
+	We will be a little sketchy here because we'll shortly give a more sophisticated proof of this. Glue the affine schemes $\Spec k[x]$ and $\Spec k[y]$ by the isomorphism $\Spec k[x,x^{-1}]\simeq\Spec k[y,y^{-1}]$, which makes the affine $k$-line with doubled origin $X$.
+
 	We really only have to pay attention to the topological spaces. Note that $X\times_{\Spec k}X$ as a topological space looks like $\AA^2_k$ with a doubled $y$-axis and a doubled $x$-axis and a quadrupled origin; one can check this through by gluing everything. As such, the diagonal map has image consisting of the line $y=x$, with two of the origins. However, the two origins have closure of all four of the origins, so the total image is not closed.
 \end{proof}
 \begin{remark}
 	However, it is true that our scheme is quasiseparated. Namely, we can see somewhat directly that our pre-images are quasicompact.
 \end{remark}
-We close class with a last remark.
-\begin{lemma}
-	Separated morphisms are stable under composition.
-\end{lemma}
-\begin{proof}
-	We stare at diagonal maps very hard. Let $f\colon X\to Y$ and $g\colon Y\to Z$ both separated morphisms. Then we draw the large diagram
-	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJYIl0sWzIsMCwiWSJdLFsxLDAsIlhcXHRpbWVzX1lYIl0sWzEsMSwiWFxcdGltZXNfWlgiXSxbMiwxLCJZXFx0aW1lc19aWSJdLFsxLDQsIlxcRGVsdGEgX2ciXSxbMCwyLCJcXERlbHRhX2YiXSxbMCwzLCJcXERlbHRhX3tnXFxjaXJjIGZ9IiwyXSxbMiwxXSxbMyw0XSxbMiwzXSxbMiw0LCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}
-		X & {X\times_YX} & Y \\
-		& {X\times_ZX} & {Y\times_ZY}
-		\arrow["{\Delta _g}", from=1-3, to=2-3]
-		\arrow["{\Delta_f}", from=1-1, to=1-2]
-		\arrow["{\Delta_{g\circ f}}"', from=1-1, to=2-2]
-		\arrow[from=1-2, to=1-3]
-		\arrow[from=2-2, to=2-3]
-		\arrow[from=1-2, to=2-2]
-		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-2, to=2-3]
-	\end{tikzcd}\]
-	and note that the square is a pullback square. Thus, the map $X\times_YX\to X\times_ZX$ is a closed embedding by pulling it back, so $\Delta_{g\circ f}$ is a closed embedding because it is the composition of two closed embeddings.
-\end{proof}
-\begin{remark}
-	The same diagram shows that if $g\circ f$ is separated implies that $f$ is separated. Indeed, the diagram tells us that the map $X\times_YX\to X\times_ZX$ is locally closed, so the image of $\Delta_f$ is forced to be a closed set in total, by looking purely topologically.
-\end{remark}
-\begin{lemma}
-	Separated morphisms are stable under base change.
-\end{lemma}
-\begin{proof}
-	Let $\pi\colon X\to B$ be our separated morphism, and we have a base extension $\iota\colon B'\to B$. Now we draw our pullback square
-	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJCJyJdLFsxLDEsIkIiXSxbMSwwLCJYIl0sWzAsMCwiWCciXSxbMCwxLCJcXGlvdGEiXSxbMiwxLCJcXHBpIl0sWzMsMF0sWzMsMl0sWzMsMSwiIiwxLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}
-		{X'} & X \\
-		{B'} & B
-		\arrow["\iota", from=2-1, to=2-2]
-		\arrow["\pi", from=1-2, to=2-2]
-		\arrow[from=1-1, to=2-1]
-		\arrow[from=1-1, to=1-2]
-		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
-	\end{tikzcd}\]
-	and track through our diagonal maps.
-\end{proof}
 
 \end{document}
