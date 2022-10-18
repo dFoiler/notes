@@ -168,10 +168,54 @@ Now, if we have a scheme $Y$ over $S$, we might want to pull $Y$ back to a schem
 As an example, if we have $Y=\Spec K[x,y]/\left(y^2-x^3+x\right)$, we can compute that
 \[X\times_SY=\Spec\frac{K'[x,y]}{\left(y^2-x^3+x\right)},\]
 which agrees with our intuition of what base-change should do.
-\begin{example}
-	As another quick example, we can compute $\PP^n_K\times_{\Spec K}\Spec K'=\PP^n_{K'}$. For example, we could cleanly define projective $n$-space over a scheme $S$
-	\[\PP^n_S=\PP^n_{\Spec\ZZ}\times_{\Spec\ZZ}S\]
-\end{example}
+\begin{exe} \label{exe:proj-by-base-change}
+	Given a ring $A$ and a nonnegative integer $n$, the canonical morphism $\ZZ\to A$ makes the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJcXFNwZWMgQSJdLFsxLDEsIlxcU3BlY1xcWloiXSxbMCwxLCJcXFBQXm5fXFxaWiJdLFswLDAsIlxcUFBebl9BIl0sWzMsMF0sWzAsMV0sWzMsMl0sWzIsMV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\PP^n_A} & {\Spec A} \\
+		{\PP^n_\ZZ} & \Spec\ZZ
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	into a pullback square.
+\end{exe}
+\begin{proof}
+	We have to track open covers; let $\pi\colon\Spec A\to\Spec\ZZ$ be the canonical map induced by $\ZZ\to A$ on global sections. Now, define
+	\[X_i\coloneqq\Spec\frac{\ZZ[x_{0/i},\ldots,x_{n/i}]}{(x_{i/i}-1)}\]
+	so that the $X_i$ form an open cover of $\PP^n_\ZZ$ by the usual isomorphisms. Explicitly, we set
+	\[X_{ij}\coloneqq D(x_{j/i})\simeq\Spec\frac{\ZZ[x_{0/i},\ldots,x_{n/i},x_{j/i}^{-1}]}{(x_{i/i}-1)}\]
+	and use isomorphisms $\varphi_{ij}\colon X_{ij}\to X_{ji}$ by the ring maps $x_{k/i}\mapsto x_{k/j}/x_{i/j}$.
+	
+	By the construction of \autoref{lem:keyfibercase}, we can give $\PP^n_\ZZ\times_{\Spec\ZZ}\Spec A$ an affine open cover by using
+	\[X_i\times_{\Spec\ZZ}\Spec A=\Spec\left(\frac{\ZZ[x_{0/i},\ldots,x_{n/i}]}{(x_{i/i}-1)}\otimes_\ZZ A\right)\]
+	by \autoref{lem:affine-fp}, but this ring is canonically isomorphic to $A[x_{0/i},\ldots,x_{n/i}]/(x_{i/i-1})$ by $f\otimes a\mapsto af$.\footnote{One can check that $\ZZ[x]\otimes_\ZZ A\simeq A[x]$ by this isomorphism, where the inverse morphism is by $\sum_{k=0}^na_kx^k\mapsto\sum_{k=0}^na_k\otimes x^k$. Then the quotient follows by the right-exactness of $-\otimes_\ZZ A$.} Thus, we see $\PP^n_\ZZ\times_{\Spec\ZZ}\Spec A$ has an affine open cover by
+	\[Y_i\coloneqq\Spec\frac{A[x_{0/i},\ldots,x_{n/i}]}{(x_{i/i}-1)},\]
+	which are precisely the affine open subschemes covering $\PP^n_A$.
+
+	It remains to check the gluing data. Under the canonical isomorphism $X_i\times_{\Spec\ZZ}\Spec A\simeq Y_i$, we see that the affine open subscheme $X_{ij}\times_{\Spec\ZZ}\Spec A$ goes to
+	\[Y_{ij}\coloneqq D(x_{j/i})\simeq\Spec\frac{A[x_{0/i},\ldots,x_{n/i},x_{j/i}^{-1}]}{(x_{i/i}-1)},\]
+	with the correct gluing data! To see this, we have two steps.
+	\begin{enumerate}
+		\item Note that the canonical projection $X_i\times_{\Spec\ZZ}\Spec A\to X_i$ corresponds to the ring map given by $x_{k/i}\mapsto x_{k/i}\otimes1$, by \autoref{lem:affine-fp}, so computations of \autoref{rem:pre-image-xfs} tell us that this pre-image is $D(x_{j/i}\otimes1)$.
+
+		While we're here, we recall that the isomorphisms $\varphi_{ij}\colon D(x_{j/i})\to D(x_{i/j})$ are given by the ring maps $x_{k/j}\mapsto x_{k/i}/x_{j/i}$. So the corresponding isomorphisms $D(x_{j/i}\otimes1)\to D(x_{i/j}\otimes1)$ are given by $x_{k/j}\otimes1\mapsto x_{k/i}/x_{j/i}\otimes1$.
+
+		\item Next, the canonical isomorphism $Y_i\cong X_i\times_{\Spec\ZZ}\Spec A$ is given by the ring map $a\otimes x_i\mapsto ax_i$, so computations of \autoref{rem:pre-image-xfs} tell us that the pre-image of $D(x_{j/i}\otimes1)$ is just $D(x_{j/i})$, which is what we wanted.
+
+		But further, the corresponding isomorphisms $D(x_{j/i})\to D(x_{i/j})$ from the isomorphisms $D(x_{j/i}\otimes1)\to D(x_{i/j}\otimes1)$ above can be projected back down to see that they are
+		\[x_{k/j}\mapsto x_{k/i}/x_{j/i},\]
+		which is the correct one.
+	\end{enumerate}
+	So indeed, we see that the affine open cover of $\PP^n_\ZZ$ lists naturally to the affine open cover of $\PP^n_A$. This finishes.
+\end{proof}
+The above exercise motivates the following definition.
+\begin{definition}[Projective space]
+	Given a scheme $S$ and a nonnegative integer $n$, we define \textit{projective $n$-space over $S$} to be $\PP^n_S\coloneqq\PP^n_\ZZ\times_{\Spec\ZZ}S$.
+\end{definition}
+Note this definition agrees with our affine case by \autoref{exe:proj-by-base-change}.
+
 This notation is a bit cumbersome, so we will abbreviate it.
 \begin{notation}
 	Fix a morphism $S'\to S$. If $X$ is a scheme over $S$, we might denote the base-change of $X$ to a scheme over $S'$ as $X_{S'}=X\times_SS'$.

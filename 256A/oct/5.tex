@@ -130,33 +130,151 @@ We can thus see that $X$ and $Y$ are birationally equivalent if and only if $K(X
 	More generally, the normalization map is birational when our scheme $X$ has finite type over $k$.
 \end{remark}
 
-\subsection{Proper Morphisms}
-Before defining proper, we should get some intuition from universally closed maps.
-\begin{definition}
-	A scheme morphism $f\colon X\to Y$ is \textit{closed} if and only if it's a closed map of topological spaces.
+\subsection{Universally Closed Morphisms}
+Before we define proper morphisms, we will define the notion of universally closed. Here is a starting definition.
+\begin{definition}[Closed]
+	A scheme morphism $\varphi\colon X\to Y$ is \textit{closed} if and only if it's a closed map of topological spaces.
 \end{definition}
+\begin{example}
+	Integral morphisms are closed by \autoref{lem:int-is-closed}.
+\end{example}
+\begin{example} \label{ex:closed-emb-is-closed}
+	Closed embeddings $\varphi\colon X\to Y$ are closed: note $\varphi$ is a homeomorphism onto its image $\varphi(X)\subseteq Y$, and $\varphi(X)$ is closed, so any closed subset $V\subseteq X$ has $\varphi(V)$ a closed subset of $\varphi(X)$ and thus closed in $Y$ because $\varphi(X)\subseteq Y$ is closed.
+\end{example}
+\begin{example} \label{ex:iso-is-closed-map}
+	Isomorphisms are closed because they are homeomorphisms on the level of topological spaces.
+\end{example}
+The issue here is that closed morphisms are not necessarily preserved by base change. To fix this, we have the following definition.
 \begin{definition}[Universally closed]
-	A scheme morphism $f\colon X\to Y$ is \textit{universally closed} if and only if $f$ remains a closed under any base change.
+	A scheme morphism $\varphi\colon X\to Y$ is \textit{universally closed} if and only if $\varphi$ remains a closed under any base change.
 \end{definition}
-\begin{example}
-	Integral morphisms are universally closed. Namely, integral morphisms are closed embeddings and stable under base change and so will stay integral and hence closed embeddings.
+\begin{example} \label{ex:integral-is-univ-closed}
+	Integral morphisms are universally closed. Indeed, integral morphisms are closed by \autoref{lem:int-is-closed}, and integral morphisms are preserved by base change by \autoref{lem:integral-base-change}, so any base-change of an integral morphism is still closed.
 \end{example}
-\begin{example}
-	Closed embeddings are also preserved by base change and hence universally closed.
+\begin{example} \label{ex:closed-emb-is-univ-closed}
+	Closed embeddings are universally closed. Indeed, closed embeddings are closed by \autoref{ex:closed-emb-is-closed}, and closed embeddings are preserved by base change by \autoref{lem:closed-embed-base-change}, so any base-change of a closed embedding is still closed.
 \end{example}
-And here is our definition.
+Let's give the usual checks.
+\begin{lemma} \label{lem:closed-morphism-comp}
+	The class of closed morphisms is preserved by composition.
+\end{lemma}
+\begin{proof}
+	Fix closed morphisms $\varphi\colon X\to Y$ and $\psi\colon Y\to Z$. Then any closed subset $C\subseteq X$ makes $\varphi(C)\subseteq Y$ closed and therefore $\psi(\varphi(C))=(\psi\circ\varphi)(C)$ closed. This finishes.
+\end{proof}
+\begin{lemma} \label{lem:univ-closed-comp}
+	The class of universally closed morphisms is preserved by composition.
+\end{lemma}
+\begin{proof}
+	Fix universally closed morphisms $\varphi\colon X\to Y$ and $\psi\colon Y\to Z$. We need to show that $\psi\circ\varphi$ is universally closed. Well, fix some scheme morphism $\pi\colon S\to Z$ and build the base-change diagram
+	% https://q.uiver.app/?q=WzAsNixbMiwxLCJaIl0sWzAsMSwiWCJdLFsxLDEsIlkiXSxbMiwwLCJTIl0sWzEsMCwiWVxcdGltZXNfWlMiXSxbMCwwLCJYXFx0aW1lc19ZKFlcXHRpbWVzX1pTKSJdLFsxLDIsIlxcdmFycGhpIl0sWzIsMCwiXFxwc2kiXSxbMywwLCJcXHBpIl0sWzUsMV0sWzQsMl0sWzUsNCwiXFx2YXJwaGknIl0sWzQsMywiXFxwc2knIl0sWzQsMCwiIiwwLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV0sWzUsMiwiIiwwLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{X\times_Y(Y\times_ZS)} & {Y\times_ZS} & S \\
+		X & Y & Z
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow["\psi", from=2-2, to=2-3]
+		\arrow["\pi", from=1-3, to=2-3]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow["{\varphi'}", from=1-1, to=1-2]
+		\arrow["{\psi'}", from=1-2, to=1-3]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-2, to=2-3]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+	\end{tikzcd}\]
+	so that we want to show $\psi'\circ\varphi'$ is a closed embedding: notably, each square is a pullback square, so the total square is a pullback square by \autoref{lem:smalls-to-big-pullback}, so $\psi'\circ\varphi'$ is indeed the base-change of $\psi\circ\varphi$.
+
+	Well, $\psi'$ and $\varphi'$ are closed embeddings because closed embeddings are preserved by base change by \autoref{lem:closed-embed-base-change}, so $\psi'\circ\varphi'$ is a closed embedding because closed embeddings are preserved by composition by \autoref{cor:closed-embed-compose}.
+\end{proof}
+\begin{lemma} \label{lem:univ-closed-base-change}
+	The class of universally closed morphisms is preserved by base change.
+\end{lemma}
+\begin{proof}
+	Fix a pullback square
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJYIl0sWzEsMSwiWSJdLFswLDAsIlciXSxbMSwwLCJaIl0sWzIsMywiXFxwaV9aIl0sWzAsMSwiXFxwc2lfWCJdLFszLDEsIlxccHNpX1oiXSxbMiwwLCJcXHBpX1giXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		W & Z \\
+		X & Y
+		\arrow["{\pi_Z}", from=1-1, to=1-2]
+		\arrow["{\psi_X}", from=2-1, to=2-2]
+		\arrow["{\psi_Z}", from=1-2, to=2-2]
+		\arrow["{\pi_X}", from=1-1, to=2-1]
+	\end{tikzcd}\]
+	such that $\psi_X$ is universally closed, and we want to show that $\pi_Y$ is also universally closed. Well, pick some morphism $\pi'\colon S\to Z$ and build the pullback square
+	% https://q.uiver.app/?q=WzAsNixbMCwyLCJYIl0sWzEsMiwiWSJdLFswLDEsIlciXSxbMSwxLCJaIl0sWzEsMCwiUyJdLFswLDAsIldcXHRpbWVzX1pTIl0sWzIsMywiXFxwaV9aIl0sWzAsMSwiXFxwc2lfWCJdLFszLDEsIlxccHNpX1oiXSxbMiwwLCJcXHBpX1giXSxbNCwzLCJcXHBpJyJdLFs1LDQsIlxccGlfWiciXSxbNSwyLCJcXHBpJyJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{W\times_ZS} & S \\
+		W & Z \\
+		X & Y
+		\arrow["{\pi_Z}", from=2-1, to=2-2]
+		\arrow["{\psi_X}", from=3-1, to=3-2]
+		\arrow["{\psi_Z}", from=2-2, to=3-2]
+		\arrow["{\pi_X}", from=2-1, to=3-1]
+		\arrow["{\pi'}", from=1-2, to=2-2]
+		\arrow["{\pi_Z'}", from=1-1, to=1-2]
+		\arrow["{\pi'}", from=1-1, to=2-1]
+	\end{tikzcd}\]
+	so that we want to show $\pi_Z'$ is also a closed map. Well, the bottom square is a pullback by hypothesis, and the top square is a pullback by construction, so the big rectangle is a pullback by \autoref{lem:smalls-to-big-pullback}. Thus, $\pi_Z'$ is a closed map because $\psi_X$ is closed.
+\end{proof}
+\begin{lemma} \label{lem:closed-is-local-target}
+	Fix a scheme morphism $\varphi\colon X\to Y$. Given an open cover $\{U_\alpha\}_{\alpha\in\lambda}$ of $Y$ such that the restrictions $\varphi|_{\varphi^{-1}U_\alpha}\colon\varphi^{-1}U_\alpha\to U_\alpha$ are all closed, the morphism $\varphi$ is also closed.
+\end{lemma}
+\begin{proof}
+	Set $\varphi_\alpha\coloneqq\varphi|_{\varphi^{-1}U_\alpha}$, for brevity. Fix a closed set $C\subseteq X$, and we want to show that $\varphi(C)$ is also closed.
+
+	Well, for any $\alpha$, we know $\varphi_\alpha\colon\varphi^{-1}U_\alpha\to U_\alpha$ is closed, so
+	\[\varphi_\alpha\left(\varphi^{-1}U_\alpha\cap C\right)=U_\alpha\cap\varphi(C)\]
+	is also closed in $U_\alpha$. Thus, $U_\alpha\setminus\varphi(C)$ is open in $U_\alpha$ and therefore open in $Y$ for any $\alpha$, so
+	\[\varphi(C)=\bigcup_{\alpha\in\lambda}(U_\alpha\cap\varphi(C))\]
+	is a union of open subsets and therefore open. This finishes.
+\end{proof}
+\begin{lemma} \label{lem:univ-closed-is-local-target}
+	The class of universally closed morphisms is local on the target.
+\end{lemma}
+\begin{proof}
+	Fix a morphism $\varphi\colon X\to Y$. In one direction, suppose $\varphi$ is universally closed, and we want to show that $\varphi|_{\varphi^{-1}U}$ is universally closed for any open subscheme $U\subseteq Y$. Well, by \autoref{lem:open-fp} implies that $\varphi|_{\varphi^{-1}U}$ is a base-change of $\varphi$ and is therefore universally closed by \autoref{lem:univ-closed-base-change}.
+
+	In the other direction, give $Y$ an affine open cover $\{Y_\alpha\}_{\alpha\in\lambda}$ such that the restrictions $\varphi_\alpha\colon X_\alpha\colon Y_\alpha$ are all universally closed, where $X_\alpha\coloneqq\varphi^{-1}Y_\alpha$. We want to show that $\varphi$ is universally closed. Well, draw a pullback square
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJYIl0sWzEsMSwiWSJdLFswLDAsIlciXSxbMSwwLCJaIl0sWzIsMywiXFx2YXJwaGknIl0sWzAsMSwiXFx2YXJwaGkiXSxbMywxLCJcXHBpIl0sWzIsMCwiXFxwaSciXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		W & Z \\
+		X & Y
+		\arrow["{\varphi'}", from=1-1, to=1-2]
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow["\pi", from=1-2, to=2-2]
+		\arrow["{\pi'}", from=1-1, to=2-1]
+	\end{tikzcd}\]
+	so that we want to show $\varphi'\colon W\to Z$ is closed. For this, we define $\delta\coloneqq\pi\circ\varphi'=\varphi\circ\pi'$, and we define $Z_\alpha\coloneqq\pi^{-1}Y_\alpha$ and $W_\alpha\coloneqq\delta^{-1}Y_\alpha$ so that \autoref{lem:fp-open-cover-base} tells us
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJYX1xcYWxwaGEiXSxbMSwxLCJZX1xcYWxwaGEiXSxbMCwwLCJXX1xcYWxwaGEiXSxbMSwwLCJaX1xcYWxwaGEiXSxbMiwzLCJcXHZhcnBoaSd8X3tXX1xcYWxwaGF9Il0sWzAsMSwiXFx2YXJwaGlfXFxhbHBoYSJdLFszLDEsIlxccGl8X3taX1xcYWxwaGF9Il0sWzIsMCwiXFxwaSd8X3tXX1xcYWxwaGF9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{W_\alpha} & {Z_\alpha} \\
+		{X_\alpha} & {Y_\alpha}
+		\arrow["{\varphi'|_{W_\alpha}}", from=1-1, to=1-2]
+		\arrow["{\varphi_\alpha}", from=2-1, to=2-2]
+		\arrow["{\pi|_{Z_\alpha}}", from=1-2, to=2-2]
+		\arrow["{\pi'|_{W_\alpha}}", from=1-1, to=2-1]
+	\end{tikzcd}\]
+	is also a pullback square. Now, each $\varphi_\alpha$ is universally closed, so each $\varphi'|_{W_\alpha}$ is closed (it's a base-change), so $\varphi'$ is also closed by \autoref{lem:closed-is-local-target}. This finishes the proof.
+\end{proof}
+
+\subsection{Proper Morphisms}
+We are now ready to define proper morphisms.
 \begin{definition}[Proper]
 	A scheme morphism $f\colon X\to Y$ is \textit{proper} if and only if $f$ is separated, of finite type, and universally closed.
 \end{definition}
-\begin{remark}
-	One can check that being integral implies being separated and universally closed.
-\end{remark}
-\begin{example}
-	Finite morphisms are proper. Namely, affine implies separated, finite type is clear, and integral implies universally closed.
+Here are the standard checks.
+\begin{lemma} \label{lem:proper-is-reasonable}
+	The class of proper morphisms is preserved by composition, preserved by base change, and affine-local on the target.
+\end{lemma}
+\begin{proof}
+	Being separated has all these adjectives by \autoref{rem:sep-is-reasonable}, and being finite type has all these adjectives by \autoref{cor:ft-is-reasonable}. Lastly, being universally closed is preserved by composition by \autoref{lem:univ-closed-comp}, preserved by composition by \autoref{lem:univ-closed-base-change}, and local on the target by \autoref{lem:univ-closed-is-local-target}. So we are done by \autoref{lem:class-intersection-is-reasonable}.
+\end{proof}
+\begin{example} \label{ex:finite-is-proper}
+	Finite morphisms are proper.
+	\begin{itemize}
+		\item Finite morphisms are affine and therefore separated by \autoref{ex:affine-is-sep}.
+		\item They're of finite type by \autoref{ex:finite-is-ft}.
+		\item Finite morphisms are integral by \autoref{ex:finite-is-integral} and therefore universally closed by \autoref{ex:integral-is-univ-closed}.
+	\end{itemize}
+	For example, closed embeddings are proper by \autoref{lem:closed-emb-is-finite}, as are isomorphisms by (say) \autoref{ex:iso-is-closed}.
 \end{example}
-\begin{remark}
-	As usual, proper morphisms are preserved by composition, base change, and is affine local on the target.
-\end{remark}
-
 
 \end{document}

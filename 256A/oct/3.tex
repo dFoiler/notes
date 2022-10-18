@@ -10,7 +10,7 @@ It's spooky season.
 
 \subsection{The Cancellation Theorem}
 We've been speaking a lot about diagonal morphisms and their various classes, so it will be useful to pick up the following piece of general theory.
-\begin{theorem}
+\begin{theorem} \label{thm:cancel}
 	Fix a class $P$ of morphisms which is preserved by composition and base change. Further, fix objects $X,Y,B$ with morphisms $\alpha\colon X\to B$ and $\beta\colon Y\to B$ and $\varphi\colon X\to Y$ making the diagram
 	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJYIl0sWzIsMCwiWSJdLFsxLDEsIkIiXSxbMCwxLCJcXHZhcnBoaSJdLFswLDIsIlxcYWxwaGEiLDJdLFsxLDIsIlxcYmV0YSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
@@ -30,20 +30,20 @@ We've been speaking a lot about diagonal morphisms and their various classes, so
 \end{example}
 
 \subsection{Varieties}
-We are finally ready to define varieties.
+We are almost ready to define varieties. We note that projective space is separated.
 \begin{proposition} \label{prop:proj-is-sep}
 	The canonical map $\PP^n_A\to\Spec A$ is separated.
 \end{proposition}
-We will prove this momentarily, but let's explain why we should care first.
-\begin{example}
-	Because $\Spec A$ is separated, we see that $\PP^n_A$ is also separated by post-composing to see $\PP^n_A\to\Spec\ZZ$ is separated.
-\end{example}
+We will prove this momentarily, but let's explain why we care.
+\begin{remark}
+	By \autoref{cor:sep-over-sep-is-sep}, being separated as an $A$-scheme is equivalent to being separated as a scheme, so \autoref{prop:proj-is-sep} is just saying that $\PP^n_A$ is a separated scheme.
+\end{remark}
 \begin{example} \label{ex:quasiproj-is-sep}
-	Quasiprojective schemes $X$ are those with a closed embedding into $\PP^n_A$. Thus, these are also separated $A$-schemes.
+	Quasiprojective schemes $X$ are those with a locally closed embedding $X\into\PP^n_A$. However, locally closed embeddings are separated by \autoref{ex:mono-is-sep}, so $X$ is separated as a $\PP^n_A$-scheme and therefore separated by \autoref{cor:sep-over-sep-is-sep} and \autoref{prop:proj-is-sep}.
 \end{example}
 These notions let us define a variety.
 \begin{definition}[Variety]
-	Fix a field $k$. A \textit{variety} over $k$ is a reduced, separated $k$-scheme of finite type.
+	Fix a field $k$. A \textit{variety} over $k$ (or ``$k$-variety'') is a reduced, separated $k$-scheme of finite type.
 \end{definition}
 \begin{remark}
 	By \autoref{cor:sep-over-sep-is-sep}, there is no ambiguity calling a $k$-scheme ``separated'' because being separated over $\Spec k$ and being separated over $\Spec\ZZ$ are equivalent.
@@ -52,24 +52,67 @@ These notions let us define a variety.
 	\autoref{ex:quasiproj-is-sep} tells us that reduced quasiprojective schemes are varieties. In particular, all our usual affine and projective varieties are indeed varieties.
 \end{example}
 Before continuing, we pick up the following result.
-\begin{proposition}
-	Fix a scheme morphism $f\colon X\to Y$ where $Y=\Spec B$ is affine. Then the following are equivalent.
+\begin{lemma} \label{lem:sep-by-affine-intersection}
+	Fix a scheme morphism $\varphi\colon X\to Y$ where $Y$ is affine. Then the following are equivalent.
 	\begin{listalph}
-		\item $f$ is separated.
+		\item $\varphi$ is separated.
 		\item Any affine open subset $U_1,U_2\subseteq X$ has $U_1\cap U_2$ affine, and the canonical map
-		\[\OO_X(U_1)\otimes_B\OO_X(U_2)\to\OO_X(U_1\cap U_2)\]
+		\[\OO_X(U_1)\otimes_{\OO_Y(Y)}\OO_X(U_2)\to\OO_X(U_1\cap U_2)\]
 		is surjective.
-		\item There is an open affine cover $\{U_\alpha\}_{\alpha\in\lambda}$ such that all the intersections $U_\alpha\cap U_\beta$ are affine, and the canonical map
-		\[\OO_X(U_1)\otimes_B\OO_X(U_2)\to\OO_X(U_1\cap U_2)\]
+		\item There is an open affine cover $\{U_\alpha\}_{\alpha\in\lambda}$ of $X$ such that all the intersections $U_\alpha\cap U_\beta$ are affine, and the canonical map
+		\[\OO_X(U_\alpha)\otimes_{\OO_Y(Y)}\OO_X(U_\beta)\to\OO_X(U_\alpha\cap U_\beta)\]
 		is surjective.
 	\end{listalph}
-\end{proposition}
+\end{lemma}
 \begin{proof}
-	Set $\Delta\colon X\to X\times_YX$ to be the diagonal map. Now, recall $U_\alpha\cap U_\beta=\Delta^{-1}(U_\alpha\times_Y\alpha_\beta)$.
+	Quickly, we note that the canonical maps $\OO_X(U_1)\otimes_{\OO_Y(Y)}\OO_X(U_2)\to\OO_X(U_1\cap U_2)$ are being induced by restriction.
 
-	Of course (b) implies (c). We show the difficult part, which is showing that (a) and (c) are equivalent. Notably, $f$ is separated if and only if the canonical map
-	\[U_\alpha\cap U_\beta\to U_\alpha\times_YU_\beta\]
-	are closed embeddings for each $\alpha$ and $\beta$. Now, $U_\alpha\cap U_\beta$ is a closed subscheme of $\Spec(\OO_X(U_\alpha)\otimes_Y\OO_X(U_\beta))$ and therefore affine. Continuing, we are surjective on the level of stalks, so this is equivalent to asking for the full morphism to be surjective here.\todo{What?}
+	Now, for brevity, set $\Delta\colon X\to X\times_YX$ to be the diagonal map, and set $A\coloneqq\OO_Y(Y)$. Quickly, note that any two affine open subschemes $U_1,U_2\subseteq X$ will have
+	\[U_1\cap U_2=\Delta^{-1}(U_1\times_YU_2)\simeq\Delta^{-1}\big(\Spec(\OO_X(U_1)\times_A\OO_X(U_2))\big)\]
+	by \autoref{lem:pre-image-diagonal} and \autoref{lem:affine-fp}. We will use this fact a few times.
+	\begin{itemize}
+		\item We show (a) implies (b); because $\varphi$ is separated, $\Delta$ is a closed embedding. Well, pick up two affine open subschemes $U_1,U_2\subseteq X$. As above, we see
+		\[U_1\cap U_2=\Delta^{-1}(U_1\times_YU_2)\simeq\Delta^{-1}\big(\Spec(\OO_X(U_1)\times_A\OO_X(U_2))\big).\]
+		Because $\Delta$ is a closed embedding, $\Delta$ is affine by \autoref{lem:closed-emb-is-finite}, so $U_1\cap U_2$ is fact affine.
+
+		Thus, because $\Delta$ is a closed embedding, we see that its restriction
+		\[\Delta|_{U_1\cap U_2}\colon U_1\cap U_2\to\Spec(\OO_X(U_1)\otimes_A\OO_X(U_2))\]
+		is also a closed embedding by \autoref{cor:closed-emb-affine-local}. Because $U_1\cap U_2$ is affine, \autoref{prop:affineclosedsubschemes} kicks in to tell us that the induced map
+		\begin{equation}
+			\OO_X(U_1)\otimes_A\OO_X(U_2)\to\OO_X(U_1\cap U_2) \label{eq:the-sep-surjection}
+		\end{equation}
+		is surjective; indeed, we see that this is the right diagram by tracking $\Delta$ in the following diagrams passed through \autoref{thm:geoisoppalg}.
+		% https://q.uiver.app/?q=WzAsMTAsWzEsMiwiVV8yIl0sWzIsMiwiWSJdLFsyLDEsIlVfMSJdLFsxLDEsIlVfMVxcdGltZXNfWVVfMiJdLFswLDAsIlVfMVxcY2FwIFVfMiJdLFszLDAsIlxcT09fWChVXzFcXGNhcCBVXzIpIl0sWzQsMSwiXFxPT19YKFVfMSlcXG90aW1lc19BXFxPT19YKFVfMikiXSxbNSwxLCJcXE9PX1goVV8xKSJdLFs0LDIsIlxcT09fWChVXzIpIl0sWzUsMiwiQSJdLFs0LDMsIlxcRGVsdGEiLDFdLFs0LDIsIiIsMSx7ImN1cnZlIjotMiwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNCwwLCIiLDEseyJjdXJ2ZSI6Miwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMywwLCJcXHBpXzIiXSxbMCwxLCJcXHZhcnBoaSJdLFsyLDEsIlxcdmFycGhpIl0sWzMsMiwiXFxwaV8xIiwyXSxbOSw3XSxbOSw4XSxbOCw2XSxbNyw2XSxbNiw1XSxbNyw1LCJcXG9we3Jlc30iLDIseyJjdXJ2ZSI6Mn1dLFs4LDUsIlxcb3B7cmVzfSIsMCx7ImN1cnZlIjotMn1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}[column sep=small]
+				{U_1\cap U_2} &&& {\OO_X(U_1\cap U_2)} \\
+				& {U_1\times_YU_2} & {U_1} && {\OO_X(U_1)\otimes_A\OO_X(U_2)} & {\OO_X(U_1)} \\
+				& {U_2} & Y && {\OO_X(U_2)} & A
+				\arrow["\Delta"{description}, from=1-1, to=2-2]
+				\arrow[curve={height=-12pt}, hook, from=1-1, to=2-3]
+				\arrow[curve={height=12pt}, hook, from=1-1, to=3-2]
+				\arrow["{\pi_2}", from=2-2, to=3-2]
+				\arrow["\varphi", from=3-2, to=3-3]
+				\arrow["\varphi", from=2-3, to=3-3]
+				\arrow["{\pi_1}"', from=2-2, to=2-3]
+				\arrow[from=3-6, to=2-6]
+				\arrow[from=3-6, to=3-5]
+				\arrow[from=3-5, to=2-5]
+				\arrow[from=2-6, to=2-5]
+				\arrow[from=2-5, to=1-4]
+				\arrow["{\op{res}}"', curve={height=12pt}, from=2-6, to=1-4]
+				\arrow["{\op{res}}", curve={height=-12pt}, from=3-5, to=1-4]
+			\end{tikzcd} \label{eq:use-sep-surjection}
+		\end{equation}
+		Notably, the maps $\OO_X(U_i)\to\OO_X(U_1\cap U_2)$ are indeed restrictions by how the open embedding $U_1\cap U_2\into U_1$ is defined in \autoref{ex:open-embed-morphism}. This is what we wanted.
+		\item There is nothing to say to show (b) implies (c): just give $X$ any affine open cover.
+		\item We show (c) implies (a). Fix $\{U_\alpha\}_{\alpha\in\lambda}$ as the given affine open cover of $X$. Again, noting
+		\[U_\alpha\cap U_\beta=\Delta^{-1}(U_\alpha\times_YU_\beta)\simeq\Delta^{-1}\big(\Spec(\OO_X(U_\alpha)\times_A\OO_X(U_\beta))\big),\]
+		we see that using \autoref{eq:use-sep-surjection} again tells us that $\Delta|_{U_\alpha\cap U_\beta}\colon U_\alpha\cap U_\beta\to\Spec(\OO_X(U_\alpha)\times_A\OO_X(U_\beta))$ is a morphism of affine schemes associated by \autoref{thm:geoisoppalg} to the surjection
+		\[\OO_X(U_\alpha)\otimes_{\OO_Y(Y)}\OO_X(U_\beta)\to\OO_X(U_\alpha\cap U_\beta).\]
+		Thus, $\Delta|_{U_\alpha\cap U_\beta}$ is a closed embedding for any $\alpha,\beta\in\lambda$ by \autoref{prop:affineclosedsubschemes}, so $\Delta$ is a closed embedding by \autoref{cor:closed-emb-affine-local}. Namely, the $U_1\times_YU_2$ cover $X\times_YX$ by two applications of \autoref{cor:sub-fp}.
+		\qedhere
+	\end{itemize}
 \end{proof}
 \begin{remark}
 	This is intended to be similar to the way we think about quasiseparated morphisms. However, having affine intersections is not good enough to be separated, as we saw with the affine line with doubled origin.
@@ -77,14 +120,47 @@ Before continuing, we pick up the following result.
 We are now ready to prove \autoref{prop:proj-is-sep}.
 \begin{proof}[Proof of \autoref{prop:proj-is-sep}]
 	We choose the usual affine open cover of $\PP^n_A$. Namely, set
-	\[U_i\coloneqq\Spec\frac{A[x_{0/i},\ldots,x_{n/i}]}{(x_{i/i}-1)}.\]
-	Here, we see that these intersections are $U_i\times_AU_j$, which are affine schemes, and we can compute that $U_i\cap U_j$ as a subset of $U_i$ is
-	\[U_i\cap U_j=\Spec\frac{A[x_{0/i},\ldots,x_{n/i},x_{j/i}^{-1}]}{(x_{i/i}-1)}.\]
-	Now, the map $U_i\cap U_j\to U_i\times_AU_j$ corresponds to the ring map sending $x_{k/i}\mapsto x_{k/i}$ and $x_{k/j}\mapsto x_{k/i}\cdot x_{j/i}^{-1}$, which we see is surjective because look at it.
+	\[U_i\coloneqq\Spec\frac{A[x_{0/i},\ldots,x_{n/i}]}{(x_{i/i}-1)}\]
+	for each $i\in\{0,1,\ldots,n\}$. By the gluing to get $\PP^n_A$, our intersections are
+	\[U_i\cap U_j\simeq\Spec\frac{A[x_{0/i},\ldots,x_{n/i},x_{j/i}^{-1}]}{(x_{i/i}-1)}\simeq\Spec\frac{A[x_{0/j},\ldots,x_{n/j},x_{i/j}^{-1}]}{(x_{j/j}-1)},\]
+	which are all affine, where the isomorphism on the right is given by $x_{k/i}\mapsto x_{k/j}/x_{i/j}$.
+	
+	To finish the application of \autoref{lem:sep-by-affine-intersection}, we need to show that the maps
+	\[\arraycolsep=1.4pt\begin{array}{clccc}
+		\OO_X(U_1) &\otimes_A& \OO_X(U_2) &\to& \OO_X(U_1\cap U_2) \\
+		f_1 &\otimes& f_2 &\mapsto& f_1|_{U_1\cap U_2}\cdot f_2|_{U_1\cap U_2}
+	\end{array}\]
+	are surjective. Well, unwrapping our gluing isomorphisms, it suffices to show that the map
+	\[\arraycolsep=1.4pt\begin{array}{clccc}
+		\frac{A[x_{0/i},\ldots,x_{n/i}]}{(x_{i/i}-1)} &\otimes_A& frac{A[x_{0/j},\ldots,x_{n/j}]}{(x_{j/j}-1)} &\to& \frac{A[x_{0/i},\ldots,x_{n/i},x_{j/i}^{-1}]}{(x_{i/i}-1)} \\
+		x_{k/i} &\otimes& x_{\ell/j} &\mapsto& x_{k/i}x_{\ell/i}/x_{j/i}
+	\end{array}\]
+	which is indeed surjective because $x_{k/i}\otimes1\mapsto x_{k/i}$ and $1\otimes x_{i/j}\mapsto x_{i/i}/x_{j/i}=1/x_{j/i}$ has hit all the needed generators of $\OO_X(U_1\cap U_2)$, so the total map must be surjective.
 \end{proof}
-\begin{remark}
-	Given a $k$-morphism $f\colon X\to Y$ of $k$-varieties, we immediately get that $f$ is separated and of finite type. It is separated by \autoref{lem:cancel-sep}, and it is of finite type because the diagonal map $\Delta_Y\colon Y\to Y\times_kY$ is given to be a closed embedding lifting a morphism of finite type, which makes us finite type immediately. The point here is that focusing on just varieties is good.
-\end{remark}
+We close our discussion here by noting that morphisms of $k$-varieties get some adjectives for free by \autoref{thm:cancel}.
+\begin{lemma}
+	A $k$-morphism of $k$-varieties is separated and of finite type.
+\end{lemma}
+\begin{proof}
+	Fix a $k$-morphism $\varphi\colon X\to Y$ of $k$-varieties, and let $\alpha\colon X\to\Spec k$ and $\beta\colon Y\to\Spec k$ be the canonical morphisms.
+	
+	Because $\varphi$ is a $k$-morphism, the diagram
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJYIl0sWzIsMCwiWSJdLFsxLDEsIlxcU3BlYyBrIl0sWzAsMSwiXFx2YXJwaGkiXSxbMCwyLCJcXGFscGhhIiwyXSxbMSwyLCJcXGJldGEiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		X && Y \\
+		& {\Spec k}
+		\arrow["\varphi", from=1-1, to=1-3]
+		\arrow["\alpha"', from=1-1, to=2-2]
+		\arrow["\beta", from=1-3, to=2-2]
+	\end{tikzcd}\]
+	commutes. Here are our checks.
+	\begin{itemize}
+		\item Because $\beta=\alpha\circ\varphi$ is separated, \autoref{lem:cancel-sep} tells us that $\varphi$ is separated.
+		\item Similarly, \autoref{lem:cancel-locally-ft} tells us that $\varphi$ is locally of finite type because $\varphi$ is.
+		\item Because $\alpha$ is quasicompact (it's of finite type), and the diagonal morphism $\Delta\beta$ is quasicompact (it's a closed embedding by definition and thus quasicompact by \autoref{ex:closed-is-qc}), we see $\varphi$ is quasicompact by \autoref{thm:cancel}.
+		\qedhere
+	\end{itemize}
+\end{proof}
 
 \subsection{Rational Maps}
 For this subsection, we let $X$ be a reduced scheme and $Y$ a separated scheme. One can remove this assumption, but it creates problems.

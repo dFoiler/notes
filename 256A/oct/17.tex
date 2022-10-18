@@ -1,0 +1,107 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 17}
+
+Welcome back. Today we talk about line bundles, many times.
+
+\subsection{Quasicoherent Sheaves from \texorpdfstring{$\mathrm{Proj}$}{\textrm{Proj}}}
+We take a moment to remember the $\op{Proj}$ construction. Fix a $\ZZ_{\ge0}$-graded ring $S$, and recall that we had
+\[\op{Proj}S\coloneqq\{\mf p\in\Spec S:\mf p\not\supseteq S_+\}.\]
+We want to create ``graded'' quasicoherent sheaves from $\ZZ$-graded modules.
+\begin{definition}[Graded module]
+	Fix a $\ZZ$-graded ring $S$. Then a graded $S$-module is an $S$-module $M=\bigoplus_{d\in\ZZ}M_d$ such that $S_d\cdot M_e\subseteq M_{d+e}$ for any $d,e\in\ZZ$.
+\end{definition}
+Of course, $\ZZ_{\ge0}$-graded rings are also $\ZZ$-graded rings, so we have also defined graded modules in the cases we care about. Notably, we want to allow our modules to be $\ZZ$-graded for twisting reasons.
+
+To define our quasicoherent sheaf $\mc M$ on $S$, we imitate the construction from $\Proj$. In other words, we will define
+\[\widetilde M(D_+(f))\coloneqq(M_f)_0\]
+for any homogeneous $f\in S_+$. The usual restriction maps $\OO_{\Proj S}(D_+(f))\to\OO_{\Proj S}(D_+(g))$ whenever $D_+(g)\subseteq D_+(f)$ give the restriction maps $M_f\to M_g$ and hence maps $(M_f)_0\to(M_g)_0$.
+\begin{remark}
+	One can then check that $\widetilde M$ is a quasicoherent sheaf and that $\widetilde M_\mf p=(M_\mf p)_0$.
+\end{remark}
+\begin{exe} \label{exe:twisting-line-bundle}
+	Take $X\coloneqq\PP^n_k$. We show that $\OO_X(m)$ is $\widetilde{S(m)}$, where $S(m)$ is the ring $S$ twisted by $m\in\ZZ$.
+\end{exe}
+\begin{proof}
+	We check what happens on the affine open cover. Namely, set $\PP^n_k=\Proj k[x_0,\ldots,x_n]$ with $U_i\coloneqq D_+(x_i)$, so we can compute
+	\[(S(m)_{x_i})_0=\left\{\frac f{x_i^k}:\deg f=k+m\right\}.\]
+	Notably, we see $\widetilde{S(m)}|_{U_i}\cong\OO_{U_i}=\Spec k[x_0/x_i,\ldots,x_n/x_i]$ by taking some $f/x_i^k$ above to $f/x_i^{k+m}$. Notably we are being assured that $\widetilde{S(m)}$ is a line bundle here.
+
+	Now we check the gluing data. Namely, for some $f/(x_i^kx_j^\ell)$ in $(S(m)_{x_ix_j})$ in $\widetilde S(m)(U_i\cap U_j)$, this gets sent to $f/(x_i^{k+m}x_j^\ell)$ when looking in $U_i$ but sent to $f/(x_i^kx_j^{k+\ell})$ over in $U_j$. Thus, our gluing data must be sending $f/(x_i^{k+m}x_j^\ell)$ over in $U_i$ through to $(x_i/x_j)^m$, which is what we wanted.
+\end{proof}
+More generally, we have the following.
+\begin{proposition}
+	Fix a $\ZZ_{\ge0}$-graded ring $S$. If $S$ is generated as an $S_0$-algebra by elements of $S_1$, then $\OO_{\Proj S}(m)\coloneqq\widetilde{S(m)}$ is a line bundle on $\Proj S$.
+\end{proposition}
+\begin{proof}
+	The proof of \autoref{exe:twisting-line-bundle} goes through entirely, where general elements of $S_1$ will play the role of the elements of $x_i$.
+\end{proof}
+
+\subsection{\v Cech Cohomology}
+Fix a scheme $X$ and a line bundle $\mc L$ on $X$. Give $X$ an open cover $\{U_\alpha\}_{\alpha\in\lambda}$ such that we are provided isomorphisms
+\[\varphi_i\colon\mc L|_{U_i}\cong\OO_{U_i}.\]
+In total, we see that we have isomorphisms
+\begin{align*}
+	\OO_{U_i\cap U_j} &= \OO_{U_i}|_{U_j} \\
+	&\stackrel{\varphi_i^{-1}}\cong \mc L|_{U_i}|_{U_i\cap U_j} \\
+	&= \mc L|_{U_j}|_{U_i\cap U_j} \\
+	&\stackrel{\varphi_j}\cong \mc O_{U_j}|_{U_i\cap U_j} \\
+	&= \OO_{U_i\cap U_j}.
+\end{align*}
+Thus, we see that a line bundle is providing some isomorphisms $\varphi_i$ as well as some isomorphisms $\varphi_{ji}\colon\OO_{U_i\cap U_j}\to\OO_{U_i\cap U_j}$ given by $\varphi_{ij}\coloneqq\varphi_j|_{U_i\cap U_j}\circ\varphi_i^{-1}|_{U_i\cap U_j}$.
+
+Going further, we see that $\alpha_{ji}\coloneqq\varphi_{ji}(1)\in\OO_{U_i\cap U_j}(U_i\cap U_j)^\times$, and in fact the full isomorphism will be determined by where it sends $1$ because these are $\OO_{U_i\cap U_j}$-modules. Notably, $\alpha_{ij}\alpha_{ji}=1$ because $\varphi_{ij}$ and $\varphi_{ji}$ are inverse. We now draw our complex to make our cohomology: we will build
+\begin{equation}
+	\arraycolsep=1.4pt\begin{array}{ccccccccc}
+		\displaystyle\prod_{\alpha}\OO_X^\times(U_\alpha) &\stackrel{d_1}\to& \displaystyle\prod_{\alpha,\beta}\OO_X^\times(U_\alpha\cap U_\beta) &\stackrel{d_2}\to& \displaystyle_{\alpha,\beta,\gamma}\OO_X^\times(U_\alpha\cap U_\beta\cap U_\gamma) \\
+		(f_\alpha) &\mapsto& (f_\alpha f_\beta^{-1})_{\alpha,\beta} \\
+		&&& (f_{\alpha\beta})_{\alpha,\beta} &\mapsto& (f_{\alpha\gamma}^{-1}f_{\alpha\beta}f_{\beta\gamma})_{\alpha,\beta,\gamma}
+	\end{array} \label{eq:cech-complex-dim-1}
+\end{equation}
+as our complex; one can in fact check that $d_2\circ d_1=0$, which is essentially by construction. This complex can continue, though we will not write mote.
+\begin{remark}
+	The entire story can be told above for more general line bundles, where multiplicative units (which are just $\op{GL}_1=(\cdot)^\times$) gets replaced by $\op{GL}_n$. What's difficult here is that $\op{GL}_n$ is no longer abelian.
+\end{remark}
+\begin{remark}
+	Here's how to remember these signs: start with $ijk$, and number them $0,1,2$. Then we are summing $(-1)^0jk+i(-1)^1k+ij(-1)^2$, which is the next one.
+\end{remark}
+\begin{remark}
+	To see that this is the start of the complex we want, we can see that the $\varphi_{ij}(1)$ will need to be in the kernel of $d_2$, basically by how gluing data works.
+\end{remark}
+Let's see what happens if we are given some different isomorphisms $\varphi'_i\colon\mc L|_{U_i}\cong\OO_{U_i}$. Then we can chain the isomorphisms
+\[\OO_{U_i}\stackrel{\varphi_i^{-1}}\cong\mc L|_{U_i}\stackrel{\varphi_i'}\cong\OO_{U_i}.\]
+Thus, $\varphi_i'\circ\varphi_i^{-1}$ is just another isomorphism of $\OO_{U_i}$ and will again be determined by what it does on the global section $1$, so we set $h_i\coloneqq\varphi_i\circ(\varphi'_i)^{-1}(1)$ to track our transition functions.
+
+By unwinding definitions, we see that $h_i\varphi'_{ij}(1)=\varphi_{ij}(1)\cdot h_j$, which means that the ``difference'' between the isomorphisms $\varphi_i$ and $\varphi_i'$ correspond to an element of the image of $d_1$, namely we are looking at $d_1((h_\alpha)_\alpha)$. Thus, we expect that the first cohomology $H^1$ of \autoref{eq:cech-complex-dim-1} is just isomorphisms classes of line bundles! With this motivation, we have the following definition.
+\begin{definition}
+	Given a scheme $X$, we define
+	\[\check H(X,\OO_X^\times)\coloneqq\colimit_{\mc U\text{ cover of }X}H^1(\mc U,\OO_X^\times),\]
+	where we are using the complex of \autoref{eq:cech-complex-dim-1} to define the $H^1$ on the right.
+\end{definition}
+And here is our result.
+\begin{proposition}
+	Fix a scheme $X$. Then $\check H^1(X,\OO_X^\times)$ is in natural bijection with isomorphism classes of line bundles on $X$.
+\end{proposition}
+\begin{proof}
+	Fix two line bundles $\mc L_1$ and $\mc L_2$ on $X$, endowed with their isomorphisms $\varphi^1_\alpha$ and $\varphi^2_\beta$ for some open cover $\{U_\alpha\}_{\alpha\in\lambda}$ of $X$. Then we can see that
+	\[(\mc L_1\otimes\mc L_2)|_{U_\alpha}\simeq\OO_{U_i}\otimes_{\OO_{U_i}}\OO_{U_i}\simeq\OO_{U_i},\]
+	so the tensor product is in fact sending line bundles to line bundles.
+
+	We now prove the proposition more directly. In one direction, fix some $(f_{\alpha\beta})_{\alpha,\beta\in\lambda}\in\ker d_2$ from \autoref{eq:cech-complex-dim-1}. This gluing data satisfies our cocycle condition (by being in the kernel of $d_1$), and say $f_{\alpha\alpha}\colon\OO_{U_\alpha}\to\OO_{U_\alpha}$ tells us that the things we are gluing are in fact locally one-dimensional. In total, we get to glue a sheaf together, which we see is a line bundle.
+
+	As another group-theoretic remark, we note that a line bundle $\mc L$ equipped with its isomorphisms $\varphi_{\alpha\beta}$, gluing the inverse morphisms $\varphi_{\alpha\beta}^{-1}$ together will give us a line bundle $\mc L^{-1}$, and we can check by our construction of the group law to have $\mc L\otimes\mc L^{-1}=\OO_X$.
+
+	We now return to the proposition. In the other direction, suppose that $\mc L$ and $\mc L'$ are line bundles, which have equipped with them their isomorphisms $(f_{ij})$ and $(f_{ij}')$, respectively, such that $(f_{ij})-(f_{ij}')\in\im d_1$. Notably, by replacing $\mc L$ and $\mc L'$ with $\mc L\otimes(\mc L')^{-1}$ and $\OO_X$ respectively, and using the group law as described above, we may just assume that $(f_{ij})\in\im d_1$, and we are trying to show that $\mc L$ is trivial.
+
+	Well, we are told $\varphi_i\circ\varphi_j^{-1}=f_{ij}=d_1((h_i))_i=h_ih_j^{-1}$. As such, we may consider the isomorphisms given by
+	\[h_i\varphi_i^{-1}\colon\mc L|_{U_i}\to\OO_{U_i},\]
+	and we can check that these isomorphisms glue together (namely, checking the cocycle condition) to get an isomorphism $\mc L\cong\OO_X$, which is what we wanted.
+\end{proof}
+Next time we will move on to divisors.
+% V S14, GW 11.5--11.6, H III.4.5
+
+\end{document}
