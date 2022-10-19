@@ -1,0 +1,255 @@
+% LTeX: enabled=false
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\newcommand{\nirpdftitle}{Topology Speedrun}
+\usepackage{import}
+\inputfrom{..}{nir}
+
+\pagestyle{contentpage}
+
+\title{Topology for the Impatient}
+\author{Nir Elber}
+\date{Fall 2022}
+\rhead{\textit{TOPOLOGY SPEEDRUN}}
+\lhead{}
+
+\setcounter{tocdepth}{2}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	This document collects a variety of definitions and results from point-set topology.
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+\section{Definitions}
+
+\subsection{Metric Spaces}
+\begin{definition}[Metric] \label{defi:metric}
+	A \textit{metric} $d$ on a set $X$ is a function $d\colon X\times X\to\RR_{\ge0}$ satisfying the following rules for any $x,y,z\in X$.
+	\begin{listalph}
+		\item Zero: $d(x,x)=0$.
+		\item Zero: $d(x,y)=0$ implies $x=y$.
+		\item Symmetry: $d(x,y)=d(y,x)$.
+		\item Triangle inequality: $d(x,y)+d(y,z)\ge d(x,z)$.
+	\end{listalph}
+	We call $(X,d)$ a \textit{metric space}.
+\end{definition}
+\begin{definition}[Norm]
+	Fix a vector space $V$ over $\RR$ or $\CC$. A norm $\lVert\cdot\rVert\colon V\to\RR_{\ge0}$ is a function satisfying the following, for any $r\in\RR$ and $v,w\in V$.
+	\begin{listalph}
+		\item Zero: $\lVert v\rVert=0$ if and only if $v=0$.
+		\item Scaling: $\lVert rv\rVert=|r|\cdot\lVert v\rVert$.
+		\item Triangle inequality: $\lVert v+w\rVert\le\lVert v\rVert+\lVert w\rVert$.
+	\end{listalph}
+\end{definition}
+\begin{definition}[Converge]
+	Fix a metric space $(X,d)$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ \textit{converges to} $x\in X$ if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
+	\[n>N\implies d(x_n,x)<\varepsilon.\]
+	We might write this as ``$x_n\to x$ as $n\to\infty$'' or ``$\lim_{n\to\infty}x_n=x$.'' In this event, we may say that the sequence $\{x_n\}_{n\in\NN}$ \textit{converges}, and its limit is $x$.
+\end{definition}
+\begin{definition}[Cauchy]
+	Fix a metric space $(X,d)$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ is a \textit{Cauchy sequence} if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
+	\[n,m>N\implies d(x_n,x_m)<\varepsilon.\]
+\end{definition}
+\begin{definition}[Complete]
+	A metric space $(X,d)$ is \textit{complete} if and only if every Cauchy sequence in $X$ converges to a point in $X$.
+\end{definition}
+\begin{definition}[Bounded]
+	Fix a metric space $(X,d)$ and a nonempty set $A$. A subset $A\subseteq X$ is \textit{bounded} if and only if there is an open ball $B(x,r)$ containing $A$. More generally, a function $f\colon A\to X$ is \textit{bounded} if and only if $\im f\subseteq X$ is bounded, and we let $B(A,X)$ denote the set of all bounded functions $f\colon A\to X$.
+\end{definition}
+\begin{definition}[Totally bounded]
+	Fix a metric space $(X,d)$. A subset $A\subseteq X$ is \textit{totally bounded} if and only if any $\varepsilon>0$ has a finite set $\{x_i\}_{i=1}^n\subseteq A$ for which
+	\[A\subseteq\bigcup_{i=1}^nB(x_i,\varepsilon).\]
+	If $X$ is totally bounded, we say that $(X,d)$ is totally bounded.
+\end{definition}
+\begin{definition}[Pointwise totally bounded]
+	Fix topological spaces $(X,\mc T_X)$ and a metric space $(M,d)$, and let $\mc F$ be a family of continuous functions $f\colon X\to M$. Then $\mc F$ is \textit{pointwise totally bounded} if and only if any $x\in \mc F$ makes the set
+	\[\{f(x):f\in\mc F\}\]
+	totally bounded.
+\end{definition}
+\begin{definition}[Equicontinuous]
+	Fix topological spaces $(X,\mc T_X)$ and a metric space $(M,d)$, and let $\mc F$ be a family of continuous functions $f\colon X\to M$. We say that the family $\mc F$ is \textit{equicontinuous} at some $x\in X$ if and only if any $\varepsilon>0$ has some open subset $U\subseteq X$ such that $y\in U$ has
+	\[d(f(y),f(x))<\varepsilon\]
+	for all $f\in \mc F$. The entire family $\mc F$ is \textit{equicontinuous} if any only if it is equicontinuous at all $x\in X$.
+\end{definition}
+
+\subsection{Basic Topology}
+\begin{definition}[Topology]
+	Fix a set $X$. Then a \textit{topology} $\mathcal T$ on $X$ is a collection of subsets $\mathcal T\subseteq\mathcal P(X)$ satisfying the following.
+	\begin{listalph}
+		\item We have $\emp\in\mathcal T$ and $X\in\mathcal T$.
+		\item Arbitrary union: given a collection $\mathcal U\subseteq\mathcal T$, the arbitrary union $\bigcup_{U\in\mathcal U}U$ lives in $\mathcal T$.
+		\item Finite intersection: given a finite collection $\{U_1,\ldots,U_n\}\subseteq\mathcal T$, the intersection $\bigcap_{i=1}^nU_i$ lives in $\mathcal T$.
+	\end{listalph}
+	We will say that the ordered pair $(X,\mathcal T)$ is a \textit{topological space}. We say that the sets in $\mathcal T$ are \textit{open}.
+\end{definition}
+\begin{definition}[Continuous]
+	Fix topological spaces $(X,\mathcal T_X)$ and $(Y,\mathcal T_Y)$. Then a function $f\colon X\to Y$ is \textit{continuous} if and only if, for any $U_Y\in\mathcal T_Y$, we have $f^{-1}(U_Y)\in\mathcal T_X$.
+\end{definition}
+\begin{definition}[Sub-base]
+	Let $(X,\mc T)$ be a topological space. A collection $\mc S\subseteq\mc T$ is a \textit{sub-base} for $\mc T$ if and only if the following hold.
+	\begin{listalph}
+		\item $\mc S$ covers $X$, in that $X=\bigcup_{U\in\mc S}U$.
+		\item $\mc T$ is generated by $\mc S$.
+	\end{listalph}
+\end{definition}
+\begin{definition}[Base]
+	Fix a set $X$. A collection $\mc B\subseteq\mc P(X)$ is a \textit{base} (for a topology on $X$) if and only if the collection of arbitrary unions of $\mc B$ form a topology on $X$.
+\end{definition}
+\begin{prop}
+	Fix a set $X$ and a collection $\mc B\subseteq\mc P(X)$. Then $\mc B$ is a base if and only if
+	\begin{listalph}
+		\item $X=\bigcup_{B\in\mc B}B$, and
+		\item any $B_1,B_2\in\mc B$ has some collection $\mc U\subseteq\mc B$ such that
+		\[B_1\cap B_2=\bigcup_{B\in\mc U}B.\]
+	\end{listalph}
+\end{prop}
+\begin{definition}[Closed]
+	Fix a topological space $(X,\mc T)$. A subset $V\subseteq X$ is \textit{closed} if and only if $(X\setminus V)\in\mc T$.
+\end{definition}
+\begin{definition}[Closure]
+	Fix a topological space $(X,\mc T)$. Given a subset $S\subseteq X$, we define the \textit{closure} as
+	\[\overline S\coloneqq\bigcap_{\substack{V\supseteq S\\V\text{ closed}}}V.\]
+	This is a closed set. In other words, the closure $\overline S$ is the unique smallest closed set containing $S$.
+\end{definition}
+\begin{defi}[Dense]
+	Fix a topological space $(X,\mc T)$. Given subsets $A\subseteq B$, we say $A$ is \textit{dense} in $B$ if and only if $B\subseteq\overline A$.
+\end{defi}
+\begin{definition}[Homeomorphism]
+	A function $f\colon X\to Y$ between topological spaces $(X,\mc T_X)$ and $(Y,\mc T_Y)$ is a \textit{homeomorphism} if and only if $f$ is continuous and has a continuous inverse. Formally, we require a continuous map $g\colon Y\to X$ such that
+	\[f\circ g={\id_Y}\qquad\text{and}\qquad g\circ f={\id_X}.\]
+\end{definition}
+\begin{definition}[Cluster point]
+	Fix a topological space $(X,\mc T)$ and a net $\{x_\alpha\}_{\alpha\in\Lambda}$. Then $x\in X$ is a \textit{cluster point} if and only if, for any open subset $U$ containing $x$ and $\alpha\in\Lambda$, there is some $\alpha'>\alpha$ for which $x_{\alpha'}\in U$.
+\end{definition}
+
+\subsection{Some Topologies}
+\begin{defihelper}[Initial topology] \nirindex{Topology!Induced topology}
+	Fix a set $X$ and a collection of topologies $\{(Y_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$ with some functions $f_\alpha\colon X\to Y_\alpha$ for each $\alpha\in\lambda$. Then
+	\[\bigcup_{\alpha\in\lambda}\left\{f_\alpha^{-1}(U_\alpha):U_\alpha\in\mc T_\alpha\right\}\]
+	is a sub-base for an \textit{initial topology}.
+\end{defihelper}
+\begin{defihelper}[Relative topology] \nirindex{Topology!Relative topology}
+	Fix $(Y,\mc T)$ a topological space. Then the \textit{relative topology} for a subset $X\subseteq Y$ is the topology initial for the natural embedding $\iota\colon X\into Y$.
+\end{defihelper}
+\begin{lemma} \label{lem:betterrelative}
+	Fix $(Y,\mc T_Y)$ a topological space. Then the relative topology for a subset $X\subseteq Y$ consists of the subsets
+	\[\left\{X\cap U:U\in\mc T_Y\right\}.\]
+\end{lemma}
+\begin{defihelper}[Product topology] \nirindex{Topology!Product topology}
+	Fix a collection of topological spaces $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$. Then the \textit{product topology} on $X\coloneqq\prod_{\alpha\in\lambda}X_\alpha$ is initial topoloy for the canonical projection maps
+	\[\pi_\alpha\colon X\to X_\alpha.\]
+\end{defihelper}
+\begin{lemma} \label{lem:prodtopbase}
+	Fix a collection of topological spaces $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$. Then the product topology on $X\coloneqq\prod_{\alpha\in\lambda}X_\alpha$ has a base
+	\[\mc B\coloneqq\Bigg\{\prod_{\alpha\in\lambda}U_\alpha:U_\alpha\in\mc T_\alpha,U_\alpha=X_\alpha\text{ for all but finitely many }\alpha\Bigg\}.\]
+\end{lemma}
+\begin{defihelper}[Final topology] \nirindex{Topology!Final topology}
+	Fix a set $Y$ and some topological spaces $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$. Given functions $f_\alpha\colon X_\alpha\to Y$, we define the \textit{final topology} on $Y$ to be the ``strongest'' (i.e., with the most open sets) making the $f_\alpha$ continuous.
+\end{defihelper}
+\begin{defihelper}[Quotient topology] \nirindex{Topology!Quotient topology}
+	Fix an equivalence relation $\sim$ on a set $X$ with a topology $\mc T$. Then the \textit{quotient topology} on $X/{\sim}$ is the final topology for the natural projection $X\onto X/{\sim}$.
+\end{defihelper}
+
+\subsection{Adjectives for Spaces}
+\begin{definition}[Hausdroff]
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is \textit{Hausdorff} if and only if, for any two distinct points $x,x'\in X$, there are disjoint open sets $U$ and $U'$ such that $x\in U$ and $x'\in U'$.
+\end{definition}
+\begin{definition}[Regular]
+	A topological space $(X,\mc T)$ is \textit{regular} if and only if each closed subset $A\subseteq X$ and $x\notin A$ have disjoint open subsets $U$ and $V$ with $A\subseteq U$ and $x\in V$.
+\end{definition}
+\begin{definition}[Normal]
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is \textit{Hausdorff} if and only if, for any two disjoint closed sets $V,V'\subseteq X$, there are disjoint open sets $U$ and $U'$ such that $V\in U$ and $V'\in U'$.
+\end{definition}
+\begin{definition}[Open cover]
+	Fix a topological space $(X,\mc T)$. An \textit{open cover} of $X$ is a collection $\mc U\subseteq\mc T$ of open sets such that
+	\[X=\bigcup_{U\in\mc U}U.\]
+\end{definition}
+\begin{defi}[Compact]
+	Fix a topological space $(X,\mc T)$. We say that $(X,\mc T)$ is \textit{compact} if and only if every open cover of $X$ has a finite subcover.
+\end{defi}
+\begin{definition}[Locally compact]
+	A topological space $(X,\mc T)$ is \textit{locally compact} if and only if each point $x\in X$ has some open subset $U\in\mc T$ containing $x$ such that $\overline U$ is compact.
+\end{definition}
+\begin{proposition} \label{prop:best-loc-compact}
+	Fix a locally compact Hausdorff space $(X,\mc T)$ and some compact subset $C\subseteq X$. Then any open subset $U$ containing $C$ has some open subset $U_C$ containing $C$ such that $\overline{U_C}$ is compact and $\overline{U_C}\subseteq U$.
+\end{proposition}
+
+\newpage
+\section{Lemmas and Results}
+
+\subsection{Metric Spaces}
+\begin{lemma} \label{lem:metricclosed}
+	Fix a metric space $(X,d)$ and $V\subseteq X$. The following are equivalent.
+	\begin{listalph}
+		\item $V$ is closed.
+		\item Any sequence $\{x_n\}_{n\in\NN}$ in $V$ which converges to a point $x\in X$ actually converges to $x\in V$.
+	\end{listalph}
+\end{lemma}
+\begin{corollary} \label{cor:closediscomplete}
+	Fix a complete metric space $(X,d)$. Then a closed subset $V\subseteq X$ given the restricted metric is also complete.
+\end{corollary}
+\begin{proposition} \label{prop:contiscomplete}
+	Fix a topological space $(X,\mc T)$ and a metric space $(Y,d)$. Let $B_c(X,Y)\subseteq B(X,Y)$ denote the metric subspace of bounded continuous functions $f\colon X\to Y$. Then $B_c(X,Y)$ is a closed subspace of $B(X,Y)$. In particular, if $(Y,d)$ is complete, then $B_c(X,Y)$ is also complete.
+\end{proposition}
+\begin{theorem} \label{thm:metric-compact}
+	Fix a metric space $(X,d)$. If $X$ is complete and totally bounded, then $X$ is compact.
+\end{theorem}
+\begin{corollary} \label{cor:metric-compact}
+	Fix a complete metric space $(X,d)$. Then a subset $A\subseteq X$ is compact if and only if $A$ is closed and totally bounded.
+\end{corollary}
+\begin{theorem}[Arzel\'a--Ascoli] \label{thm:ascoli}
+	Fix a compact topological space $(X,\mc T)$ and a metric space $(M,d)$ so that we can give the space of bounded continuous functions $B_c(X,M)$ the uniform metric $d_u$. Then any family $\mc F\subseteq B_c(X,M)$ is totally bounded if and only if it is equicontinuous and pointwise totally bounded family.
+\end{theorem}
+
+\subsection{Building Functions}
+\begin{prop}
+	Fix a collection of topological spaces $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$. Give the product $X\coloneqq\prod_{\alpha\in\lambda}X_\alpha$ the projections $\pi_\alpha\colon X\to X_\alpha$ and the product topology $\mc T$. Given a topological space $(Y,\mc T_Y)$, a function $f\colon Y\to X$ is continuous if and only if the compositions $\pi_\alpha\circ f$ are continuous.
+\end{prop}
+\begin{proposition} \label{prop:quotientup}
+	Fix an equivalence relation $\sim$ on a set $X$ with a topology $\mc T$; let $\pi\colon X\onto(X/{\sim})$ be the natural projection. Then, for any continuous map $f\colon X\to Z$ such that any $x\sim x'$ has $f(x)=f(x')$, there is a unique continuous map $\overline f\colon(X/{\sim})\to Z$ such that
+	\[f=\overline f\circ\pi.\]
+\end{proposition}
+\begin{restatable}[Urysohn's lemma]{theorem}{urythm} \label{thm:ury}
+	Fix a topological space $(X,\mc T)$. If $(X,\mc T)$ is normal, then for any disjoint closed subsets $V_0,V_1\subseteq X$, there is a continuous function $f\colon X\to[0,1]$ such that $f(V_0)=\{0\}$ and $f(V_1)=\{1\}$.
+\end{restatable}
+\begin{restatable}[Tietze extension]{theorem}{tiethm} \label{thm:tie}
+	Fix a normal topological space $(X,\mc T)$, and give some closed subset $A\subseteq X$ the relative topology from $X$. Given a continuous function $f\colon A\to\RR$, there exists a continuous function $\widetilde f\colon X\to\RR$ such that $\widetilde f|_A=f$. In fact, if $\im f\subseteq[a,b]$, then we may enforce $\im\widetilde f\subseteq[a,b]$ as well.
+\end{restatable}
+
+\subsection{Running Checks}
+\begin{lemma} \label{lem:betterclosure}
+	Fix a topological space $(X,\mc T)$ and a subset $A\subseteq X$. Then $x\in\overline A$ if and only if every open subset $U\subseteq X$ containing $x$ has $U\cap A\ne\emp$.
+\end{lemma}
+\begin{lemma} \label{lem:closedincompactiscompact}
+	Fix a compact topological space $(X,\mc T)$. Then any closed subset $A\subseteq X$ is compact.
+\end{lemma}
+\begin{lemma} \label{cor:compact-in-haus-is-closed}
+	Fix a Hausdorff topological space $(X,\mc T)$, and let $A\subseteq X$ be compact. Then $A$ is closed.
+\end{lemma}
+\begin{proposition} \label{prop:comp-haus-is-normal}
+	Fix a compact Hausdorff space $(X,\mc T)$. Then $(X,\mc T)$ is normal.
+\end{proposition}
+\begin{lemma} \label{lem:compactimage}
+	Fix a continuous map $f\colon(X,\mc T_X)\to(Y,\mc T_Y)$. If $(X,\mc T_X)$ is compact, then $\im f\subseteq Y$ is also compact.
+\end{lemma}
+\begin{proposition}
+	Fix a compact topological space $(X,\mc T_X)$ and a Hausdorff topological space $(Y,\mc T_Y)$. Then any continuous bijection $f\colon X\to Y$ is a homeomorphism.
+\end{proposition}
+\begin{proposition} \label{prop:compactviafip}
+	Fix a topological space $(X,\mc T)$. Then $(X,\mc T)$ is compact if and only if any collection $\mc V$ of closed subsets with the finite intersection property has
+	\[\bigcap_{V\in\mc V}V\ne\emp.\]
+\end{proposition}
+\begin{restatable}[Tychonoff]{theorem}{tychthm} \label{thm:tych}
+	Fix a collection $\{(X_\alpha,\mc T_\alpha)\}_{\alpha\in\lambda}$ of compact topological spaces, and give the product space $X\coloneqq\prod_{\alpha\in\lambda}X_\alpha$ the product topology. Then $X$ is compact.
+\end{restatable}
+
+\end{document}
