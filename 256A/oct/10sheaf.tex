@@ -11,7 +11,7 @@ We now shift gears to talk about quasicoherent sheaves.
 \subsection{\texorpdfstring{$\OO_X$}{OX}-modules}
 Fix a ringed space $(X,\OO_X)$. We have the following definition.
 \begin{defihelper}[{$\OO_X$-module}] \nirindex{OX-module@$\OO_X$-module}
-	Fix a ringed space $(X,\OO_X)$. Then an \textit{$\mathcal O_X$-module} is a sheaf of abelian groups $\mc F$ on $X$ with a sheaf morphism for scalar multiplication $\cdot\colon\OO_X\times\mc F\to\mc F$ making $\mc F(U)$ an $\mathcal OO_X(U)$-module for each open $U\subseteq X$. Namely, given open subsets $V\subseteq U\subseteq X$, the following diagram commutes.
+	Fix a ringed space $(X,\OO_X)$. Then an \textit{$\mathcal O_X$-module} is a sheaf of abelian groups $\mc F$ on $X$ with a sheaf morphism for scalar multiplication $\cdot\colon\OO_X\times\mc F\to\mc F$ making $\mc F(U)$ an $\mathcal O_X(U)$-module for each open $U\subseteq X$. Namely, given open subsets $V\subseteq U\subseteq X$, the following diagram commutes.
 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBGKFUpIl0sWzAsMSwiXFxPT19YKFYpXFx0aW1lc1xcbWMgRihWKSJdLFsxLDAsIlxcbWMgRihVKSJdLFsxLDEsIlxcbWMgRihWKSJdLFswLDEsIntcXG9we3Jlc31fe1UsVn19XFx0aW1lc1xcb3B7cmVzfV97VSxWfSIsMl0sWzIsMywiXFxvcHtyZXN9X3tVLFZ9Il0sWzAsMiwiXFxjZG90X1UiXSxbMSwzLCJcXGNkb3RfViJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
 		{\OO_X(U)\times\mc F(U)} & {\mc F(U)} \\
@@ -185,49 +185,579 @@ Let's give a few more $\OO_X$-modules.
 	One can also define, as usual, the arbitrary direct sum, products, the tensor product, inverse limits, and direct limits. The arbitrary direct sum, the tensor product, and the direct limit require a sheafification to construct, though we will not on average be too worried about such things.
 \end{remark}
 Let's give a more sheaf-theoretic constructions. As usual, the direct image is good.
+\begin{lemma}
+	Fix a morphism $f\colon(X,\OO_X)\to(Y,\OO_Y)$ of ringed spaces. If $\mc F$ is an $\mathcal O_X$-module, then $f_*\mc F$ is naturally an $\mathcal O_Y$-module.
+\end{lemma}
+\begin{proof}
+	The point is to use the sheaf morphism $f^\sharp\colon\OO_Y\to f_*\OO_X$ to define our $\OO_Y$-action. Indeed, for an open subset $U\subseteq Y$, we need to define an action of $\OO_Y(U)$ on $f_*\mc F(U)=\mc F(f^{-1}U)$. Well, we have a ring map
+	\[f^\sharp_U\colon\OO_Y(U)\to \OO_X\left(f^{-1}U\right),\]
+	so the action homomorphism $\OO_X\left(f^{-1}U)\right)\to\op{Aut}\left(\mc F(f^{-1}U)\right)$ can be pre-composed with $f^\sharp$ to exhibit an action homomorphism $\OO_Y(U)\to\op{Aut}(f_*\mc F(U))$. Explicitly, our action will send $r\in\OO_Y(U)$ and $m\in f_*\mc F(U)$ to $r\cdot m\coloneqq f^\sharp_U(r)\cdot m$.
+
+	It remains to see that this creates an $\mathcal O_Y$-module. Well, given open subsets $V\subseteq U\subseteq X$, some $r\in\OO_Y(U)$ and some $m\in f_*\mc F(U)$, we compute
+	\begin{align*}
+		(r\cdot m)|_V &= (f^\sharp_U(r)\cdot m)|_{V} \\
+		&= f^\sharp_U(r)|_V\cdot m|_V \\
+		&= f^\sharp_V(r)\cdot m|_V,
+	\end{align*}
+	which is what we wanted.
+\end{proof}
+Going the other way requires some care. In particular, we won't want to just look at $f^{-1}\mc F$ to pull back because it's not clear how to give the sheaf an $\mathcal O_X$-module give an $\mathcal O_Y$-action.
 \begin{definition}[Direct image module]
 	Fix a morphism $f\colon(X,\OO_X)\to(Y,\OO_Y)$ of ringed spaces. If $\mc F$ is an $\mathcal O_X$-module, then $f_*\OO_X$ remains an $\mathcal O_X$-module, so the \textit{direct image module} $f_*\mc F$ will become an $\mathcal O_Y$-module through $f^\sharp\colon\OO_Y\to f_*\OO_X$.
 \end{definition}
-However, pullback sheaves do change from being ``just'' $f^{-1}\mc F$.
+However, pullback sheaves do change from being ``just'' $f^{-1}\mc F$. Nonetheless, let's pick up some facts about $f^{-1}$.
+\begin{lemma} \label{lem:better-ox-mod-iso}
+	Fix a ringed space $(X,\OO_X)$. A morphism $\varphi\colon\mc F\to\mc G$ is an isomorphism of $\OO_X$-modules if and only if it is a morphism of $\OO_X$-modules and also a (pre)sheaf isomorphism.
+\end{lemma}
+\begin{proof}
+	Certainly an isomorphism of $\OO_X$-modules is an $\mathcal O_X$-module homomorphism and also a sheaf isomorphism. Indeed, pick up the inverse morphism $\psi\colon\mc G\to\mc F$, and we see $\varphi\circ\psi={\id_\mc G}$ and $\psi\circ\varphi={\id_\mc F}$ by how identities are defined in $\mathrm{Mod}_{\OO_X}$.
+
+	Conversely, fix a morphism of $\OO_X$-modules $\varphi\colon\mc F\to\mc G$ which is a sheaf isomorphism; let $\psi\colon\mc G\to\mc F$ be the inverse sheaf morphism. We need to show that $\psi$ is an $\mathcal O_X$-module morphism. Well, for any open subset $U\subseteq X$, we note that any $g\in\mc G(U)$ can be written as $\varphi_U(f)$ for some $f\in\mc F(U)$, so any $r\in\OO_X(U)$ has
+	\[\psi_U(rg)=\psi_U(r\varphi_U(f))=\psi_U(\varphi_U(rf))=rf=r\psi_U(\varphi_U(f))=r\psi_U(g),\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:ox-res-functorial}
+	Fix a ringed space $(X,\OO_X)$. Then, for any open $U\subseteq X$, the restriction taking an $\mathcal O_X$-module $\mc F$ to $\mc F|_U$ defines the actions of a functor $\cdot|_U\colon\mathrm{Mod}_{\OO_X}\to\mathrm{Mod}_{\OO_X|_U}$ on objects.
+\end{lemma}
+\begin{proof}
+	We already have a functor $\mathrm{Sh}_X\to\mathrm{Sh}_{U}$ by \autoref{lem:inv-image-is-functor}, using the inclusion $U\into X$. Thus, we just need to check that all the mappings preserve $\OO_X$-structure.
+	\begin{itemize}
+		\item Given an $\mathcal O_X$-module $\mc F$, we give $\mc F|_U$ the structure of an $\mathcal O_X|_U$-module. Well, for any open $V\subseteq U$, we note that $\mc F|_U=\mc F(V)$ already has the structure of an $\mathcal O_X(V)=\OO_X|_U(V)$-module. To check that this gives $\mathcal O_X$-module, we pick up $f\in\mc F|_U(V)$ and $r\in\OO_X(V)$ and note that any $V'\subseteq V$ will have
+		\[(rf)|_{V'}=r|_{V'}\cdot f|_{V'}.\]
+		\item Given a morphism of $\OO_X$-modules $\varphi\colon\mc F\to\mc G$, we need to show that $\varphi|_U\colon\mc F|_U\to\mc G|_U$ is a morphism of $\OO_X$-modules. Well, we already have a sheaf morphism. Then for any open $V\subseteq U$ and $f\in\mc F|_U(V)$, we compute
+		\[(\varphi|_U)_V(rf)=\varphi_V(rf)=r\varphi_V(f)=r(\varphi|_U)_V(f).\]
+	\end{itemize}
+	We now note that our functoriality checks are in fact included in \autoref{lem:inv-image-is-functor}, by our definitions, so we are done.
+\end{proof}
+Now here is our pullback module.
 \begin{definition}[Pullback module]
 	Given an $\mathcal O_Y$-module $\mc G$, we see $f^{-1}\mc G$ is an $f^{-1}\OO_Y$-module. To make this an $\mathcal O_X$-module, we would like to use the morphism $f^\flat\colon f^{-1}\OO_Y\to\OO_X$, but this only makes $\OO_X$ into an $f^{-1}\OO_Y$-module, so we define
 	\[f^*\mc G\coloneqq f^{-1}\mc G\otimes_{f^{-1}\OO_Y}\OO_X\]
 	to be the \textit{pullback module} $\OO_X$-module.
 \end{definition}
 \begin{remark}
-	The main point of the pullback module is to have the adjunction
+	Analogously to \autoref{prop:invdiradjunction}, we have the adjunction
 	\[\op{Hom}_{\OO_X}(f^*\mc G,\mc F)\simeq\op{Hom}_{\OO_Y}(\mc G,f_*\mc F).\]
+	I do not expect to use this neither result nor $f^*$, so I will not run any checks.
 \end{remark}
 \begin{example}
 	Given a ring map $\varphi\colon B\to A$, we induce a scheme map $f\colon\Spec A\to\Spec B$. Now, there is a functor from $A$-modules $M$ to $\OO_X$-modules $\widetilde M$. Then we see that we can send such a module $\widetilde M$ back to a $B$-module as $f_*(\widetilde M)=\widetilde M$ by taking global sections and using $\varphi$, and we can send a $B$-module $N$ to $f^*(\widetilde N)=\widetilde{N\otimes_BA}$ given the obvious $A$-module structure.
 \end{example}
 
-\subsection{Quasicoherent Sheaves}
-To make the above example precise, we need to define $\widetilde M$.
-\begin{definition}
-	Fix an affine scheme $X\coloneqq\Spec A$ and an $A$-module $M$. Then we define the $\OO_X$-module $\widetilde M$ as a sheaf on the distinguished base
-	\[\widetilde M(D(f))\coloneqq M_f,\]
-	with the usual restrictions.
-\end{definition}
-It is somewhat clear to check that this is in fact a sheaf on the base, which gives the needed sheaf. One can also check that the stalk $\widetilde M_\mf p$ at a given prime $\mf p\in\Spec A$ is just $M_\mf p$.
-\begin{example}
-	From the above example, we can pass $A$ through to see that $\OO_X$ is an $\mathcal O_X$-module.
-\end{example}
-We now have the following.
-\begin{proposition}
-	Fix a ring $A$. The functor from $A$-modules to $\OO_X$-modules taking $M$ to $\widetilde M$ is exact and fully faithful. This equivalence also respects $\oplus$ and $\otimes$.
-\end{proposition}
+\subsection{Sheaves from Modules}
+% \begin{warn}
+% 	As we get closer to thinking about sheaves of modules as vector bundles, I will more aggressively adopt the notation $\Gamma(U,\mc F)$ to mean $\mc F(U)$.
+% \end{warn}
+To make the above example precise, we need to define $\widetilde M$ as an $\mathcal O_{\Spec A}$-module.
+\begin{lemma} \label{lem:get-ox-mod-from-mod}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Given an $A$-module $M$, the data given by
+	\[\widetilde M(X_f)\coloneqq S(D(f))^{-1}M\simeq M\otimes_A\OO_X(X_f)\]
+	for $f\in A$ will assemble into a sheaf on the base and thus an $\mathcal O_X$-module.
+\end{lemma}
+\begin{remark}
+	The isomorphism $S(D(f))^{-1}A\simeq A_f$ of \autoref{rem:eval-structure-sheaf-on-base} tells us that
+	\[\arraycolsep=1.4pt\begin{array}{ccccccccc}
+		\widetilde M(X_f) &=& S(D(f))^{-1}M &\simeq&  M\otimes_A\OO_X(X_f)^{-1}A &\simeq& M\otimes_AA_f &\simeq& M_f \\
+		&& m/g &\mapsto& m\otimes1/g &\mapsto& m\otimes g^{-1} &\mapsto& g^{-1}m
+	\end{array}\]
+	so that the naturality of these isomorphisms means that we tend to think of $\widetilde M(X_f)$ as just $M_f$ in practice.
+\end{remark}
 \begin{proof}
-	Exactness is checked at stalks. Being fully faithful is approximately as hard as showing \autoref{thm:geoisoppalg}, where the same machinery approximately works.
+	Recall that $S(D(f))=\{g\in A:V(\{g\})\subseteq(\Spec A)\setminus D(f)\}$, which are the functions on $A$ which do not vanish on $D(f)$. Thus, $D(f')\subseteq D(f)$ implies $S(D(f))\subseteq S(D(f'))$, so we induce a natural localization map
+	\[\op{res}_{D(f),D(f')}\colon S(D(f))^{-1}M\to S(D(f'))^{-1}M.\]
+	To see that we've made a sheaf on the base, reread the proof of \autoref{lem:check-structure-sheaf} and replace all the numerators from elements of $A$ to elements of $M$. We won't write this out proof here because it really is just a matter of changing all the variable names.
+
+	Thus, we have induced a sheaf on the base, which extends uniquely to a sheaf by \autoref{prop:sheaffrombase}. It remains to show that $\widetilde M$ is an $\mathcal O_X$-module. To begin, we need to define our action $\cdot\colon\OO_X\times\widetilde M\to\widetilde M$. By \autoref{lem:morphismonbase}, it suffices to exhibit a morphism of sheaves on the base, for which we need to give morphisms
+	\[\OO_X(X_f)\times\widetilde M(X_f)\to\widetilde M(X_f).\]
+	Well, we just have to note that $\OO_X(X_f)$ has a natural action on $\widetilde M(X_f)\simeq M\otimes_A\OO_X(X_f)$ by multiplying on the right coordinate. Translating this back over to $S(D(f))^{-1}M$, our natural action takes $a/g\in\OO_X(X_f)\simeq S(D(f))^{-1}A$ and $m/h\in\widetilde M(D(f))$ and spits out $a/g\cdot m/h=(am)/(gh)$.
+
+	To see that we assemble into a morphism of sheaves on the base, we fix distinguished open sets $D(f')\subseteq D(f)$ and note that the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goRChmKSlcXHRpbWVzXFxHYW1tYShEKGYpLFxcd2lkZXRpbGRlIE0pIl0sWzAsMSwiXFxPT19YKEQoZicpKVxcdGltZXNcXEdhbW1hKEQoZicpLFxcd2lkZXRpbGRlIE0pIl0sWzEsMCwiXFxHYW1tYShEKGYpLFxcd2lkZXRpbGRlIE0pIl0sWzEsMSwiXFxHYW1tYShEKGYnKSxcXHdpZGV0aWxkZSBNKSJdLFsyLDAsIihhL2csbS9oKSJdLFsyLDEsIihhL2csbS9oKSJdLFszLDAsIihhbSkvKGdoKSJdLFszLDEsIihhbSkvKGdoKSJdLFswLDJdLFsyLDNdLFswLDFdLFsxLDNdLFs0LDUsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(X_f)\times\widetilde M(X_f)} & {\widetilde M(X_f)} & {(a/g,m/h)} & {(am)/(gh)} \\
+		{\OO_X(X_f)\times\widetilde M(D(f'))} & {\widetilde M(X_f)} & {(a/g,m/h)} & {(am)/(gh)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commutes. So we have induced a scalar multiplication which is a sheaf morphism, so we have made an $\mathcal O_X$-module.
+\end{proof}
+Let's codify our notation.
+\begin{notation}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Given an $A$-module $M$, we define the $\OO_X$-module $\widetilde M$ from the sheaf on the distinguished base defined by
+	\[\widetilde M(X_f)\coloneqq S(D(f))^{-1}M,\]
+	with the usual restrictions. Note we ran our checks in \autoref{lem:get-ox-mod-from-mod}.
+\end{notation}
+\begin{example}
+	From the above example, we can pass $A$ through to see that $\widetilde A\simeq\OO_X$ is an $\mathcal O_X$-module. Indeed, let $\varphi\colon X\cong\Spec A$ be the canonical isomorphism from \autoref{cor:the-affine-iso}. Then, for each affine open subscheme $X_f\subseteq X$, we see
+	\[\widetilde A(X_f)=S(D(f))^{-1}A=\OO_{\Spec A}(D(f))\stackrel{\varphi^\sharp_{D(f)}}\cong\OO_X(X_f)\]
+	by definition of $\varphi^\sharp$. Notably, this is functorial in $X_f$ because $\varphi^\sharp$ is.
+\end{example}
+Here is a quick sanity check.
+\begin{lemma} \label{lem:stalk-of-gotten-ox-mod}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Let $\varphi\colon X\to\Spec A$ be the canonical isomorphism. Given an $A$-module $M$ and a point $x\in X$, we have a natural isomorphism $M_{\varphi(x)}\simeq\widetilde M_{x}$.
+\end{lemma}
+\begin{proof}
+	We imitate the proof of \autoref{lem:affinestalk}. We begin by exhibiting the natural map $\alpha\colon M_{\varphi(x)}\to\widetilde M_x$. Well, if $f\notin\varphi(x)$, then we see $\varphi(x)\in D(f)$, so $x\in X_f$ by construction of $\varphi$. Thus, we induce a map
+	\[\alpha\colon m/f\mapsto\left[\left(X_f,\frac mf\right)\right].\]
+	Here are the checks on $\alpha$.
+	\begin{itemize}
+		\item Well-defined: if $m/f=m'/f'$ in $M_{\varphi(x)}$ for $f,f'\in\varphi(x)$, then there exists $f''\notin\varphi(x)$ such that $f''f'm=f''fm'$. Thus, in $\widetilde M(X_{f''})$, we see that
+		\[\frac mf=\frac{m'}{f'}\]
+		because $f''\in S(D(f''))$. Thus, we see that
+		\[\left[\left(X_f,\frac mf\right)\right]=\left[\left(X_{f''},\frac mf\right)\right]=\left[\left(X_{f''},\frac {m'}{f'}\right)\right]=\left[\left(X_{f'},\frac {m'}{f'}\right)\right].\]
+		\item Injective: suppose $[(X_f,m/f)]=[(X_{f'},m'/f')]$ in $\widetilde M_x$. Using the distinguished base, we are promised $X_{f''}$ such that $\frac mf=\frac{m'}{f'}$ in $\widetilde M(X_{f''})$, which means that there is some $g\in S(D(f''))$ such that
+		\[gf'm=gfm'.\]
+		Notably, $g\in\varphi(x)$ would imply that $f''\in\varphi(x)$, which is false, so we must have $g\notin\varphi(x)$. Thus, $\frac mf=\frac{m'}{f'}$ in $M_{\varphi(x)}$.
+		\item Surjective: using the distinguished base, we can write any germ in $\widetilde M_{\varphi(x)}$ in the form $[(X_f,m/g)]$ where $x\notin X_f$ and $g\in S(D(f))$. Notably, $x\notin X_f$, then $\varphi(x)\notin D(f)$ by the construction of $\varphi$, so $f\notin\varphi(x)$.
+		
+		Further, because $g\in S(D(f))$, then it follows again that $g\notin\varphi(x)$, so $\varphi(x)\in D(g)$, so $x\in X_g$ as usual, and we note that $g\in S(D(f))$ implies that $D(g)\subseteq D(f)$, so $X_g\subseteq X_f$ by construction of $\varphi$. The point of all this is that we can restrict $m/g$ to $X_g\subseteq X_f$ as
+		\[[(X_f,m/g)]=[(X_g,m/g)]=\alpha(m/g),\]
+		which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	The above proof shows that $\widetilde M_x$ has the natural structure of an $\mathcal O_{X,x}$-module from $M_{\varphi(x)}$.
+\end{remark}
+
+\subsection{Geometry Is Opposite Algebra, Again}
+As in \autoref{thm:geoisoppalg}, we are going to build towards the following result.
+\begin{theorem}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. The functor from $A$-modules to $\OO_X$-modules taking $M$ to $\widetilde M$ is exact and fully faithful. This equivalence also respects $\oplus$ and $\otimes$.
+\end{theorem}
+\begin{proof}[Sketch]
+	Exactness is checked at stalks. Being fully faithful is approximately as hard as \autoref{thm:geoisoppalg}, where the same machinery approximately works.
+\end{proof}
+In particular, just as before, there is an adjunction lying in the background. Before doing anything, let's run the usual checks. Here are our functors.
+\begin{lemma} \label{lem:ox-mod-tilde}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. The map sending an $A$-module $M$ to an $\mathcal O_X$-module $\widetilde M$ defines the action of a functor $\widetilde\cdot\colon\mathrm{Mod}_A\to\mathrm{Mod}_{\OO_X}$ on objects.
+\end{lemma}
+\begin{proof}
+	Fix an $A$-module homomorphism $\varphi\colon M\to N$, and we need to exhibit the corresponding $\OO_X$-module morphism $\widetilde\varphi\colon\widetilde M\to\widetilde N$. Well, by \autoref{lem:morphismonbase}, it suffices to exhibit a morphism on the distinguished base. For this, we define the map $\widetilde\varphi$ on some $X_f\subseteq X$ by the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXHdpZGV0aWxkZSBNKEQoZikpIl0sWzAsMSwiXFx3aWRldGlsZGUgTihEKGYpKSJdLFsxLDEsIk5cXG90aW1lc19BUyhEKGYpKV57LTF9QSJdLFsxLDAsIk1cXG90aW1lc19BUyhEKGYpKV57LTF9QSJdLFsyLDAsIm0vZyJdLFszLDAsIm1cXG90aW1lczEvZyJdLFszLDEsIlxcdmFycGhpKG0pXFxvdGltZXMxL2ciXSxbMiwxLCJcXHZhcnBoaShtKS9nIl0sWzAsMSwiXFx3aWRldGlsZGVcXHZhcnBoaV97RChmKX0iLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwzLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwiXFxzaW1lcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFszLDJdLFs0LDUsIiIsMyx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw2LCIiLDMseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNywiIiwzLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9LCJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNyw2LCIiLDMseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\widetilde M(X_f)} & {M\otimes_AS(D(f))^{-1}A} & {m/g} & {m\otimes1/g} \\
+		{\widetilde N(X_f)} & {N\otimes_AS(D(f))^{-1}A} & {\varphi(m)/g} & {\varphi(m)\otimes1/g}
+		\arrow["{\widetilde\varphi_{D(f)}}"', dashed, from=1-1, to=2-1]
+		\arrow["\simeq"{marking}, draw=none, from=1-1, to=1-2]
+		\arrow["\simeq"{marking}, draw=none, from=2-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[dashed, maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	where we note that the map on the right is a homomorphism because it's just $\varphi\otimes_AS(D(f))^{-1}A$. To show that this assembles into a morphism of sheaves on the base, suppose $D(f')\subseteq D(f)\subseteq X$, and we note that the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXHdpZGV0aWxkZSBNKEQoZikpIl0sWzEsMCwiXFx3aWRldGlsZGUgTihEKGYpKSJdLFswLDEsIlxcd2lkZXRpbGRlIE0oRChmJykpIl0sWzEsMSwiXFx3aWRldGlsZGUgTihEKGYnKSkiXSxbMywwLCJtL2ciXSxbNCwwLCJcXHZhcnBoaShtKS9nIl0sWzMsMSwibS9nIl0sWzQsMSwiXFx2YXJwaGkobSkvZyJdLFswLDEsIlxcd2lkZXRpbGRlXFx2YXJwaGlfe0QoZil9Il0sWzIsMywiXFx3aWRldGlsZGVcXHZhcnBoaV97RChmJyl9Il0sWzAsMiwiXFxvcHtyZXN9X3tEKGYpLEQoZicpfSIsMl0sWzEsMywiXFxvcHtyZXN9X3tEKGYpLEQoZicpfSJdLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\widetilde M(X_f)} & {\widetilde N(X_f)} && {m/g} & {\varphi(m)/g} \\
+		{\widetilde M(X_{f'})} & {\widetilde N(X_{f'})} && {m/g} & {\varphi(m)/g}
+		\arrow["{\widetilde\varphi_{X_f}}", from=1-1, to=1-2]
+		\arrow["{\widetilde\varphi_{X_{f'}}}", from=2-1, to=2-2]
+		\arrow["{\op{res}_{X_f,X_{f'}}}"', from=1-1, to=2-1]
+		\arrow["{\op{res}_{X_f,X_{f'}}}", from=1-2, to=2-2]
+		\arrow[maps to, from=1-4, to=1-5]
+		\arrow[maps to, from=1-5, to=2-5]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=2-4, to=2-5]
+	\end{tikzcd}\]
+	commutes. Lastly, to see that we have created a morphism of $\OO_X$-modules, we check that the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goWF9mKVxcdGltZXNcXHdpZGV0aWxkZSBNKFhfZikiXSxbMSwwLCJcXHdpZGV0aWxkZSBNKFhfZikiXSxbMCwxLCJcXE9PX1goWF9mKVxcdGltZXNcXHdpZGV0aWxkZSBOKFhfZikiXSxbMSwxLCJcXHdpZGV0aWxkZSBOKFhfZikiXSxbMywwLCIoYS9nLG0vaCkiXSxbNCwwLCIoYW0pLyhnaCkiXSxbMywxLCIoYS9nLFxcdmFycGhpKG0pL2gpIl0sWzQsMSwiXFx2YXJwaGkoYW0pLyhnaCkiXSxbMCwxXSxbMiwzXSxbMCwyLCJ7XFxpZF97XFxPT19YKFhfZil9fVxcdGltZXNcXHdpZGV0aWxkZVxcdmFycGhpX3tYX2Z9IiwyXSxbMSwzLCJcXHZhcnBoaV97WF9mfSJdLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(X_f)\times\widetilde M(X_f)} & {\widetilde M(X_f)} && {(a/g,m/h)} & {(am)/(gh)} \\
+		{\OO_X(X_f)\times\widetilde N(X_f)} & {\widetilde N(X_f)} && {(a/g,\varphi(m)/h)} & {\varphi(am)/(gh)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{{\id_{\OO_X(X_f)}}\times\widetilde\varphi_{X_f}}"', from=1-1, to=2-1]
+		\arrow["{\varphi_{X_f}}", from=1-2, to=2-2]
+		\arrow[maps to, from=1-4, to=1-5]
+		\arrow[maps to, from=1-5, to=2-5]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=2-4, to=2-5]
+	\end{tikzcd}\]
+	commutes.
+
+	We now check the functoriality axioms.
+	\begin{itemize}
+		\item Identity: we need to show $\widetilde{\id_M}=\id_{\widetilde M}$. As usual, \autoref{lem:morphismonbase} tells us that we may check this on the distinguished base. Then, for any $m/g\in\widetilde M(X_f)$, we compute
+		\[(\widetilde{\id_M})_{X_f}(m/g)=\id_M(m)/g=m/g=\id_{\widetilde M(X_f)}(m/g)=(\id_{\widetilde M})_{\widetilde M(X_f)}(m/g).\]
+		\item Functoriality: fix morphism $\varphi\colon M_1\to M_2$ and $\psi\colon M_2\to M_3$, and we want to show that $\widetilde{\psi\circ\varphi}=\widetilde\psi\circ\widetilde\varphi$. By \autoref{lem:morphismonbase}, we may check this on the distinguished base. Well, for any $m/g\in\widetilde M_1(X_f)$, we compute
+		\begin{align*}
+			(\widetilde{\psi\circ\varphi})_{X_f}(m/g) &= (\psi\circ\varphi)(m)/g \\
+			&= \psi(\varphi(m))/g \\
+			&= \widetilde\psi_{X_f}((\varphi(m))/g) \\
+			&= (\widetilde\psi_{X_f}\circ\widetilde\varphi_{X_f})(m/g) \\
+			&= (\widetilde\psi\circ\widetilde\varphi)_{X_f}(m/g),
+		\end{align*}
+		which is what wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:ox-gamma}
+	Fix a ringed space $(X,\OO_X)$, and set $A\coloneqq\OO_X(X)$. Then, given an open subset $U\subseteq X$ the map sending an $\mathcal O_X$-module $\mc F$ to $\mc F(U)$ defines the action of a functor $\mathrm{Mod}_{\OO_X}\to\mathrm{Mod}_{\OO_X(U)}$ on objects. If $U=X$, we call this functor $\Gamma$.
+\end{lemma}
+\begin{proof}
+	To define our functor on morphisms, we will just send $\varphi\colon\mc F\to\mc G$ to the morphism $\varphi_U\colon\mc F(U)\to\mc G(U)$. Notably, $\varphi_U$ is a morphism of $\OO_X(U)$-modules by definition of an $\mathcal O_X$-module homomorphism.
+
+	We now check our functoriality axioms.
+	\begin{itemize}
+		\item Identity: note that $\id_{\mc F}\colon\mc F\to\mc F$ gets sent to the identity map $(\id_{\mc F})_U\colon\mc F(U)\to\mc F(U)$ by definition of this identity map.
+		\item Functoriality: given $\varphi\colon\mc F\to\mc G$ and $\psi\colon\mc G\to\mc H$, we note $(\psi\circ\varphi)_U=\psi_U\circ\varphi_U$ by definition of our composition.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Next up we exhibit some natural maps.
+\begin{lemma} \label{lem:geo-opp-alg-2-map}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. We exhibit a map $\varepsilon_\bullet\colon\widetilde\cdot\circ\Gamma\Rightarrow\id_{\mathrm{Mod}_{\OO_X}}$.
+\end{lemma}
+\begin{proof}
+	Fix an $\mathcal O_X$-module $\mc F$ so that we want to exhibit a map $\varepsilon_{\mc F}\colon\widetilde{\mc F(X)}\to\mc F$. As usual, \autoref{lem:morphismonbase} lets us define this morphism on the distinguished base. To begin, we acknowledge that we are looking for a map of $\OO_X(X_f)$-modules
+	\[S(D(f))^{-1}\mc F(X)\to\mc F(X_f).\]
+	Well, we will simply define this map by
+	\[(\varepsilon_{\mc F})_{X_f}\colon\frac sg\mapsto\frac1g(s|_{X_f}),\]
+	where the right-hand makes sense because $\mc F(X_f)$ is an $\mathcal O_X(X_f)$-module. Here are the checks.
+	\begin{itemize}
+		\item Well-defined: if $s_1/g_1=s_2/g_2$, then there is some $g\in S(D(f))$ such that $gg_2s_1=gg_1s_2$, so the fact $\mc F$ is an $\mathcal O_X$-module tells us
+		\[gg_2|_{X_f}\cdot s_1|_{X_f}=gg_1|_{X_f}\cdot s_2|_{X_f}\]
+		which rearranges into $\frac1{g_1}(s_1|_{X_f})=\frac1{g_2}(s_2|_{X_f})$.
+		\item Homomorphic: given $a/g,a'/g'\in S(D(f))^{-1}A$ and $m/h,m'/h'\in S(D(f))^{-1}A$, we compute
+		\begin{align*}
+			(\varepsilon_{\mc F})_{X_f}\left(\frac ag\cdot\frac mh+\frac{a'}{g'}\frac{m'}{h'}\right) &= (\varepsilon_{\mc F})_{X_f}\left(\frac{g'h'am+gha'm'}{ghg'h'}\right) \\
+			&= \frac1{ghg'h'}(g'h'am|_{X_f}+gha'm'|_{X_f}) \\
+			&= \frac ag\cdot\frac1{h}(m|_{X_f})+\frac{a'}{g'}\cdot\frac1{h'}(m'|_{X_f}) \\
+			&= \frac ag\cdot(\varepsilon_{\mc F})_{X_f}(m/h)+\frac{a'}{g'}\cdot(\varepsilon_{\mc F})_{X_f}(m'/h').
+		\end{align*}
+		\item Morphism of sheaves on a base: given $X_{f'}\subseteq X_f$, we see that the diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJTKEQoZikpXnstMX1cXG1jIEYoWCkiXSxbMCwxLCJTKEQoZicpKV57LTF9XFxtYyBGKFgpIl0sWzEsMCwiXFxtYyBGKEQoZikpIl0sWzEsMSwiXFxtYyBGKEQoZicpKSJdLFszLDAsIm0vZyJdLFs0LDAsIlxcZnJhYzFnbXxfe0QoZil9Il0sWzMsMSwibXxfe0QoZicpfS9nIl0sWzQsMSwiXFxmcmFjMWdtfF97RChmJyl9Il0sWzAsMiwiXFx2YXJlcHNpbG9uX1xcbWMgRiJdLFsxLDMsIlxcdmFyZXBzaWxvbl9cXG1jIEYiXSxbMCwxLCJcXG9we3Jlc31fe0QoZiksRChmJyl9IiwyXSxbMiwzLCJcXG9we3Jlc31fe0QoZiksRChmJyl9Il0sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{S(D(f))^{-1}\mc F(X)} & {\mc F(X_f)} && {m/g} & {\frac1gm|_{X_f}} \\
+			{S(D(f'))^{-1}\mc F(X)} & {\mc F(X_{f'})} && {m|_{X_{f'}}/g} & {\frac1gm|_{X_{f'}}}
+			\arrow["{\varepsilon_\mc F}", from=1-1, to=1-2]
+			\arrow["{\varepsilon_\mc F}", from=2-1, to=2-2]
+			\arrow["{\op{res}_{X_f,X_{f'}}}"', from=1-1, to=2-1]
+			\arrow["{\op{res}_{X_f,X_{f'}}}", from=1-2, to=2-2]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow[maps to, from=1-5, to=2-5]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-5]
+		\end{tikzcd}\]
+		commutes.
+	\end{itemize}
+	Thus, we have defined a morphism of our sheaves. To define a morphism of $\OO_X$-modules, we need to check that the left diagram of
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1hcXHRpbWVzXFx3aWRldGlsZGV7XFxtYyBGKFgpfSJdLFswLDEsIlxcT09fWFxcdGltZXNcXG1jIEYiXSxbMSwwLCJcXHdpZGV0aWxkZXtcXG1jIEYoWCl9Il0sWzEsMSwiXFxtYyBGIl0sWzIsMCwiKGEsbS9nKSJdLFszLDAsIihhbSkvZyJdLFsyLDEsIihhLFxcZnJhYzFnbXxfe0QoZil9KSJdLFszLDEsIlxcZnJhYzFnKGFtfF97RChmKX0pIl0sWzAsMSwiKFxcaWRfe1xcT09fWH0sXFx2YXJlcHNpbG9uX3tcXG1jIEZ9KSIsMl0sWzIsMywiXFx2YXJlcHNpbG9uX3tcXG1jIEZ9Il0sWzAsMl0sWzEsM10sWzQsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X\times\widetilde{\mc F(X)}} & {\widetilde{\mc F(X)}} & {(a/h,m/g)} & {(am)/(gh)} \\
+		{\OO_X\times\mc F} & {\mc F} & {(a/h,\frac1gm|_{X_f})} & {\frac1{gh}(am|_{X_f})}
+		\arrow["{(\id_{\OO_X},\varepsilon_{\mc F})}"', from=1-1, to=2-1]
+		\arrow["{\varepsilon_{\mc F}}", from=1-2, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commutes; as usual, we can check the distinguished base by \autoref{lem:morphismonbase}, which is what we've done on the right.
+\end{proof}
+\begin{remark} \label{rem:natural-quasicoherent-map-is-iso}
+	If $\mc F=\widetilde M$ for an $A$-module $M$, then $\varepsilon_\mc F=\id_\mc F$. Indeed, by \autoref{lem:morphismonbase}, it suffices to check this on the distinguished base. Well, for any $X_f\subseteq X$ and $m/g\in\widetilde M(X_f)$, we note
+	\[(\varepsilon_\mc F)_{X_f}(m/g)=\frac1g(m|_{X_f})=m/g=({\id_\mc F})_{X_f}(m/g).\]
+\end{remark}
+\begin{theorem} \label{thm:ox-mod-adjunction}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Then the functors $\widetilde\cdot$ and $\Gamma$ are adjoint. In other words, there is a natural isomorphism
+	\[\begin{array}{ccc}
+		\op{Hom}_{\OO_X}(\widetilde M,\mc F) &\simeq& \op{Hom}_A(M,\mc F(X)) \\
+		\varphi &\mapsto& \varphi_X \\
+		\varepsilon_\mc F\circ\widetilde f &\mapsfrom& f
+	\end{array}\]
+	for any $A$-module $M$ and $\OO_X$-module $\mc F$. Here $\varepsilon_\bullet$ is from \autoref{lem:geo-opp-alg-2-map}.
+\end{theorem}
+\begin{proof}
+	Quickly, note that $\varphi_X\colon\widetilde M(X)\to\mc F(X)$ is indeed a map $M\to\mc F(X)$ because $\widetilde M(X)=\widetilde M(1)=M$.
+	
+	Now, as in \autoref{thm:biggeoisalgopp}, naturality will follow pretty quickly once we have our bijection. We now check that these are inverses; fix an $A$-module $M$ and $\OO_X$-module $\mc F$.
+	\begin{itemize}
+		\item Begin with $\varphi\colon\widetilde M\to\mc F$; we need to show that
+		\[\varphi=\varepsilon_\mc F\circ\widetilde{\varphi_X}\]
+		as morphisms $\widetilde M\to\mc F$.
+
+		By \autoref{lem:morphismonbase}, it suffices to show this equality on the distinguished base, so fix some $X_a\subseteq X$, and we want to show
+		\[\varphi_{X_a}\stackrel?=(\varepsilon_\mc F)_{X_a}\circ(\widetilde\varphi_X)_{X_a}.\]
+		Well, for any $m/b\in\widetilde M(X_a)=S(D(a))^{-1}M$, we compute
+		\begin{align*}
+			\big((\varepsilon_\mc F)_{X_a}\circ(\widetilde\varphi_X)_{X_a}\big)(m/b) &= (\varepsilon_\mc F)_{X_a}(\varphi_X(m)/b) \\
+			&= \frac1b(\varphi_X(m)|_{X_a}) \\
+			&= \frac1b\varphi_{X_a}(m) \\
+			&= \varphi_{X_a}(m/b).
+		\end{align*}
+
+		\item Begin with $f\colon M\to\mc F(X)$; we need to show that $f=(\varepsilon_\mc F\circ\widetilde f)_X$ as morphisms $M\to\mc F(X)$. Well,
+		\[(\varepsilon_\mc F\circ\widetilde f)_X=(\varepsilon_\mc F)_{X_1}\circ\widetilde f_{X_1}={\id_{\mc F}}\circ f=f.\]
+	\end{itemize}
+	And here are our naturality checks.
+	\begin{itemize}
+		\item Fix an $A$-module homomorphism $g\colon M\to N$. Then the following diagram commutes.
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG9we0hvbX1fe1xcT09fWH0oXFx3aWRldGlsZGUgTixcXG1jIEYpIl0sWzEsMCwiXFxvcHtIb219X0EoTixcXG1jIEYoWCkpIl0sWzAsMSwiXFxvcHtIb219X3tcXE9PX1h9KFxcd2lkZXRpbGRlIE0sXFxtYyBGKSJdLFsxLDEsIlxcb3B7SG9tfV9BKE0sXFxtYyBGKFgpKSJdLFszLDAsImYiXSxbMywxLCJmXFxjaXJjIGciXSxbMiwwLCJcXHZhcmVwc2lsb25fXFxtYyBGXFxjaXJjXFx3aWRldGlsZGUgZiJdLFsyLDEsIlxcdmFyZXBzaWxvblxcY2lyY1xcd2lkZXRpbGRle2ZcXGNpcmMgZ30iXSxbMCwxLCJcXHNpbWVxIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMywiLVxcY2lyYyBnIl0sWzAsMiwiLVxcY2lyY1xcd2lkZXRpbGRlIGciXSxbMiwzLCJcXHNpbWVxIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsNiwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Hom}_{\OO_X}(\widetilde N,\mc F)} & {\op{Hom}_A(N,\mc F(X))} & {\varepsilon_\mc F\circ\widetilde f} & f \\
+			{\op{Hom}_{\OO_X}(\widetilde M,\mc F)} & {\op{Hom}_A(M,\mc F(X))} & {\varepsilon\circ\widetilde{f\circ g}} & {f\circ g}
+			\arrow["\simeq"{marking}, draw=none, from=1-1, to=1-2]
+			\arrow["{-\circ g}", from=1-2, to=2-2]
+			\arrow["{-\circ\widetilde g}", from=1-1, to=2-1]
+			\arrow["\simeq"{description}, draw=none, from=2-1, to=2-2]
+			\arrow[maps to, from=1-4, to=1-3]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-3]
+			\arrow[maps to, from=1-3, to=2-3]
+		\end{tikzcd}\]
+		\item Fix an $\mathcal O_X$-module homomorphism $\psi\circ\mc F\to\mc G$. Then the following diagram commutes.
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG9we0hvbX1fe1xcT09fWH0oXFx3aWRldGlsZGUgTSxcXG1jIEYpIl0sWzEsMCwiXFxvcHtIb219X0EoTSxcXG1jIEYoWCkpIl0sWzAsMSwiXFxvcHtIb219X3tcXE9PX1h9KFxcd2lkZXRpbGRlIE0sXFxtYyBHKSJdLFsxLDEsIlxcb3B7SG9tfV9BKE0sXFxtYyBHKFgpKSJdLFsyLDAsIlxcdmFycGhpIl0sWzIsMSwiXFxwc2lcXGNpcmNcXHZhcnBoaSJdLFszLDAsIlxcdmFycGhpX1giXSxbMywxLCIoXFxwc2lcXGNpcmNcXHZhcnBoaSlfWCJdLFswLDEsIlxcc2ltZXEiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCJcXHBzaV9YXFxjaXJjLSJdLFswLDIsIlxccHNpXFxjaXJjLSJdLFsyLDMsIlxcc2ltZXEiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw2LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Hom}_{\OO_X}(\widetilde M,\mc F)} & {\op{Hom}_A(M,\mc F(X))} & \varphi & {\varphi_X} \\
+			{\op{Hom}_{\OO_X}(\widetilde M,\mc G)} & {\op{Hom}_A(M,\mc G(X))} & \psi\circ\varphi & {(\psi\circ\varphi)_X}
+			\arrow["\simeq"{marking}, draw=none, from=1-1, to=1-2]
+			\arrow["{\psi_X\circ-}", from=1-2, to=2-2]
+			\arrow["{\psi\circ-}", from=1-1, to=2-1]
+			\arrow["\simeq"{description}, draw=none, from=2-1, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-3, to=2-4]
+			\arrow[maps to, from=1-3, to=2-3]
+		\end{tikzcd}\]
+	\end{itemize}
+	The above checks finish our check that we have an adjunction.
+\end{proof}
+\begin{corollary}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Then the functor $\widetilde\cdot\colon\mathrm{Mod}_A\to\mathrm{Mod}_{\OO_X}$ is fully faithful.
+\end{corollary}
+\begin{proof}
+	Given $A$-modules $M$ and $N$, we need to show
+	\[\widetilde\cdot\colon\op{Hom}_A(M,N)\to\op{Hom}_{\OO_X}(\widetilde M,\widetilde N)\]
+	is a bijection. The point is to use \autoref{thm:ox-mod-adjunction} with $\mc F$ to set $\widetilde N$. Technically, we are told that the map
+	\[f\mapsto\varepsilon_{\widetilde N}\circ\widetilde f\]
+	is a bijection, but \autoref{rem:natural-quasicoherent-map-is-iso} tells us that $\varepsilon_{\widetilde N}={\id_{\widetilde N}}$, so this bijection really is just $f\mapsto\widetilde f$.
+\end{proof}
+\begin{corollary} \label{cor:the-quasicoherent-iso}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Given an $\mathcal O_X$-module $\mc F$, there exists an $A$-moodule $M$ such that $\mc F\cong\widetilde M$ if and only if the map $\varepsilon_\mc F\colon\widetilde{\mc F(X)}\to\mc F$ of \autoref{lem:geo-opp-alg-2-map} is an isomorphism.
+\end{corollary}
+\begin{proof}
+	If the map $\varepsilon_\mc F$ is an isomorphism, then take $M\coloneqq\mc F(X)$, and the needed isomorphism is just $\varepsilon_\mc F$.
+
+	In the other direction, suppose that we have an isomorphism $\varphi\colon\widetilde M\cong\mc F$. Then \autoref{thm:ox-mod-adjunction} tells us that
+	\[\varphi=\varepsilon_\mc F\circ\widetilde{\varphi_X}.\]
+	Now, $\varphi$ is an isomorphism, so $\varphi_X$ is an isomorphism by functoriality of $\Gamma$ in \autoref{lem:ox-gamma}. Thus, $\widetilde{\varphi_X}$ is still an isomorphism by functoriality of $\widetilde\cdot$ in \autoref{lem:ox-mod-tilde}. Thus, we can write
+	\[\varepsilon_\mc F=\varphi\circ\widetilde{\varphi_X}^{-1},\]
+	so $\varepsilon_\mc F$ is the composite of isomorphisms and therefore an isomorphism.
+\end{proof}
+\begin{corollary} \label{cor:restrict-associated-ox-module}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Given an $A$-module $M$ and a distinguished open subscheme $X_f\subseteq X$, the morphism $\varepsilon_{\widetilde M|_{X_f}}$ is an isomorphism.
+\end{corollary}
+\begin{proof}
+	By the functoriality of extending a sheaf on a base from \autoref{lem:sheafonabasefunctor}, it suffices to show that $\varepsilon_{\widetilde M|_{X_f}}$ is an isomorphism on the distinguished base of $X_f$. Noting that $\OO_X(X_f)\simeq A_f$ through the canonical isomorphism $\varphi\colon\Spec A\cong X$, we can write an element of $\OO_X(X_f)$ as $a/f^n$ for some $a\in A$ and $n\in\NN$, from which we note
+	\[(X_f)_{a/f^n}=\{\varphi(\mf p)\in X:f\notin\mf p,a/f^n\notin\mf pA_f\}=\{\varphi(\mf p):af\notin\mf p\}=X_{af},\]
+	so our distinguished open subschemes look like $X_{af}$ for $a\in A$.
+
+	Thus, we are showing that
+	\[(\varepsilon_{\widetilde M_{X_f}})_{X_{af}}\colon\underbrace{\widetilde{\widetilde M(X_f)}(X_{af})}_{S(D(af))^{-1}\widetilde M(X_f)}\to\underbrace{\widetilde M(X_{af})}_{S(D(af))^{-1}M}\]
+	is an isomorphism for each $a\in A$; by construction, this morphism sends $m/g$ to $\frac1g(m/1)=\frac11m/g$. Namely, we see that $S(D(af))^{-1}\widetilde M(X_f)=S(D(af))^{-1}S(D(f))^{-1}M\simeq S(D(af))^{-1}M$ by sending $m/g$ to $(m/g)/1$ because $D(ag)\supseteq D(f)$, which is this map.
+\end{proof}
+\begin{corollary} \label{cor:epsilon-restriction-functoriality}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Given an $\mathcal O_X$-module $\mc F$ and some distinguished open subscheme $X_f\subseteq X$, the following diagram commutes.
+	% https://q.uiver.app/?q=WzAsNCxbMiwxLCJcXG1jIEZ8X3tYX2Z9Il0sWzIsMCwiXFx3aWRldGlsZGV7XFxtYyBGKFhfZil9Il0sWzAsMSwiXFx3aWRldGlsZGV7XFxtYyBGKFgpfXxfe1hfZn0iXSxbMCwwLCJcXHdpZGV0aWxkZXtcXHdpZGV0aWxkZXtcXG1jIEYoWCl9KFhfZil9Il0sWzEsMCwiXFx2YXJlcHNpbG9uX3tcXG1jIEZ8X3tYX2Z9fSJdLFsyLDAsIlxcdmFyZXBzaWxvbl97XFxtYyBGfXxfe1hfZn0iXSxbMywyLCJcXHZhcmVwc2lsb25fe1xcd2lkZXRpbGRle1xcbWMgRihYKX18X3tYX2Z9fSIsMl0sWzMsMSwiXFx3aWRldGlsZGV7XFx2YXJlcHNpbG9uX3tcXG1jIEZ9KFhfZil9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\widetilde{\widetilde{\mc F(X)}(X_f)}} && {\widetilde{\mc F(X_f)}} \\
+		{\widetilde{\mc F(X)}|_{X_f}} && {\mc F|_{X_f}}
+		\arrow["{\varepsilon_{\mc F|_{X_f}}}", from=1-3, to=2-3]
+		\arrow["{\varepsilon_{\mc F}|_{X_f}}", from=2-1, to=2-3]
+		\arrow["{\varepsilon_{\widetilde{\mc F(X)}|_{X_f}}}"', from=1-1, to=2-1]
+		\arrow["{\widetilde{\varepsilon_{\mc F}(X_f)}}", from=1-1, to=1-3]
+	\end{tikzcd}\]
+\end{corollary}
+\begin{proof}
+	By the functoriality of extending a sheaf on a base from \autoref{lem:sheafonabasefunctor}, it suffices to check this on the distinguished base. As we saw in the previous corollary, the distinguished base on $X_f$ consists of $X_{af}$ for various $a\in A$.
+
+	Thus, for some $X_{af}$, we check that the square
+	% https://q.uiver.app/?q=WzAsOCxbMiwxLCJcXG1jIEYoWF97YWZ9KSJdLFsyLDAsIlxcd2lkZXRpbGRle1xcbWMgRihYX2YpfShYX3thZn0pIl0sWzAsMSwiXFx3aWRldGlsZGV7XFxtYyBGKFgpfShYX3thZn0pIl0sWzAsMCwiXFx3aWRldGlsZGV7XFx3aWRldGlsZGV7XFxtYyBGKFgpfShYX2YpfShYX3thZn0pIl0sWzMsMCwiXFxmcmFjIGJ7KGFmKV5ufVxcbGVmdChcXGZyYWN7YX17Zl5tfVxcY2RvdCB4XFxyaWdodCkiXSxbNCwwLCJcXGZyYWMgYnsoYWYpXm59XFxsZWZ0KFxcZnJhY3theH17Zl5tfVxccmlnaHQpIl0sWzQsMSwiXFxmcmFje2FieH17KGFmKV5uZl5tfSJdLFszLDEsIlxcZnJhY3tiXFxsZWZ0KFxcZnJhY3thfXtmXm19XFxjZG90IHhcXHJpZ2h0KX17KGFmKV5ufSJdLFsxLDAsIlxcdmFyZXBzaWxvbl97XFxtYyBGfF97WF9mfX0iXSxbMiwwLCJcXHZhcmVwc2lsb25fe1xcbWMgRn18X3tYX2Z9Il0sWzMsMiwiXFx2YXJlcHNpbG9uX3tcXHdpZGV0aWxkZXtcXG1jIEYoWCl9fF97WF9mfX0iLDJdLFszLDEsIlxcd2lkZXRpbGRle1xcdmFyZXBzaWxvbl97XFxtYyBGfShYX2YpfSJdLFs0LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNyw2LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\widetilde{\widetilde{\mc F(X)}(X_f)}(X_{af})} && {\widetilde{\mc F(X_f)}(X_{af})} & {\frac b{(af)^n}\left(\frac{c}{f^m}\cdot x\right)} & {\frac b{(af)^n}\left(\frac{cx}{f^m}\right)} \\
+		{\widetilde{\mc F(X)}(X_{af})} && {\mc F(X_{af})} & {\frac{b\left(\frac{c}{f^m}\cdot x\right)}{(af)^n}} & {\frac{bcx}{(af)^nf^m}}
+		\arrow["{\varepsilon_{\mc F|_{X_f}}}", from=1-3, to=2-3]
+		\arrow["{\varepsilon_{\mc F}|_{X_f}}", from=2-1, to=2-3]
+		\arrow["{\varepsilon_{\widetilde{\mc F(X)}|_{X_f}}}"', from=1-1, to=2-1]
+		\arrow["{\widetilde{\varepsilon_{\mc F}(X_f)}}", from=1-1, to=1-3]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=2-4, to=2-5]
+		\arrow[maps to, from=1-5, to=2-5]
+		\arrow[maps to, from=1-4, to=1-5]
+	\end{tikzcd}\]
+	commutes by expanding out all the definitions. At a high level, all of our definitions have ``essentially'' been identities, so there's not much to worry about here.
 \end{proof}
 
+\subsection{Extending Geometry Is Opposite Algebra, Again}
+We are going to want more properties of the functor $\widetilde\cdot\colon\mathrm{Mod}_A\to\mathrm{Mod}_{\OO_X}$, where $X$ is an affine scheme and $A=\OO_X(X)$. Here is exactness.
+\begin{lemma} \label{lem:stalks-of-gotten-mod-functorial}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Let $\varphi\colon X\cong\Spec A$ be the canonical isomorphism. For an $A$-module homomorphism $f\colon M\to N$, the diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwxLCJcXHdpZGV0aWxkZSBNX3giXSxbMSwxLCJcXHdpZGV0aWxkZSBOX3giXSxbMCwwLCJNX3tcXHZhcnBoaSh4KX0iXSxbMSwwLCJOX3tcXHZhcnBoaSh4KX0iXSxbMCwxLCJcXHdpZGV0aWxkZSBmX3giXSxbMiwzLCJmX3tcXHZhcnBoaSh4KX0iXSxbMiwwXSxbMywxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{M_{\varphi(x)}} & {N_{\varphi(x)}} \\
+		{\widetilde M_x} & {\widetilde N_x}
+		\arrow["{\widetilde f_x}", from=2-1, to=2-2]
+		\arrow["{f_{\varphi(x)}}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+	commutes, where the vertical morphisms are the isomorphisms of \autoref{lem:stalk-of-gotten-ox-mod}, and $f_{\varphi(x)}$ is the localized map induced map $M_{\varphi(x)}\simeq M\otimes_AA_{\varphi(x)}$.
+\end{lemma}
+\begin{proof}
+	We simply compute that
+	% https://q.uiver.app/?q=WzAsOCxbMCwxLCJcXHdpZGV0aWxkZSBNX3giXSxbMSwxLCJcXHdpZGV0aWxkZSBOX3giXSxbMCwwLCJNX3tcXHZhcnBoaSh4KX0iXSxbMSwwLCJOX3tcXHZhcnBoaSh4KX0iXSxbMiwwLCJtL2EiXSxbMywwLCJmKG0pL2EiXSxbMiwxLCJbKFhfYSxtL2EpXSJdLFszLDEsIlsoWF9hLGYobSkvYSldIl0sWzAsMSwiXFx3aWRldGlsZGUgZl94Il0sWzIsMywiZl97XFx2YXJwaGkoeCl9Il0sWzIsMF0sWzMsMV0sWzQsNSwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{M_{\varphi(x)}} & {N_{\varphi(x)}} & {m/a} & {f(m)/a} \\
+		{\widetilde M_x} & {\widetilde N_x} & {[(X_a,m/a)]} & {[(X_a,f(m)/a)]}
+		\arrow["{\widetilde f_x}", from=2-1, to=2-2]
+		\arrow["{f_{\varphi(x)}}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	from the construction of $\widetilde f$.
+\end{proof}
+\begin{proposition}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Then the functor $\widetilde\cdot\colon\mathrm{Mod}_A\to\mathrm{Mod}_{\OO_X}$ of \autoref{lem:ox-mod-tilde} is exact.
+\end{proposition}
+\begin{proof}
+	Let $\varphi\colon X\cong\Spec A$ be the canonical isomorphism. Fix an exact sequence of $A$-modules named
+	\[0\to M'\stackrel f\to M\stackrel g\to M''\to 0.\]
+	Because localization is an exact functor on $A$-modules (\cite[Proposition~2.5]{eisenbud-comm-alg}), we note that
+	\begin{equation}
+		0\to M'_\mf p\stackrel{f_\mf p}\to M_\mf p\stackrel{g_\mf p}\to M''_\mf p\to0 \label{eq:exact-on-mod-a}
+	\end{equation}
+	is a short exact sequence for any prime $\mf p\in\Spec A$. Thus, for any $x$, we draw the diagram
+	% https://q.uiver.app/?q=WzAsMTAsWzAsMSwiMCJdLFsxLDEsIlxcd2lkZXRpbGRlIE1feCciXSxbMSwwLCJNX3tcXHZhcnBoaSh4KX0nIl0sWzIsMSwiXFx3aWRldGlsZGUgTV94Il0sWzMsMSwiXFx3aWRldGlsZGUgTV94JyciXSxbMiwwLCJNX3tcXHZhcnBoaSh4KX0iXSxbMywwLCJNX3tcXHZhcnBoaSh4KX0nJyJdLFswLDAsIjAiXSxbNCwwLCIwIl0sWzQsMSwiMCJdLFs3LDJdLFsyLDUsImZfe1xcdmFycGhpKHgpfSJdLFs1LDYsImdfe1xcdmFycGhpKHgpfSJdLFs2LDhdLFswLDFdLFsxLDMsIlxcd2lkZXRpbGRlIGZfeCJdLFszLDQsIlxcd2lkZXRpbGRlIGdfeCJdLFs0LDldLFsyLDFdLFs1LDNdLFs2LDRdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {M_{\varphi(x)}'} & {M_{\varphi(x)}} & {M_{\varphi(x)}''} & 0 \\
+		0 & {\widetilde M_x'} & {\widetilde M_x} & {\widetilde M_x''} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow["{f_{\varphi(x)}}", from=1-2, to=1-3]
+		\arrow["{g_{\varphi(x)}}", from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{\widetilde f_x}", from=2-2, to=2-3]
+		\arrow["{\widetilde g_x}", from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+	\end{tikzcd}\]
+	where the vertical morphisms are the isomorphisms of \autoref{lem:stalk-of-gotten-ox-mod}. Notably, each square commutes by \autoref{lem:stalks-of-gotten-mod-functorial}, and the top row is an instance of the exact sequence \autoref{eq:exact-on-mod-a}, so the bottom row is also exact.
+
+	Thus, the sequence
+	\[0\to\widetilde M'\stackrel{\widetilde f}\to\widetilde M\stackrel{\widetilde g}\to\widetilde M''\to0\]
+	is the stalk over any $x\in X$, so this is exact by \autoref{prop:stalk-exact-by-stalks}.
+\end{proof}
+
+\subsection{Quasicoherent Sheaves}
 We are now ready to define quasicoherent sheaves.
 \begin{definition}[Quasicoherent sheaf]
-	Fix a scheme $(X,\OO_X)$. An $\mathcal O_X$-module $\mc F$ is \textit{quasicoherent} if and only if $X$ has an affine open cover $\{U_\alpha\}_{\alpha\in\lambda}$ such that $\mc F|_{U_\alpha}\simeq\widetilde{M_\alpha}$ for some $\OO_X(U_\alpha)$-module $M_\alpha$.
+	Fix a scheme $(X,\OO_X)$. An $\mathcal O_X$-module $\mc F$ is \textit{quasicoherent} if and only if $X$ has an affine open cover $\{U_\alpha\}_{\alpha\in\lambda}$ such that $\mc F|_{U_\alpha}\cong\widetilde{M_\alpha}$ for some $\OO_X(U_\alpha)$-module $M_\alpha$.
 \end{definition}
-Using \autoref{lem:affine-comm}, it is equivalent to saying that $\mc F|_U\simeq\widetilde M$ for some $\OO_X(U)$-module $M$, for any affine open subscheme $U\subseteq X$.
+As usual, we note that it's annoying that we only have an affine open cover because we would like to have $\mc F|_U\cong\widetilde M$ for some $\OO_X(U)$-module $M$ at any affine open subscheme $U\subseteq X$.
 
-Namely, for (i), has to show that $\mc F|_U\simeq\widetilde M$ implies that $\mc F|_{U_f}\simeq\widetilde{M_f}$ for some $f\in\OO_X(U)$, which is by construction of $\widetilde M$. For (ii), one has to show that if $A\coloneqq\OO_X(U)$ is generated by some $f_i$ with $\mc F|_{U_{f_i}}\simeq\widetilde{M_i}$ where $M_i$ is an $A_{f_i}$-module gluing together to $\widetilde M$. Well, one just has to check that $\mc F$ is isomorphic to the kernel of the natural map
-\[\prod_i\widetilde{M_i}\to\prod_{i,j}M_{ij}.\]
+Well, here's the appropriate application of the Affine communication lemma.
+% \begin{lemma}
+% 	Fix a ringed space $(X,\OO_X)$ and an $\mathcal O_X$-module $\mc F$. Then for any open cover $\{U_\alpha\}_{\alpha\in\lambda}$ of an open subscheme $U\subseteq X$, the sequence
+% 	\[\arraycolsep=1.4pt\begin{array}{ccccccccc}
+% 		0 &\to& \mc F(U) &\to& \displaystyle\prod_{\alpha\in\lambda}\mc F(U_\alpha) &\to& \displaystyle\prod_{\alpha,\beta\in\lambda}\mc F(U_\alpha\cap U_\beta) \\
+% 		&&& f &\mapsto& (f|_{U_\alpha})_{\alpha\in\lambda} \\
+% 		&&&&& (f_\alpha)_{\alpha\in\lambda} &\mapsto& (f_\alpha|_{U_\alpha\cap U_\beta}-f_\beta|_{U_\alpha\cap U_\beta})_{\alpha,\beta\in\lambda}
+% 	\end{array}\]
+% 	is an exact sequence of $\OO_X(U)$-modules.
+% \end{lemma}
+% \begin{proof}
+% 	We already showed exactness back in \autoref{lem:sheaf-by-left-es}. To show that these are morphisms of $\OO_X(U)$-modules, we first give some $f\in\mc F(V)$ with $V\subseteq U$ an action by $r\in\OO_X(U)$ by $r\cdot f\coloneqq r|_V\cdot f$. We can see that this defines a module action because we are just using the pre-composition
+% 	\[\OO_X(U)\to\OO_X(V)\to\op{Aut}(\mc F(U))\]
+% 	to define our action. Then the products become $\OO_X(U)$-modules as products of $\OO_X(U)$-modules.
+% 	We now show that the map $\alpha\colon\mc F(U)\to\prod_{\alpha\in\lambda}\mc F(U_\alpha)$ is a morphism of $\OO_X(U)$-modules. Well, given $f\in\mc F(U)$ and $r\in\OO_X(U)$, we see
+% 	\[\alpha(rf)=((rf)|_{U_\alpha})_\alpha=(r|_{U_\alpha}\cdot f|_{U_\alpha})_{\alpha}=r\cdot(f|_{U_\alpha})_{\alpha}.\]
+% 	Similarly, to show that the map $\beta\colon\prod_{\alpha\in\lambda}\mc F(U_\alpha)\to\prod_{\alpha,\beta\in\lambda}\mc F(U_\alpha\cap U_\beta)$, we pick up $(f_\alpha)_{\alpha\in\lambda}\in\prod_{\alpha\in\lambda}\mc F(U_\alpha)$ and check
+% 	\begin{align*}
+% 		\beta(r\cdot(f_\alpha)_\alpha) &= \beta((r|_{U_\alpha}\cdot f_\alpha)_\alpha) \\
+% 		&= \big((r|_{U_\alpha}\cdot f_\alpha)|_{U_\alpha\cap U_\beta}-(r|_{U_\beta}\cdot f_\beta)|_{U_\alpha\cap U_\beta}\big)_{\alpha,\beta} \\
+% 		&= \big(r|_{U_\alpha\cap U_\beta}\cdot(f_\alpha|_{U_\alpha\cap U_\beta}-f_\beta|_{U_\alpha\cap U_\beta})\big)_{\alpha,\beta} \\
+% 		&= r\cdot\beta((f_\alpha)_\alpha).
+% 	\end{align*}
+% 	This finishes.
+% \end{proof}
+\begin{lemma} \label{lem:better-quasicoherent}
+	Fix a quasicoherent sheaf $\mc F$ on a scheme $X$. Then, for any affine open subscheme $U\subseteq X$, there is an $\mathcal O_X(U)$-module $M$ such that $\mc F|_U\cong\widetilde M$.
+\end{lemma}
+\begin{proof}
+	We apply \autoref{lem:affine-comm}; call an affine open subscheme $U\subseteq X$ ``respectful'' if and only if there is an $\mathcal O_X(U)$-module $M$ such that $\mc F|_U\cong\widetilde M$. Because $\mc F$ is quasicoherent, we are given that there is an open cover of respectful affine open subschemes of $X$, so it remains to check conditions (i) and (ii).
+	\begin{listroman}
+		\item We are given a respectful affine open subscheme $U$ and some $f\in\OO_X(U)$ and would like to show that $U_f$ is respectful. Well, by \autoref{cor:the-quasicoherent-iso}, we are given that $\varepsilon_{\mc F|_U}\colon\widetilde{\mc F(U)}\to\mc F|_U$ is an isomorphism of $\OO_U$-modules. In particular, by \autoref{cor:epsilon-restriction-functoriality}, we conclude
+		% https://q.uiver.app/?q=WzAsNCxbMiwxLCJcXG1jIEZ8X3tVX2Z9Il0sWzIsMCwiXFx3aWRldGlsZGV7XFxtYyBGKFVfZil9Il0sWzAsMSwiXFx3aWRldGlsZGV7XFxtYyBGKFUpfSJdLFswLDAsIlxcd2lkZXRpbGRle1xcd2lkZXRpbGRle1xcbWMgRihVKX0oVV9mKX0iXSxbMSwwLCJcXHZhcmVwc2lsb25fe1xcbWMgRnxfe1VfZn19Il0sWzIsMCwiXFx2YXJlcHNpbG9uX3tcXG1jIEZ8X1V9fF97VV9mfSJdLFszLDEsIlxcd2lkZXRpbGRle1xcdmFyZXBzaWxvbl97XFxtYyBGfF9VfShVX2YpfSJdLFszLDIsIlxcdmFyZXBzaWxvbl97XFx3aWRldGlsZGV7XFxtYyBGKFUpfXxfe1VfZn19IiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\widetilde{\widetilde{\mc F(U)}(U_f)}} && {\widetilde{\mc F(U_f)}} \\
+			{\widetilde{\mc F(U)}} && {\mc F|_{U_f}}
+			\arrow["{\varepsilon_{\mc F|_{U_f}}}", from=1-3, to=2-3]
+			\arrow["{\varepsilon_{\mc F|_U}|_{U_f}}", from=2-1, to=2-3]
+			\arrow["{\widetilde{\varepsilon_{\mc F|_U}(U_f)}}", from=1-1, to=1-3]
+			\arrow["{\varepsilon_{\widetilde{\mc F(U)}|_{U_f}}}"', from=1-1, to=2-1]
+		\end{tikzcd}\]
+		commutes. The left arrow is an isomorphism by \autoref{cor:restrict-associated-ox-module}. The top arrow is an isomorphism by functoriality of taking sections and $\widetilde\cdot$ from \autoref{lem:ox-mod-tilde} because $\varepsilon_{\mc F|_U}$ is an isomorphism and using functoriality of restriction from \autoref{lem:ox-res-functorial}. Lastly, the bottom arrow is an isomorphism functoriality of restriction in \autoref{lem:ox-res-functorial}, so we conclude that $\varepsilon_{\mc F}|_{U_f}$ is also an isomorphism. We conclude that $U_f$ is respectful.
+
+		\item We are given an affine open subscheme $U$ and some $\{f_1,\ldots,f_n\}$ so that the $U_{f_i}$ cover $U$ and are respectful, and we need to show that $U$ is respectful. By \autoref{cor:the-quasicoherent-iso}, we see that all the $\varepsilon_{\mc F|_{U_{f_i}}}$ are isomorphisms, so we use \autoref{cor:epsilon-restriction-functoriality} to conclude that the diagram
+		% https://q.uiver.app/?q=WzAsNCxbMiwxLCJcXG1jIEZ8X3tVX2Z9Il0sWzIsMCwiXFx3aWRldGlsZGV7XFxtYyBGKFVfZil9Il0sWzAsMSwiXFx3aWRldGlsZGV7XFxtYyBGKFUpfSJdLFswLDAsIlxcd2lkZXRpbGRle1xcd2lkZXRpbGRle1xcbWMgRihVKX0oVV9mKX0iXSxbMSwwLCJcXHZhcmVwc2lsb25fe1xcbWMgRnxfe1VfZn19Il0sWzIsMCwiXFx2YXJlcHNpbG9uX3tcXG1jIEZ8X1V9fF97VV9mfSJdLFszLDEsIlxcd2lkZXRpbGRle1xcdmFyZXBzaWxvbl97XFxtYyBGfF9VfShVX2YpfSJdLFszLDIsIlxcdmFyZXBzaWxvbl97XFx3aWRldGlsZGV7XFxtYyBGKFUpfXxfe1VfZn19IiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\widetilde{\widetilde{\mc F(U)}(U_f)}} && {\widetilde{\mc F(U_f)}} \\
+			{\widetilde{\mc F(U)}} && {\mc F|_{U_f}}
+			\arrow["{\varepsilon_{\mc F|_{U_f}}}", from=1-3, to=2-3]
+			\arrow["{\varepsilon_{\mc F|_U}|_{U_f}}", from=2-1, to=2-3]
+			\arrow["{\widetilde{\varepsilon_{\mc F|_U}(U_f)}}", from=1-1, to=1-3]
+			\arrow["{\varepsilon_{\widetilde{\mc F(U)}|_{U_f}}}"', from=1-1, to=2-1]
+		\end{tikzcd}\]
+		commutes for each $f\in\{f_1,\ldots,f_n\}$. Notably, now the right arrow is an isomorphism because each $U_f$ is respectful (by \autoref{cor:the-quasicoherent-iso}). The left arrow is an isomorphism by \autoref{cor:restrict-associated-ox-module}. The top arrow is an isomorphism because each $U_{f}$ is respectful, noting that $\varepsilon_{\mc F|_U}(U_f)=\varepsilon_{\mc F|_{U_f}}(U_f)$, so $\varepsilon_{\mc F|_{U_f}}$ is an isomorphism by \autoref{cor:the-quasicoherent-iso}, so functoriality from \autoref{lem:ox-gamma} and \autoref{lem:ox-mod-tilde} finishes.
+		
+		Thus, we conclude that the bottom arrow $\varepsilon_{\mc F|_U}|_{U_{f}}$ is an isomorphism for each $f\in\{f_1,\ldots,f_n\}$. Noting that the $U_{f_i}$ form a cover of $U$, we are essentially done.
+
+		Indeed, it remains to show that $\varepsilon_{\mc F|_U}$ is actually an isomorphism of $\OO_X$-modules. Certainly this is a morphism of $\OO_X$-modules by construction, so \autoref{lem:better-ox-mod-iso} says that we just have to check we have an isomorphism of sheaves. Well, by \autoref{prop:isoonstalks}, it suffices to check that we are an isomorphism at stalks, for which it suffices to check that we are an isomorphism at stalks as sheaves of just abelian groups.
+		
+		For this, pick some $p\in U$ and find some $i$ with $p\in U_{f_i}$, and we note the naturality of \autoref{lem:invimagestalk} gives the commutative diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCIoXFxtYyBGfF9VKV9wIl0sWzEsMCwiKFxcd2lkZXRpbGRle1xcbWMgRihVKX0pX3AiXSxbMCwxLCIoXFxtYyBGfF97VV97Zl9pfX0pX3AiXSxbMSwxLCIoXFx3aWRldGlsZGV7XFxtYyBGKFUpfXxfe1Vfe2ZfaX19KV9wIl0sWzIsMCwiWyhWLHMpXSJdLFszLDAsIlsoViwoXFx2YXJlcHNpbG9uX3tcXG1jIEZ8X1V9KV9WcyldIl0sWzIsMSwiWyhWXFxjYXAgVV97Zl9pfSxzfF97VV97Zl9pfX0pXSJdLFszLDEsIlsoVlxcY2FwIFVfe2ZfaX0sKFxcdmFyZXBzaWxvbl97XFxtYyBGfF9VfSlfe1ZcXGNhcCBVX3tmX2l9fXMpXSJdLFswLDEsIihcXHZhcmVwc2lsb25fe1xcbWMgRnxfVX0pX3AiXSxbMiwzLCIoXFx2YXJlcHNpbG9uX3tcXG1jIEZ9fF97VV97Zl9pfX0pX3AiXSxbMCwyXSxbMSwzXSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{(\mc F|_U)_p} & {(\widetilde{\mc F(U)})_p} & {[(V,s)]} & {[(V,(\varepsilon_{\mc F|_U})_Vs)]} \\
+			{(\mc F|_{U_{f_i}})_p} & {(\widetilde{\mc F(U)}|_{U_{f_i}})_p} & {[(V\cap U_{f_i},s|_{U_{f_i}})]} & {[(V\cap U_{f_i},(\varepsilon_{\mc F|_U})_{V\cap U_{f_i}}s)]}
+			\arrow["{(\varepsilon_{\mc F|_U})_p}", from=1-1, to=1-2]
+			\arrow["{(\varepsilon_{\mc F}|_{U_{f_i}})_p}", from=2-1, to=2-2]
+			\arrow[from=1-1, to=2-1]
+			\arrow[from=1-2, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow[maps to, from=2-3, to=2-4]
+		\end{tikzcd}\]
+		where we note that the vertical morphisms are isomorphisms. Thus, because all the $(\varepsilon_{\mc F}|_{U_{f_i}})_p$ are isomorphisms by \autoref{prop:isoonstalks}, we conclude that $(\varepsilon_{\mc F}|_{U_{f}})_p$ are isomorphisms by \autoref{prop:isoonstalks} again. This finishes.
+		\qedhere
+	\end{listroman}
+\end{proof}
+\begin{corollary}
+	Fix an affine scheme $X$, and set $A\coloneqq\Spec A$. An $\mathcal O_X$-module $\mc F$ is quasicoherent if and only if there exists an $A$-module $M$ such that $\mc F\cong\widetilde M$.
+\end{corollary}
+\begin{proof}
+	If $\mc F\cong\widetilde M$, then the affine open cover $\{X\}$ of $X$ shows that $\mc F$ is quasicoherent. Conversely, if $X$ is quasicoherent, then the fact that $X$ is an affine open subscheme of $X$ implies that $\mc F=\mc F|_X=\widetilde M$ for some $A$-module $M$ by \autoref{lem:better-quasicoherent}.
+\end{proof}
+% Using \autoref{lem:affine-comm}, it is equivalent to saying that $\mc F|_U\simeq\widetilde M$ for some $\OO_X(U)$-module $M$, for any affine open subscheme $U\subseteq X$.
+
+% Namely, for (i), has to show that $\mc F|_U\simeq\widetilde M$ implies that $\mc F|_{U_f}\simeq\widetilde{M_f}$ for some $f\in\OO_X(U)$, which is by construction of $\widetilde M$. For (ii), one has to show that if $A\coloneqq\OO_X(U)$ is generated by some $f_i$ with $\mc F|_{U_{f_i}}\simeq\widetilde{M_i}$ where $M_i$ is an $A_{f_i}$-module gluing together to $\widetilde M$. Well, one just has to check that $\mc F$ is isomorphic to the kernel of the natural map
+% \[\prod_i\widetilde{M_i}\to\prod_{i,j}M_{ij}.\]
 
 \end{document}
