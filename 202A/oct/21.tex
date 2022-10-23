@@ -1,0 +1,102 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 17}
+
+I did poorly on the midterm, and I'm too tired to be okay with it.
+
+\subsection{Miscellaneous Outer Measures}
+We quickly complete an example from last class.
+\begin{lemma} \label{lem:null-set-is-measurable}
+	Fix an outer measure $\nu$ on a hereditary $\sigma$-ring $\mc H$. Then any set $E\in\mc H$ with $\nu(E)=0$ is $\nu$-measurable.
+\end{lemma}
+\begin{proof}
+	Fix any $A\in\mc H$. Because outer measures are monotone, we see
+	\[\nu(A\setminus E)+\nu(A\cap E)\le\nu(A)+\nu(E)=\nu(A),\]
+	so we conclude that $\nu(A\setminus F)+\nu(A\cap F)=\nu(A)$ by \autoref{rem:measurable-by-ineq}.
+\end{proof}
+\begin{lemma}
+	If $\nu$ is an outer measure on a hereditary $\sigma$-ring $\mc H$, then $\nu|_{\mc M(\nu)}$ is complete when $\mc M(\nu)$ is nonempty.
+\end{lemma}
+\begin{proof}
+	Given $E\in\mc M(\nu)$ with $\nu(E)=0$, we note that any $F\subseteq E$ is $\nu$-measurable and has $\nu(F)=0$. Well, we certainly have $0\le\nu(F)$, and then we see that $\nu(F)\le\nu(E)=0$ because $\nu$ is monotone, so we conclude that $\nu(F)=0$. Thus, $F$ is $\nu$-measurable by \autoref{lem:null-set-is-measurable}.
+\end{proof}
+We take a moment to acknowledge that our restricted outer measures are in fact extending our premeasures when appropriate.
+\begin{lemma}
+	Fix a premeasure $\mu$ on a $\sigma$-ring $\mc S$ (viewed as a prering). Then, for any $B\in\mc H(\mc S)$, there exists some $E\in\mc S$ such that $B\subseteq E$ and $\mu^*(B)=\mu(E)$.
+\end{lemma}
+\begin{proof}
+	Recall that
+	\[\mu^*(B)=\inf\Bigg\{\sum_{i=1}^\infty\mu(E_i):\{E_i\}_{i=1}^\infty\subseteq\mc S\text{ and }B\subseteq\bigcup_{i=1}^\infty E_i\Bigg\}.\]
+	Notably, if we have some $\{E_i\}_{i=1}^\infty$ covering $B$, then we are told that $\mu^*(B)\le\sum_{i=1}^\infty\mu(E_i)$, but in fact $\mc S$ being a $\sigma$-ring forces $E\coloneqq\bigcup_{i=1}^\infty E_i$ to be in $\mc S$, so $B\subseteq E$ forces the stronger inequality
+	\[\mu^*(B)\le\mu^*(E)=\mu(E)\le\sum_{i=1}^\infty\mu(E_i).\]
+	Note that we have used countable subadditivity from \autoref{lem:premeas-is-countable-subadd} and $\mu^*(E)=\mu(E)$ from \autoref{lem:hered-measure-extends}. It follows that $\inf\{\mu(E):B\subseteq E\}\le\mu^*(B)$. But of course $B\subseteq E$ forces $\mu^*(B)\le\mu(E)$ from definition of $\mu^*$, so in fact
+	\begin{equation}
+		\mu^*(B)=\inf\{\mu(E):B\subseteq E\}. \label{eq:outer-is-inf-of-contained}
+	\end{equation}
+	It remains to show that this infimum is achievable. Certainly if $\mu^*(B)=\infty$, then any $E\in\mc S$ with $B\subseteq E$ will have $\mu^*(E)=\infty$, finishing.
+
+	Otherwise, take $\mu^*(B)<\infty$. From \autoref{eq:outer-is-inf-of-contained}, we can a sequence $\{E_i\}_{i=1}^\infty\subseteq\mc S$ such that $E_i\subseteq B$ and $\mu(E_i)<\mu^*(B)+\frac1i$ for each $i$. We now define
+	\[E\coloneqq\bigcap_{i=1}^\infty E_i,\]
+	which is an element of $\mc S$ by \autoref{rem:sring-has-intersections}. However, because $\mu^*$ is monotone by \autoref{lem:hered-measure-facts}, we see that $B\subseteq E$ forces $\mu^*(B)\le\mu^*(E)$ while $E\subseteq E_i$ for each $i$ forces
+	\[\mu^*(E)\le\mu^*(E_i)<\mu^*(B)+1/i\]
+	for each $i$. Sending $i\to\infty$ recovers $\mu(E)=\mu^*(E)=\mu^*(B)$, where we have used \autoref{lem:hered-measure-extends} to finish.
+\end{proof}
+
+\subsection{Uniqueness of Extensions}
+It is not always true that the extension of a measure must be unique.
+\begin{example}
+	Give an uncountable set $X$ the discrete topology, and let $\mc S$ denote the $\sigma$-ring of countable sets. Then the zero function $\mu$ on $S$ is a measure; however, we have the following two extensions $\nu$ to a measure on all of $\mc P(X)$.
+	\begin{itemize}
+		\item We could set $\nu(E)=0$ for any uncountable $E$.
+		\item We could set $\nu(E)=\infty$ for any uncountable $E$.
+	\end{itemize}
+\end{example}
+\begin{ex}
+	Let $\mc P$ be the prering of right-half-open intervals of $\RR$. Then the measure $\mu$ on $\mc P$ by $\mu([a,b))=\infty$ for $a<b$ while $\mu(\emp)=0$. Then here are two extensions of $\mu$.
+	\begin{itemize}
+		\item We could set $\mu$ to be infinite for any nonempty subset of $\RR$.
+		\item We could set $\mu(E)$ be the counting measure on $\RR$.
+	\end{itemize}
+\end{ex}
+The issue in these examples is that there is too much allowed $\infty$. To deal with this, we have the following definition.
+\begin{defihelper}[{$\sigma$-finite}] \nirindex{Sigma-finite@$\sigma$-finite}
+	Fix a set $X$ and a prering $\mc P$ on $X$. Then a premeasure $\mu$ on $\mc P$ is \textit{$\sigma$-finite} if and only if $E\subseteq\mc P$ has some countable collection $\{E_i\}_{i=1}^\infty\subseteq\mc P$ with $E=\bigcup_{i=1}^\infty E_i$ and $\mu(E_i)<\infty$ for each $i$.
+\end{defihelper}
+It will now turn out that $\sigma$-finite things have unique extensions. Let's first see that our outer measure extension is special, though it need not be the only extension yet.
+\begin{lemma} \label{lem:outer-is-largest}
+	Fix a set $X$ and a prering $\mc P$ on $X$ equipped with a premeasure $\mu$. Then for any $\sigma$-ring containing $\mc P$ and contained in $\mc M(\mu^*)$, we have $\mu^*|_{\mc S}$ is the largest measure on $\mc S$ extending $\mu$ on $\mc P$. In other words, if $\nu$ is any measure extending $\mc P$ to $\mc S$, then $\nu(E)\le\mu^*(E)$ for any $E\in\mc S$.
+\end{lemma}
+\begin{proof}
+	Note that $\mu^*$ extends $\mu$ by \autoref{lem:hered-measure-extends}.
+	
+	Now, suppose that $\nu$ is a measure on $\mc S$ extending the premeasure $\nu$ on $\mc P$. Now, for any $G\in\mc S$ the fact that $\mc S\subseteq\mc H(\mc P)$, we may find some $\{E_i\}_{i=1}^\infty$ contained in $\mc P$ covering $G$. This tells us
+	\[\nu(G)\le\sum_{i=1}^\infty\nu(E_j)=\sum_{i=1}^\infty\mu(E_i)=\sum_{i=1}^\infty\mu^*(E_i)=\sum_{i=1}^\infty\mu(E_i).\]
+	Taking the infimum allows us to conclude $\nu(G)\le\mu^*(G)$.
+\end{proof}
+Now, here is our main result.
+\begin{theorem}
+	Fix a set $X$ and a prering $\mc P$ on $X$ equipped with a $\sigma$-finite premeasure $\mu$ on $X$. Then, for some $\sigma$-ring $\mc S\subseteq\mc M(\mu^*)$, our $\mu^*|_{\mc S}$ is the unique extension of $\mu$ to a measure on $\mc S$.
+\end{theorem}
+\begin{proof}
+	Let $\nu$ be some measure on $\mc S$ extending $\mu$. Note that we really only have one inequality here, thanks to \autoref{lem:outer-is-largest}. Anyway, we proceed in steps. Fix any $G\in\mc S$.
+	\begin{enumerate}
+		\item If $G\in\mc S$ has $\nu(G)=\infty$, then our bound $\mu^*(G)\ge\nu(G)$ from \autoref{lem:outer-is-largest} forces equality. So we may now assume that $\nu(G)<\infty$.
+		\item Otherwise, we take $\nu(G)<\infty$. Suppose that $G\in\mc S$ and $G\subseteq E$ where $E\in\mc P$. Note that we at least still know $\nu(G)\le\mu^*(G)\le\mu^*(E)=\mu(E)$ because $\mu^*$ is monotone by \autoref{lem:hered-measure-facts}. On the other hand, we know that $E\in\mc P$ is measurable by \autoref{thm:prering-is-measurable}, so we can use additivity to write
+		\[\nu(E)=\nu(G)+\nu(E\setminus G)\le\mu^*(G)+\mu^*(E\setminus G)=\mu^*(E)\stackrel*=\mu(E)=\nu(E).\]
+		Note that we have used \autoref{lem:hered-measure-extends} in $\stackrel*=$. Thus, equalities must follow everywhere, so in particular $\nu(G)=\mu^*(G)$ is forced.
+		\item Lastly, we take $\nu(G)<\infty$ with any $G\in\mc S$. We now use the $\sigma$-finite hypothesis: because $G\in\mc S\subseteq\mc H(\mc P)$, we may cover $G$ with $\{E_i\}_{i=1}^\infty\subseteq\mc P$, but then each $E_i\in\mc P$ can be covered with some countable collection $\{E_{ij}\}_{j=1}^\infty$ such that $\mu(G_{ij})<\infty$ for each $j$. Stringing these $E_{ij}$ together, we get a countable collection $\{F_i\}_{i=1}^\infty$ covering $G$ such that $\nu(F_i)<\infty$ for each $i$.
+
+		Now, as usual, we set
+		\[F_i'\coloneqq F_i{\mathbin\bigg\backslash}\bigsqcup_{j<i}F_j\]
+		so that the $F_i'$ are now disjoint (if $i\ne i'$, say with $i<i'$ without loss of generality, then $F_{i'}'\subseteq F_{i'}\setminus F_i$) even though $G$ is still covered by the $F_i'$ (any $x\in G$ lives in some least $F_i$, so $x\in F_i'$ follows). Additionally, $F_i'\in\mc S$ by \autoref{rem:sring-has-intersections}, so the previous step tells us that $G\cap F_i'\subseteq F_i'$ implies $\nu(G\cap F_i')=\mu^*(G\cap F_i')$ and thus
+		\[\nu(G)=\sum_{i=1}^\infty\nu(G\cap F_i')=\sum_{i=1}^\infty\mu^*(G\cap F_i')=\mu^*(G)\]
+		by using additivity.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\end{document}
