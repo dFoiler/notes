@@ -1,0 +1,144 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 24}
+
+The midterms were all graded. The mean was 15.68, and the standard deviation was 7.64. Roughly speaking, a score of 15 (and continuing to work at that level for the rest of the class) should roughly correspond to a B+.
+
+We completed the proof of \autoref{thm:measure-extension-unique} from last class, but I have simply completed the proof there for continuity reasons.
+
+\subsection{Continuity Properties}
+Let's discuss continuity a little.
+\begin{proposition} \label{prop:measure-union-up}
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ equipped with a measure $\mu$ on $\mc S$. A collection $\{E_i\}_{i=1}^\infty\subseteq\mc S$ such that $E_n\subseteq E_{n+1}$ for each $i$ will have
+	\[\lim_{n\to\infty}\mu(E_n)=\mu\Bigg(\bigcup_{i=1}^\infty E_i\Bigg).\]
+\end{proposition}
+\begin{proof}
+	Set $E\coloneqq\bigcup_{i=1}^\infty E_i$, for brevity, and we define
+	\[F_i\coloneqq E_i\setminus E_{i-1},\]
+	where $E_0\coloneqq\emp$. Note that the $F_i$ are now pairwise disjoint: if $i\ne j$, then without loss of generality say $i<j$, so $F_i\subseteq E_i\subseteq E_{j-1}$ while $F_j=E_j\setminus E_{j-1}$ is disjoint from $E_{j-1}$, so $F_i\cap F_j=\emp$. Thus, we note that
+	\[E_n=\bigsqcup_{k=1}^nF_k.\]
+	Indeed, certainly each $k\le n$ has $F_k\subseteq E_k\subseteq E_n$; and conversely any $x\in E_n$ belongs to some $E_k$ with $k\le n$ minimal, implying $x\notin F_{k-1}$ and so $x\in F_k$. In particular, we note that
+	\[E=\bigcup_{n=1}^\infty E_n=\bigcup_{n=1}^\infty\bigcup_{i=1}^nF_i=\bigcup_{i=1}^\infty\bigcup_{n\ge i} F_i=\bigcup_{i=1}^\infty F_i=\bigsqcup_{i=1}^\infty F_i\]
+	is still a disjoint union because the $F_i$ are pairwise disjoint.
+
+	Thus, by the countable additivity of $\mu$, we compute
+	\begin{align*}
+		\lim_{n\to\infty}\mu(E_n) &= \lim_{n\to\infty}\mu\Bigg(\bigsqcup_{k=1}^nF_k\Bigg) \\
+		&= \lim_{n\to\infty}\sum_{k=1}^n\mu(F_k) \\
+		&= \sum_{k=1}^\infty\mu(F_k) \\
+		&= \mu\Bigg(\bigsqcup_{k=1}^\infty F_k\Bigg) \\
+		&= \mu(E),
+	\end{align*}
+	which is what we wanted.
+\end{proof}
+\begin{cor}
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ equipped with a measure $\mu$ on $\mc S$. Suppose we have a collection $\{E_i\}_{i=1}^\infty\subseteq\mc S$ such that $\mu(E_1)<\infty$ and $E_n\supseteq E_{n+1}$ for each $i$. Then we have
+	\[\lim_{n\to\infty}\mu(E_n)=\mu\Bigg(\bigcap_{i=1}^\infty E_i\Bigg).\]
+\end{cor}
+\begin{proof}
+	Set
+	\[E\coloneqq\bigcap_{i=1}^\infty E_i.\]
+	Then we define $F_i\coloneqq E_1\setminus E_i$ so that
+	\[F\coloneqq\bigcup_{i=1}^\infty F_i=\bigcup_{i=1}^\infty(E_1\setminus E_i)=E_1{\mathbin\bigg\backslash}\bigcap_{i=1}^\infty E_i=E_1\setminus E.\]
+	On the other hand, we note $E_i\supseteq E_{i+1}$ implies $E_1\setminus E_i\supseteq E_1\setminus E_{i+1}$, so $F_i\subseteq F_{i+1}$.
+
+	Thus, applying \autoref{prop:measure-union-up}, we see
+	\[\lim_{n\to\infty}\mu(F_n)=F.\]
+	Rearranging gets the needed result. However, we note that $\mu(E_i)\le\mu(E_1)<\infty$ for each $i$ because $\mu$ is monotone by \autoref{lem:fin-additive-is-monotone}, so we can say
+	\begin{align*}
+		\lim_{n\to\infty}\mu(E_n) &= \lim_{n\to\infty}\mu(E_1\setminus F_n) \\
+		&\stackrel*= \lim_{n\to\infty}(\mu(E_1)-\mu(F_n)) \\
+		&= \mu(E_1)-\lim_{n\to\infty}\mu(F_n)=\mu(E_1)-\mu(F) \\
+		&\stackrel*= \mu(E_1\setminus F)=\mu(E),
+	\end{align*}
+	where we have used \autoref{rem:fin-additive-is-subtractive} at each $\stackrel*=$. This finishes.
+\end{proof}
+\begin{remark}
+	If we do not require $\mu(E_1)<\infty$, then the statement is false: set $\alpha(t)\coloneqq t$ be an increasing, left-continuous function, and let $\mu$ be the corresponding measure coming as a restricted outer measure from the premeasure measure $\mu_\alpha$ of \autoref{prop:leb-premeasure}.
+	
+	Then set $E_i\coloneqq[i,\infty)$, which is measurable by \autoref{thm:prering-is-measurable}. Here are our checks.
+	\begin{itemize}
+		\item Note $\mu(E_i)=\infty$. Indeed, for any positive integer $N$, we note that $\mu(E_i)\ge\mu([i,i+N))=N$ because $\mu$ is monotone by \autoref{lem:fin-additive-is-monotone} and restricts properly by \autoref{lem:hered-measure-extends}. It follows $\mu(E_i)>\infty$.
+		\item On the other hand, note $\bigcap_{i=1}^\infty E_i=\emp$ because no real number is larger than every positive integer, and $\mu(\emp)=\mu([0,0))=0$ using \autoref{lem:hered-measure-extends}.
+	\end{itemize}
+\end{remark}
+
+\subsection{Borel Measures}
+We take a moment to recognize that we've actually built a measure.
+\begin{definition}[Lebesgue--Stieltjes measure]
+	Let $\mc P$ be the prering of \autoref{exe:leb-premeasure} and some increasing, left-continuous function $\alpha\colon\RR\to\RR$. Then the measure $\mu_\alpha^*|_{\mc M(\mu_\alpha^*)}$ restricted by \autoref{rem:restrict-measure} from the premeasure of \autoref{prop:leb-premeasure} is the \textit{Lebesgue--Stieltjes measure}. The \textit{Lebesgue measure} is the measure coming from $\alpha(t)=t$.
+\end{definition}
+The measurable sets for each $\mu_\alpha$ might be difficult to handle, so let's find some subsets which are always measurable.
+\begin{definition}[Borel set]
+	The $\sigma$-ring generated by the prering $\mc P$ of \autoref{exe:leb-premeasure} is called the $\sigma$-ring of \textit{Borel sets}. A measure on the Borel sets is called a \textit{Borel measure}.
+\end{definition}
+Let's go find some Borel sets.
+\begin{example} \label{ex:intervals-are-borel}
+	Here are some Borel sets of $\RR$. Let $a,b\in\RR$.
+	\begin{itemize}
+		\item Note $(-\infty,a)=\bigcup_{n=1}^\infty[a-n,a)$, so $(-\infty,a)$ is a Borel set.
+		\item Note $(a,\infty)=\bigcup_{i=1}^\infty[a+1/i,a+i)$, so $(a,\infty)$ is a Borel set. Namely, if $b>a$, then there is some positive integer $i>\max\{1/(b-a),b-a\}$, so $b\in[a+1/i,a+i)$.
+		\item From \autoref{rem:sring-has-intersections}, we note that $(a,b)=(-\infty,b)\cap(a,\infty)$ is a Borel set.
+		% \item Taking complements, note $(-\infty,a[=\RR\setminus(a,\infty)$ and $(a,\infty]=\RR\setminus(-\infty,a)$ are both Bore sets.
+		% \item Again from \autoref{rem:sring-has-intersections}, we note that $[a,b]=(-\infty,b]\cap[a,\infty)$ is a Borel set.
+	\end{itemize}
+\end{example}
+\begin{exe} \label{exe:open-is-borel}
+	Any open subset $U\subseteq\RR$ is a Borel set.
+\end{exe}
+\begin{proof}
+	If $U=\RR$, there is nothing to say because $\RR=(-\infty,1]\cup[1,\infty)$, so we are done by \autoref{ex:intervals-are-borel}. Thus, suppose that we have some $y\in\RR\setminus U$.
+
+	Otherwise, given some $x\in U$, we note that there is some $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$. Note that $\varepsilon<|x-y|$ because $\varepsilon>|x-y|$ will force $y\in B(x,\varepsilon)\setminus U$. As such, we may let $r_x$ be the supremum of all such $\varepsilon$, which we see is finite. Note $r_x>0$ because $\varepsilon>0$ always.
+
+	We now note that $B(x,r_x)\subseteq U$. Indeed, if $x'\in B(x,r_x)$, then
+	\[|x-x'|<r_x\]
+	implies that $|x-x'|$ is not an upper-bound for our set of $\varepsilon$s, so we can find some $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$ and $|x-x'|<\varepsilon$, so $x'\in B(x,\varepsilon)\subseteq U$.
+
+	We now proceed with the proof directly. The rationals are countable, so enumerate the rationals in $U$ as $\{q_n\}_{n=1}^\infty$. For each $q_n$, set $r_n\coloneqq r_{q_n}$. We now claim that
+	\[U\stackrel?=\bigcup_{n=1}^\infty B(q_n,r_n).\]
+	Certainly $B(q_n,r_n)\subseteq U$ for each $n$, as shown above. Conversely, if $x\in U$, find $r>0$ such that $B(x,r)\subseteq U$. Because the rationals are dense in $\RR$, we may find some rational $q\in B(x,r/3)$. But now we see that
+	\[B(q,2r/3)\subseteq B(x,r)\subseteq U,\]
+	so $r_q\ge2r/3$. Thus, $x\in B(q,2r/3)\subseteq B(q,r_q)$, so $x\in\bigcup_{n=1}^\infty B(q_n,r_n)$ follows because each rational $q$ is some $q_n$.
+\end{proof}
+\begin{example} \label{ex:closed-is-borel}
+	Any closed subset $V\subseteq\RR$ has $V=\RR\setminus U$ for some open $U$, so $V$ is a measurable set by \autoref{exe:open-is-borel}.
+\end{example}
+\begin{definition}[Borel--Stieltjes measure]
+	Let $\mc S$ be the $\sigma$-ring of Borel sets. Given some increasing, left-continuous function $\alpha\colon\RR\to\RR$, we note that $\mc M(\mu_\alpha^*)$ contains $\mc P$ by \autoref{thm:prering-is-measurable} and is a $\sigma$-ring by \autoref{thm:from-outer} and thus contains $\mc S$ by definition of $\mc S$. Thus, we define $\mu_\alpha^*|_{\mc S}$ (which is a measure from \autoref{rem:restrict-measure}) to be the corresponding \textit{Borel--Stieltjes measure}.
+\end{definition}
+\begin{remark}
+	It turns out that all Borel--Stieltjes measures which are finite on $[a,b)$ for each $a,b\in\RR$ take the form  $\mu_\alpha$ for some increasing, left-continuous function $\alpha\colon\RR\to\RR$. Namely, one can define $\alpha(t)\coloneqq\mu([0,t))$ for $t>0$ and $\alpha(t)\coloneqq-\mu([t,0))$ for $t<0$ and check that this is increasing and left-continuous and has $\mu=\mu_\alpha$.
+\end{remark}
+
+\subsection{The Haar Measure}
+Let's build up to talking about the Haar measure.
+\begin{remark} \label{rem:leb-is-translation-invariant}
+	We'll show on the homework that the Lebesgue measure $\mu$ on $\RR$ is translation-invariant: if $E$ is measurable, and $t\in\RR$, then $E+t=\{r+t:r\in E\}$ is measurable has the same measure as $E$. In fact, any translation-invariant measure on the Borel sets is a multiple of $\mu$.
+\end{remark}
+There is a different definition of Borel sets is a little different in general.
+\begin{definition}[Borel set]
+	Fix a locally compact Hausdorff space $X$. Then the $\sigma$-ring of \textit{Borel sets} is the $\sigma$-ring generated by the compact subsets of $X$. A \textit{Borel measure} is a measure on the Borel sets of $X$.
+\end{definition}
+\begin{example}
+	Certainly any compact subset of $\RR$ is closed by \autoref{cor:compact-in-haus-is-closed} and thus Borel by \autoref{ex:closed-is-borel}, so the Borel subsets of $\RR$ coming from the above definition are indeed Borel subsets of $\RR$. Conversely, for any $a,b\in\RR$, we note that $[a,b)=[a,b+1]\setminus[b,b+1]$ is a Borel subset from the above definition, so Borel subsets from the above definition are indeed Borel subsets of $\RR$.
+\end{example}
+We quickly note that we have the following uniqueness result.
+\begin{theorem}[Haar] \label{thm:haar}
+	Fix a locally compact Hausdorff topological group $G$. Then there is a (nonzero) Borel measure, unique up to scaling, which is finite on compact subsets of $X$ and invariant under left-translation.
+\end{theorem}
+In some sense, the above result explains \autoref{rem:leb-is-translation-invariant}.
+\begin{remark}
+	On the homework, we construct the Haar measure on the circle group $S^1$.
+\end{remark}
+In fact, we have the following converse to \autoref{thm:haar}.
+\begin{theorem}[Weil]
+	Fix a group $G$ and a $\sigma$-ring $\mc S$ on $G$ equipped with a $\sigma$-finite measure $\mu$ and some extra separating property. Given that both $\mc S$ and $\mu$ are suitably translation-invariant, there is a topology $\mc T$ on $G$ making $G$ into a locally compact Hausdorff topological group where $\mu$ is a Haar measure for $G$.
+\end{theorem}
+Despite all our work, it's not even obvious which sets are Lebesgue-measurable or even that there are sets which are not Lebesgue-measurable. We will be able to answer at least this second question in the negative next class.
+
+\end{document}
