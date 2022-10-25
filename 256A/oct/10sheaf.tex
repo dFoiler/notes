@@ -10,8 +10,11 @@ We now shift gears to talk about quasicoherent sheaves.
 
 \subsection{\texorpdfstring{$\OO_X$}{OX}-modules}
 Fix a ringed space $(X,\OO_X)$. We have the following definition.
-\begin{defihelper}[{$\OO_X$-module}] \nirindex{OX-module@$\OO_X$-module}
-	Fix a ringed space $(X,\OO_X)$. Then an \textit{$\mathcal O_X$-module} is a sheaf of abelian groups $\mc F$ on $X$ with a sheaf morphism for scalar multiplication $\cdot\colon\OO_X\times\mc F\to\mc F$ making $\mc F(U)$ an $\mathcal O_X(U)$-module for each open $U\subseteq X$. Namely, given open subsets $V\subseteq U\subseteq X$, the following diagram commutes.
+\begin{warn}
+	The term ``premodule'' is non-standard. It is more common to refer to a presheaf of $\OO_X$-modules.
+\end{warn}
+\begin{definition}[{$\OO_X$-premodule}] \nirindex{OX-premodule@$\OO_X$-premodule}
+	Fix a ringed space $(X,\OO_X)$. Then an \textit{$\mathcal O_X$-premodule} is a presheaf of abelian groups $\mc F$ on $X$ with a sheaf morphism for scalar multiplication $\cdot\colon\OO_X\times\mc F\to\mc F$ making $\mc F(U)$ an $\mathcal O_X(U)$-module for each open $U\subseteq X$. Namely, given open subsets $V\subseteq U\subseteq X$, the following diagram commutes.
 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBGKFUpIl0sWzAsMSwiXFxPT19YKFYpXFx0aW1lc1xcbWMgRihWKSJdLFsxLDAsIlxcbWMgRihVKSJdLFsxLDEsIlxcbWMgRihWKSJdLFswLDEsIntcXG9we3Jlc31fe1UsVn19XFx0aW1lc1xcb3B7cmVzfV97VSxWfSIsMl0sWzIsMywiXFxvcHtyZXN9X3tVLFZ9Il0sWzAsMiwiXFxjZG90X1UiXSxbMSwzLCJcXGNkb3RfViJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
 		{\OO_X(U)\times\mc F(U)} & {\mc F(U)} \\
@@ -21,10 +24,55 @@ Fix a ringed space $(X,\OO_X)$. We have the following definition.
 		\arrow["{\cdot_U}", from=1-1, to=1-2]
 		\arrow["{\cdot_V}", from=2-1, to=2-2]
 	\end{tikzcd}\]
+\end{definition}
+\begin{defihelper}[{$\OO_X$-module}] \nirindex{OX-module@$\OO_X$-module}
+	Fix a ringed space $(X,\OO_X)$. Then an \textit{$\mathcal O_X$-module} is an $\mathcal O_X$-premodule which is also a sheaf.
 \end{defihelper}
-Note that we are in fact allowed to write down $\OO_X\times\mc F$ as a sheaf thanks to \autoref{cor:sheafprod}.
-\begin{defihelper}[{Morphism of $\OO_X$-modules}]
-	Fix a ringed space $(X,\OO_X)$. As usual, we will define a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules as a morphism of the underlying (pre)sheaves making the diagram following diagram commute.
+Quickly, note that we are in fact allowed to write down $\OO_X\times\mc F$ as a sheaf thanks to \autoref{cor:sheafprod}.
+\begin{example}
+	Given any ringed space $(X,\OO_X)$, we may assign $\mc F(U)\coloneqq0$ for any $U\subseteq X$, giving $0$ the trivial action.
+\end{example}
+\begin{remark}
+	Here's how to think about this definition: for each open $U\subseteq X$, we have a morphism $\OO_X(U)\times\mc F(U)\to\mc F(U)$, which is the map endowing $\mc F(U)$ with $\OO_X(U)$-module structure. However, we should remember the various sheaf things floating around, so we make the action respect restriction.
+\end{remark}
+Let's quickly see our definitions in action.
+\begin{lemma} \label{lem:stalk-is-stalk-mod}
+	Fix a ringed space $(X,\OO_X)$ and an $\mathcal O_X$-premodule $\mc F$. For any $p\in X$, we can make $\mc F_p$ naturally into an $\mathcal O_{X,p}$-module.
+\end{lemma}
+\begin{proof}
+	Given germs $[(V,r)]\in\OO_{X,p}$ and $[(U,f)]\in\mc F_p$ where $p\in U\cap V$, we simply define
+	\[[(V,r)]\cdot[(U,f)]\coloneqq[(U\cap V,r|_{U\cap V}\cdot f|_{U\cap V})].\]
+	Here are our checks.
+	\begin{itemize}
+		\item Well-defined: if $[(V,r)]=[(V',r')]$ and $[(U,f)]=[(U',f')]$, then we may find $V''\subseteq V\cap V'$ and $U''\subseteq U\cap U'$ such that $r|_{V''}=r'|_{V''}$ and $f|_{U''}=f'|_{U''}$. So we compute
+		\begin{align*}
+			[(V,r)]\cdot[(U,f)] &= [(U\cap V,r|_{U\cap V}\cdot f|_{U\cap V})] \\
+			&\stackrel*= [(U''\cap V'',(r|_{U\cap V}\cdot f|_{U\cap V})|_{U''\cap V''})] \\
+			&= [(U''\cap V'',r|_{U''\cap V''}\cdot f|_{U''\cap V''})] \\
+			&= [(U''\cap V'',r'|_{U''\cap V''}\cdot f'|_{U''\cap V''})] \\
+			&\stackrel*= [(U''\cap V'',(r'|_{U'\cap V'}\cdot f'|_{U'\cap V'})|_{U''\cap V''})] \\
+			&= [(U'\cap V',r'|_{U'\cap V'}\cdot f'|_{U'\cap V'})] \\
+			&= [(V',r')]\cdot[(U',f')],
+		\end{align*}
+		where the $\stackrel*=$ were using the fact that $\mc F$ is an $\mathcal O_X$-premodule.
+		\item Identity: note that $[(X,1)]$ is the identity of $\mc OO_{X,p}$, so we note $[(X,1)]\cdot[(U,f)]=[(U,f)]$.
+		\item Associativity: given $[(V_1,r_1)],[(V_2,r_2)]\in\mc O_{X,p}$ and some $[(U,f)]\in\mc F_p$, we begin by restricting everything to $W\coloneqq V_1\cap V_2\cap U$ (which still contains $p$) so that the germs we're looking at look like $[(W,r_1),[(W,r_2)]\in\OO_{X,p}$ and $[(W,f)]\in\mc F_p$. Then
+		\[[(W,r_1)]\cdot([(W,r_2)]\cdot[(W,f)])=[(W,r_1)]\cdot[(W,r_2f)]=[(W,r_1r_2f)]=[(W,r_1r_2)]\cdot[(W,f)].\]
+		\item Distributivity: given $[(V_1,r_1)],[(V_2,r_2)]\in\OO_{X,p}$ and $[(U_1,f_1)],[(U_2,f_2)]\in\mc F_p$, we begin by restricting everything to $W\coloneqq V_1\cap V_2\cap U_1\cap U_2$ so that the germs we're looking at look like $[(W,r_1)],[(W,r_2)]\in\OO_{X,p}$ and $[(W,f_1)],[(W,f_2)]\in\mc F_p$. Then
+		\begin{align*}
+			&\phantom{{}={}}([(W,r_1)]+[(W,r_2)])\cdot([(W,f_1)]+[(W,f_2)]) \\
+			&= [(W,r_1+r_2)]\cdot[(W,f_1+f_2)] \\
+			&= [(W,(r_1+r_2)(f_1+f_2))] \\
+			&= [(W,r_1f_1+r_1f_2+r_2f_1+r_2f_2)] \\
+			&= [(W,r_1f_1)]+[(W,r_1f_2)]+[(W,r_2f_1)]+[(W,r_2f_2)] \\
+			&= [(W,r_1)]\cdot[(W,f_1)]+[(W,r_1)]\cdot[(W,f_2)]+[(W,r_2)]\cdot[(W,f_1)]+[(W,r_2)]\cdot[(W,f_2)].
+		\end{align*}
+	\end{itemize}
+	The above checks finish.
+\end{proof}
+Having defined our objects, we should define our morphisms.
+\begin{defihelper}[{Morphism of $\OO_X$-premodules}]
+	Fix a ringed space $(X,\OO_X)$. As usual, we will define a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-premodules as a morphism of the underlying (pre)sheaves making the diagram following diagram commute.
 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1hcXHRpbWVzXFxtYyBGIl0sWzAsMSwiXFxPT19YXFx0aW1lc1xcbWMgRyJdLFsxLDAsIlxcbWMgRiJdLFsxLDEsIlxcbWMgRyJdLFswLDIsIlxcY2RvdF9cXG1jIEYiXSxbMSwzLCJcXGNkb3RfXFxtYyBHIl0sWzAsMSwiKHtcXGlkX3tcXE9PX1h9fSxcXHZhcnBoaSkiLDJdLFsyLDMsIlxcdmFycGhpIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
 		{\OO_X\times\mc F} & {\mc F} \\
@@ -34,10 +82,10 @@ Note that we are in fact allowed to write down $\OO_X\times\mc F$ as a sheaf tha
 		\arrow["{({\id_{\OO_X}},\varphi)}"', from=1-1, to=2-1]
 		\arrow["\varphi", from=1-2, to=2-2]
 	\end{tikzcd}\]
-	Composition is still just composition of the morphisms of sheaves.
+	Composition is still just composition of the morphisms of sheaves. As usual, morphism of $\OO_X$-modules is just a morphism of the underlying $\OO_X$-premodules.
 \end{defihelper}
 \begin{remark}
-	Because sheaf morphisms are determined by their action on open subsets, checking that a sheaf morphism is a morphism of $\OO_X$-modules amounts to checking that the following diagram commutes for any open subset $U\subseteq X$.
+	Because (pre)sheaf morphisms are determined by their action on open subsets, checking that a (pre)sheaf morphism is a morphism of $\OO_X$-(pre)modules amounts to checking that the following diagram commutes for any open subset $U\subseteq X$.
 	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBGKFUpIl0sWzAsMSwiXFxPT19YKFUpXFx0aW1lc1xcbWMgRyhVKSJdLFsxLDAsIlxcbWMgRihVKSJdLFsxLDEsIlxcbWMgRyhVKSJdLFswLDIsIlxcY2RvdF9cXG1jIEYiXSxbMSwzLCJcXGNkb3RfXFxtYyBHIl0sWzAsMSwiKHtcXGlkX3tcXE9PX1goVSl9fSxcXHZhcnBoaV9VKSIsMl0sWzIsMywiXFx2YXJwaGlfVSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}
 		{\OO_X(U)\times\mc F(U)} & {\mc F(U)} \\
@@ -72,9 +120,38 @@ Let's check that our definitions make sense.
 	\[(\psi\circ\varphi)_U(rf)=\psi_U(\varphi_U(rf))=\psi_U(r\varphi_U(f))=r\psi_U\varphi_U(f)=r(\psi\circ\varphi)_U(f),\]
 	which is what we wanted.
 \end{proof}
-While we're here, we might as well check that our category is additive.
+As usual, we will want a more concrete way to understand isomorphisms.
+\begin{lemma} \label{lem:better-ox-mod-iso}
+	Fix a ringed space $(X,\OO_X)$. A morphism $\varphi\colon\mc F\to\mc G$ is an isomorphism of $\OO_X$-modules if and only if it is a morphism of $\OO_X$-modules and also a (pre)sheaf isomorphism.
+\end{lemma}
+\begin{proof}
+	Certainly an isomorphism of $\OO_X$-modules is an $\mathcal O_X$-module homomorphism and also a sheaf isomorphism. Indeed, pick up the inverse morphism $\psi\colon\mc G\to\mc F$, and we see $\varphi\circ\psi={\id_\mc G}$ and $\psi\circ\varphi={\id_\mc F}$ by how identities are defined in $\mathrm{Mod}_{\OO_X}$.
 
-Here's our zero.
+	Conversely, fix a morphism of $\OO_X$-modules $\varphi\colon\mc F\to\mc G$ which is a sheaf isomorphism; let $\psi\colon\mc G\to\mc F$ be the inverse sheaf morphism. We need to show that $\psi$ is an $\mathcal O_X$-module morphism. Well, for any open subset $U\subseteq X$, we note that any $g\in\mc G(U)$ can be written as $\varphi_U(f)$ for some $f\in\mc F(U)$, so any $r\in\OO_X(U)$ has
+	\[\psi_U(rg)=\psi_U(r\varphi_U(f))=\psi_U(\varphi_U(rf))=rf=r\psi_U(\varphi_U(f))=r\psi_U(g),\]
+	which is what we wanted.
+\end{proof}
+As expected, we note that taking stalks remains functorial.
+\begin{lemma} \label{lem:ox-mod-stalk-morphism}
+	Fix a ringed space $(X,\OO_X)$ and a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-premodules. Then any $p\in X$ induces a natural map $\varphi_p\colon\mc F_p\to\mc G_p$ of $\OO_{X,p}$-premodules.
+\end{lemma}
+\begin{proof}
+	Note that \autoref{prop:stalkmorphism} at least gives us some map $\varphi_p\colon\mc F_p\to\mc G_p$ by $\varphi_p([(U,f)])=[(U,\varphi_Uf)]$. To see that this a morphism of $\OO_{X,p}$-modules, we note that any $[(V,r)]\in\OO_{X,p}$ and $[(U,f)]\in\mc F_p$ may first everything to $W\coloneqq U\cap V$ so that we're looking at the germs $[(W,r)]$ and $[(W,f)]$. Then we compute
+	\begin{align*}
+		[(W,r)]\cdot\varphi_p([(W,f)]) &= [(V,r)]\cdot[(W,\varphi_Wf)] \\
+		&= [(W,r\cdot\varphi_Uf)] \\
+		&= [(W,\varphi_U(rf))] \\
+		&= \varphi_p([(W,rf)]) \\
+		&= \varphi_p([(W,r)]\cdot[(W,f)]),
+	\end{align*}
+	where we have used the fact that $\varphi_U$ is an $\mathcal O_X(U)$-premodule morphism.
+\end{proof}
+\begin{remark}
+	Because we simply defined $\varphi_p$ the same way it is defined for presheaves, the computation of \autoref{rem:stalkfunctor} can be directly copied to show that taking stalks is functorial. Namely, the identity and functoriality checks do not change at all.
+\end{remark}
+
+\subsection{\texorpdfstring{$\mathrm{Mod}_{\OO_X}$}{ Mod-OX} Is Additive}
+While we're here, we might as well check that our category is additive. This is mostly inherited from \autoref{cor:sheavesadditive}. Here's our zero.
 \begin{lemma} \label{lem:zero-module}
 	Fix a ringed space $(X,\OO_X)$. Then the zero sheaf $\mc Z$ on $X$ from \autoref{cor:zerosheaf} is the zero object in the category of $\OO_X$-modules.
 \end{lemma}
@@ -109,7 +186,7 @@ Here's our zero.
 \end{proof}
 Here's our addition structure.
 \begin{lemma} \label{lem:ox-mod-is-ab-enriched}
-	Fix a ringed space $(X,\OO_X)$ and $\OO_X$-modules $\mc F$ and $\mc G$. Then the set of $\OO_X$-morphisms $\mc F\to\mc G$ is a subgroup of the sheaf morphisms $\mc F\to\mc G$.
+	Fix a ringed space $(X,\OO_X)$ and $\OO_X$-modules $\mc F$ and $\mc G$. Then the set of $\OO_X$-morphisms $\mc F\to\mc G$ is a subgroup of the sheaf morphisms $\mc F\to\mc G$. In particular, $\op{Mor}_{\OO_X}(\mc F,\mc G)$ is an abelian group, where composition distributes over addition.
 \end{lemma}
 \begin{proof}
 	We use the subgroup test. There are two checks.
@@ -120,9 +197,12 @@ Here's our addition structure.
 		Well, we pick up an open subset $U\subseteq X$ and some $r\in\OO_X(U)$ and $f\in\mc F(U)$ to check
 		\[(\varphi+-\psi)_U(rf)=\varphi_U(rf)+(-\psi)_U(rf)=\varphi_U(rf)+-\psi_U(rf)=r(\varphi_U(f)+-\psi_U(f))=r(\varphi+-\psi)_U(f),\]
 		which is what we wanted.
-		\qedhere
 	\end{itemize}
+	We now note that the last sentence here follows from \autoref{lem:addmorphisms}. Indeed, we are abelian because we are a subgroup of an abelian group, and composition still distributes over addition because composition and addition have not changed.
 \end{proof}
+\begin{remark}
+	From \autoref{lem:addmorphisms}, we see that our zero morphism $\mc F\to\mc G$ is indeed $\mc F\to\mc Z\to\mc G$. Namely, we want the morphism sending everything to $0$ automatically.
+\end{remark}
 \begin{lemma}
 	Fix a ringed space $(X,\OO_X)$ and $\OO_X$-modules $\{\mc F_\alpha\}_{\alpha\in\lambda}$. The product sheaf $\mc F\coloneqq\prod_{\alpha\in\lambda}\mc F_\alpha$ is naturally an $\mathcal O_X$-module.
 \end{lemma}
@@ -171,27 +251,451 @@ Here's our addition structure.
 	\[\varphi_U(rg)=((\varphi_\alpha)_U(rg))_\alpha=(r(\varphi_\alpha)_U(g))_\alpha=r((\varphi_\alpha)_U(g))_\alpha=r\varphi_U(g),\]
 	finishing.
 \end{proof}
-\begin{corollary}
+\begin{corollary} \label{cor:ox-mod-additive}
 	Fix a ringed space $(X,\OO_X)$. The category of $\OO_X$-modules is additive.
 \end{corollary}
 \begin{proof}
 	Combine \autoref{lem:ox-mod-is-ab-enriched}, \autoref{lem:zero-module}, and \autoref{lem:ox-products}.
 \end{proof}
-Now, we will remark that one can define kernels, cokernels, and images as we did for sheaves, so the category of $\OO_X$-modules is again an abelian category. We refer to \cite[\S2.6.3]{rising-sea}.
 
-\subsection{More Modules}
-Let's give a few more $\OO_X$-modules.
-\begin{remark}
-	One can also define, as usual, the arbitrary direct sum, products, the tensor product, inverse limits, and direct limits. The arbitrary direct sum, the tensor product, and the direct limit require a sheafification to construct, though we will not on average be too worried about such things.
+\subsection{Kernels for \texorpdfstring{$\OO_X$}{OX}-modules}
+As usual, kernels are easier than cokernels for sheafification reasons. We will avoid discussing sheafification of $\OO_X$-modules for a little while longer.
+\begin{proposition} \label{prop:ox-mod-ker}
+	Fix a ringed space $(X,\OO_X)$ and a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules. Then the kernel $\ker\varphi$ of $\varphi$ viewed as a (pre)sheaf is the kernel in the category of $\OO_X$-modules.
+\end{proposition}
+\begin{proof}
+	Quickly, we recall that
+	\[(\ker\varphi)(U)\coloneqq\ker\varphi_U\subseteq\mc F(U),\]
+	where the restrictions maps are induced by $\mc F$.
+	
+	To make $\ker\varphi$ into an $\mathcal O_X$-module, we will give it the action inherited from $\mc F$: given some open $U\subseteq X$, some $r\in\OO_X(U)$, and some $f\in\ker\varphi_U\subseteq\mc F(U)$, we set $r\cdot f$ to be the $r\cdot f$ from the action of $\OO_X(U)$ on $\mc F(U)$. To see that this is well-defined, we note
+	\[\varphi_U(r\cdot f)=r\cdot\varphi_U(f)=r\cdot0=0\]
+	because $\varphi$ is a morphism of $\OO_X$-modules. Thus, $r\cdot f\in\ker\varphi_U$, making our action okay. We also note that $U'\subseteq U\subseteq X$ makes the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzKFxca2VyXFx2YXJwaGkpKFUpIl0sWzAsMSwiXFxPT19YKFUnKVxcdGltZXMoXFxrZXJcXHZhcnBoaSkoVScpIl0sWzEsMCwiKFxca2VyXFx2YXJwaGkpKFUpIl0sWzEsMSwiKFxca2VyXFx2YXJwaGkpKFUnKSJdLFsyLDAsIihyLGYpIl0sWzMsMCwiclxcY2RvdCBmIl0sWzIsMSwiKHJ8X3tVJ30sZnxfe1UnfSkiXSxbMywxLCIoclxcY2RvdCBmKXxfe1UnfSJdLFswLDJdLFsyLDMsIlxcb3B7cmVzfV97VSxVJ30iXSxbMCwxLCJ7XFxvcHtyZXN9X3tVLFUnfX1cXHRpbWVze1xcb3B7cmVzfV97VSxVJ319IiwyXSxbMSwzXSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(U)\times(\ker\varphi)(U)} & {(\ker\varphi)(U)} & {(r,f)} & {r\cdot f} \\
+		{\OO_X(U')\times(\ker\varphi)(U')} & {(\ker\varphi)(U')} & {(r|_{U'},f|_{U'})} & {(r\cdot f)|_{U'}}
+		\arrow[from=1-1, to=1-2]
+		\arrow["{\op{res}_{U,U'}}", from=1-2, to=2-2]
+		\arrow["{{\op{res}_{U,U'}}\times{\op{res}_{U,U'}}}"', from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	commute, as inherited from $\mc F$, so $\ker\varphi$ is indeed an $\mathcal O_X$-module.
+
+	It remains to show the universal property. Let $\iota\colon\ker\varphi\to\mc F$ be the canonical morphism; note that $\iota$ is an $\mathcal O_X$-module morphism because $\iota(rf)=rf=r\iota(f)$ for any $r\in\OO_X(U)$ and $f\in\mc F(U)$ at any open $U\subseteq X$. Now, given some morphism $\psi\colon\mc H\to\mc F$ of $\OO_X$-modules such that $\varphi\circ\psi=0$, we need to show that there is a unique map $\overline\psi\colon\mc H\to\ker\varphi$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMSwyLCJcXG1jIEYiXSxbMiwyLCJcXG1jIEciXSxbMiwxLCJcXG1jIFoiXSxbMCwwLCJcXG1jIEgiXSxbMSwxLCJcXGtlclxcdmFycGhpIl0sWzAsMSwiXFx2YXJwaGkiXSxbNCwwLCJcXGlvdGEiXSxbNCwyXSxbMiwxXSxbMyw0LCJcXG92ZXJsaW5lXFxwc2kiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMywyLCIiLDIseyJjdXJ2ZSI6LTJ9XSxbMywwLCJcXHBzaSIsMix7ImN1cnZlIjoyfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			{\mc H} \\
+			& \ker\varphi & {\mc Z} \\
+			& {\mc F} & {\mc G}
+			\arrow["\varphi", from=3-2, to=3-3]
+			\arrow["\iota", from=2-2, to=3-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-3, to=3-3]
+			\arrow["\overline\psi"{description}, dashed, from=1-1, to=2-2]
+			\arrow[curve={height=-12pt}, from=1-1, to=2-3]
+			\arrow["\psi"', curve={height=12pt}, from=1-1, to=3-2]
+		\end{tikzcd} \label{eq:ox-mod-ker}
+	\end{equation}
+	commute. Note that uniqueness follows directly from \autoref{lem:sheafker}. It remains to show existence. Well, \autoref{lem:sheafker} has told us that we may set
+	\[\overline\psi_U(h)\coloneqq\psi_U(h)\]
+	for any open $U\subseteq X$ and section $h\in\OO_X(U)$ to define a well-defined sheaf morphism $\overline\psi\colon\mc H\to\ker\varphi$ making \autoref{eq:ox-mod-ker} commute as sheaves.
+
+	Thus, it roughly remains to show $\overline\psi$ defines a morphism of $\OO_X$-modules. Well, for any open $U\subseteq X$ and sections $r\in\OO_X(U)$ and $h\in\mc H(U)$, we see
+	\[\overline\psi_U(rh)=\psi_U(rh)=r\cdot\psi_U(h)=r\cdot\overline\psi_U(h).\]
+	So we see that $\overline\psi_U$ is a morphism of $\OO_X$-modules, and \autoref{eq:ox-mod-ker} now commutes in the category of $\OO_X$-modules because composition of morphisms of $\OO_X$-modules is the same as the composition of the underlying sheaf morphisms.
+\end{proof}
+\begin{corollary} \label{cor:mono-ox-mod}
+	Fix a ringed space $(X,\OO_X)$ and a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules. The following are equivalent.
+	\begin{listalph}
+		\item $\varphi$ is monic in the category of sheaves.
+		\item $\varphi$ is monic in the category of $\OO_X$-modules.
+	\end{listalph}
+\end{corollary}
+\begin{proof}
+	By \autoref{lem:moniciszeroker}, we see that $\varphi$ is monic in the category of $\OO_X$-modules if and only if $\ker\varphi$ vanishes. However, the kernel of $\varphi$ is the same in the category of sheaves as in the category of $\OO_X$-modules by \autoref{prop:ox-mod-ker}, so $\ker\varphi$ vanishing is equivalent to $\varphi$ being monic in the category of sheaves by \autoref{lem:moniciszeroker}.
+\end{proof}
+
+\subsection{Sheafification for \texorpdfstring{$\OO_X$}{OX}-modules}
+In order to deal with cokernels (and colimits in general), we will want to understand how to use sheafification with $\OO_X$-modules. Here are the relevant result.
+\begin{lemma} \label{lem:sheafification-is-ox-mod}
+	Fix a ringed space $(X,\OO_X)$. Fix a $\OO_X$-premodule $\mc F$.
+	\begin{listalph}
+		\item We can make $\mc F\sh$ naturally into an $\mathcal O_X$-module.
+		\item The sheafification map $\op{sh}\colon\mc F\to\mc F\sh$ can be made into an $\mathcal O_X$-premodule morphism.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We show the parts in order. Observe that we will have to use the construction of sheafification of \autoref{lem:sheafification-exists}.
+	\begin{listalph}
+		\item Given an open subset $U\subseteq X$, recall
+		\[\mc F\sh(U)\coloneqq\Bigg\{(f_p)_{p\in U}\in\prod_{p\in U}\mc F_p:(f_p)_{p\in U}\text{ is a compatible system of germs}\Bigg\}\]
+		with the obvious restriction maps.
+		
+		To give $\mc F\sh(U)$ an $\mathcal O_X(U)$-module structure, we note that any $p\in U$ can precompose the action map $\OO_{X,p}\to\op{Aut}(\mc F_p)$ with the restriction $\OO_X(U)\to\OO_{X,p}$ to give an action of $\OO_X(U)$ on each stalk $\mc F_p$ by $r\cdot f_p\coloneqq r|_p\cdot f_p$. Taking the product of these action morphisms, we get a morphism
+		\[\OO_X(U)\to\prod_{p\in U}\op{Aut}(\mc F_p)\subseteq\op{Aut}\Bigg(\prod_{p\in U}\mc F_p\Bigg)\]
+		(this action is just defining the arbitrary product of some modules), so we have made $\prod_{p\in U}\mc F_p$ into an $\mathcal O_X(U)$-module, where the scalar multiplication is by $r\cdot(f_p)_{p\in U}=(r|_p\cdot f_p)_{p\in U}$.
+
+		We now claim that $\mc F\sh(U)\subseteq\prod_{p\in U}\mc F_p$ is an $\mathcal O_X(U)$-submodule. Certainly we have a subgroup (after all, $\mc F\sh(U)$ assembles into a sheaf valued in abelian groups), so we just need to be preserved by the $\OO_X(U)$-action. Well, suppose $(f_p)_{p\in U}$ is a system of compatible germs so that each $p\in U$ has some open $U_p\subseteq U$ (contained in $U$ after suitable restriction) containing $p$ with a lift $\widetilde f_p\in\mc F(U_p)$ such that $\widetilde f_p|_q=f_q$ for each $q\in U$.
+
+		Now, for any $r\in\OO_X(U)$, the construction of the $\OO_X$-action gives
+		\[(r|_{U_p}\cdot\widetilde f_p)|_q=r|_q\cdot\widetilde f_p|_q=r|_q\cdot f_q\]
+		for any $q\in U_p$, for any $p\in U$. Thus, $r|_{U_p}\cdot\widetilde f_p\in\mc F(U_p)$ witnesses that $r\cdot(f_p)_{p\in U}=(r|_p\cdot f_p)_{p\in U}$ is a system of compatible of germs.
+
+		Thus, we have made each $\mc F\sh(U)$ into an $\mathcal O_X(U)$-module. To make $\mc F\sh$ into an $\mathcal O_X$-module, we need to check that any $V\subseteq U$ makes the diagram
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBGXFxzaChVKSJdLFswLDEsIlxcT09fWChWKVxcdGltZXNcXG1jIEZcXHNoKFYpIl0sWzEsMCwiXFxtYyBGXFxzaChVKSJdLFsxLDEsIlxcbWMgRlxcc2goVikiXSxbMiwwLCIociwoZl9wKV97cFxcaW4gVX0pIl0sWzMsMCwiKHJ8X3BcXGNkb3QgZl9wKV9wIl0sWzMsMSwiKHJ8X3BcXGNkb3QgZl9wKV97cFxcaW4gVn0iXSxbMiwxLCIocnxfViwoZl9wKV97cFxcaW4gVn0pIl0sWzAsMl0sWzIsMywiXFxvcHtyZXN9X3tVLFZ9Il0sWzAsMSwiXFxvcHtyZXN9X3tVLFZ9XFx0aW1lc1xcb3B7cmVzfV97VSxWfSIsMl0sWzEsM10sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzcsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\OO_X(U)\times\mc F\sh(U)} & {\mc F\sh(U)} & {(r,(f_p)_{p\in U})} & {(r|_p\cdot f_p)_p} \\
+			{\OO_X(V)\times\mc F\sh(V)} & {\mc F\sh(V)} & {(r|_V,(f_p)_{p\in V})} & {(r|_p\cdot f_p)_{p\in V}}
+			\arrow[from=1-1, to=1-2]
+			\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+			\arrow["{\op{res}_{U,V}\times\op{res}_{U,V}}"', from=1-1, to=2-1]
+			\arrow[from=2-1, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow[maps to, from=2-3, to=2-4]
+		\end{tikzcd}\]
+		commute.
+
+		\item We now check that the sheafification map $\op{sh}\colon\mc F\to\mc F\sh$ is a morphism of $\OO_X$-premodules. Well, \autoref{lem:sheafification-exists} already tells us that this map is a sheaf morphism, so we just need to check that we preserve the $\OO_X$ structure. For this, we see that any open $U\subseteq X$ makes
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBGKFUpIl0sWzAsMSwiXFxPT19YKFUpXFx0aW1lc1xcbWMgRlxcc2goVSkiXSxbMSwwLCJcXG1jIEYoVSkiXSxbMSwxLCJcXG1jIEZcXHNoKFUpIl0sWzIsMCwiKHIsZikiXSxbMywwLCJyZiJdLFsyLDEsIihyLChmfF9wKV97cFxcaW4gVX0pIl0sWzMsMSwiKHJ8X3BcXGNkb3QgZnxfcClfe3BcXGluIFV9Il0sWzAsMl0sWzIsMywiXFxvcHtzaH1fVSJdLFswLDEsIihcXGlkX3tcXE9PX1goVSl9LHtcXG9we3NofV9VfSkiLDJdLFsxLDNdLFs0LDUsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\OO_X(U)\times\mc F(U)} & {\mc F(U)} & {(r,f)} & rf \\
+			{\OO_X(U)\times\mc F\sh(U)} & {\mc F\sh(U)} & {(r,(f|_p)_{p\in U})} & {(r|_p\cdot f|_p)_{p\in U}}
+			\arrow[from=1-1, to=1-2]
+			\arrow["{\op{sh}_U}", from=1-2, to=2-2]
+			\arrow["{(\id_{\OO_X(U)},{\op{sh}_U})}"', from=1-1, to=2-1]
+			\arrow[from=2-1, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow[maps to, from=2-3, to=2-4]
+		\end{tikzcd}\]
+		commute. Namely, we have $(rf)|_p=r|_p\cdot f|_p$ in the above computation from the construction of the action of $\OO_{X,p}$ on $\mc F_p$ from \autoref{lem:stalk-is-stalk-mod}.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark} \label{rem:sheafification-stalks-ox-mod}
+	As above, the sheafification map $\op{sh}\colon\mc F\to\mc F\sh$ is a morphism of $\OO_X$-premodules, so \autoref{lem:ox-mod-stalk-morphism} assures us that $\op{sh}_p\colon\mc F_p\to\mc F\sh_p$ is a morphism of $\OO_{X,p}$-modules at each $p\in U$. But \autoref{prop:sheafificationstalk} now assures us that this morphism is an isomorphism on the level of abelian groups, so $\op{sh}_p$ is a full isomorphism of $\mc O_{X,p}$-modules.
 \end{remark}
-Let's give a more sheaf-theoretic constructions. As usual, the direct image is good.
+Now here is the universal property.
+\begin{proposition} \label{prop:sheafification-ox-mod}
+	Fix a ringed space $(X,\OO_X)$ and an $\mathcal O_X$-premodule $\mc F$. Further, let $\op{sh}\colon\mc F\to\mc F\sh$ be the sheafification map. Then for any $\OO_X$-module $\mc G$ and $\OO_X$-premodule morphism $\varphi\colon\mc F\to\mc G$, there is a unique $\OO_X$-module morphism $\varphi\sh\colon\mc F\sh\to\mc G$ such that $\varphi=\varphi\sh\circ\op{sh}$.
+\end{proposition}
+\begin{proof}
+	Before doing anything, we note that the statements make sense because $\mc F\sh$ is an $\mathcal O_X$-module by \autoref{lem:sheafification-is-ox-mod}.
+
+	Because $\OO_X$-module morphisms are already sheaf morphisms, \autoref{lem:sheafification-exists} tells us that there is at most one sheaf morphism $\varphi\sh\colon\mc F\sh\to\mc G$ and thus at most one $\OO_X$-module morphism such that $\varphi=\varphi\sh\circ\op{sh}$.
+
+	For existence, we note that \autoref{lem:sheafification-exists} promises some sheaf morphism $\varphi\sh\colon\mc F\sh\to\mc G$ such that $\varphi=\varphi\sh\circ\op{sh}$, which we upgrade into an $\mathcal O_X$-module morphism. Indeed, we show in \autoref{lem:sheafification-exists} that $(\varphi_p(f_p))_{p\in U}$ is a compatible system of germs for compatible system of germs $(f_p)_{p\in U}\in\mc F\sh(U)$, which lets us uniquely define $\varphi\sh_U((f_p)_{p\in U})$ by having
+	\[\varphi\sh_U((f_p)_{p\in U})|_q=\varphi_q(f_q)\]
+	for any $q\in U$. Namely, we know that this is well-defined and produces a sheaf morphism.
+
+	It remains to check that $\varphi\sh$ is in fact a morphism of $\OO_X$-modules. For this, we see that any open $U\subseteq X$ and sections $r\in\OO_X(U)$ and $(f_p)_{p\in U}\in\mc F\sh(U)$ will have at $q$ the equalities
+	\[\big(r\cdot\varphi\sh_U((f_p)_{p\in U})\big)|_q=r|_q\cdot\varphi\sh_U((f_p)_{p\in U})|_q=r|_q\cdot\varphi_q(f_q)\stackrel*=\varphi_q(r|_q\cdot f_q),\]
+	where we have used \autoref{lem:ox-mod-stalk-morphism} at $\stackrel*=$. On the other hand, $\varphi\sh_U(r\cdot(f_p)_{p\in U})=\varphi\sh_U((r|_p\cdot f_p)_{p\in U})$ is defined to be $\varphi_q(r|_q\cdot f_q)$ at $q$, so we are done.
+\end{proof}
+
+\subsection{Cokernels for \texorpdfstring{$\OO_X$}{OX}-modules}
+Now that we have sheafification, we can discuss cokernels. We begin with $\OO_X$-premodules.
+\begin{lemma} \label{lem:coker-ox-premod}
+	Fix a ringed space $(X,\OO_X)$ and a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-premodules. Then the cokernel presheaf $\coker\pre\varphi$ of $\varphi$ viewed as a presheaf is the cokernel in the category of $\OO_X$-premodules.
+\end{lemma}
+\begin{proof}
+	As usual, the main point is to give $\coker\pre\varphi$ an $\mathcal O_X$-premodule structure; in particular, note that we already have a presheaf by \autoref{lem:presheafcoker}. Well, given open $U\subseteq X$, we begin by noting that $\im\varphi_U\subseteq\mc G(U)$ is an $\mathcal O_X(U)$-submodule of $\mc G(U)$: given $\varphi_U(f)\in\im\varphi_U$ and $r\in\OO_X(U)$, we see
+	\[r\cdot\varphi_U(f)=\varphi_U(rf)\in\im\varphi_U.\]
+	Thus, $\im\varphi_U$ has a $\OO_X(U)$-action by restricting from $\mc G(U)$, so we can give $\coker\varphi_U=\mc G(U)/\im\varphi_U$ a quotient module action. Explicitly, $r\in\OO_X(U)$ and $[g]\in\coker\varphi_U$, we have
+	\[r\cdot[g]=[rg].\]
+	Note further that these maps assemble into making an $\mathcal O_X$-module by noting that any $V\subseteq U$ makes the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxjb2tlclxcdmFycGhpX1UiXSxbMCwxLCJcXE9PX1goVilcXHRpbWVzXFxjb2tlclxcdmFycGhpX1YiXSxbMSwwLCJcXGNva2VyXFx2YXJwaGlfVSJdLFsxLDEsIlxcY29rZXJcXHZhcnBoaV9WIl0sWzIsMCwiKHIsW2ddKSJdLFszLDAsIltyZ10iXSxbMiwxLCIocnxfVixbZ3xfVl0pIl0sWzMsMSwiWyhyZyl8X1ZdIl0sWzAsMl0sWzIsMywiXFxvcHtyZXN9X3tVLFZ9Il0sWzAsMSwiXFxvcHtyZXN9X3tVLFZ9XFx0aW1lc1xcb3B7cmVzfV97VSxWfSIsMl0sWzEsM10sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(U)\times\coker\varphi_U} & {\coker\varphi_U} & {(r,[g])} & {[rg]} \\
+		{\OO_X(V)\times\coker\varphi_V} & {\coker\varphi_V} & {(r|_V,[g|_V])} & {[(rg)|_V]}
+		\arrow[from=1-1, to=1-2]
+		\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+		\arrow["{\op{res}_{U,V}\times\op{res}_{U,V}}"', from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commute. As an additional sanity check, we note that the projection map $\pi\colon\mc G\to\coker\pre\varphi$ constructed in \autoref{lem:presheafcoker} is a morphism of $\OO_X$-premodules: certainly we have a presheaf morphism, and we have a $\OO_X$-premodule morphism because any open $U\subseteq X$ makes the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBHKFUpIl0sWzAsMSwiXFxPT19YKFUpXFx0aW1lc1xcY29rZXJcXHZhcnBoaV9VIl0sWzEsMSwiXFxjb2tlclxcdmFycGhpX1UiXSxbMSwwLCJcXG1jIEcoVSkiXSxbMiwwLCIocixnKSJdLFszLDAsInJnIl0sWzMsMSwiW3JnXSJdLFsyLDEsIihyLFtnXSkiXSxbMCwzXSxbMSwyXSxbMCwxLCIoXFxpZF97XFxPT19YKFUpfSxcXHBpX1UpIiwyXSxbMywyLCJcXHBpX1UiXSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs3LDYsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(U)\times\mc G(U)} & {\mc G(U)} & {(r,g)} & rg \\
+		{\OO_X(U)\times\coker\varphi_U} & {\coker\varphi_U} & {(r,[g])} & {[rg]}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{(\id_{\OO_X(U)},\pi_U)}"', from=1-1, to=2-1]
+		\arrow["{\pi_U}", from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=2-3, to=2-4]
+		\arrow[maps to, from=1-3, to=2-3]
+	\end{tikzcd}\]
+	commute.
+
+	We now show the universal property. Fix an $\mathcal O_X$-premodule $\mc H$ with a map $\psi\colon\mc G\to\mc H$ such that $\psi\circ\varphi=0$. Then we need a unique map $\overline\psi\colon\coker\pre\varphi\to\mc H$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMSwxLCJcXGNva2VyXFxwcmVcXHZhcnBoaSJdLFsyLDIsIlxcbWMgSCJdLFswLDEsIlxcdmFycGhpIl0sWzAsMl0sWzIsM10sWzEsMywiXFxwaSIsMl0sWzIsNCwiIiwwLHsiY3VydmUiOjJ9XSxbMSw0LCJcXHBzaSIsMCx7ImN1cnZlIjotMn1dLFszLDQsIlxcb3ZlcmxpbmVcXHBzaSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z} & \coker\pre\varphi \\
+		&& {\mc H}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\pi"', from=1-2, to=2-2]
+		\arrow[curve={height=12pt}, from=2-1, to=3-3]
+		\arrow["\psi", curve={height=-12pt}, from=1-2, to=3-3]
+		\arrow["\overline\psi"{description}, dashed, from=2-2, to=3-3]
+	\end{tikzcd}\]
+	commute. Note that \autoref{lem:presheafcoker} promises that there is at most one presheaf morphism $\overline\psi$ making this diagram commute, so we at least have uniqueness of an $\mathcal O_X$-premodule morphism making the diagram commute.
+
+	It remains to show existence. Well, \autoref{lem:presheafcoker} does promise that setting
+	\[\overline\psi_U([g])\coloneqq\psi_U(g)\]
+	for any $g\in\mc G(U)$ will assemble into a well-defined presheaf morphism $\overline\psi\colon\coker\pre\varphi\to\mc H$ such that $\psi=\overline\psi\circ\pi$. It remains to show that $\overline\psi$ is a morphism of $\OO_X$-premodules, for which we note that any open $U\subseteq X$ makes the diagram
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxjb2tlclxcdmFycGhpX1UiXSxbMCwxLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBIKFUpIl0sWzEsMSwiXFxtYyBIKFUpIl0sWzEsMCwiXFxjb2tlclxcdmFycGhpX1UiXSxbMiwwLCIocixbZ10pIl0sWzMsMCwiW3JnXSJdLFsyLDEsIihyLFxccHNpX1UoZykpIl0sWzMsMSwiclxccHNpX1UoZyk9XFxwc2lfVShyZykiXSxbMCwxLCIoXFxpZF97XFxPT19YKFUpfSxcXG92ZXJsaW5lXFxwc2lfVSkiLDJdLFszLDIsIlxcb3ZlcmxpbmVcXHBzaV9VIl0sWzAsM10sWzEsMl0sWzQsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(U)\times\coker\varphi_U} & {\coker\varphi_U} & {(r,[g])} & {[rg]} \\
+		{\OO_X(U)\times\mc H(U)} & {\mc H(U)} & {(r,\psi_U(g))} & {r\psi_U(g)=\psi_U(rg)}
+		\arrow["{(\id_{\OO_X(U)},\overline\psi_U)}"', from=1-1, to=2-1]
+		\arrow["{\overline\psi_U}", from=1-2, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	commutes, where we are using the fact that $\psi$ is already a morphism of $\OO_X$-premodules.
+\end{proof}
+And now we apply sheafification.
+\begin{prop} \label{prop:ox-mod-coker}
+	Fix a ringed space $(X,\OO_X)$ and a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules. Then the cokernel sheaf $\coker\varphi$ of $\varphi$ viewed as a presheaf is the cokernel in the category of $\OO_X$-modules.
+\end{prop}
+\begin{proof}
+	As in \autoref{lem:sheafcoker}, we let $\pi\pre\colon\mc G\to\coker\pre\varphi$ denote the projection map and $\op{sh}\colon\coker\pre\varphi\to\coker\varphi$ be the sheafification map.
+	
+	Now, we define $\pi\coloneqq\op{sh}\circ\pi\pre$ to be the canonical projection $\coker\varphi\to\mc G$. Note that $\op{sh}$ and $\pi\pre$ are both morphisms of $\OO_X$-premodules by \autoref{lem:sheafification-is-ox-mod} and \autoref{lem:coker-ox-premod}, respectively, so $\pi$ is also a morphism of $\OO_X$-premodules and thus a morphism of $\OO_X$-modules because $\mc G$ and $\coker\varphi$ are both sheaves.
+
+	It remains to verify the universal property. Fix an $\mathcal O_X$-module $\mc H$ with a map $\psi\colon\mc G\to\mc H$ such that $\psi\circ\varphi$. Then we need a unique morphism $\overline\psi\colon\coker\varphi\to\mc H$ of $\OO_X$-modules making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJcXG1jIEYiXSxbMSwwLCJcXG1jIEciXSxbMCwxLCJcXG1jIFoiXSxbMSwxLCJcXGNva2VyXFx2YXJwaGkiXSxbMiwyLCJcXG1jIEgiXSxbMCwxLCJcXHZhcnBoaSJdLFswLDJdLFsyLDNdLFsxLDMsIlxccGkiLDJdLFsyLDQsIiIsMCx7ImN1cnZlIjoyfV0sWzEsNCwiXFxwc2kiLDAseyJjdXJ2ZSI6LTJ9XSxbMyw0LCJcXG92ZXJsaW5lXFxwc2kiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} & {\mc G} \\
+		{\mc Z} & \coker\varphi \\
+		&& {\mc H}
+		\arrow["\varphi", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\pi"', from=1-2, to=2-2]
+		\arrow[curve={height=12pt}, from=2-1, to=3-3]
+		\arrow["\psi", curve={height=-12pt}, from=1-2, to=3-3]
+		\arrow["\overline\psi"{description}, dashed, from=2-2, to=3-3]
+	\end{tikzcd}\]
+	commute. Well, \autoref{lem:sheafcoker} assures us that there is at most one sheaf morphism making this diagram commute, so there is at most one morphism of $\OO_X$-modules making this diagram.
+
+	For existence, we note that \autoref{lem:coker-ox-premod} promises a morphism $\overline\psi\pre\colon\coker\pre\varphi\to\mc H$ of $\OO_X$-premodules such that
+	\[\psi=\overline\psi\pre\circ\pi\pre.\]
+	However, $\mc H$ is a sheaf, so \autoref{prop:sheafification-ox-mod} assures us that there is a morphism $\overline\psi\colon\coker\varphi\to\mc H$ of $\OO_X$-modules such that $\overline\psi\pre=\overline\psi\circ\op{sh}$. Thus,
+	\[\psi=\overline\psi\pre\circ\pi\pre=\overline\psi\circ\op{sh}\circ\pi\pre=\overline\psi\circ\pi,\]
+	which is what we wanted.
+\end{proof}
+\begin{corollary}
+	Fix a ringed space $(X,\OO_X)$ and a morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules. The following are equivalent.
+	\begin{listalph}
+		\item $\varphi$ is epic in the category of sheaves.
+		\item $\varphi$ is epic in the category of $\OO_X$-modules.
+	\end{listalph}
+\end{corollary}
+\begin{proof}
+	This is similar to \autoref{cor:mono-ox-mod}. By \autoref{lem:epiiszerocoker}, we see that $\varphi$ is epic in the category of $\OO_X$-modules if and only if $\coker\varphi$ vanishes. However, the cokernel of $\varphi$ is the same in the category of sheaves as in the category of $\OO_X$-modules by \autoref{prop:ox-mod-coker}, so $\coker\varphi$ vanishing is equivalent to $\varphi$ being monic in the category of sheaves by \autoref{lem:epiiszerocoker}.
+\end{proof}
+
+\subsection{\texorpdfstring{$\mathrm{Mod}_{\OO_X}$}{ Mod-OX} Is Abelian}
+Because we can, we will go ahead and show that $\mathrm{Mod}_{\OO_X}$ is abelian. We have two more checks.
+\begin{lemma} \label{lem:ox-mod-kercoker}
+	Fix a ringed space $(X,\OO_X)$ and a monic morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules. Then actually $\varphi\colon\mc F\to\mc G$ makes $\mc F$ the kernel of the cokernel $\pi\colon\mc G\to\coker\varphi$.
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:kercoker}, we know that the map $\varphi\colon\mc F\to\mc G$ identifies $\mc F$ as $\ker\pi$ in the category of sheaves. Now, by \autoref{prop:ox-mod-ker}, we see that $\ker\pi$ in the category of sheaves is the same as in the category of $\OO_X$-modules, so we conclude that $\varphi\colon\mc F\to\mc G$ remains a kernel in the category of $\OO_X$-modules.
+
+	To be more explicit, we note that the universal property of the kernel $\ker\pi$ promises a unique sheaf morphism $\overline\varphi$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMiwxLCJcXG1jIEciXSxbMiwyLCJcXGNva2VyXFxwaSJdLFsxLDIsIlxcbWMgWiJdLFswLDAsIlxcbWMgRiJdLFsxLDEsIlxca2VyXFxwaSJdLFswLDEsIlxccGkiXSxbNCwwLCJcXGlvdGEiXSxbNCwyXSxbMiwxXSxbMyw0LCJcXG92ZXJsaW5lXFx2YXJwaGkiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMywwLCJcXHZhcnBoaSIsMCx7ImN1cnZlIjotMn1dLFszLDIsIiIsMSx7ImN1cnZlIjoyfV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc F} \\
+		& \ker\pi & {\mc G} \\
+		& {\mc Z} & \coker\pi
+		\arrow["\pi", from=2-3, to=3-3]
+		\arrow["\iota", from=2-2, to=2-3]
+		\arrow[from=2-2, to=3-2]
+		\arrow[from=3-2, to=3-3]
+		\arrow["\overline\varphi"{description}, dashed, from=1-1, to=2-2]
+		\arrow["\varphi", curve={height=-12pt}, from=1-1, to=2-3]
+		\arrow[curve={height=12pt}, from=1-1, to=3-2]
+	\end{tikzcd}\]
+	commute. In fact, by \autoref{lem:kercoker}, we see that $\overline\varphi$ is in fact a sheaf isomorphism because $\mc F$ is also a kernel for $\pi$, so we get to apply the usual universal property arguments.
+	
+	But because $\varphi$ is a morphism of $\OO_X$-modules, we see that $\overline\varphi$ is also an $\mathcal O_X$-module isomorphism by \autoref{lem:better-ox-mod-iso}. As such, $\overline\varphi\colon\mc F\cong\ker\pi$ as $\OO_X$-modules, which makes $\mc F$ into a kernel of $\pi$ in the category of $\OO_X$-modules, where the needed inclusion map is $\iota\circ\overline\varphi=\varphi$.
+\end{proof}
+\begin{lemma} \label{lem:ox-mod-cokerker}
+	Fix a ringed space $(X,\OO_X)$ and an epic morphism $\varphi\colon\mc F\to\mc G$ of $\OO_X$-modules. Then actually $\varphi\colon\mc F\to\mc G$ makes $\mc G$ the cokernel of the kernel $\iota\colon\ker\varphi\to\mc F$.
+\end{lemma}
+\begin{proof}
+	This is very similar to the previous proof. By \autoref{lem:cokerker}, we know that the map $\varphi\colon\mc F\to\mc G$ identifies $\mc G$ as $\coker\iota$ in the category of sheaves. Now, by \autoref{prop:ox-mod-coker}, we see that $\coker\iota$ in the category of sheaves is the same as in the category of $\OO_X$-modules, so we conclude that $\varphi\colon\mc F\to\mc G$ remains a kernel in the category of $\OO_X$-modules.
+
+	To be more explicit, we note that the universal property of the kernel $\coker\iota$ promises a unique sheaf morphism $\overline\varphi$ making the diagram
+	% https://q.uiver.app/?q=WzAsNSxbMiwyLCJcXG1jIEciXSxbMSwxLCJcXGNva2VyXFxpb3RhIl0sWzAsMCwiXFxrZXJcXHZhcnBoaSJdLFsxLDAsIlxcbWMgRiJdLFswLDEsIlxcbWMgWiJdLFszLDEsIlxccGkiLDJdLFsyLDMsIlxcaW90YSJdLFsyLDRdLFs0LDFdLFszLDAsIlxcdmFycGhpIiwwLHsiY3VydmUiOi0yfV0sWzQsMCwiIiwyLHsiY3VydmUiOjJ9XSxbMSwwLCJcXG92ZXJsaW5lXFx2YXJwaGkiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\ker\varphi & {\mc F} \\
+		{\mc Z} & \coker\iota \\
+		&& {\mc G}
+		\arrow["\pi"', from=1-2, to=2-2]
+		\arrow["\iota", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow["\varphi", curve={height=-12pt}, from=1-2, to=3-3]
+		\arrow[curve={height=12pt}, from=2-1, to=3-3]
+		\arrow["\overline\varphi"{description}, dashed, from=2-2, to=3-3]
+	\end{tikzcd}\]
+	commute. In fact, by \autoref{lem:kercoker}, we see that $\overline\varphi$ is in fact a sheaf isomorphism because $\mc G$ is also a cokernel for $\iota$, so we get to apply the usual universal property arguments.
+	
+	But because $\varphi$ is a morphism of $\OO_X$-modules, we see that $\overline\varphi$ is also an $\mathcal O_X$-module isomorphism by \autoref{lem:better-ox-mod-iso}. As such, $\overline\varphi\colon\coker\iota\cong\coker\varphi$ as $\OO_X$-modules, which makes $\mc G$ into a cokernel of $\iota$ in the category of $\OO_X$-modules, where the needed inclusion map is $\overline\varphi\circ\pi=\varphi$.
+\end{proof}
+\begin{theorem}
+	Fix a ringed space $(X,\OO_X)$. Then the category of $\OO_X$-modules is abelian.
+\end{theorem}
+\begin{proof}
+	The category is additive by \autoref{cor:ox-mod-additive}. We have kernels by \autoref{prop:ox-mod-ker} and cokernels by \autoref{prop:ox-mod-coker}, and they cohere appropriately by \autoref{lem:ox-mod-kercoker} and \autoref{lem:ox-mod-cokerker}.
+\end{proof}
+
+\subsection{Direct Sums}
+We will want to be able to discuss ``free $\OO_X$-modules'' and relatives later on, so for these we must discuss direct sums.
+\begin{lemma} \label{lem:direct-sum-ox-premod}
+	Fix a ringed space $(X,\OO_X)$ and some collection $\{\mc F_\alpha\}_{\alpha\in\lambda}$ of $\OO_X$-premodules. Then the data
+	\[\mc F(U)\coloneqq\bigoplus_{\alpha\in\lambda}\mc F_\alpha(U)\]
+	assembles into an $\mathcal O_X$-premodule. Further, the natural inclusions $\iota_\alpha\colon\mc F_\alpha\to\mc F$ are $\OO_X$-premodule morphisms.
+\end{lemma}
+\begin{proof}
+	Note that each $\mc F_\alpha(U)$ is an $\mathcal O_X(U)$-module, so taking the direct sum of modules tells us that
+	\[\mc F(U)\coloneqq\bigoplus_{\alpha\in\lambda}\mc F_\alpha(U)\]
+	remains an $\mathcal O_X(U)$-module as a submodule of the product $\prod_{\alpha\in\lambda}\mc F_\alpha(U)$.
+
+	To see that we form a presheaf, fix some open $U\subseteq X$. Then we define our restriction maps for any $(f_\alpha)_{\alpha\in\lambda}\in\mc F(U)$ and $V\subseteq U$ by
+	\[(f_\alpha)_{\alpha\in\lambda}|_V\coloneqq(f_\alpha|_V)_{\alpha\in\lambda}.\]
+	Here are our checks.
+	\begin{itemize}
+		\item Well-defined: note that $f_\alpha=0$ for all but finitely many $\alpha$, so $f_\alpha|_V$ still vanishes for all but finitely many $\alpha$, so we do indeed have $(f_\alpha|_V)_{\alpha\in\lambda}\in\mc F(V)$.
+		\item Identity: if $U=V$, we see $(f_\alpha)_\alpha|_V=(f_\alpha|_V)_\alpha=(f_\alpha)_\alpha$.
+		\item Functoriality: if $W\subseteq V\subseteq U$, then $(f_\alpha)_\alpha|_V|_W=(f_\alpha|_V|_W)_\alpha=(f_\alpha|_W)_\alpha=(f_\alpha)_\alpha|_W$.
+		\item $\OO_X$-module: if $r\in\OO_X(U)$ and $(f_\alpha)_\alpha\in\mc F(U)$, then any $V\subseteq U$ will give
+		\[\big(r\cdot(f_\alpha)_{\alpha\in\lambda}\big)|_V=(rf_\alpha)_{\alpha\in\lambda}|_V=\big((rf_\alpha)|_V\big)_{\alpha\in\lambda}=\big(r|_V\cdot f_\alpha|_V\big)_{\alpha\in\lambda}=r|_V\cdot(f_\alpha)_{\alpha\in\lambda}|_V.\]
+	\end{itemize}
+	The above checks complete the construction of $\mc F$.
+
+	It remains to discuss the inclusions $\iota_\beta\colon\mc F_\beta\to\mc F$ for some fixed $\beta\in\lambda$. Well, for any open $U\subseteq X$, we note that we have a map
+	\[\mc F_\beta(U)\to\bigoplus_{\alpha\in\lambda}\mc F_\alpha(U)\]
+	induced by the direct sum in the category of $\OO_X(U)$-modules as $f\mapsto(1_{\alpha=\beta}f)_{\alpha\in\lambda}$. This is a morphism of presheaves because any open $V\subseteq U$ and $f\in\mc F_\beta(U)$ give
+	\[(\iota_\beta)_U(f)|_V=(1_{\alpha=\beta}f)_{\alpha\in\lambda}|_V=(1_{\alpha=\beta}f|_V)_{\alpha\in\lambda}=(\iota_\beta)_V(f|_V).\]
+	And this is a morphism of $\OO_X$-premodules because any $r\in\OO_X(U)$ and $f\in\mc F_\beta(U)$ will give
+	\[r\iota_\beta(f)=r\cdot(1_{\alpha=\beta}f)_{\alpha\in\lambda}=(1_{\alpha=\beta}\cdot rf)_{\alpha\in\lambda}=\iota_\beta(rf).\]
+	This finishes.
+\end{proof}
+
+Because we used sheafification, we will want to understand direct sums at stalks.
+\begin{lemma}
+	Fix a ringed space $(X,\OO_X)$ and some collection $\{\mc F_\alpha\}_{\alpha\in\lambda}$ of $\OO_X$-modules, and let $\mc F$ be their direct sum. Then there are natural inclusions $\iota_\alpha\colon\mc F_\alpha\to\mc F$ yielding the isomorphism of $\OO_{X,p}$-modules
+	\[\bigoplus_{\alpha\in\lambda}\mc F_{\alpha,p}\to\mc F_p\]
+	at each point $p\in X$.
+\end{lemma}
+\begin{proof}
+	To begin, we use \autoref{lem:direct-sum-ox-premod} to define an $\mathcal O_X$-premodule by
+	\[\mc F\pre(U)\coloneqq\bigoplus_{\alpha\in\lambda}\mc F_\alpha(U),\]
+	and we let $\op{sh}\colon\mc F\pre\to\mc F$ be the sheafification map. Further, we let $\iota_\alpha\pre\colon\mc F_\alpha\to\mc F\pre$ be the inclusions of \autoref{lem:direct-sum-ox-premod}, which lets us set $\iota_\alpha\coloneqq{\op{sh}}\circ\iota_\alpha\pre$.
+
+	Thus, taking stalks, we have induced morphisms $\iota_{\alpha,p}\colon\mc F_{\alpha,p}\to\mc F_p$ of $\OO_{X,p}$-modules at each $p$.
+	Namely, $(\iota_\alpha\pre)_p$ is a morphism of $\OO_{X,p}$-modules by \autoref{lem:ox-mod-stalk-morphism},
+	and $\op{sh}_p$ is an isomorphism of $\OO_{X,p}$-modules by \autoref{rem:sheafification-stalks-ox-mod}.
+	So using the direct sum in the category of $\OO_{X,p}$-modules, we get a morphism
+	\[\bigoplus_{\alpha\in\lambda}\mc F_{\alpha,p}\stackrel\iota\to\mc F\pre_{\alpha,p}\stackrel{\op{sh}_p}\to\mc F_p.\]
+	In particular, it remains to show that the left morphism here is an isomorphism. It's already a morphism of $\OO_{X,p}$-modules, so we really just need to show bijectivity.
+	\begin{itemize}
+		\item Injective: suppose that we have a collection of germs $g_\alpha\coloneqq[(V_\alpha,f_\alpha)]\in\mc F_{\alpha,p}$ which makes an element of $\bigoplus_{\alpha\in\lambda}\mc F_{\alpha,p}$ going to $0$ under $\iota$. To begin, we note that all but finitely many of the $g_\alpha\in\mc F_{\alpha,p}$ are allowed to be nonzero, so define
+		\[V\coloneqq\bigcap_{\substack{\alpha\in\lambda\\g_\alpha\ne0}}V_\alpha,\]
+		which is still contains $p$ and remains open as the finite union of opens. Now, we restrict all the $[(V_\alpha,f_\alpha)]$ to $V$, where we see that $g_\alpha=0$ means that $[(V_\alpha,f_\alpha])=[(V,0)]$, so we may now just assume that $f_\alpha=0$ for all but finitely many $\alpha$.
+
+		In total, we unravel our definitions to give
+		\[0=\iota\big((g_\alpha)_{\alpha\in\lambda}\big)=\sum_{\beta\in\lambda}\iota_{\beta,p}\pre([(V,f_\beta)])=\sum_{\beta\in\lambda}[(V,\iota_{\beta,V}\pre f_\beta)]=[(V,(f_\alpha)_{\alpha\in\lambda})],\]
+		where these sums are legal because they are (in practice) finite with only finitely many nonzero terms. Thus, we are told that there is some open $W\subseteq V$ containing $p$ such that
+		\[(f_\alpha)_{\alpha\in\lambda}|_W=0,\]
+		which now forces $f_\alpha|_W=0$ for each $\alpha$, so $[(V,f_\alpha)]=0$ for each $\alpha$, so our original tuple of germs $(g_\alpha)_\alpha$ also vanishes.
+
+		\item Surjective: Fix a germ $[(V,(f_\alpha)_\alpha)]\in\mc F\pre_p$. Notably, only finitely many of the $f_\alpha$ are nonzero, so we can expand
+		\[[(V,(f_\alpha)_\alpha)]=\sum_{\beta\in\lambda}[(V,(1_{\alpha=\beta}f_\alpha)_\alpha)]=\sum_{\beta\in\lambda}[(V,\iota_{\beta,V}f_\beta)]=\sum_{\alpha\in\lambda}\iota_{\beta,p}([(V,f_\beta)])=\iota\big(([(V,f_\alpha)])_{\alpha\in\lambda}\big),\]
+		which is the needed element in the pre-image.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Tensor Products}
+The tensor product is an important enough notion for modules that we will also want for our $\OO_X$-modules. For example, the tensor product will behave well with modules which are locally $\OO_X$.
+\begin{lemma}
+	Fix a ringed space $(X,\OO_X)$ and two $\OO_X$-premodules $\mc F$ and $\mc G$. Then the data of
+	\[\mc T(U)\coloneqq\mc F(U)\otimes_{\OO_X(U)}\mc G(U)\]
+	assembles into an $\mathcal O_X$-premodule.
+\end{lemma}
+\begin{proof}
+	To begin, we note that $\mc F(U)$ and $\mc G(U)$ are both $\OO_X(U)$-modules, so the tensor product at least makes sense and endows $\mc T(U)$ with an $\mathcal O_X(U)$-action. To define our restriction maps, we claim that opens $V\subseteq U$ make the map
+	\[\arraycolsep=1.4pt\begin{array}{cccc}
+		\mc F(U)\times\mc G(U) &\to& \mc F(V)\otimes_{\OO_X(V)}\mc G(V) \\
+		(f,g) &\mapsto&(f|_V)\otimes(g|_V)
+	\end{array}\]
+	$\OO_X(U)$-bilinear: indeed, for $f_1,f_2\in\mc F(U)$ and $g_1,g_2\in\mc G(U)$ and $r_1,r_2,s_1,s_2\in\OO_X(U)$, we compute
+	\begin{align*}
+		&\phantom{{}={}}(r_1f_1+r_2f_2)|_V\otimes(s_1g_1+s_2g_2)|_V \\
+		&= (r_1|V\cdot f_1|_V+r_2|_V\cdot f_2|_V)\otimes(s_1|_V\cdot g_1|_V+s_2|_V\cdot g_2|_V) \\
+		&= (r_1s_1)|_V\cdot(f_1|_V\otimes g_1|_V)+(r_1s_2)|_V\cdot(f_1|_V\otimes g_2|_V) \\
+		&\qquad+(r_2s_1)|_V\cdot(f_2|_V\otimes g_1|_V)+(r_2s_2)|_V\cdot(f_2|_V\otimes g_2|_V),
+	\end{align*}
+	where we have used the fact that restriction is a morphism of $\OO_X(V)$-modules and a ring homomorphism $\OO_X(U)\to\OO_X(V)$.
+
+	Thus, we induce a restriction map $\op{res}_{U,V}\colon\mc T(U)\to\mc T(V)$ by extending $f\otimes g\mapsto(f|_V)\otimes(g|_V)$. To see that this assembles into an $\mathcal O_X$-premodule, we check that any opens $V\subseteq U$ makes
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXE9PX1goVSlcXHRpbWVzXFxtYyBUKFUpIl0sWzEsMCwiXFxtYyBUKFUpIl0sWzAsMSwiXFxPT19YKFYpXFx0aW1lc1xcbWMgVChWKSJdLFsxLDEsIlxcbWMgVChWKSJdLFsyLDAsIihyLGZcXG90aW1lcyBnKSJdLFszLDAsInIoZlxcb3RpbWVzIGcpIl0sWzIsMSwiKHJ8X1YsZnxfVlxcb3RpbWVzIGd8X1YpIl0sWzMsMSwicnxfVihmfF9WXFxvdGltZXMgZ3xfVikiXSxbMCwxXSxbMSwzLCJcXG9we3Jlc31fe1UsVn0iXSxbMCwyLCIoXFxvcHtyZXN9X3tVLFZ9LFxcb3B7cmVzfV97VSxWfSkiLDJdLFsyLDNdLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(U)\times\mc T(U)} & {\mc T(U)} & {(r,f\otimes g)} & {r(f\otimes g)} \\
+		{\OO_X(V)\times\mc T(V)} & {\mc T(V)} & {(r|_V,f|_V\otimes g|_V)} & {r|_V(f|_V\otimes g|_V)}
+		\arrow[from=1-1, to=1-2]
+		\arrow["{\op{res}_{U,V}}", from=1-2, to=2-2]
+		\arrow["{(\op{res}_{U,V},\op{res}_{U,V})}"', from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commute, which follows by extending the computation in the right square additively.
+\end{proof}
+So we have the following definition.
+\begin{definition}[Tensor product module]
+	Fix a ringed space $(X,\OO_X)$ and some $\OO_X$-modules $\mc F$ and $\mc G$. Then the \textit{tensor product module} $\mc F\otimes\mc G$ is the sheafification of the $\OO_X$-premodule coming from the data
+	\[U\mapsto\mc F(U)\otimes_{\OO_X(U)}\mc G(U).\]
+\end{definition}
+
+\subsection{Sheaf Theory for Modules}
+Let's give some more sheaf-theoretic constructions. As usual, the direct image is good.
 \begin{lemma}
 	Fix a morphism $f\colon(X,\OO_X)\to(Y,\OO_Y)$ of ringed spaces. If $\mc F$ is an $\mathcal O_X$-module, then $f_*\mc F$ is naturally an $\mathcal O_Y$-module.
 \end{lemma}
 \begin{proof}
 	The point is to use the sheaf morphism $f^\sharp\colon\OO_Y\to f_*\OO_X$ to define our $\OO_Y$-action. Indeed, for an open subset $U\subseteq Y$, we need to define an action of $\OO_Y(U)$ on $f_*\mc F(U)=\mc F(f^{-1}U)$. Well, we have a ring map
 	\[f^\sharp_U\colon\OO_Y(U)\to \OO_X\left(f^{-1}U\right),\]
-	so the action homomorphism $\OO_X\left(f^{-1}U)\right)\to\op{Aut}\left(\mc F(f^{-1}U)\right)$ can be pre-composed with $f^\sharp$ to exhibit an action homomorphism $\OO_Y(U)\to\op{Aut}(f_*\mc F(U))$. Explicitly, our action will send $r\in\OO_Y(U)$ and $m\in f_*\mc F(U)$ to $r\cdot m\coloneqq f^\sharp_U(r)\cdot m$.
+	so the action homomorphism $\OO_X\left(f^{-1}U\right)\to\op{Aut}\left(\mc F(f^{-1}U)\right)$ can be pre-composed with $f^\sharp$ to exhibit an action homomorphism $\OO_Y(U)\to\op{Aut}(f_*\mc F(U))$. Explicitly, our action will send $r\in\OO_Y(U)$ and $m\in f_*\mc F(U)$ to $r\cdot m\coloneqq f^\sharp_U(r)\cdot m$.
 
 	It remains to see that this creates an $\mathcal O_Y$-module. Well, given open subsets $V\subseteq U\subseteq X$, some $r\in\OO_Y(U)$ and some $m\in f_*\mc F(U)$, we compute
 	\begin{align*}
@@ -206,16 +710,6 @@ Going the other way requires some care. In particular, we won't want to just loo
 	Fix a morphism $f\colon(X,\OO_X)\to(Y,\OO_Y)$ of ringed spaces. If $\mc F$ is an $\mathcal O_X$-module, then $f_*\OO_X$ remains an $\mathcal O_X$-module, so the \textit{direct image module} $f_*\mc F$ will become an $\mathcal O_Y$-module through $f^\sharp\colon\OO_Y\to f_*\OO_X$.
 \end{definition}
 However, pullback sheaves do change from being ``just'' $f^{-1}\mc F$. Nonetheless, let's pick up some facts about $f^{-1}$.
-\begin{lemma} \label{lem:better-ox-mod-iso}
-	Fix a ringed space $(X,\OO_X)$. A morphism $\varphi\colon\mc F\to\mc G$ is an isomorphism of $\OO_X$-modules if and only if it is a morphism of $\OO_X$-modules and also a (pre)sheaf isomorphism.
-\end{lemma}
-\begin{proof}
-	Certainly an isomorphism of $\OO_X$-modules is an $\mathcal O_X$-module homomorphism and also a sheaf isomorphism. Indeed, pick up the inverse morphism $\psi\colon\mc G\to\mc F$, and we see $\varphi\circ\psi={\id_\mc G}$ and $\psi\circ\varphi={\id_\mc F}$ by how identities are defined in $\mathrm{Mod}_{\OO_X}$.
-
-	Conversely, fix a morphism of $\OO_X$-modules $\varphi\colon\mc F\to\mc G$ which is a sheaf isomorphism; let $\psi\colon\mc G\to\mc F$ be the inverse sheaf morphism. We need to show that $\psi$ is an $\mathcal O_X$-module morphism. Well, for any open subset $U\subseteq X$, we note that any $g\in\mc G(U)$ can be written as $\varphi_U(f)$ for some $f\in\mc F(U)$, so any $r\in\OO_X(U)$ has
-	\[\psi_U(rg)=\psi_U(r\varphi_U(f))=\psi_U(\varphi_U(rf))=rf=r\psi_U(\varphi_U(f))=r\psi_U(g),\]
-	which is what we wanted.
-\end{proof}
 \begin{lemma} \label{lem:ox-res-functorial}
 	Fix a ringed space $(X,\OO_X)$. Then, for any open $U\subseteq X$, the restriction taking an $\mathcal O_X$-module $\mc F$ to $\mc F|_U$ defines the actions of a functor $\cdot|_U\colon\mathrm{Mod}_{\OO_X}\to\mathrm{Mod}_{\OO_X|_U}$ on objects.
 \end{lemma}
@@ -750,7 +1244,7 @@ Well, here's the appropriate application of the Affine communication lemma.
 	\end{listroman}
 \end{proof}
 \begin{corollary}
-	Fix an affine scheme $X$, and set $A\coloneqq\Spec A$. An $\mathcal O_X$-module $\mc F$ is quasicoherent if and only if there exists an $A$-module $M$ such that $\mc F\cong\widetilde M$.
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. An $\mathcal O_X$-module $\mc F$ is quasicoherent if and only if there exists an $A$-module $M$ such that $\mc F\cong\widetilde M$.
 \end{corollary}
 \begin{proof}
 	If $\mc F\cong\widetilde M$, then the affine open cover $\{X\}$ of $X$ shows that $\mc F$ is quasicoherent. Conversely, if $X$ is quasicoherent, then the fact that $X$ is an affine open subscheme of $X$ implies that $\mc F=\mc F|_X=\widetilde M$ for some $A$-module $M$ by \autoref{lem:better-quasicoherent}.
