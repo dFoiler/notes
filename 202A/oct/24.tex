@@ -35,7 +35,7 @@ Let's discuss continuity a little.
 	\end{align*}
 	which is what we wanted.
 \end{proof}
-\begin{cor}
+\begin{cor} \label{cor:measure-inter-down}
 	Fix a $\sigma$-ring $\mc S$ on a set $X$ equipped with a measure $\mu$ on $\mc S$. Suppose we have a collection $\{E_i\}_{i=1}^\infty\subseteq\mc S$ such that $\mu(E_1)<\infty$ and $E_n\supseteq E_{n+1}$ for each $i$. Then we have
 	\[\lim_{n\to\infty}\mu(E_n)=\mu\Bigg(\bigcap_{i=1}^\infty E_i\Bigg).\]
 \end{cor}
@@ -111,9 +111,45 @@ Let's go find some Borel sets.
 \begin{definition}[Borel--Stieltjes measure]
 	Let $\mc S$ be the $\sigma$-ring of Borel sets. Given some increasing, left-continuous function $\alpha\colon\RR\to\RR$, we note that $\mc M(\mu_\alpha^*)$ contains $\mc P$ by \autoref{thm:prering-is-measurable} and is a $\sigma$-ring by \autoref{thm:from-outer} and thus contains $\mc S$ by definition of $\mc S$. Thus, we define $\mu_\alpha^*|_{\mc S}$ (which is a measure from \autoref{rem:restrict-measure}) to be the corresponding \textit{Borel--Stieltjes measure}.
 \end{definition}
-\begin{remark}
-	It turns out that all Borel--Stieltjes measures which are finite on $[a,b)$ for each $a,b\in\RR$ take the form  $\mu_\alpha$ for some increasing, left-continuous function $\alpha\colon\RR\to\RR$. Namely, one can define $\alpha(t)\coloneqq\mu([0,t))$ for $t>0$ and $\alpha(t)\coloneqq-\mu([t,0))$ for $t<0$ and check that this is increasing and left-continuous and has $\mu=\mu_\alpha$.
-\end{remark}
+We now note that these are actually all the measures.
+\begin{proposition}
+	Fix a Borel measure $\mu$ on the Borel sets $\mc B$ of $\RR$ such that $\mu([a,b))<\infty$ for any $a,b\in\RR$. Then there exists an increasing, left-continuous function $\alpha\colon\RR\to\RR$ such that $\mu=\mu_\alpha$.
+\end{proposition}
+\begin{proof}
+	Define the function $\alpha\colon\RR\to\RR$ by
+	\[\alpha(t)\coloneqq\begin{cases}
+		\mu([0,t)) & t\ge0, \\
+		-\mu([t,0)) & t\le0.
+	\end{cases}\]
+	Notably, at $t=0$, $\mu([0,0))=0=-\mu([0,0))$. We now run our checks.
+	\begin{itemize}
+		\item Suppose $a,b\in\RR$ has $a\le b$. We claim $\mu([a,b))=\alpha(b)-\alpha(a)$; there's nothing to say if $a=b$. We have the following cases.
+		\begin{itemize}
+			\item If $a\ge0$, then we note $b\ge a\ge0$, so
+			\[\mu([a,b))=\mu([0,b)\setminus[0,a))\stackrel*=\mu([0,b))-\mu([0,a))=\alpha(b)-\alpha(a),\]
+			where $\stackrel*=$ is by \autoref{rem:fin-additive-is-subtractive}.
+			\item If $b\ge0\ge a$, then
+			\[\mu([a,b))=\mu([a,0)\sqcup[0,b))=\mu([a,0))+\mu([0,b))=-\alpha(a)+\alpha(b).\]
+			\item Lastly, if $0\ge b\ge a$, then
+			\[\mu([a,b))=\mu([a,0)\setminus[b,0))\stackrel*=\mu([a,0))-\mu([b,0))=-\alpha(a)+\alpha(b),\]
+			where $\stackrel*=$ is by \autoref{rem:fin-additive-is-subtractive}.
+		\end{itemize}
+		\item Increasing: given real numbers $a,b\in\RR$ such that $a\le b$, then we note $\alpha(b)-\alpha(a)=\mu([a,b))\ge0$, so $\alpha(b)\ge\alpha(a)$ follows.
+		\item Left-continuous: fix some real number $b\in\RR$ and some $\varepsilon>0$ so that we need some $\delta>0$ such that $b-\delta<a\le b$ implies $|\alpha(b)-\alpha(a)|<\varepsilon$. To begin, we at least note that $\alpha(a)\le\alpha(b)$, so $\alpha(b)-\alpha(a)\ge0>-\varepsilon$, so it suffices for
+		\[b-\delta<a\le b\implies\mu([a,b))=\alpha(b)-\alpha(a)<\varepsilon.\]
+		To begin, we note $\mu([b-1,b))<\infty$ by hypothesis on $\mu$ (here is where we use this hypothesis!), so we set $a_n\coloneqq b-\frac1n$ and $E_n\coloneqq[a_n,b)$ so that $\mu(E_1)<\infty$ and $E_n\supseteq E_{n+1}$ for each $n$. It follows from \autoref{cor:measure-inter-down} that
+		\[\lim_{n\to\infty}\mu(E_n)=\mu\left(\bigcap_{i=1}^\infty E_i\right)=\mu(\emp)=0.\]
+		Indeed, we note that $\bigcap_{i=1}^\infty E_i=\emp$ because any $x\in E_i$ for each $i$ must have $x<b$, but then any $i>1/(b-x)$ will force $x\notin E_i$. And also, $\mu(\emp)=0$ by \autoref{rem:measure-emp} because $\mu(\emp)\le\mu([b-1,b))<\infty$, where we are using the fact that $\mu$ is monotone from \autoref{lem:fin-additive-is-monotone}.
+
+		In total, we see that there is some $N$ such that $n\ge N$ implies $\mu(E_n)<\varepsilon$. Set $\delta\coloneqq\frac1{N}$ so that $b-\delta<a\le b$ implies that $a\in E_N$, so $[a,b)\subseteq E_n$, so
+		\[\mu([a,b))\le\mu(E_N)<\varepsilon\]
+		by \autoref{lem:fin-additive-is-monotone}.
+		\item Lastly, we show $\mu=\mu_\alpha|_\mc B$. Let $\mc P$ be the prering of right-half-open intervals. Note that $\mu_\alpha$ at least makes sense from the above checks, so the fact that $\mc B\subseteq\mc M(\mu^*_\alpha)$ as discussed in the definition of the Borel--Stieltjes measure $\mu_\alpha^*|_{\mc B}$.
+
+		Now, we note that $\mu_\alpha([a,b))=\alpha(b)-\alpha(a)=\mu([a,b))$ as checked above (we have used \autoref{lem:hered-measure-extends}), so $\mu_\alpha^*|_{\mc B}$ and $\mu$ are both extensions of the premeasure $\mu_\alpha$ on $\mc P$, so \autoref{thm:measure-extension-unique} follows $\mu_\alpha^*|_\mc B=\mu$. This finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
 
 \subsection{The Haar Measure}
 Let's build up to talking about the Haar measure.
