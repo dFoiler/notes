@@ -1,0 +1,130 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 26}
+
+We now transition to integration. Here is a warning about our exposition.
+\begin{warn}
+	We are going to do integration valued in general Banach spaces instead of just $\RR\cup\{\infty\}$.
+\end{warn}
+The above convention is non-standard. See \cite{lang-analysis} for perhaps another treatment along these lines, but Professor Rieffel doesn't like Lang's exposition.
+\begin{example}
+	The Banach spaces we care about will essentially all be $\RR^n$ or $\CC^n$ for some integer $n$.
+\end{example}
+\begin{example}
+	We may also use any completion of a normed vector space $(V,\norm\cdot)$, such as the $p$-adic rationals $\QQ_p$ or $C([0,1])$ using the $p$-norm $\norm\cdot_p$.
+\end{example}
+
+\subsection{Simple Measurable Functions}
+Let's begin with the easiest possible functions we might hope to integrate.
+\begin{definition}[Simple measurable function]
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ and a Banach space $B$. Then a \textit{simple $\mc S$-measurable $B$-valued function} is a function $f\colon X\to B$ such that $\im f$ is finite and $f^{-1}(\{y\})\in\mc S$ for any $y\in B\setminus\{0\}$.
+\end{definition}
+% \begin{remark}
+% 	If $Y\subseteq B$ in the above setting, note that
+% 	\[f^{-1}(Y)=\bigcup_{y\in(\im f)\cap Y}f^{-1}(\{y\})\]
+% 	is a finite union because $\im f$ is finite. Thus, it is necessary and sufficient for $f^{-1}(\{y\})\in\mc S$ for each $y\in\im f$. Indeed, certainly this is necessary because $\{y\}$ is some subset of $B$, and this sufficient because any subset $Y\subseteq B$ can have $f^{-1}(E)$ broken down into finitely many $f^{-1}(\{y\})$s for $y\in\im f$ as above.
+% \end{remark}
+\begin{example} \label{ex:indicator-is-simple}
+	Given any $y\in B$ and $E\in\mc S$, the function $y1_E$ is a simple $\mc S$-measurable function. For one, the image is $\{0,y\}$, which is finite. Further, if $b\in B\setminus\{0\}$, then either $b\ne y$ as well and so $f^{-1}(\{b\})=\emp\in\mc S$ or $f^{-1}(\{y\})=E\in\mc S$.
+\end{example}
+As from the above example, it turns out that we should think of simple measurable functions as just linear combinations of indicators.
+\begin{lemma} \label{lem:simple-is-linear-combo-of-chars}
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ and a Banach space $B$. Then any simple $\mc S$-measurable function $f\colon X\to S$ can be written as
+	\[f=\sum_{y\in(\im f)\setminus\{0\}}y1_{f^{-1}(\{y\})}.\]
+\end{lemma}
+\begin{proof}
+	Fix any $x_0\in X$, and we want to show that
+	\[f(x_0)=\sum_{y\in(\im f)\setminus\{0\}}y1_{f^{-1}(\{y\})}(x_0).\]
+	Well, if $f(x_0)=0$, then note that $x_0\notin f^{-1}(\{y\})$ for any $y\in(\im f)\setminus\{0\}$, so the right-hand sum vanishes.
+	
+	Otherwise, say that $f(x_0)=y_0$ where $y_0\in(\im f)\setminus\{0\}$. Then note that $x_0\in f^{-1}(\{y_0\})$, and further we see that $x_0\in f^{-1}(\{y\})$ forces $y=f(x_0)=y_0$, so $y_0$ is the only $y$ for which $x_0\in f^{-1}(\{y_0\})$, so
+	\[\sum_{y\in(\im f)\setminus\{0\}}y1_{f^{-1}(\{y\})}(x_0)=y_01_{f^{-1}(\{y_0\})}(x_0)=y_0=f(x_0),\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma}
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ and a Banach space $B$. Then any simple $\mc S$-measurable function $f\colon X\to S$ can be written as
+	\[f=\sum_{i=1}^ny_i1_{E_i}\]
+	where the $y_\in B$ are distinct and nonzero and the $E_i\in\mc S$ are pairwise disjoint. In fact, we must have $\{y_1,\ldots,y_n\}=(\im f)\setminus\{0\}$ and $E_i=f^{-1}(\{y_i\})$.
+\end{lemma}
+\begin{proof}
+	We show the claims in sequence.
+	\begin{itemize}
+		\item Existence: by \autoref{lem:simple-is-linear-combo-of-chars}, we can write
+		\[f=\sum_{y\in(\im f)\setminus\{0\}}y1_{f^{-1}(\{y\})}.\]
+		Here, the elements of $(\im f)\setminus\{0\}$ are surely distinct, and there are finitely many of them, so we enumerate them by $\{y_1,\ldots,y_n\}$. Then we set $E_i\coloneqq f^{-1}(\{y_i\})$, which is in $\mc S$ by hypothesis on $f$.
+
+		Lastly, we note that the $E_\bullet$ are pairwise disjoint: if $x\in E_i$, then $f(x)=y_i$, so if $x\in E_i\cap E_j$, then $f(x)=y_i=y_j$, so $y_i=y_j$, so $i=j$ because the $y_\bullet$ are distinct.
+
+		\item Uniqueness: suppose we can write
+		\[f=\sum_{i=1}^ny_i1_{E_i}\]
+		where the $y_i\in B$ are distinct and nonzero, and the $E_i\in\mc S$ are pairwise disjoint. We claim that $\{y_1,\ldots,y_n\}=(\im f)\setminus\{0\}$ and $E_i=f^{-1}(\{y_i\})$ for each $i$.
+
+		Certainly $\{y_1,\ldots,y_n\}\subseteq(\im f)\setminus\{0\}$. Indeed, if $x\in E_i$, then
+		\[f(x)=\sum_{i=1}^ny_i1_{E_i}(x)=y_i1_{E_i}(x)=y_i\]
+		because the $E_\bullet$ are pairwise disjoint, so $y_i\in(\im f)\setminus\{0\}$. In fact, observe that we have also shown that $x\in E_i$ implies $f(x)=y_i$.
+		
+		Conversely, if $y\in(\im f)\setminus\{0\}$, then find $x\in X$ with $f(x)=y$. Because $f(x)\ne0$, some term in the sum of
+		\[f(x)=\sum_{i=1}^ny_i1_{E_i}(x)\]
+		must be nonzero, so say that $y_i1_{E_i}(x)\ne0$, so $x\in E_i$. However, $x\in E_i$ now forces $f(x)=y_i$ as we saw above, so $y\in\{y_1,\ldots,y_n\}$. In fact, observe that we have also shown that $f(x)\ne0$ implies $x\in E_j$ for some $j$.
+
+		It remains to show that $E_i=f^{-1}(\{y_i\})$. Well, above we showed that $x\in E_i$ implies $f(x)=y_i$. Conversely, we showed that $f(x)=y_i\ne0$ implies that $x\in E_j$ for some $j$. But then $f(x)=y_j$ from the above, so $y_j=y_i$, so $i=j$ because the $y_i$ are distinct, so $x\in E_i$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here's a sanity check.
+\begin{lemma} \label{lem:simple-meas-is-k-vec}
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ and a Banach space $B$ over a field $k$. Then the simple $\mc S$-measurable functions valued in $B$ form a $k$-vector space.
+\end{lemma}
+\begin{proof}
+	We have the following checks.
+	\begin{itemize}
+		\item Zero: note that the zero function $z\colon X\to B$ by $z(x)=0$ for all $x\in X$ is a simple measurable function. Indeed, $\im z=\{0\}$ is finite, and any $y\in B$ with $y\ne0$ has $z^{-1}(\{y\})=\emp\in\mc S$ by \autoref{rem:emp-is-in-ring}.
+
+		\item Scalar multiplication: suppose $f$ is a simple $\mc S$-measurable function, and let $r\in k$, and we show $rf$ is still a simple $\mc S$-measurable function. Well, if $r=0$, then $rf=0$, so $rf=0\cdot1_{\emp}$ is a simple $\mc S$-measurable function by \autoref{ex:indicator-is-simple}.
+		
+		Otherwise, take $r\ne0$. For one, note that
+		\[\im(rf)=\{rf(x):x\in X\}=\{ry:y\in\im f\}\]
+		is still finite, with cardinality upper-bounded by $\#(\im f)$.
+
+		Further, we need to show that $y\in B\setminus\{0\}$ will have $f^{-1}(\{y\})\in\mc S$. Well, we compute
+		\[(rf)^{-1}(\{y\})=\{x\in X:rf(x)=y\}=\{x\in X:f(x)=1/r\cdot y\}=f^{-1}(1/r\cdot y),\]
+		where we are using the fact that $r\ne0$. Because $y\ne0$, we see $1/r\cdot y\ne0$, so $f^{-1}(1/r\cdot y)\in\mc S$ still.
+
+		\item Addition: suppose $f$ and $g$ are simple $\mc S$-measurable so that we want to show $f+g$ is still a simple $\mc S$-measurable function. Indeed, we claim that
+		\[\im(f+g)\subseteq\{b+c:b\in\im f\text{ and }c\in\im g\}.\]
+		To see this note that any element of $\im(f+g)$ can be written as $(f+g)(x)=f(x)+g(x)$, which does take the form $b+c$ where $b=f(x)\in\im f$ and $c=g(x)\in\im g$. Thus, we do indeed see that $\im(f+g)$ is finite, with cardinality at most $\#(\im f)\cdot\#(\im g)$.
+
+		Now, suppose that $y\in B\setminus\{0\}$, and we show $(f+g)^{-1}(\{y\})\in\mc S$. Indeed, we see that $f(x)+g(x)=y$ is equivalent to $f(x)=y-g(x)$, so
+		\[(f+g)^{-1}(\{y\})=\bigcup_{c\in(\im g)}\left(f^{-1}(\{y-c\})\cap g^{-1}(\{y\})\right).\]
+		Because $\sigma$-rings are closed under finite unions, it suffices to show that $f^{-1}(\{y-c\})\cap g^{-1}(\{c\})\in\mc S$ for each $c\in\im g$. We have three cases.
+		\begin{itemize}
+			\item If $y\ne c$ and $c\ne0$, then we see that $f^{-1}(\{y-c\}),g^{-1}(\{c\})\in\mc S$, so their intersection remains in $\mc S$ by \autoref{rem:sring-has-intersections}.
+			\item If $y=c$, then note that $c=y\ne0$. Here, we are showing $f^{-1}(\{0\})\cap g^{-1}(\{y\})\in\mc S$. Well, $f^{-1}(\{0\})\cap g^{-1}(\{y\})$ is
+			\[\Bigg(X{\mathbin\bigg\backslash}\bigcup_{b\in(\im f)\setminus\{0\}}f^{-1}(\{b\})\bigg)\cap g^{-1}(\{y\})=g^{-1}(\{y\}){\mathbin\bigg\backslash}\bigcup_{b\in(\im f)\setminus\{0\}}f^{-1}(\{b\}).\]
+			Well, $f^{-1}(\{b\})\in\mc S$ for each of the finitely many $b\in(\im f)\setminus\{0\}$, so the full union lives in $\mc S$ because $\mc S$ is a $\sigma$-ring. Lastly, the subtraction still lives in $\mc S$ because $g^{-1}(\{y\})\in\mc S$, and $\mc S$ is still a $\sigma$-ring.
+			\item If $c=0$, then we still have $y\ne0$. Here, we are showing that $f^{-1}(\{y\})\cap g^{-1}(\{0\})\in\mc S$, so we may just reverse the roles of $f$ and $g$ in the above case to finish.
+		\end{itemize}
+		The above cases finish the proof.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary}
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ and a Banach space $B$. For any sets $\{E_i\}_{i=1}^n\subseteq\mc S$ and outputs $\{y_i\}_{i=1}^n\in B$, the function
+	\[\sum_{i=1}^ny_i1_{E_i}\]
+	is a simple $\mc S$-measurable function.
+\end{corollary}
+\begin{proof}
+	Note that each $y_i1_{E_i}$ is a simple $\mc S$-measurable function by \autoref{ex:indicator-is-simple}, so the finite sum of these remains a simple $\mc S$-measurable function by \autoref{lem:simple-meas-is-k-vec}.
+\end{proof}
+We are finally ready to define integrals.
+\begin{definition}[Integral]
+	Fix a $\sigma$-ring $\mc S$ on a set $X$ and a Banach space $B$. Further, let $\mu$ be a finitely additive measure $\mu$ on $\mc S$. Given a simple $\mc S$-measurable function $f$, we define the \textit{integral}
+	\[\int_Xf\,d\mu=\sum_{y\in(\im f)\setminus\{0\}}\mu\left(f^{-1}(\{y\})\right).\]
+\end{definition}
+Note that the sum in the above definition is a finite sum by definition of $f$, and each $f^{-1}(\{y\})$ is also in $\mc S$ by definition of $f$ again.
+
+\end{document}
