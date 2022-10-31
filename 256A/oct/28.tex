@@ -1,0 +1,75 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 26}
+
+Today we'll focus on computing divisors for curves over a field.
+
+\subsection{Degrees on Curves}
+To discuss curves, we should probably define curves.
+\begin{definition}[Curve]
+	Fix a field $k$. A \textit{curve} is a one-dimensional variety over $k$.
+\end{definition}
+Let's begin by discussing Cartier divisors.
+\begin{itemize}
+	\item Let $X$ be a normal curve. For a Cartier divisor $D$, we define
+	\[\deg D\coloneqq\sum_{x\in X}\nu_x(D)[k(x):k].\]
+	Here, $\nu_x(D)=\nu_x(f_i)$, where $D=\{(U_i,f_i)\}$ has $x\in U_i$ for a given $i$, which makes sense because $\OO_{X,x}$ is a discrete valuation ring.
+	\item If $X$ is not normal, then we should pass to its normalization $\widetilde X$ with normalization map $\iota\colon\widetilde X\to X$. Then we can pull back Cartier divisors $D$ on $X$ to divisors on $\widetilde X$ and compute the degree there.
+\end{itemize}
+\begin{example}
+	Take $X=\PP^1_\QQ$ as a $\QQ$-curve. Then the closed point $x\coloneqq\left(x_0^2-2x_1^2\right)$ has $\deg_\QQ[x]=2$, where the $2$ contribution is coming from $[\QQ(x):\QQ]=2$.
+\end{example}
+And here is the degree of a Weil divisor.
+\begin{itemize}
+	\item For a normal curve $X$, and a Weil divisor $D=\sum_xn_x[x]$ on $X$, we again just define
+	\[\deg D\coloneqq\sum_{x\in X}n_x[k(x):x].\]
+	\item For general curves, apply the same normalization technique to get the definition in general.
+\end{itemize}
+Here is the usual check.
+\begin{prop} \label{prop:deg-of-princ-vanishes}
+	Fix a proper $k$-curve $X$. Then $\deg\op{div}f=0$ for any $f\in K(X)$. Thus, $\deg$ descends to a homomorphism $\op{CaCl}X\to\ZZ$.
+\end{prop}
+We will prove this shortly.
+\begin{nex}
+	With $X=\AA^1_k=\Spec k[t]$, we note that $\deg\op{div}(t)=\deg[0]=1$. The point here is that the proper condition on $X$ is necessary.
+\end{nex}
+
+\subsection{Pulling Back Divisors}
+To prove \autoref{prop:deg-of-princ-vanishes}, we need to discuss what we meant when we said we're pulling back Cartier divisors.
+% GW S14, V S25
+\begin{remark}
+	Before continuing, we say out loud some properties of flat morphisms.
+	\begin{itemize}
+		\item The class of flat morphisms is preserved by composition, is preserved by base change, and is affine-local on the target.
+		\item If $f\colon X\to Y$ is flat, and $y=f(x)$ for some $x\in X$, then $\dim\OO_{X,x}=\dim\OO_{Y,y}+\dim\OO_{X_y,x}$.
+	\end{itemize}
+\end{remark}
+Fix some flat morphism $f\colon X\to Y$. If $Z\subseteq Y$ is a closed integral subscheme of codimension $1$, then we note that $X\times_YZ$ is a closed subscheme of $X$. Further, by the flatness, we note that
+\[\codim_X(X\times_YZ)=\codim_Y(Z)=1\]
+provided that $X\times_YZ$ is nonempty. The point is that this process defines a group homomorphism $\op{Weil}(Y)\to\op{Weil}(X)$ sending some $[Z]$ to the reduced subscheme with topological space $X\times_YZ\subseteq X$, with some suitably defined multiplicities.
+
+Namely, for an irreducible closed subscheme $W$ of $X\times_YZ$, we let the multiplicity of $[W]$ be given by choosing an affine open subscheme $U\subseteq W$. Then we take the stalk $\OO_W(U)_\eta$, where $\eta$ is the generic point, is a zero-dimensional ring and hence Artinian and hence has finite length, so we set the multiplicity to the length of $\OO_W(U)_\eta$.
+\begin{example}
+	If we have $X\times_YZ\simeq\Spec k[x]/\left(x^2\right)$, then our multiplicity we can see should be $2$, and the corresponding reduction is $k$.
+\end{example}
+\begin{example}
+	If we have $X\times_YZ\simeq\Spec k[x,y]/\left(x^2\right)$, then our reduction is $k[y]$, and our multiplicity is $2$ coming from the length of $k[x,y]/\left(x^2\right)$ at the generic point $(y)$ of $k[y]$.
+\end{example}
+We can see from the examples that the point of our weird reduction and so on is to keep track of the differential information.
+
+Next we want to pull back Cartier divisors, which we are promised will be less confusing.
+\begin{example}
+	Fix a dominant morphism $f\colon X\to Y$ of integral $k$-curves. Then a Cartier divisor made of the data $\{(U_i,f_i)\}$ on $Y$ has $f_i\in\mc K(Y)=K(Y)^\times$. But we see that $f\colon X\to Y$ gives us a map $f^\sharp\colon K(Y)\to K(X)$ because dominance forces $f$ to send the generic point of $X$ to the generic point of $Y$. As such, we will do the obvious thing and send
+	\[(U_i,f_i)\mapsto\left(f^{-1}U_i,f^\sharp(f_i)\right)\]
+	to define our map $f^*\colon\op{CaDiv}Y\to\op{CaDiv}X$.
+\end{example}
+Generalizing the example, we note that $f^\sharp\colon\OO_Y\to f_*\OO_X$ is going to induce a morphism $f^\sharp\colon\mc K_Y\to f_*\mc K_X$. To make a map on divisors, we want a condition like flatness to preserve dimension and to perhaps send irreducible components to irreducible components. Namely, we are getting a map $f^*\colon\mc K_Y/\OO_Y\to f_*(\mc K_X^*/\OO_X^*)$, which is precisely a map of the Cartier divisors.
+\begin{example}
+	Set $E=V_+\left(ZY^2=X^3+aXZ^2+bZ^3\right)\subseteq\PP^2_k$ to be an elliptic curve. Then the map $f\colon E\to\PP^1_k$ by $[X:Y:Z]\mapsto[Y:Z]$ (note that $E$ has no points with $Y=Z=0$) will let us pull back. For example, we can pull back the divisor $[0:1]$ of $\PP^1_k$ back to the three roots of $x^3+ax+b$ as points on our elliptic curve. Similarly, we can pull back $[1:0]$ on $\PP^1_k$ to $3[0:1:0]$.
+\end{example}
+
+\end{document}
