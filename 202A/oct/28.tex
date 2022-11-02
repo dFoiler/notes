@@ -6,7 +6,7 @@
 
 \section{October 28}
 
-We continue our story with integration, defining what we mean by a measurable function.
+We continue our story with integration by defining what we mean by a measurable function.
 
 \subsection{Measurable Functions}
 The following definition is non-standard but is how to think about our integrals in practice.
@@ -14,73 +14,239 @@ The following definition is non-standard but is how to think about our integrals
 	Fix a set $X$ and a $\sigma$-ring $\mc S$ on $X$. Given a normed vector space $B$, an \textit{$\mathcal S$-measurable function} is a function $f\colon X\to B$ such that there is a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ which converge to $f$ pointwise.
 \end{definition}
 \begin{remark}
-	Later in life, when we take $B=\RR$, we will allow the functions $f_n$ to output at $\infty$, but we will not do so while we allow $B$ to be a general metric space or even a Banach space.
+	Later in life, when we take $B=\RR$, we will allow the functions $f_n$ to output at $\infty$, but we will not do so while we allow $B$ to be a normed vector space.
 \end{remark}
 Sometimes we won't converge ``on the nose,'' so we will want a little freedom.
 \begin{definition}[Null set]
 	Fix a set $X$ and a $\sigma$-ring $\mc S$ on $X$ equipped with a measure $\mu$. A \textit{null set} is a subset $N\in\mc S$ such that $\mu(N)=0$.
 \end{definition}
+\begin{definition}[Converges almost everywhere]
+	Fix a set $X$ and a $\sigma$-ring $\mc S$ on $X$ equipped with a measure $\mu$. Given a metric space $B$, a sequence of functions $f_n\colon X\to B$ with $n\in\NN$ converges to a function $f\colon X\to B$ \textit{almost everywhere} if and only if there is a null set $N$ such that $f_n(x)\to f(x)$ as $n\to\infty$ for each $x\in X\setminus N$.
+\end{definition}
 \begin{definition}[Measurable function]
-	Fix a set $X$ and a $\sigma$-ring $\mc S$ on $X$ equipped with a measure $\mu$. Given a metric space $B$, a \textit{$\mu$-measurable function} is a function $f\colon X\to B$ such that there is a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ which converge to $f$ pointwise outside some fixed null set $N\in\mc S$.
+	Fix a set $X$ and a $\sigma$-ring $\mc S$ on $X$ equipped with a measure $\mu$. Given a metric space $B$, a \textit{$\mu$-measurable function} is a function $f\colon X\to B$ such that there is a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ which converge to $f$ almost everywhere.
 \end{definition}
 
-\subsection{Properties of Measurable Functions}
-Something annoying about our definition is that we can only work simple $\mc S$-measurable functions ``directly.'' For example, it is quite unclear if a sequence of $\mc S$-measurable functions (not necessarily simple!) which converge to a function $f$ will in fact be $\mc S$-measurable.
+\subsection{Properties of Simple Measurable Functions}
+Something annoying about our definition is that we can only work simple $\mc S$-measurable functions ``directly.'' One might wonder, for example, if a looking at limits $f_n\to f$ as $n\to\infty$ where each $f_n$ is $\mc S$-measurable might give a function $f$ which is not $\mc S$-measurable. This turns out to not be the case, but it will take some work to prove.
 
-For this, we will want a better description of $\mc S$-measurable functions.
-\begin{definition}
-	Fix a metric space $M$. A subset $A\subseteq M$ is \textit{separable} if and only if there is a countable subset $B\subseteq M$ such that $A\subseteq\overline B$.
+In particular, we will want a better description of $\mc S$-measurable functions. For today, we will content ourselves with necessary conditions.
+\begin{definition}[Separable]
+	A metric space $M$ is \textit{separable} if and only if there is a countable dense subset of $M$. As such, a subset $A\subseteq M$ is \textit{separable} if and only if $A$ is separable with the restricted metric; in other words, $A\subseteq M$ is separable if and only if there is a countable subset $B\subseteq A$ such that $A\subseteq\overline B$.
 \end{definition}
-\begin{remark}
-	It is equivalent to require a countable subset $B\subseteq A$ such that $A\subseteq\overline B$.
-\end{remark}
-\begin{lemma}
-	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Given an $\mathcal S$-measurable function $f$, then $\im f$ is separable.
+\begin{example} \label{ex:countable-is-sep}
+	If $A\subseteq M$ is countable, then we can see that $A\subseteq\overline A$ by definition of the closure, so $A$ is a countable dense subset with $A\subseteq\overline A$.
+\end{example}
+Here is a quick sanity check.
+\begin{lemma} \label{lem:better-sep}
+	Fix a metric space $(M,d)$. A subset $A\subseteq M$ is separable if and only if there is a countable subset $B\subseteq M$ such that $A\subseteq\overline B$.
 \end{lemma}
 \begin{proof}
-	By definition, we find our simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ with $f_n\to f$ pointwise. Now, set
-	\[E\coloneqq\bigcup_{n\in\NN}\im f_n,\]
-	which is a countable union of finite sets and hence countable. For any $y\in\im f$, find the $x\in X$ such that $y=f(x)$. Now, we are told that $f_n(x)\to f(x)$ as $n\to\infty$, so $f(x)$ is a limit point of elements of $E$. Thus, noting that $\overline E$ is closed, we conclude from \autoref{lem:metricclosed} that $f(x)\in\overline E$. In particular, $\im f\subseteq\overline E$, so $E$ is separable.
+	In the forward direction, having a countable subset $B\subseteq A$ with $A\subseteq\overline B$ will certainly imply having a countable subset $B\subseteq M$ with $A\subseteq\overline B$.
+
+	In the reverse direction, we begin with a countable subset $B\subseteq M$ with $A\subseteq\overline B$. For now, fix some $\varepsilon>0$. Then each $a\in A$ has $B(a,\varepsilon/2)\cap B\ne\emp$ by \autoref{lem:denseformetricspaces}, so choose some $b_a\in B$ with $d(a,b_{\varepsilon,a})<\varepsilon/2$. Now, the subset
+	\[B_\varepsilon\coloneqq\{b_{\varepsilon,a}:a\in A\}\subseteq B\]
+	must be countable, so enumerate its elements by $B_\varepsilon=\{b_{\varepsilon,1},b_{\varepsilon,2},\ldots\}$, and for each $b_{\varepsilon,k}$, we select some $a_{\varepsilon,k}\in A$ such that $d(b_{\varepsilon,k},a_{\varepsilon,k})<\varepsilon/2$, which exists by construction of $B_\varepsilon$.
+
+	We now go back to letting $\varepsilon>0$ vary. As our countable subset, we now set
+	\[B'\coloneqq\bigcup_{n=1}^\infty\{a_{1/n,k}:k\in\ZZ_{>0}\}.\]
+	Indeed, we claim that $A\subseteq\overline {B'}$, which shows density by \autoref{lem:denseformetricspaces}. For this, we pick up any $a\in A$ and $\varepsilon>0$, and we show that $B(a,\varepsilon)\cap B'\ne\emp$. Well, find some $N$ with $N>1/\varepsilon$. By construction of $B_{1/N}$, we may find some $k$ with $b_{1/N,k}=b_{1/N,a}$, which means that
+	\[d(a,a_{1/N,k})\le d_(a,b_{1/N,k})+d(b_{1/N,k},a_{1/N,k})<\frac1{2N}+\frac1{2N}<\varepsilon.\]
+	Thus, $a_{1/N,k}\in B'$ is the element we are looking for.
 \end{proof}
-\begin{remark}
-	In fact, the above proof can show that, if a sequence of functions $\{f_n\}_{n\in\NN}$ with $\im f_n$ separable and $f_n\to f$ pointwise, then $f$ also $\im f$ separable.
-\end{remark}
-\begin{lemma}
-	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Given an $\mathcal S$-measurable function $f$, then
-	\[\{x\in X:f(x)\ne0\}\]
-	is contained in a subset in $\mc S$.
+Here is why we just defined separable subsets.
+\begin{lemma} \label{lem:simple-has-sep-image}
+	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Any simple $\mc S$-measurable function $f\colon X\to B$ has $\im f\subseteq B$ separable.
 \end{lemma}
 \begin{proof}
-	Take the union of the individual simple $\mc S$-measurable functions.
+	By definition of simple measurable functions, $\im f$ is finite and hence separable by \autoref{ex:countable-is-sep}.
 \end{proof}
-\begin{remark}
-	In fact, the above proof can show that, if a sequence of functions $\{f_n\}_{n\in\NN}$ with $\im f_n$ separable, and $\{x\in X:f_n(x)\}$ is contained in a subset of $\mc S$ for each $n$, then the same is true for $f$.
-\end{remark}
-More generally, we have the following.
-\begin{lemma}
-	Fix a simple $\mc S$-measurable function $f$. Given an open subset $U\subseteq B$, we have $f^{-1}(U)\cap E\in\mc S$, where $E\in\mc S$ is any set containing the points where $f$ is nonzero.
+Here are a few other moderately silly checks.
+\begin{lemma} \label{lem:simple-measurable-pre-image}
+	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Any simple $\mc S$-measurable function $f\colon X\to B$ has $f^{-1}(U\setminus\{0\})\in\mc S$ for any open $U\subseteq X$.
 \end{lemma}
 \begin{proof}
-	As usual, pick up the promised sequence $\{f_n\}_{n\in\NN}$ of simple $\mc S$-measurable functions. Now, notice that $x\in f^{-1}(U)$ if and only if $f(x)\in U$, so we want to understand $U$ a little better. Without loss of generality, we may assume that $0\notin U$ because we are intersecting with $E$.
-
-	We would like to say that $f(x)$ is just a little far from $\overline U$. For this, we set
-	\[U_m\coloneqq\{x\in U:d(x,B\setminus U)<1/m\}\]
-	for any $m\ge1$. Notably, we have that $U$ is the union of all the $U_m$, and $\overline{U_m}\subseteq U_{m+1}$ always.
-
-	Continuing, we now see that $f(x)\in U$ is equivalent to $f(x)\in U_n$ for some $n$. Next, this is equivalent to saying that $f_k(x)\in U_n$ for all sufficiently large $k$ and some $n$. Certainly if $f(x)\in U_n$, then we have $f_k(x)\in U_n$ for sufficiently large $k$, and conversely, if $f_k(x)\in U_n$ for sufficiently large $k$, then $f(x)\in\overline{U_n}\subseteq U_{n+1}$.
-
-	Thus, in total we see that
-	\[f^{-1}(U)=\bigcup_{n=1}^\infty\bigcup_{K=1}^\infty\bigcap_{k\ge K}f_k^{-1}(U_n).\]
-	However, $f_k^{-1}(U_n)\in\mc S$ by definition, so this full union of unions of intersections is still in $\mc S$.
+	Recall that $\im f$ is finite by definition, so enumerate $\im f$ by $(\im f)\cap(U\setminus\{0\})=\{y_1,\ldots,y_n\}$. Then we note that
+	\[f^{-1}(U\setminus\{0\})=f^{-1}((\im f)\cap(U\setminus\{0\}))=\bigcup_{k=1}^nf^{-1}(\{y_k\}).\]
+	However, $f^{-1}(\{y_k\})\in\mc S$ for each $k$, so the total union lives in $\mc S$ because $\mc S$ is a ring.
 \end{proof}
+
+\subsection{Properties Preserved by Limits}
+Now, to upgrade from simple $\mc S$-measurable functions to $\mc S$-measurable functions, we take limits. Here is the separability check.
+\begin{lemma} \label{lem:limit-of-sep-ims-has-sep-im}
+	Fix a metric space $M$ and a set $X$. Suppose a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ have a pointwise limit $f_n\to f$ as $n\to\infty$. If each $\im f_n\subseteq M$ is separable, then $\im f\subseteq M$ is separable as well.
+\end{lemma}
+\begin{proof}
+	For each $n$, find the countable subset $C_n\subseteq\im f_n$ with $\im f_n\subseteq\overline{C_n}$. Then we set
+	\[C\coloneqq\bigcup_{n\in\NN}C_n,\]
+	and we note that $C$ is the countable union of countable subsets and hence countable. We thus claim that $\im f\subseteq\overline C$, which will finish by \autoref{lem:better-sep}.
+
+	Well, fix any $y\in\im f$, and find some $x\in X$ with $y=f(x)$. For any $\varepsilon>0$, we need to show that $B(y,\varepsilon)\cap C\ne\emp$; this is enough by \autoref{lem:denseformetricspaces}. For this, we note that there is some $N$ such that $n\ge N$ implies
+	\[d(f(x),f_n(x))<\varepsilon/2,\]
+	where $d$ is the metric of $M$; set $n\coloneqq N$. Further, we recall $\im f_n\subseteq\overline{C_n}$, so \autoref{lem:denseformetricspaces} promises us some $c\in C_n$ such that $d(f_n(x),c)<\varepsilon/2$. In total,
+	\[d(y,c)\le d(f(x),f_n(x))+d(f_n(x),c)<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+	which is what we wanted.
+\end{proof}
+\begin{corollary}
+	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Any $\mc S$-measurable function $f\colon X\to B$ has $\im f\subseteq B$ separable.
+\end{corollary}
+\begin{proof}
+	By definition of being $\mc S$-measurable, there is a sequence of simple $\mc S$-measurable functions $f_n\colon X\to B$ with $f_n\to f$ as $n\to\infty$ pointwise. Each $f_n$ has $\im f_n$ separable by \autoref{lem:simple-has-sep-image}, so $f$ does as well by \autoref{lem:limit-of-sep-ims-has-sep-im}.
+\end{proof}
+Making \autoref{lem:simple-measurable-pre-image} work in limits requires a little more care.
+% \begin{lemma} \label{lem:limit-measurable-pre-image}
+% 	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Suppose that a sequence of functions $f_n\colon X\to B$ satisfy the following conditions for each $f_n$.
+% 	\begin{listroman}
+% 		\item There is a subset $E\in\mc S$ containing $f_n^{-1}(B\setminus\{0\})$.
+% 		\item For any $E\in\mc S$ containing $f_n^{-1}(B\setminus\{0\})$ and open $U\subseteq B$, we have $f_n^{-1}(U)\cap E\in\mc S$.
+% 	\end{listroman}
+% 	If $f_n\to f$ pointwise as $n\to\infty$, then $f$ satisfies (i) and (ii) above as well.
+% \end{lemma}
+\begin{lemma} \label{lem:limit-measurable-pre-image}
+	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Suppose that a sequence of functions $f_n\colon X\to B$ have $f_n^{-1}(U\setminus\{0\})\in\mc S$ for each open $U\subseteq B$. Then satisfy the following conditions for each $f_n$. If $f_n\to f$ pointwise as $n\to\infty$, then $f^{-1}(U\setminus\{0\})\in\mc S$ for each open $U\subseteq B$ as well.
+\end{lemma}
+\begin{proof}
+	This is a little tricky. We will replace $U$ with $U\setminus\{0\}$ and simply remember that $0\notin U$.
+	
+	The main point is that any $x\in f^{-1}(U)$ will have $f(x)\in U$, and elements of $U$ should have some small positive distance away from $B\setminus U$. Namely, we set
+	\[U_m\coloneqq\{x\in U:d(x,B\setminus U)>1/m\}\]
+	for any $m\ge1$; here, $d$ is the metric of $B$, and $d(x,B\setminus U)=\inf_{y\in B\setminus U}d(x,y)$. Here are a few checks.
+	\begin{itemize}
+		\item As an intermediate claim, we note that $d(x,y)+d(y,B\setminus U)\ge d(x,B\setminus U)$. Indeed, for any $a\in B\setminus U$, note that
+		\[d(x,y)+d(y,a)\ge d(b,a)\ge d(x,B\setminus U),\]
+		so
+		\[d(y,a)\ge d(x,B\setminus U)-d(x,y).\]
+		Letting $a\in B\setminus U$ vary in this last inequality tells us that $d(y,B\setminus U)\ge d(x,B\setminus U)-d(x,y)$.
+		\item Note that each $U_m$ is open. Indeed, if $x\in U_m$, then set $\varepsilon\coloneqq 1/m-d(x,B\setminus U)>0$. This means that $d(x,y)<\varepsilon$ implies, from the previous check,
+		\[d(y,B\setminus U)\le d(x,y)+d(x,B\setminus U)<\varepsilon+d(x,B\setminus U)=1/m,\]
+		so $y\in U_m$. Thus, $B(x,\varepsilon)\subseteq U$.
+		\item We claim
+		\[U\stackrel?=\bigcup_{m=1}^\infty U_m.\]
+		In one direction, $x\in U_m$ implies $d(x,B\setminus U)\ne0$, so $x\notin B\setminus U$, so $x\in U$.
+		
+		In the other direction, note $x\in U$ implies there is some $\varepsilon>0$ with $B(x,\varepsilon)\subseteq U$, so $B(x,\varepsilon)\cap(B\setminus U)=\emp$, so $d(x,B\setminus U)>\varepsilon$. Thus, there is some $m>1/\varepsilon$ with $d(x,B\setminus U)>1/m$ and so $x\in U_m$ for this $m$.
+		\item From the above claim, we note that $0\notin U_m$ for each $m$ because $0\notin U$.
+		\item We claim $\overline{U_m}\subseteq U_{m+1}$ for each $m$; set $\varepsilon\coloneqq\frac1m-\frac1{m+1}>0$. Now, if $x\in\overline{U_m}$, then we see $B(x,\varepsilon)\cap U_m\ne\emp$ by \autoref{lem:denseformetricspaces}, so we may find $y\in U_m$ with $d(x,y)<\varepsilon$. It follows from the first check that
+		\[d(x,B\setminus U)\le d(x,y)+d(y,B\setminus U)<\varepsilon+\frac1m=\frac1{m+1},\]
+		so $x\in U_{m+1}$ follows.
+	\end{itemize}
+	Now, we see from the above that
+	\[f^{-1}(U)=\bigcup_{m=1}^\infty f^{-1}(U_m).\]
+	Thus, $x\in f^{-1}(U_m)$ implies that there is some $\varepsilon>0$ with $B(x,\varepsilon)\subseteq U_m$; because $f_n\to f$ as $n\to\infty$ pointwise (!), there is some $N$ for which $f_n(x)\in B(x,\varepsilon)\subseteq U_m$ for each $n\ge N$, so
+	\[f^{-1}(U)\subseteq\bigcup_{m=1}^\infty\bigcup_{N=1}^\infty\bigcap_{n\ge N}f_n^{-1}(U_m).\]
+	Conversely, if $x$ lives in this right-hand set, we have some $m$ and $N$ with $f_n(x)\in U_m\subseteq\overline{U_m}$ for all $n\ge N$. So $f(x)\in\overline{U_m}$ by \autoref{lem:metricclosed}, so $f(x)\in U_{m+1}\subseteq U$ follows. Thus, equality in the above containment follows.
+
+	In total, we see that
+	\[f^{-1}(U)=\bigcup_{m=1}^\infty\bigcup_{N=1}^\infty\bigcap_{n\ge N}f_n^{-1}(U_m).\]
+	Notably, $f_n^{-1}(U_m)\cap E\in\mc S$ for each $n$ and $m$, by construction of the $f_n$s, so this full union of unions of intersections is still in $\mc S$, using the fact that $\mc S$ is a $\sigma$-ring and \autoref{rem:sring-has-intersections}.
+\end{proof}
+% \begin{proof}
+% 	We show (i) and (ii) separately. For each $n$, let $E_n\in\mc S$ be the subset containing $f^{-1}(B\setminus\{0\})$.
+% 	\begin{listroman}
+% 		\item We set
+% 		\[E\coloneqq\bigcup_{n\in\NN}E_n,\]
+% 		and we note that $E\in\mc S$ because $\mc S$ is a $\sigma$-ring. As such, we claim that $E$ contains $f^{-1}(B\setminus\{0\})$, which will finish.
+
+% 		Well, if $x\in f^{-1}(B\setminus\{0\})$, then $f(x)\ne0$. Because $f_n(x)\to f(x)$ as $n\to\infty$, there is some $N$ for which $n\ge N$ implies $|f(x)-f_n(x)|<|f(x)|$ and so $f_n(x)\ne0$. Thus, $x\in f_n^{-1}(B\setminus\{0\})\subseteq E_n$, so the claim follows.
+
+% 		\item This is a little tricky. The main point is that any $x\in f^{-1}(U)$ will have $f(x)\in U$, and elements of $U$ should have some small positive distance away from $B\setminus U$. Namely, we set
+% 		\[U_m\coloneqq\{x\in U:d(x,B\setminus U)>1/m\}\]
+% 		for any $m\ge1$; here, $d$ is the metric of $B$, and $d(x,B\setminus U)=\inf_{y\in B\setminus U}d(x,y)$. Here are a few checks.
+% 		\begin{itemize}
+% 			\item As an intermediate claim, we note that $d(x,y)+d(y,B\setminus U)\ge d(x,B\setminus U)$. Indeed, for any $a\in B\setminus U$, note that
+% 			\[d(x,y)+d(y,a)\ge d(b,a)\ge d(x,B\setminus U),\]
+% 			so
+% 			\[d(y,a)\ge d(x,B\setminus U)-d(x,y).\]
+% 			Letting $a\in B\setminus U$ vary in this last inequality tells us that $d(y,B\setminus U)\ge d(x,B\setminus U)-d(x,y)$.
+% 			\item Note that each $U_m$ is open. Indeed, if $x\in U_m$, then set $\varepsilon\coloneqq 1/m-d(x,B\setminus U)>0$. This means that $d(x,y)<\varepsilon$ implies, from the previous check,
+% 			\[d(y,B\setminus U)\le d(x,y)+d(x,B\setminus U)<\varepsilon+d(x,B\setminus U)=1/m,\]
+% 			so $y\in U_m$. Thus, $B(x,\varepsilon)\subseteq U$.
+% 			\item We claim
+% 			\[U\stackrel?=\bigcup_{m=1}^\infty U_m.\]
+% 			In one direction, $x\in U_m$ implies $d(x,B\setminus U)\ne0$, so $x\notin B\setminus U$, so $x\in U$.
+			
+% 			In the other direction, note $x\in U$ implies there is some $\varepsilon>0$ with $B(x,\varepsilon)\subseteq U$, so $B(x,\varepsilon)\cap(B\setminus U)=\emp$, so $d(x,B\setminus U)>\varepsilon$. Thus, there is some $m>1/\varepsilon$ with $d(x,B\setminus U)>1/m$ and so $x\in U_m$ for this $m$.
+% 			\item We claim $\overline{U_m}\subseteq U_{m+1}$ for each $m$; set $\varepsilon\coloneqq\frac1m-\frac1{m+1}>0$. Now, if $x\in\overline{U_m}$, then we see $B(x,\varepsilon)\cap U_m\ne\emp$ by \autoref{lem:denseformetricspaces}, so we may find $y\in U_m$ with $d(x,y)<\varepsilon$. It follows from the first check that
+% 			\[d(x,B\setminus U)\le d(x,y)+d(y,B\setminus U)<\varepsilon+\frac1m=\frac1{m+1},\]
+% 			so $x\in U_{m+1}$ follows.
+% 		\end{itemize}
+% 		Now, we see from the above that
+% 		\[f^{-1}(U)=\bigcup_{m=1}^\infty f^{-1}(U_m).\]
+% 		Now, $x\in f^{-1}(U_m)$ implies that there is some $\varepsilon>0$ with $B(x,\varepsilon)\subseteq U_m$; because $f_n\to f$ as $n\to\infty$ pointwise (!), there is some $N$ for which $f_n(x)\in B(x,\varepsilon)\subseteq U_m$ for each $n\ge N$, so
+% 		\[f^{-1}(U)\subseteq\bigcup_{m=1}^\infty\bigcup_{N=1}^\infty\bigcap_{n\ge N}f_n^{-1}(U_m).\]
+% 		Conversely, if $x$ lives in this right-hand set, we have some $m$ and $N$ with $f_n(x)\in U_m\subseteq\overline{U_m}$ for all $n\ge N$. So $f(x)\in\overline{U_m}$ by \autoref{lem:metricclosed}, so $f(x)\in U_{m+1}\subseteq U$ follows. Thus, equality in the above containment follows.
+
+% 		Thus, in total we see that
+% 		\[f^{-1}(U)=\bigcup_{m=1}^\infty\bigcup_{N=1}^\infty\bigcap_{n\ge N}f_n^{-1}(U_m).\]
+% 		Only now do we pick up the promised $E$ from our hypothesis and intersect as
+% 		\[f^{-1}(U)\cap E=\bigcup_{m=1}^\infty\bigcup_{N=1}^\infty\bigcap_{n\ge N}\left(f_n^{-1}(U_m)\cap E\right).\]
+% 		Notably, $f_n^{-1}(U_m)\cap E\in\mc S$ for each $n$ and $m$, by construction of the $f_n$s, so this full union of unions of intersections is still in $\mc S$, using the fact that $\mc S$ is a $\sigma$-ring and \autoref{rem:sring-has-intersections}.
+% 		\qedhere
+% 	\end{listroman}
+% \end{proof}
+% \begin{remark}
+% 	The above conditions are forced to be so weird because it need not be true that $f^{-1}(B\setminus\{0\})\in\mc S$ even if $f_n^{-1}(B\setminus\{0\})\in\mc S$ for each $n$. The above proof gets around this by merely showing
+% 	\[f^{-1}(B\setminus\{0\})\subseteq\bigcup_{n\in\NN}f_n^{-1}(B\setminus\{0\}).\]
+% \end{remark}
+% \begin{remark}
+% 	For peace of mind, we can equivalently replace (ii) in \autoref{lem:limit-measurable-pre-image} with
+% 	\begin{itemize}
+% 		\item[(ii')] There is some $E\in\mc S$ containing $f_n^{-1}(B\setminus\{0\})$ such that any open $U\subseteq B$ has $f_n^{-1}(U)\cap E\in\mc S$.
+% 	\end{itemize}
+% 	By (i), certainly (ii) implies (ii') by choosing any available $E$. Conversely, given (ii'), let $E\in\mc S$ be the special subset. Then any $E'\in\mc S$ containing $f_n^{-1}(B\setminus\{0\})$ will have
+% 	\[f_n^{-1}(U)\cap E'=\left(f_n^{-1}(U)\cap E\right)\cup\left(f_n^{-1}(\{0\})\cap (E'\setminus E)\right),\]
+% 	so it remains to show $f_n^{-1}(\{0\})\cap E'\in\mc S$.
+% \end{remark}
+\begin{corollary}
+	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Any $\mc S$-measurable function $f\colon X\to B$ has $f^{-1}(U\setminus\{0\})\in\mc S$ for each open $U\subseteq B$.
+\end{corollary}
+\begin{proof}
+	Any simple $\mc S$-measurable function satisfies the conclusion by \autoref{lem:simple-measurable-pre-image}. However, because $\mc S$-measurable functions are limits of simple $\mc S$-measurable functions, $\mc S$-measurable functions satisfy the conclusion as well by \autoref{lem:limit-measurable-pre-image}.
+\end{proof}
+% \begin{proof}
+% 	By definition, we find our simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ with $f_n\to f$ pointwise. Now, set
+% 	\[E\coloneqq\bigcup_{n\in\NN}\im f_n,\]
+% 	which is a countable union of finite sets and hence countable. For any $y\in\im f$, find the $x\in X$ such that $y=f(x)$. Now, we are told that $f_n(x)\to f(x)$ as $n\to\infty$, so $f(x)$ is a limit point of elements of $E$. Thus, noting that $\overline E$ is closed, we conclude from \autoref{lem:metricclosed} that $f(x)\in\overline E$. In particular, $\im f\subseteq\overline E$, so $E$ is separable.
+% \end{proof}
+% \begin{remark}
+% 	In fact, the above proof can show that, if a sequence of functions $\{f_n\}_{n\in\NN}$ with $\im f_n$ separable and $f_n\to f$ pointwise, then $f$ also $\im f$ separable.
+% \end{remark}
+% \begin{lemma}
+% 	Fix a normed vector space $B$ and a set $X$ with $\sigma$-ring $\mc S$ on $X$. Given an $\mathcal S$-measurable function $f$, then
+% 	\[\{x\in X:f(x)\ne0\}\]
+% 	is contained in a subset in $\mc S$.
+% \end{lemma}
+% \begin{proof}
+% 	Take the union of the individual simple $\mc S$-measurable functions.
+% \end{proof}
+% \begin{remark}
+% 	In fact, the above proof can show that, if a sequence of functions $\{f_n\}_{n\in\NN}$ with $\im f_n$ separable, and $\{x\in X:f_n(x)\}$ is contained in a subset of $\mc S$ for each $n$, then the same is true for $f$.
+% \end{remark}
+% More generally, we have the following.
+% \begin{lemma}
+% 	Fix a simple $\mc S$-measurable function $f$. Given an open subset $U\subseteq B$, we have $f^{-1}(U)\cap E\in\mc S$, where $E\in\mc S$ is any set containing the points where $f$ is nonzero.
+% \end{lemma}
+% \begin{proof}
+% 	As usual, pick up the promised sequence $\{f_n\}_{n\in\NN}$ of simple $\mc S$-measurable functions. Now, notice that $x\in f^{-1}(U)$ if and only if $f(x)\in U$, so we want to understand $U$ a little better. Without loss of generality, we may assume that $0\notin U$ because we are intersecting with $E$.
+
+% 	We would like to say that $f(x)$ is just a little far from $\overline U$. For this, we set
+% 	\[U_m\coloneqq\{x\in U:d(x,B\setminus U)<1/m\}\]
+% 	for any $m\ge1$. Notably, we have that $U$ is the union of all the $U_m$, and $\overline{U_m}\subseteq U_{m+1}$ always.
+
+% 	Continuing, we now see that $f(x)\in U$ is equivalent to $f(x)\in U_n$ for some $n$. Next, this is equivalent to saying that $f_k(x)\in U_n$ for all sufficiently large $k$ and some $n$. Certainly if $f(x)\in U_n$, then we have $f_k(x)\in U_n$ for sufficiently large $k$, and conversely, if $f_k(x)\in U_n$ for sufficiently large $k$, then $f(x)\in\overline{U_n}\subseteq U_{n+1}$.
+
+% 	Thus, in total we see that
+% 	\[f^{-1}(U)=\bigcup_{n=1}^\infty\bigcup_{K=1}^\infty\bigcap_{k\ge K}f_k^{-1}(U_n).\]
+% 	However, $f_k^{-1}(U_n)\in\mc S$ by definition, so this full union of unions of intersections is still in $\mc S$.
+% \end{proof}
+% \begin{remark}
+% 	As usual, we have bought more with the above proof: fix a sequence of functions $\{f_n\}_{n\in\NN}$ such that $f_n^{-1}(U)\in\mc S$ for each open $U\subseteq B\setminus\{0\}$. If $f_n\to f$ pointwise, then $f^{-1}(U)$ as well.
+% \end{remark}
+% \begin{remark}
+% 	It follows from our remarks that a sequence of $\mc S$-measurable functions converging to a function $f$ will satisfy the conclusions of the previous three lemmas.
+% \end{remark}
 \begin{remark}
-	As usual, we have bought more with the above proof: fix a sequence of functions $\{f_n\}_{n\in\NN}$ such that $f_n^{-1}(U)\in\mc S$ for each open $U\subseteq B\setminus\{0\}$. If $f_n\to f$ pointwise, then $f^{-1}(U)$ as well.
-\end{remark}
-\begin{remark}
-	It follows from our remarks that a sequence of $\mc S$-measurable functions converging to a function $f$ will satisfy the conclusions of the previous three lemmas.
-\end{remark}
-\begin{remark}
-	Note that the case of $B=\RR$, we see that $f^{-1}(U)$ is measurable for any open $U\subseteq\RR$, where $f$ is an $\mathcal S$-measurable function. By taking unions and complements appropriately, we in fact see that $f^{-1}(U)$ is measurable for any Borel set $U\subseteq\RR$. This is the usual definition of a measurable function, and we will show it next class.
+	Note that the case of $B=\RR$, we see that $f^{-1}(U)$ is measurable for any open $U\subseteq\RR$, where $f$ is an $\mathcal S$-measurable function. By taking unions and complements appropriately, we in fact see that $f^{-1}(U)$ is measurable for any Borel set $U\subseteq\RR$. This is the usual definition of a (Borel) measurable function $X\to\RR$, and we will show it is equivalent to the one we gave next class.
 \end{remark}
 
 \end{document}
