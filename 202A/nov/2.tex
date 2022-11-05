@@ -31,7 +31,7 @@ We now use \autoref{thm:better-measurable} for fun and profit.
 	\[|\norm{x}-\norm y|\le\norm{x-y}.\]
 	This finishes.
 \end{proof}
-\begin{corollary}
+\begin{corollary} \label{cor:take-norms-is-measurable}
 	Fix a normed vector space $(B,\norm\cdot)$ and a set $X$ with a $\sigma$-ring $\mc S$ on $X$. If $f$ is an $\mathcal S$-measurable function, then $x\mapsto\norm{f(x)}$ is as well.
 \end{corollary}
 \begin{proof}
@@ -46,24 +46,44 @@ We now use \autoref{thm:better-measurable} for fun and profit.
 \end{proof}
 
 \subsection{Integrating Measurable Functions}
-We begin by picking up some facts about simple integrable functions.
+We begin by picking up some facts about our integral.
 \begin{lemma}
-	Fix a normed $k$-vector space $B$ and a set $X$ with a ring $\mc S$ on $X$ equipped with a finitely additive measure $\mu$. Then the set of all simple integrable functions forms a $k$-vector space under pointwise operations.
+	Fix a ring $\mc S$ on a set $X$ equipped with a finitely additive measure $\mu$ and a normed vector space $B$. Then the mapping
+	\[f\mapsto\int_Xf\,d\mu\]
+	from simple $\mu$-integrable functions to $B$ is $k$-linear.
 \end{lemma}
 \begin{proof}
-	Use ideas from \autoref{lem:simple-meas-is-k-vec}.
-\end{proof}
-\begin{lemma}
-	The function $f\mapsto\int_Xf\,d\mu$ is $k$-linear.
-\end{lemma}
-\begin{proof}
-	Add directly.
-\end{proof}
-\begin{lemma}
-	The function $x\mapsto\norm{f(x)}$ is a simple integrable function.
-\end{lemma}
-\begin{proof}
-	Computation.
+	Unsurprisingly, we use the ideas of \autoref{lem:simple-int-is-k-vec} to compute our integrals. We have two checks.
+	\begin{itemize}
+		\item Scalar multiplication: fix a simple $\mu$-integrable function $f$ and a scalar $r\in k$. If $r=0$, then $rf=0$, so $\int_X(rf)\,d\mu=0=r\int_Xf\,d\mu$ vacuously, so there is nothing more to say.
+
+		Otherwise, we have $r\ne0$, and we remarked in \autoref{lem:simple-int-is-k-vec} that we have
+		\[(rf)^{-1}(\{y\})=f^{-1}(\{1/r\cdot y\}).\]
+		In other words, $\im rf=\{ry:y\in\im f\}$ with $(rf)^{-1}(\{ry\})=f^{-1}(\{y\})$ for each $y\in\im f$, so
+		\begin{align*}
+			\int_X(rf)\,d\mu &= \sum_{y\in(\im rf)\setminus\{0\}}\mu\left((rf)^{-1}(\{y\})\right)y \\
+			&= \sum_{ry\in(\im rf)\setminus\{0\}}\mu\left((rf)^{-1}(\{ry\})\right)\cdot ry \\
+			&= r\sum_{y\in(\im f)\setminus\{0\}}\mu\left(f^{-1}(\{y\})\right)y \\
+			&= r\int_Xf\,d\mu.
+		\end{align*}
+		\item Addition: fix simple $\mu$-integrable functions $f$ and $g$. We remarked in \autoref{lem:simple-int-is-k-vec} that any $y\in B\setminus\{0\}$ will have
+		\[(f+g)^{-1}(\{y\})=\bigcup_{c\in(\im g)}\left(f^{-1}(\{y-c\})\cap g^{-1}(\{y\})\right)=\bigcup_{\substack{b\in(\im f),c\in(\im g)\\b+c=y}}\left(f^{-1}(\{b\})\cap g^{-1}(\{c\})\right).\]
+		Now, note that this union is in fact disjoint because the fibers $f^{-1}(\{b\})$ are disjoint. Thus, we may say that
+		\[\mu\left((f+g)^{-1}(\{y\})\right)=\sum_{\substack{b\in(\im f),c\in(\im g)\\b+c=y}}\mu\left(f^{-1}(\{b\})\cap g^{-1}(\{c\})\right).\]
+		Looping through all $y$, we see
+		\begin{align*}
+			\int_X(f+g)\,d\mu &= \sum_{y\in\im(f+g)\setminus\{0\}}\mu\left((f+g)^{-1}(\{y\})\right)y \\
+			&= \sum_{y\in\im(f+g)\setminus\{0\}}\sum_{\substack{b\in(\im f),c\in(\im g)\\b+c=y}}\mu\left(f^{-1}(\{b\})\cap g^{-1}(\{c\})\right)(b+c) \\
+			&= \sum_{b\in(\im f)}\sum_{c\in(\im g)}\mu\left(f^{-1}(\{b\})\cap g^{-1}(\{c\})\right)(b+c) \\
+			&= \sum_{b\in(\im f)}\sum_{c\in(\im g)}\mu\left(f^{-1}(\{b\})\cap g^{-1}(\{c\})\right)b+\sum_{c\in(\im g)}\sum_{b\in(\im f)}\mu\left(f^{-1}(\{b\})\cap g^{-1}(\{c\})\right)c.
+		\end{align*}
+		Now, we note that
+		\[\bigsqcup_{b\in(\im f)}f^{-1}(\{b\})=X\qquad\text{and}\qquad\bigsqcup_{c\in(\im g)}g^{-1}(\{c\})=X\]
+		because the fibers should cover the domain and are disjoint. It follows that from the finite additivity of $\mu$ that
+		\[\int_X(f+g)\,d\mu = \sum_{b\in(\im f)}\mu\left(f^{-1}(\{b\})\right)b+\sum_{c\in(\im g)}\mu\left(g^{-1}(\{c\})\right)c,\]
+		which is $\int_Xf\,d\mu+\int_Xg\,d\mu$, which is what we wanted.
+		\qedhere
+	\end{itemize}
 \end{proof}
 \begin{lemma}
 	If $f$ and $g$ are real-valued, then $f(x)\ge g(x)$ for each $x$ implies $\int f\,d\mu\ge\int f\,d\mu$.
@@ -94,6 +114,10 @@ So we see that we're going to get a norm on the quotient of all simple integrabl
 \end{example}
 
 \subsection{Convergence in Measure}
+In order to avoid the constant repetition of hypotheses, we pick up the following definition.
+\begin{definition}[Measure space]
+	A \textit{measure space} is a triple $(X,\mc S,\mu)$, where $\mc S$ is a $\sigma$-ring and $\mu$ is a measure on $\mc S$.
+\end{definition}
 Now, let me tell you the bad news.
 \begin{warn}
 	A sequence $\{f_n\}_{n\in\NN}$ of simple integrable functions which is Cauchy for $\norm\cdot_1$ need not converge pointwise, at any point!

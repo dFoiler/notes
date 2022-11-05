@@ -1,0 +1,107 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 4}
+
+We continue our journey towards integrating functions.
+
+\subsection{Sequences Converging in Measure}
+Here is our convergence result, which convinces us that convergence in measure is a good property.
+\begin{proposition}
+	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. Then a sequence of simple integrable functions $f_n\colon X\to B$ for $n\in\NN$ which is Cauchy for $\norm\cdot_1$ is also Cauchy in measure.
+\end{proposition}
+\begin{proof}
+	Fix $\varepsilon>0$ and set
+	\[E^\varepsilon_{m,n}\coloneqq\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}\}.\]
+	We need to show that
+	\[\lim_{m,n\to\infty}\mu(E_{m,n})\stackrel?=0,\]
+	where $\norm\cdot$ is the norm for $B$. Notably, for each $x\in X$, we must have
+	\begin{equation}
+		1_{E^\varepsilon_{m,n}}(x)\le\frac{\norm{f_m(x)-f_n(x)}}\varepsilon \label{eq:bound-indicator-e-m-n}
+	\end{equation}
+	by definition of $E^{\varepsilon}_{m,n}$. Now, both sides of this equation are simple $\mu$-integrable functions, so we may integrate, which gives
+	\[\mu(E^\varepsilon_{m,n})=\int_X1_{E^{\varepsilon}_{m,n}}\,d\mu\le\int_X\frac{\norm{f_m(x)-f_n(x)}}\varepsilon\,d\mu=\frac{\norm{f_m-f_n}_1}\varepsilon.\]
+	But as $m,n\to\infty$, the right-hand value goes to $0$ because $\{f_n\}_{n\in\NN}$ is Cauchy for $\norm\cdot_1$, so the left-hand value must also go to $0$.
+\end{proof}
+\begin{remark}
+	A similar proof works for when we are Cauchy for $\norm\cdot_p$ for finite $p$ by taking $p$th powers of \autoref{eq:bound-indicator-e-m-n}. For example, in probability theory, the result for $\norm\cdot_2$ is essentially Chebyshev's inequality.
+\end{remark}
+Here are some quick sanity checks.
+\begin{lemma} \label{lem:converge-in-measure-uniq-ae}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Now, suppose a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions converges to both $f$ and $g$ in measure, where $f$ and $g$ are both $\mc S$-measurable. Then $f=g$ almost everywhere; i.e., $\{x\in X:f(x)\ne g(x)\}$ is a null set.
+\end{lemma}
+\begin{proof}
+	Fix some $\varepsilon>0$. The key observation is that
+	\[\norm{f(x)-g(x)}\le\norm{f(x)-f_n(x)}+\norm{f_n(x)-g(x)},\]
+	so it follows that $\norm{f(x)-g(x)}\ge\varepsilon$ forces $\norm{f(x)-f_n(x)}\ge\varepsilon/2$ or $\norm{g(x)-g_n(x)}\ge\varepsilon/2$. Thus,
+	\[\mu(\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})\le\mu(\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon/2\})+\mu(\{x\in X:\norm{g(x)-f_n(x)}\ge\varepsilon/2\}).\]
+	But now, as $n\to\infty$, we see that the right-hand side goes to $0$ because $f_n\to f$ and $f_n\to g$ in measure, so it follows that
+	\[\mu(\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})=0.\]
+	We now send $\varepsilon\to0^+$. Namely, for any $\varepsilon>0$, we see that
+	\[\{x\in X:f(x)\ne g(x)\}=\{x\in X:\norm{f(x)-g(x)}>0\}=\bigcup_{n\in\NN}\{x\in X:\norm{f(x)-g(x)}\ge1/n\},\]
+	so
+	\[\mu(\{x\in X:f(x)\ne g(x)\})\le\sum_{n\in\NN}\mu(\{x\in X:\norm{f(x)-g(x)}\ge1/n\})=0,\]
+	so $\{x\in X:f(x)\ne g(x)\}$ is in fact a null set.
+\end{proof}
+\begin{lemma}
+	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Fix sequences of $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ with $f_n\to f$ and $g_n\to g$ in measure.
+	\begin{listalph}
+		\item We have $f_n+g_n\to f+g$ in measure.
+		\item Given some $a\in k$, we have $af_n\to f$ in measure.
+		\item The functions $x\mapsto\norm{f_n(x)}$ converge to $x\mapsto\norm{f(x)}$ in measure.
+		\item Given $E\in\mc S$, the functions $f_n1_E$ converge to $f1_E$ in measure.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We check (a) and leave the others as exercises.
+	\begin{listalph}
+		\item By the triangle inequality, we see
+		\[\norm{(f(x)+g(x))-(f_n(x)+g_n(x))}\le\norm{f(x)-f_n(x)}+\norm{g(x)-g_n(x)}.\]
+		We now proceed as in \autoref{lem:converge-in-measure-uniq-ae}, noting that any $\varepsilon>0$ will have
+		\[\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})\subseteq\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon/2\}\cup\{x\in X:\norm{g(x)-g_n(x)}\ge\varepsilon/2\},\]
+		so we can argue as before.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark}
+	There are similar properties that we can check for functions which are Cauchy in measure.
+\end{remark}
+\begin{corollary}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then a simple integrable function $f$ on $X$ ``restricts'' to a simple integrable function $f1_E$ for any $E\in\mc S$.
+\end{corollary}
+\begin{proof}
+	Exercise.
+\end{proof}
+The above corollary promises the following notation.
+\begin{notation}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then a simple integrable function $f$ on $X$ and $E\in\mc S$ will have
+	\[\int_Ef\,d\mu\coloneqq\int_Xf1_E\,d\mu.\]
+\end{notation}
+\begin{remark}
+	One can define
+	\[\mu_f(E)\coloneqq\int_Ef\,d\mu,\]
+	and it is not too hard to check that this defines a measure on $\mc S$ which is valued in $B$. This $\mu_f$ will later be called the ``indefinite integral for $f$.''
+\end{remark}
+
+\subsection{Almost Uniform Convergence}
+As we tend to do, we now return to a context which is perhaps too general.
+\begin{definition}[Almost uniformly]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Then a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ converges \textit{almost uniformly} to $f$ if and only if every $\varepsilon>0$ has some $E^\varepsilon\in\mc S$ such that $\mu(E^\varepsilon)<\varepsilon$ and $f_n|_{X\setminus E}\to f|_{X\setminus E}$ uniformly.
+\end{definition}
+\begin{remark}
+	The term ``almost'' above is different from the ``almost everywhere'' that we've been seeing.
+\end{remark}
+As usual, with a convergence definition, we have a Cauchy definition.
+\begin{definition}[Almost uniformly]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Then a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ is \textit{uniformly Cauchy} if and only if every $\varepsilon>0$ has some $E^\varepsilon\in\mc S$ such that $\mu(E^\varepsilon)<\varepsilon$ and $\{f_n|_{X\setminus E}\}_{n\in\NN}$ is uniformly Cauchy.
+\end{definition}
+Now, here is the main result, which we will not prove today.
+\begin{theorem}[Riesz--Weyl]
+	Let $\{f_n\}_{n\in\NN}$ be a sequence of $\mc S$-measurable functions which are Cauchy in measure. Then there is a subsequence $\{f_n\}_{n\in\NN}$ which is almost uniformly Cauchy.
+\end{theorem}
+In particular, we will be able to define a limit function for the sequence $\{f_n\}_{n\in\NN}$ outside some null set, which will finally allow us to take limits of simple integrable functions in a way that makes sense.
+
+\end{document}
