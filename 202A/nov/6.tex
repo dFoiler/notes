@@ -1,0 +1,98 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 6}
+
+Today we prove \autoref{thm:rw}.
+
+\subsection{The Riesz--Weyl Theorem}
+Here is our statement.
+\rwthm*
+\noindent The main idea is similar to what we have from the following definition.
+\begin{definition}[Rapidly Cauchy]
+	Fix a metric space $(X,d)$. Then a sequence $\{x_n\}_{n\in\NN}$ in $X$ is \textit{rapidly Cauchy} if and only if all $\varepsilon>0$ have some $N$ for which
+	\[\sum_{i=1}^\infty d(x_i,x_{i+1})<\infty.\]
+\end{definition}
+\begin{remark}
+	Of course, being rapidly Cauchy implies that any $\varepsilon>0$ has some $N$ for which
+	\[\sum_{i=1}^\infty d(x_i,x_{i+1})-\sum_{i\le N}d(x_i,x_{i+1})<\varepsilon.\]
+	Thus, $i>j>N$ implies
+	\[d(x_i,x_j)\le\sum_{k=i}^{j-1}d(x_k,x_{k+1})\le\sum_{k>N}d(x_k,x_{k+1})<\varepsilon,\]
+	so the sequence is Cauchy.
+\end{remark}
+However, we have the following fact.
+\begin{proposition} \label{prop:cauchy-has-rapidly-cauchy}
+	Fix a metric space $(X,d)$. Then any Cauchy sequence $\{x_n\}_{n\in\NN}$ is a rapidly Cauchy subsequence.
+\end{proposition}
+\begin{proof}
+	We proceed inductively. Set $n_1=1$. Then once given $n_j$, we find $n_{j+1}>n_j$ such that $m,n\ge n_{j+1}$ such that $d(x_m,x_n)<2^{-j}$ by using the Cauchy condition. Then we can check directly that
+	\[\sum_{j=1}^\infty d(x_j,x_{j+1})\le\sum_{j=1}^\infty2^{-j}=1<\infty,\]
+	which is what we wanted.
+\end{proof}
+We now proceed with the proof of \autoref{thm:rw}.
+\begin{proof}[Proof of \autoref{thm:rw}]
+	We proceed as in \autoref{prop:cauchy-has-rapidly-cauchy}. Namely, set $n_1=1$. Then we proceed inductively: note that
+	\[\mu\left(\{x\in X:\norm{f_m(x)-f_n(x)}>2^{-j}\}\right)\to0\]
+	as $m,n\to\infty$, so we can find $n_{j+1}>n_j$ so that $m,n>n_{j+1}$ gives
+	\[\mu\left(\{x\in X:\norm{f_m(x)-f_n(x)}>2^{-j}\}\right)<2^{-j}.\]
+	We now claim that the sequence $\{f_{n_j}\}_{j\in\NN}$ is almost uniformly Cauchy. Well, fix any $\varepsilon>0$. Then choose $N$ for which
+	\[\sum_{j\ge N}2^{-j}=2^{-N+1}<\varepsilon.\]
+	As such, we set
+	\[E_j\coloneqq\{x\in X:\norm{f_{n_j}(x)-f_{n_{j+1}}(x)}\ge2^{-j}\}\]
+	so that $\mu(E_j)<2^{-j}$ by construction. Thus, we define our $E$ as
+	\[E\coloneqq\bigcup_{j\ge N}E_j\]
+	so that $\mu(E)<\varepsilon$ by construction of $N$.
+
+	It remains to show that $\{f_{n_j}|_{X\setminus E}\}_{j\in\NN}$ is uniformly Cauchy. Well, given $\delta>0$, we need $M$ so that $i,j>M$ implies $\norm{f_{n_i}(x)-f_{n_j}(x)}<\delta$ for all $x\notin E$. Well, we set $M>N$ so that
+	\[\sum_{j\ge M}2^{-j}=2^{-M+1}<\delta.\]
+	In particular, it follows that any $j>i>M$ will have
+	\[\norm{f_{n_i}(x)-f_{n_j}(x)}\le\sum_{k=i}^{j-1}\norm{f_{n_i}(x)-f_{n_{i+1}}(x)}\le\sum_{k=i}^{j-1}2^{-k}<\sum_{k\ge M}2^{-k}<\varepsilon,\]
+	which is what we wanted.
+\end{proof}
+\begin{example}
+	Even in \autoref{ex:the-bad-news}, there is a subsequence which is almost uniformly converging to $0$.
+\end{example}
+
+\subsection{Finally, Banach Spaces}
+We are now ready to use the condition that we are integrating into a Banach space.
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. A sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable $B$-valued functions which is almost uniformly Cauchy. Then there is an $\mathcal S$-measurable function $f\colon X\to B$ such that $f_n\to f$ almost uniformly as $n\to\infty$. In fact, this $f$ is unique almost everywhere.
+\end{lemma}
+\begin{proof}
+	For each $n\in\NN$, we get some $E_n$ such that $\mu(E_n)<1/n$ and such that $\{f_i|_{X\setminus E_n}\}_{i\in\NN}$ is uniformly Cauchy. We now set
+	\[E\coloneqq\bigcap_{n=1}^\infty E_n\]
+	so that $\mu(E)=0$ because $\mu(E)\le\mu(E_n)$ for each $n$ and $\mu(E_n)\to0$ as $N\to\infty$.
+
+	Now, for any $x\in X\setminus E$, we can find $n$ for which $x\notin E_n$, so the sequence $\{f_i(x)\}_{i\in\NN}$ is Cauchy and allows us to define $f(x)$ to be the limit. Note we have used the fact that $B$ is a Banach space here! Thus far we have defined $f$ on $X\setminus E$; it doesn't matter what we do on $E$, so we will just define $f(x)=0$ for $x\in E$. Because $f$ is the limit of some $\mc S$-measurable functions, we conclude that $f$ is still $\mc S$-measurable.\footnote{Technically, we should redefine the $f_i$ to vanish on $E$.} We note that this construction is unique.
+
+	We now check that $f_i\to f$ almost uniformly as $i\to\infty$. Well, for $\varepsilon>0$, we see that $\{f_i\}_{i\in\NN}$ is almost uniformly Cauchy on $X\setminus E_n$, where we choose $n$ with $n<2/\varepsilon$. Then for any $x\in E_n$ and $\delta>0$, we see
+	\[\norm{f_n(x)-f(x)}\le\norm{f_n(x)-f_m(x)}+\norm{f_m(x)-f(x)}\]
+	for any $m$. However, we can force $m$ to be large enough so that $\norm{f_m(x)-f(x)}<\delta/2$ and $\norm{f_n(x)-f_m(x)}<\delta/2$ by the uniformity. This finishes.
+\end{proof}
+Here is the payoff to our hard work.
+\begin{definition}[Mean Cauchy]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of simple integrable functions is \textit{mean Cauchy} if and only if $\norm{f_n-f_m}_1\to0$ as $m,n\to\infty$.
+\end{definition}
+\begin{theorem}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Given an $\mathcal S$-measurable function $f$, the following are equivalent.
+	\begin{listalph}
+		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ in measure.
+		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ almost uniformly.
+		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ almost everywhere.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We show our implications in sequence.
+	\begin{itemize}
+		\item We show (a) implies (b). This holds from \autoref{thm:rw}: namely, our mean Cauchy sequence converging in measure will have a subsequence which is almost uniformly Cauchy. Then we note that the limits are the same by checking almost everywhere.
+		% \item We show (b) implies (a). Well, any sequence which is almost uniformly Cauchy is automatically Cauchy in measure, finishing.
+		\item We show (b) implies (c). Well, converging almost uniformly automatically forces us to converge almost everywhere.
+		\item We show (c) implies (a). Well, if $\{f_n\}_{n\in\NN}$ is mean Cauchy, then the sequence is Cauchy in measure and therefore has a subsequence which is almost uniformly Cauchy. However, this subsequence will then converge to some $g$ almost everywhere, and we see that $f=g$ almost everywhere, so this subsequence actually converges to $f$ almost everywhere.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
