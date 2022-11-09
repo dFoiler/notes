@@ -45,9 +45,9 @@ We now use \autoref{thm:better-measurable} for fun and profit.
 	\end{listroman}
 \end{proof}
 
-\subsection{Integrating Measurable Functions}
+\subsection{Integrating Simple Functions}
 We begin by picking up some facts about our integral.
-\begin{lemma}
+\begin{lemma} \label{lem:int-is-linear}
 	Fix a ring $\mc S$ on a set $X$ equipped with a finitely additive measure $\mu$ and a normed vector space $B$. Then the mapping
 	\[f\mapsto\int_Xf\,d\mu\]
 	from simple $\mu$-integrable functions to $B$ is $k$-linear.
@@ -85,32 +85,65 @@ We begin by picking up some facts about our integral.
 		\qedhere
 	\end{itemize}
 \end{proof}
-\begin{lemma}
-	If $f$ and $g$ are real-valued, then $f(x)\ge g(x)$ for each $x$ implies $\int f\,d\mu\ge\int f\,d\mu$.
+\begin{lemma} \label{lem:int-positivity}
+	Fix a ring $\mc S$ on a set $X$ equipped with a finitely additive measure $\mu$. If a simple $\mu$-integrable function $f\colon X\to\RR$ has $f(x)\ge0$ for each $x\in X$, then
+	\[\int_Xf\,d\mu\ge0.\]
 \end{lemma}
 \begin{proof}
-	Computation.
+	Note that each $y\in(\im f)\setminus\{0\}$ has $y\ge0$ and so
+	\[\int_Xf\,d\mu=\sum_{y\in(\im f)\setminus\{0\}}\mu\left(f^{-1}(\{y\}\right)y\]
+	is nonnegative term-by-term, so $\int_Xf\,d\mu\ge0$ follows.
 \end{proof}
-We now give a semi-norm on our functions.
-\begin{definition}
-	Given a simple integrable function $f$, we define
+\begin{cor} \label{cor:bound-ints}
+	Fix a ring $\mc S$ on a set $X$ equipped with a finitely additive measure $\mu$. Given simple $\mu$-integrable functions $f,g\colon X\to\RR$, if $f(x)\ge g(x)$ for each $x$, then $\int f\,d\mu\ge\int f\,d\mu$.
+\end{cor}
+\begin{proof}
+	Set $h(x)\coloneqq f(x)-g(x)$, which is a simple $\mu$-integrable function by \autoref{lem:simple-int-is-k-vec}. Note $h(x)\ge0$ for each $x$, so \autoref{lem:int-positivity} tells us that
+	\[\int_Xh(x)\,d\mu\ge0.\]
+	However, by \autoref{lem:int-is-linear}, we conclude that
+	\[\int_Xh(x)\,d\mu=\int_Xf(x)\,d\mu-\int_Xg(x)\,d\mu,\]
+	so $\int_Xf(x)\,d\mu\ge\int_Xg(x)\,d\mu$ follows.
+\end{proof}
+The above positivity result suggests a semi-norm on our space.
+\begin{notation}
+	Fix a ring $\mc S$ on a set $X$ equipped with a finitely additive measure $\mu$ and a normed vector space $B$. Given a simple integrable function $f\colon X\to B$, we define
 	\[\norm f_1\coloneqq\int_X\norm f\,d\mu.\]
-\end{definition}
+	Note $\norm f$ is in fact a simple $\mu$-integrable function by \autoref{lem:norm-is-simple-int}.
+\end{notation}
 \begin{lemma}
-	Given simple integrable functions $f$ and $g$, we have $\norm{f+g}_1\le\norm f_1+\norm g_1$.
+	Fix a ring $\mc S$ on a set $X$ equipped with a finitely additive measure $\mu$ and a normed vector space $B$. Then the function $f\mapsto\norm f_1$ on simple $\mu$-integrable functions defines a semi-norm on the space of simple $\mu$-integrable functions.
 \end{lemma}
+\begin{proof}
+	Note that simple $\mu$-integrable functions already form a space by \autoref{lem:simple-meas-is-k-vec}. Here are our checks.
+	\begin{itemize}
+		\item Positivity: given a simple $\mu$-integrable function $f$, note that $\norm{f(x)}\ge0$ for any $x\in X$, so \autoref{lem:int-positivity} tells us that $\int_X\norm f\,d\mu\ge0$.
+		\item Zero: we show $\norm z_1=0$, where $z\colon X\to B$ is the zero function. Well, $\norm0$ is the zero function $X\to\RR$ because $\norm0=0$, so the linearity of \autoref{lem:int-is-linear} forces $\int_X\norm z\,d\mu=0$.
+		\item Scaling: given a simple $\mu$-integrable function $f\colon X\to B$ and some scalar $r$, we need $\norm{rf}_1=\norm r\cdot\norm f_1$. Well, $rf$ is still a simple integrable function by \autoref{lem:simple-int-is-k-vec}, as is $\norm{rf}$ by \autoref{lem:norm-is-simple-int}.
+
+		However, the main point is that $\norm{rf}=\norm r\cdot\norm f$ by checking pointwise: any $x\in X$ has
+		\[\norm{rf}(x)=\norm{rf(x)}=\norm r\cdot\norm{f(x)}=(\norm r\cdot\norm f)(x).\]
+		Thus, linearity of \autoref{lem:int-is-linear} forces
+		\[\int_X\norm{rf}\,d\mu=\int_X(\norm r\cdot\norm f)\,d\mu=\norm r\cdot\int_X\norm f\,d\mu.\]
+		\item Triangle inequality: given simple $\mu$-integrable functions $f,g\colon X\to B$, we note that the triangle inequality gives
+		\[\norm{f+g}(x)=\norm{f(x)+g(x)}\le\norm{f(x)}+\norm{g(x)}=(\norm f+\norm g)(x)\]
+		for any $x\in X$. Thus, noting as usual that $f+g$ and hence $\norm{f+g}$ are both simple $\mu$-integrable, we note \autoref{cor:bound-ints} tells us
+		\[\int_X\norm{f+g}\,d\mu\le\int_X(\norm f+\norm g)\,d\mu.\]
+		As such, linearity of the integral from \autoref{lem:int-is-linear} tells us that $\norm{f+g}_1\le\norm f_1+\norm g_1$, which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
 To make this a norm, we need to remove the problematic functions.
 \begin{notation}
 	We define
-	\[\mc N(X,\mc S,\mu)=\{f\text{ simple integrable}:\norm f_1=0\}.\]
+	\[\mc N(X,\mc S,\mu,B)=\{f\text{ simple integrable}:\norm f_1=0\}.\]
 \end{notation}
-So we see that we're going to get a norm on the quotient of all simple integrable functions by $\mc N(X,\mc S,\mu)$. We are interested in elements of the completion here.
+Thus, \autoref{prop:semi-norm-to-norm} tells us that we're going to get a norm on the quotient of all simple integrable functions by $\mc N(X,\mc S,\mu)$. In our story of integration, we are essentially interested in the completion of this normed vector space.
 \begin{example}
-	Give $[0,1]$ the usual Lebesgue measure $\mu$. Further, let $\{E_i\}_{i=1}^\infty$ be pairwise disjoint Borel subsets of $\RR$, where $\mu(E_i)\le 4^{-i}$ for each $i$. Then we see that
+	Give $[0,1]$ the usual Lebesgue measure $\mu$, and let $\{E_i\}_{i=1}^\infty$ be pairwise disjoint Borel subsets of $\RR$, where $\mu(E_i)\le 4^{-i}$ for each $i$. Then we see that
 	\[\sum_{i=1}^n1_{E_i}\to\sum_{i=1}^\infty1_{E_i}\]
 	as $n\to\infty$, but the function on the right may be potentially quite hard to handle. Namely, we want
-	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf\,d\mu=\sum_{i=1}^\infty\mu(E_i),\]
-	where we have used countable additivity at the end here.
+	\[\int_X\Bigg(\sum_{i=1}^\infty1_{E_i}\Bigg)\,d\mu=\lim_{n\to\infty}\int_X\Bigg(\sum_{i=1}^n1_{E_i}\Bigg)\,d\mu=\sum_{i=1}^\infty\mu(E_i),\]
+	but changing the order of this integral and sum is somewhat tricky.
 \end{example}
 
 \subsection{Convergence in Measure}
@@ -123,22 +156,33 @@ Now, let me tell you the bad news.
 	A sequence $\{f_n\}_{n\in\NN}$ of simple integrable functions which is Cauchy for $\norm\cdot_1$ need not converge pointwise, at any point!
 \end{warn}
 \begin{example} \label{ex:the-bad-news}
-	Give $[0,1]$ the usual Lebesgue measure $\mu$. Then the sequence of functions
-	\[1_{[0,1/2]},\quad1_{[1/2,1]},\quad1_{[0,1/4]},\quad1_{[1/4,2/4]},\quad1_{[2/4,3/4]},\quad\cdots\]
-	should approach $0$, but it does not converge to $0$ pointwise.
+	Give $[0,1)$ the usual Lebesgue measure $\mu$, and for $k\ge1$, define $E_k\coloneqq\left[\frac{k-2^{n}}{2^{n}},\frac{k+1-2^{n}}{2^{n}}\right]$, where $n$ is the integer such that $2^n\le k<2^{n+1}$. Then the sequence of functions $\{1_{E_k}\}_{k\in\ZZ_{>0}}$ approaches $0$ according to $\norm\cdot_1$, but it does not converge to $0$ pointwise anywhere! We will be brief.
+	\begin{itemize}
+		\item To see $1_{E_k}\to0$ as $k\to\infty$ according to $\norm\cdot_1$, we note $\norm{1_{E_k}}_1=1/2^n$ by \autoref{ex:integrate-indicator}, which goes to $0$ as $k\to\infty$. (Namely, $n=\floor{\log_2k}\to\infty$ as $k\to\infty$.)
+		\item However, at particular $x\in[0,1)$, there are infinitely many $k$ for which $x\in E_k$ (so that $1_{E_k}(x)=1$) and $x\notin E_k$ (so that $1_{E_k}(x)=0$), meaning $1_{E_k}(x)$ does not converge pointwise.
+		
+		Indeed, fix any $N$, and we find some $k\ge N$ with $x\in E_k$ and some $k\ge N$ with $x\notin E_k$. Well, choose any $n\ge\max\{N,2\}$, and we see that the sets $E_{2^n},E_{2^n+1},\ldots,E_{2^{n+1}-1}$ are disjoint and cover $[0,1)$ by construction, so $x$ will live in exactly one of them.
+	\end{itemize}
 \end{example}
-We close class by discussing the following definition.
-\begin{definition}[Converge in measure]
-	Fix a normed vector space $(B,\norm\cdot)$ and a $\sigma$-ring $\mc S$ on a set $X$ equipped with a measure $\mu$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions \textit{converges in measure} to a simple $\mc S$-measurable function $f$ if and only if all $\varepsilon>0$ have
-	\[\lim_{n\to\infty}\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})=0.\]
+To fix this bad news, we have the following definition.
+\begin{definition}[Converge in measure] \label{def:converge-in-measure}
+	Fix a measure space $(X,\mc S,\mu)$ and normed vector space $(B,\norm\cdot)$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions \textit{converges in measure} to an $\mathcal S$-measurable function $f$ if and only if all $\varepsilon>0$ have
+	\[\lim_{n\to\infty}\mu(\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\})=0.\]
 \end{definition}
 \begin{remark}
-	Notably, $f$ and $f_n$ are both simple $\mc S$-measurable, so $f-f_n$ is $\mc S$-measurable, so $g\coloneqq\norm{f-f_n}$ is $\mc S$-measurable, so $\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}=g^{-1}([\varepsilon,\infty))$ is in fact in $\mc S$.
+	Notably, $f$ and $f_n$ are $\mc S$-measurable, so $f-f_n$ is $\mc S$-measurable by \autoref{lem:meas-is-vec-space}, so $g\coloneqq\norm{f-f_n}$ is $\mc S$-measurable by \autoref{cor:take-norms-is-measurable}, so
+	\[\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}=g^{-1}([\varepsilon,\infty))=g^{-1}((0,\infty))\setminus g^{-1}((0,\varepsilon))\]
+	is in fact in $\mc S$ by \autoref{cor:meas-has-meas-pre-image}. In particular, the limit in \autoref{def:converge-in-measure} actually makes sense.
 \end{remark}
+\begin{example}
+	The sequence from \autoref{ex:the-bad-news} converges in measure to the zero function. Indeed, for any $k$, we see
+	\[\mu(\{x\in X:\norm{0-1_{E_k}(x)}\ge\varepsilon\})=\mu(E_k)=\frac1{2^{\floor{\log_2k}}}\]
+	by \autoref{ex:integrate-indicator}, which goes to $0$ as $k\to\infty$.
+\end{example}
+Of course, with a notion of convergence, we also have a notion of being Cauchy.
 \begin{definition}[Cauchy in measure]
 	Fix a normed vector space $(B,\norm\cdot)$ and a $\sigma$-ring $\mc S$ on a set $X$ equipped with a measure $\mu$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions is \textit{Cauchy in measure} if and only if all $\varepsilon>0$ have
 	\[\lim_{m,n\to\infty}\mu(\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\})=0.\]
 \end{definition}
-The point of these definitions is that the sequence from \autoref{ex:the-bad-news} converges in measure to the zero function.
 
 \end{document}

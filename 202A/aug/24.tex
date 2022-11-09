@@ -99,10 +99,11 @@ Observe that it is not completely obvious that \autoref{ex:euclidean} satisfies 
 
 \subsection{Norms on Vector Spaces}
 Norms provide convenient ways to build metrics.
-\begin{definition}[Norm]
-	Fix a vector space $V$ over $\RR$ or $\CC$. A norm $\lVert\cdot\rVert\colon V\to\RR_{\ge0}$ is a function satisfying the following, for any $r\in\RR$ and $v,w\in V$.
+\begin{definition}[Norm] \label{defi:norm}
+	Fix a vector space $V$ over a normed field $(k,|\cdot|)$. A \textit{norm} $\lVert\cdot\rVert\colon V\to\RR_{\ge0}$ is a function satisfying the following, for any $r\in\RR$ and $v,w\in V$.
 	\begin{listalph}
-		\item Zero: $\lVert v\rVert=0$ if and only if $v=0$.
+		\item Zero: $\lVert 0\rVert=0$.
+		\item Zero: if $\norm v=0$, then $v=0$.
 		\item Scaling: $\lVert rv\rVert=|r|\cdot\lVert v\rVert$.
 		\item Triangle inequality: $\lVert v+w\rVert\le\lVert v\rVert+\lVert w\rVert$.
 	\end{listalph}
@@ -110,22 +111,47 @@ Norms provide convenient ways to build metrics.
 \begin{remark}
 	We can probably work with a more general normed field instead of ``merely'' $\RR$ or $\CC$.
 \end{remark}
+There is also an analogous notion of ``semi-norm.''
+\begin{definition}[Semi-norm]
+	Fix a vector space $V$ over $\RR$ or $\CC$. A \textit{semi-norm} $\lVert\cdot\rVert\colon V\to\RR_{\ge0}$ is a function satisfying (a), (c), and (d) of \autoref{defi:norm}.
+\end{definition}
 And here is our result.
-\begin{proposition}
-	Given a metric space $V$ with a norm $\norm{\cdot}\colon V\to\RR_{\ge0}$, then the function
+\begin{proposition} \label{prop:norm-to-metric}
+	Given a vector space $V$ with a (semi-)norm $\norm{\cdot}\colon V\to\RR_{\ge0}$, then the function
 	\[d(v,w)\coloneqq\norm{v-w}\]
-	defines a metric on $V$.
+	defines a (semi-)metric on $V$.
 \end{proposition}
 \begin{proof}
-	We run the checks directly. Let $x,y,z\in V$ be points.
-	\begin{itemize}
-		\item Zero: note that $d(x,y)=0$ if and only if $\norm{x-y}=0$ if and only if $x-y=0$ if and only if $x=y$.
+	We run the checks directly. Let $x,y,z\in V$ be points. Quickly, we note that $d(x,y)=\norm{x-y}\ge0$ by hypothesis on $\norm\cdot$.
+	\begin{listalph}
+		\item Zero: note that $d(x,x)=0$ because $d(x,x)=\norm{x-x}=\norm0=0$.
+		\item Zero: if $d(x,y)=0$, then $\norm{x-y}=0$, so $x-y=0$, so $x=y$.
 		\item Symmetry: note that
 		\[d(x,y)=\norm{x-y}=|-1|\cdot\norm{y-x}=1\cdot\norm{y-x}=d(y,x).\]
 		\item Triangle inequality: note that
 		\[d(x,z)=\norm{x-z}=\norm{(x-y)+(y-z)}\le\norm{x-y}+\norm{y-z}=d(x,y)+d(y,z),\]
 		which finishes the check.
-		\qedhere
+	\end{listalph}
+	Thus, if $\norm\cdot$ is a full norm, then $d$ is a full metric. But if $\norm\cdot$ is only a semi-norm satisfying (a), (c), and (d) of \autoref{defi:norm}, then the corresponding $d$ only satisfies (a), (c), and (d) of \autoref{defi:metric} and makes a semi-metric.
+\end{proof}
+As an aside, we note that what's nice about semi-norms is that they will ``algebraically'' encode the equivalence relation of \autoref{lem:semitometric}.
+\begin{prop} \label{prop:semi-norm-to-norm}
+	Fix a vector space $V$ over a normed field $(k,|\cdot|)$ and a semi-norm $\norm\cdot$ on $V$. Then the set $N\coloneqq\{v\in V:\norm v=0\}$ is a subspace of $V$. In fact, the semi-norm $\norm\cdot$ descends to a well-defined norm on $V/N$.
+\end{prop}
+\begin{proof}
+	To show that $N\subseteq V$ is a subspace, we pick up $v,w\in N$ and scalars $r,s\in k$. Then we note
+	\[\norm{rv+sw}\le\norm{rv}+\norm{sw}=|r|\cdot\norm v+|s|\cdot\norm w=0,\]
+	so it follows $\norm{rv+sw}=0$ and so $rv+sw\in N$.
+
+	It remains to descend $\norm\cdot$ to $V/N$. Here are our checks; fix $v,w\in V$ and $r\in k$.
+	\begin{itemize}
+		\item Well-defined: if $v+N=w+N$, we need $\norm v=\norm w$. Well, $v+N=w+N$ tells us that there is some $z\in N$ with $v=w+z$ and so
+		\[\norm v=\norm{w+z}\le\norm w+\norm z=\norm w.\]
+		Similarly, $v+(-z)=w$ implies that $\norm w\le\norm v$, so $\norm v=\norm w$ follows.
+		\item Zero: note that $v+N=0+N$ implies that $\norm{v+N}=\norm{0+N}=\norm0=0$.
+		\item Zero: if $\norm{v+N}=0$, then $\norm v=0$, so $v\in N$, so $v+N=0+N$.
+		\item Scaling: note $\norm{r(v+N)}=\norm{rv+N}=\norm{rv}=|r|\cdot\norm v=|r|\cdot\norm{v+N}$.
+		\item Triangle inequality: note $\norm{(v+N)+(w+N)}=\norm{(v+w)+N}=\norm{v+w}\le\norm v+\norm w=\norm{v+N}+\norm{w+N}$.
 	\end{itemize}
 \end{proof}
 Here are the usual examples.

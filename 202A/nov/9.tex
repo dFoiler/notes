@@ -1,0 +1,100 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 6}
+
+Today we define integrable functions. We went through this discussion quickly last class but are now going through it in more detail, so I have just moved the exposition to today.
+
+\subsection{Integrable Functions}
+Here is the payoff to our hard work.
+\begin{definition}[Mean Cauchy]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of simple integrable functions is \textit{mean Cauchy} if and only if $\norm{f_n-f_m}_1\to0$ as $m,n\to\infty$.
+\end{definition}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions.
+	\begin{listalph}
+		\item If $f_n\to f$ almost uniformly as $n\to\infty$, then $f_n\to f$ in measure.
+		\item If $\{f_n\}_{n\in\NN}$ is almost uniformly Cauchy, then $\{f_n\}_{n\in\NN}$ is Cauchy in measure.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We show (a); the proof of (b) is similar. Fix $\varepsilon>0$, and we would like to show that
+	\[\lim_{n\to\infty}\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})\stackrel?=0.\]
+	Well, for any $\delta>0$, we need $N$ such that $n\ge N$ has
+	\[\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})<\delta.\]
+	Because the $f_\bullet$ are $\mc S$-measurable, we may find some $E\in\mc S$ containing each $f_n^{-1}(B\setminus\{0\})$.
+
+	Now, by the almost uniform convergence, we are promised $F\in\mc S$ such that $\mu(F)<\delta$ and $f_n\to f$ uniformly as $n\to\infty$ on $X\setminus F$. As such, we choose $N$ such that $n\ge N$implies
+	\[\norm{f(x)-f_n(x)}<\varepsilon.\]
+	In particular, for $n\ge N$, we see
+	\[\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})\le\mu(X\setminus F)<\delta,\]
+	which finishes.
+\end{proof}
+\begin{theorem} \label{thm:int-funcs}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Given an $\mathcal S$-measurable function $f$, the following are equivalent.
+	\begin{listalph}
+		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ in measure.
+		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ almost uniformly.
+		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ almost everywhere.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We show our implications in sequence.
+	\begin{itemize}
+		\item We show (a) implies (b). This holds from \autoref{thm:rw}: namely, our mean Cauchy sequence converging in measure will have a subsequence which is almost uniformly Cauchy. Then we note that the limits are the same by checking almost everywhere.
+		% \item We show (b) implies (a). Well, any sequence which is almost uniformly Cauchy is automatically Cauchy in measure, finishing.
+		\item We show (b) implies (c). Well, converging almost uniformly automatically forces us to converge both in measure and almost everywhere.
+		\item We show (c) implies (a). Well, if $\{f_n\}_{n\in\NN}$ is mean Cauchy, then the sequence is Cauchy in measure and therefore has a subsequence which is almost uniformly Cauchy. However, this subsequence will then converge to some $g$ almost everywhere, and we see that $f=g$ almost everywhere, so this subsequence actually converges to $f$ almost everywhere.
+		\qedhere
+	\end{itemize}
+\end{proof}
+As such, we have the following definition.
+\begin{definition}[Integrable]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then an $\mathcal S$-measurable function $f\colon X\to B$ is \textit{$\mu$-integrable} if and only if one of the equivalent conditions from \autoref{thm:int-funcs} is satisfied. This set of integrable functions is often denoted $\mc L^1(X,\mc S,\mu,B)$, where some data might be omitted when we want to.
+\end{definition}
+\begin{remark}
+	Later on, we will define
+	\[\int_X f\,d\mu\coloneqq\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+	However, we have not yet checked that this definition is well-defined.
+\end{remark}
+\begin{remark}
+	Later on we will also define $\mc L^\infty(X,\mc S,\mu,B)$ as the bounded $\mc S$-measurable functions as well as more general $\mc L^p(X,\mc S,\mu,B)$ for finite $p$ where
+	\[\int_X\norm{f}^p\,d\mu.\]
+	As an example fact, we can see that $\mc L^1(X,\mc S,\mu,B)$ is a module over $\mc L^\infty(X,\mc S,\mu,k)$, where $B$ is a normed $k$-vector space.
+\end{remark}
+Here are the usual checks.
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed $k$-vector space $B$. Then $\mc L^1(X,\mc S,\mu,B)$ forms a $k$-vector space.
+\end{lemma}
+\begin{proof}
+	Just take linear combinations of the requested sequences in \autoref{thm:int-funcs}.
+\end{proof}
+
+\subsection{Completeness of \texorpdfstring{$\mathcal L^1$}{ L1}}
+We would like for our $\mathcal L^1$ to actually be a completion for our simple integrable functions.
+\begin{lemma} \label{lem:subsequence-has-same-limit}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed $k$-vector space $B$. Further, fix a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ which is Cauchy in measure. If a subsequence $\{f_{n_k}\}_{k\in\NN}$ converges to a function $f$ in measure, then $\{f_n\}_{n\in\NN}$ fully converges to $f$ in measure.
+\end{lemma}
+\begin{proof}
+	Fix some $\varepsilon>0$. Then we note that any $k$ will have
+	\[\{x\in X:\norm{f_n(x)-f(x)}\ge\varepsilon\}\subseteq\{x\in X:\norm{f_{n_k}(x)-f(x)}\ge\varepsilon/2\}\cup\{x\in X:\norm{f_n(x)-f_{n_k}(x)}\ge\varepsilon/2\}.\]
+	Now taking $k$ large enough recovers the result; notably, the left term is small because our subsequence converges in measure, and the right term is small because our sequence is Cauchy in measure.
+\end{proof}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed $k$-vector space $B$. Further, fix mean Cauchy sequences of simple $\mu$-integrable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ which converges to $f$ and $g$ in measure, respectively. If $\norm{f_n-g_n}_1\to0$ as $n\to\infty$, then $f=g$ almost everywhere.
+\end{lemma}
+\begin{proof}
+	The sequence $f_1,g_1,f_2,g_2,\ldots$ is mean Cauchy and hence Cauchy in measure. However, the subsequence $\{f_n\}_{n\in\NN}$ tells us that the sequence converges to $f$ in measure by \autoref{lem:subsequence-has-same-limit}; similarly, the subsequence $\{g_n\}_{n\in\NN}$ tells us that the sequence converges to $g$ in measure as well. Thus, our single sequence converges to both $f$ and $g$ in measure, so $f=g$ almost everywhere
+\end{proof}
+The point here is that we can take equivalence classes in $\mathcal L^1(X,\mc S,\mu,B)$ to get a bona fide norm from our semi-norm $\norm\cdot_1$.
+
+To finish our discussion of completeness, we will need the following result, which we will state but not prove today.
+\begin{proposition}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed $k$-vector space $B$. Suppose that $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ are mean Cauchy sequences of simple $\mu$-integrable functions which both converge to some function $f$ in measure. Then the sequences $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ are equivalent mean Cauchy sequences.
+\end{proposition}
+In particular, this will imply that the integral $\int_Xf\,d\mu$ is well-defined.
+
+\end{document}
