@@ -15,14 +15,14 @@ Here is our convergence result, which convinces us that convergence in measure w
 	\[\lim_{m,n\to\infty}\norm{f_m-f_n}_1=0.\]
 \end{defi}
 \begin{lemma}
-	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. Then a sequence of simple $\mu$-integrable functions $f_n\colon X\to B$ for $n\in\NN$ which is mean Cauchy is also Cauchy in measure.
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then a sequence of simple $\mu$-integrable functions $f_n\colon X\to B$ for $n\in\NN$ which is mean Cauchy is also Cauchy in measure.
 \end{lemma}
 \begin{proof}
 	Fix $\varepsilon>0$ and set
 	\[E^\varepsilon_{m,n}\coloneqq\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\},\]
 	which has finite measure by \autoref{rem:sets-in-cauchy-in-measure-are-finite}. We need to show that
-	\[\lim_{m,n\to\infty}\mu(E_{m,n}^\varepsilon)\stackrel?=0,\]
-	where $\norm\cdot$ is the norm for $B$. Notably, for each $x\in X$, we must have
+	\[\lim_{m,n\to\infty}\mu(E_{m,n}^\varepsilon)\stackrel?=0.\]
+	Notably, for each $x\in X$, we must have
 	\begin{equation}
 		1_{E^\varepsilon_{m,n}}(x)\le\frac{\norm{f_m(x)-f_n(x)}}\varepsilon \label{eq:bound-indicator-e-m-n}
 	\end{equation}
@@ -69,7 +69,7 @@ Here are some quick sanity checks our convergence.
 	\end{listalph}
 \end{lemma}
 \begin{proof}
-	Quickly, note that $f$ and $g$ are both $\mc S$-measurable by \autoref{cor:limit-of-meas-is-meas}. We also go ahead and let $|\cdot|$ denote the norm on base field $k$ of $B$.
+	We go ahead and let $|\cdot|$ denote the norm on base field $k$ of $B$.
 	\begin{listalph}
 		\item Note that the $f_n+g_n$ and $f+g$ are all $\mc S$-measurable by \autoref{lem:meas-is-vec-space}.
 		
@@ -112,7 +112,7 @@ Here are some quick sanity checks our convergence.
 	\end{listalph}
 \end{proof}
 Here is the analogous result for sequences Cauchy in measure.
-\begin{lemma}
+\begin{lemma} \label{lem:linear-combo-cauchy-in-measure}
 	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Fix sequences of $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ which are Cauchy in measure.
 	\begin{listalph}
 		\item The sequence $\{f_n+g_n\}_{n\in\NN}$ is Cauchy in measure.
@@ -166,24 +166,65 @@ Here is the analogous result for sequences Cauchy in measure.
 
 \subsection{Restricting Measurable Functions}
 We begin by introducing the construction we will be interested in.
-\begin{lemma}
+\begin{lemma} \label{lem:restrict-meas-functions}
 	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$ and a set $E\in\mc S$. If $f\colon X\to B$ is simple $\mc S$-measurable or $\mc S$-measurable or simple $\mu$-integrable, then $f1_E$ is as well.
 \end{lemma}
 \begin{proof}
 	Omitted.
+	Before doing anything, we pick up a few facts. Note that
+	\[\im f1_E=\{f(x)1_E(x):x\in X\}\subseteq\{0\}\cup\{f(x):x\in E\}\subseteq\{0\}\cup\im f.\]
+	Also, if $S\subseteq B\setminus\{0\}$, then we claim
+	\[(f1_E)^{-1}(S)=E\cap f^{-1}(S).\]
+	In one direction, note $x\in E\cap f^{-1}(S)$ implies that $(f1_E)(x)=f(x)\in S$. In the other direction, if $x\in(f1_E)^{-1}(S)$, then note $x\in E$ is forced because otherwise $f(x)=0\notin S$. Thus, with $x\in E$, we have $(f1_E)(x)=f(x)$, so $(f1_E)(x)\in S$ forces $x\in f^{-1}(S)$ as well.
+
+	We now note that we actually have three claims to show, which we show in sequence.
+	\begin{itemize}
+		\item Suppose that $f$ is a simple $\mc S$-measurable function. As such, $\im f$ is finite, so $\im f1_E\subseteq\{0\}\cup\im f$ is also finite.
+		
+		Further, for each $y\in(\im f1_E)\setminus\{0\}$, we see that $(f1_E)^{-1}(\{y\})=E\cap f^{-1}(\{y\})$ as discussed above, which lives in $\mc S$ because $E\in\mc S$ and $f^{-1}(\{y\})\in\mc S$.
+		\item Suppose that $f$ is an $\mathcal S$-measurable function. Then $\im f$ is separable, so it follows $\{0\}\cup\im f$ is separable (by \autoref{ex:union-of-seps-is-sep}), so $\im f1_E\subseteq\{0\}\cup\im f$ is separable (by \autoref{rem:subspace-of-sep-is-sep}).
+
+		Now, for any open subset $U\subseteq B\setminus\{0\}$, we see $(f1_E)^{-1}(U)=E\cap f^{-1}(U)$ as discussed above, which lives in $\mc S$ because $E\in\mc S$ and $f^{-1}(\{y\})\in\mc S$.
+		\item Suppose that $f$ is a simple $\mu$-integrable function. As before, $\im f$ is finite implies that $\im f1_E\subseteq\{0\}\cup\im f$ is still finite.
+
+		Further, for each $y\in(\im f1_E)\setminus\{0\}$, we see $(f1_E)^{-1}(\{y\})=E\cap f^{-1}(\{y\})$, which saw in our first point to live in $\mc S$, but now we note that \autoref{lem:fin-additive-is-monotone} tells us
+		\[\mu\left((f1_E)^{-1}(\{y\})\right)\le\mu\left(f^{-1}(\{y\})\right)<\infty\]
+		is finite.
+		\qedhere
+	\end{itemize}
 \end{proof}
-Analogously to \autoref{lem:linear-combo-in-measure}, we have the following.
+Analogously to \autoref{lem:linear-combo-in-measure} and \autoref{lem:linear-combo-cauchy-in-measure}, we have the following.
 \begin{lemma}
-	Given $E\in\mc S$, the functions $f_n1_E$ converge to $f1_E$ in measure.
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$, and fix some $E\in\mc S$. Given a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions with $f_n\to f$ in measure as $n\to\infty$, then $f_n1_E\to f1_E$ in measure as $n\to\infty$.
 \end{lemma}
 \begin{proof}
-	Omitted.
+	Note that the $f_n1_E$ and $f1_E$ are all $\mc S$-measurable by \autoref{lem:restrict-meas-functions}, so the claim at least makes sense.
+
+	For brevity, we set $g_n\coloneqq\norm{f1_E-f_n1_E}$ for each $n$. We would like to show
+	\[\lim_{n\to\infty}\mu\left(g_n^{-1}([\varepsilon,\infty))\right)\stackrel?=0.\]
+	If $x\notin E$, then note $g_n(x)=0$; otherwise, $g_n(x)=\norm{f(x)-f_n(x)}$ because $1_E(x)=1$. As such, for $\varepsilon>0$, we see $x\in g_n^{-1}([\varepsilon,\infty))$ requires $x\in E$ and then $\norm{f(x)-f_n(x)}\ge\varepsilon$; conversely, $x\in E$ with $\norm{f(x)-f_n(x)}\ge\varepsilon$ does give $g_n(x)\ge\varepsilon$.
+
+	Thus, we note that
+	\[g_n^{-1}([\varepsilon,\infty))\subseteq\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\},\]
+	so \autoref{lem:fin-additive-is-monotone} tells us
+	\[\lim_{n\to\infty}\mu\left(g_n^{-1}([\varepsilon,\infty))\right)\le\lim_{n\to\infty}\mu\left(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}\right),\]
+	where the right-hand limit vanishes because $f_n\to f$ in measure as $n\to\infty$. Thus, the left-hand limit also vanishes because the terms of the limit are nonnegative.
 \end{proof}
-\begin{corollary}
-	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then a simple integrable function $f$ on $X$ ``restricts'' to a simple integrable function $f1_E$ for any $E\in\mc S$.
-\end{corollary}
+\begin{lemma}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$, and fix some $E\in\mc S$. Given a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions which is Cauchy in measure, then $\{f_n1_E\}_{n\in\NN}$ is still Cauchy in measure.
+\end{lemma}
 \begin{proof}
-	Omitted.
+	As usual, the proof is exactly the same as before. Note that the $f_n1_E$ and $f1_E$ are all $\mc S$-measurable by \autoref{lem:restrict-meas-functions}, so the claim at least makes sense.
+
+	For brevity, we set $g_{m,n}\coloneqq\norm{f_m1_E-f_n1_E}$ for each $m$ and $n$. We would like to show
+	\[\lim_{m,n\to\infty}\mu\left(g_{m,n}^{-1}([\varepsilon,\infty))\right)\stackrel?=0.\]
+	If $x\notin E$, then note $g_{m,n}(x)=0$; otherwise, $g_{m,n}(x)=\norm{f_m(x)-f_n(x)}$ because $1_E(x)=1$. As such, for $\varepsilon>0$, we see $x\in g_{m,n}^{-1}([\varepsilon,\infty))$ requires $x\in E$ and then $\norm{f_m(x)-f_n(x)}\ge\varepsilon$; conversely, $x\in E$ with $\norm{f_m(x)-f_n(x)}\ge\varepsilon$ does give $g_{m,n}(x)\ge\varepsilon$.
+
+	Thus, we note that
+	\[g_{m,n}^{-1}([\varepsilon,\infty))\subseteq\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\},\]
+	so \autoref{lem:fin-additive-is-monotone} tells us
+	\[\lim_{m,n\to\infty}\mu\left(g_{m,n}^{-1}([\varepsilon,\infty))\right)\le\lim_{m,n\to\infty}\mu\left(\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}\right),\]
+	where the right-hand limit vanishes because $\{f_{n}\}_{n\in\NN}$ is Cauchy in measure. Thus, the left-hand limit also vanishes because the terms of the limit are nonnegative.
 \end{proof}
 The above corollary promises the following notation.
 \begin{notation}
@@ -193,20 +234,20 @@ The above corollary promises the following notation.
 \begin{remark}
 	One can define
 	\[\mu_f(E)\coloneqq\int_Ef\,d\mu,\]
-	and it is not too hard to check that this defines a measure on $\mc S$ which is valued in $B$. This $\mu_f$ will later be called the ``indefinite integral for $f$.''
+	and it is not too hard to check that this defines a measure on $\mc S$ which is valued in $B$. This $\mu_f$ will later be called the ``indefinite integral for $f$.'' We will postpone writing this out until we are ready to talk about what this looks like when $f$ is a general $\mu$-integrable function instead of a simple $\mu$-integrable function.
 \end{remark}
 
 \subsection{Almost Uniform Convergence}
 As we tend to do, we now return to a context which is perhaps too general.
 \begin{definition}[Almost uniformly]
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Then a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ converges \textit{almost uniformly} to $f$ if and only if every $\varepsilon>0$ has some $E^\varepsilon\in\mc S$ such that $\mu(E^\varepsilon)<\varepsilon$ and $f_n|_{X\setminus E}\to f|_{X\setminus E}$ uniformly.
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ converges \textit{almost uniformly} to $f$ if and only if every $\varepsilon>0$ has some $E^\varepsilon\in\mc S$ such that $\mu(E^\varepsilon)<\varepsilon$ and $f_n|_{X\setminus E}\to f|_{X\setminus E}$ uniformly.
 \end{definition}
 \begin{remark}
 	The term ``almost'' above is different from the ``almost everywhere'' that we've been seeing.
 \end{remark}
 As usual, with a convergence definition, we have a Cauchy definition.
 \begin{definition}[Almost uniformly Cauchy]
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Then a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ is \textit{almost uniformly Cauchy} if and only if every $\varepsilon>0$ has some $E^\varepsilon\in\mc S$ such that $\mu(E^\varepsilon)<\varepsilon$ and $\{f_n|_{X\setminus E}\}_{n\in\NN}$ is uniformly Cauchy.
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence of functions $f_n\colon X\to B$ for $n\in\NN$ is \textit{almost uniformly Cauchy} if and only if every $\varepsilon>0$ has some $E^\varepsilon\in\mc S$ such that $\mu(E^\varepsilon)<\varepsilon$ and $\{f_n|_{X\setminus E}\}_{n\in\NN}$ is uniformly Cauchy.
 \end{definition}
 Now, here is the main result, which we will not prove today.
 \begin{restatable}[Riesz--Weyl]{thm}{rwthm} \label{thm:rw}
