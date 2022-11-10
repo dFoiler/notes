@@ -9,67 +9,110 @@
 Today we prove \autoref{thm:rw}.
 
 \subsection{Rapidly Cauchy Intermission}
-The main idea to the proof of \autoref{thm:rw} is similar to what we have from the following definition.
+As an intermission, we introduce the following definition.
 \begin{definition}[Rapidly Cauchy]
 	Fix a metric space $(X,d)$. Then a sequence $\{x_n\}_{n\in\NN}$ in $X$ is \textit{rapidly Cauchy} if and only if all $\varepsilon>0$ have some $N$ for which
-	\[\sum_{i=1}^\infty d(x_i,x_{i+1})<\infty.\]
+	\[\sum_{k=1}^\infty d(x_k,x_{k+1})<\infty.\]
 \end{definition}
-\begin{remark}
-	Of course, being rapidly Cauchy implies that any $\varepsilon>0$ has some $N$ for which
-	\[\sum_{i=1}^\infty d(x_i,x_{i+1})-\sum_{i\le N}d(x_i,x_{i+1})<\varepsilon.\]
-	Thus, $i>j>N$ implies
-	\[d(x_i,x_j)\le\sum_{k=i}^{j-1}d(x_k,x_{k+1})\le\sum_{k>N}d(x_k,x_{k+1})<\varepsilon,\]
-	so the sequence is Cauchy.
-\end{remark}
-However, we have the following fact.
+We won't use this definition in any meaningful way, but it will be enlightening to note that the main idea to the proof of \autoref{thm:rw} is similar to the proof that a Cauchy sequence has a rapidly Cauchy subsequence.
+
+As such, let's see our checks on being rapidly Cauchy.
+\begin{lemma}
+	Fix a metric space $(X,d)$. Then any rapidly Cauchy sequence $\{x_n\}_{n\in\NN}$ in $X$ is also a Cauchy sequence.
+\end{lemma}
+\begin{proof}
+	Fix any $\varepsilon>0$. We want $N$ for which $n,m\ge N$ give $d(x_n,x_m)<\varepsilon$. Well, set $S\coloneqq\sum_{k=1}^\infty d(x_k,x_{k+1})$, so we note that there is some $N$ for which
+	\[\Bigg|S-\sum_{k=1}^nd(x_k,x_{k+1})\Bigg|<\varepsilon\]
+	for each $n\ge N$. It follows that
+	\[S-\sum_{k=1}^nd(x_k,x_{k+1})<\varepsilon\]
+	for any $n\ge N$. Thus, for any $m\ge n\ge N+1$, the triangle inequality yields
+	\[d(x_n,x_m)\le\sum_{k=n}^{m-1}d(x_k,x_{k+1})=\sum_{k=1}^{m-1}d(x_k,x_{k+1})-\sum_{k=1}^{n-1}d(x_k,x_{k+1})\stackrel*\le S-\sum_{k=1}^{n-1}d(x_k,x_{k+1})<\varepsilon.\]
+	Notably, $\stackrel*\le$ holds because all terms in the series of $S$ are nonnegative, so the sequence of partial sums is increasing, so $S$ is greater than or equal to any individual partial sum.
+\end{proof}
 \begin{proposition} \label{prop:cauchy-has-rapidly-cauchy}
-	Fix a metric space $(X,d)$. Then any Cauchy sequence $\{x_n\}_{n\in\NN}$ is a rapidly Cauchy subsequence.
+	Fix a metric space $(X,d)$. Then any Cauchy sequence $\{x_n\}_{n\in\NN}$ has a rapidly Cauchy subsequence.
 \end{proposition}
 \begin{proof}
-	We proceed inductively. Set $n_1=1$. Then once given $n_j$, we find $n_{j+1}>n_j$ such that $m,n\ge n_{j+1}$ such that $d(x_m,x_n)<2^{-j}$ by using the Cauchy condition. Then we can check directly that
-	\[\sum_{j=1}^\infty d(x_j,x_{j+1})\le\sum_{j=1}^\infty2^{-j}=1<\infty,\]
-	which is what we wanted.
+	We proceed inductively. Set $n_0=1$. Next, suppose we already have some $n_k$. Because $\{x_n\}_{n\in\NN}$, we can find a constant $n_{k+1}\ge n_g$ such that $m,n\ge n_{k+1}$ implies $d(x_m,x_n)<2^{-k}$. In particular, we see that $n_{k+1}\ge n_k$ in this construction tells us that
+	\[d(x_{n_k},x_{n_{k+1}})\le 2^{-k}\]
+	for $j\ge1$. Summing, we see
+	\[\sum_{k=1}^\infty d(x_k,x_{k+1})\le\sum_{k=1}^\infty2^{-k}=1<\infty,\]
+	so $\{x_{n_k}\}_{k\in\NN}$ is the desired rapidly Cauchy subsequence.
 \end{proof}
 
 \subsection{The Riesz--Weyl Theorem}
-And now for the main event.
+And now, our feature presentation.
 \rwthm*
 \begin{proof}
-	We proceed as in \autoref{prop:cauchy-has-rapidly-cauchy}. Namely, set $n_1=1$. Then we proceed inductively: note that
-	\[\mu\left(\{x\in X:\norm{f_m(x)-f_n(x)}>2^{-j}\}\right)\to0\]
-	as $m,n\to\infty$, so we can find $n_{j+1}>n_j$ so that $m,n>n_{j+1}$ gives
-	\[\mu\left(\{x\in X:\norm{f_m(x)-f_n(x)}>2^{-j}\}\right)<2^{-j}.\]
-	We now claim that the sequence $\{f_{n_j}\}_{j\in\NN}$ is almost uniformly Cauchy. Well, fix any $\varepsilon>0$. Then choose $N$ for which
-	\[\sum_{j\ge N}2^{-j}=2^{-N+1}<\varepsilon.\]
-	As such, we set
-	\[E_j\coloneqq\{x\in X:\norm{f_{n_j}(x)-f_{n_{j+1}}(x)}\ge2^{-j}\}\]
-	so that $\mu(E_j)<2^{-j}$ by construction. Thus, we define our $E$ as
-	\[E\coloneqq\bigcup_{j\ge N}E_j\]
-	so that $\mu(E)<\varepsilon$ by construction of $N$.
-
-	It remains to show that $\{f_{n_j}|_{X\setminus E}\}_{j\in\NN}$ is uniformly Cauchy. Well, given $\delta>0$, we need $M$ so that $i,j>M$ implies $\norm{f_{n_i}(x)-f_{n_j}(x)}<\delta$ for all $x\notin E$. Well, we set $M>N$ so that
-	\[\sum_{j\ge M}2^{-j}=2^{-M+1}<\delta.\]
-	In particular, it follows that any $j>i>M$ will have
-	\[\norm{f_{n_i}(x)-f_{n_j}(x)}\le\sum_{k=i}^{j-1}\norm{f_{n_i}(x)-f_{n_{i+1}}(x)}\le\sum_{k=i}^{j-1}2^{-k}<\sum_{k\ge M}2^{-k}<\varepsilon,\]
-	which is what we wanted.
+	We proceed as in \autoref{prop:cauchy-has-rapidly-cauchy}. Set $n_0=1$. Then we proceed inductively: suppose we already know our $n_k$ for some $k$, and we construct $n_{k+1}$. Note that
+	\[\lim_{m,n\to\infty}\mu\left(\{x\in X:\norm{f_m(x)-f_n(x)}\ge2^{-k}\}\right)=0,\]
+	so we can find a constant $n_{k+1}>n_k$ such that $m,n\ge n_{k+1}$ gives
+	\[\mu\left(\{x\in X:\norm{f_m(x)-f_n(x)}>2^{-k}\}\right)<2^{-k}.\]
+	We now claim that the sequence $\{f_{n_k}\}_{k\in\NN}$ is almost uniformly Cauchy. This has two steps. Fix any $\varepsilon>0$.
+	\begin{enumerate}
+		\item We select our small $E\in\mc S$ to avoid. Choose $N$ for which
+		\[\sum_{k=N}^\infty 2^{-k}=2^{-N+1}<\varepsilon.\]
+		As such, we set
+		\[E_k\coloneqq\{x\in X:\norm{f_{n_k}(x)-f_{n_{k+1}}(x)}\ge2^{-k}\}\]
+		so that $\mu(E_k)<2^{-k}$ by construction of the sequence $\{n_k\}_{k\in\NN}$ because $n_k,n_{k+1}\ge n_k$. Thus, we define our $E$ as
+		\[E\coloneqq\bigcup_{k=N}^\infty E_k.\]
+		Indeed, $E\in\mc S$ because $E_k\in\mc S$ for each $k\ge N$, so by \autoref{lem:premeas-is-countable-subadd}, we may say
+		\[\mu(E)\le\sum_{k=N}^\infty\mu(E_k)=\sum_{k=N}^\infty2^{-k}<\varepsilon,\]
+		where the last inequality is by construction of $N$.
+		\item It remains to check that the subsequence $\{f_{n_k}|_{X\setminus E}\}_{k\in\NN}$ is uniformly Cauchy. Well, given $\delta>0$, we need $M$ so that $i,j>M$ and $x\notin E$ gives
+		\[\norm{f_{n_i}(x)-f_{n_j}(x)}\stackrel?<\delta\]
+		for all $x\notin E$. Well, find some $M>N$ such that
+		\[\sum_{j\ge M}2^{-j}=2^{-M+1}<\delta.\]
+		As such, it follows from the triangle inequality that any $j>i>M$ will have
+		\[\norm{f_{n_i}(x)-f_{n_j}(x)}\le\sum_{k=i}^{j-1}\norm{f_{n_k}(x)-f_{n_{k+1}}(x)}\stackrel*\le\sum_{k=i}^{j-1}2^{-k}<\sum_{k=M}^\infty2^{-k}<\varepsilon,\]
+		which is what we wanted. Notably, $\stackrel*\le$ holds by construction of $E$ as a subset of $E_k$.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 \begin{example}
-	Even in \autoref{ex:the-bad-news}, there is a subsequence which is almost uniformly converging to $0$.
+	Even in \autoref{ex:the-bad-news}, there is a subsequence which is almost uniformly converging to $0$. Indeed, consider the subsequence $\{1_{E_{2^n}}\}_{n\in\NN}$. Then for any $\varepsilon>0$, we find some $N$ for which $2^{-N}<\varepsilon$ and set $E\coloneqq\left[0,1/2^N\right)$ to have measure less than $\varepsilon$. But now, for $n\ge N$, we see that $1_{E_{2^n}}|_{X\setminus E}=0$ because $E_{2^n}\subseteq E$. Thus, $1_{E_{2^n}}|_{X\setminus E}\to 0$ uniformly as $n\to\infty$.
 \end{example}
-We are now ready to use the condition that we are integrating into a Banach space.
+We are now ready to use the condition that we are integrating into a Banach space!
 \begin{lemma}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. A sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable $B$-valued functions which is almost uniformly Cauchy. Then there is an $\mathcal S$-measurable function $f\colon X\to B$ such that $f_n\to f$ almost uniformly as $n\to\infty$. In fact, this $f$ is unique almost everywhere.
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix an almost uniformly Cauchy sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions. Then there is an $\mathcal S$-measurable function $f\colon X\to B$ such that $f_n\to f$ almost uniformly as $n\to\infty$.
 \end{lemma}
 \begin{proof}
+	The main idea is that the almost uniformity condition allows us to define $f$ outside a null set, which is good enough.
+
 	For each $n\in\NN$, we get some $E_n$ such that $\mu(E_n)<1/n$ and such that $\{f_i|_{X\setminus E_n}\}_{i\in\NN}$ is uniformly Cauchy. We now set
-	\[E\coloneqq\bigcap_{n=1}^\infty E_n\]
-	so that $\mu(E)=0$ because $\mu(E)\le\mu(E_n)$ for each $n$ and $\mu(E_n)\to0$ as $N\to\infty$.
+	\[E\coloneqq\bigcap_{n=1}^\infty E_n.\]
+	Note $E\in\mc S$ by \autoref{rem:sring-has-intersections}, and \autoref{lem:fin-additive-is-monotone} tells us that $\mu(E)\le\mu(E_n)<1/n$ for each $n$, so it follows $\mu(E)=0$.
 
-	Now, for any $x\in X\setminus E$, we can find $n$ for which $x\notin E_n$, so the sequence $\{f_i(x)\}_{i\in\NN}$ is Cauchy and allows us to define $f(x)$ to be the limit. Note we have used the fact that $B$ is a Banach space here! Thus far we have defined $f$ on $X\setminus E$; it doesn't matter what we do on $E$, so we will just define $f(x)=0$ for $x\in E$. Because $f$ is the limit of some $\mc S$-measurable functions, we conclude that $f$ is still $\mc S$-measurable.\footnote{Technically, we should redefine the $f_i$ to vanish on $E$.} We note that this construction is unique.
+	Now, for any $x\in X\setminus E$, we can find $k$ for which $x\notin E_k$. Thus, because $\{f_n|_{X\setminus E_k}\}_{n\in\NN}$ is uniformly Cauchy, we see that $\{f_n(x)|_{X\setminus E_k}\}_{n\in\NN}$ is Cauchy; we define $f(x)$ as its limit. Note we have used the fact that $B$ is a Banach space here! This defines $f$ outside the null set $E$.
+	
+	It doesn't really matter what $f$ does on $E$, so we just define $f(x)=0$ for $x\in E$. We will quickly run checks to show that $f$ is $\mc S$-measurable, but they are not terribly important.
+	\begin{itemize}
+		\item We show $f_n1_{X\setminus E}$ is $\mc S$-measurable for each $n$. This proof is similar to \autoref{lem:restrict-meas-functions}, so we will use the ideas of that proof. For example, $\im f_n$ is separable, and as remarked in \autoref{lem:restrict-meas-functions}, we have
+		\[\im f_n1_{X\setminus E}\subseteq\{0\}\cup\im f_n.\]
+		As such, $\{0\}\cup\im f_n$ is separable by \autoref{ex:union-of-seps-is-sep}, so $\im f_n1_{X\setminus E}$ is separable by \autoref{rem:subspace-of-sep-is-sep}.
 
-	We now check that $f_i\to f$ almost uniformly as $i\to\infty$. Well, for $\varepsilon>0$, we see that $\{f_i\}_{i\in\NN}$ is almost uniformly Cauchy on $X\setminus E_n$, where we choose $n$ with $n<2/\varepsilon$. Then for any $x\in E_n$ and $\delta>0$, we see
-	\[\norm{f_n(x)-f(x)}\le\norm{f_n(x)-f_m(x)}+\norm{f_m(x)-f(x)}\]
-	for any $m$. However, we can force $m$ to be large enough so that $\norm{f_m(x)-f(x)}<\delta/2$ and $\norm{f_n(x)-f_m(x)}<\delta/2$ by the uniformity. This finishes.
+		Further, for any open $U\subseteq B\setminus\{0\}$, we again note from the proof of \autoref{lem:restrict-meas-functions} that
+		\[(f_n1_E)^{-1}(U)=(X\setminus E)\cap f_n^{-1}(U)=f_n^{-1}(U)\setminus E.\]
+		In particular, $f_n^{-1}(U)\in\mc S$ because $f_n$ is $\mc S$-measurable, so $f_n^{-1}(U)\setminus E\in\mc S$ follows.
+
+		\item We show $f_n1_{X\setminus E}\to f$ pointwise as $n\to\infty$. If $x\notin E$, then we recall that we defined $f(x)$ as the limit of $\{f_n(x)\}_{n\in\NN}$, so the result follows by real analysis because $(f_n1_{X\setminus E})(x)=f_n(x)$ in this case.
+		
+		Otherwise, $x\in E$, so $(f_n1_{X\setminus E})(x)=0$ for each $n$, and $f(x)=0$ by construction of $f$. So this case is just looking at a constant sequence.
+	\end{itemize}
+	It follows that $f$ is $\mc S$-measurable by \autoref{cor:limit-of-meas-is-meas}.
+
+	We now check that $f_n\to f$ almost uniformly as $n\to\infty$. This is done in steps. Fix some $\varepsilon>0$. We begin by selecting our small subset to avoid. Choose some $N$ with $N>1/\varepsilon$. Note $\mu(E_N)<1/N<\varepsilon$, so we will show that $f_n|_{X\setminus E_N}\to f|_{X\setminus E_N}$ uniformly as $n\to\infty$.
+
+	For this, we proceed as in \autoref{prop:completeboundedfuncs}. Fix any $\delta>0$. Because $\{f_n|_{X\setminus E_N}\}$ is uniformly, we are promised some $M$ such that $m,n\ge M$ and $x\notin E_N$ gives
+	\[\norm{f_m(x)-f_n(x)}<\delta/2.\]
+	Now, for any $x\in X$ and $n\ge M$, we see
+	\[\norm{f(x)-f_n(x)}\le\norm{f(x)-f_m(x)}+\norm{f_m(x)-f_n(x)}<\norm{f(x)-f_m(x)}+\frac\delta2\]
+	for any $m\ge N$. However, we see $x\notin E_N$ implies $x\notin E$, so $f(x)$ was constructed to be the limit of $\{f_m(x)\}_{m\in\NN}$, so all $m$ sufficiently large have $\norm{f(x)-f_m(x)}<\delta/2$. Ensuring that we choose an $m$ with $m\ge M$ as well allows us to conclude
+	\[\norm{f(x)-f_n(x)}<\norm{f(x)-f_m(x)}+\frac\delta2<\delta\]
+	for any $n\ge N$ and $x\notin E_N$.
 \end{proof}
+\begin{remark}
+	Note that the limit $f$ is unique by \autoref{lem:uniq-almost-uniform-limit}.
+\end{remark}
 
 \end{document}
