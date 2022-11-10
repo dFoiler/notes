@@ -9,71 +9,181 @@
 We continue our journey towards integrating functions.
 
 \subsection{Sequences Converging in Measure}
-Here is our convergence result, which convinces us that convergence in measure is a good property.
-\begin{proposition}
-	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. Then a sequence of simple integrable functions $f_n\colon X\to B$ for $n\in\NN$ which is Cauchy for $\norm\cdot_1$ is also Cauchy in measure.
-\end{proposition}
+Here is our convergence result, which convinces us that convergence in measure will be one that we can work with; note this generalizes \autoref{ex:fixing-bad-news}.
+\begin{defi}[Mean Cauchy]
+	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. A sequence of simple $\mu$-integrable functions $\{f_n\}_{n\in\NN}$ is \textit{mean Cauchy} if and only if it is Cauchy for the semi-norm $\norm\cdot_1$. In other words, we require
+	\[\lim_{m,n\to\infty}\norm{f_m-f_n}_1=0.\]
+\end{defi}
+\begin{lemma}
+	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. Then a sequence of simple $\mu$-integrable functions $f_n\colon X\to B$ for $n\in\NN$ which is mean Cauchy is also Cauchy in measure.
+\end{lemma}
 \begin{proof}
 	Fix $\varepsilon>0$ and set
-	\[E^\varepsilon_{m,n}\coloneqq\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}\}.\]
-	We need to show that
-	\[\lim_{m,n\to\infty}\mu(E_{m,n})\stackrel?=0,\]
+	\[E^\varepsilon_{m,n}\coloneqq\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\},\]
+	which has finite measure by \autoref{rem:sets-in-cauchy-in-measure-are-finite}. We need to show that
+	\[\lim_{m,n\to\infty}\mu(E_{m,n}^\varepsilon)\stackrel?=0,\]
 	where $\norm\cdot$ is the norm for $B$. Notably, for each $x\in X$, we must have
 	\begin{equation}
 		1_{E^\varepsilon_{m,n}}(x)\le\frac{\norm{f_m(x)-f_n(x)}}\varepsilon \label{eq:bound-indicator-e-m-n}
 	\end{equation}
-	by definition of $E^{\varepsilon}_{m,n}$. Now, both sides of this equation are simple $\mu$-integrable functions, so we may integrate, which gives
-	\[\mu(E^\varepsilon_{m,n})=\int_X1_{E^{\varepsilon}_{m,n}}\,d\mu\le\int_X\frac{\norm{f_m(x)-f_n(x)}}\varepsilon\,d\mu=\frac{\norm{f_m-f_n}_1}\varepsilon.\]
-	But as $m,n\to\infty$, the right-hand value goes to $0$ because $\{f_n\}_{n\in\NN}$ is Cauchy for $\norm\cdot_1$, so the left-hand value must also go to $0$.
+	by definition of $E^{\varepsilon}_{m,n}$. Now, both sides of this equation are simple $\mu$-integrable functions: $1_{E^\varepsilon_{m,n}}$ is by \autoref{ex:indicator-is-simple}; and $f_m-f_n$ is simple $\mu$-integrable by \autoref{lem:simple-int-is-k-vec}, as is $\norm{f_m-f_n}$ by \autoref{lem:norm-is-simple-int}, so $\frac1\varepsilon\norm{f_m-f_n}$ is simple $\mu$-integrable by \autoref{lem:simple-int-is-k-vec} again.
+	
+	Thus, we may integrate, for which \autoref{cor:bound-ints} tells us
+	\[\mu(E^\varepsilon_{m,n})=\int_X1_{E^{\varepsilon}_{m,n}}\,d\mu\le\int_X\frac{\norm{f_m-f_n}}\varepsilon\,d\mu=\frac{\norm{f_m-f_n}_1}\varepsilon,\]
+	where the first integral was computed using \autoref{ex:integrate-indicator}. But as $m,n\to\infty$, the right-hand value goes to $0$ because $\{f_n\}_{n\in\NN}$ is Cauchy for $\norm\cdot_1$, so the left-hand value must also go to $0$.
 \end{proof}
 \begin{remark}
 	A similar proof works for when we are Cauchy for $\norm\cdot_p$ for finite $p$ by taking $p$th powers of \autoref{eq:bound-indicator-e-m-n}. For example, in probability theory, the result for $\norm\cdot_2$ is essentially Chebyshev's inequality.
 \end{remark}
-Here are some quick sanity checks.
+Here are some quick sanity checks our convergence.
 \begin{lemma} \label{lem:converge-in-measure-uniq-ae}
 	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Now, suppose a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions converges to both $f$ and $g$ in measure, where $f$ and $g$ are both $\mc S$-measurable. Then $f=g$ almost everywhere; i.e., $\{x\in X:f(x)\ne g(x)\}$ is a null set.
 \end{lemma}
 \begin{proof}
-	Fix some $\varepsilon>0$. The key observation is that
+	Before we do anything at all, we note that $f-g$ is $\mc S$-measurable by \autoref{lem:meas-is-vec-space}, so
+	\[N\coloneqq\{x\in X:f(x)\ne g(x)\}=(f-g)^{-1}(B\setminus\{0\})\]
+	is $\mc S$-measurable by \autoref{cor:meas-has-meas-pre-image}.
+	
+	Now, fix any $\varepsilon>0$; we show $\mu(N)<\varepsilon$. The key observation is that
 	\[\norm{f(x)-g(x)}\le\norm{f(x)-f_n(x)}+\norm{f_n(x)-g(x)},\]
 	so it follows that $\norm{f(x)-g(x)}\ge\varepsilon$ forces $\norm{f(x)-f_n(x)}\ge\varepsilon/2$ or $\norm{g(x)-g_n(x)}\ge\varepsilon/2$. Thus,
+	\[\{x:\norm{f(x)-g(x)}\ge\varepsilon\}\subseteq\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}\cup\{x:\norm{g(x)-f_n(x)}\ge\varepsilon\},\]
+	so \autoref{lem:finitely-additive-is-subaddtive} tells us
 	\[\mu(\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})\le\mu(\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon/2\})+\mu(\{x\in X:\norm{g(x)-f_n(x)}\ge\varepsilon/2\}).\]
-	But now, as $n\to\infty$, we see that the right-hand side goes to $0$ because $f_n\to f$ and $f_n\to g$ in measure, so it follows that
-	\[\mu(\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})=0.\]
-	We now send $\varepsilon\to0^+$. Namely, for any $\varepsilon>0$, we see that
-	\[\{x\in X:f(x)\ne g(x)\}=\{x\in X:\norm{f(x)-g(x)}>0\}=\bigcup_{n\in\NN}\{x\in X:\norm{f(x)-g(x)}\ge1/n\},\]
-	so
-	\[\mu(\{x\in X:f(x)\ne g(x)\})\le\sum_{n\in\NN}\mu(\{x\in X:\norm{f(x)-g(x)}\ge1/n\})=0,\]
-	so $\{x\in X:f(x)\ne g(x)\}$ is in fact a null set.
+	But now, as $n\to\infty$, we see that the right-hand side goes to $0+0=0$ because $f_n\to f$ and $f_n\to g$ in measure, so it follows that
+	\begin{equation}
+		\mu(\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})=0. \label{eq:norm-big-vanishes-equal-limits}
+	\end{equation}
+	We now send $\varepsilon\to0^+$. Namely, we see $f(x)\ne g(x)$ is equivalent to $\norm{f(x)-g(x)}>0$ is equivalent to $\norm{f(x)-g(x)}\ge1/n$ for some $n\in\NN$, so
+	\[N\coloneqq\{x\in X:f(x)\ne g(x)\}=\{x\in X:\norm{f(x)-g(x)}>0\}=\bigcup_{n\in\NN}\{x\in X:\norm{f(x)-g(x)}\ge1/n\}.\]
+	Thus,
+	\[\mu(N)\le\sum_{n\in\NN}\mu(\{x\in X:\norm{f(x)-g(x)}\ge1/n\})\stackrel*=\sum_{x\in X}0=0,\]
+	so $N$ is in fact a null set. Notably, $\stackrel*=$ has used \autoref{eq:norm-big-vanishes-equal-limits}.
 \end{proof}
-\begin{lemma}
-	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Fix sequences of $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ with $f_n\to f$ and $g_n\to g$ in measure.
+\begin{lemma} \label{lem:linear-combo-in-measure}
+	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Fix sequences of $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ with $f_n\to f$ and $g_n\to g$ in measure as $n\to\infty$.
 	\begin{listalph}
 		\item We have $f_n+g_n\to f+g$ in measure.
-		\item Given some $a\in k$, we have $af_n\to f$ in measure.
+		\item Given some scalar $a\in k$, we have $af_n\to af$ in measure.
 		\item The functions $x\mapsto\norm{f_n(x)}$ converge to $x\mapsto\norm{f(x)}$ in measure.
-		\item Given $E\in\mc S$, the functions $f_n1_E$ converge to $f1_E$ in measure.
 	\end{listalph}
 \end{lemma}
 \begin{proof}
-	We check (a) and leave the others as exercises.
+	Quickly, note that $f$ and $g$ are both $\mc S$-measurable by \autoref{cor:limit-of-meas-is-meas}. We also go ahead and let $|\cdot|$ denote the norm on base field $k$ of $B$.
 	\begin{listalph}
-		\item By the triangle inequality, we see
+		\item Note that the $f_n+g_n$ and $f+g$ are all $\mc S$-measurable by \autoref{lem:meas-is-vec-space}.
+		
+		Now, by the triangle inequality, we see
 		\[\norm{(f(x)+g(x))-(f_n(x)+g_n(x))}\le\norm{f(x)-f_n(x)}+\norm{g(x)-g_n(x)}.\]
-		We now proceed as in \autoref{lem:converge-in-measure-uniq-ae}, noting that any $\varepsilon>0$ will have
-		\[\{x\in X:\norm{f(x)-g(x)}\ge\varepsilon\})\subseteq\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon/2\}\cup\{x\in X:\norm{g(x)-g_n(x)}\ge\varepsilon/2\},\]
-		so we can argue as before.
+		We now proceed as in \autoref{lem:converge-in-measure-uniq-ae}. Fix $\varepsilon>0$. If the left-hand side exceeds $\varepsilon$, then one of the terms on the right-hand side must exceed $\varepsilon/2$, so
+		\begin{align*}
+			\{x:\norm{(f(x)+g(x))-(f_n(x)+g_n(x))}\ge\varepsilon\}&\subseteq\{x:\norm{f(x)-f_n(x)}\ge\varepsilon/2\} \\
+			&\qquad\cup\{x:\norm{g(x)-g_n(x)}\ge\varepsilon/2\}.
+		\end{align*}
+		Thus, \autoref{lem:finitely-additive-is-subaddtive} tells us
+		\begin{align*}
+			\mu(\{x:\norm{(f(x)+g(x))-(f_n(x)+g_n(x))}\ge\varepsilon\}) &\le \mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon/2\}) \\
+			&\qquad+\mu(\{x:\norm{g(x)-g_n(x)}\ge\varepsilon/2\}).
+		\end{align*}
+		However, $\varepsilon/2>0$, so taking $n\to\infty$ and using our convergence in measure tells us that
+		\[\lim_{n\to\infty}\mu(\{x:\norm{(f(x)+g(x))-(f_n(x)+g_n(x))}\ge\varepsilon\})\le0+0=0,\]
+		so we are done after noting that $\mu$ will only output nonnegative values, so the limit is at least nonnegative.
+
+		\item Note that the $af_n$ and $af$ are all $\mc S$-measurable by \autoref{lem:meas-is-vec-space}.
+		
+		Now, fix some $\varepsilon>0$ so that we want to show that
+		\[L\coloneqq\lim_{n\to\infty}\mu(\{x\in X:\norm{af_n(x)-af(x)}\ge\varepsilon\})\stackrel?=0.\]
+		If $a=0$, then $af_n(x)=af(x)=0$ for all $x\in X$, so $\{x\in X:\norm{af_n(x)-af(x)}\ge\varepsilon\}$ is empty, so the result follows.
+
+		Otherwise, take $a\ne0$ so that $|a|>0$. Now, note $\norm{af_n(x)-af(x)}=|a|\cdot\norm{f_n(x)-f(x)}$, so it follows $\norm{af_n(x)-af(x)}\ge\varepsilon$ if and only if $\norm{f_n(x)-f(x)}\ge\varepsilon/|a|$. Thus,
+		\[L=\lim_{n\to\infty}\mu(\{x\in X:\norm{f_n(x)-f(x)}\ge\varepsilon/|a|\}).\]
+		However, $\varepsilon/|a|>0$ because $\varepsilon>0$, so the above limit vanishes because $f_n\to f$ in measure as $n\to\infty$.
+
+		\item Observe that the $g_n$ and $g$ are all $\mc S$-measurable by \autoref{cor:take-norms-is-measurable}.
+
+		Now, fix some $\varepsilon>0$. By the (reverse) triangle inequality,
+		\[|\norm{f(x)}-\norm{f_n(x)}|\le\norm{f(x)-f_n(x)},\]
+		so any $\varepsilon>0$ has
+		\[\{x:|\norm{f(x)}-\norm{f_n(x)}|\ge\varepsilon\}\subseteq\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}.\]
+		Thus, \autoref{lem:fin-additive-is-monotone} tells us
+		\[\lim_{n\to\infty}\mu(\{x:|\norm{f(x)}-\norm{f_n(x)}|\ge\varepsilon\})\le\lim_{n\to\infty}\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}).\]
+		The right-hand limit vanishes because $f_n\to f$ in measure, so the left-hand limit must vanish as well because the limit's terms are nonnegative.
 		\qedhere
 	\end{listalph}
 \end{proof}
-\begin{remark}
-	There are similar properties that we can check for functions which are Cauchy in measure.
-\end{remark}
+Here is the analogous result for sequences Cauchy in measure.
+\begin{lemma}
+	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Fix sequences of $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ which are Cauchy in measure.
+	\begin{listalph}
+		\item The sequence $\{f_n+g_n\}_{n\in\NN}$ is Cauchy in measure.
+		\item Given some scalar $a\in k$, the sequence $\{af_n\}_{n\in\NN}$ is Cauchy in measure.
+		\item The sequence of functions $\{x\mapsto\norm{f_n(x)}\}_{n\in\NN}$ are Cauchy in measure.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	These proofs are essentially the same as \autoref{lem:linear-combo-in-measure} with the appropriate names changed. Again, we let $|\cdot|$ denote the norm on base field $k$ of $B$.
+	\begin{listalph}
+		\item Note that the $f_n+g_n$ are all $\mc S$-measurable by \autoref{lem:meas-is-vec-space}.
+		
+		Now, by the triangle inequality, we see
+		\[\norm{(f_m(x)+g_m(x))-(f_n(x)+g_n(x))}\le\norm{f_m(x)-f_n(x)}+\norm{g_m(x)-g_n(x)}.\]
+		Fix $\varepsilon>0$. As usual
+		\begin{align*}
+			\{x:\norm{(f_m(x)+g_m(x))-(f_n(x)+g_n(x))}\ge\varepsilon\}&\subseteq\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon/2\} \\
+			&\qquad\cup\{x:\norm{g_m(x)-g_n(x)}\ge\varepsilon/2\},
+		\end{align*}
+		so \autoref{lem:finitely-additive-is-subaddtive} tells us
+		\begin{align*}
+			\mu(\{x:\norm{(f_m(x)+g_m(x))-(f_n(x)+g_n(x))}\ge\varepsilon\}) &\le \mu(\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon/2\}) \\
+			&\qquad+\mu(\{x:\norm{g_m(x)-g_n(x)}\ge\varepsilon/2\}).
+		\end{align*}
+		However, $\varepsilon/2>0$, so taking $m,n\to\infty$ and using our Cauchy in measure conditions tells us that
+		\[\lim_{m,n\to\infty}\mu(\{x:\norm{(f_m(x)+g_m(x))-(f_n(x)+g_n(x))}\ge\varepsilon\})\le0+0=0,\]
+		so we are done after noting that $\mu$ will only output nonnegative values, so the limit is at least nonnegative.
+
+		\item Note that the $af_n$ are all $\mc S$-measurable by \autoref{lem:meas-is-vec-space}.
+		
+		Now, fix some $\varepsilon>0$ so that we want to show that
+		\[L\coloneqq\lim_{m,n\to\infty}\mu(\{x\in X:\norm{af_m(x)-af_n(x)}\ge\varepsilon\})\stackrel?=0.\]
+		If $a=0$, then $af_n(x)=af(x)=0$ for all $x\in X$, so $\{x\in X:\norm{af_m(x)-af_n(x)}\ge\varepsilon\}$ is empty, so the result follows.
+
+		Otherwise, take $a\ne0$ so that $|a|>0$. Now, note $\norm{af_m(x)-af_n(x)}=|a|\cdot\norm{f_m(x)-f_n(x)}$, so it follows $\norm{af_m(x)-af_n(x)}\ge\varepsilon$ if and only if $\norm{f_m(x)-f_n(x)}\ge\varepsilon/|a|$. Thus,
+		\[L=\lim_{m,n\to\infty}\mu(\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon/|a|\}).\]
+		However, $\varepsilon/|a|>0$ because $\varepsilon>0$, so the above limit vanishes because $\{f_n\}_{n\in\NN}$ is Cauchy in measure.
+
+		\item Observe that the $g_n$ are all $\mc S$-measurable by \autoref{cor:take-norms-is-measurable}.
+
+		Now, fix some $\varepsilon>0$. By the (reverse) triangle inequality,
+		\[|\norm{f_m(x)}-\norm{f_n(x)}|\le\norm{f_m(x)-f_n(x)},\]
+		so any $\varepsilon>0$ has
+		\[\{x:|\norm{f_m(x)}-\norm{f_n(x)}|\ge\varepsilon\}\subseteq\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}.\]
+		Thus, \autoref{lem:fin-additive-is-monotone} tells us
+		\[\lim_{m,n\to\infty}\mu(\{x:|\norm{f_m(x)}-\norm{f_n(x)}|\ge\varepsilon\})\le\lim_{m,n\to\infty}\mu(\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}).\]
+		The right-hand limit vanishes because $\{f_n\}_{n\in\NN}$ is Cauchy in measure, so the left-hand limit must vanish as well because the limit's terms are also nonnegative.
+		\qedhere
+	\end{listalph}
+\end{proof}
+
+\subsection{Restricting Measurable Functions}
+We begin by introducing the construction we will be interested in.
+\begin{lemma}
+	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$ and a set $E\in\mc S$. If $f\colon X\to B$ is simple $\mc S$-measurable or $\mc S$-measurable or simple $\mu$-integrable, then $f1_E$ is as well.
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+Analogously to \autoref{lem:linear-combo-in-measure}, we have the following.
+\begin{lemma}
+	Given $E\in\mc S$, the functions $f_n1_E$ converge to $f1_E$ in measure.
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
 \begin{corollary}
 	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then a simple integrable function $f$ on $X$ ``restricts'' to a simple integrable function $f1_E$ for any $E\in\mc S$.
 \end{corollary}
 \begin{proof}
-	Exercise.
+	Omitted.
 \end{proof}
 The above corollary promises the following notation.
 \begin{notation}

@@ -10,7 +10,7 @@ We begin class by finishing the proof of \autoref{thm:better-measurable}. I have
 
 \subsection{Some Measurable Facts}
 We now use \autoref{thm:better-measurable} for fun and profit.
-\begin{corollary}
+\begin{corollary} \label{cor:limit-of-meas-is-meas}
 	Fix a normed vector space $B$ and a set $X$ with a $\sigma$-ring $\mc S$ on $X$. If a sequence of functions $\{f_n\}_{n\in\NN}$ are $\mc S$-measurable, and $f_n\to f$ pointwise as $n\to\infty$, then $f$ is also $\mc S$-measurable.
 \end{corollary}
 \begin{proof}
@@ -149,14 +149,14 @@ Thus, \autoref{prop:semi-norm-to-norm} tells us that we're going to get a norm o
 \subsection{Convergence in Measure}
 In order to avoid the constant repetition of hypotheses, we pick up the following definition.
 \begin{definition}[Measure space]
-	A \textit{measure space} is a triple $(X,\mc S,\mu)$, where $\mc S$ is a $\sigma$-ring and $\mu$ is a measure on $\mc S$.
+	A \textit{measure space} is a triple $(X,\mc S,\mu)$, where $\mc S$ is a $\sigma$-ring and $\mu$ is a measure on $\mc S$. We also require $\mu(\emp)<\infty$ so that $\mu(\emp)=0$ by \autoref{rem:measure-emp}.
 \end{definition}
 Now, let me tell you the bad news.
 \begin{warn}
 	A sequence $\{f_n\}_{n\in\NN}$ of simple integrable functions which is Cauchy for $\norm\cdot_1$ need not converge pointwise, at any point!
 \end{warn}
 \begin{example} \label{ex:the-bad-news}
-	Give $[0,1)$ the usual Lebesgue measure $\mu$, and for $k\ge1$, define $E_k\coloneqq\left[\frac{k-2^{n}}{2^{n}},\frac{k+1-2^{n}}{2^{n}}\right]$, where $n$ is the integer such that $2^n\le k<2^{n+1}$. Then the sequence of functions $\{1_{E_k}\}_{k\in\ZZ_{>0}}$ approaches $0$ according to $\norm\cdot_1$, but it does not converge to $0$ pointwise anywhere! We will be brief.
+	Give $[0,1)$ the usual Lebesgue measure $\mu$, and for $k\ge1$, define $E_k\coloneqq\left[\frac{k-2^{n}}{2^{n}},\frac{k+1-2^{n}}{2^{n}}\right)$, where $n$ is the integer such that $2^n\le k<2^{n+1}$. Then the sequence of functions $\{1_{E_k}\}_{k\in\ZZ_{>0}}$ approaches $0$ according to $\norm\cdot_1$, but it does not converge to $0$ pointwise anywhere! We will be brief.
 	\begin{itemize}
 		\item To see $1_{E_k}\to0$ as $k\to\infty$ according to $\norm\cdot_1$, we note $\norm{1_{E_k}}_1=1/2^n$ by \autoref{ex:integrate-indicator}, which goes to $0$ as $k\to\infty$. (Namely, $n=\floor{\log_2k}\to\infty$ as $k\to\infty$.)
 		\item However, at particular $x\in[0,1)$, there are infinitely many $k$ for which $x\in E_k$ (so that $1_{E_k}(x)=1$) and $x\notin E_k$ (so that $1_{E_k}(x)=0$), meaning $1_{E_k}(x)$ does not converge pointwise.
@@ -164,6 +164,8 @@ Now, let me tell you the bad news.
 		Indeed, fix any $N$, and we find some $k\ge N$ with $x\in E_k$ and some $k\ge N$ with $x\notin E_k$. Well, choose any $n\ge\max\{N,2\}$, and we see that the sets $E_{2^n},E_{2^n+1},\ldots,E_{2^{n+1}-1}$ are disjoint and cover $[0,1)$ by construction, so $x$ will live in exactly one of them.
 	\end{itemize}
 \end{example}
+The main point of the above example is that our functions are allowed to look small according to $\norm\cdot_1$ but be relatively large for (say) $\norm\cdot_\infty$.
+
 To fix this bad news, we have the following definition.
 \begin{definition}[Converge in measure] \label{def:converge-in-measure}
 	Fix a measure space $(X,\mc S,\mu)$ and normed vector space $(B,\norm\cdot)$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions \textit{converges in measure} to an $\mathcal S$-measurable function $f$ if and only if all $\varepsilon>0$ have
@@ -174,7 +176,7 @@ To fix this bad news, we have the following definition.
 	\[\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}=g^{-1}([\varepsilon,\infty))=g^{-1}((0,\infty))\setminus g^{-1}((0,\varepsilon))\]
 	is in fact in $\mc S$ by \autoref{cor:meas-has-meas-pre-image}. In particular, the limit in \autoref{def:converge-in-measure} actually makes sense.
 \end{remark}
-\begin{example}
+\begin{example} \label{ex:fixing-bad-news}
 	The sequence from \autoref{ex:the-bad-news} converges in measure to the zero function. Indeed, for any $k$, we see
 	\[\mu(\{x\in X:\norm{0-1_{E_k}(x)}\ge\varepsilon\})=\mu(E_k)=\frac1{2^{\floor{\log_2k}}}\]
 	by \autoref{ex:integrate-indicator}, which goes to $0$ as $k\to\infty$.
@@ -182,7 +184,17 @@ To fix this bad news, we have the following definition.
 Of course, with a notion of convergence, we also have a notion of being Cauchy.
 \begin{definition}[Cauchy in measure]
 	Fix a normed vector space $(B,\norm\cdot)$ and a $\sigma$-ring $\mc S$ on a set $X$ equipped with a measure $\mu$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions is \textit{Cauchy in measure} if and only if all $\varepsilon>0$ have
-	\[\lim_{m,n\to\infty}\mu(\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\})=0.\]
+	\[\lim_{m,n\to\infty}\mu(\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\})=0.\]
 \end{definition}
+\begin{remark} \label{rem:cauchy-in-measure-makes-sense}
+	Again, we note that $f_n-f_m$ is $\mc S$-measurable by \autoref{lem:meas-is-vec-space}, so $g\coloneqq\norm{f_m-f_n}$ is $\mc S$-measurable by \autoref{cor:take-norms-is-measurable}, so
+	\[\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}=g^{-1}([\varepsilon,\infty))=g^{-1}((0,\infty))\setminus g^{-1}((0,\varepsilon))\]
+	is in fact in $\mc S$ by \autoref{cor:meas-has-meas-pre-image}. So we do see the limit in \autoref{def:converge-in-measure} actually makes sense.
+\end{remark}
+\begin{remark} \label{rem:sets-in-cauchy-in-measure-are-finite}
+	In fact, if $f_m$ and $f_n$ are simple $\mu$-integrable functions, then $f_m-f_n$ is also by \autoref{lem:simple-int-is-k-vec}, as is $g\coloneqq\norm{f_m-f_n}$ by \autoref{lem:norm-is-simple-int}. Thus,
+	\[g^{-1}([\varepsilon,\infty))=\bigcup_{y\in(\im g)\cap[\varepsilon,\infty)}g^{-1}(\{y\})\]
+	is a finite union of sets $g^{-1}(\{y\})$ of finite measure, so $\mu\left(g^{-1}([\varepsilon,\infty))\right)$ is finite by \autoref{lem:finitely-additive-is-subaddtive}.
+\end{remark}
 
 \end{document}
