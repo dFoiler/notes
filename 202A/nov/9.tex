@@ -8,46 +8,197 @@
 
 Today we define integrable functions. We went through this discussion quickly last class but are now going through it in more detail, so I have just moved the exposition to today.
 
-\subsection{Integrable Functions}
-Here is the payoff to our hard work.
-\begin{definition}[Mean Cauchy]
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of simple integrable functions is \textit{mean Cauchy} if and only if $\norm{f_n-f_m}_1\to0$ as $m,n\to\infty$.
-\end{definition}
+\subsection{Convergence in Mean}
+We are going to want yet another notion of convergence, to align with our desire to integrate.
+\begin{defi}[Converge in mean]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of simple $\mu$-integrable functions \textit{converges in mean} to a simple $\mu$-integrable function $f$ if and only if $\norm{f-f_n}_1\to0$ as $n\to\infty$.
+\end{defi}
+\begin{defi}[Mean Cauchy]
+	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. A sequence of simple $\mu$-integrable functions $\{f_n\}_{n\in\NN}$ is \textit{mean Cauchy} if and only if it is Cauchy for the semi-norm $\norm\cdot_1$. In other words, we require
+	\[\lim_{m,n\to\infty}\norm{f_m-f_n}_1=0.\]
+\end{defi}
+\begin{remark}
+	Because simple $\mu$-integrable functions form a vector space by \autoref{lem:simple-int-is-k-vec}, we see that $\norm{f-f_n}_1$ and $\norm{f_m-f_n}_1$ are legal expressions.
+\end{remark}
+Here are the usual checks.
 \begin{lemma}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions.
+	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Further, fix a sequence of simple $\mu$-integrable functions $f_n\colon X\to B$ and $g_n\colon X\to B$ with $f_n\to f$ and $g_n\to g$ in mean as $n\to\infty$.
+	\begin{listalph}
+		\item We have $f_n+g_n\to f+g$ in mean.
+		\item Given some scalar $a\in k$, we have $af_n\to af$ in mean.
+		\item We have $\norm{f_n}\to\norm f$ in mean.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	For (a) and (b), note the relevant functions are simple $\mu$-integrable by \autoref{lem:simple-int-is-k-vec}; for (c), the relevant functions are simple $\mu$-integrable by \autoref{lem:norm-is-simple-int}. As usual, let $|\cdot|$ denote the norm on $k$.
+	\begin{listalph}
+		\item For any $\varepsilon>0$, having $f_n\to f$ in mean promises $N_f$ such that $n\ge N$ has
+		\[\norm{f-f_n}_1<\varepsilon/2.\]
+		Similarly, $g_n\to g$ in mean promises $N_g$ such that $n\ge N_g$ has
+		\[\norm{g-g_n}_1<\varepsilon/2.\]
+		As such \autoref{lem:l1-seminorm} tells us that $N\coloneqq\max\{N_f,N_g\}$ has $n\ge N$ implies $n\ge N_f$ and $n\ge N_g$ and thus
+		\[\norm{(f+g)-(f_n+g_n)}_1\le\norm{f-f_n}_1+\norm{g-g_n}_1<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+		which finishes.
+		\item If $a=0$, then $af_n=af=0$, so $af-af_n=0$, so $\norm{af-af_n}_1=0$ by \autoref{lem:l1-seminorm}. Thus, $af_n\to af$ in mean.
+
+		Otherwise, take $a\ne0$ so that $|a|>0$. Now, having $f_n\to f$ in mean promises $N$ such that $n\ge N$ has
+		\[\norm{f-f_n}_1<\frac\varepsilon{|a|}.\]
+		Thus, $n\ge N$ has
+		\[\norm{af-af_n}_1=\norm{a(f-f_n)}_1\stackrel*=|a|\cdot\norm{f-f_n}_1<|a|\cdot\frac\varepsilon{|a|}=\varepsilon,\]
+		where $\stackrel*=$ is by \autoref{lem:l1-seminorm}.
+		\item For any $\varepsilon>0$, we are promised $N$ such that $n\ge N$ implies
+		\[\norm{f-f_n}_1<\varepsilon.\]
+		By the reverse triangle inequality, we see
+		\[|\norm{f(x)}-\norm{f_n(x)}|\le\norm{f(x)-f_n(x)}\]
+		for each $x\in X$, so \autoref{cor:bound-ints} tells us
+		\[|\norm f-\norm{f_n}|_1=\int_X|\norm f-\norm{f_n}|\,d\mu\le\int_X\norm{f-f_n}\,d\mu=\norm{f-f_n}_1<\varepsilon\]
+		for each $n\ge N$. This finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{lemma} \label{lem:linear-combo-mean-cauchy}
+	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Further, fix a sequence of simple $\mu$-integrable functions $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ which are mean Cauchy.
+	\begin{listalph}
+		\item The sequence $\{f_n+g_n\}_{n\in\NN}$ is mean Cauchy.
+		\item Given some scalar $a\in k$, the sequence $\{af_n\}_{n\in\NN}$ is mean Cauchy.
+		\item The sequence $\{\norm{f_n}\}_{n\in\NN}$ is mean Cauchy.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	These proofs are essentially identical. For (a) and (b), note the relevant functions are simple $\mu$-integrable by \autoref{lem:simple-int-is-k-vec}; for (c), the relevant functions are simple $\mu$-integrable by \autoref{lem:norm-is-simple-int}. As usual, let $|\cdot|$ denote the norm on $k$.
+	\begin{listalph}
+		\item For any $\varepsilon>0$, having $\{f_n\}_{n\in\NN}$ mean Cauchy promises $N_f$ such that $m,n\ge N$ has
+		\[\norm{f_m-f_n}_1<\varepsilon/2.\]
+		Similarly, having $\{g_n\}_{n\in\NN}$ mean Cauchy promises $N_g$ such that $m,n\ge N_g$ has
+		\[\norm{g_m-g_n}_1<\varepsilon/2.\]
+		As such \autoref{lem:l1-seminorm} tells us that $N\coloneqq\max\{N_f,N_g\}$ has $m,n\ge N$ implies $m,n\ge N_f$ and $m,n\ge N_g$ and thus
+		\[\norm{(f_m+g_m)-(f_n+g_n)}_1\le\norm{f-f_n}_1+\norm{g-g_n}_1<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+		which finishes.
+		\item If $a=0$, then $af_n=0$, so $af_m-af_n=0$, so $\norm{af_m-af_n}_1=0$ by \autoref{lem:l1-seminorm}. Thus, $\{af_n\}_{n\in\NN}$ is mean Cauchy.
+
+		Otherwise, take $a\ne0$ so that $|a|>0$. Now, having $\{f_n\}_{n\in\NN}$ Cauchy in mean promises $N$ such that $m,n\ge N$ has
+		\[\norm{f_m-f_n}_1<\frac\varepsilon{|a|}.\]
+		Thus, $m,n\ge N$ has
+		\[\norm{af_m-af_n}_1=\norm{a(f_m-f_n)}_1\stackrel*=|a|\cdot\norm{f_m-f_n}_1<|a|\cdot\frac\varepsilon{|a|}=\varepsilon,\]
+		where $\stackrel*=$ is by \autoref{lem:l1-seminorm}.
+		\item For any $\varepsilon>0$, we are promised $N$ such that $m,n\ge N$ implies
+		\[\norm{f_m-f_n}_1<\varepsilon.\]
+		By the reverse triangle inequality, we see
+		\[|\norm{f_m(x)}-\norm{f_n(x)}|\le\norm{f(x)-f_n(x)}\]
+		for each $x\in X$, so \autoref{cor:bound-ints} tells us
+		\[|\norm {f_m}-\norm{f_n}|_1=\int_X|\norm {f_m}-\norm{f_n}|\,d\mu\le\int_X\norm{{f_m}-f_n}\,d\mu=\norm{f_m-f_n}_1<\varepsilon\]
+		for each $m,n\ge N$. This finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{lemma} \label{lem:mean-cauchy-subsequence}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. If $\{f_n\}_{n\in\NN}$ is a mean Cauchy sequence of simple $\mu$-integrable functions, then any subsequence $\{f_{n_i}\}_{i\in\NN}$ is a mean Cauchy sequence of simple $\mu$-integrable functions.
+\end{lemma}
+\begin{proof}
+	For any $\varepsilon>0$, we are given $N$ such that $m,n\ge N$ implies $\norm{f_m-f_n}_1<\varepsilon$. Because $n_i\ge n$ for each $i$, we see $i,j\ge N$ has $\norm{f_{n_i}-f_{n_j}}_1<\varepsilon$ as well, which is what we wanted.
+\end{proof}
+
+\subsection{Comparing Convergences}
+We are going to want to see the comparative strengths of different convergences. Here is a starting result, which was moved from an earlier lecture for thematic reasons. Note this generalizes \autoref{ex:fixing-bad-news}.
+\begin{lemma} \label{lem:mean-cauchy-is-cauchy-in-measure}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then a sequence of simple $\mu$-integrable functions $f_n\colon X\to B$ for $n\in\NN$ which is mean Cauchy is also Cauchy in measure.
+\end{lemma}
+\begin{proof}
+	Fix $\varepsilon>0$ and set
+	\[E^\varepsilon_{m,n}\coloneqq\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\},\]
+	which has finite measure by \autoref{rem:sets-in-cauchy-in-measure-are-finite}. We need to show that
+	\[\lim_{m,n\to\infty}\mu(E_{m,n}^\varepsilon)\stackrel?=0.\]
+	Notably, for each $x\in X$, we must have
+	\begin{equation}
+		1_{E^\varepsilon_{m,n}}(x)\le\frac{\norm{f_m(x)-f_n(x)}}\varepsilon \label{eq:bound-indicator-e-m-n}
+	\end{equation}
+	by definition of $E^{\varepsilon}_{m,n}$. Now, both sides of this equation are simple $\mu$-integrable functions: $1_{E^\varepsilon_{m,n}}$ is by \autoref{ex:indicator-is-simple}; and $f_m-f_n$ is simple $\mu$-integrable by \autoref{lem:simple-int-is-k-vec}, as is $\norm{f_m-f_n}$ by \autoref{lem:norm-is-simple-int}, so $\frac1\varepsilon\norm{f_m-f_n}$ is simple $\mu$-integrable by \autoref{lem:simple-int-is-k-vec} again.
+	
+	Thus, we may integrate, for which \autoref{cor:bound-ints} tells us
+	\[\mu(E^\varepsilon_{m,n})=\int_X1_{E^{\varepsilon}_{m,n}}\,d\mu\le\int_X\frac{\norm{f_m-f_n}}\varepsilon\,d\mu=\frac{\norm{f_m-f_n}_1}\varepsilon,\]
+	where the first integral was computed using \autoref{ex:integrate-indicator}. But as $m,n\to\infty$, the right-hand value goes to $0$ because $\{f_n\}_{n\in\NN}$ is Cauchy for $\norm\cdot_1$, so the left-hand value must also go to $0$.
+\end{proof}
+\begin{remark}
+	A similar proof works for when we are Cauchy for $\norm\cdot_p$ for finite $p$ by taking $p$th powers of \autoref{eq:bound-indicator-e-m-n}. For example, in probability theory, the result for $\norm\cdot_2$ is essentially Chebyshev's inequality.
+\end{remark}
+We now note that converging almost uniformly is stronger than in measure.
+\begin{lemma} \label{lem:almost-uniform-to-in-measure}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions and an $\mathcal S$-measurable function $f$.
 	\begin{listalph}
 		\item If $f_n\to f$ almost uniformly as $n\to\infty$, then $f_n\to f$ in measure.
 		\item If $\{f_n\}_{n\in\NN}$ is almost uniformly Cauchy, then $\{f_n\}_{n\in\NN}$ is Cauchy in measure.
 	\end{listalph}
 \end{lemma}
 \begin{proof}
-	We show (a); the proof of (b) is similar. Fix $\varepsilon>0$, and we would like to show that
-	\[\lim_{n\to\infty}\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})\stackrel?=0.\]
-	Well, for any $\delta>0$, we need $N$ such that $n\ge N$ has
-	\[\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})<\delta.\]
-	Because the $f_\bullet$ are $\mc S$-measurable, we may find some $E\in\mc S$ containing each $f_n^{-1}(B\setminus\{0\})$.
-
-	Now, by the almost uniform convergence, we are promised $F\in\mc S$ such that $\mu(F)<\delta$ and $f_n\to f$ uniformly as $n\to\infty$ on $X\setminus F$. As such, we choose $N$ such that $n\ge N$implies
-	\[\norm{f(x)-f_n(x)}<\varepsilon.\]
-	In particular, for $n\ge N$, we see
-	\[\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})\le\mu(X\setminus F)<\delta,\]
-	which finishes.
-\end{proof}
-\begin{theorem} \label{thm:int-funcs}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Given an $\mathcal S$-measurable function $f$, the following are equivalent.
+	Here we go.
 	\begin{listalph}
-		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ in measure.
-		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ almost uniformly.
-		\item There is a mean Cauchy sequence of simple integrable functions that converges to $f$ almost everywhere.
+		\item For any $\varepsilon>0$, we need to show that
+		\[\lim_{n\to\infty}\mu(\{x\in X:\norm{f(x)-f_n(x)}\})\stackrel?=0.\]
+		Well, for any $\delta>0$, we need $N$ such that $n\ge N$ has
+		\[\mu(\{x\in X:\norm{f(x)-f_n(x)})\stackrel?<\delta.\]
+		Now, by the almost uniform convergence, we are promised $F\in\mc S$ such that $\mu(X\setminus F)<\delta$ and $f_n\to f$ uniformly as $n\to\infty$ on $F$. Now using our uniform convergence, we choose $N$ such that $n\ge N$ implies
+		\[\norm{f(x)-f_n(x)}<\varepsilon\]
+		for each $x\in F$. In particular, for $n\ge N$, we see
+		\[\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\}\subseteq X\setminus F,\]
+		so \autoref{lem:fin-additive-is-monotone} tells us
+		\[\mu(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\})\le\mu(X\setminus F)<\delta,\]
+		which finishes.
+		\item This proof is essentially the same. For any $\varepsilon>0$, we need to show that
+		\[\lim_{n\to\infty}\mu(\{x\in X:\norm{f_m(x)-f_n(x)}\})\stackrel?=0.\]
+		Well, for any $\delta>0$, we need $N$ such that $m,n\ge N$ has
+		\[\mu(\{x\in X:\norm{f_m(x)-f_n(x)})\stackrel?<\delta.\]
+		Now, by the almost uniform convergence, we are promised $F\in\mc S$ such that $\mu(X\setminus F)<\delta$ and $\{f_n\}_{n\in\NN}$ is uniformly Cauchy on $F$. Now using the fact we're uniformly Cauchy, we choose $N$ such that $m,n\ge N$ implies
+		\[\norm{f_m(x)-f_n(x)}<\varepsilon\]
+		for each $x\in F$. In particular, for $m,n\ge N$, we see
+		\[\{x\in X:\norm{f_m(x)-f_n(x)}\ge\varepsilon\}\subseteq X\setminus F,\]
+		so \autoref{lem:fin-additive-is-monotone} tells us
+		\[\mu(\{x:\norm{f_m(x)-f_n(x)}\ge\varepsilon\})\le\mu(X\setminus F)<\delta,\]
+		which finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Further, convergence almost uniformly is stronger than convergence almost everywhere.
+\begin{lemma} \label{lem:almost-uniform-to-almost-everywhere}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of functions which converge to $f$ almost uniformly as $n\to\infty$. Then $f_n\to f$ almost everywhere.
+\end{lemma}
+\begin{proof}
+	Let $E$ be the set of points such that $\{f_n(x)\}_{n\in\NN}$ does not converge to $f(x)$ as $n\to\infty$. Note $x\in E$ is equivalent to having some $\varepsilon>0$ and $N$ such that $\norm{f_n(x)-f(x)}\ge\varepsilon$ for each $n\ge N$, so
+	\[E=\bigcup_{\varepsilon>0}\bigcup_{N=1}^\infty\bigcap_{n\ge N}\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\}.\]
+	Note that $\norm{f_n(x)-f(x)}\ge\varepsilon$ for some $\varepsilon>0$ and all $n\ge N$ is equivalent to $\norm{f(x)-f_n(x)}\ge1/m$ for some $m$ and all $n\ge N$ because $1/m\to0$ as $m\to\infty$. So in fact
+	\[E=\bigcup_{m=1}^\infty\bigcup_{N=1}^\infty\bigcap_{n\ge N}\{x\in X:\norm{f(x)-f_n(x)}\ge1/m\}.\]
+	By \autoref{lem:premeas-is-countable-subadd}, it suffices to show that
+	\[\mu\Bigg(\bigcap_{n\ge N}\{x\in X:\norm{f(x)-f_n(x)}\ge1/m\}\Bigg)\stackrel?=0\]
+	for each $m$ and $N$.
+	
+	Well, $f_n\to f$ almost uniformly, so any $\delta>0$ has $F\in\mc S$ such that $\mu(X\setminus F)<\delta$ and $f_n\to f$ uniformly as $n\to\infty$. Thus, there is $N'$ such that $n\ge N'$ implies $\norm{f(x)-f_n(x)}<1/m$ for all $x\in X$ so that
+	\[\{x\in X:\norm{f(x)-f_n(x)}\ge1/m\}\subseteq X\setminus F.\]
+	In particular, choosing any $n_0$ greater than both $N$ and $N'$, we see from \autoref{lem:fin-additive-is-monotone} that
+	\[\mu\Bigg(\bigcap_{n\ge N}\{x\in X:\norm{f(x)-f_n(x)}\ge1/m\}\Bigg)\le\mu(\{x\in X:\norm{f(x)-f_{n_0}(x)}\ge1/m\})\le\mu(X\setminus F)<\delta.\]
+	It follows $\mu\left(\bigcap_{n\ge N}\{x\in X:\norm{f(x)-f_n(x)}\ge1/m\}\right)=0$.
+\end{proof}
+
+\subsection{Integrable Functions}
+Our payoff to our hard work is a definition of integrable functions. Here it is.
+\begin{theorem} \label{thm:int-funcs}
+	Fix a normed $k$-vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Then given an $\mathcal S$-measurable function $f$, the following are equivalent.
+	\begin{listalph}
+		\item There is a mean Cauchy sequence of simple $\mu$-integrable functions that converges to $f$ in measure.
+		\item There is a mean Cauchy sequence of simple $\mu$-integrable functions that converges to $f$ almost uniformly.
+		\item There is a mean Cauchy sequence of simple $\mu$-integrable functions that converges to $f$ almost everywhere.
 	\end{listalph}
 \end{theorem}
 \begin{proof}
-	We show our implications in sequence.
+	We show our implications in sequence. In all parts, let $\{f_n\}_{n\in\NN}$ be the requested mean Cauchy sequence of simple $\mu$-integrable functions.
 	\begin{itemize}
-		\item We show (a) implies (b). This holds from \autoref{thm:rw}: namely, our mean Cauchy sequence converging in measure will have a subsequence which is almost uniformly Cauchy. Then we note that the limits are the same by checking almost everywhere.
-		% \item We show (b) implies (a). Well, any sequence which is almost uniformly Cauchy is automatically Cauchy in measure, finishing.
-		\item We show (b) implies (c). Well, converging almost uniformly automatically forces us to converge both in measure and almost everywhere.
-		\item We show (c) implies (a). Well, if $\{f_n\}_{n\in\NN}$ is mean Cauchy, then the sequence is Cauchy in measure and therefore has a subsequence which is almost uniformly Cauchy. However, this subsequence will then converge to some $g$ almost everywhere, and we see that $f=g$ almost everywhere, so this subsequence actually converges to $f$ almost everywhere.
+		\item We show (a) implies (b). This holds from the Riesz--Weyl theorem. Namely, by \autoref{thm:rw}, $\{f_n\}_{n\in\NN}$ will have a subsequence $\{f_{n_i}\}_{i\in\NN}$ which is almost uniformly Cauchy; this subsequence remains mean Cauchy by \autoref{lem:mean-cauchy-subsequence}.\todo{}
+		% subsequences of mean cauchy is mean cauchy
+		\item We show (b) implies (c) and (a). Well, converging almost uniformly automatically forces us to converge in measure by \autoref{lem:almost-uniform-to-in-measure} and almost everywhere by \autoref{lem:almost-uniform-to-almost-everywhere}.
+		% converging in measure implies almost everywhere
+		\item We show (c) implies (a). Well, if $\{f_n\}_{n\in\NN}$ is mean Cauchy, then the sequence is Cauchy in measure by \autoref{lem:almost-uniform-to-in-measure} and therefore has a subsequence $\{f_{n_k}\}_{k\in\NN}$ which is almost uniformly Cauchy by \autoref{thm:rw}.
+		
+		However, this subsequence $\{f_{n_k}\}_{n\in\NN}$ will then converge to some $\mc S$-measurable $g\colon X\to B$ almost uniformly by \autoref{lem:almost-uniform-cauchy-converges}, and we see that $f=g$ almost everywhere, so this subsequence actually converges to $f$ almost everywhere.
+		% subsequences of mean cauchy is mean cauchy
+		% subsequences of almost uniformly converges almost uniformly
 		\qedhere
 	\end{itemize}
 \end{proof}
@@ -92,9 +243,9 @@ We would like for our $\mathcal L^1$ to actually be a completion for our simple 
 The point here is that we can take equivalence classes in $\mathcal L^1(X,\mc S,\mu,B)$ to get a bona fide norm from our semi-norm $\norm\cdot_1$.
 
 To finish our discussion of completeness, we will need the following result, which we will state but not prove today.
-\begin{proposition}
-	Fix a measure space $(X,\mc S,\mu)$ and a normed $k$-vector space $B$. Suppose that $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ are mean Cauchy sequences of simple $\mu$-integrable functions which both converge to some function $f$ in measure. Then the sequences $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ are equivalent mean Cauchy sequences.
-\end{proposition}
-In particular, this will imply that the integral $\int_Xf\,d\mu$ is well-defined.
+\begin{restatable}{proposition}{intisdefinedprop}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed $k$-vector space $B$. Suppose that $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ are mean Cauchy sequences of simple $\mu$-integrable functions which both converge to some $\mc S$-measurable function $f$ in measure. Then the sequences $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ are equivalent mean Cauchy sequences.
+\end{restatable}
+\noindent Roughly speaking, this will imply that the integral $\int_Xf\,d\mu$ is well-defined.
 
 \end{document}
