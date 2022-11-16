@@ -137,6 +137,40 @@ Here is the analogous result for sequences Cauchy in measure.
 		\qedhere
 	\end{listalph}
 \end{proof}
+\begin{lemma} \label{lem:in-measure-subsequence}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Now, fix$\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ and $f$. If $f_n\to f$ in measure as $n\to\infty$, then $f_{n_i}\to f$ in measure as $i\to\infty$ for any subsequence $\{f_{n_i}\}_{i\in\NN}$.
+\end{lemma}
+\begin{proof}
+	Fix some $\varepsilon>0$. Then any $\delta>0$ has some $N$ for which $n\ge N$ has
+	\[\mu(\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\})<\delta.\]
+	As such, for any $i\ge N$, we see $n_i\ge i\ge N$, so
+	\[\mu(\{x\in X:\norm{f(x)-f_{n_i}(x)}\ge\varepsilon\})<\delta,\]
+	which finishes.
+\end{proof}
+\begin{lemma} \label{lem:uniq-limit-in-measure}
+	Fix a normed vector space $(B,\norm\cdot)$ and a measure space $(X,\mc S,\mu)$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions converging in measure to an $\mathcal S$-measurable function $f\colon X\to B$. Given an $\mathcal S$-measurable function $g\colon X\to B$, we have $f=g$ almost everywhere if and only if $f_n\to g$ in measure.
+\end{lemma}
+\begin{proof}
+	In one direction, suppose $f=g$ almost everywhere so that we have some $E\in\mc S$ with $\mu(E)=0$ such that $f(x)\ne g(x)$ implies $x\in E$. Now, fix some $\varepsilon>0$. For any $\delta>0$, we are promised $N$ such that $n\ge N$ implies
+	\[\mu(\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\})<\delta.\]
+	Now, we note that $\norm{g(x)-f_n(x)}\ge\varepsilon$ implies that either $f(x)\ne g(x)$ so that $x\in E$ or $\norm{f(x)-f_n(x)}\ge\varepsilon$, so it follows
+	\[\{x\in X:\norm{g(x)-f_n(x)}\ge\varepsilon\}=\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\}\cup\{x\in E:\norm{g(x)-f_n(x)}\ge\varepsilon\}.\]
+	Notably, $\mu(\{x\in E:\norm{g(x)-f_n(x)}\ge\varepsilon\})=0$ as a subset of $E$, so we see that
+	\[\mu(\{x\in X:\norm{g(x)-f_n(x)})\le\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\}+0<\delta,\]
+	which finishes this direction.
+
+	Conversely, suppose $f_n\to g$ in measure. Note that $f(x)\ne g(x)$ if and only if $\norm{f(x)-g(x)}>0$ if and only if $\norm{f(x)-g(x)}\ge1/m$ for some positive integer $m$. Thus,
+	\[\{x\in X:f(x)\ne g(x)\}\subseteq\bigcup_{m=1}^\infty\{x\in X:\norm{f(x)-g(x)}\ge1/m\}.\]
+	By \autoref{lem:premeas-is-countable-subadd}, to show that $\{x\in X:f(x)\ne g(x)\}$ is a null set, it suffices to show that $\{x\in X:\norm{f(x)-g(x)}\ge1/m\}$ is a null set. Well, note that any positive integer $n$ has
+	\[\norm{f(x)-g(x)}\le\norm{f(x)-f_n(x)}+\norm{g(x)-f_n(x)},\]
+	implying
+	\[\{x:\norm{f(x)-g(x)}\ge1/m\}\subseteq\{x:\norm{f(x)-f_n(x)}\ge1/(2m)\}\cup\{x:\norm{g(x)-f_n(x)}\ge1/(2m)\}.\]
+	Now, for any $\delta>0$, because $f_n\to f$ and $f_n\to g$ in measure, we are promised some $N$ large enough so that $n\ge N$ has
+	\[\mu(\{x:\norm{f(x)-f_n(x)}\ge1/(2m)\}),\mu(\{x:\norm{g(x)-f_n(x)}\ge1/(2m)\})<\frac\delta2.\]
+	It follows by \autoref{lem:finitely-additive-is-subaddtive} that
+	\[\mu(\{x\in X:\norm{f(x)-g(x)}\ge1/m\})<\frac\delta2+\frac\delta2=\delta\]
+	for any $\delta>0$. Thus, $\mu(\{x\in X:\norm{f(x)-g(x)}\ge1/m\})=0$ follows.
+\end{proof}
 
 \subsection{Restricting Measurable Functions}
 We begin by introducing the construction we will be interested in.
@@ -225,10 +259,14 @@ As usual, with a convergence definition, we have a Cauchy definition.
 \end{definition}
 We take a deep breath and run some of our usual checks.
 \begin{lemma} \label{lem:uniq-almost-uniform-limit}
-	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. Now, suppose a sequence $\{f_n\}_{n\in\NN}$ converges almost uniformly to both $f$ and $g$. Then $f=g$ almost everywhere.
+	Fix a normed vector space $B$ and a measure space $(X,\mc S,\mu)$. Now, suppose a sequence $\{f_n\}_{n\in\NN}$ converges almost uniformly to a function $f$. Then, for a function $g\colon X\to B$, we have $f=g$ almost everywhere if and only if $f_n\to g$ almost uniformly.
 \end{lemma}
 \begin{proof}
-	Define $N\coloneqq\{x\in X:f(x)\ne g(x)\}$, and we show that $N$ is a null set. Well, for any $d>0$, we are promised subsets $F_d,G_d\in\mc S$ such that $\mu(F_d),\mu(G_d)<1/d$ and $f_n|_{X\setminus F}\to f|_{X\setminus F}$ and $f_n|_{X\setminus G}\to g|_{X\setminus G}$ uniformly as $n\to\infty$.
+	In one direction, suppose $f=g$ almost everywhere so that $\{x\in X:f(x)\ne g(x)\}$ is contained in some $N\in\mc S$ such that $\mu(N)=0$. Then for any $\varepsilon>0$, we note that $f_n\to f$ almost uniformly promises $F\in\mc S$ such that $\mu(X\setminus F)<\varepsilon$ while $f_n|_F\to f|_F$ uniformly. Now, $f|_{X\setminus N}=g|_{X\setminus N}$, so we note $f_n|_{F\setminus N}\to g|_{F\setminus N}$ uniformly (by restricting $f_n|_F\to f|_F$ uniformly) while
+	\[\mu(X\setminus(F\setminus N))=\mu\big((X\setminus F)\cup N\big)=\mu(X\setminus F)+\mu(N\cap F),\]
+	where $\mu(N\cap F)=0$ because $\mu(N)=0$.
+
+	The other direction is harder. Define $N\coloneqq\{x\in X:f(x)\ne g(x)\}$, and we show that $N$ is a null set. Well, for any $d>0$, we are promised subsets $F_d,G_d\in\mc S$ such that $\mu(F_d),\mu(G_d)<1/d$ and $f_n|_{X\setminus F}\to f|_{X\setminus F}$ and $f_n|_{X\setminus G}\to g|_{X\setminus G}$ uniformly as $n\to\infty$.
 
 	In particular, if $x\notin(F_d\cup G_d)$, then our uniform convergence will imply pointwise convergence at $x$, so $f_n(x)\to f(x)$ and $f_n(x)\to g(x)$ as $n\to\infty$. It follows that $f(x)=g(x)$ by properties of convergence. Apply contraposition, we conclude that $N\subseteq F_d\cup G_d$; as such, we use \autoref{lem:finitely-additive-is-subaddtive} to note that
 	\[\mu(F_d\cup G_d)\le\mu(F_d)+\mu(G_d)<\frac2d.\]

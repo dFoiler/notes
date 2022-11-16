@@ -1,0 +1,102 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 16}
+
+Here we go.
+
+\subsection{Integration Facts}
+We are now ready to define the integral.
+\begin{definition}[Integral]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given an integrable function $f\colon X\to B$ with corresponding sequence mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of simple $\mu$-integrable functions with $f_n\to f$ in measure, we define the \textit{integral} by
+	\[\int_Xf\,d\mu\coloneqq\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{definition}
+We roughly showed last class that the integral is well-defined. It's not too hard to check that it's linear in $f$ and satisfies the bounding result
+\[\norm{\int_Xf\,d\mu}\le\norm{f}_1.\]
+We continue our fact-collection.
+\begin{lemma} \label{lem:simple-int-are-dense}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$ with corresponding sequence mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of simple $\mu$-integrable functions with $f_n\to f$ in measure, then $\norm{f-f_n}_1\to0$ as $n\to\infty$.
+\end{lemma}
+\begin{proof}
+	This follows directly from the definition of integration. Indeed, fix some $\varepsilon>0$. Our sequence is mean Cauchy, so choose some $N$ for which $m,n\ge N$ implies $\norm{f_m-f_n}_1<\varepsilon$.
+	
+	Now, for some fixed $m$, define $g_n\coloneqq f_m-f_n$, which is a simple $\mu$-integrable function by \autoref{lem:simple-int-is-k-vec}, and we see $\{g_n\}_{n\in\NN}$ is mean Cauchy by \autoref{lem:linear-combo-mean-cauchy} with $g_n\to f_m-f$ in measure by \autoref{lem:linear-combo-in-measure}. As such,
+	\[\norm{f_m-f}_1=\lim_{n\to\infty}\norm{f_m-f_n}_1,\]
+	so taking $m\ge N$ forces $\norm{f_m-f}_1\le\varepsilon$ for $m\ge N$. This completes the proof.
+\end{proof}
+\begin{remark}
+	In essence, the above result says that the simple $\mu$-integrable functions are in fact dense in $\mc L^1$.
+\end{remark}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$, set $E\coloneqq f^{-1}(B\setminus\{0\})\in\mc S$. Now, for any $\varepsilon>0$, there is some $F\subseteq E$ with $F\in\mc S$ and $\mu(F)<\infty$ such that
+	\[\int_{X\setminus F}\norm f\,d\mu<\varepsilon.\]
+\end{lemma}
+\begin{proof}
+	Because $f$ is integrable, we may choose some simple $\mu$-integrable function $g\colon X\to B$ such that $\norm{f-g}_1<\varepsilon$, where we are using \autoref{lem:simple-int-are-dense}. Now, choose $F\coloneqq E\cap g^{-1}(B\setminus\{0\})$. Note $\mu(F)\le\mu\left(g^{-1}(B\setminus\{0\})\right)$ is finite, so we compute
+	\[\int_{X\setminus F}\norm f\,d\mu=\int_{E\setminus F}\norm{f-g}\,d\mu\le\int_X\norm{f-g}\,d\mu\le\norm{f-g}_1<\varepsilon,\]
+	which is what we wanted.
+\end{proof}
+\begin{remark}
+	The above result basically says that $f$ is almost supported on a set of finite measure.
+\end{remark}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$. Given a $\mu$-integrable function $f\colon X\to\RR$, given $E\in\mc S$ with $1_E\le f$ pointwise, then
+	\[\mu(E)\le\int_Xf\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	The main difficulty here is that we don't actually know if $1_E$ is an integrable function at the outset. We can see from the definition of being integrable that $f^{-1}(B\setminus\{0\})$ is the countable union of some finite sets. As such, taking the intersection with $E$, we can find some sequence $\{E_n\}_{n\in\NN}\subseteq\mc S$ of sets of finite measure such that $E=\bigcup_{n\in\NN}E_n$ and $E_n\subseteq E_{n+1}$ for each $n$.
+
+	But now we note that each $1_{E_n}$ is a simple $\mu$-integrable function and has $1_{E_n}\le1_E\le f$ pointwise, so
+	\[\mu(E_n)=\int_X1_{E_n}\,d\mu\le\int_Xf\,d\mu,\]
+	so \autoref{prop:measure-union-up} tells us
+	\[\mu(E)=\lim_{n\to\infty}\mu(E_n)\le\int_Xf\,d\mu,\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$, if $\norm f_1=0$, then $\mu\left(f^{-1}(B\setminus\{0\})\right)=0$.
+\end{lemma}
+\begin{proof}
+	Note that the sequence $\{f_n\}_{n\in\NN}$ of functions defined by $f_n(x)\coloneqq0$ are all simple $\mu$-integrable functions and is also mean Cauchy because $\norm{f_m-f_n}_1=0$ for all $m$ and $n$. We also note that $f_n\to0$ in measure, and $f_n\to f$ in measure by tracking through our convergences, so $f=0$ almost everywhere by \autoref{lem:uniq-limit-in-measure}. The result follows.
+\end{proof}
+
+\subsection{Completeness of \texorpdfstring{$L^1$}{ L1}}
+We now move towards showing that $\mc L^1$ is complete. To state the result, we need to (re)define converging in mean.
+\begin{definition}[Converge in mean]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions \textit{converges in mean} to a $\mu$-integrable function $f\colon X\to B$ if and only if $\norm{f-f_n}_1\to0$ as $n\to\infty$.
+\end{definition}
+\begin{definition}[Mean Cauchy]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions is \textit{mean Cauchy} if and only if $\norm{f_m-f_n}_1\to0$ as $m,n\to\infty$.
+\end{definition}
+And now for our feature presentation.
+\begin{proposition} \label{prop:l1-complete}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then a mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions converges in mean to some $\mu$-integrable function $f\colon X\to B$.
+\end{proposition}
+\begin{proof}
+	For each $n$, we may choose some simple $\mu$-integrable function $g_n\colon X\to B$ such that $\norm{f_n-g_n}_1<1/n$, where we are using \autoref{lem:simple-int-are-dense}. We can check directly that $\{g_n\}_{n\in\NN}$ is mean Cauchy, so we may find some $f\colon X\to B$ such that $g_n\to f$ in measure. It follows $\norm{f-g_n}_1\to0$ as $n\to\infty$, so $\norm{f-f_n}_1\to0$ as $n\to\infty$ follows.
+\end{proof}
+In order to actually state this as a completeness result, we need to turn the semi-norm $\norm\cdot_1$ into an actual norm.
+\begin{notation}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. We set $\mc N(X,\mc S,\mu,B)\coloneqq\{f\in\mc L(X,\mc S,\mu,B):\norm f_1=0\}$ and
+	\[L^1(X,\mc S,\mu,B)\coloneqq\mc L^1(X,\mc S,\mu,B)/\mc N(X,\mc S,\mu,B)\]
+\end{notation}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. The function $\norm\cdot_1$ descends to a norm on $L^1(X,\mc S,\mu,B)$.
+\end{lemma}
+\begin{proof}
+	Apply \autoref{prop:semi-norm-to-norm}.
+\end{proof}
+\begin{corollary} \label{cor:l1-complete}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then $L^1(X,\mc S,\mu,B)$ is complete.
+\end{corollary}
+\begin{proof}
+	This follows directly from \autoref{prop:l1-complete}.
+\end{proof}
+\begin{remark}
+	Using \autoref{lem:simple-int-are-dense}, one can now check that the simple $\mu$-integrable functions have dense image in $L^1(X,\mc S,\mu,B)$. So $L^1(X,\mc S,\mu,B)$ is in fact the completion of the space of simple $\mu$-integrable functions (modded out by the ``null functions'' as usual).
+\end{remark}
+Next class we will begin trying to compute integrals.
+
+\end{document}
