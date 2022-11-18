@@ -1,0 +1,83 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 18}
+
+There will be at most two more homework assignments.
+
+\subsection{Measures from Integrals}
+Now that we have a reasonable notion of what functions to integrate, given a measure, we would like to take these integrable functions to build measures. Namely, given $f\in\mc L^1(X,\mc S,\mu,B)$, we can define
+\[\mu_f(E)\coloneqq\int_Ef\,d\mu.\]
+Here is the result.
+\begin{proposition}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Given some $\mu$-integrable function $f\colon X\to B$, we have $\mu_f(E)\coloneqq\int_Ef\,d\mu$ is countably additive.
+\end{proposition}
+\begin{proof}
+	Well, suppose we have pairwise disjoint $\{E_i\}_{i\in\NN}\subseteq\mc S$ and set $E\coloneqq\bigsqcup_{i=1}^\infty E_i$ so that we want to show
+	\[\mu_f(E)\stackrel?=\sum_{i=1}^\infty\mu_f(E_i).\]
+	Well, if $f$ is an indicator of the form $b1_F$ for some $b\in B$ and $F\in\mc S$, then we can compute
+	\[\mu_f(F')=\int_Xb1_{F'}1_F\,d\mu=b\mu(F\cap F'),\]
+	so the desired equality follows. By taking linear combinations, we see that all simple $\mu$-integrable functions $f$ satisfy the desired equality.
+
+	For the general case, we fix any $\varepsilon>0$ and note that there is some simple $\mu$-integrable function $g$ with $\norm{f-g}_1<\varepsilon/3$. Then for any finite $n$, we compute
+	\begin{align*}
+		\norm{\mu_f(E)-\sum_{i=1}^n\mu_f(E_i)} &\le \norm{\mu_f(E)-\mu_g(E)} + \norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{\sum_{i=1}^n\big(\mu_g(E_i)-\mu_f(E_i)\big)} \\
+		&= \norm{\mu_f(E)-\mu_g(E)}+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{\mu_g\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)-\mu_f\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)} \\
+		&\le \norm{f-g}_1+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{f-g}_1 \\
+		&< \frac23\varepsilon+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)},
+	\end{align*}
+	where we have used the fact that $\mu_f$ is finitely additive already. Now, selecting $N$ large enough so that $n\ge N$ implies $\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}<\varepsilon/3$ will finish.
+\end{proof}
+Having a notion of countably additive functions encourages us to extend our definition of measure.
+\begin{definition}[Measure]
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Then a \textit{$B$-valued measure $\mu$ on $\mc S$} is a countably additive function $\mu\colon\mc S\to B$.
+\end{definition}
+We now note that $\mu_f$ cannot be terribly large.
+\begin{lemma} \label{lem:int-measure-is-continuous}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$ and $\varepsilon>0$, there is some $\delta>0$ such that $\mu(E)<\delta$ implies $\norm{\mu_f(E)}<\varepsilon$.
+\end{lemma}
+\begin{proof}
+	As usual, find some simple $\mu$-integrable function $g\colon X\to B$ with $\norm{f-g}_1<\varepsilon/2$. Then any $E\in\mc S$ grants
+	\[\norm{\mu_f(E)}\le\norm{\mu_f(E)-\mu_g(E)}+\norm{\mu_g(E)}\le\norm{f-g}_1+\norm g_\infty\cdot\mu(E),\]
+	where we are using the fact that simple $\mu$-integrable functions are bounded. Thus, we set $\delta\coloneqq\frac\varepsilon{2(1+\norm g_\infty)}$ to finish.
+\end{proof}
+The above lemma motivates the following definition.
+\begin{definition}[Strongly absolutely continuous]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Then a $B$-valued measure $\nu\colon\mc S\to B$ is \textit{strongly absolutely continuous} if and only if each $\varepsilon>0$ have some $\delta>0$ such that $\mu(E)<\delta$ implies $\norm{\nu(E)}<\varepsilon$.
+\end{definition}
+\begin{example}
+	By \autoref{lem:int-measure-is-continuous}, each $\mu_f$ coming from a $\mu$-integrable function $f$ is strongly absolutely continuous.
+\end{example}
+\begin{remark}
+	If $\nu$ is strongly absolutely continuous, then note that any $E\in\mc S$ with $\mu(E)=0$ will have $\norm{\nu(E)}=0$. This condition is that $\nu$ is ``absolutely continuous.''
+\end{remark}
+\begin{remark}
+	The Radon--Nikodym theorem says that sufficiently nice $B$-valued measures $\nu$ which are absolutely continuous will have $\nu=\mu_f$ for some $\mu$-integrable function $f$.
+\end{remark}
+To help us later, we pick up the following result on $\mc S$-measurable functions.
+\begin{theorem}[Egorov's]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Further, fix some sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions. Suppose $E\in\mc S$ has $\mu(E)<\infty$ such that the $\{f_n\}_{n\in\NN}$ converge almost everywhere to a function $f\colon E\to B$. Then $f_n|_E\to f$ almost uniformly on $E$.
+\end{theorem}
+\begin{proof}
+	This is a little tricky. For psychological reasons, set $g_n\coloneqq f-f_n|_E$ so that $g_n\to0$ almost everywhere; we would like to show that $g_n\to0$ almost uniformly. Well, for each $m$ and $n$, set
+	\[E^m_n\coloneqq\{x\in E:\norm{g_k(x)}\ge1/m\text{ for some }k\ge n\}.\]
+	Now, when $m$ is fixed, we note that $g_k(x)\to0$ forces $\bigcap_{n=1}^\infty E^m_n=\emp$. However, $\mu(E)<\infty$, so continuity properties tell us that $\mu\left(E^m_n\to\right)\to0$ as $n\to\infty$. 
+
+	We now attack the proof directly. Set $\varepsilon>0$. For each $m$, we may choose $n_m$ so that $\mu\left(E^m_{n_m}\right)<\varepsilon/2^n$. As such, we set
+	\[F\coloneqq\bigcup_{n=1}^\infty E^m_{n_m}\]
+	so that countable subadditivity tells us $\mu(F)<\varepsilon$. We now show our uniform convergence on $E\setminus F$. Fix any $\delta>0$ and then choose some $m$ with $m>1/\delta$, and we set $N\coloneqq n_m$. Now, $n\ge N$ implies $1/n<\delta$. We must check that $x\in E\setminus F$ implies that $\norm{g_n(x)}<\delta$. Well, $x\in E\setminus F$ has some $E^{m}_{n_m}$ not containing $x$, so it follows $\norm{g_n(x)}<\delta$.
+\end{proof}
+The point of picking up these facts is so that we can prove the Dominated convergence theorem.
+\begin{theorem}[Dominated convergence]
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Further, fix some sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions converging almost everywhere to a function $f$. If there is a $\mu$-integrable function $g\colon X\to\RR$ such that $\norm{f_n(x)}\le\norm{g(x)}$ for each $x\in X$, then $\{f_n\}_{n\in\NN}$ is in fact mean Cauchy.
+\end{theorem}
+We will prove this next class.
+\begin{remark}
+	It will follow from the conclusion that $f_n\to f$ in mean and so
+	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{remark}
+
+\end{document}
