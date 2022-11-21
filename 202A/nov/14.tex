@@ -11,47 +11,153 @@ Today we show that the space $L^1$ is complete. Here is a challenge problem.
 	Here is a challenge problem. Fix a sequence of continuous functions $f_n\colon[0,1]\to[0,1]$. Show that if $f_n\to f$ pointwise, then $\norm{f_n}_1\to0$ as $n\to\infty$, where $\norm{f_n}_1$ is defined using the Riemann integral. There are proofs which do not use any measure theory!
 \end{remark}
 
-\subsection{Defining Integrals}
+\subsection{Equivalent Mean Cauchy Sequences}
 Last class we were about to prove the following result.
 \intisdefinedprop*
+\noindent For this proof, we will want the following lemma.
+\begin{lemma} \label{lem:int-defined-zero}
+	Fix a measure space $(X,\mc S,\mu)$ and a mean Cauchy sequence of nonnegative simple $\mu$-integrable functions $f_n\colon X\to\RR$. If $f_n\to0$ in measure, then $\norm{f_n}_1\to0$.
+\end{lemma}
 \begin{proof}
-	Unsurprisingly, set $h_n\coloneqq f_n-g_n$, which is a simple $\mu$-integrable function by \autoref{lem:simple-int-is-k-vec}. Note $\{h_n\}_{n\in\NN}$ is a mean Cauchy sequence by \autoref{lem:linear-combo-mean-cauchy} and converges to $f-f=0$ in measure by \autoref{lem:linear-combo-in-measure}. We want to show that $\norm{h_n}_1\to0$ as $n\to\infty$, so we define $j_n(x)\coloneqq\norm{h_n(x)}$, which is mean Cauchy by \autoref{lem:linear-combo-mean-cauchy}.
+	By \autoref{lem:mean-cauchy-is-cauchy-in-measure}, we see $\{f_n\}_{n\in\NN}$ is Cauchy in measure, so we may use \autoref{thm:rw} to extract an almost uniformly Cauchy subsequence $\{f_{n_i}\}_{i\in\NN}$, which we then see almost uniformly converges to $0$ by \autoref{lem:almost-uniformly-subsequence}.
+	
+	For another reduction, we note that $\{\norm{f_n}_1\}_{n\in\NN}$ is a Cauchy sequence: for any $\varepsilon>0$, find $N$ such that $\norm{f_m-f_n}_1<\varepsilon$ for $m,n\ge N$. Then
+	\[|\norm{f_m}_1-\norm{f_n}_1|\le\norm{f_m-f_n}_1<\varepsilon\]
+	for $m,n\ge N$ by the (reverse) triangle inequality from \autoref{lem:l1-seminorm}. As such, $\{\norm{f_n}_1\}_{n\in\NN}$ does converge to some real number $r$, and the subsequence $\{f_{n_i}\}_{i\in\NN}$ will also converge to the same real number $r$. So we will show that $\norm{f_{n_i}}_1\to0$ as $i\to\infty$.
 
-	This now reduces to the following lemma.
-	\begin{lemma}
-		Fix a measure space $(X,\mc S,\mu)$ and a mean Cauchy sequence of nonnegative simple $\mu$-integrable functions $f_n\colon X\to\RR$. If $f_n\to0$ in measure, then $\norm{f_n}_1\to0$ in measure.
-	\end{lemma}
-	\begin{proof}
-		We use \autoref{thm:rw} to extract an almost uniformly Cauchy subsequence $\{f_{n_k}\}_{k\in\NN}$, which we then see almost uniformly converges to $0$. Because our sequence is mean Cauchy, it suffices to show $\norm{f_{n_k}}_1\to0$ as $k\to\infty$.
+	Now, to simplify notation, set $g_i\coloneqq f_{n_i}$ so that $g_i\to0$ almost uniformly, and we want to show $\norm{g_i}_1\to0$ as $i\to\infty$. Fix $\varepsilon>0$; we want $N$ such that $n\ge N$ has
+	\[0\le\norm{g_n}_1\stackrel?<\varepsilon.\]
+	This means we have to bound an integral, which we do in many pieces. To begin, our sequence $\{g_n\}_{n\in\NN}$ is mean Cauchy, so we start with some $N_1$ such that $m,n\ge N_1$ implies $\norm{g_m-g_n}_1<\varepsilon/4$. Now here are the pieces of our integral.
+	\begin{enumerate}
+		\item Set $F\coloneqq g_{N_1}^{-1}(B\setminus\{0\})$, which is in $\mc S$ by \autoref{lem:simple-measurable-pre-image} and has finite measure by definition of a simple $\mu$-integrable function.
+		% Continuing, we choose $E\in\mc S$ equal to $\bigcup_{n\in\NN}g_n^{-1}(B\setminus\{0\})$, and in fact, we set $F=g_N^{-1}(\{0\})$, which we note has finite measure because $f$ is a simple $\mu$-integrable function.
+		Now, for $n\ge N_1$, we see any $x\in X\setminus F$ has
+		\[g_n(x)=|g_n(x)-g_{N_1}(x)|,\]
+		so
+		\[\int_Xg_n1_{X\setminus F}\,d\mu=\int_X|g_n(x)-g_N(x)|1_{X\setminus F}\,d\mu\stackrel*\le\int_X|g_n(x)-g_N(x)|\,d\mu=\norm{g_n-g_N}_1<\frac\varepsilon4,\]
+		where we have used \autoref{cor:simple-bound-ints} in $\stackrel*\le$. (Note $g_n1_{X\setminus F}$ is simple $\mu$-integrable by \autoref{rem:complement-restrict-meas-functions}.)
 
-		As such, to simplify notation, set $g_n\coloneqq f_{n_k}$ so that $g_n\to0$ almost uniformly, and we want to show $\norm{g_n}_1\to0$ as $n\to\infty$. Fix $\varepsilon>0$, so we want $N$ such that $n\ge N$ has
-		\[0\le\norm{g_n}_1\stackrel?<\varepsilon.\]
-		This means we have to bound an integral, which we do in many pieces. To begin, our sequence $\{g_n\}_{n\in\NN}$ is mean Cauchy, so we start with some $N$ such that $m,n\ge N$ implies $\norm{g_m-g_n}_1<\varepsilon/4$.
+		\item To continue, we recall $g_n\to0$ almost uniformly, so we use $\delta\coloneqq\frac\varepsilon{4(1+\norm{g_N}_\infty)}>0$ to find $G\in\mc S$ with $\mu(G)<\delta$ and $g_n\to0$ uniformly on $X\setminus G$.
+	
+		As such, we can choose $N_2$ for which $n\ge N_2$ has
+		\[g_n(x)\le\frac\varepsilon{4(1+\mu(F))}\]
+		for each $x\in X\setminus G$. Integrating, we see $n\ge N_2$ gives
+		\[\int_Xg_n1_{F\setminus G}\,d\mu\le\int_X\left(\frac\varepsilon{4(1+\mu(F))}\cdot1_{F\setminus G}\right)\,d\mu\]
+		by \autoref{cor:simple-bound-ints}. (Note $g_n1_{F\setminus G}=g_n1_F-g_n1_{F\cap G}$ is a simple $\mu$-integrable function by \autoref{lem:restrict-meas-functions} and \autoref{lem:simple-int-is-k-vec}.) Using \autoref{lem:simple-int-is-linear} and then \autoref{ex:integrate-indicator} to compute the integral, we see
+		\[\int_Xg_n1_{F\setminus G}\,d\mu\le\frac\varepsilon{4(1+\mu(F))}\cdot\mu(F\setminus G)<\frac\varepsilon{4(1+\mu(F))}\cdot(1+\mu(F))\le\frac\varepsilon4,\]
+		where $\mu(F\setminus G)\le\mu(F)$ by \autoref{lem:fin-additive-is-monotone}.
 		
-		Continuing, we choose $E\in\mc S$ equal to $\bigcup_{n\in\NN}g_n^{-1}(B\setminus\{0\})$, and in fact, we set $F=g_N^{-1}(\{0\})$, which we note has finite measure because $f$ is a simple $\mu$-integrable function. Now, for $n\ge N$, we see
-		\[\int_{E\setminus F}g_n\,d\mu=\int_{E\setminus F}|g_n(x)-g_N(x)|\,d\mu=\norm{g_n-g_N}_1<\frac\varepsilon4.\]
-		Now, we see $\{g_n\}_{n\in\NN}$ converges almost uniformly on $F$ (because it converges almost uniformly on $X$), so we set $\delta\coloneqq\frac\varepsilon{4(1+\norm{g_N}_\infty)}$. This grants us $G\in\mc S$ with $\mu(F\setminus G)<\delta$ and $\{g_n\}_{n\in\NN}$ converging uniformly on $F\setminus G$.
-
-		As such, we can choose $N'$ for which $n>N'$ has
-		\[g_n(x)\le\frac\varepsilon{4(1+\mu(G))}.\]
-		As such, $n\ge N'$ grants
-		\[\int_{G}g_n\,d\mu\le\int\frac\varepsilon{4\mu(G)}\,d\mu=\frac\varepsilon4.\]
-		It remains to handle what's happening on $F\setminus G$. Well, $\mu(F\setminus G)<\delta$, so whatever happens here is pretty small: note $n\ge N'$ has
-		\begin{align*}
-			\int_{F\setminus G}g_n\,d\mu &= \int_G\norm{g_n-g_N}\,d\mu+\int_Gg_N(x)\,d\mu \\
-			&\le \norm{g_n-g_N}_1+\int_G\norm{g_N}_\infty\,d\mu \\
-			&= \norm{g_n-g_N}_1+\mu(G)\cdot\norm{g_N}_\infty \\
-			&\le \frac\varepsilon4+\frac\varepsilon{4(1+\norm{g_N}_\infty)}\cdot\norm{g_N}_\infty \\
-			&\le \frac\varepsilon2.
-		\end{align*}
-		Adding our integrals together completes the proof.
-	\end{proof}
-	The above lemma finishes the proof.
+		\item It remains to handle what's happening on $F\cap G$. Well, $\mu(F\cap G)\le\mu(G)<\delta$ by \autoref{lem:fin-additive-is-monotone}, so whatever happens here is pretty small. Indeed, note any $n$ gives
+		\[g_n1_{F\cap G}\le|g_n-g_N|1_{F\cap G}+|g_N|1_{F\cap G}\le|g_n-g_N|+\norm{g_N}_\infty1_G,\]
+		so \autoref{cor:simple-bound-ints} and \autoref{lem:simple-int-is-linear} tells us
+		\[\int_Xg_n1_{F\cap G}\,d\mu\le\underbrace{\int_X|g_n-g_N|\,d\mu}_{\norm{g_n-g_N}_1}+\norm{g_N}_\infty\int_X1_G\,d\mu.\]
+		(As usual, the relevant restricted functions are simple $\mu$-integrable by \autoref{lem:restrict-meas-functions}.) By \autoref{ex:integrate-indicator}, we see
+		\[\int_X1_G\,d\mu=\mu(G)<\delta=\frac\varepsilon{4(1+\norm{g_N}_\infty)},\]
+		so we have the bound
+		\[\int_Xg_n1_{F\cap G}\,d\mu\le\norm{g_n-g_N}_1+\norm{g_N}_\infty\cdot\frac\varepsilon{4(1+\norm{g_N}_\infty)}<\norm{g_n-g_N}_1+\frac\varepsilon4.\]
+		As such, $n\ge N_1$ will give
+		\[\int_Xg_n1_{F\cap G}\,d\mu<\frac\varepsilon2.\]
+	\end{enumerate}
+	In total, we set $N\coloneqq\max\{N_1,N_2\}$ so that $n\ge N$ implies
+	\[\int_Xg_n\,d\mu=\int_Xg_n1_{X\setminus F}\,d\mu+\int_Xg_n1_{F\setminus G}\,d\mu+\int_Xg_n1_{F\cap G}\,d\mu<\frac\varepsilon4+\frac\varepsilon4+\frac\varepsilon2=\varepsilon,\]
+	where we have used \autoref{lem:simple-int-is-linear} in the first equality. This finishes.
 \end{proof}
-The above result grants us a natural bijection between equivalence classes of mean Cauchy sequences of simple $\mu$-integrable functions and ``almost everywhere'' equivalence classes of $\mu$-integrable functions. So we have constructed our completion of simple $\mu$-integrable functions.
+We are now ready to prove \autoref{prop:equivalent-mean-cauchy}.
+\begin{proof}[Proof of \autoref{prop:equivalent-mean-cauchy}]
+	Unsurprisingly, set $h_n\coloneqq f_n-g_n$, which is a simple $\mu$-integrable function by \autoref{lem:simple-int-is-k-vec}. Note $\{h_n\}_{n\in\NN}$ is a mean Cauchy sequence by \autoref{lem:linear-combo-mean-cauchy} and converges to $f-f=0$ in measure by \autoref{lem:linear-combo-in-measure}.
+	
+	We want to show that $\norm{h_n}_1\to0$ as $n\to\infty$, so we define $j_n\coloneqq\norm{h_n}$, which is mean Cauchy by \autoref{lem:linear-combo-mean-cauchy}. Furthermore, $j_n\to0$ in measure by \autoref{lem:linear-combo-in-measure} (note $\norm0=0$), so \autoref{lem:int-defined-zero} tells us that $\norm{j_n}_1\to0$ as $n\to\infty$. However, for any $n$,
+	\[\norm{j_n}_1=\int_X|j_n|\,d\mu=\int_X\norm{h_n}\,d\mu=\norm{h_n}_1,\]
+	so it follows $\norm{h_n}_1\to0$ as $n\to\infty$ as well.
+\end{proof}
+\noindent The above result grants us a natural bijection between equivalence classes of mean Cauchy sequences of simple $\mu$-integrable functions and ``almost everywhere'' equivalence classes of $\mu$-integrable functions. So we have constructed our completion of simple $\mu$-integrable functions.
 \begin{remark}
-	As an aside, we note that the $\norm\cdot_1$ norm is pretty poorly behaved at points. For example, the function $C([0,1])\to[0,1]$ by $f\mapsto f(1)$ is not continuous for $\norm\cdot_1$. Namely, define $f_n(x)=x^n$ so that $f_n\to0$ in mean as $n\to\infty$, but $f_n(1)\to1$ as $n\to\infty$.
+	As an aside, we note that the $\norm\cdot_1$ norm is pretty poorly behaved at points. For example, the function $C([0,1])\to[0,1]$ by $f\mapsto f(1)$ is not continuous for $\norm\cdot_1$. Namely, define $f_n(x)=x^n$ so that $f_n\to0$ in mean (we will be able to check this eventually) as $n\to\infty$, but $f_n(1)\to1$ as $n\to\infty$.
 \end{remark}
-Now, we have just shown that $\mc L^1(X,\mc S,\mu,B)$ is the completion of the space of simple $\mu$-integrable functions and is therefore complete. One can show that this forms a $k$-vector space (where $k$ is the base field for $B$), and one can show some positivity and bounding results.
+% Now, we have just shown that $\mc L^1(X,\mc S,\mu,B)$ is the completion of the space of simple $\mu$-integrable functions and is therefore complete. One can show that this forms a $k$-vector space (where $k$ is the base field for $B$), and one can show some positivity and bounding results.
+
+\subsection{Defining Integrals}
+The main use of \autoref{prop:equivalent-mean-cauchy} is the following corollary.
+\begin{corollary} \label{cor:int-is-well-defined}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $(B,\norm\cdot)$. Given mean Cauchy sequences $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ of simple $\mu$-integrable functions both converging to an $\mathcal S$-measurable function $f$ in measure, we have
+	\[\lim_{n\to\infty}\int_Xf_n\,d\mu=\lim_{n\to\infty}\int_Xg_n\,d\mu.\]
+	Namely, if the limits exist, then they are equal. If $B$ is a Banach space, then the limits exist.
+\end{corollary}
+\begin{proof}
+	There are two claims here, which we will show in sequence.
+	\begin{itemize}
+		\item Suppose the limits exist. We show they are equal. Using \autoref{lem:simple-int-is-linear}, it suffices to show that
+		\[\lim_{n\to\infty}\int_X(f_n-g_n)\,d\mu\]
+		vanishes. Well, by \autoref{prop:equivalent-mean-cauchy}, we see $\norm{f_n-g_n}_1\to0$ as $n\to\infty$. Thus, for any $\varepsilon>0$, we are promised some $N$ for which $n\ge N$ has $\norm{f_n-g_n}_1<\varepsilon$. But then \autoref{lem:simple-bound-norm-int} implies
+		\[\norm{\int_X(f_n-g_n)\,d\mu}\le\int_X\norm{f_n-g_n}\,d\mu=\norm{f_n-g_n}_1<\varepsilon\]
+		for $n\ge N$, which is what we wanted.
+
+		\item Now suppose that $B$ is a Banach space, and we must show the limits exist. By symmetry, it suffices to show that $\lim_{n\to\infty}\int_Xf_n\,d\mu$ exists. Because $B$ is complete, it suffices to show that the sequence $\int_Xf_n\,d\mu$ of elements in $B$ is Cauchy.
+
+		Well, fix some $\varepsilon>0$. We see $\{f_n\}_{n\in\NN}$ is mean Cauchy, so there is some $N$ such that $m,n\ge N$ implies $\norm{f_m-f_n}_1<\varepsilon$. We now bound. Using \autoref{lem:simple-int-is-linear} and \autoref{lem:simple-bound-norm-int}, we see
+		\[\norm{\int_Xf_m\,d\mu-\int_Xf_n\,d\mu}=\norm{\int_X(f_m-f_n)\,d\mu}\le\int_X\norm{f_m-f_n}\,d\mu=\norm{f_m-f_n}_1,\]
+		which is less than $\varepsilon$ for $m,n\ge N$. This finishes.
+		\qedhere
+	\end{itemize} 
+\end{proof}
+\begin{remark}
+	It is not too hard to extend the above proof to show that if just one of the limits exist, then both of them exist. We will not need this.
+\end{remark}
+As such, we are prepared to finally define integrals.
+\begin{definition}[Integral]
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Given an integrable function $f\colon X\to B$, find the corresponding sequence mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of simple $\mu$-integrable functions with $f_n\to f$ in measure. Then we define the \textit{integral} by
+	\[\int_Xf\,d\mu\coloneqq\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{definition}
+\begin{example}
+	If $f\colon X\to B$ is already a simple $\mu$-integrable function, then $\{f\}_{n\in\NN}$ is mean Cauchy with $f\to f$ in measure, so our new integral $\int_Xf\,d\mu$ takes the intended value.
+\end{example}
+Note that this limit exists and is well-defined by \autoref{cor:int-is-well-defined}. We now pick up some facts about our integral. The main theme here is to just reduce these facts to the corresponding one about simple $\mu$-integrable functions.
+\begin{proposition} \label{prop:int-is-linear}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach $k$-space $B$. Further, fix $\mu$-integrable functions $f$ and $g$ and scalars $a,b\in k$. Then
+	\[\int_X(af+bg)\,d\mu=a\int_Xf\,d\mu+b\int_Xg\,d\mu.\]
+\end{proposition}
+\begin{proof}
+	Because $f$ and $g$ are $\mu$-integrable, we are promised mean Cauchy sequences $\{f_n\}_{n\in\NN}$ and $\{g_n\}_{n\in\NN}$ of simple $\mu$-integrable functions such that $f_n\to f$ and $g_n\to g$ in measure. 
+	
+	Now, it follows from the proof of \autoref{lem:int-is-vec-space} that $\{af_n\}_{n\in\NN}$ and $\{bg_n\}_{n\in\NN}$ are mean Cauchy sequences of simple $\mu$-integrable functions converging to $af$ and $bg$ in measure, so $\{af_n+bg_n\}_{n\in\NN}$ is a mean Cauchy sequence of simple $\mu$-integrable functions converging to $af+bg$ in measure. As such, we begin by using \autoref{lem:simple-int-is-linear} to compute
+	\[\int_X(af_n+bg_n)\,d\mu=a\int_Xf_n\,d\mu+b\int_Xg_n\,d\mu,\]
+	so
+	\[\int_X(af+bg)\,d\mu=\lim_{n\to\infty}\int_X(af_n+bg_n)\,d\mu=a\lim_{n\to\infty}\int_Xf_n\,d\mu+b\lim_{n\to\infty}\int_Xg_n\,d\mu=a\int_Xf\,d\mu+b\int_Xg\,d\mu,\]
+	which is what we wanted.
+\end{proof}
+Here are the usual bounding results.
+\begin{lemma} \label{lem:int-positivity}
+	Fix a measure space $(X,\mc S,\mu)$. Given a $\mu$-integrable function $f\colon X\to\RR$, if $f(x)\ge0$ for each $x\in X$, we have
+	\[\int_Xf\,d\mu\ge0.\]
+\end{lemma}
+\begin{proof}
+	The main point is that $f=|f|$. Pick up our mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of simple $\mu$-integrable functions such that $f_n\to f$ in measure. It follows from the proof of \autoref{lem:norm-int-function} that $\{|f_n|\}_{n\in\NN}$ is also a mean Cauchy sequence of simple $\mu$-integrable functions but with $|f_n|\to|f|$ in measure. However,
+	\[|f|(x)=|f(x)|=f(x)\]
+	for each $x\in X$, so $|f|=f$, so $|f_n|\to f$ in measure. Thus,
+	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_X|f_n|\,d\mu.\]
+	However, $|f_n|(x)\ge0$ for each $x\in X$, so the integrals on the right-hand side are nonnegative by \autoref{lem:simple-int-positivity}. It follows $\int_Xf\,d\mu\ge0$.
+\end{proof}
+\begin{lemma} \label{lem:bound-ints}
+	Fix a measure space $(X,\mc S,\mu)$. Given $\mu$-integrable functions $f,g\colon X\to\RR$ such that $f(x)\ge g(x)$ for each $x\in X$, we have
+	\[\int_Xf\,d\mu\ge\int_Xg\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	Quickly, note $f-g$ is $\mu$-integrable by \autoref{lem:int-is-vec-space}. By \autoref{prop:int-is-linear}, it suffices to show that
+	\[\int_X(f-g)\,d\mu\ge0.\]
+	However, $(f-g)(x)=f(x)-g(x)\ge0$ for each $x\in X$, so this follows directly from \autoref{lem:int-positivity}.
+\end{proof}
+\begin{lemma} \label{lem:bound-norm-int}
+	Fix a measure space $(X,\mc S,\mu)$. Given a $\mu$-integrable function $f\colon X\to B$, we have
+	\[\norm{\int_Xf\,d\mu}\le\int_X\norm f\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	Quickly, note $\norm f$ is $\mu$-integrable by \autoref{lem:norm-int-function}. Now, as usual, pick up our mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of simple $\mu$-integrable functions such that $f_n\to f$ in measure. It follows from the proof of \autoref{lem:norm-int-function} that $\{\norm{f_n}\}_{n\in\NN}$ is a mean Cauchy sequence of simple $\mu$-integrable functions with $\norm{f_n}\to\norm f$ in measure. It follows
+	\[\int_X\norm f\,d\mu=\lim_{n\to\infty}\int_X\norm{f_n}\,d\mu.\]
+	Now, using \autoref{lem:simple-bound-norm-int}, we see
+	\[\int_X\norm f\,d\mu\ge\lim_{n\to\infty}\norm{\int_Xf_n\,d\mu}.\]
+	To finish, we note that $\norm\cdot\colon B\to\RR$ is continuous (\autoref{ex:norm-is-cont}), so \autoref{lem:contpreservesconverge} grants
+	\[\int_X\norm f\,d\mu\ge\norm{\lim_{n\to\infty}\int_Xf_n\,d\mu}=\norm{\int_Xf\,d\mu},\]
+	which is what we wanted.
+\end{proof}
 
 \end{document}
