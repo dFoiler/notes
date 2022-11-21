@@ -1,0 +1,55 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 20}
+
+Today we prove \autoref{thm:dom-conv}.
+
+\subsection{Dominated Convergence}
+Here is the statement.
+\domconvthm*
+\begin{proof}
+	Fix $\varepsilon>0$. Because $g$ is $\mu$-measurable, we use \autoref{lem:almost-support-l1} to find $E\in\mc S$ such that $\mu(E)<\infty$ and
+	\[\int_Xg1_{X\setminus E}\,d\mu<\frac\varepsilon6.\]
+	In particular, note $g1_{X\setminus E}$ is $\mu$-integrable by \autoref{rem:complement-restrict-int}. Now, for any $m,n\in\NN$, we note
+	\[\norm{f_m(x)-f_n(x)}\le\norm{f_m(x)}+\norm{f_n(x)}\le2g(x)\]
+	almost everywhere, so integrating with \autoref{lem:bound-ints} gives
+	\[\int_X\norm{f_m(x)-f_n(x)}1_{X\setminus E}\,d\mu\le\int_X2g(x)1_{X\setminus E}\,d\mu=2\int_Xg(x)1_{X\setminus E}\,d\mu<\frac\varepsilon3.\]
+	It remains to bound what's happening on $E$. Note $f_n\to f$ almost everywhere on $E$, so \autoref{thm:ego} tells us $f_n|_E\to f|_E$ converges almost uniformly, so for any $\delta>0$, we can find $F\subseteq E$ with $\mu(F)<\delta$ such that $f_n|_{E\setminus F}\to f|_{E\setminus F}$ uniformly.
+	
+	We get some choice in this $\delta$, so we use the fact that the measure $\mu_g$ from \autoref{lem:int-measure-is-continuous} is strongly absolutely continuous to find $\delta>0$ such that $\mu(F)<\delta$ implies $\mu_g(F)<\varepsilon/6$. As such,
+	\[\int_F\norm{f_m(x)-f_n(x)}\,d\mu\le2\int_Fg\,d\mu=2\mu_g(F)<\frac\varepsilon3.\]
+	Thus, it now remains to bound what's happening on $E\setminus F$. Well, $f_n|_{E\setminus F}\to f|_{E\setminus F}$ uniformly, so $\{f_n|_{E\setminus F}\}_{n\in\NN}$ is uniformly Cauchy, so we may find $N$ such that $m,n\ge N$ has
+	\[\norm{f_m(x)-f_n(x)}<\frac\varepsilon{3(1+\mu(E\setminus F))}\]
+	for $x\in E\setminus F$, so integrating with \autoref{lem:bound-ints} tells us
+	\[\int_{E\setminus F}\norm{f_m(x)-f_n(x)}\,d\mu\le\frac\varepsilon{3(1+\mu(E\setminus F))}\cdot\mu(E\setminus F)\le\frac\varepsilon3.\]
+	Adding our integrals together finishes.
+\end{proof}
+Here are some corollaries.
+\begin{corollary}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given an $\mathcal S$-measurable function $f\colon X\to B$ with some $\mu$-integrable function $g\colon X\to\RR$ such that $\norm{f(x)}\le g(x)$ almost everywhere, then $f$ is $\mu$-integrable.
+\end{corollary}
+\begin{proof}
+	Because $f$ is $\mc S$-measurable, there is a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ such that $f_n\to f$ almost everywhere. Multiplying each $f_n$ by $1_{f^{-1}(B\setminus\{0\})}$, we may assume that $f_n(x)=0$ whenever $f(x)=0$. Now, define
+	\[E_n\coloneqq\{x\in X:\norm{f_n(x)}\le2g(x)\}\]
+	and $h_n\coloneqq f_n1_{E_n}$. The point is that $\norm{h_n(x)}\le2g(x)$ for each $x\in X$, but we still have that $h_n$ is a simple $\mc S$-measurable function. However, by taking the pre-images, we actually see that each $h_n$ is a simple $\mu$-integrable function by \autoref{lem:bound-meas-set}. Now, $h_n\to f$ pointwise, where we note $f(x)=0$ forces $h_n(x)=0$ always, and $f(x)=0$ forces $\norm{f_n(x)}\le2g(x)$ for $n$ large enough. But now $\{f_n\}_{n\in\NN}$ is mean Cauchy by \autoref{thm:dom-conv}, so we are done.
+\end{proof}
+\begin{theorem}[Monotone convergence]
+	Fix a measure space $(X,\mc S,\mu)$. Given $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_n(x)\ge f_m(x)\ge0$ almost everywhere for each $n\ge m$. If we can find some $C\in\RR$ such that
+	\[\int_Xf_n\,d\mu\le C\]
+	for each $n$, then $\{f_n\}_{n\in\NN}$ is a mean Cauchy sequence.
+\end{theorem}
+\begin{proof}
+	Note $m\ge n$ gives
+	\[\norm{f_m-f_n}=\int_Xf_n\,d\mu-\int_Xf_m\,d\mu.\]
+	However, these integrals are increasing and bounded above and therefore Cauchy, so this differences goes to $0$ as $m,n\to\infty$.
+\end{proof}
+\begin{remark}
+	It follows that $f_n\to f$ in measure for a function $f$, so there is a subsequence converging to $f$ in mean, but then $f_n\to f$ in mean, in which case
+	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{remark}
+
+\end{document}
