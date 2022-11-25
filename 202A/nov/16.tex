@@ -86,48 +86,113 @@ The point of the above lemma is the following density result.
 	\[r1_E(x)\le\norm{f}(x)\]
 	for all $x\in X$ because either $x\notin E$ and thus $f(x)=0$ or $x\in E$ and thus $r\le\norm{f(x)}$. It follows $1_E(x)\le\frac1r\norm f(x)\le\frac1rg(x)$ almost everywhere, so \autoref{lem:bound-meas-set} tells us that $E$ has finite measure. In particular, $\frac 1rg$ is $\mu$-integrable by \autoref{lem:int-is-vec-space}. 
 \end{proof}
-\begin{lemma}
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$, if $\norm f_1=0$, then $\mu\left(f^{-1}(B\setminus\{0\})\right)=0$.
+
+\subsection{Convergence in Mean, Again}
+We now move towards showing that $\mc L^1$ is complete. To state the result, we need to (re)define converging in mean for our $\mu$-integrable functions.
+\begin{definition}[Converge in mean]
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions \textit{converges in mean} to a $\mu$-integrable function $f\colon X\to B$ if and only if $\norm{f-f_n}_1\to0$ as $n\to\infty$.
+\end{definition}
+\begin{definition}[Mean Cauchy]
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions is \textit{mean Cauchy} if and only if $\norm{f_m-f_n}_1\to0$ as $m,n\to\infty$.
+\end{definition}
+\begin{remark}
+	If everything is simple $\mu$-integrable, then we note the fact that $\norm f_1$ is the same for $\mu$-integrable functions as for simple $\mu$-integrable functions means that our definitions above also do not change.
+\end{remark}
+We now take a deep breath and run a few checks. Here is a comparison result.
+\begin{lemma} \label{lem:converge-in-mean-to-converge-in-measure}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Further, fix a sequence of $\mu$-integrable functions $\{f_n\}_{n\in\NN}$ and another $\mu$-integrable function $f\colon X\to B$. If $f_n\to f$ in mean, then $f_n\to f$ in measure.
 \end{lemma}
 \begin{proof}
-	Note that the sequence $\{f_n\}_{n\in\NN}$ of functions defined by $f_n(x)\coloneqq0$ are all simple $\mu$-integrable functions (vacuously) and is also mean Cauchy because $\norm{f_m-f_n}_1=0$ for all $m$ and $n$. We also note that $f_n\to0$ in measure, and $f_n\to f$ in measure by tracking through our convergences, so $f=0$ almost everywhere by \autoref{lem:uniq-limit-in-measure}. The result follows.
+	We imitate \autoref{lem:mean-cauchy-is-cauchy-in-measure}; note the statement makes sense because the $f_n$ and $f$ are $\mc S$-measurable. Now, fix some $\varepsilon>0$. Then, for any $n$, we define
+	\[E_{n}\coloneqq\{x\in X:\norm{f(x)-f_n(x)}\ge\varepsilon\}\]
+	so that we want to show $\mu(E_n)\to0$ as $n\to\infty$; note $E_n$ is $\mc S$-measurable because all the relevant functions are $\mc S$-measurable. Well, we see that each $x\in X$ has
+	\[1_{E_{n}}(x)\le\frac{\norm{f(x)-f_n(x)}}\varepsilon,\]
+	so \autoref{lem:bound-meas-set} tells us that
+	\[\mu(E_n)\le\int_X\frac{\norm{f(x)-f_n(x)}}\varepsilon\,d\mu=\frac1\varepsilon\int_X\norm{f(x)-f_n(x)}\,d\mu=\frac{\norm{f-f_n}_1}\varepsilon,\]
+	where we have used \autoref{prop:int-is-linear}. Thus,
+	\[\lim_{n\to\infty}\mu(E_n)\le\lim_{n\to\infty}\frac{\norm{f-f_n}_1}\varepsilon=\frac1\varepsilon\lim_{n\to\infty}\norm{f-f_n}_1,\]
+	which is $0$ because $f_n\to f$ in mean. The fact that $\mu(E_n)\ge0$ for each $n$ tells us $\lim_{n\to\infty}\mu(E_n)\ge0$, so $\mu(E_n)\to0$ as $n\to\infty$ follows.
+\end{proof}
+Here is a nice consequence.
+\begin{lemma} \label{lem:norm-zero-to-zero}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$, if $\norm f_1=0$, then $f(x)=0$ almost everywhere.
+\end{lemma}
+\begin{proof}
+	Let $z$ denote the zero function so that we want to show $f(x)=0=z(x)$ almost everywhere. Note that the sequence $\{f_n\}_{n\in\NN}$ of functions defined by $f_n\coloneqq z$ are all simple $\mu$-integrable functions (vacuously). As such, we see that $f_n\to z$ in measure.
+	
+	On the other hand, we see $f_n\to f$ in mean because any $\varepsilon>0$ can set $N=0$ so that $n\ge N$ has
+	\[\norm{f-f_n}_1=\norm{f-0}_1=\norm f_1=0<\varepsilon.\]
+	However, $f_n\to f$ in mean implies that $f_n\to f$ in measure by \autoref{lem:converge-in-mean-to-converge-in-measure}. It follows from \autoref{lem:uniq-limit-in-measure} that $f(x)=z(x)$ almost everywhere.
+\end{proof}
+And here is the converse.
+\begin{lemma} \label{lem:zero-to-norm-zero}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Given some $\mu$-integrable function $f\colon X\to B$, if $f(x)=0$ almost everywhere, then $\norm f_1=0$.
+\end{lemma}
+\begin{proof}
+	Define $f_n\colon X\to B$ to be the zero function for each $n$. The main claim is that $f_n\to f$ in measure. Indeed, because $f(x)=0$ almost everywhere, we can find $E\in\mc S$ such that $\mu(E)=0$ while $f(x)=0$ for $x\in X\setminus E$. As such, for any $\varepsilon>0$, we note that any $n\ge1$ has
+	\[\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}=\{x:\norm{f(x)}\ge\varepsilon\}\subseteq\{x:f(x)\ne0\}\subseteq E.\]
+	Thus, \autoref{lem:fin-additive-is-monotone} tells us $\mu\left(\{x:\norm{f(x)-f_n(x)}\ge\varepsilon\}\right)\le\mu(E)=0$, finishing.
+	
+	We now note that each $\norm{f_n}$ is the zero function and hence (vacuously) a simple $\mc S$-integrable function, and $\norm{f_n}\to\norm f$ by \autoref{lem:linear-combo-in-measure}. Thus, by definition of our integral,
+	\[\norm f_1=\int_X\norm f\,d\mu=\lim_{n\to\infty}\int_X\norm{f_n}\,d\mu=\lim_{n\to\infty}\norm{f_n}_1=\lim_{n\to\infty}0=0.\]
+	This is what we wanted.
+\end{proof}
+And here is the total result.
+\begin{lemma} \label{lem:norm-diff-zero-iff-equal-ae}
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then two $\mu$-integrable functions $f,g\colon X\to B$ have $\norm{f-g}_1=0$ if and only if $f(x)=g(x)$ almost everywhere.
+\end{lemma}
+\begin{proof}
+	We let $[h]\in L^1(X,\mc S,\mu,B)$ denote the equivalence class of a $\mu$-integrable function $h\colon X\to B$.
+
+	In one direction, if $[f]=[g]$, then $f-g\in\mc N(X,\mc S,\mu,B)$, so $\norm{f-g}_1=0$. It follows that $f(x)-g(x)=0$ almost everywhere by \autoref{lem:norm-zero-to-zero}, so we can select $E\in\mc S$ such that $\mu(E)=0$ while $f(x)-g(x)=0$ for $x\in X\setminus E$. As such, $f(x)=g(x)$ for $x\in X\setminus E$, so $f(x)=g(x)$ almost everywhere.
+
+	In the other direction, suppose $f(x)=g(x)$ almost everywhere. Then we can select $E\in\mc S$ such that $\mu(E)=0$ while $f(x)=g(x)$ for $x\in X\setminus E$. It follows $f(x)-g(x)=0$ for $x\in X\setminus E$, so $(f-g)(x)=0$ almost everywhere. Thus, $\norm{f-g}_1=0$ by \autoref{lem:zero-to-norm-zero}.
 \end{proof}
 
 \subsection{Completeness of \texorpdfstring{$L^1$}{ L1}}
-We now move towards showing that $\mc L^1$ is complete. To state the result, we need to (re)define converging in mean.
-\begin{definition}[Converge in mean]
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions \textit{converges in mean} to a $\mu$-integrable function $f\colon X\to B$ if and only if $\norm{f-f_n}_1\to0$ as $n\to\infty$.
-\end{definition}
-\begin{definition}[Mean Cauchy]
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Then a sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions is \textit{mean Cauchy} if and only if $\norm{f_m-f_n}_1\to0$ as $m,n\to\infty$.
-\end{definition}
 And now for our feature presentation.
 \begin{proposition} \label{prop:l1-complete}
 	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then a mean Cauchy sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions converges in mean to some $\mu$-integrable function $f\colon X\to B$.
 \end{proposition}
 \begin{proof}
-	For each $n$, we may choose some simple $\mu$-integrable function $g_n\colon X\to B$ such that $\norm{f_n-g_n}_1<1/n$, where we are using \autoref{cor:simple-int-are-dense}. We can check directly that $\{g_n\}_{n\in\NN}$ is mean Cauchy, so we may find some $f\colon X\to B$ such that $g_n\to f$ in measure. It follows $\norm{f-g_n}_1\to0$ as $n\to\infty$, so $\norm{f-f_n}_1\to0$ as $n\to\infty$ follows.
+	For each $n$, \autoref{cor:simple-int-are-dense} grants some simple $\mu$-integrable function $g_n\colon X\to B$ with $\norm{f_n-g_n}_1<1/n$. We now proceed in steps.
+	\begin{enumerate}
+		\item We claim that $\{g_n\}_{n\in\NN}$ is mean Cauchy. Well, fix any $\varepsilon>0$. Then we can find some $N_f$ such that $m,n\ge N_f$ implies
+		\[\norm{f_m-f_n}_1<\frac\varepsilon3.\]
+		Thus, we define $N\coloneqq\max\{N_f,3/\varepsilon\}$ so that $m,n\ge N$ implies
+		\[\norm{g_m-g_n}_1\le\norm{f_m-g_m}_1+\norm{f_m-f_n}_1+\norm{f_n-g_n}_1<\frac1m+\frac\varepsilon3+\frac1n\le\frac2N+\frac\varepsilon3\le\frac{2\varepsilon}3+\frac\varepsilon3=\varepsilon,\]
+		which finishes.
+		\item Next, we construct the limit function. Because $\{g_n\}_{n\in\NN}$ is mean Cauchy, it is Cauchy in measure by \autoref{lem:mean-cauchy-is-cauchy-in-measure}, so there is a uniformly Cauchy subsequence $\{g_{n_i}\}_{i\in\NN}$ by \autoref{thm:rw}. However, this subsequence $\{g_{n_i}\}_{i\in\NN}$ will then converge to some $\mc S$-measurable $g\colon X\to B$ almost uniformly by \autoref{lem:almost-uniform-cauchy-converges}. Note that $g$ is then $\mu$-integrable by definition.
+		\item It remains to show that $f_n\to g$ in mean. Well, note $g_{n_i}\to g$ almost uniformly, so $g_{n_i}\to g$ in measure by \autoref{lem:almost-uniform-to-in-measure}, so $g_{n_i}\to g$ in mean by \autoref{lem:almost-simple-int-are-dense}. (This step is why it is important for the $g_\bullet$ to be simple $\mu$-integrable!) Finishing up, we fix any $\varepsilon>0$ and note that there is $N_g$ such that $i\ge N_g$ implies
+		\[\norm{g_{n_i}-g}_1<\varepsilon/3.\]
+		Further, $\{f_n\}_{n\in\NN}$ is mean Cauchy, so there is $N_f$ such that $m,n\ge N_f$ implies
+		\[\norm{f_m-f_n}_1<\varepsilon/3.\]
+		In total, we set $N\coloneqq\max\{N_f,N_g,3/\varepsilon\}$. Then $n\ge N$ implies $n\ge N_f$ and $n_n\ge n\ge N\ge N_g$, so
+		\[\norm{g-f_n}_1\le\norm{g-g_{n_n}}_1+\norm{g_{n_n}-f_{n_n}}_1+\norm{f_{n_n}-f_n}_1<\frac\varepsilon3+\frac1{n_n}+\frac\varepsilon3\le\frac\varepsilon3+\frac1{3/\varepsilon}+\frac\varepsilon3=\varepsilon,\]
+		which is what we wanted.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 In order to actually state this as a completeness result, we need to turn the semi-norm $\norm\cdot_1$ into an actual norm.
 \begin{notation}
 	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. We set $\mc N(X,\mc S,\mu,B)\coloneqq\{f\in\mc L(X,\mc S,\mu,B):\norm f_1=0\}$ and
 	\[L^1(X,\mc S,\mu,B)\coloneqq\mc L^1(X,\mc S,\mu,B)/\mc N(X,\mc S,\mu,B)\]
 \end{notation}
+\begin{remark}
+	Given $\mu$-integrable functions $f,g\colon X\to B$, we claim that the equivalence classes $[f],[g]\in L^1(X,\mc S,\mu,B)$ are equal if and only if $f(x)=g(x)$ almost everywhere. Indeed, $[f]=[g]$ if and only if $f-g\in\mc N(X,\mc S,\mu,B)$, which is equivalent to $\norm{f-g}_1=0$. However, by \autoref{lem:norm-diff-zero-iff-equal-ae}, $\norm{f-g}_1=0$ is equivalent to $f(x)=g(x)$ almost everywhere.
+\end{remark}
 \begin{lemma}
 	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. The function $\norm\cdot_1$ descends to a norm on $L^1(X,\mc S,\mu,B)$.
 \end{lemma}
 \begin{proof}
-	Apply \autoref{prop:semi-norm-to-norm}.
+	This is a direct consequence \autoref{prop:semi-norm-to-norm}, applied to $\norm\cdot_1$ on $\mc L^1(X,\mc S,\mu,B)$.
 \end{proof}
 \begin{corollary} \label{cor:l1-complete}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then $L^1(X,\mc S,\mu,B)$ is complete.
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Then $L^1(X,\mc S,\mu,B)$ is the completion of the vector space of simple $\mu$-integrable functions.
 \end{corollary}
 \begin{proof}
-	This follows directly from \autoref{prop:l1-complete}.
+	The normed vector space $L^1(X,\mc S,\mu,B)$ is complete by \autoref{prop:l1-complete}. Further, the space of simple $\mu$-integrable functions (modded out by the functions of norm zero) are dense in $L^1(X,\mc S,\mu,B)$ by \autoref{cor:simple-int-are-dense}.
 \end{proof}
-\begin{remark}
-	Using \autoref{cor:simple-int-are-dense}, one can now check that the simple $\mu$-integrable functions have dense image in $L^1(X,\mc S,\mu,B)$. So $L^1(X,\mc S,\mu,B)$ is in fact the completion of the space of simple $\mu$-integrable functions (modded out by the ``null functions'' as usual).
-\end{remark}
 Next class we will begin trying to compute integrals.
 
 \end{document}

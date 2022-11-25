@@ -204,18 +204,21 @@ As usual, the identity function is uniformly continuous and continuous (it's an 
 	In some sense, isometries and Lipschitz continuous functions have their definition fundamentally interrelated with the metric. In contrast, the weaker notion of continuity will readily generalize to general topological spaces. Uniform continuity also generalizes to ``uniformities,'' which is a different notion.
 \end{remark}
 
-\subsection{Convergence and Completeness}
+\subsection{Convergent Sequences}
 To discuss completeness, we need to talk about convergence.
 \begin{definition}[Converge]
-	Fix a metric space $(X,d)$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ \textit{converges to} $x\in X$ if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
+	Fix a semi-metric $d$ on a set $X$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ \textit{converges to} $x\in X$ if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
 	\[n>N\implies d(x_n,x)<\varepsilon.\]
 	We might write this as ``$x_n\to x$ as $n\to\infty$'' or ``$\lim_{n\to\infty}x_n=x$.'' In this event, we may say that the sequence $\{x_n\}_{n\in\NN}$ \textit{converges}, and its limit is $x$.
 \end{definition}
 \begin{remark}[Nir] \label{rem:uniqlim}
-	As a sanity check, the limit of a sequence is unique: if $x_n\to x$ and $x_n\to x'$ as $n\to\infty$, then any $\varepsilon>0$ can find some large $n$ so that $d(x_n,x),d(x_n,x')<\varepsilon/2$. As such,
+	As a sanity check, the limit of a sequence is unique if $(X,d)$ is a metric space: if $x_n\to x$ and $x_n\to x'$ as $n\to\infty$, then any $\varepsilon>0$ can find some large $n$ so that $d(x_n,x),d(x_n,x')<\varepsilon/2$. As such,
 	\[d(x,x')<d(x_n,x)+d(x_n,x')=\varepsilon\]
 	for any $\varepsilon>0$, so $d(x,x')=0$ and thus $x=x'$ is forced.
 \end{remark}
+\begin{example}
+	Given $x\in X$, define the sequence $\{x_n\}_{n\in\NN}$ by $x_n\coloneqq x$ for each $n$. Then $d(x_n,x)=0$ for each $n$, so any $\varepsilon>0$ may set $N=0$ so that $n\ge N$ implies $d(x_n,x)<\varepsilon$. Thus, $x_n\to x$ as $n\to\infty$.
+\end{example}
 We have no reason yet to be convinced that any of our morphisms described previously are good notions, so let's start with continuity.
 \begin{lemma} \label{lem:contpreservesconverge}
 	Fix a continuous function between metric spaces $f\colon(X,d_X)\to(Y,d_Y)$. Then, if the sequence $\{x_n\}_{n\in\NN}\subseteq X$ converges to $x\in X$, then the sequence $\{f(x_n)\}_{n\in\NN}\subseteq Y$ converges to $f(x)\in Y$.
@@ -234,11 +237,44 @@ In fact, the converse also holds.
 \begin{proof}
 	We proceed by contraposition. If $f$ is not continuous at $x$, then any $n\in\NN$ can find $x_n$ such that $d_X(x,x_n)<1/n$ even though $d_Y(f(x_n),f(x))\ge1$. In particular, $x_n\to x$ as $n\to\infty$ (for any $\varepsilon$, choose $N=1/\varepsilon$), but the sequence $\{f(x_n)\}_{n\in\NN}$ does not converge to $f(x)$ because no $n$ has $d_Y(f(x),f(x_n))<1$.
 \end{proof}
+We will want the following fact (much) later, but we prove it now while ideas are fresh.
+\begin{lemma} \label{lem:converge-linear-combo}
+	Fix a semi-norm $\norm\cdot$ on a $k$-vector space $V$. Further, fix sequences $\{v_n\}_{n\in\NN}$ and $\{w_n\}_{n\in\NN}$ of vectors and two more vectors $v,w\in V$ such that $v_n\to v$ and $w_n\to w$ as $n\to\infty$.
+	\begin{listalph}
+		\item We have $v_n+w_n\to v+w$ as $n\to\infty$.
+		\item For any scalar $a\in k$, we have $av_n\to av$ as $n\to\infty$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Here we go. Let $|\cdot|$ denote the norm on $k$.
+	\begin{listalph}
+		\item For any $\varepsilon>0$, having $v_n\to v$ promises $N_v$ such that $n\ge N_v$ has
+		\[\norm{v-v_n}_1<\varepsilon/2.\]
+		Similarly, $w_n\to w$ promises $N_w$ such that $n\ge N_w$ has
+		\[\norm{w-w_n}_1<\varepsilon/2.\]
+		As such, we set $N\coloneqq\max\{N_v,N_w\}$ so that $n\ge N$ implies $n\ge N_v$ and $n\ge N_w$ and thus
+		\[\norm{(v+w)-(v_n+w_n)}_1\le\norm{v-v_n}_1+\norm{w-w_n}_1<\frac\varepsilon2+\frac\varepsilon2=\varepsilon\]
+		by the triangle inequality.
+		\item If $a=0$, then $av_n=av=0$, so $av-av_n=0$, so $\norm{av-av_n}_1=0$. Thus, $av_n\to av$.
+
+		Otherwise, take $a\ne0$ so that $|a|>0$. Now, having $v_n\to v$ promises $N$ such that $n\ge N$ has
+		\[\norm{v-v_n}_1<\frac\varepsilon{|a|}.\]
+		Thus, $n\ge N$ has
+		\[\norm{av-av_n}_1=\norm{a(v-v_n)}_1\stackrel*=|a|\cdot\norm{v-v_n}_1<|a|\cdot\frac\varepsilon{|a|}=\varepsilon,\]
+		where $\stackrel*=$ is because $\norm\cdot$ is a semi-norm.
+		\qedhere
+	\end{listalph}
+\end{proof}
+
+\subsection{Cauchy Sequences}
 We would like a notion of convergence which only uses data internal to the sequence, and this leads to the following definition.
 \begin{definition}[Cauchy]
-	Fix a metric space $(X,d)$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ is a \textit{Cauchy sequence} if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
+	Fix a semi-metric $d$ on a set $X$. A sequence of points $\{x_n\}_{n\in\NN}\subseteq X$ is a \textit{Cauchy sequence} if and only if, for any $\varepsilon>0$, we can find $N>0$ such that
 	\[n,m>N\implies d(x_n,x_m)<\varepsilon.\]
 \end{definition}
+\begin{example}
+	Given $x\in X$, define the sequence $\{x_n\}_{n\in\NN}$ by $x_n\coloneqq x$ for each $n$. Then $d(x_m,x_n)=0$ for each $n$, so any $\varepsilon>0$ may set $N=0$ so that $n\ge N$ implies $d(x_m,x_n)<\varepsilon$. Thus, $\{x_n\}_{n\in\NN}$ is Cauchy. More generally, we will see that convergent sequences are Cauchy in \autoref{lem:converge-implies-cauchy}.
+\end{example}
 It would be rude if continuity was always the best kind of morphism, so this time around preserving Cauchy-ness requires something stronger.
 \begin{lemma} \label{lem:uniformcontpreservecauchy}
 	Fix a uniformly continuous function between metric spaces $f\colon(X,d_X)\to(Y,d_Y)$. Then, if the sequence $\{x_n\}_{n\in\NN}\subseteq X$ is Cauchy, then the sequence $\{f(x_n)\}_{n\in\NN}\subseteq Y$ is also Cauchy.
@@ -254,7 +290,7 @@ It would be rude if continuity was always the best kind of morphism, so this tim
 	Continuous functions do not need to preserve Cauchy sequences: $f\colon(0,\infty)\to(0,\infty)$ by $f(x)\coloneqq 1/x$ is continuous, and the sequence $\{1/n\}_{n\in\NN}\subseteq(0,\infty)$ is Cauchy (it converges to $0$ in $\RR$) even though $\{f(1/n)\}_{n\in\NN}=\{n\}_{n\in\NN}$ certainly does not converge.
 \end{example}
 Anyway, it is quick to check that convergent sequences are Cauchy.
-\begin{lemma}
+\begin{lemma} \label{lem:converge-implies-cauchy}
 	Fix a metric space $(X,d)$. Then all convergent sequences are Cauchy.
 \end{lemma}
 \begin{proof}
@@ -263,6 +299,34 @@ Anyway, it is quick to check that convergent sequences are Cauchy.
 	for all $n>N$. Then any $n,m>N$ has
 	\[d(x_n,x_m)\le d(x_n,x)+d(x_m,x)<\varepsilon,\]
 	so the sequence $\{x_n\}_{n\in\NN}$ is Cauchy.
+\end{proof}
+As before, we will want the following fact later.
+\begin{lemma} \label{lem:cauchy-linear-combo}
+	Fix a semi-norm $\norm\cdot$ on a $k$-vector space $V$. Further, fix Cauchy sequences $\{v_n\}_{n\in\NN}$ and $\{w_n\}_{n\in\NN}$ of vectors.
+	\begin{listalph}
+		\item The sequence $\{v_n+w_n\}_{n\in\NN}$ is Cauchy.
+		\item For any scalar $a\in k$, the sequence $\{av_n\}_{n\in\NN}$ is Cauchy.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	These proofs are essentially the same as \autoref{lem:converge-linear-combo}. As usual, let $|\cdot|$ denote the norm on $k$.
+	\begin{listalph}
+		\item For any $\varepsilon>0$, having $\{v_n\}_{n\in\NN}$ Cauchy promises $N_v$ such that $n\ge N_v$ has
+		\[\norm{v_m-v_n}_1<\varepsilon/2.\]
+		Similarly, $\{w_n\}_{n\in\NN}$ Cauchy promises $N_w$ such that $n\ge N_w$ has
+		\[\norm{w_m-w_n}_1<\varepsilon/2.\]
+		As such, we set $N\coloneqq\max\{N_v,N_w\}$ so that $n\ge N$ implies $n\ge N_v$ and $n\ge N_w$ and thus
+		\[\norm{(v_m+w_m)-(v_n+w_n)}_1\le\norm{v_m-v_n}_1+\norm{w_m-w_n}_1<\frac\varepsilon2+\frac\varepsilon2=\varepsilon\]
+		by the triangle inequality.
+		\item If $a=0$, then $av_n=av_m=0$, so $av_m-av_n=0$, so $\norm{av_m-av_n}_1=0$. Thus, the sequence $\{av_m\}_{n\in\NN}$ in Cauchy.
+
+		Otherwise, take $a\ne0$ so that $|a|>0$. Now, having $\{v_n\}_{n\in\NN}$ Cauchy promises $N$ such that $n\ge N$ has
+		\[\norm{v_m-v_n}_1<\frac\varepsilon{|a|}.\]
+		Thus, $n\ge N$ has
+		\[\norm{av_m-av_n}_1=\norm{a(v_m-v_n)}_1\stackrel*=|a|\cdot\norm{v_m-v_n}_1<|a|\cdot\frac\varepsilon{|a|}=\varepsilon,\]
+		where $\stackrel*=$ is because $\norm\cdot$ is a semi-norm.
+		\qedhere
+	\end{listalph}
 \end{proof}
 We in general hope that our Cauchy sequences converge. As such, we have the following definition.
 \begin{definition}[Complete]
