@@ -9,40 +9,129 @@
 There will be at most two more homework assignments.
 
 \subsection{Measures from Integrals}
-Now that we have a reasonable notion of what functions to integrate, given a measure, we would like to take these integrable functions to build measures. Namely, given $f\in\mc L^1(X,\mc S,\mu,B)$, we can define
-\[\mu_f(E)\coloneqq\int_Ef\,d\mu.\]
-Here is the result.
-\begin{proposition}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given some $\mu$-integrable function $f\colon X\to B$, we have $\mu_f(E)\coloneqq\int_Ef\,d\mu$ is countably additive.
+Now that we have a reasonable notion of what functions to integrate, given a measure, we would like to take these integrable functions to build measures. It will be convenient to have the following notation.
+\begin{notation}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Given a $\mu$-integrable function $f$ and some $E\subseteq X$ such that either $E\in\mc S$ or $X\setminus E\in\mc S$, we define
+	\[\mu_f(E)\coloneqq\int_Ef\,d\mu\coloneqq\int_Xf1_E\,d\mu.\]
+	Note that $f1_E$ is $\mu$-integrable by \autoref{lem:restrict-int-function} when $E\in\mc S$ and by \autoref{rem:complement-restrict-int} when $X\setminus E\in\mc S$.
+\end{notation}
+\begin{remark} \label{rem:linear-combo-mu-f}
+	We note that $\mu_f$ has good additivity properties. Namely, given scalars $a,b\in k$, where $k$ is the base field of $B$, and two $\mu$-integrable functions $f,g\colon X\to B$, we have
+	\[\int_X(af+bg)1_E\,d\mu=\int_X\big(a(f1_E)+b(g1_E)\big)\,d\mu\stackrel*=a\int_Xf1_E\,d\mu+\int_Xb1_E\,d\mu,\]
+	where $\stackrel*=$ is by \autoref{prop:int-is-linear}. Thus, $\mu_{af+bg}(E)=a\mu_f(E)+b\mu_g(E)$.
+\end{remark}
+Here are a few quick inequalities.
+\begin{lemma} \label{lem:bound-mu-f}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Further, fix a $\mu$-integrable function $f\colon X\to B$ and some $E\in\mc S$.
+	\begin{listalph}
+		\item We have $\norm{\mu_f(E)}\le\norm f_1$.
+		\item Given a bound $M\ge0$ such that $\norm{f(x)}\le M$ almost everywhere for $x\in E$, then
+		\[\norm{\mu_f(E)}\le M\mu(E).\]
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:bound-norm-int}, we see
+	\[\norm{\mu_f(E)}=\norm{\int_Xf1_E\,d\mu}\le\int_X\norm{f1_E}\,d\mu.\]
+	We now approach the two parts separately.
+	\begin{listalph}
+		\item For each $x\in X$, we note that $\norm{f1_E}(x)$ is either $0$ or $\norm{f(x)}$, so $\norm{f1_E}(x)\le\norm f(x)$ for each $x\in X$. Thus, \autoref{lem:bound-ints} tells us
+		\[\int_X\norm{f1_E}\,d\mu\le\int_X\norm f\,d\mu=\norm f_1,\]
+		which finishes.
+		\item We claim that $\norm{f1_E}(x)\le M1_E(x)$ almost everywhere for $x\in X$. Indeed, $\norm{f(x)}\le M$ almost everywhere for $x\in E$, so there is some $N\in\mc S$ such that $\mu(N)=0$ and $x\in E\setminus N$ implies $\norm{f(x)}\le M$. Thus, $x\in X\setminus N$ either has $x\in X\setminus E$ so that $\norm{f1_E}(x)=0\le0=M1_E(x)$ or $x\in E\setminus N$ so that
+		\[\norm{f1_E}(x)=\norm{f(x)}\le M=M1_E(x).\]
+		Finishing up, \autoref{lem:bound-ints} kicks in to tell us that
+		\[\int_X\norm{f1_E}\,d\mu\le\int_XM1_E\,d\mu.\]
+		The right-hand side is $M\int_X1_E\,d\mu$ by \autoref{lem:simple-int-is-linear}, which is $M\mu(E)$ by \autoref{ex:integrate-indicator}. This finishes.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Now, the notation $\mu_f$ is intended to be suggestive that we're going to have a measure. Finite additivity is relatively quick.
+\begin{remark} \label{rem:mu-f-fin-additive}
+	Suppose $f\colon X\to B$ is $\mu$-integrable. It's pretty fast to see that $\mu_f\colon\mc S\to B$ is finitely additive: if $E,F\in\mc S$ are disjoint, we need to show that $\mu_f(E\sqcup F)=\mu_f(E)+\mu_f(F)$. (By induction, this extends to any finite collection.) Well, $1_E+1_F=1_{E\sqcup F}$ because $x\in E\sqcup F$ if and only if $x\in E$ or $x\in F$, but only one of $x\in E$ or $x\in F$ is possible. Thus, \autoref{prop:int-is-linear} tells us
+	\[\mu_f(E\sqcup F)=\int_Xf1_{E\sqcup F}\,d\mu=\int_Xf(1_E+1_F)\,d\mu=\int_Xf1_E\,d\mu+\int_Xf1_F\,d\mu=\mu_f(E)+\mu_f(F).\]
+\end{remark}
+In fact, we can extend \autoref{rem:mu-f-fin-additive} to make $\mu_f$ countably additive.
+\begin{proposition} \label{prop:int-gives-measure}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given some $\mu$-integrable function $f\colon X\to B$, the function $\mu_f\colon\mc S\to B$ is countably additive.
 \end{proposition}
 \begin{proof}
-	Well, suppose we have pairwise disjoint $\{E_i\}_{i\in\NN}\subseteq\mc S$ and set $E\coloneqq\bigsqcup_{i=1}^\infty E_i$ so that we want to show
-	\[\mu_f(E)\stackrel?=\sum_{i=1}^\infty\mu_f(E_i).\]
-	Well, if $f$ is an indicator of the form $b1_F$ for some $b\in B$ and $F\in\mc S$, then we can compute
-	\[\mu_f(F')=\int_Xb1_{F'}1_F\,d\mu=b\mu(F\cap F'),\]
-	so the desired equality follows. By taking linear combinations, we see that all simple $\mu$-integrable functions $f$ satisfy the desired equality.
+	Suppose we have a pairwise disjoint collection $\{E_i\}_{i\in\NN}\subseteq\mc S$. Set $E\coloneqq\bigsqcup_{i=1}^\infty E_i$ (which is in $\mc S$) so that we want to show
+	\begin{equation}
+		\mu_f(E)\stackrel?=\sum_{i=1}^\infty\mu_f(E_i). \label{eq:desired-mu-f-measure}
+	\end{equation}
+	We have two steps.
+	\begin{enumerate}
+		\item Suppose $f\colon X\to B$ is a simple $\mu$-integrable function; we show \autoref{eq:desired-mu-f-measure}. Well, by \autoref{lem:simple-form}, we can write
+		\[f=\sum_{j=1}^ny_j1_{F_j}\]
+		for some nonzero distinct points $y_j\in B$ and pairwise disjoint $F_j\coloneqq f^{-1}(\{y_j\})\in\mc S$.
 
-	For the general case, we fix any $\varepsilon>0$ and note that there is some simple $\mu$-integrable function $g$ with $\norm{f-g}_1<\varepsilon/3$. Then for any finite $n$, we compute
-	\begin{align*}
-		\norm{\mu_f(E)-\sum_{i=1}^n\mu_f(E_i)} &\le \norm{\mu_f(E)-\mu_g(E)} + \norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{\sum_{i=1}^n\big(\mu_g(E_i)-\mu_f(E_i)\big)} \\
-		&= \norm{\mu_f(E)-\mu_g(E)}+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{\mu_g\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)-\mu_f\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)} \\
-		&\le \norm{f-g}_1+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{f-g}_1 \\
-		&< \frac23\varepsilon+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)},
-	\end{align*}
-	where we have used the fact that $\mu_f$ is finitely additive already. Now, selecting $N$ large enough so that $n\ge N$ implies $\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}<\varepsilon/3$ will finish.
+		Now, we note $1_{F\cap F_j}=1_F1_{F_j}$ for any $F\in\mc S$ because $(1_F1_{F_j})(x)=1$ if and only if $1_F(x)=1$ and $1_{F_j}(x)=1$, which is equivalent to $x\in F$ and $x\in F_j$. Applying this multiple times, we compute
+		\begin{align*}
+			\mu_f(F) &= \int_Xf1_F\,d\mu \\
+			&= \int_X\Bigg(\sum_{j=1}^ny_j1_{F_j}1_F\Bigg)\,d\mu \\
+			&= \int_X\Bigg(\sum_{j=1}^ny_j1_{F_j\cap F}\Bigg)\,d\mu \\
+			&= \sum_{j=1}^n\Bigg(y_j\int_X1_{F_j\cap F}\,d\mu\Bigg) \\
+			&= \sum_{j=1}^ny_j\mu(F_j\cap F),
+		\end{align*}
+		where the last two equalities follow from \autoref{prop:int-is-linear} and then \autoref{ex:integrate-indicator}. As such, we can use the fact that $\mu$ is countably additive already: for each $j$, note that $\{F_j\cap E_i\}_{i\in\NN}$ is a pairwise disjoint collection because $x\in (F_j\cap E_i)\cap(F_j\cap E_{i'})$ implies $x\in E_i\cap E_{i'}$ implies $i=i'$. Thus,
+		\[F_j\cap E=F_j\cap\bigsqcup_{i=1}^\infty E_i=\bigsqcup_{i=1}^\infty(F_j\cap E_i)\]
+		implies
+		\[\mu(F_j\cap E)=\sum_{i=1}^\infty\mu(F_j\cap E_i).\]
+		Summing over all $j$, we can write
+		\begin{align*}
+			\mu_f(E) &= \sum_{j=1}^ny_j\mu(F_j\cap E) \\
+			&= \sum_{j=1}^n\Bigg(y_j\sum_{i=1}^\infty\mu(F_j\cap E_i)\Bigg) \\
+			&\stackrel*= \sum_{i=1}^\infty\Bigg(\sum_{j=1}^ny_j\mu(F_j\cap E_i)\Bigg) \\
+			&= \sum_{i=1}^\infty\mu_f(F_j\cap E_i),
+		\end{align*}
+		which is what we wanted. Note that we are allowed to switch the order of summation in $\stackrel*=$ because the outer sum is finite. (This is effectively just the linearity of limits.)
+
+		\item We now let $f\colon X\to B$ be an arbitrary $\mu$-integrable function. Fix any $\varepsilon>0$, and we need some $N$ such that $n\ge N$ implies
+		\[\norm{\mu_f(E)-\sum_{i=1}^n\mu_f(E_i)}<\varepsilon.\]
+		The idea is to relate $f$ to a simple $\mu$-integrable function: \autoref{cor:simple-int-are-dense} grants us some simple $\mu$-integrable function $g\colon X\to B$ such that $\norm{f-g}_1<\varepsilon/3$. Now, for any finite $n$, we can compute
+		\begin{align*}
+			\norm{\mu_f(E)-\sum_{i=1}^n\mu_f(E_i)} &\le \norm{\mu_f(E)-\mu_g(E)} + \norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{\sum_{i=1}^n\big(\mu_g(E_i)-\mu_f(E_i)\big)} \\
+			&= \norm{\mu_f(E)-\mu_g(E)}+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}+\norm{\mu_g\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)-\mu_f\Bigg(\bigsqcup_{i=1}^nE_i\Bigg)},
+		\end{align*}
+		where the last equality is because $\mu_f$ and $\mu_g$ are already finitely additive by \autoref{rem:mu-f-fin-additive}. Now, for any $F\in\mc S$, we note \autoref{rem:linear-combo-mu-f} tells us
+		\[\norm{\mu_f(F)-\mu_g(F)}=\norm{\mu_{f-g}(F)},\]
+		which is upper-bounded by $\norm{f-g}_1$ by \autoref{lem:bound-mu-f}. Thus,
+		\[\norm{\mu_f(E)-\sum_{i=1}^n\mu_f(E_i)}\le2\norm{f-g}_1+\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}.\]
+		To finish, we use the previous step to note that there is some $N$ such that $n\ge N$ implies
+		\[\norm{\mu_g(E)-\sum_{i=1}^n\mu_g(E_i)}<\frac\varepsilon3.\]
+		In total,
+		\[\norm{\mu_f(E)-\sum_{i=1}^n\mu_f(E_i)}<2\cdot\frac\varepsilon3+\frac\varepsilon3=\varepsilon,\]
+		which is what we wanted.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 Having a notion of countably additive functions encourages us to extend our definition of measure.
 \begin{definition}[Measure]
 	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Then a \textit{$B$-valued measure $\mu$ on $\mc S$} is a countably additive function $\mu\colon\mc S\to B$.
 \end{definition}
+\begin{example}
+	By \autoref{prop:int-gives-measure}, we see that a $\mu$-integrable function $f\colon X\to B$ gives a $B$-valued measure $\mu_f$.
+\end{example}
 We now note that $\mu_f$ cannot be terribly large.
 \begin{lemma} \label{lem:int-measure-is-continuous}
-	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Given a $\mu$-integrable function $f\colon X\to B$ and $\varepsilon>0$, there is some $\delta>0$ such that $\mu(E)<\delta$ implies $\norm{\mu_f(E)}<\varepsilon$.
+	Fix a measure space $(X,\mc S,\mu)$ and a normed vector space $B$. Further, fix a $\mu$-integrable function $f\colon X\to B$. For any $\varepsilon>0$, there is some $\delta>0$ such that $E\in\mc S$ with $\mu(E)<\delta$ implies $\norm{\mu_f(E)}<\varepsilon$.
 \end{lemma}
 \begin{proof}
-	As usual, find some simple $\mu$-integrable function $g\colon X\to B$ with $\norm{f-g}_1<\varepsilon/2$. Then any $E\in\mc S$ grants
-	\[\norm{\mu_f(E)}\le\norm{\mu_f(E)-\mu_g(E)}+\norm{\mu_g(E)}\le\norm{f-g}_1+\norm g_\infty\cdot\mu(E),\]
-	where we are using the fact that simple $\mu$-integrable functions are bounded. Thus, we set $\delta\coloneqq\frac\varepsilon{2(1+\norm g_\infty)}$ to finish.
+	As usual, use \autoref{cor:simple-int-are-dense} to find some simple $\mu$-integrable function $g\colon X\to B$ with $\norm{f-g}_1<\varepsilon/2$. Then any $E\in\mc S$ grants
+	\[\norm{\mu_f(E)}\le\norm{\mu_f(E)-\mu_g(E)}+\norm{\mu_g(E)}.\]
+	We now bound the terms individually.
+	\begin{itemize}
+		\item By \autoref{rem:linear-combo-mu-f}, we see $\mu_f(E)-\mu_g(E)=\mu_{f-g}(E)$, so
+		\[\norm{\mu_f(E)-\mu_g(E)}=\norm{\mu_{f-g}(E)}\le\norm{f-g}_1,\]
+		where the inequality is by \autoref{lem:bound-mu-f}.
+		\item Note that $g$ has finite image, so we may set $M\coloneqq\max\{\norm{g(x)}:x\in X\}$ so that $\norm{g(x)}\le M$ for each $x\in X$. Thus, \autoref{lem:bound-mu-f} tells us
+		\[\norm{\mu_g(E)}\le M\mu(E).\]
+	\end{itemize}
+	In total, we see
+	\[\norm{\mu_f(E)}\le\frac\varepsilon2+M\mu(E)\]
+	for any $E\in\mc S$. Thus, we set $\delta\coloneqq\frac\varepsilon{2(M+1)}$ so that $\mu(E)<\delta$ implies
+	\[\norm{\mu_f(E)}<\frac\varepsilon2+M\cdot\frac\varepsilon{2(M+1)}<\varepsilon,\]
+	which is what we wanted.
 \end{proof}
 The above lemma motivates the following definition.
 \begin{definition}[Strongly absolutely continuous]
@@ -52,11 +141,13 @@ The above lemma motivates the following definition.
 	By \autoref{lem:int-measure-is-continuous}, each $\mu_f$ coming from a $\mu$-integrable function $f$ is strongly absolutely continuous.
 \end{example}
 \begin{remark}
-	If $\nu$ is strongly absolutely continuous, then note that any $E\in\mc S$ with $\mu(E)=0$ will have $\norm{\nu(E)}=0$. This condition is that $\nu$ is ``absolutely continuous.''
+	If $\nu$ is strongly absolutely continuous, then note that any $E\in\mc S$ with $\mu(E)=0$ will have $\nu(E)=0$. Indeed, for any $\varepsilon>0$, there is $\delta>0$ such that $\mu(E')<\delta$ implies $\norm{\nu(E')}<\varepsilon$. But we will always have $\mu(E)=0<\delta$, so $\norm{\nu(E)}<\varepsilon$ for all $\varepsilon>0$, so $\norm{\nu(E)}=0$, so $\nu(E)=0$. (This condition is that $\nu$ is ``absolutely continuous.'' We will not need it later.)
 \end{remark}
 \begin{remark}
 	The Radon--Nikodym theorem says that sufficiently nice $B$-valued measures $\nu$ which are absolutely continuous will have $\nu=\mu_f$ for some $\mu$-integrable function $f$.
 \end{remark}
+
+\subsection{Egorov's Theorem}
 To help us later, we pick up the following result on $\mc S$-measurable functions.
 \begin{theorem}[Egorov's] \label{thm:ego}
 	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix some sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions. Suppose $E\in\mc S$ has $\mu(E)<\infty$ such that the $\{f_n\}_{n\in\NN}$ converge almost everywhere to a function $f\colon E\to B$. Then $f_n|_E\to f$ almost uniformly on $E$.
@@ -70,7 +161,7 @@ To help us later, we pick up the following result on $\mc S$-measurable function
 	\[F\coloneqq\bigcup_{n=1}^\infty E^m_{n_m}\]
 	so that countable subadditivity tells us $\mu(F)<\varepsilon$. We now show our uniform convergence on $E\setminus F$. Fix any $\delta>0$ and then choose some $m$ with $m>1/\delta$, and we set $N\coloneqq n_m$. Now, $n\ge N$ implies $1/n<\delta$. We must check that $x\in E\setminus F$ implies that $\norm{g_n(x)}<\delta$. Well, $x\in E\setminus F$ has some $E^{m}_{n_m}$ not containing $x$, so it follows $\norm{g_n(x)}<\delta$.
 \end{proof}
-The point of picking up these facts is so that we can prove the Dominated convergence theorem.
+The point of picking up \autoref{thm:ego} is so that we can prove the Dominated convergence theorem.
 \begin{restatable}[Dominated convergence]{theorem}{domconvthm} \label{thm:dom-conv}
 	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix some sequence $\{f_n\}_{n\in\NN}$ of $\mu$-integrable functions converging almost everywhere to a function $f$. If there is a $\mu$-integrable function $g\colon X\to\RR$ such that $\norm{f_n(x)}\le g(x)$ almost everywhere for each $n$, then $\{f_n\}_{n\in\NN}$ is in fact mean Cauchy.
 \end{restatable}
