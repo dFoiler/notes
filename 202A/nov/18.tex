@@ -150,16 +150,37 @@ The above lemma motivates the following definition.
 \subsection{Egorov's Theorem}
 To help us later, we pick up the following result on $\mc S$-measurable functions.
 \begin{theorem}[Egorov's] \label{thm:ego}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix some sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions. Suppose $E\in\mc S$ has $\mu(E)<\infty$ such that the $\{f_n\}_{n\in\NN}$ converge almost everywhere to a function $f\colon E\to B$. Then $f_n|_E\to f$ almost uniformly on $E$.
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. Further, fix some sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions. Suppose $E\in\mc S$ has $\mu(E)<\infty$ such that the $\{f_n\}_{n\in\NN}$ converge almost everywhere on $E$ to a function $f\colon X\to B$. Then $f_n|_E\to f$ almost uniformly on $E$.
 \end{theorem}
 \begin{proof}
-	This is a little tricky. For psychological reasons, set $g_n\coloneqq f-f_n|_E$ so that $g_n\to0$ almost everywhere; we would like to show that $g_n\to0$ almost uniformly. Well, for each $m$ and $n$, set
-	\[E^m_n\coloneqq\{x\in E:\norm{g_k(x)}\ge1/m\text{ for some }k\ge n\}.\]
-	Now, when $m$ is fixed, we note that $g_k(x)\to0$ forces $\bigcap_{n=1}^\infty E^m_n=\emp$. However, $\mu(E)<\infty$, so continuity properties tell us that $\mu\left(E^m_n\to\right)\to0$ as $n\to\infty$. 
+	This is a little tricky. We'll take this in steps.
+	\begin{enumerate}
+		\item We begin by removing a few null sets, for psychological reasons. Note we are given some $N\in\mc S$ such that $\mu(N)=0$ while $f_k(x)\to f(x)$ as $n\to\infty$ for each $x\in E\setminus N$. As such,
+		\[f_n1_{E\setminus N}\to f1_{E\setminus N}\]
+		on $E$ because if $x\notin N$, then $f_n1_{E\setminus N}(x)=0=f1_{E\setminus N}(x)$ for each $n$.
+		
+		We thus claim that $f_n1_{E\setminus N}\to f1_{E\setminus N}$ almost uniformly on $E$. To see that this is enough, note that any $\varepsilon>0$ has some $F\subseteq E$ with $\mu(E\setminus F)<\varepsilon$ while $f_n1_{E\setminus N}|_F\to f1_{E\setminus N}|_F$ uniformly. But then we set $F'\coloneqq F\setminus N$ so that \autoref{lem:fin-additive-is-monotone} and \autoref{lem:finitely-additive-is-subaddtive} tells us
+		\[\mu(E\setminus F')\le\mu((E\setminus F)\cup N)\le\mu(E\setminus F)+\mu(N)<\delta+0=\delta.\]
+		But now $f_n1_{E\setminus N}|_{F'}=f_n|_{F'}$ and $f1_{E\setminus N}|_{F'}=f|_{F'}$ because each $x\in F'$ has $x\notin N$ already. Thus, $f_n|_{F'}\to f|_{F'}$ uniformly, which is what we needed.
+	
+		In total, we are given $f_n1_{E\setminus N}\to f1_{E\setminus N}$ everywhere on $E$ and would like to show this convergence is almost uniform. As such, we replace each $f_n1_{E\setminus N}$ with $f_n$ and $f1_{E\setminus N}$ with $f$ to no detriment, except now we know $f_n\to f$ everywhere. In particular, $f$ is $\mc S$-measuralbe by \autoref{cor:limit-of-meas-is-meas}.
 
-	We now attack the proof directly. Set $\varepsilon>0$. For each $m$, we may choose $n_m$ so that $\mu\left(E^m_{n_m}\right)<\varepsilon/2^n$. As such, we set
-	\[F\coloneqq\bigcup_{n=1}^\infty E^m_{n_m}\]
-	so that countable subadditivity tells us $\mu(F)<\varepsilon$. We now show our uniform convergence on $E\setminus F$. Fix any $\delta>0$ and then choose some $m$ with $m>1/\delta$, and we set $N\coloneqq n_m$. Now, $n\ge N$ implies $1/n<\delta$. We must check that $x\in E\setminus F$ implies that $\norm{g_n(x)}<\delta$. Well, $x\in E\setminus F$ has some $E^{m}_{n_m}$ not containing $x$, so it follows $\norm{g_n(x)}<\delta$.
+		\item Now, for each $m$ and $n$, set
+		\[E^m_n\coloneqq\bigcup_{k\ge n}\{x\in E:\norm{(f-f_k)(x)}\ge1/m\}=\{x\in E:\norm{(f-f_k)(x)}\ge1/m\text{ for some }k\ge n\}.\]
+		Note each $\norm{f-f_k}$ is $\mc S$-measurable by \autoref{lem:meas-is-vec-space} and \autoref{cor:take-norms-is-measurable}, so the union $E^m_n$ is in $\mc S$ by \autoref{cor:meas-has-meas-pre-image}. Now, for fixed $m$, we note that $f_k(x)\to f(x)$ for $x\in E$ forces $\bigcap_{n=1}^\infty E^m_n=\emp$. However, $\mu(E_1)\le\mu(E)<\infty$ by \autoref{lem:fin-additive-is-monotone}, so \autoref{cor:measure-inter-down} tell us that
+		\[\lim_{n\to\infty}\mu\left(E^m_n\right)=\mu\Bigg(\bigcap_{n=1}^\infty E^m_n\Bigg)=\mu(\emp)=0.\]
+
+		\item We now attack the proof directly. Set $\varepsilon>0$. For each $m$, we may choose $n_m$ so that $\mu\left(E^m_{n}\right)<\varepsilon/2^m$ for $n\ge n_m$. As such, we set
+		\[F\coloneqq E{\mathbin\bigg\backslash}\bigcup_{m=1}^\infty E^m_{n_m}\]
+		so that \autoref{lem:premeas-is-countable-subadd} tells us
+		\[\mu(E\setminus F)=\mu\Bigg(\bigcup_{m=1}^\infty E^m_{n_m}\Bigg)\le\sum_{m=1}^\infty\mu\left(E^m_{n_m}\right)<\sum_{m=1}^\infty\frac\varepsilon{2^m}=\varepsilon.\]
+		It remains to show $f_n|_F\to f|_F$ uniformly. Fix any $\delta>0$. To set $N$, find $m$ with $m>1/\delta$, and we set $N\coloneqq n_{m}$.
+		
+		To see that this construction works, fix some $n\ge N$ and $x\in F$. Well, $x\in F$ implies that $x\notin E^m_{n_m}$ for our $m$, so
+		\[\norm{f(x)-f_k(x)}<1/m<\delta\]
+		for each $k\ge n_m$. In particular, $n\ge n_m$, so $\norm{f(x)-f_n(x)}<\delta$ follows.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 The point of picking up \autoref{thm:ego} is so that we can prove the Dominated convergence theorem.
 \begin{restatable}[Dominated convergence]{theorem}{domconvthm} \label{thm:dom-conv}
