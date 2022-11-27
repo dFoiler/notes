@@ -12,43 +12,97 @@ Today we prove \autoref{thm:dom-conv}.
 Here is the statement.
 \domconvthm*
 \begin{proof}
-	Fix $\varepsilon>0$. Because $g$ is $\mu$-measurable, we use \autoref{lem:almost-support-l1} to find $E\in\mc S$ such that $\mu(E)<\infty$ and
-	\[\int_Xg1_{X\setminus E}\,d\mu<\frac\varepsilon6.\]
-	In particular, note $g1_{X\setminus E}$ is $\mu$-integrable by \autoref{rem:complement-restrict-int}. Now, for any $m,n\in\NN$, we note
-	\[\norm{f_m(x)-f_n(x)}\le\norm{f_m(x)}+\norm{f_n(x)}\le2g(x)\]
-	almost everywhere, so integrating with \autoref{lem:bound-ints} gives
-	\[\int_X\norm{f_m(x)-f_n(x)}1_{X\setminus E}\,d\mu\le\int_X2g(x)1_{X\setminus E}\,d\mu=2\int_Xg(x)1_{X\setminus E}\,d\mu<\frac\varepsilon3.\]
-	It remains to bound what's happening on $E$. Note $f_n\to f$ almost everywhere on $E$, so \autoref{thm:ego} tells us $f_n|_E\to f|_E$ converges almost uniformly, so for any $\delta>0$, we can find $F\subseteq E$ with $\mu(F)<\delta$ such that $f_n|_{E\setminus F}\to f|_{E\setminus F}$ uniformly.
+	Note that $g(x)\le|g|(x)$, so $\norm{f_n(x)}\le|g|(x)$ almost everywhere for each $n$. Further, $|g|$ is $\mu$-integrable by \autoref{lem:norm-int-function}. Thus, we may replace $g$ with $|g|$ so that $g=|g|$. Also, before doing any heavy lifting, for each $n$, we select our $E_n\in\mc S$ with $\mu(E_n)=0$ while $\norm{f_n(x)}\le g(x)$ for each $x\in X\setminus E_n$.
+
+	Fix any $\varepsilon>0$. Observe that we are interested in bounding the integral
+	\[\norm{f_m-f_n}_1=\int_X\norm{f_m-f_n}\,d\mu\]
+	for large $m$ and $n$. We do this in three steps.
+	\begin{enumerate}
+		\item Because $g$ is $\mu$-integrable, we use \autoref{lem:almost-support-l1} to find $E\in\mc S$ such that $\mu(E)<\infty$ and
+		\[\int_Xg1_{X\setminus E}\,d\mu=\int_X|g|1_{X\setminus E}\,d\mu<\frac\varepsilon6.\]
+		In particular, note $g1_{X\setminus E}$ is $\mu$-integrable by \autoref{rem:complement-restrict-int}. Now, for any $m,n\in\NN$, we note
+		\[\norm{f_m(x)-f_n(x)}\le\norm{f_m(x)}+\norm{f_n(x)}\le2g(x)\]
+		almost everywhere: if $x\notin(E_m\cup E_n)$, then $\norm{f_m(x)},\norm{f_n(x)}\le2g(x)$. However, $E_m\cup E_n$ is a null set because $\mu(E_m\cup E_n)\le\mu(E_m)+\mu(E_n)=0+0=0$ by \autoref{lem:finitely-additive-is-subaddtive}. Thus, for any $E'\subseteq X$, we see
+		\begin{equation}
+			\norm{f_m(x)-f_n(x)}1_{X\setminus E}\le2g(x)1_{X\setminus E} \label{eq:restrict-ae-ineq}
+		\end{equation}
+		almost everywhere as well because $x\notin(E_m\cup E_n)$ has either $x\notin E'$ so that both sides are zero or $x\in E'$ so that we reduce to the inequality.
+		
+		As such, we use $E'=E$ and integrate with \autoref{lem:bound-ints} to get
+		\[\int_X\norm{f_m-f_n}1_{X\setminus E}\,d\mu\le\int_X2g1_{X\setminus E}\,d\mu\stackrel*=2\int_Xg1_{X\setminus E}\,d\mu<\frac\varepsilon3.\]
+		Note we have used \autoref{prop:int-is-linear} at $\stackrel*=$.
+
+		\item It remains to bound what's happening on $E$. Note $f_n\to f$ almost everywhere on $E$,\footnote{Whatever null set witnessed $f_n(x)\to f(x)$ almost everywhere on $X$ will work for $E$.} so \autoref{thm:ego} tells us $f_n|_E\to f|_E$ converges almost uniformly. In particular, for any $\delta>0$, we can find $F\subseteq E$ with $\mu(F)<\delta$ such that $f_n|_{E\setminus F}\to f|_{E\setminus F}$ uniformly.
 	
-	We get some choice in this $\delta$, so we use the fact that the measure $\mu_g$ from \autoref{lem:int-measure-is-continuous} is strongly absolutely continuous to find $\delta>0$ such that $\mu(F)<\delta$ implies $\mu_g(F)<\varepsilon/6$. As such,
-	\[\int_F\norm{f_m(x)-f_n(x)}\,d\mu\le2\int_Fg\,d\mu=2\mu_g(F)<\frac\varepsilon3.\]
-	Thus, it now remains to bound what's happening on $E\setminus F$. Well, $f_n|_{E\setminus F}\to f|_{E\setminus F}$ uniformly, so $\{f_n|_{E\setminus F}\}_{n\in\NN}$ is uniformly Cauchy, so we may find $N$ such that $m,n\ge N$ has
-	\[\norm{f_m(x)-f_n(x)}<\frac\varepsilon{3(1+\mu(E\setminus F))}\]
-	for $x\in E\setminus F$, so integrating with \autoref{lem:bound-ints} tells us
-	\[\int_{E\setminus F}\norm{f_m(x)-f_n(x)}\,d\mu\le\frac\varepsilon{3(1+\mu(E\setminus F))}\cdot\mu(E\setminus F)\le\frac\varepsilon3.\]
-	Adding our integrals together finishes.
+		We get some choice in this $\delta$, so we use the fact that the measure $\mu_g$ is strongly absolutely continuous (by \autoref{lem:int-measure-is-continuous}) to find $\delta>0$ such that $\mu(F)<\delta$ implies $\mu_g(F)<\varepsilon/6$. As such, using $E'=F$ in \autoref{eq:restrict-ae-ineq}, \autoref{lem:bound-ints} lets us bound
+		\[\int_X\norm{f_m(x)-f_n(x)}1_F\,d\mu\le\int_X2g1_F\,d\mu\stackrel*=2\int_Xg1_F\,d\mu=2\mu_g(F)<\frac\varepsilon3.\]
+		Again, we have used \autoref{prop:int-is-linear} at $\stackrel*=$.
+		
+		\item \label{item:dom-conv-3} Thus, it now remains to bound what's happening on $E\setminus F$. Well, $f_n|_{E\setminus F}\to f|_{E\setminus F}$ uniformly, so $\{f_n|_{E\setminus F}\}_{n\in\NN}$ is uniformly Cauchy, so we may find $N$ such that $m,n\ge N$ has
+		\[\norm{f_m(x)-f_n(x)}<\frac\varepsilon{3(1+\mu(E\setminus F))}\]
+		for $x\in E\setminus F$. (Note $\mu(E\setminus F)<\infty$ because $\mu(E\setminus F)\le\mu(E)<\infty$ by \autoref{lem:fin-additive-is-monotone}.) Thus, \autoref{lem:bound-mu-f} grants
+		\[\int_X\norm{f_m(x)-f_n(x)}1_{E\setminus F}\,d\mu=\mu_{\norm{f_m-f_n}}(E\setminus F)\le\frac\varepsilon{3(1+\mu(E\setminus F))}\cdot\mu(E\setminus F)<\frac\varepsilon3.\]
+	\end{enumerate}
+	We now add our integrals together. Note $X=(X\setminus E)\sqcup E=(X\setminus E)\sqcup F\sqcup(E\setminus F)$ because $F\subseteq E\subseteq X$. Thus, \autoref{rem:mu-f-fin-additive} promises
+	\[\norm{f_m-f_n}_1=\mu_{\norm{f_m-f_n}}(X)=\mu_{\norm{f_m-f_n}}(X\setminus E)+\mu_{\norm{f_m-f_n}}(F)+\mu_{\norm{f_m-f_n}}(E\setminus F)<\varepsilon\]
+	for each $m,n\ge N$, where $N$ was chosen in \autoref{item:dom-conv-3}.
 \end{proof}
-Here are some corollaries.
+\begin{remark}
+	We manifest \autoref{rem:apply-dom-conv}; we continue in the context of \autoref{thm:dom-conv} but now assume that $f$ is $\mc S$-measurable. In this case, we see that $f$ is $\mu$-integrable and that $f_n\to f$ in mean by \autoref{cor:limit-of-mu-ints}. Lastly, \autoref{rem:converge-in-mean-computes-int} implies
+	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{remark}
+As an application of \autoref{thm:dom-conv}, we upgrade \autoref{cor:bounded-simp-meas-is-simp-int}.
 \begin{corollary}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given an $\mathcal S$-measurable function $f\colon X\to B$ with some $\mu$-integrable function $g\colon X\to\RR$ such that $\norm{f(x)}\le g(x)$ almost everywhere, then $f$ is $\mu$-integrable.
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Further, fix an $\mathcal S$-measurable function $f\colon X\to B$. If there is a $\mu$-integrable function $g\colon X\to\RR$ such that $\norm{f(x)}\le g(x)$ almost everywhere, then $f$ is $\mu$-integrable.
 \end{corollary}
 \begin{proof}
-	Because $f$ is $\mc S$-measurable, there is a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ such that $f_n\to f$ almost everywhere. Multiplying each $f_n$ by $1_{f^{-1}(B\setminus\{0\})}$, we may assume that $f_n(x)=0$ whenever $f(x)=0$. Now, define
-	\[E_n\coloneqq\{x\in X:\norm{f_n(x)}\le2g(x)\}\]
-	and $h_n\coloneqq f_n1_{E_n}$. The point is that $\norm{h_n(x)}\le2g(x)$ for each $x\in X$, but we still have that $h_n$ is a simple $\mc S$-measurable function. However, by taking the pre-images, we actually see that each $h_n$ is a simple $\mu$-integrable function by \autoref{lem:bound-meas-set}. Now, $h_n\to f$ pointwise, where we note $f(x)=0$ forces $h_n(x)=0$ always, and $f(x)=0$ forces $\norm{f_n(x)}\le2g(x)$ for $n$ large enough. But now $\{f_n\}_{n\in\NN}$ is mean Cauchy by \autoref{thm:dom-conv}, so we are done.
+	Because $f$ is $\mc S$-measurable, there is a sequence of simple $\mc S$-measurable functions $\{f_n\}_{n\in\NN}$ such that $f_n\to f$ almost everywhere. The main idea is to coerce the $f_n$ into being a mean Cauchy sequence of simple $\mu$-integrable functions, which will finish.
+	
+	To begin, set $C\coloneqq g^{-1}(B\setminus\{0\})$ (which is in $\mc S$ by \autoref{cor:meas-has-meas-pre-image}), and define $g_n\coloneqq f_n1_C$. Each $g_n$ is still simple $\mc S$-measurable by \autoref{lem:restrict-meas-functions}, and we see $g_n\to f$ almost everywhere still: there is some $E\in\mc S$ with $\mu(E)=0$ while $f_n(x)\to f(x)$ for $x\in X\setminus E$. But then $x\in X\setminus E$ implies $g_n(x)\to f(x)$ as well: if $x\in C$, then $g_n(x)=f_n(x)$ for all $n$; otherwise if $x\notin C$, then $g_n(x)=0$ for all $n$ while $g(x)=0$ and thus $f(x)=0$.
+	
+	Now, the key restriction is to define
+	\[E_n\coloneqq\{x\in X:\norm{f_n(x)}\le2|g(x)|\}\]
+	and $h_n\coloneqq g_n1_{E_n}$. Notably, $2|g|-\norm{f_n}$ is $\mc S$-measurable by \autoref{lem:norm-is-simple-meas} and \autoref{lem:simple-meas-is-k-vec}, so $E_n\in\mc S$ by \autoref{cor:meas-has-meas-pre-image}, so $h_n$ is simple $\mc S$-measurable by \autoref{lem:restrict-meas-functions}. But now we see
+	\[\norm{h_n(x)}\le2g(x)\]
+	for each $x\in X$ because $x\in E_n$ grants this inequality for free by definition of $E_n$, and $x\notin E_n$ gives $\norm{h_n(x)}=0\le2|g(x)|$.
+	
+	Further, we claim $h_n\to f$ almost everywhere. Fix some $x\in X\setminus E$ so that $f_n(x)\to f(x)$. There are two cases.
+	\begin{itemize}
+		\item If $x\notin C$, then $h_n(x)=0$ for all $n$ while $g(x)=0$ and thus $f(x)=0$.
+		\item Otherwise, $x\in C$ so that $|g(x)|>0$. Now, $f_n(x)\to f(x)$ for each $x$, so $\norm{f_n(x)}\to\norm{f(x)}$ by \autoref{ex:norm-is-cont}, so $\norm{f(x)}<2|g(x)|$ tells us there is some $N_g$ with
+		\[\norm{f_n(x)}<2|g(x)|\]
+		for $n\ge N_g$. (Namely, use the error bound $|g(x)|>0$ so that $n\ge N$ implies $\norm{f_n(x)}-\norm{f(x)}<|g(x)|$.) Thus, for $n\ge N$, we see $x\in E_n$, so $h_n(x)=g_n(x)=f_n(x)$. So $f_n(x)\to f(x)$ implies that $h_n(x)\to f(x)$ because the sequences match on large terms.\footnote{Explicitly, for any $\varepsilon>0$, find $N_f$ such that $\norm{f(x)-f_n(x)}<\varepsilon$, and define our $N$ as $N\coloneqq\max\{N_f,N_g\}$.}
+	\end{itemize}
+	Finishing up, \autoref{cor:bounded-simp-meas-is-simp-int} tells us that each $h_n$ is simple $\mu$-integrable (and thus $\mu$-integrable), so \autoref{thm:dom-conv} tells us $\{h_n\}_{n\in\NN}$ is mean Cauchy. Thus, $h_n\to f$ almost everywhere implies $f$ is $\mu$-integrable.
 \end{proof}
-\begin{theorem}[Monotone convergence]
-	Fix a measure space $(X,\mc S,\mu)$. Given $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_n(x)\ge f_m(x)\ge0$ almost everywhere for each $n\ge m$. If we can find some $C\in\RR$ such that
+
+\subsection{Monotone Convergence}
+We finish class by picking up another convergence theorem, for real-valued functions.
+\begin{theorem}[Monotone convergence] \label{thm:mono-conv}
+	Fix a measure space $(X,\mc S,\mu)$. Given $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_m(x)\ge f_n(x)\ge0$ almost everywhere for each $m\ge n$. If we can find some $C\in\RR$ such that
 	\[\int_Xf_n\,d\mu\le C\]
 	for each $n$, then $\{f_n\}_{n\in\NN}$ is a mean Cauchy sequence.
 \end{theorem}
 \begin{proof}
-	Note $m\ge n$ gives
-	\[\norm{f_m-f_n}=\int_Xf_n\,d\mu-\int_Xf_m\,d\mu.\]
-	However, these integrals are increasing and bounded above and therefore Cauchy, so this differences goes to $0$ as $m,n\to\infty$.
+	There are two steps. For brevity, we set $I_n\coloneqq\int_Xf_n\,d\mu$.
+	\begin{enumerate}
+		\item We compute $\norm{f_m-f_n}_1$ when $m\ge n$. The main point is that $m\ge n$ implies $|f_m-f_n|=f_m-f_n$ almost everywhere. Indeed, there exists $E\in\mc S$ such that $\mu(E)=0$ while $f_m(x)\ge f_n(x)\ge0$ for each $x\in X\setminus E$, so
+		\[|f_m-f_n|(x)=|f_m(x)-f_n(x)|=f_m(x)-f_n(x)=(f_m-f_n)(x)\]
+		for each $x\in X\setminus E$. Thus, \autoref{rem:equal-ae-gives-equal-ints} tells us that
+		\[\norm{f_m-f_n}_1=\int_X|f_m-f_n|\,d\mu=\int_X(f_m-f_n)\,d\mu.\]
+		As usual, the linearity of integration from \autoref{prop:int-is-linear} gives
+		\[\norm{f_m-f_n}_1\le\int_Xf_m\,d\mu-\int_Xf_n\,d\mu=I_m-I_n.\]
+
+		\item We complete the proof. We know that $m\ge n$ implies $I_m-I_n=\norm{f_m-f_n}_1\ge0$ (say, using \autoref{cor:l1-seminorm}), so $I_m\ge I_n$. Thus, $\{I_n\}_{n\in\NN}$ is an increasing sequence, but we are given that $I_n\le C$ for each $n$. It follows that $\{I_n\}_{n\in\NN}$ is a Cauchy sequence!
+
+		Finishing up, for any $\varepsilon>0$, we are promised $N$ such that $m,n\ge N$ implies $|I_m-I_n|<\varepsilon$. Thus, $m\ge n\ge N$ implies
+		\[\norm{f_m-f_n}_1\le|I_m-I_n|<\varepsilon,\]
+		which finishes.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 \begin{remark}
-	It follows that $f_n\to f$ in measure for a function $f$, so there is a subsequence converging to $f$ in mean, but then $f_n\to f$ in mean, in which case
+	We work in the context of \autoref{thm:mono-conv}. Notably, by \autoref{prop:l1-complete}, we are granted some $\mu$-integrable function $f\colon X\to B$ such that $f_n\to f$ in mean. Thus, \autoref{rem:converge-in-mean-computes-int} tells us
 	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
 \end{remark}
 
