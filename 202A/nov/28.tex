@@ -1,0 +1,168 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 28}
+
+It's the last week of class, so it's time to go off the rails.
+\begin{remark}
+	As an application of \autoref{thm:mono-conv}, we get the following definition: given $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_m(x)\ge f_n(x)\ge0$ almost everywhere for each $m\ge n$ such that $f_n\to f$ almost everywhere for some $\mc S$-measurable function $f$, then we should have
+	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+	However, if the limit is $+\infty$, then this doesn't make sense because $f$ will not be $\mu$-integrable, so we just define the integral as being $+\infty$. Note this is well-defined: for any monotonically increasing sequence $\{g_n\}_{n\in\NN}$ of $\mu$-integrable functions such that $g_n\to f$ almost everywhere, we still have $\int_Xg_n\,d\mu\to+\infty$.
+\end{remark}
+
+\subsection{Defining \texorpdfstring{$\mc L^p$}{ Lp}}
+Here is our definition.
+\begin{defihelper}[{$\mathcal L^p$-space}] \nirindex{Lp-space@$\mathcal L^p$-space}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given some $p\in(0,\infty)$, we define
+	\[\mc L^p(X,\mc S,\mu,B)\coloneqq\left\{\mc S\text{-measurable}f:\norm f^p\text{ is }\mu\text{-integrable}\right\}.\]
+\end{defihelper}
+\begin{lemma}
+	Fix a measure space $(X,\mc S,\mu)$ and a $k$-Banach space $(B,\norm\cdot)$. Then $\mc L^p(X,\mc S,\mu,B)$ is a $k$-vector space.
+\end{lemma}
+\begin{proof}
+	We have the following checks. As usual, let $|\cdot|$ denote the norm on $k$.
+	\begin{itemize}
+		\item Zero: note the zero function $z\colon X\to B$ has $\norm z^p(x)=0$ for each $x\in X$, which is $\mu$-integrable by \autoref{lem:int-is-vec-space}.
+		\item Scalar multiplication: if $f\in\mc L^p(X,\mc S,\mu,B)$, then $\norm f^p$ is $\mu$-integrable. However, for $r\in k$, we note that $rf$ is $\mc S$-maesurable by \autoref{lem:meas-is-vec-space}, and
+		\[\norm{rf}^p(x)=\left(|r|^p\cdot\norm f^p\right)(x)\]
+		for each $x\in X$, so the fact that $\norm f^p$ is $\mu$-integrable implies that $\norm{rf}^p$ is also $\mu$-integrable. This finishes.
+		\item Additive: suppose $f,g\in\mc L^p(X,\mc S,\mu,B)$ so that we want to show $f+g\in\mc L^p(X,\mc S,\mu,B)$, which means that we want $\norm{f+g}^p\in\mc L^1(X,\mc S,\mu,B)$. Well, $\norm{f+g}^p$ is $\mc S$-measurable by applying \autoref{lem:meas-is-vec-space} and \autoref{cor:take-norms-is-measurable} and \autoref{cor:compose-cont-is-meas} (with the continuous function $x\mapsto|x|^p$), so we merely need to upper-bound $\norm{f+g}^p$ and use \autoref{cor:bounded-meas-is-int}.
+		
+		Indeed, the triangle inequality implies that
+		\[\norm{f(x)+g(x)}\le\norm{f(x)}+\norm{g(x)}\le2\max\{\norm{f(x)},\norm{g(x)}\}\]
+		for each $x\in X$, so
+		\begin{align*}
+			\norm{f(x)+g(x)}^p &\le 2^p\big(\max\{\norm{f(x)},\norm{g(x)}\}\big)^p \\
+			&= 2^p\big(\max\{\norm{f(x)}^p,\norm{g(x)}^p\}\big) \\
+			&\le 2^p\left(\norm{f(x)}^p+\norm{g(x)}^p\right).
+		\end{align*}
+		However, each $\norm f^p$ and $\norm g^p$ are $\mu$-integrable by hypothesis, so $2^p\norm f^p+2^p\norm g^p$ is $\mu$-integrable by \autoref{lem:int-is-vec-space}. Thus, \autoref{cor:bounded-meas-is-int} finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here is a reason to care about $\mc L^p$: just like $\mc L^1$, they have a well-behaved semi-norm (in good cases).
+\begin{notation}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. For $p\in(0,\infty)$ and $f\in\mc L^p(X,\mc S,\mu,B)$, we define
+	\[\norm f_p\coloneqq\left(\int_X\norm f^p\,d\mu\right)^{1/p}.\]
+	Note that this integral is well-defined by definition of $L^p(X,\mc S,\mu,B)$.
+\end{notation}
+Here is the analogue for \autoref{lem:norm-diff-zero-iff-equal-ae}.
+\begin{lemma} \label{lem:lp-zero-iff-zero-ae}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and fix $p\in(0,\infty)$. Given some $f\in\mc L^p(X,\mc S,\mu,B)$, we see $\norm f_p=0$ if and only if $f(x)=0$ almost everywhere.
+\end{lemma}
+\begin{proof}
+	By \autoref{lem:norm-diff-zero-iff-equal-ae}, we see that
+	\[\norm f^p_p=\int_X\norm f^p\,d\mu\]
+	equals zero if and only if $\norm f^p(x)=0$ almost everywhere. However, $\norm f^p(x)=0$ is equivalent to saying $\norm{f(x)}^p=0$, which is equivalent to $\norm{f(x)}=0$, which is equivalent to $f(x)=0$. Thus, one side of
+	\[\left\{x\in X:\norm f^p(x)\ne0\right\}=\{x\in X:f(x)\ne0\}\]
+	is a null set if and only if the other is, which finishes.
+\end{proof}
+\begin{corollary} \label{cor:lp-diff-zero-iff-equal-ae}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and fix $p\in(0,\infty)$. Given some $f,g\in\mc L^p(X,\mc S,\mu,B)$, we see $\norm{f-g}_p=0$ if and only if $f(x)=g(x)$ almost everywhere.
+\end{corollary}
+\begin{proof}
+	Note that $\norm{f-g}_p=0$ is equivalent to $(f-g)(x)=0$ almost everywhere by \autoref{lem:lp-zero-iff-zero-ae}, which is equivalent to $\{x\in X:f(x)\ne g(x)\}$ being a null set, which is what we wanted.
+\end{proof}
+Continuing, we now show that $\norm\cdot_2$ is a semi-norm.
+\begin{proposition} \label{prop:l2-semi-norm}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Then the function $\norm\cdot_2$ defines a semi-norm on $\mc L^2(X,\mc S,\mu,B)$.
+\end{proposition}
+\begin{proof}
+	We quickly run our easier checks. Let $|\cdot|$ denote the norm on our base field $k$, and fix some $f\in\mc L^2(X,\mc S,\mu,B)$.
+	\begin{itemize}
+		\item Zero: the zero function $z\colon X\to B$ has $\norm z^2\colon X\to\RR$ equal to zero everywhere, so $\norm z^2=1_\emp$, so
+		\[\int_X\norm z^2\,d\mu=\mu(\emp)=0\]
+		by \autoref{ex:integrate-indicator}.
+		\item Nonnegative: we note that $\norm f(x)\ge0$ for each $x\in X$, so $\norm f^2(x)\ge0$ for each $x\in X$, so
+		\[\int_X\norm f^2\,d\mu\ge0\]
+		by \autoref{lem:int-positivity}, so $\norm f_2\ge0$ follows.
+		\item Homogeneous: if $r\in k$, then we note $\norm{rf}(x)=(|r|\cdot\norm f)(x)$ for each $x\in X$. Thus, by \autoref{prop:int-is-linear} tells us
+		\[\norm{rf}_2=\left(\int_X\norm{rf}^2\,d\mu\right)^{1/2}=\left(\int_X|r|\cdot\norm f^2\,d\mu\right)^{1/2}=|r|\cdot\left(\int_X\norm f^2\,d\mu\right)^{1/2}=|r|\cdot\norm f_2.\]
+	\end{itemize}
+	It remains to check the triangle inequality, which is harder. We have the following lemma.
+	\begin{lemma}[Cauchy--Schwarz] \label{lem:cs-ineq}
+		Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given $\mc S$-measurable functions $f,g\in\mc L^2(X,\mc S,\mu,B)$, then $\norm f\cdot\norm g$ is $\mu$-integrable, and
+		\[\int_X\big(\norm f\cdot\norm g\big)\,d\mu\le\frac{\norm f_2^2+\norm g_2^2}2.\]
+	\end{lemma}
+	\begin{proof}
+		Quickly, we see $\norm f\cdot\norm g$ is $\mc S$-measurable by applying \autoref{lem:prod-of-meas} to \autoref{cor:take-norms-is-measurable}. It remains to upper-bound $\norm f\cdot\norm g$.
+		
+		Now, the main point is the arithmetic mean-geometric mean inequality: for $r,s\in\RR_{\ge0}$, we see
+		\[0\le(r-s)^2=r^2+s^2-2rs,\]
+		so $r^2+s^2\ge2rs$. Applying this to our situation, we see
+		\[2\norm {f(x)}\cdot\norm {g(x)}\le\norm {f(x)}^2+\norm {g(x)}^2\]
+		for each $x\in X$, so
+		\[\big(\norm f\cdot\norm g\big)(x)\le\left(\frac{\norm f^2+\norm g^2}2\right)(x)\]
+		for each $x\in X$. However, $\frac{\norm f^2+\norm g^2}2$ is $\mu$-integrable by \autoref{lem:int-is-vec-space}, so we conclude that $\norm f\cdot\norm g$ is $\mu$-integrable by \autoref{cor:bounded-meas-is-int}.
+		
+		Continuing, \autoref{lem:bound-ints} tells us
+		\[\int_X\big(\norm f\cdot\norm g\big)\,d\mu\le\int_X\frac{\norm f^2+\norm g^2}2\,d\mu,\]
+		and now the right-hand side simplifies to $\frac12\left(\norm f_2^2+\norm g_2^2\right)$ by \autoref{prop:int-is-linear}. This finishes.
+	\end{proof}
+	We now proceed with the proof of the triangle inequality. Fix $f,g\in\mc L^2(X,\mc S,\mu,B)$. We quickly deal with the case of $\norm f_2=0$. Here, $\norm f_2=0$ implies that $f(x)=0$ almost everywhere by \autoref{lem:lp-zero-iff-zero-ae}, so $(f+g)(x)=g(x)$ almost everywhere, so $\norm{f+g}^2(x)\le\norm g^2(x)$ almost everywhere, so \autoref{lem:bound-ints} implies
+	\[\int_X\norm{f+g}^2\,d\mu\le\int_X\norm{g}^2\,d\mu\le\int_X\norm{f+g}^2\,d\mu.\]
+	Thus, $\norm{f+g}_2\le\norm g_2=\norm f_2+\norm g_2$ follows. Note that a similar argument works for $\norm g_2=0$.
+
+	Thus, we may assume that $\norm f_2,\norm g_2\ne0$, which allows us to set $h\coloneqq\frac f{\norm f_2}$ and $k\coloneqq\frac g{\norm g_2}$. Notably, $\norm h_2=\norm k_2=1$ by the homogeneity check above. As such, \autoref{lem:cs-ineq} grants
+	\[\int_X\big(\norm h\cdot\norm k\big)\,d\mu\le\frac{1+1}2=1.\]
+	However, $\norm{h}=\norm{f}/\norm f_2$ and $\norm k=\norm g/\norm g_2$, so \autoref{prop:int-is-linear} implies
+	\[\int_X\big(\norm f\cdot\norm g\big)\,d\mu\le2\norm f_2\cdot\norm g_2.\]
+	This now rearranges to the desired inequality: given $f,g\in\mc L^2(X,\mc S,\mu,B)$, we see
+	\begin{align*}
+		\norm{f+g}_2^2 &= \int_X\big(\norm{f+g}\big)^2\,d\mu \\
+		&\stackrel*\le \int_X\big(\norm{f}+\norm{g}\big)^2\,d\mu \\
+		&= \int_X\norm f^2\,d\mu+\int_X\norm g^2\,d\mu+2\int_X\big(\norm f\cdot\norm g\big)\,d\mu \\
+		&\le \norm f_2^2+\norm g_2^2+2\norm f_2\cdot\norm g_2 \\
+		&= \big(\norm f_2+\norm g_2\big)^2,
+	\end{align*}
+	and taking the square root finishes. Notably, $\stackrel*\le$ has used the triangle inequality and \autoref{lem:bound-ints} (and the following equality used \autoref{prop:int-is-linear}).
+\end{proof}
+\begin{remark}
+	In fact, $\norm f_p$ is a norm in general, but it is somewhat harder to show. Roughly speaking, the difficulty lies in establishing an analogue for \autoref{lem:cs-ineq}.
+\end{remark}
+\begin{remark}
+	If $p\in(0,1)$, then $\norm f_p$ is not a norm. In particular, it does not satisfy the triangle inequality. For that matter, $p\in(0,1)$ do very strange things. For example, if we define
+	\[U_r\coloneqq\left\{f\in\mc L^p(X,\mc S,\mu,B):\int_X\norm f^p\,d\mu<r\right\},\]
+	then the convex hull of $U_r$ recovers all of $\mc L^p(X,\mc S,\mu,B)$. In particular, one can show that there are thus no nonzero continuous linear functionals on $\mc L^p(X,\mc S,\mu,B)$.
+\end{remark}
+
+\subsection{Defining \texorpdfstring{$L^2$}{ L2}}
+Now that we have a semi-norm, we can mod out to get our norm.
+\begin{notation}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. We set $\mc N(X,\mc S,\mu,B)\coloneqq\{f\in\mc L^2(X,\mc S,\mu,B):\norm f_2=0\}$ and
+	\[L^2(X,\mc S,\mu,B)\coloneqq\mc L^2(X,\mc S,\mu,B)/\mc N(X,\mc S,\mu,B).\]
+\end{notation}
+\begin{remark}
+	Given $f,g\in\mc L^p(X,\mc S,\mu,B)$, note that $[f]=[g]$ in $L^p(X,\mc S,\mu,B)$ if and only if $\norm{f-g}_p=0$ by definition, which is equivalent to $f(x)=g(x)$ almost everywhere by \autoref{cor:lp-diff-zero-iff-equal-ae}.
+\end{remark}
+\begin{proposition}
+	Fix a measure space $(X,\mc S,\mu$ and a Banach space $B$. The function $\norm\cdot_2$ descends to a norm on $L^2(X,\mc S,\mu,B)$.
+\end{proposition}
+\begin{proof}
+	We have a semi-norm by \autoref{prop:l2-semi-norm}, which descends to a norm on $L^2(X,\mc S,\mu,B)$ from \autoref{prop:semi-norm-to-norm}.
+\end{proof}
+We would like to show that $L^2$ is complete, but this requires some work. Namely, we will require Fatou's lemma.
+\begin{lemma}[Fatou]
+	Fix a measure space $(X,\mc S,\mu)$. Fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions $f_n\colon X\to\RR^+$. Then
+	\[\int_X(\liminf f_n)\,d\mu\le\liminf\int_Xf_n\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	For $m\ge n$, define
+	\[h_{m,n}\coloneqq\min\{f_n,f_{n+1},\ldots,f_m\}.\]
+	Notably, for fixed $n$, the functions $h_{n,n},h_{n+1,n},h_{n+2,n},\ldots$ are decreasing as $m\to\infty$, so there is a limit function
+	\[g_n(x)\coloneqq\lim_{m\to\infty}h_{m,n}(x).\]
+	However, we can see that the $g_n(x)$ are monotonically increasing, so we define
+	\[\left(\liminf_{n\to\infty}f_n\right)(x)\coloneqq\lim_{n\to\infty}g_n(x),\]
+	where $+\infty$ is a permitted value. Thus, by \autoref{thm:mono-conv}, we see
+	\[\int_X(\liminf f_n)\,d\mu=\lim_{n\to\infty}\int_Xg_n\,d\mu,\]
+	where we are still permitting $+\infty$. However, $g_n(x)\le f_n(x)$ for each $x$ by construction, so $f_m(x)\le g_n(x)$ for each $m\ge n$ and $x$. As such,
+	\[\int_Xg_m\,d\mu\le\int_Xf_n\,d\mu\]
+	for each $m\ge n$, so
+	\[\int_X(\liminf f_n)\,d\mu\le\liminf\int_Xf_n\,d\mu,\]
+	which is what we wanted.
+\end{proof}
+
+\end{document}
