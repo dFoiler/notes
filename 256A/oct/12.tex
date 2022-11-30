@@ -566,13 +566,39 @@ Given a sheaf $\mc F$ on $x$, recall from long ago that we defined $\op{Supp}\mc
 \begin{definition}[Ideal sheaf]
 	Fix a scheme $X$. An \textit{ideal sheaf} $\mc I$ is an $\mathcal O_X$-module which is a subsheaf of $\OO_X$. Categorically, an ideal sheaf is an embedding of $\OO_X$-modules $\iota\colon\mc I\into\OO_X$.
 \end{definition}
-\begin{proposition}
+\begin{proposition} \label{prop:closed-embedding-from-qc-ideal}
 	Fix a scheme $X$. Then there is a contravariant equivalence of categories between closed subschemes of $X$ and quasicoherent ideal sheaves.
 \end{proposition}
-\begin{proof}
-	We begin by describing our maps. Call the category of closed subschemes $\mathrm{CldSch}$ and the category of quasicoherent ideal sheaves $\mathrm{QCohIdl}$.
+We take a moment to define the named categories, though we will not check formally that they are in fact a category. The category of closed subschemes of $X$ has objects which are closed embeddings $f\colon Y\to X$. A morphism from the closed embedding $f_1\colon Y_1\to X$ to the closed embedding $f_2\colon Y_2\to X$ is a morphism $g\colon Y_1\to Y_2$ making the diagram
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJZXzEiXSxbMCwxLCJZXzIiXSxbMSwwLCJYIl0sWzEsMSwiWCJdLFswLDIsImZfMSIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzEsMywiZl8yIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMiwzLCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsImciLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{Y_1} & X \\
+	{Y_2} & X
+	\arrow["{f_1}", hook, from=1-1, to=1-2]
+	\arrow["{f_2}", hook, from=2-1, to=2-2]
+	\arrow[Rightarrow, no head, from=1-2, to=2-2]
+	\arrow["g"', from=1-1, to=2-1]
+\end{tikzcd}\]
+commute; for example, $\id_{Y}$ is a morphism given some closed embedding $f\colon Y\into X$. In other words, we are considering the subcategory of schemes under $X$ consisting of closed subschemes.
 
-	We begin by describing our functor $K\colon\mathrm{CldSch}\to\mathrm{QCohIdl}\opp$. (Here, $K$ stands for ``kernel.'')
+Analogously, the category of quasicoherent ideal sheaves has objects which are injections $\iota\colon\mc I\into\OO_X$ of quasicoherent ideal sheaves. A morphism from the quasicoherent ideal sheaf $\iota_1\colon\mc I_1\into\OO_X$ to $\iota_2\colon\mc I_2\into\OO_X$ is a morphism $\varphi\colon\mc I_1\to\mc I_2$ making the diagram
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIElfMSJdLFswLDEsIlxcbWMgSV8yIl0sWzEsMCwiXFxPT19YIl0sWzEsMSwiXFxPT19YIl0sWzAsMiwiXFxpb3RhXzEiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFsxLDMsIlxcaW90YV8yIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMCwxLCJcXHZhcnBoaSIsMl0sWzIsMywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\mc I_1} & {\OO_X} \\
+	{\mc I_2} & {\OO_X}
+	\arrow["{\iota_1}", hook, from=1-1, to=1-2]
+	\arrow["{\iota_2}", hook, from=2-1, to=2-2]
+	\arrow["\varphi"', from=1-1, to=2-1]
+	\arrow[Rightarrow, no head, from=1-2, to=2-2]
+\end{tikzcd}\]
+commute; for example, $\id_\mc I$ is a morphism given some injection $\iota\colon\mc I\into\OO_X$. Again, this is essentially the subcategory of quasicoherent ideal sheaves under $\OO_X$ consisting of injections.
+
+We now divide the proof into a series of steps. Given a scheme $X$, we call the category of closed subschemes $\mathrm{CldSch}$ and the category of quasicoherent ideal sheaves $\mathrm{QCohIdl}$.
+\begin{lemma}
+	Fix a scheme $X$. We describe our functor $K\colon\mathrm{CldSch}\to\mathrm{QCohIdl}\opp$. (Here, $K$ stands for ``kernel.'')
+\end{lemma}
+\begin{proof}
+	Here is our data.
 	\begin{itemize}
 		\item On objects, pick up a closed embedding $f\colon Y\to X$, we note that we have a map $f^\sharp\colon\OO_X\to f_*\OO_Y$ of sheaves. Now, note that $f$ is quasicompact by \autoref{ex:closed-is-qc} and separated by \autoref{ex:mono-is-sep} and hence quasiseparated by \autoref{lem:mainqslemma} because the diagonal morphism is closed and hence quasicompact (by \autoref{ex:closed-is-qc} again).
 
@@ -668,8 +694,14 @@ Given a sheaf $\mc F$ on $x$, recall from long ago that we defined $\op{Supp}\mc
 			which tells us that $K(g_2\circ g_1)$ and $K(g_1)\circ K(g_2)$ both make the outer-left $2\times1$ rectangle commute, so the uniqueness of this map forces $K(g_2\circ g_1)=K(g_1)\circ K(g_2)$.
 		\end{itemize}
 		As an aside, we note that $K(g)\colon K(Y_2)\to K(Y_1)$ is always injective by the Snake lemma.
+		\qedhere
 	\end{itemize}
-	We describe our functor $S\colon\mathrm{QCohIdl}\to\mathrm{CldSch}$. (Here, $S$ stands for ``support.'') This is a little more involved because it requires constructing a scheme and scheme morphisms. Because I don't want to drive myself completely insane, I will omit some of the more annoying checks.
+\end{proof}
+\begin{lemma} \label{lem:ideal-to-subscheme}
+	Fix a scheme $X$. We describe our functor $S\colon\mathrm{QCohIdl}\to\mathrm{CldSch}$. (Here, $S$ stands for ``support.'')
+\end{lemma}
+\begin{proof}
+	This is a little more involved because it requires constructing a scheme and scheme morphisms. Because I don't want to drive myself completely insane, I will omit some of the more annoying checks.
 	\begin{itemize}
 		\item On objects, pick up a quasicoherent ideal sheaf $\iota\colon\mc I\into\OO_X$. Then we need to construct a closed scheme $S(\mc I)\into X$, which we will call $Y$. We do this in steps.
 		\begin{enumerate}
@@ -907,9 +939,16 @@ Given a sheaf $\mc F$ on $x$, recall from long ago that we defined $\op{Supp}\mc
 				\arrow[Rightarrow, no head, from=2-3, to=3-3]
 			\end{tikzcd}\]
 			and note that $\overline{\varphi_2\circ\varphi_1}=\overline{\varphi_2}\circ\overline{\varphi_1}$ by the uniqueness of the induced arrows. However, the sheaf maps $\OO_{Y_1}\to (g_1)_*\OO_{Y_2}$ and $\OO_{Y_2}\to(g_3)_*\OO_{Y_3}$ and $\OO_{Y_1}\to g_*\OO_{Y_3}$ are just the maps $\overline{\varphi_1}$ and $\overline{\varphi_2}$ and $\overline{\varphi_2\circ\varphi_1}$ restricted appropriately, so the composites match correctly.
+			\qedhere
 		\end{itemize}
 	\end{itemize}
-	It remains to exhibit natural isomorphisms $\Phi\colon{\id}\Rightarrow KS$ and $\Psi\colon{\id}\Rightarrow SK$. Unsurprisingly, we do these one at a time. Let's start with $\Phi$.
+\end{proof}
+It remains to give natural isomorphisms for the above functors.
+\begin{lemma}
+	Fix a scheme $X$. We construct a natural isomorphism $\Phi\colon{\id}\Rightarrow KS$.
+\end{lemma}
+\begin{proof}
+	Here is our data.
 	\begin{itemize}
 		\item We construct $\Phi$ on components. For some quasicoherent ideal sheaf $\iota\colon\mc I\to\OO_X$, let $f\colon Y\into X$ be $S(\mc I)$. Then $K(Y)$ is $\ker f^\sharp$, but for each open $U\subseteq X$, we recall that $f^\sharp_U\colon\OO_X(U)\to(f_*\OO_Y)(U)$ is just the projection map $\OO_X(U)\to(\coker\iota)(U)$. Thus, the commutative diagram
 		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIlxcbWMgSSJdLFsyLDAsIlxcT09fWCJdLFszLDAsIlxcY29rZXJcXGlvdGEiXSxbNCwwLCIwIl0sWzMsMSwiXFxjb2tlclxcaW90YSJdLFsyLDEsIlxcT09fWCJdLFs0LDEsIjAiXSxbMSwxLCJcXGtlciBmXlxcc2hhcnAiXSxbMCwxLCIwIl0sWzEsMiwiXFxpb3RhIl0sWzIsM10sWzYsNSwiZl5cXHNoYXJwIl0sWzMsNSwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw2LCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs5LDhdLFs4LDZdLFswLDFdLFsxLDgsIlxcUGhpX3tcXG1jIEl9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzMsNF0sWzUsN11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
@@ -986,8 +1025,14 @@ Given a sheaf $\mc F$ on $x$, recall from long ago that we defined $\op{Supp}\mc
 			\arrow[dashed, from=1-2, to=2-2]
 		\end{tikzcd}\]
 		commute.
+		\qedhere
 	\end{itemize}
-	Lastly, we exhibit our natural isomorphism $\Psi\colon{\id}\Rightarrow SK$
+\end{proof}
+\begin{lemma} \label{lem:improve-closed-embed}
+	Fix a scheme $X$. We exhibit our natural isomorphism $\Psi\colon{\id}\Rightarrow SK$.
+\end{lemma}
+\begin{proof}
+	Here is our data.
 	\begin{itemize}
 		\item We exhibit $\Psi$ on components. Well, for some closed embedding $f\colon Y\into X$, let $\iota\colon\mc I\into\OO_X$ denote $K(Y)=\ker f^\sharp$, and let $f'\colon Y'\into X$ denote $S(\mc I)$. Roughly speaking, the idea is to draw the short exact sequences
 		% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIlxcbWMgSSJdLFsyLDAsIlxcT09fWCJdLFswLDEsIjAiXSxbMSwxLCJcXG1jIEkiXSxbMywwLCJcXGNva2VyXFxpb3RhIl0sWzIsMSwiXFxPT19YIl0sWzMsMSwiZl8qXFxPT19ZIl0sWzQsMSwiMCJdLFs0LDAsIjAiXSxbMiw1XSxbMSwyLCJcXGlvdGEiXSxbNCw2LCJcXGlvdGEiXSxbMCwxXSxbMyw0XSxbNiw3LCJmXlxcc2hhcnAiXSxbNyw4XSxbNSw5XSxbMSw0LCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDYsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsNywiXFxwc2kiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
@@ -1184,12 +1229,52 @@ Given a sheaf $\mc F$ on $x$, recall from long ago that we defined $\op{Supp}\mc
 			\arrow[dashed, from=1-4, to=2-4]
 		\end{tikzcd}\]
 		is unique.
+		\qedhere
 	\end{itemize}
-	The above naturality check completes the proof.
 \end{proof}
-\begin{remark}
-	The forward direction of the above proposition shows that all closed subschemes look like $\Spec A/I\into\Spec A$. Namely, one has to show that quasicoherent ideal sheaves $\mc I$ of an affine scheme all look like $\widetilde I$ where $I\subseteq A$ is an ideal, and the above proof has shown that $\op{Supp}(\widetilde A/\widetilde I)=V(I)$ and $f^{-1}(\OO_{\Spec A}/\mc I)$ has the correct structure sheaf.
-\end{remark}
+The above lemmas complete the proof of \autoref{prop:closed-embedding-from-qc-ideal}.
+
+We now prove \autoref{prop:affineclosedsubschemes}, which follows quickly from the machinery we've established.
+\begin{corollary}
+	Fix an affine scheme $X$, and set $A\coloneqq\OO_X(X)$. Given a closed embedding $f\colon Y\into X$, then $Y$ is an affine scheme. In particular, there exists an ideal $I\subseteq A$ and commutative diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJZIl0sWzAsMSwiWCJdLFsxLDAsIlxcU3BlYyBBL0kiXSxbMSwxLCJcXFNwZWMgQSJdLFswLDEsImYiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFsyLDMsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzEsM10sWzAsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		Y & {\Spec A/I} \\
+		X & {\Spec A}
+		\arrow["f"', hook, from=1-1, to=2-1]
+		\arrow[hook, from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}\]
+	where the horizontal morphisms are isomorphisms.
+\end{corollary}
+\begin{proof}
+	We start by showing $Y$ is affine. Let $K(Y)$ be the quasicoherent ideal sheaf $\iota\colon\mc I\into\OO_X$ and let $S(\mc I)$ be the closed embedding $f'\colon Y'\into X$. By \autoref{lem:improve-closed-embed}, we see that $Y\simeq Y'$, so it suffices to show that $Y'$ is affine. Well, in \autoref{lem:ideal-to-subscheme}, we showed that $Y'\cap U$ is an affine open subscheme of $Y'$ whenever $U\subseteq X$ is affine open, so it follows that $Y'$ is affine.
+
+	In fact, we note that the map $(f')^\sharp\colon\OO_X\to(f')_*\OO_Y$ on global sections looks like $(f')^\sharp_X\colon \OO_X(X)\to(\coker\iota)(X)$ as discussed in \autoref{lem:ideal-to-subscheme}, so in particular this map is surjective on global sections. Because $f\colon Y\into X$ and $f'\colon Y'\into X$ are isomorphic closed embeddings, the commuting square
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXE9PX1goWCkiXSxbMSwwLCJcXE9PX1koWSkiXSxbMSwxLCJcXE9PX3tZJ30oWScpIl0sWzAsMSwiXFxPT19YKFgpIl0sWzEsMiwiKFxcUHNpX1leXFxzaGFycClfWSJdLFswLDEsImZeXFxzaGFycF9YIl0sWzMsMiwiKGYnKV5cXHNoYXJwX1giXSxbMCwzLCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\OO_X(X)} & {\OO_Y(Y)} \\
+		{\OO_X(X)} & {\OO_{Y'}(Y')}
+		\arrow["{(\Psi_Y^\sharp)_Y}", from=1-2, to=2-2]
+		\arrow["{f^\sharp_X}", from=1-1, to=1-2]
+		\arrow["{(f')^\sharp_X}", from=2-1, to=2-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-1]
+	\end{tikzcd}\]
+	tells us that $f^\sharp_X$ is also surjective on global sections.
+	
+	Now, we set $B\coloneqq\OO_Y(Y)$, and we see that the naturality from \autoref{lem:specgamma} grants us a diagram
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJZIl0sWzAsMSwiWCJdLFsxLDAsIlxcU3BlYyBCIl0sWzEsMSwiXFxTcGVjIEEiXSxbMCwxLCJmIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMSwzLCJcXHZhcmVwc2lsb25fWCJdLFswLDIsIlxcdmFyZXBzaWxvbl9ZIl0sWzIsMywiXFxTcGVjIGZeXFxzaGFycF9YIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		Y & {\Spec B} \\
+		X & {\Spec A}
+		\arrow["f"', hook, from=1-1, to=2-1]
+		\arrow["{\varepsilon_X}", from=2-1, to=2-2]
+		\arrow["{\varepsilon_Y}", from=1-1, to=1-2]
+		\arrow["{\Spec f^\sharp_X}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	where the horizontal morphisms are isomorphisms by \autoref{cor:the-affine-iso}. At this point, we recall that $f^\sharp_X\colon A\to B$ is surjective, so defining $I\coloneqq\ker f^\sharp_X$, we get an isomorphism $\Spec B\cong\Spec A/I$. Adjusting our morphisms appropriately recovers the desired square in the statement.
+\end{proof}
 
 \subsection{Scheme Images}
 We would like to talk about images of schemes. For example, given a quasicompact and quasiseparated morphism $f\colon X\to Y$, then we see $f_*\OO_X$ is quasicoherent on $Y$, so $I=\ker(\OO_Y\to f_*\OO_X)$ is going to be a quasicoherent sheaf on $Y$, and this will define a closed subscheme of $Y$ as above.
