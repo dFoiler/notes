@@ -1,0 +1,78 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 30}
+
+The final is in about two weeks. Material covered this week may appear on the exam. Material covered in the topology section of the course may also appear on the exam.
+
+\subsection{Completeness of \texorpdfstring{$L^2$}{ L2}}
+We continue moving towards proving the completeness of $L^2$. We pick up the following result.
+\begin{lemma}[Fatou] \label{lem:fatou}
+	Fix a measure space $(X,\mc S,\mu)$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions $f_n\colon X\to\RR^+$. Then
+	\[\int_X\left(\liminf_{n\to\infty} f_n\right)\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	For $m\ge n$, define
+	\[h_{n,m}\coloneqq\min\{f_n,f_{n+1},\ldots,f_m\},\]
+	which is also $\mc S$-measurable by \autoref{ex:min-max-meas}. Notably, for fixed $n$, the functions $h_{n,n},h_{n+1,n},h_{n+2,n},\ldots$ are decreasing as $m\to\infty$ (adding more terms to this minimum requires values to decrease), so there is a limit function
+	\[g_n(x)\coloneqq\inf\{h_{n,m}(x):m\ge n\}=\lim_{m\to\infty}h_{n,m}(x),\]
+	which is $\mc S$-measurable as the pointwise limit of $\mc S$-measurable functions. Note that $g_n(x)$ is always a real number because the set $\{h_{n,m}(x):n\ge m\}$ is bounded below by $0$. However, we can see that the $g_n(x)$ are monotonically increasing (taking fewer terms in our infimum requires values to increase), so we define
+	\[\left(\liminf_{n\to\infty}f_n\right)(x)\coloneqq\liminf_{n\to\infty}f_n(x)=\lim_{n\to\infty}g_n(x),\]
+	where $+\infty$ is a permitted value.
+	
+	Quickly, fixing some $n$, any $m\ge n$ has $h_{n,m}(x)\le f_n(x)$ for all $x$, so the limit function $g_n(x)\le f_n(x)$ for all $x$. Thus, by \autoref{thm:mono-conv}, we see
+	\[\int_X\left(\liminf_{n\to\infty} f_n\right)\,d\mu=\lim_{n\to\infty}\int_Xg_n\,d\mu,\]
+	where we are still permitting $+\infty$. However, $g_n(x)\le f_n(x)$ for each $x$ by construction, so
+	\[\int_X(\liminf_{n\to\infty} f_n)\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu,\]
+	which is what we wanted.
+\end{proof}
+And now here is our result.
+\begin{theorem}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Then $L^2(X,\mc S,\mu,B)$ is complete.
+\end{theorem}
+\begin{proof}
+	Fix a sequence of functions $\{f_n\}_{n\in\NN}$ of functions in $\mc L^2(X,\mc S,\mu,B)$ which are Cauchy for $\norm\cdot_2$. We claim that $\{f_n\}_{n\in\NN}$ is Cauchy in measure. For this, we pick up the following inequality.
+	\begin{lemma}[Chebychev]
+		Fix a measure space $(X,\mc S,\mu,B)$ and a Banach space $(B,\norm\cdot)$. Given some $h\in\mc L^2(X,\mc S,\mu,B)$ and $\varepsilon>0$, the set $E\coloneqq\{x\in X:\norm{h(x)}\ge\varepsilon\}$ has finite measure with
+		\[\mu(E)\le\frac{\norm h_2^2}{\varepsilon^2}.\]
+	\end{lemma}
+	\begin{proof}
+		Note that $E$ is $\mc S$-measurable. Now, the indicator function has
+		\[1_{E}(x)\le\frac{\norm{h(x)}}\varepsilon\le\left(\frac{\norm{h(x)}}\varepsilon\right)^2,\]
+		so it follows from \autoref{lem:bound-ints} that $1_E$ is $\mu$-integrable, and
+		\[\mu(E)\le\int_X1_E\,d\mu\le\frac1{\varepsilon^2}\int_X\norm h^2\,d\mu=\frac{\norm h_2^2}{\varepsilon^2},\]
+		which is what we wanted.
+	\end{proof}
+	Now, for any $m$ and $n$, the above inequality gives
+	\[\mu(\{x\in X:\norm{f_n(x)-f_m(x)}\ge\varepsilon\})\le\frac{\norm{f_m-f_n}_2^2}{\varepsilon^2},\]
+	but $\norm{f_m-f_n}_2\to0$ as $m,n\to\infty$. Thus, $\{f_n\}_{n\in\NN}$ is Cauchy in measure, so it follows that some subsequence $\{f_{n_k}\}_{k\in\NN}$ converges to some $\mc S$-measurable function $f\colon X\to B$, almost uniformly using arguments similar to \autoref{prop:l1-complete}. It remains to show that $f\in\mc L^2(X,\mc S,\mu,B)$ and $f_{n_k}\to f$ in $L^2(X,\mc S,\mu,B)$. We go ahead and re-index our sequence so that $f_n\to f$ almost uniformly, which is legal because Cauchy sequences with a convergent subsequence will in total converge to the same limit as the subsequence.
+
+	We will actually show that $\norm{f-f_n}_2\to0$ as $n\to\infty$; this will finish because it forces $\norm f_2$ to be close to $\norm{f_n}_2$ for $n$ large enough and in particular finite. For this, we consider the integral
+	\[\int_X\norm{f-f_n}^2\,d\mu,\]
+	which is a legal expression provided that we permit $+\infty$. Now, $f_m\to f$ almost uniformly as $m\to\infty$, so $\norm{f_m-f_n}\to\norm{f-f_n}$ almost uniformly as $m\to\infty$, so
+	\[\liminf_{m\to\infty}\norm{f_m-f_n}^2(x)=\norm{f-f_n}^2(x)\]
+	for each $x\in X$. Thus, by \autoref{lem:fatou}, we see
+	\[\int_X\norm{f-f_n}^2\,d\mu\le\liminf_{m\to\infty}\int_X\norm{f_m-f_n}^2\,d\mu=\liminf_{m\to\infty}\norm{f_m-f_n}_2^2.\]
+	As such, for any $\varepsilon>0$, we select $N$ such that $m,n\ge N$ has $\norm{f_m-f_n}^2<\varepsilon/2$, so it follows that $\norm{f-f_n}_2<\varepsilon$ from the above bounding. This completes the proof.
+\end{proof}
+\begin{remark}
+	The above proof will work for any $p\in[1,\infty)$.
+\end{remark}
+We close class by noting we have made a Hilbert space.
+\begin{definition}[Hilbert space]
+	A \textit{Hilbert space} is a vector space $V$ over $\RR$ or $\CC$ equipped with an inner product $\langle\cdot,\cdot\rangle$ such that $V$ is complete for the norm defined by $\norm v\coloneqq\langle v,v\rangle^{1/2}$.
+\end{definition}
+\begin{example}
+	In the usual set-up, we can make $L^2(X,\mc S,\mu,\RR)$ into a Hilbert space by
+	\[\langle f,g\rangle\coloneqq\int_Xfg\,d\mu.\]
+	Notably, $\langle f,f\rangle^{1/2}=\norm f_2$. A similar definition works for $L^2(X,\mc S,\mu,\CC)$ by conjugating $g$ in the integral.
+\end{example}
+\begin{remark}
+	One can show that $L^2(X,\mc S,\mu,\RR)$ is ``self-dual'' in that every linear functional arises in the form $\langle f,\cdot\rangle$. This is one reason why $L^2$ is better than other $L^p$s.
+\end{remark}
+Next class we will discuss $L^\infty$.
+
+\end{document}
