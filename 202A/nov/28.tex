@@ -66,6 +66,18 @@ For this definition to make sense, we need a few lemmas.
 	Thus, the sequence $\int_Xf_n\,d\mu$ does not go to $+\infty$.
 \end{proof}
 While we're here, we pick up a few of our standard bounds.
+\begin{lemma} \label{lem:extended-equal-ae-gives-equal-ints}
+	Fix a measure space $(X,\mc S,\mu)$ and some $\mc S$-measurable functions $f,g\colon X\to\RR$ such that $f(x),g(x)\ge0$ for all $x\in X$. If $f(x)=g(x)$ almost everywhere, then
+	\[\int_Xf\,d\mu=\int_Xg\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	We are given $E\in\mc S$ such that $\mu(E)=0$ while $f(x)=g(x)$ for $x\in X\setminus E$. Now, we have the following cases.
+	\begin{itemize}
+		\item If $f$ is $\mu$-integrable or $g$ is $\mu$-integrable, then we note $f(x)\le g(x)$ and $g(x)\le f(x)$ almost everywhere (namely, on $X\setminus E$), so \autoref{cor:bounded-meas-is-int} implies that both $f$ and $g$ are both $\mu$-integrable. To finish, note $f(x)=g(x)$ almost everywhere implies that $\int_Xf\,d\mu=\int_Xg\,d\mu$ by \autoref{rem:equal-ae-gives-equal-ints}.
+		\item If neither $f$ nor $h$ are $\mu$-integrable, then \autoref{prop:extended-int-makes-sense} tells us that $\int_Xf\,d\mu=\int_Xg\,d\mu=\infty$.
+		\qedhere
+	\end{itemize}
+\end{proof}
 \begin{lemma} \label{lem:add-extended-int}
 	Fix a measure space $(X,\mc S,\mu)$. Given $\mc S$-measurable functions $f,g\colon X\to\RR$ such that $f(x),g(x)\ge0$ for all $x\in X$, we have
 	\[\int_X(f+g)\,d\mu=\int_Xf\,d\mu+\int_Xg\,d\mu,\]
@@ -94,6 +106,26 @@ While we're here, we pick up a few of our standard bounds.
 		\qedhere
 	\end{itemize}
 \end{proof}
+\begin{lemma} \label{lem:extended-mono-conv}
+	Fix a measure space $(X,\mc S,\mu)$. Given some $\mc S$-measurable $f\colon X\to\RR$ with $f(x)\ge0$ for each $x$, suppose there is a sequence of $\mc S$-measurable functions $f_n\colon X\to\RR$ such that $f_{n+1}(x)\ge f_n(x)\ge0$ for each $x$ and $n$ and $f_n\to f$ pointwise. Then
+	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	The difficulty here is that the $f_n$ are merely $\mc S$-measurable. We quickly check that the limit makes sense: for any $n$, note that $0\le f_n(x)\le f_{n+1}(x)$ for each $x\in X$ tells us $0\le\int_Xf_n\,d\mu\le\int_Xf_{n+1}\,d\mu$ by \autoref{lem:bound-extended-int}, so the right-hand limit is either finite or $+\infty$.
+	
+	Thus, we have two cases to appropriately deal with infinity.
+	\begin{itemize}
+		\item If each $f_n$ is $\mu$-integrable, then this follows from either \autoref{rem:apply-mono-conv} or the definition of an integral evaluating to $+\infty$. (Technically, we are using the fact that the limit function of $\{f_n\}_{n\in\NN}$ is unique almost everywhere by \autoref{lem:norm-diff-zero-iff-equal-ae}, so $f_n\to f$ in mean.)
+		\item If any $f_n$ is not $\mu$-integrable, then \autoref{prop:extended-int-makes-sense} tells us $\int_Xf_n\,d\mu=+\infty$.
+		
+		Now, for any $m\ge n$ has $f_m(x)\le f_n(x)$ for all $x$, so
+		\[+\infty=\int_Xf_n\,d\mu=\int_Xf_m\,d\mu\]
+		by \autoref{lem:bound-extended-int}, so $\int_Xf_m\,d\mu=+\infty$. It follows that
+		\[\lim_{m\to\infty}\int_Xf_m\,d\mu=+\infty.\]
+		On the other hand, for any $x$, we note that $f_m(x)\to f(x)$ as $m\to\infty$, but $f_m(x)\ge f_n(x)$ for $m\ge n$, so $f_n(x)\le f(x)$ follows. Applying \autoref{lem:bound-extended-int} again tells us $\int_Xf\,d\mu=+\infty$.
+		\qedhere
+	\end{itemize}
+\end{proof}
 
 \subsection{Defining \texorpdfstring{$\mc L^p$}{ Lp}}
 Here is our definition.
@@ -101,7 +133,7 @@ Here is our definition.
 	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Given some $p\in(0,\infty)$, we define
 	\[\mc L^p(X,\mc S,\mu,B)\coloneqq\left\{\mc S\text{-measurable}f:\norm f^p\text{ is }\mu\text{-integrable}\right\}.\]
 \end{defihelper}
-\begin{lemma}
+\begin{lemma} \label{lem:lp-vec-space}
 	Fix a measure space $(X,\mc S,\mu)$ and a $k$-Banach space $(B,\norm\cdot)$. Then $\mc L^p(X,\mc S,\mu,B)$ is a $k$-vector space.
 \end{lemma}
 \begin{proof}
@@ -211,21 +243,21 @@ Continuing, we now show that $\norm\cdot_2$ is a semi-norm.
 	then the convex hull of $U_r$ recovers all of $\mc L^p(X,\mc S,\mu,B)$. In particular, one can show that there are thus no nonzero continuous linear functionals on $\mc L^p(X,\mc S,\mu,B)$.
 \end{remark}
 
-\subsection{Defining \texorpdfstring{$L^2$}{ L2}}
+\subsection{Defining \texorpdfstring{$L^p$}{ Lp}}
 Now that we have a semi-norm, we can mod out to get our norm.
 \begin{notation}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. We set $\mc N(X,\mc S,\mu,B)\coloneqq\{f\in\mc L^2(X,\mc S,\mu,B):\norm f_2=0\}$ and
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. We set $\mc N(X,\mc S,\mu,B)\coloneqq\{f\in\mc L^2(X,\mc S,\mu,B):\norm f_2=0\}$ and
 	\[L^2(X,\mc S,\mu,B)\coloneqq\mc L^2(X,\mc S,\mu,B)/\mc N(X,\mc S,\mu,B).\]
 \end{notation}
 \begin{remark}
 	Given $f,g\in\mc L^p(X,\mc S,\mu,B)$, note that $[f]=[g]$ in $L^p(X,\mc S,\mu,B)$ if and only if $\norm{f-g}_p=0$ by definition, which is equivalent to $f(x)=g(x)$ almost everywhere by \autoref{cor:lp-diff-zero-iff-equal-ae}.
 \end{remark}
-\begin{proposition}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$. The function $\norm\cdot_2$ descends to a norm on $L^2(X,\mc S,\mu,B)$.
+\begin{proposition} \label{prop:lp-norm}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $B$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. The function $\norm\cdot_p$ descends to a norm on $L^p(X,\mc S,\mu,B)$.
 \end{proposition}
 \begin{proof}
-	We have a semi-norm by \autoref{prop:l2-semi-norm}, which descends to a norm on $L^2(X,\mc S,\mu,B)$ from \autoref{prop:semi-norm-to-norm}.
+	This follows from \autoref{prop:semi-norm-to-norm}.
 \end{proof}
-We would like to show that $L^2$ is complete, but this requires some work. Namely, we will require Fatou's lemma, a result we will state and prove next class.
+We would like to show that $L^p$ is complete, but this requires some work. Namely, we will require Fatou's lemma, a result we will state and prove next class.
 
 \end{document}

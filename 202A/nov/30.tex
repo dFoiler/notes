@@ -8,59 +8,146 @@
 
 The final is in about two weeks. Material covered this week may appear on the exam. Material covered in the topology section of the course may also appear on the exam.
 
-\subsection{Completeness of \texorpdfstring{$L^2$}{ L2}}
+\subsection{Fatou's Lemma}
 We continue moving towards proving the completeness of $L^2$. We pick up the following result.
 \begin{lemma}[Fatou] \label{lem:fatou}
-	Fix a measure space $(X,\mc S,\mu)$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions $f_n\colon X\to\RR^+$. Then
+	Fix a measure space $(X,\mc S,\mu)$. Further, fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions $f_n\colon X\to\RR$ with $f_n(x)\ge0$ for each $x$, and suppose that $\liminf_{n\to\infty}f_n(x)$ is finite for all $x\in X$. Then the function $\liminf_{n\to\infty}f_n$ is $\mc S$-measurable, and
 	\[\int_X\left(\liminf_{n\to\infty} f_n\right)\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu.\]
 \end{lemma}
 \begin{proof}
-	For $m\ge n$, define
-	\[h_{n,m}\coloneqq\min\{f_n,f_{n+1},\ldots,f_m\},\]
-	which is also $\mc S$-measurable by \autoref{ex:min-max-meas}. Notably, for fixed $n$, the functions $h_{n,n},h_{n+1,n},h_{n+2,n},\ldots$ are decreasing as $m\to\infty$ (adding more terms to this minimum requires values to decrease), so there is a limit function
-	\[g_n(x)\coloneqq\inf\{h_{n,m}(x):m\ge n\}=\lim_{m\to\infty}h_{n,m}(x),\]
-	which is $\mc S$-measurable as the pointwise limit of $\mc S$-measurable functions. Note that $g_n(x)$ is always a real number because the set $\{h_{n,m}(x):n\ge m\}$ is bounded below by $0$. However, we can see that the $g_n(x)$ are monotonically increasing (taking fewer terms in our infimum requires values to increase), so we define
-	\[\left(\liminf_{n\to\infty}f_n\right)(x)\coloneqq\liminf_{n\to\infty}f_n(x)=\lim_{n\to\infty}g_n(x),\]
-	where $+\infty$ is a permitted value.
-	
-	Quickly, fixing some $n$, any $m\ge n$ has $h_{n,m}(x)\le f_n(x)$ for all $x$, so the limit function $g_n(x)\le f_n(x)$ for all $x$. Thus, by \autoref{thm:mono-conv}, we see
-	\[\int_X\left(\liminf_{n\to\infty} f_n\right)\,d\mu=\lim_{n\to\infty}\int_Xg_n\,d\mu,\]
-	where we are still permitting $+\infty$. However, $g_n(x)\le f_n(x)$ for each $x$ by construction, so
-	\[\int_X(\liminf_{n\to\infty} f_n)\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu,\]
+	We'll do this in steps for clarity.
+	\begin{enumerate}
+		\item We set up variables. For $m\ge n$, define
+		\[h_{n,m}\coloneqq\min\{f_n,f_{n+1},\ldots,f_m\},\]
+		which is also $\mc S$-measurable by \autoref{ex:min-max-meas}, and these have $h_{n,m}(x)\ge0$ for each $x$.
+		
+		Notably, for fixed $n$, the functions $h_{n,n},h_{n+1,n},h_{n+2,n},\ldots$ are decreasing as $m\to\infty$ (adding more terms to this minimum requires values to decrease), so there is a limit function
+		\[g_n(x)\coloneqq\inf\{h_{n,m}(x):m\ge n\}=\lim_{m\to\infty}h_{n,m}(x),\]
+		which is $\mc S$-measurable as the pointwise limit of $\mc S$-measurable functions. Note that $g_n(x)$ is always a nonnegative real number because the set $\{h_{n,m}(x):n\ge m\}$ is bounded below by $0$.
+		
+		However, we can see that the $g_n(x)$ are monotonically increasing (taking fewer terms in our infimum requires values to increase), so we see
+		\[\left(\liminf_{n\to\infty}f_n\right)(x)\coloneqq\liminf_{n\to\infty}f_n(x)=\lim_{n\to\infty}g_n(x),\]
+		which we note is always finite by hypothesis. Thus, $\liminf_{n\to\infty}$ is $\mc S$-measurable by \autoref{cor:limit-of-meas-is-meas}, and $g_n(x)\ge0$ always tells us $\liminf_{n\to\infty}f_n(x)\ge0$ always as well.
+
+		\item We complete the proof. By \autoref{lem:extended-mono-conv}, we see
+		\begin{equation}
+			\int_X\left(\liminf_{n\to\infty} f_n\right)\,d\mu=\lim_{n\to\infty}\int_Xg_n\,d\mu. \label{eq:key-fatou-equality}
+		\end{equation}
+		Now, for any $n$, we note $g_n(x)\le h_{n,n}(x)=f_n(x)$ for each $x\in X$, so \autoref{lem:bound-extended-int} tells us
+		\[\int_Xg_n\,d\mu\le\int_Xf_n\,d\mu.\]
+		It follows that
+		\[\liminf_{n\to\infty}\int_Xg_n\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu,\]
+		which finishes upon noting $\lim_{n\to\infty}\int_Xg_n\,d\mu=\liminf_{n\to\infty}\int_Xg_n\,d\mu$ and combining with \autoref{eq:key-fatou-equality}.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{corollary} %\label{cor:extended-fatou}
+	Fix a measure space $(X,\mc S,\mu)$ and fix a sequence $\{f_n\}_{n\in\NN}$ of $\mc S$-measurable functions $f_n\colon X\to\RR$ with $f_n(x)\ge0$ for each $x$. Suppose that there is $E\subseteq X$ with $E\in\mc S$ or $X\setminus E\in\mc S$ such that $\liminf_{n\to\infty}f_n(x)$ is finite for all $x\in E$. Then the function $\left(\liminf_{n\to\infty}f_n\right)1_E$ is $\mc S$-measurable, and
+	\[\int_E\left(\liminf_{n\to\infty} f_n\right)\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu,\]
+	where we enforce $\left(\liminf_{n\to\infty}f_n\right)1_E(x)=0$ when $x\notin E$.
+\end{corollary}
+\begin{proof}
+	This is a direct consequence of \autoref{lem:fatou}. Indeed, for any $n$, set $g_n\coloneqq f_n1_E$, which is $\mc S$-measurable by \autoref{lem:restrict-meas-functions} or \autoref{rem:complement-restrict-meas-functions}, and we note $g_n(x)\in\{0,f_n(x)\}$ for each $x$, so $g_n(x)\ge0$ for each $x$. The main claim is that
+	\[\left(\liminf_{n\to\infty} f_n\right)1_E=\liminf_{n\to\infty}g_n\]
+	as functions. Indeed, if $x\notin E$, then both sides are zero. Otherwise, $x\in E$, so $g_n(x)=f_n(x)$ for all $n$, so both $\liminf$s converge to the same finite value.
+
+	Thus, \autoref{lem:fatou} implies
+	\[\int_E\left(\liminf_{n\to\infty} f_n\right)\,d\mu=\int_X\left(\liminf_{n\to\infty}g_n\right)\,d\mu\le\liminf_{n\to\infty}\int_Xg_n\,d\mu.\]
+	Now, $g_n(x)\le f_n(x)$ for each $x\in X$, so \autoref{lem:bound-extended-int} tells us $\int_Xg_n\,d\mu\le\int_Xf_n\,d\mu$, so we see
+	\[\int_E\left(\liminf_{n\to\infty} f_n\right)\,d\mu\le\liminf_{n\to\infty}\int_Xg_n\,d\mu\le\liminf_{n\to\infty}\int_Xf_n\,d\mu,\]
 	which is what we wanted.
 \end{proof}
+\begin{remark}
+	One can show that, if $E$ contains a set of positive measure, then $\liminf_{n\to\infty}\int_Xf_n\,d\mu=+\infty$. We will not need this.
+\end{remark}
+% \begin{remark}
+% 	One can relax the requirement that $\liminf_{n\to\infty}f_n(x)$ is finite in a few ways. Here are a few.
+% 	\begin{itemize}
+% 		\item One can restrict the domain to where the $\liminf$ is finite. Technically, this statement follows directly from what we have above.
+% 		\item One can say that the relevant integral is infinite if $\liminf$ is infinite on a set of positive measure or just itself if $\liminf$ is finite outside a null set. Showing this requires showing that $\liminf$ being infinite in a set of positive measure implies that the integrals $\int_Xf_n\,d\mu$ are unbounded.
+% 	\end{itemize}
+% 	We will not need the extra generality in the discussion which follows, so I have not done so.
+% \end{remark}
+
+\subsection{Convergence in \texorpdfstring{$p$}{ p}-Mean}
+For $L^1$, we had convergence in mean, so we will not want a generalized notion.
+\begin{defihelper}[{Converge in $p$-mean}] \nirindex{Converge in p-mean@Converge in $p$-mean}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. A sequence of functions $\{f_n\}_{n\in\NN}\in\mc L^p(X,\mc S,\mu,B)$ \textit{converges in $p$-mean} to some $f\in\mc L^p(X,\mc S,\mu,B)$ if and only if $\norm{f_n-f}_p\to0$ as $n\to\infty$.
+\end{defihelper}
+\begin{defihelper}[{Cauchy in $p$-mean}] \nirindex{Cauchy in p-mean@Cauchy in $p$-mean}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. A sequence of functions $\{f_n\}_{n\in\NN}\in\mc L^p(X,\mc S,\mu,B)$ \textit{converges in $p$-mean} to some $f\in\mc L^p(X,\mc S,\mu,B)$ if and only if $\norm{f_n-f}_p\to0$ as $n\to\infty$.
+\end{defihelper}
+Note that the relevant functions all stay in $\mc L^p$ by \autoref{lem:lp-vec-space}.
+
+The main result here is a comparison result. To begin, we pick up Chebyshev's inequality.
+\begin{lemma}[Chebyshev] \label{lem:cheb}
+	Fix a measure space $(X,\mc S,\mu,B)$ and a Banach space $(B,\norm\cdot)$, and choose $p\in[1,\infty)$. Given some $h\in\mc L^p(X,\mc S,\mu,B)$ and $\varepsilon>0$, the set $E\coloneqq\{x\in X:\norm{h(x)}\ge\varepsilon\}$ has finite measure with
+	\[\mu(E)\le\frac{\norm h_p^p}{\varepsilon^p}.\]
+\end{lemma}
+\begin{proof}
+	Note that $\norm h$ is $\mc S$-measurable by \autoref{cor:take-norms-is-measurable}, so $E$ is $\mc S$-measurable by \autoref{cor:meas-has-meas-pre-image}, so $1_E$ is simple $\mc S$-measurable by \autoref{ex:indicator-is-simple}.
+	
+	Now, the indicator function has
+	\[1_{E}(x)\le\left(\frac{\norm{h(x)}}\varepsilon\right)^p.\]
+	Indeed, if $x\notin E$, then $1_E(x)=0$ while $\norm{h(x)}/\varepsilon>0$; otherwise, $x\in E$, so $\norm{h(x)}\ge\varepsilon$. Thus, it follows from \autoref{cor:bounded-simp-meas-is-simp-int} that $1_E$ is $\mu$-integrable, and \autoref{lem:bound-ints} implies
+	\[\int_X1_E\,d\mu\le\int_X\frac{\norm h^p}{\varepsilon^p}\,d\mu.\]
+	The left-hand side is $\mu(E)$ by \autoref{ex:integrate-indicator}, and the right-hand side is $\norm h_p^p/\varepsilon^p$ by \autoref{prop:int-is-linear}, so we are done.
+\end{proof}
+And here is our comparison result.
+\begin{lemma} \label{lem:converge-in-p-mean-to-converge-in-measure}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. If a sequence of functions $\{f_n\}_{n\in\NN}\subseteq\mc L^p(X,\mc S,\mu,B)$ is Cauchy in $p$-mean, then it is Cauchy in measure.
+\end{lemma}
+\begin{proof}
+	We use \autoref{lem:cheb}. Indeed, for any $m$ and $n$, we see
+	\[\mu(\{x\in X:\norm{f_n(x)-f_m(x)}\ge\varepsilon\})\le\frac{\norm{f_m-f_n}_p^p}{\varepsilon^p},\]
+	but $\norm{f_m-f_n}_p\to0$ as $m,n\to\infty$. Explicitly, for any $\delta>0$, choose $N$ so that $\norm{f_m-f_n}_p<\delta^{1/p}\varepsilon$ for $m,n\ge N$ so that
+	\[\mu(\{x\in X:\norm{f_n(x)-f_m(x)}\ge\varepsilon\})\le\frac{\delta\cdot\varepsilon^p}{\varepsilon^p}=\delta\]
+	follows for $m,n\ge N$.
+\end{proof}
+
+\subsection{Completeness of \texorpdfstring{$L^p$}{ Lp}}
 And now here is our result.
-\begin{theorem}
-	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$. Then $L^2(X,\mc S,\mu,B)$ is complete.
+\begin{theorem} \label{thm:lp-complete}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. Then a mean Cauchy sequence of functions $\{f_n\}_{n\in\NN}\subseteq\mc L^p(X,\mc S,\mu,B)$ converges in $p$-mean to some $f\in\mc L^p(X,\mc S,\mu,B)$.
 \end{theorem}
 \begin{proof}
-	Fix a sequence of functions $\{f_n\}_{n\in\NN}$ of functions in $\mc L^2(X,\mc S,\mu,B)$ which are Cauchy for $\norm\cdot_2$. We claim that $\{f_n\}_{n\in\NN}$ is Cauchy in measure. For this, we pick up the following inequality.
-	\begin{lemma}[Chebychev]
-		Fix a measure space $(X,\mc S,\mu,B)$ and a Banach space $(B,\norm\cdot)$. Given some $h\in\mc L^2(X,\mc S,\mu,B)$ and $\varepsilon>0$, the set $E\coloneqq\{x\in X:\norm{h(x)}\ge\varepsilon\}$ has finite measure with
-		\[\mu(E)\le\frac{\norm h_2^2}{\varepsilon^2}.\]
-	\end{lemma}
-	\begin{proof}
-		Note that $E$ is $\mc S$-measurable. Now, the indicator function has
-		\[1_{E}(x)\le\frac{\norm{h(x)}}\varepsilon\le\left(\frac{\norm{h(x)}}\varepsilon\right)^2,\]
-		so it follows from \autoref{lem:bound-ints} that $1_E$ is $\mu$-integrable, and
-		\[\mu(E)\le\int_X1_E\,d\mu\le\frac1{\varepsilon^2}\int_X\norm h^2\,d\mu=\frac{\norm h_2^2}{\varepsilon^2},\]
-		which is what we wanted.
-	\end{proof}
-	Now, for any $m$ and $n$, the above inequality gives
-	\[\mu(\{x\in X:\norm{f_n(x)-f_m(x)}\ge\varepsilon\})\le\frac{\norm{f_m-f_n}_2^2}{\varepsilon^2},\]
-	but $\norm{f_m-f_n}_2\to0$ as $m,n\to\infty$. Thus, $\{f_n\}_{n\in\NN}$ is Cauchy in measure, so it follows that some subsequence $\{f_{n_k}\}_{k\in\NN}$ converges to some $\mc S$-measurable function $f\colon X\to B$, almost uniformly using arguments similar to \autoref{prop:l1-complete}. It remains to show that $f\in\mc L^2(X,\mc S,\mu,B)$ and $f_{n_k}\to f$ in $L^2(X,\mc S,\mu,B)$. We go ahead and re-index our sequence so that $f_n\to f$ almost uniformly, which is legal because Cauchy sequences with a convergent subsequence will in total converge to the same limit as the subsequence.
+	We proceed as in \autoref{prop:l1-complete}; for brevity, set $\mc L^p\coloneqq\mc L^p(X,\mc S,\mu,B)$ and $L^p\coloneqq(X,\mc S,\mu,B)$. By \autoref{lem:converge-in-p-mean-to-converge-in-measure}, we see that $\{f_n\}_{n\in\NN}$ is Cauchy in measure, so there is a uniformly Cauchy subsequence $\{f_{n_i}\}_{i\in\NN}$ by \autoref{thm:rw}. However, this subsequence $\{f_{n_i}\}_{i\in\NN}$ will then converge to some $\mc S$-measurable $f\colon X\to B$ almost uniformly by \autoref{lem:almost-uniform-cauchy-converges}.
+	
+	It remains to show that $f\in\mc L^p$ and $f_n\to f$ in $p$-mean. Define $g_i\coloneqq f_{n_i}$, and we will actually directly show that the integrals
+	\[I_n\coloneqq\int_X\norm{f-g_n}^p\,d\mu\]
+	are small. Note that $f-g_n$ is $\mc S$-measurable by \autoref{lem:meas-is-vec-space}, so $\norm{f-g_n}$ is $\mc S$-measurable by \autoref{cor:take-norms-is-measurable}, so $\norm{f-g_n}^p$ is $\mc S$-measurable by \autoref{cor:compose-cont-is-meas} (using $x\mapsto|x|^p$). Additionally, $\norm{f-g_n}^p(x)\ge0$ for each $x$, so $I_n$ is a legal integral with possibly infinite value.
 
-	We will actually show that $\norm{f-f_n}_2\to0$ as $n\to\infty$; this will finish because it forces $\norm f_2$ to be close to $\norm{f_n}_2$ for $n$ large enough and in particular finite. For this, we consider the integral
-	\[\int_X\norm{f-f_n}^2\,d\mu,\]
-	which is a legal expression provided that we permit $+\infty$. Now, $f_m\to f$ almost uniformly as $m\to\infty$, so $\norm{f_m-f_n}\to\norm{f-f_n}$ almost uniformly as $m\to\infty$, so
-	\[\liminf_{m\to\infty}\norm{f_m-f_n}^2(x)=\norm{f-f_n}^2(x)\]
+	Now, $g_m\to f$ almost uniformly as $m\to\infty$, so $g_m\to f$ almost everywhere. Thus, we find $E\in\mc S$ such that $\mu(E)=0$ while $g_m(x)\to f(x)$ for $x\in E$. Thus, $g_m1_{X\setminus E}\to f1_{X\setminus E}$ pointwise: if $x\in E$, then $g_m(x)\to f(x)$ already, and if $x\notin E$, then $g_m1_{X\setminus E}(x)=0=f1_{X\setminus E}(x)$ for all $m$. As such, we note $(g_m-f_n)1_{X\setminus E}\to(f-g_n)1_{X\setminus E}$ pointwise, so $\norm{g_m-f_n}1_{X\setminus E}\to\norm{f-g_n}1_{X\setminus E}$ pointwise, so
+	\[\left(\liminf_{m\to\infty}\norm{g_m-g_n}^p1_{X\setminus E}\right)(x)=\lim_{m\to\infty}\norm{g_m(x)-g_n(x)}^p1_{X\setminus E}(x)=\left(\norm{f-g_n}^p1_{X\setminus E}\right)(x)\]
 	for each $x\in X$. Thus, by \autoref{lem:fatou}, we see
-	\[\int_X\norm{f-f_n}^2\,d\mu\le\liminf_{m\to\infty}\int_X\norm{f_m-f_n}^2\,d\mu=\liminf_{m\to\infty}\norm{f_m-f_n}_2^2.\]
-	As such, for any $\varepsilon>0$, we select $N$ such that $m,n\ge N$ has $\norm{f_m-f_n}^2<\varepsilon/2$, so it follows that $\norm{f-f_n}_2<\varepsilon$ from the above bounding. This completes the proof.
+	\[\int_X\norm{f-g_n}^p1_{X\setminus E}\,d\mu\le\liminf_{m\to\infty}\int_X\norm{g_m-g_n}^p1_{X\setminus E}\,d\mu.\]
+	(Note that the relevant functions are nonnegative and $\mc S$-measurable by \autoref{lem:meas-is-vec-space} and \autoref{cor:take-norms-is-measurable} and \autoref{cor:compose-cont-is-meas} and \autoref{rem:complement-restrict-meas-functions}.) But now we note that $\norm{f-g_n}^p1_{X\setminus E}=\norm{f-g_n}^p$ and $\norm{g_m-g_n}^p1_{X\setminus E}=\norm{g_m-g_n}^p$ almost everywhere (namely, on $X\setminus E$), so \autoref{lem:extended-equal-ae-gives-equal-ints} tells us
+	\begin{equation}
+		\int_X\norm{f-g_n}^p\,d\mu\le\liminf_{m\to\infty}\int_X\norm{g_m-g_n}^p\,d\mu, \label{eq:bound-complete-lp}
+	\end{equation}
+	which will be good enough for our purposes.
+
+	We now show the remaining claims in sequence.
+	\begin{itemize}
+		\item We show $f\in\mc L^p$. Note $f$ is $\mc S$-measurable by construction. Now, $f-g_n\in\mc L^p$ by \autoref{eq:bound-complete-lp}: namely, there is $N$ such that $\norm{g_m-g_n}_p<1$ for all $m,n\ge N$ because $\{f_n\}_{n\in\NN}$ is Cauchy in $p$-mean, so selecting any such $n$ implies that
+		\[\int_X\norm{f-g_n}^p\,d\mu\le\liminf_{m\to\infty}\int_X\norm{g_m-g_n}^p\,d\mu=\liminf_{m\to\infty}\norm{g_m-g_n}_p^p\le1.\]
+		Thus, $\norm{f-g_n}^p$ is $\mu$-integrable by \autoref{prop:extended-int-makes-sense}, so $f-g_n\in\mc L^p$. It follows from \autoref{lem:lp-vec-space} that $f\in\mc L^p$ because $g_n\in\mc L^p$ already.
+		\item We show $f_n\to f$ in $p$-mean. The main point is that \autoref{eq:bound-complete-lp} now reads
+		\[\norm{f-g_i}_p\le\liminf_{j\to\infty}\norm{g_i-g_j}_p\]
+		for any $i\in\ZZ$, where we have applied the continuous function $x\mapsto x^{1/p}$ everywhere.
+
+		Now, fix any $\varepsilon>0$. To begin, fix some $N_f$ such that $m,n\ge N$ implies $\norm{f_m-f_n}_p<\varepsilon/2$. Then, for any $n\ge N$, we note $n_n\ge n\ge N$, so
+		\[\norm{f-f_n}_p\le\norm{f-g_n}_p+\norm{f_n-f_{n_n}}_p<\liminf_{j\to\infty}\norm{g_n-g_j}_p+\frac\varepsilon2.\]
+		However, for $j\ge N$, we note $\norm{g_n-g_j}_p<\varepsilon/2$, so it follows $\norm{f-f_n}_p<\varepsilon$, finishing.
+		\qedhere
+	\end{itemize}
 \end{proof}
-\begin{remark}
-	The above proof will work for any $p\in[1,\infty)$.
-\end{remark}
+\begin{corollary}
+	Fix a measure space $(X,\mc S,\mu)$ and a Banach space $(B,\norm\cdot)$, and choose $p\in[1,\infty)$ such that $\norm\cdot_p$ defines a semi-norm on $\mc L^p(X,\mc S,\mu,B)$. Then $L^p(X,\mc S,\mu,B)$ is complete.
+\end{corollary}
+\begin{proof}
+	The metric space structure comes from \autoref{prop:lp-norm}. For brevity, set $\mc L^p\coloneqq\mc L^p(X,\mc S,\mu,B)$ and $L^p\coloneqq L^p(X,\mc S,\mu,B)$. Now, given a Cauchy sequence $\{[f_n]\}_{n\in\NN}\subseteq L^p$, we note that $\{f_n\}_{n\in\NN}\subseteq\mc L^p$ is Cauchy in $p$-mean (by definition) and thus converges in $p$-mean to some $f\in\mc L^p$ by \autoref{thm:lp-complete}, so $f_n\to f$ in $p$-mean.
+\end{proof}
 We close class by noting we have made a Hilbert space.
 \begin{definition}[Hilbert space]
 	A \textit{Hilbert space} is a vector space $V$ over $\RR$ or $\CC$ equipped with an inner product $\langle\cdot,\cdot\rangle$ such that $V$ is complete for the norm defined by $\norm v\coloneqq\langle v,v\rangle^{1/2}$.
