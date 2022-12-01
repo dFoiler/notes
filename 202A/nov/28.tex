@@ -7,19 +7,93 @@
 \section{November 28}
 
 It's the last week of class, so it's time to go off the rails.
-\begin{remark}
-	As an application of \autoref{thm:mono-conv}, we get the following definition: given $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_m(x)\ge f_n(x)\ge0$ almost everywhere for each $m\ge n$ such that $f_n\to f$ almost everywhere for some $\mc S$-measurable function $f$, then we should have
-	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xf_n\,d\mu.\]
-	However, if the limit is $+\infty$, then this doesn't make sense because $f$ will not be $\mu$-integrable, so we just define the integral as being $+\infty$.
-\end{remark}
-\begin{remark}
-	We note that the integral being $+\infty$ is well-defined: if we have some other increasing sequence $\{g_n\}_{n\in\NN}$ of $\mu$-integrable functions such that $g_n\to f$, then we claim $\int_Xg_n\,d\mu\to+\infty$ still. Indeed, otherwise we can find some constant $C$ such that $\int_Xg_n\,d\mu\le C$ always, so it follows from \autoref{rem:apply-mono-conv} that
-	\[\int_Xf\,d\mu=\lim_{n\to\infty}\int_Xg_n\,d\mu\le C,\]
-	so $\int_Xf_n\,d\mu\le C$ for each $n$ follows from \autoref{lem:bound-ints}, which is our contradiction.
-\end{remark}
-\begin{remark}
-	If $f\colon X\to\RR^+$, one can show that $f_n$ merely being $\mc S$-measurable either implies that $f$ is $\mu$-integrable or has $\int_Xf\,d\mu=+\infty$.
-\end{remark}
+
+\subsection{Infinite Integrals}
+As an application of \autoref{thm:mono-conv}, we get the following convention.
+\begin{defi}
+	Fix a measure space $(X,\mc S,\mu)$. Given an $\mathcal S$-measurable function $f\colon X\to\RR$ such that $f(x)\ge0$ always, we say
+	\[\int_Xf\,d\mu\coloneqq+\infty\]
+	if and only if there is a sequence of $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_{n+1}(x)\ge f_n(x)\ge0$ for each $x$ and $n$ such that $f_n\to f$ pointwise and $\int_Xf_n\,d\mu\to+\infty$.
+\end{defi}
+For this definition to make sense, we need a few lemmas.
+\begin{lemma} \label{lem:get-monotone-seq-below}
+	Fix a measure space $(X,\mc S,\mu)$. Given an $\mathcal S$-measurable function $f\colon X\to\RR$ such that $f(x)\ge0$, there exists some sequence of $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_{n+1}(x)\ge f_n(x)\ge0$ for each $x$ and $n$ such that $f_n\to f$ pointwise.
+\end{lemma}
+\begin{proof}
+	We have two steps.
+	\begin{enumerate}
+		\item Because $f$ is $\mc S$-measurable, we may find a sequence of simple $\mc S$-measurable functions $g_n\colon X\to\RR$ such that $g_n\to f$ pointwise. Thus, by \autoref{lem:restrict-meas-functions}, the functions $g_n1_{[-n,n]}$ are still simple $\mc S$-measurable, but now we claim they are simple $\mu$-integrable. Indeed, for any $y\in\RR\setminus\{0\}$, we see that
+		\[\left(g_n1_{[-n,n]}\right)^{-1}(\{y\})\subseteq[-n,n+1)\]
+		because $x\notin[-n,n+1)$ gives $1_{[-n,n]}(x)=0$; thus, $\mu\left((g_n1_{[-n,n]})^{-1}(\{y\})\right)\le(n+1)--n<\infty$ by \autoref{lem:fin-additive-is-monotone}, which is what we wanted.
+	
+		Further, we claim that $g_n1_{[-n,n]}\to f$ pointwise as $n\to\infty$. Indeed, for any $x\in X$, fix some $\varepsilon>0$. We may find some $N_1$ such that $n\ge N$ implies
+		\[|f(x)-g_n(x)|<\varepsilon.\]
+		As such, we set $N\coloneqq\max\{N_1,|x|\}$ so that $n\ge N\ge|x|$ gives $g_n1_{[-n,n]}(x)=g_n(x)$, and so $n\ge N\ge N_1$ gives $|f(x)-g_n(x)|<\varepsilon$.
+	
+		\item Relabeling, the previous step constructed a sequence of simple $\mu$-integrable functions $g_n\colon X\to\RR$ converging to $f$ pointwise. It remains to deal with our bounding. For this, we delete our sequence of functions $f_n$ recursively. Define $f_1=0$, which is $\mu$-integrable by \autoref{lem:int-is-vec-space}.
+
+		Now, given $f_n$, we define $f_{n+1}$ by
+		\[f_{n+1}\coloneqq\max\{f_n,\min\{g_{n+1},f\}\}.\]
+		Note $\min\{g_{n+1},f\}$ is $\mc S$-measurable by \autoref{ex:min-max-meas} and thus $\mu$-integrable by \autoref{cor:bounded-meas-is-int} because $\min\{g_{n+1}(x),f(x)\}\le g_{n+1}(x)$ for each $x\in X$. Thus, we see $f_{n+1}$ is $\mu$-integrable (inductively) by \autoref{ex:min-max-int}. We also note $f_n(x)\le f_{n+1}(x)$ for any $n$ and $x$ by construction, so we get $f_n(x)\ge f_1(x)=0$.
+
+		It remains to check $f_n\to f$ pointwise; fix any $x\in X$. To begin, note $f_n(x)\le f(x)$ for each $n$. For $n=1$, this is by hypothesis on $f$, and in general we note that $f_n(x)\le f(x)$ and $\min\{g_{n+1}(x),f(x)\}\le f(x)$ forces $f_{n+1}(x)\le f(x)$.
+
+		However, for all $\varepsilon>0$, we can find some $N>0$ such that $n\ge N$ implies $|g_n(x)-f(x)|<\varepsilon$. We claim that $|f_n(x)-f(x)|<\varepsilon$ for each $n\ge N>0$ as well. There are two cases.
+		\begin{itemize}
+			\item If $g_n(x)\le f(x)$, then we note
+			\[g_n(x)=\min\{g_n(x),f(x)\}\le f_n(x)\le f(x),\]
+			so $|f(x)-f_n(x)|=f(x)-f_n(x)\le f(x)-g_n(x)<\varepsilon$.
+			\item If $g_n(x)\ge f(x)$, then we note $f_n(x)\le f(x)$ while $f_n(x)\ge\min\{g_n(x),f(x)\}=f(x)$, so $f_n(x)=f(x)$.
+		\end{itemize}
+		The above checks complete the proof.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{proposition} \label{prop:extended-int-makes-sense}
+	Fix a measure space $(X,\mc S,\mu)$ and an $\mathcal S$-measurable function $f\colon X\to\RR$ with $f(x)\ge0$ for all $x\in X$. Then exactly one of the following is true.
+	\begin{itemize}
+		\item $f$ is $\mu$-integrable.
+		\item $\int_Xf\,d\mu=+\infty$.
+	\end{itemize}
+\end{proposition}
+\begin{proof}
+	By \autoref{lem:get-monotone-seq-below}, there certainly exists some sequence of $\mu$-integrable functions $f_n\colon X\to\RR$ such that $f_{n+1}(x)\ge f_n(x)\ge0$ for each $x$ and $n$ such that $f_n\to f$ pointwise. As such, note that the sequence of integrals
+	\[I_n\coloneqq\int_Xf_n\,d\mu\]
+	are increasing by \autoref{lem:bound-ints}. Thus, if the sequence is bounded above, we note $f$ is $\mu$-integrable by \autoref{thm:mono-conv}. Otherwise, $I_n\to+\infty$ as $n\to\infty$, so $\int_Xf\,d\mu=+\infty$.
+
+	Thus, we have so far shown that at least one of the conclusions is true. It remains to show that they cannot both be true. Well, suppose $f\colon X\to\RR$ is $\mu$-integrable, and we show $\int_Xf\,d\mu\ne+\infty$. If we have any increasing sequence $\{g_n\}_{n\in\NN}$ of $\mu$-integrable functions such that $g_n\to f$ pointwise, then we see $g_n(x)\le f(x)$ for each $x$, so we may use \autoref{lem:bound-ints} to upper-bound
+	\[\int_Xf_n\,d\mu\le\int_Xf\,d\mu.\]
+	Thus, the sequence $\int_Xf_n\,d\mu$ does not go to $+\infty$.
+\end{proof}
+While we're here, we pick up a few of our standard bounds.
+\begin{lemma} \label{lem:add-extended-int}
+	Fix a measure space $(X,\mc S,\mu)$. Given $\mc S$-measurable functions $f,g\colon X\to\RR$ such that $f(x),g(x)\ge0$ for all $x\in X$, we have
+	\[\int_X(f+g)\,d\mu=\int_Xf\,d\mu+\int_Xg\,d\mu,\]
+	where we permit values to be $+\infty$.
+\end{lemma}
+\begin{proof}
+	Note that $f+g$ is $\mc S$-measurable by \autoref{lem:meas-is-vec-space}. We have two cases.
+	\begin{itemize}
+		\item If $\int_X(f+g)\,d\mu\ne\infty$, then $(f+g)$ is $\mu$-integrable by \autoref{prop:extended-int-makes-sense}. However, we note $f(x),g(x)\le(f+g)(x)$ for each $x\in X$ because $f(x),g(x)\ge0$, so \autoref{lem:bound-ints} tells us that $f$ and $g$ are both $\mu$-integrable. Thus, the result follows from \autoref{prop:int-is-linear}.
+		\item Suppose $\int_X(f+g)\,d\mu=+\infty$. If $f$ and $g$ are both $\mu$-integrable, $(f+g)$ is $\mu$-integrable by \autoref{lem:int-is-vec-space}, which violates the hypothesis of this case by \autoref{prop:extended-int-makes-sense}. Thus, one of $f$ or $g$ is not $\mu$-integrable. Without loss of generality, we say $f$ is not $\mu$-integrable, so
+		\[\int_Xf\,d\mu=+\infty\]
+		follows from \autoref{prop:extended-int-makes-sense}. Because $\int_Xg\,d\mu\ge0$ either when $g$ is $\mu$-integrable (by \autoref{lem:bound-ints} and \autoref{prop:int-is-linear}) or when $g$ is not $\mu$-integrable (by \autoref{prop:extended-int-makes-sense}), the result follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:bound-extended-int}
+	Fix a measure space $(X,\mc S,\mu)$. Given $\mc S$-measurable functions $f,g\colon X\to\RR$ such that $f(x)\ge g(x)\ge0$ for all $x\in X$, we have
+	\[\int_Xf(x)\,d\mu\ge\int_Xg(x)\,d\mu,\]
+	where we permit values to be $+\infty$.
+\end{lemma}
+\begin{proof}
+	We have two cases.
+	\begin{itemize}
+		\item If $f$ is $\mu$-integrable, then $g$ is $\mu$-integrable by \autoref{cor:bounded-meas-is-int}, so the result follows from \autoref{lem:bound-ints}.
+		\item If $f$ is not $\mu$-integrable, then $\int_Xf\,d\mu=+\infty$ by \autoref{prop:extended-int-makes-sense}, so the result follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
 
 \subsection{Defining \texorpdfstring{$\mc L^p$}{ Lp}}
 Here is our definition.
