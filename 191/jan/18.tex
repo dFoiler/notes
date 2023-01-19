@@ -8,7 +8,268 @@
 
 Here we go.
 
-\subsection{}
+\subsection{House-Keeping}
+We're teaching analytic number theory. Here are some notes.
+\begin{itemize}
+	\item We will be referencing \cite{davenport-mult-nt} mostly, but we will do some things that Davenport does not do. For example, we will discuss the circle method, for which we refer to \cite{davenport-ineqs}.
+	\item We will assume complex analysis, at the level of Math 185. We will use some Fourier analysis, but we will discuss the relevant parts as we need them. Of course, because this is number theory, we will assume some algebra, such as characters on abelian groups.
+	\item There is a website \href{https://sites.google.com/view/ruixiang-zhang/home/teaching/math191_spring2023}{here}, which includes a list of topics. Notably, there is a website for a previous version of the course.
+	\item Grading is still up in there, as is the syllabus. Tentatively, grading will be as follows: by around the middle of the semester, there will be a list of recommended papers to read. Then we will write a 2--6-page report and present it to Professor Zhang. We will not have problem sets.
+	\item Tentatively, office hours will be 90 minutes before lecture on Monday and Wednesday, in Evans 813.
+	\item We should all write an email to Professor Zhang to introduce ourselves; for example, say what you're looking forward to in the course.
+\end{itemize}
 
+\subsection{Primer on Infinite Primes}
+In this first part of the course, we will be moving towards the following result.
+\begin{theorem}[Dirichlet] \label{thm:dirichlet}
+	Fix nonzero integers $a,q\in\ZZ$ such that $\gcd(a,q)=1$. Then there exist infinitely many primes $p$ such that $p\equiv a\pmod q$.
+\end{theorem}
+The statement of \Cref{thm:dirichlet} is purely elementary, but the standard proof uses complex analysis.
+
+The functions we will do analysis on are generalizations of the Riemann $\zeta$ function, defined as
+\[\zeta(s)\coloneqq\sum_{n=1}^\infty\frac1{n^s},\]
+which converges absolutely for $s\in\CC$ such that $\op{Re}s>1$. The following factorization is due to Euler.
+\begin{proposition} \label{prop:euler-factor}
+	For $s\in\CC$ such that $\op{Re}s>1$, we have
+	\[\zeta(s)=\prod_{p\text{ prime}}\frac1{1-p^{-s}}.\]
+\end{proposition}
+\begin{proof}
+	Roughly speaking, we use unique prime factorization in $\ZZ$, writing
+	\[\prod_{p\text{ prime}}\frac1{1-p^{-s}}=\prod_{p\text{ prime}}\sum_{k=1}^\infty\frac1{p^{-ks}}=\sum_{n=1}^\infty\frac1{n^s},\]
+	which is what we wanted. Rigorously, one ought to bound the size of our primes to get the required convergence.
+\end{proof}
+\begin{remark} \label{rem:euler-inf-primes}
+	Note that
+	\[\lim_{s\to1^+}\zeta(s)=+\infty,\]
+	so the factorization of \Cref{prop:euler-factor} requires there to be infinitely many primes. In fact, by taking logarithms of the factorization, we can see $\sum_p\frac1p=+\infty$.
+\end{remark}
+The proof of \Cref{thm:dirichlet} more or less imitates the argument of \Cref{rem:euler-inf-primes}. Roughly speaking, we will show that
+\[\sum_{\substack{p\text{ prime}\\p\equiv a\pmod q}}\frac1p=+\infty,\]
+from which our infinitude follows. Finding a way to extract out the equivalence class $a\pmod q$ will use a little character theory.
+
+\subsection{Characters}
+Throughout, our groups will be finite and abelian, and actually we will be most interested in the abelian groups $\ZZ/n\ZZ$ and $(\ZZ/n\ZZ)^\times$ for integers $n$. Formally, here is our definition.
+\begin{definition}
+	Fix a positive integer $n$. Then we define $(\ZZ/n\ZZ)^\times$ as the units in $\ZZ/n\ZZ$, which is $\{a\pmod n:\gcd(a,n)=1\}$.
+\end{definition}
+\begin{remark}
+	It is a fact that $(\ZZ/p\ZZ)^\times$ is cyclic for any prime $p$. This is nontrivial to prove, but we will not show it here.
+\end{remark}
+Notably, given a prime factorization $n=\prod_{p\mid n}p^{\nu_p(n)}$, there is an isomorphism of rings
+\[\ZZ/n\ZZ\cong\prod_{p\mid n}\left(\ZZ/p^{\nu_p(n)}\right)\]
+and hence also an isomorphism of multiplicative groups, upon taking units.
+
+Having said all that, the theory is most cleanly build working with general finite abelian groups.
+\begin{definition}[dual group] \nirindex{character}
+	Let $G$ be a group. Then the \textit{dual group} is $G^*\coloneqq\op{Hom}(G,\CC^\times)$, where the operation is pointwise. Its elements are called \textit{characters}. Note there is a ``trivial'' character $1\colon G\to\CC^\times$ sending $g\mapsto1$, which is the identity. We might call $1$ the \textit{principal character}.
+\end{definition}
+\begin{remark} \label{rem:chars-to-s1}
+	If $G$ is a finite group, we note that any $\chi\in G^*$ and $g\in G$ has
+	\[\chi(g)^{\#G}=\chi\left(g^{\#G}\right)=1,\]
+	so $\chi(g)$ is a $(\#G)$th root of unity. In particular, $|\chi(g)|=1$, so $\overline{\chi(g)}=\chi(g)^{-1}=\chi\left(g^{-1}\right)$.
+\end{remark}
+% Here are some elementary facts.
+% \begin{lemma} \label{lem:basic-chars}
+% 	Let $G$ be a finite group.
+% 	\begin{listalph}
+% 		\item For any $g\in G$ and $\chi\in\widetilde G$, we have $\chi(g)^{\#G}=1$. Thus, $|\chi(g)|=1$ for all $g\in G$.
+% 		\item Suppose $G=\langle\sigma\rangle$ where $\sigma$ has order $n$. Then $\chi\colon G\to\CC^\times$ is uniquely determined by the image of $\sigma$.
+% 	\end{listalph}
+% \end{lemma}
+% \begin{proof}
+% 	We show these one at a time.
+% 	\begin{listalph}
+% 		\item Let $e$ be the identity. Then $\chi(g)^{\#G}=\chi\left(g^{\#G}\right)=\chi(e)=1$.
+% 		\item Given $\chi(\sigma)$, we note $\chi(\sigma^k)=\chi(\sigma)^k$.
+% 		\qedhere
+% 	\end{listalph}
+% \end{proof}
+It will be helpful to have the following notation.
+\begin{notation}
+	We might write $e\colon\CC\to\CC$ for the function $e(z)\coloneqq\exp(2\pi iz)$.
+\end{notation}
+We now begin computing $G^*$ for finite abelian groups.
+\begin{lemma} \label{lem:prod-dual}
+	Suppose $G$ and $H$ are groups. Then $G^*\times H^*\cong(G\times H)^*$ by sending $(\chi_G,\chi_H)$ to $(g,h)\mapsto\chi_G(g)\chi_H(g)$.
+\end{lemma}
+\begin{proof}
+	We have the following checks. Let $e_G$ and $e_H$ be the identities of $G$ and $H$, respectively.
+	\begin{itemize}
+		\item Well-defined: given $(\chi_G,\chi_H)\in G^*\times H^*$, define $\varphi(\chi_G,\chi_H)\colon G\times H\to\CC^\times$ by $\varphi(\chi_G,\chi_H)\colon(g,h)\mapsto\chi_G(g)\chi_H(h)$. Note $\varphi(\chi_G,\chi_H)$ is a homomorphism: we have
+		\begin{align*}
+			\varphi(\chi_G,\chi_H)((g,h)\cdot(g',h')) &= \varphi(\chi_G,\chi_H)(gg',hh') \\
+			&= \chi_G(gg')\chi_H(hh') \\
+			&= \chi_G(g)\chi_H(h)\chi_G(g')\chi_H(h') \\
+			&=\varphi(\chi_G,\chi_H)(g,h)\cdot\varphi(\chi_G,\chi_H)(g',h').
+		\end{align*}
+		\item Homomorphism: to show $\varphi$ is a homomorphism, we have
+		\begin{align*}
+			\varphi((\chi_G,\chi_H)\cdot(\chi_G',\chi_H'))(g,h)=\chi_G(g)\chi'_G(g)\chi_H(h)\chi'_H(h)=\varphi(\chi_G,\chi_H)(g,h)\cdot\varphi(\chi'_G,\chi'_H)(g,h),
+		\end{align*}
+		so $\varphi((\chi_G,\chi_H)\cdot(\chi'_G,\chi'_H))=\varphi(\chi_G,\chi_H)\cdot\varphi(\chi'_G,\chi'_H)$.
+		\item Injective: if $\varphi(\chi_G,\chi_H)=1$, then
+		\[\chi_G(g)\chi_H(h)=\varphi(\chi_G,\chi_H)(g,h)=1\]
+		for all $g\in G$ and $h\in H$. Setting $g=e_G$ shows that $\chi_H=1$, and similarly setting $h=e_H$ shows that $\chi_G=1$. Thus, $(\chi_G,\chi_H)=(1,1)$.
+		\item Surjective: given a character $\chi\colon(G\times H)\to\CC^\times$, define $\chi_G(g)\coloneqq\chi(g,e_H)$ and $\chi_H(h)\coloneqq\chi(e_G,h)$. Note $\chi_G$ is a character because
+		\[\chi_G(gg')=\chi(gg',e_H)=\chi(g,e_H)\chi(g',e_H)=\chi_G(g)\chi_G(g').\]
+		Switching the roles of $G$ and $H$ shows that $\chi_H$ is also a character. Lastly, we note $\varphi(\chi_G,\chi_H)=\chi$ because
+		\[\varphi(\chi_G,\chi_H)(g,h)=\chi(g,e_H)\chi(e_G,h)=\chi(g,h).\]
+		This completes the proof.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:cyclic-dual}
+	Suppose $G=\ZZ/n\ZZ$ for a positive integer $n$. Then $\chi_\bullet\colon\ZZ/n\ZZ\cong G^*$ by sending $[k]$ to the character $\chi_k\colon[\ell]\mapsto e(k\ell/n)$.
+\end{lemma}
+\begin{proof}
+	To begin, note $\chi_k\colon\ZZ\to\CC^\times$ defines a homomorphism because
+	\[\chi_k(\ell+\ell')=e\left(\frac{k(\ell+\ell')}n\right)=e\left(\frac{k\ell}n\right)e\left(\frac{k\ell'}n\right)=\chi_k(\ell)\chi_k(\ell').\]
+	Further, note $\chi_k(n\ell)=e(k\ell)=1$ for any $n\ell\in\ZZ$, so $n\ZZ\subseteq\ker\chi_k$. It follows that $\chi_k$ produces a homomorphism $\chi_k\colon G\to\CC^\times$.
+
+	We now note that $\chi_\bullet\colon\ZZ\to G^*$ defines a homomorphism: for any $[\ell]\in G$, we see
+	\[\chi_{k+k'}([\ell])=e\left(\frac{(k+k')\ell}n\right)=e\left(\frac{k\ell}n\right)e\left(\frac{k'\ell}n\right)=\chi_k([\ell])\chi_{k'}([\ell]).\]
+	Additionally, $\chi_{nk}([\ell])=e(k\ell)=1$, so $\chi_{nk}=1$, so $nk\in\ker\chi_\bullet$. It follows that $\chi_\bullet$ produces a homomorphism $\chi_\bullet\colon\ZZ/n\ZZ\to G^*$.
+
+	It remains to show that $\chi_\bullet$ is a bijection. We have two checks.
+	\begin{itemize}
+		\item Injective: suppose $\chi_k=1$ for $k\in\ZZ$. We must show $k\in n\ZZ$. Well, we must then have
+		\[1=\chi_k([1])=e(k/n),\]
+		which forces $n\mid k$.
+		\item Surjective: given some character $\chi\colon G\to\CC^\times$, we note $\chi([1])^n=\chi([0])=1$, so $\chi([1])$ is an $n$th root of unity. Thus, there exists $k$ such that $\chi([1])=e(k/n)=\chi_k([1])$. Thus, for any $\ell\in\{0,1,\ldots,n-1\}$, we see
+		\[\chi([\ell])=\chi(\underbrace{[1]+\cdots+[1]}_\ell)=\underbrace{\chi([1])\cdot\ldots\cdot\chi([1])}_\ell=\underbrace{\chi_k([1])\cdot\ldots\cdot\chi_k([1])}_\ell=\chi_k([\ell]),\]
+		so $\chi=\chi_k$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{proposition} \label{prop:g-cong-g-dual}
+	Let $G$ be a finite abelian group. Then $G\cong G^*$.
+\end{proposition}
+\begin{proof}
+	By the Fundamental theorem of finitely generated abelian groups, we may write
+	\[G\cong\prod_{i=1}^n\ZZ/n_i\ZZ\]
+	for some positive integers $n_i$. Thus, using \Cref{lem:prod-dual} and \Cref{lem:cyclic-dual}, we compute
+	\[G^*\cong\Bigg(\prod_{i=1}^n\ZZ/n_i\ZZ\Bigg)^*=\prod_{i=1}^n(\ZZ/n_i\ZZ)^*\cong\prod_{i=1}^n\ZZ/n_i\ZZ\cong G,\]
+	which is what we wanted.
+\end{proof}
+\Cref{prop:g-cong-g-dual} might look like we now understand dual groups perfectly, but the isomorphism given there is non-canonical because the isomorphism of \Cref{lem:cyclic-dual} is non-canonical. In other words, given some $g\in G$, there is in general no good way to produce character $\chi\in G^*$.
+
+However, there is a natural map $G\to G^{**}$ which is an isomorphism.
+\begin{proposition}
+	Fix a finite abelian group $G$. Define the map $\op{ev}_\bullet\colon G\to G^{**}$ by sending $g\in G$ to the map $\op{ev}_g\in G^{**}$ defined by $\op{ev}_g\colon\chi\mapsto\chi(g)$. Then $\op{ev}_\bullet$ is an isomorphism.
+\end{proposition}
+\begin{proof}
+	We begin by checking that $\op{ev}_\bullet$ is a well-defined homomorphism. For each $g\in G$, we see $\op{ev}_g\colon G^*\to\CC^\times$ is a homomorphism because
+	\[\op{ev}_g(\chi\chi')=\chi(g)\chi(g')=\op{ev}_g(\chi)\op{ev}_g(\chi').\]
+	Further, $\op{ev}_\bullet$ is a homomorphism because
+	\[\op{ev}_{gg'}(\chi)=\chi(g)\chi(g')=\op{ev}_g(\chi)\op{ev}_{g'}(\chi).\]
+	It remains to show that $\op{ev}_\bullet$ is an isomorphism. We claim that $\op{ev}_\bullet$ is injective, which will be enough because $|G|=|G^{**}|$ by \Cref{prop:g-cong-g-dual}.
+
+	For this, we appeal to the following lemma.
+	\begin{lemma} \label{lem:annoying-double-dual-lemma}
+		Fix a finite abelian group $G$ with identity $e$. If $g\ne e$, then there exists $\chi\in G^*$ such that $\chi(g)\ne1$.
+	\end{lemma}
+	\begin{proof}
+		Using the Fundamental theorem of finitely generated abelian groups, we may write
+		\[G\cong\prod_{i=1}^n\ZZ/n_i\ZZ\]
+		for positive integers $n_i\ge2$. Moving our problem from $G$ to the right-hand side, we are given some $(g_i)_{i=1}^n$ such that $[g_i]\ne[0]$ for at least one $i$, and we want a character $\chi$ such that $\chi\left((g_i)_{i=1}^n\right)\ne1$. Without loss of generality, suppose that $g_1\ne0$ and define $\chi$ by
+		\[\chi\left((k_i)_{i=1}^n\right)\coloneqq e(k_1/n_1).\]
+		Certainly $\chi\left((g_i)_{i=1}^n\right)=e(g_1/n_1)\ne1$, so it remains to show that $\chi$ is a character. This technically follows from \Cref{lem:prod-dual}, but we can see it directly by computing
+		\[\chi\left((k_i)_{i=1}^n+(k'_i)_{i=1}^n\right)=e(k_1/n_1)e(k'_1/n_1)=\chi\left((k_i)_{i=1}^n\right)\chi\left((k'_i)_{i=1}^n\right).\]
+		This completes the proof.
+	\end{proof}
+	The proof now follows quickly from \Cref{lem:annoying-double-dual-lemma}. By contraposition, we see that any $g\in G$ such that $\chi(g)=1$ for all $\chi\in G^*$ and must have $g=e$. But this is exactly the statement that $\op{ev}_\bullet\colon G\to G^{**}$ is injective.
+\end{proof}
+
+\subsection{Finite Fourier Analysis}
+We now proceed to essentially do Fourier analysis for finite abelian groups. Here is the idea.
+\begin{idea} \label{idea:rep-theory}
+	We can write general functions $G\to\CC$ as linear combinations of characters.
+\end{idea}
+\begin{remark}
+	When $G$ is not abelian, one must work with function $G\to\CC$ which are ``locally constant'' on conjugacy classes of $G$.
+\end{remark}
+Here is our Fourier transform.
+\begin{notation}
+	Let $G$ be a finite abelian group. Given a function $f\colon G\to\CC$, we define $f^*\colon G^*\to\CC$ by
+	\[f^*(\chi)\coloneqq\sum_{g\in G}f(g)\overline{\chi(g)}.\]
+	Recall $\overline{\chi(g)}=\chi\left(g^{-1}\right)$ by \Cref{rem:chars-to-s1}.
+\end{notation}
+To manifest \Cref{idea:rep-theory} properly, we need the following orthogonality relations.
+\begin{proposition} \label{prop:ortho-relations}
+	Let $G$ be a finite abelian group.
+	\begin{itemize}
+		\item For any fixed $\chi\in G^*$, we have
+		\[\sum_{g\in G}\chi(g)=\begin{cases}
+			0 & \text{if }\chi\ne1, \\
+			\#G & \text{if }\chi=1.
+		\end{cases}\]
+		\item For any $g\in G$, we have
+		\[\sum_{\chi\in G^*}\chi(g)=\begin{cases}
+			0 & \text{if }g\ne e, \\
+			\#G & \text{if }g=e.
+		\end{cases}\]
+	\end{itemize}
+\end{proposition}
+\begin{proof}
+	We show these directly.
+	\begin{listalph}
+		\item If $\chi=1$, then the sum is $\sum_{g\in G}1=\#G$.
+		
+		Otherwise, $\chi\ne1$, so there exists $g_0\in G$ such that $\chi(g_0)\ne1$. It follows
+		\[\chi(g_0)\sum_{g\in G}\chi(g)=\sum_{g\in G}\chi(g_0g)\stackrel*=\sum_{g\in G}\chi(g),\]
+		so we must have $\sum_{g\in G}\chi(g)=0$. Note that we have re-indexed the sum at $\stackrel*=$.
+		\item If $g=e$, then the sum is $\sum_{\chi\in G^*}\chi(g)=\#(G^*)$, which is $\#G$ by \Cref{prop:g-cong-g-dual}.
+
+		Otherwise, $g\ne e$, so by \Cref{lem:annoying-double-dual-lemma}, there exists $\chi_0$ such that $\chi_0(g)\ne1$. Employing the same trick, it follows
+		\[\chi_0\sum_{\chi\in G^*}\chi(g)=\sum_{\chi\in G^*}(\chi_0\chi)(g)\stackrel*=\sum_{\chi\in G^*}\chi(g),\]
+		so we must have $\sum_{\chi\in G^*}\chi(g)=0$. Again, we re-indexed at $\stackrel*=$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Now here is our result.
+\begin{theorem}[Fourier inversion] \label{thm:fourier-inversion}
+	Let $G$ be a finite abelian group. For any $f\colon G\to\CC$, we have
+	\[f(g)=\frac1{\#G}\sum_{\chi\in G^*}f^*(\chi)\chi(g)\]
+	for any $g\in G$.
+\end{theorem}
+\begin{proof}
+	This is direct computation with \Cref{prop:ortho-relations}. Indeed, for any $g_0\in G$, we see
+	\[\sum_{\chi\in G^*}f^*(\chi)\chi(g_0) = \sum_{\chi\in G^*}\sum_{g\in G}f(g)\chi\left(g^{-1}\right)\chi(g_0) = \sum_{g\in G}\Bigg(f(g)\sum_{\chi\in G^*}\chi\left(g^{-1}g_0\right)\Bigg).\]
+	Now using \Cref{prop:ortho-relations}, given $g\in G$, we see that the inner sum will vanish whenever $g\ne g_0$ and returns $\#G$ when $g=g_0$. In total, it follows
+	\[\frac1{\#G}\sum_{\chi\in G^*}f^*(\chi)\chi(g_0)=f(g_0),\]
+	which is exactly what we wanted.
+\end{proof}
+Here is our chief application.
+\begin{corollary}
+	Let $G$ be a finite abelian group. Fixing some $g_0\in G$, we have
+	\[1_{g_0}(g)=\frac1{\#G}\sum_{\chi\in\widehat G}\overline{\chi(g_0)}\chi(g)\]
+	for any $g\in G$.
+\end{corollary}
+\begin{proof}
+	Note
+	\[1_{g_0}^*(\chi)=\sum_{g\in G}1_{g_0}(g)\overline{\chi(g)}=\overline{\chi(g_0)}\]
+	because all terms except $g=g_0$ vanish. The result now follows from \Cref{thm:fourier-inversion}.
+\end{proof}
+
+\subsection{Dirichlet Characters}
+We want to extend our characters on $(\ZZ/q\ZZ)^\times$ to work on all $\ZZ$, but this requires some trickery because, for example, $0$ is not in general represented in $(\ZZ/q\ZZ)^\times$. Here is our definition.
+\begin{definition}[Dirichlet character]
+	Let $q$ be a nonzero integer. A \textit{Dirichlet character$\pmod q$} is a function $\chi\colon\ZZ\to\CC$ such that there exists a character $\widetilde\chi\colon(\ZZ/q\ZZ)^\times\to\CC^\times$ for which
+	\[\chi(a)=\begin{cases}
+		0 & \text{if }\gcd(a,q)>1, \\
+		\widetilde\chi([a]) & \text{if }\gcd(a,q)=1.
+	\end{cases}\]
+	We might write this situation as $\chi\pmod q$.
+\end{definition}
+\begin{remark}
+	Note $\chi$ is periodic with period $q$.
+\end{remark}
+We can finally define our generalization of $\zeta$.
+\begin{definition}[Dirichlet $L$-function]
+	Fix a Dirichlet character $\chi\pmod q$. Then we define the \textit{Dirichlet $L$-function} as
+	\[L(s,\chi)\coloneqq\sum_{n=1}^\infty\frac{\chi(n)}{n^s}=\prod_{p\text{ prime}}\frac1{1-\chi(p)p^{-s}}.\]
+	Note we have absolute convergence for $\op{Re}s>1$.
+\end{definition}
+In fact, these definitions work for $\op{Re}s>0$, which we will talk about later.
 
 \end{document}
