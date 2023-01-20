@@ -1,0 +1,160 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{January 20}
+
+We continue. Today we move towards a proof of \Cref{thm:hasse-mink}.
+
+\subsection{Orthogonal Basis}
+We established a lot of notation last class, so we pick up the following notation.
+\begin{definition}[quadratic space]
+	Fix a field $K$ of characteristic not $2$. Then a \textit{quadratic space} is a triple $(V,Q,B)$, where $Q$ is a quadratic form on the finite-dimensional $K$-vector space $V$, and $B$ is the corresponding bilinear form. We say that the space $(V,Q,B)$ is \textit{non-degenerate} if $Q$ is.
+\end{definition}
+Bilinear forms tend to behave with special bases.
+\begin{definition}[orthogonal]
+	Fix a field $K$ and a quadratic space $(V,Q,B)$. Then $v$ and $w$ are \textit{orthogonal} if and only if $B(v,w)=0$.
+\end{definition}
+Here's why we care.
+\begin{lemma}
+	Fix a field $K$ of characteristic not $2$. Then a quadratic space $(V,Q,B)$ admits a basis of orthogonal vectors.
+\end{lemma}
+\begin{proof}
+	We induct on $\dim V$. If $Q=0$ (for example, if $\dim V=0$), then $B(v,w)=\frac12(Q(v+w)-Q(v)-Q(w))=0$ for all $v,w\in V$, so any basis will work.
+
+	Otherwise, $Q\ne0$. It follows that $Q(e_1)\ne0$ for some fixed $e_1\in V$. To induct downwards, we let $H$ denote the kernel of the map $B(e_1,\cdot)\colon V\to K$, which is surjective because $B(e_1,e_1)\ne0$. As such, we can decompose
+	\[V\stackrel?=Ke_1\oplus H,\]
+	which is a direct sum as vector spaces. Indeed, for any $v\in V$, we can write $v=\langle e_1,v\rangle e_1+(v-\langle e_1,v\rangle e_1)$ so that $\langle e_1,v\rangle e_1\in Ke_1$ while $(v-\langle e_1,v\rangle e_1)\in H$. Because $\dim H=\dim V-\dim K=\dim V-1$ and $\dim Ke_1=1$, we conclude that this must in fact be a direct sum.
+
+	% Namely,
+	% \[B(ae_1+h,a'e_1+h')=B(ae_1,a'e_1)+B(h,h')\]
+	% for $ae_1,a'e_1\in Ke_1$ and $h,h'\in H$, so $B$ is properly restricting to a $K$-bilinear form.
+	We now apply the inductive hypothesis to $H$ to finish. Indeed, $\dim H<\dim V$ grants us an orthogonal basis $\{e_2,\ldots,e_n\}$ spanning $H$, where $n\coloneqq\dim V$. Thus, $\{e_1,\ldots,e_n\}$ spans $V$ and is a basis, and we see $\langle e_i,e_j\rangle=0$ for any $i<j$ because either $i=1$ and $e_j\in H$ or by construction of the $e_i$ if $i,j\ge2$.
+\end{proof}
+\begin{remark}
+	Note that when $Q$ is given an orthogonal basis $\{e_i\}_{i=1}^n$, we get to compute that $v=\sum_ix_ie_i$ yields
+	\[Q(v)=B(v,v)=\sum_{i=1}^n\sum_{j=1}^nx_ix_jB(x_i,x_j)=\sum_{i=1}^na_ix_i^2,\]
+	where $a_i\coloneqq B(e_i,e_i)$. The point is that we only need to look at quadratic forms lacking cross terms.
+\end{remark}
+
+\subsection{Small Dimensions}
+We are going to induct on dimension to show \Cref{thm:hasse-mink}, so we pick up a few lemmas.
+\begin{definition}[represents]
+	Fix a quadratic space $(V,Q,B)$ over a field $K$ not of characteristic $2$. Then we say $Q$ \textit{represents} $c\in K$ if and only if there is a nonzero $v\in V$ such that $Q(v)=c$.
+\end{definition}
+The following lemma explains why we've been focusing on representing $0$ thus far (e.g., in the statement of \Cref{thm:hasse-mink}).
+\begin{lemma} \label{lem:rep-zero-gives-all}
+	Fix a non-degenerate quadratic space $(V,Q,B)$ over a field $K$ not of characteristic $2$. If $Q$ represents $0$, then $Q$ represents $c$ for all $c\in K$.
+\end{lemma}
+\begin{proof}
+	To begin, for any $t\in K$ and $v,w\in V$, we compute
+	\[Q(tv+w)-t^2Q(v)-Q(w)=Q(tv+w)-Q(tv)-Q(w)=2B(tv,w)=2tB(v,w),\]
+	so
+	\[Q(tv+w)=t^2Q(v)+2tB(v,w)+Q(v).\]
+	Now, because $Q$ represents $0$, we may find $v\ne0$ such that $Q(v)=0$. Further, because $Q$ is non-degenerate, we see that $v\ne0$ requires $w\in V$ such that $B(v,w)\ne0$ by \Cref{rem:non-degenerate-bilin}. Setting $\alpha\coloneqq2B(v,w)$ and $\beta=Q(w)$, we see
+	\[Q(tv+w)=\alpha t+\beta,\]
+	where $\alpha\ne0$, so letting $t$ vary completes the proof. Indeed, for any $c\in K$, set $t\coloneqq(c-\beta)/\alpha$.
+\end{proof}
+The following lemma will be useful in our induction on variables.
+\begin{lemma} \label{lem:increase-vars}
+	Fix a non-degenerate quadratic space $(V,Q,B)$ over a field $K$ not of characteristic $2$. Then $Q$ represents $c\in K$ if and only if $R\coloneqq Q-cy^2$ represents $0$, where $R$ is on a vector space of dimension one larger.
+\end{lemma}
+\begin{proof}
+	In one direction, if $Q(x_1,\ldots,x_n)=c$ for some $(x_1,\ldots,x_n)\ne0$, then $R(x_1,\ldots,x_n,1)=c-c=0$ with $(x_1,\ldots,x_n,1)\ne0$.
+	
+	In the other direction, suppose $R(x_1,\ldots,x_n,y)=0$ for $(x_1,\ldots,x_n,y)\ne0$. Note $Q(x_1,\ldots,x_n)=cy^2$, so we have two cases.
+	\begin{itemize}
+		\item If $y\ne0$, then we see $Q(x_1/y,\ldots,x_n/y)=c$.
+		\item If $y=0$, then we see $Q(x_1,\ldots,x_n)=0$, but $(x_1,\ldots,x_n)\ne0$, so \Cref{lem:rep-zero-gives-all} finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Here is a more basic lemma to deal with small dimensions.
+\begin{lemma} \label{lem:reps-0-to-norms}
+	Fix a field $K$ not of characteristic $2$. Fix nonzero $a,b,c\in K$.\todo{Nonzero?}
+	\begin{listalph}
+		\item $Q=x^2$ does not represent $0$.
+		\item $Q=x^2-ay^2$ represents $0$ if and only if $a$ is a square.
+		\item $Q=x^2-ay^2-bz^2$ represents $0$ if and only if $b$ is in the image of the norm map $\op N\colon K(\sqrt a)\to K$.
+		\item $Q=x^2-by^2-cz^2+acw^2$ represents $0$ if and only if $c$ is in the image of the norm map $K(\sqrt a,\sqrt b)\to K(\sqrt{ab})$.
+	\end{listalph}
+\end{lemma}
+Note that part (d) really requires expanding our field $K$ in a nontrivial way. In particular, even if one only cared about $\QQ$, phrasing part (d) without extending from $\QQ$ would require some obfuscation.
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item Note $x^2=0$ implies $x=0$.
+		\item Applying \Cref{lem:increase-vars} to (a), we see that $Q$ represents $0$ if and only if $Q_1\coloneqq x^2$ represents $a$. (Note $Q_1$ is non-degenerate: it has discriminant $1$.)
+		\item If $a$ is a square, then $Q$ represents $0$ (take $(x,y,z)=(\sqrt a,1,0)$), and $b$ is indeed in the image of the norm map $K\to K$.
+		
+		Otherwise, $a\ne0$ is not a square, so $x^2-ay^2$ is a non-degenerate quadratic form. By \Cref{lem:increase-vars} we see $Q$ represents $0$ if and only if $x^2-ay^2$ represents $b$, or
+		\[b=(x-y\sqrt a)(x+y\sqrt a)=\op N^{K(\sqrt a)}_K(x+y\sqrt a)\]
+		for some $x,y\in K$, which is equivalent to $b\in\im\op N^{K(\sqrt a)}_K$.
+		
+		\item This is a bit complicated. We will work towards having the following tower of fields.
+		% https://q.uiver.app/?q=WzAsNSxbMSwwLCJLKFxcc3FydCBhLFxcc3FydCBiKSJdLFswLDEsIksoXFxzcXJ0IGEpIl0sWzEsMSwiSyhcXHNxcnR7YWJ9KSJdLFsyLDEsIksoXFxzcXJ0IGIpIl0sWzEsMiwiSyJdLFswLDEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsMiwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDQsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwzLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsNCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\begin{equation}
+			\begin{tikzcd}
+				& {K(\sqrt a,\sqrt b)} \\
+				{K(\sqrt a)} & {K(\sqrt{ab})} & {K(\sqrt b)} \\
+				& K
+				\arrow[no head, from=1-2, to=2-1]
+				\arrow[no head, from=2-1, to=3-2]
+				\arrow[no head, from=1-2, to=2-2]
+				\arrow[no head, from=2-2, to=3-2]
+				\arrow[no head, from=1-2, to=2-3]
+				\arrow[no head, from=2-3, to=3-2]
+			\end{tikzcd} \label{eq:quad-tower}
+		\end{equation}
+		We quickly deal with degenerate cases.
+		\begin{itemize}
+			\item If $a$ is a square, recall $a\ne0$, so $Q$ represents $0$ by $(x,y,z,w)=(0,0,1,1/\sqrt a)$. Further, we see $K(\sqrt a,\sqrt b)=K(\sqrt{ab})$ because $a\ne0$, so $c$ is of course in the image of the norm map.
+			\item If $b$ is a square, $Q$ represents $0$ by $(x,y,z,w)=(\sqrt b,1,0,0)$. Further, $K(\sqrt a,\sqrt b)=K(\sqrt{ab})$ because $b\ne0$, so $c$ is again in the image of the norm map.
+			\item If $ab$ is a square but neither nor $a$ nor $b$ are squares, then we see that $\sqrt a=\sqrt{ab}/\sqrt b$, so $K(\sqrt a)=K(\sqrt b)$. Thus, $c$ is in the image of the norm map $K(\sqrt a,\sqrt b)\to K(\sqrt{ab})$ if and only if $c$ is in the image of the norm map $K(\sqrt b)\to K$.
+
+			If $c$ is in the image of the norm map, then $0=x^2-by^2-c\cdot012+ac\cdot0^2$ for some $x,y\in K$, so $Q$ represents $0$. Conversely, if $Q$ represents $0$ by $(x,y,z,w)\ne0$, then we note $z^2-aw^2=0$ forces $z=w=0$ by (b) and so $x^2-by^2=0$, which forces $x=y=0$ by (b) again. Thus, $z^2-aw^2\ne0$, so we can solve
+			\[c=\frac{x^2-by^2}{z^2-aw^2}=\frac{\op N^{K(\sqrt b)}_K(x+b\sqrt y)}{\op N^{K(\sqrt a)}_K(z+w\sqrt a)},\]
+			so $c$ is in the image of the map ${\op N^{K(\sqrt a)}_K}=\op N^{K(\sqrt b)}_K$ because this function is multiplicative.
+		\end{itemize}
+		% Thus, we assume that neither $a$ nor $b$ is a square. By direct expansion, we can compute
+		% \[Q(x,y,z,t)=0\iff c=\frac{\op N^{K(\sqrt b)}_K(x+y\sqrt b)}{\op N^{K(\sqrt a)}_K(z+w\sqrt a)}.\]
+		% Continuing, this is equivalent to saying $c=\op N^{K(\sqrt a)}_K(\alpha)\cdot\op N^{K(\sqrt\beta)}_K(\beta)$ for some $\alpha,\beta$.
+
+		% As a last degenerate case, suppose $K(\sqrt a)=K(\sqrt b)$, so $\sqrt b=x+y\sqrt a$ for $x,y\in K$, and we know $y\ne0$. Now, the Galois action forces $-\sqrt b=x-y\sqrt a$, so $x=0$ is forced, meaning $\sqrt b=c\sqrt a$ for some $c\in K$, which is equivalent to $ab\in K^{\times2}$. However, we see that $c$ is in the image of the norm map $K(\sqrt a,\sqrt b)\to K(\sqrt{ab})$ if and only if $c$ is in the image of the norm map $K(\sqrt a)\to K$, which is equivalent to the condition we just gave.
+
+		Lastly, we must deal with the case where all the quadratic fields in \eqref{eq:quad-tower} are not $K$. Quickly, we note that $K(\sqrt a)\ne K(\sqrt b)$ in this situation. Indeed, if $\sqrt a\in K(\sqrt b)$, then we can write $\sqrt a=x+y\sqrt b$ for some $x,y\in K$. Applying the Galois action of $K(\sqrt a)=K(\sqrt b)$, we then see
+		\[-\sqrt a=x-y\sqrt b,\]
+		so $x=0$, and we get $\sqrt a=y\sqrt b$ for some $y\in K$. Thus, $\sqrt{ab}=yb$, implying $K(\sqrt{ab})=K$, which degenerates this case.
+		
+		It follows $K(\sqrt a)\cap K(\sqrt b)=K$ in our case, so $K(\sqrt a,\sqrt b)/K$ is in fact a biquadratic extension in our case. Arguing exactly as in the last degenerate case above, we note that $Q$ represents $0$ by $(x,y,z,w)\ne0$ if and only if
+		\[c=\frac{x^2-by^2}{z^2-aw^2}=\frac{\op N^{K(\sqrt b)}_K(x+y\sqrt b)}{\op N^{K(\sqrt a)}_K(z+w\sqrt a)},\]
+		which is equivalent to $c=\op N^{K(\sqrt a)}_K(\alpha)\cdot\op N^{K(\sqrt b)}_K(\beta)$ for some $\alpha\in K(\sqrt a)$ and $\beta\in K(\sqrt b)$. We would like this last condition to be equivalent to $c\in\op N^{K(\sqrt a,\sqrt b)}_K$. Thus, to finish the proof, we outsource to the following lemma.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{lemma}
+	Fix a field $K$ not of characteristic not $2$. Find $a,b\in K$ such that $[K(\sqrt a,\sqrt b):K]=4$. Then $c\in K^\times$ is in the image of the norm map $\op N\colon K(\sqrt a,\sqrt b)\to K(\sqrt{ab})$ if and only if there exist $\alpha\in K(\sqrt a)$ and $b\in K(\sqrt b)$ such that
+	\[c=\op N^{K(\sqrt a)}_K(\alpha)\cdot\op N^{K(\sqrt b)}_K(\beta).\]
+\end{lemma}
+\begin{proof}
+	Observe that we are still dealing with the tower of fields in \eqref{eq:quad-tower}. Now, note
+	\[\op{Gal}(K(\sqrt a,\sqrt b)/K)=\{1,\sigma,\tau,\sigma\tau\},\]
+	where $\sigma\colon\sqrt a\mapsto\sqrt a$ and $\sigma\colon\sqrt b\mapsto-\sqrt b$ and $\tau\colon\sqrt a\mapsto-\sqrt a$ and $\tau\colon\sqrt b\mapsto\sqrt b$. We now want the following to be equivalent.
+	\begin{itemize}
+		\item There are $x,y\in K(\sqrt a,\sqrt b)$ such that $(\sigma-1)x=(\tau-1)y=0$ and $xy\cdot\sigma\tau(x,y)=c$.
+
+		Indeed, $(\sigma-1)x=0$ means $x\in K(\sqrt a)$, and similarly for $y$, so this statement is equivalent to $c=\op N^{K(\sqrt a)}_K(\alpha)\cdot\op N^{K(\sqrt b)}_K(\beta)$ for some $\alpha\in K(\sqrt a)$ and $\beta\in K(\sqrt b)$.
+
+		\item There is $z\in K(\sqrt a,\sqrt b)$ such that $z\cdot\sigma\tau(z)=c$.
+
+		Indeed, note $\sigma\tau(\sqrt{ab})=\sqrt{ab}$, so $\op{Gal}(K(\sqrt{ab})/K)=\{1,\sigma\tau\}$. Thus, this is equivalent to $c$ being in the image of the norm map $\op N\colon K(\sqrt a,\sqrt b)\to K(\sqrt{ab})$.
+	\end{itemize}
+	We will finish the proof of this lemma next class.
+\end{proof}
+\begin{remark}
+	\Cref{lem:reps-0-to-norms} provides the connection to norms, which have a connection to cohomology. So we can see that, indeed, we will be able to use cohomological tools shortly.
+\end{remark}
+
+\end{document}
