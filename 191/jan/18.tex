@@ -19,7 +19,7 @@ We're teaching analytic number theory. Here are some notes.
 	\item We should all write an email to Professor Zhang to introduce ourselves; for example, say what you're looking forward to in the course.
 \end{itemize}
 
-\subsection{Primer on Infinite Primes}
+\subsection{Facts about Dirichlet Series}
 In this first part of the course, we will be moving towards the following result.
 \begin{theorem}[Dirichlet] \label{thm:dirichlet}
 	Fix nonzero integers $a,q\in\ZZ$ such that $\gcd(a,q)=1$. Then there exist infinitely many primes $p$ such that $p\equiv a\pmod q$.
@@ -28,22 +28,101 @@ The statement of \Cref{thm:dirichlet} is purely elementary, but the standard pro
 
 The functions we will do analysis on are generalizations of the Riemann $\zeta$ function, defined as
 \[\zeta(s)\coloneqq\sum_{n=1}^\infty\frac1{n^s},\]
-which converges absolutely for $s\in\CC$ such that $\op{Re}s>1$. The following factorization is due to Euler.
-\begin{proposition} \label{prop:euler-factor}
-	For $s\in\CC$ such that $\op{Re}s>1$, we have
-	\[\zeta(s)=\prod_{p\text{ prime}}\frac1{1-p^{-s}}.\]
+which converges absolutely for $s\in\CC$ such that $\op{Re}s>1$. Indeed, we can show this.
+\begin{lemma} \label{lem:holo-limit}
+	Fix some open, connected subset $U\subseteq\CC$ and some function $f\colon U\to\CC$. Given holomorphic functions $f_n\colon U\to\CC$ for each $n\in\NN$, if $f_n\to f$ uniformly on all compact subsets $D\subseteq U$, then $f$ is holomorphic.
+\end{lemma}
+\begin{proof}
+	The point is to use Morera's theorem. Each $f_n$ is continuous, so we see $f$ is continuous as well. Thus, fixing any closed piecewise $C^1$ path $\gamma\colon[0,1]\to U$, we would like to show
+	\[\oint_\gamma f(z)\,dz\stackrel?=0.\]
+	Note $\im\gamma$ is compact, so $f_n\to f$ uniformly on $\im\gamma$. Thus, fixing any $\varepsilon>0$, we can find some $N$ such that
+	\[|f(z)-f_n(z)|<\varepsilon\]
+	for all $n>N$. Fixing any $n>N$, we find
+	\[\left|\oint_\gamma f(z)\,dz\right|=\left|\oint_\gamma f(z)\,dz-\oint_\gamma f_n(z)\,dz\right|\le\oint_\gamma|f(z)-f_n(z)|\,dz\le\varepsilon\ell(\gamma),\]
+	where $\ell(\gamma)$ is the length of $\gamma$. (Note $\ell(\gamma)$ is finite because $\gamma$ is piecewise $C^1$.) Sending $\varepsilon\to0^+$ finishes the proof.
+\end{proof}
+\begin{proposition} \label{prop:basic-dirichlet-series}
+	Let $f\colon\NN\to\CC$ denote a sequence of complex numbers such that $|f(n)|=O\left(n^\sigma\right)$ for some $\sigma\in\RR$. Then the series
+	\[D(s)\coloneqq\sum_{n=1}^\infty\frac{f(n)}{n^s}\]
+	converges absolutely for $s\in\CC$ such that $\op{Re}s>\sigma+1$. Thus, $D(s)$ defines a holomorphic function in this region.
 \end{proposition}
 \begin{proof}
-	Roughly speaking, we use unique prime factorization in $\ZZ$, writing
-	\[\prod_{p\text{ prime}}\frac1{1-p^{-s}}=\prod_{p\text{ prime}}\sum_{k=1}^\infty\frac1{p^{-ks}}=\sum_{n=1}^\infty\frac1{n^s},\]
-	which is what we wanted. Rigorously, one ought to bound the size of our primes to get the required convergence.
+	We are given $|f(n)|\le Cn^\sigma$ for some $C>0$. Thus, showing the absolute convergence is direct: note
+	\[\sum_{n=1}^\infty\left|\frac{f(n)}{n^s}\right|\le C\sum_{n=1}^\infty\frac1{n^{\op{Re}(s)-\sigma}},\]
+	which converges because $\op{Re}(s)-\sigma>1$.
+	
+	We can now convert absolute convergence to uniform convergence of the partial sums $\{D_n\}_{n\in\NN}$ of $D$, from which \Cref{lem:holo-limit} will finish. Fix some compact subset $D\subseteq U$, and we want to show $D_n\to D$ uniformly on $D$. Because $D$ is compact, there exists $s_0\in D$ with minimal $\op{Re}s_0$; define $\sigma_0\coloneqq\op{Re}s_0$. Now, the series
+	\[\sum_{n=1}^\infty\frac{|f(n)|}{n^{\sigma_0}}\]
+	converges by our absolute convergence.
+	
+	As such, for any $\varepsilon>0$, select $N$ such that $n_0>N$ implies
+	\[\sum_{n>n_0}\frac{|f(n)|}{n^{\sigma_0}}<\varepsilon.\]
+	Thus, for any $s\in\CC$ and $n_0>N$, we see
+	\[\left|D(s)-D_{n_0}(s)\right|=\left|\sum_{n>n_0}\frac{f(n)}{n^s}\right|\le\sum_{n>n_0}\frac{|f(n)|}{n^{\op{Re}s}}\le\sum_{n>n_0}\frac{|f(n)|}{n^{\sigma_0}}<\varepsilon,\]
+	which is what we wanted.
 \end{proof}
-\begin{remark} \label{rem:euler-inf-primes}
-	Note that
-	\[\lim_{s\to1^+}\zeta(s)=+\infty,\]
-	so the factorization of \Cref{prop:euler-factor} requires there to be infinitely many primes. In fact, by taking logarithms of the factorization, we can see $\sum_p\frac1p=+\infty$.
-\end{remark}
-The proof of \Cref{thm:dirichlet} more or less imitates the argument of \Cref{rem:euler-inf-primes}. Roughly speaking, we will show that
+It follows from \Cref{prop:basic-dirichlet-series} that $\zeta(s)$ defines a holomorphic function on $\op{Re}s>1$.
+
+\subsection{The Euler Product}
+The following factorization is due to Euler.
+\begin{proposition} \label{prop:euler-factor}
+	Let $f\colon\NN\to\CC$ be a multiplicative function such that $|f(n)|=O\left(n^\sigma\right)$. For any $s\in\CC$ such that $\op{Re}s>\sigma+1$, we have
+	\[\sum_{n=1}^\infty\frac{f(n)}{n^s}=\prod_{p\text{ prime}}\Bigg(\sum_{k=0}^\infty\frac{f\left(p^k\right)}{p^{ks}}\Bigg).\]
+\end{proposition}
+\begin{proof}
+	Fix $s\in\CC$ with $\op{Re}s>\sigma+1$. Roughly speaking, this follows from unique prime factorization in $\ZZ$. For and $N$ and $M$ to be fixed later, define
+	\[P_{N,M}\coloneqq\prod_{p<N}\Bigg(\sum_{k=0}^{M-1}\frac{f\left(p^k\right)}{p^{ks}}\Bigg),\]
+	and define $P_{N,\infty}$ analogously. Define $A_{N,M}$ to be the set of integers $n$ such that the prime factorization of $n$ includes primes less than $N$ each to a power less than $M$, and define $A_{N,\infty}$ analogously. Note $A_{N,M}$ is a finite set, so the distributive law implies
+	\[P_{N,M}=\sum_{n\in A_{N,M}}\frac{f(n)}{n^s}.\]
+	To begin, we fix $N$ and claim
+	\[P_{N,\infty}\stackrel?=\sum_{n\in A_{N,\infty}}\frac{f(n)}{n^s}.\]
+	Note $P_{N,\infty}=\lim_{M\to\infty}P_{N,M}$, so we fix some $M>0$ and compute
+	\[\left|P_{N,M}-\sum_{n\in A_{N,\infty}}\frac{f(n)}{n^s}\right|=\left|\sum_{n\in A_{N,\infty}\setminus A_{N,M}}\frac{f(n)}{n^s}\right|\le\sum_{n\notin A_{N,M}}\left|\frac{f(n)}{n^s}\right|.\]
+	Now, the smallest $n$ such that $n\notin A_{N,M}$ is at least $2^M$, so we see
+	\[\left|P_{N,M}-\sum_{n\in A_{N,\infty}}\frac{f(n)}{n^s}\right|\le\sum_{n\ge 2^M}\left|\frac{f(n)}{n^s}\right|,\]
+	which now vanishes as $M\to\infty$ because $\sum_{n=1}^\infty f(n)/n^s$ converges absolutely by \Cref{prop:basic-dirichlet-series}. This completes the proof of the claim.
+
+	We now send $N\to\infty$ to finish the proof. For any $N>0$, we use the claim to note
+	\[\left|P_{N,\infty}-\sum_{n=1}^\infty\frac{f(n)}{n^s}\right|=\left|\sum_{n\notin A_{N,\infty}}\frac{f(n)}{n^s}\right|\le\sum_{n\notin A_{N,\infty}}\left|\frac{f(n)}{n^s}\right|.\]
+	Now, we note that the smallest $n\notin A_{N,\infty}$ is at least $N$ because any $n<N$ has a prime factor less than $N$, so
+	\[\left|P_{N,\infty}-\sum_{n=1}^\infty\frac{f(n)}{n^s}\right|\le\sum_{n\ge N}\left|\frac{f(n)}{n^s}\right|,\]
+	and now we see that the right-hand side goes to $0$ as $N\to\infty$ because $\sum_{n=1}^\infty f(n)/n^s$ converges absolutely by \Cref{prop:basic-dirichlet-series}. The proposition follows.
+\end{proof}
+\begin{corollary} \label{cor:euler-factor-zeta}
+	We have
+	\[\zeta(s)=\sum_{n=1}^\infty\frac1{n^s}=\prod_{p\text{ prime}}\frac1{1-p^{-s}}.\]
+\end{corollary}
+\begin{proof}
+	By \Cref{prop:euler-factor}, we see
+	\[\zeta(s)=\prod_{p\text{ prime}}\Bigg(\sum_{k=0}^\infty\frac1{p^{ks}}\Bigg)=\prod_{p\text{ prime}}\frac1{1-p^{-s}},\]
+	which is what we wanted.
+\end{proof}
+We can now use \Cref{cor:euler-factor-zeta} to give a proof of the infinitude of primes.
+\begin{theorem} \label{thm:inf-primes}
+	There are infinitely many primes. In fact,
+	\[\sum_{p\text{ prime}}\frac1p=+\infty.\]
+\end{theorem}
+\begin{proof}
+	Throughout the proof, $s$ will be a real number greater than $1$. The key estimate is to note
+	\[\zeta(s)=\sum_{n=1}^\infty\frac1{n^s}\ge\int_1^\infty x^{-s}\,dx=-\frac1{1-s},\]
+	which goes to $+\infty$ as $s\to1^+$. In particular, $\log\zeta(s)\to+\infty$ as $s\to1^+$.
+
+	The last ingredient we need is to bound the Euler product of \Cref{cor:euler-factor-zeta}. In particular, we see
+	\[\log\zeta(s)=\log\Bigg(\prod_{p\text{ prime}}\frac1{1-p^{-s}}\Bigg)=\sum_{p\text{ prime}}-\log\left(1-p^{-s}\right).\]
+	(Formally, one should cap the number of factors and then send the number of factors to infinity.) Using the Taylor expansion of $-\log(1-x)$, we now see
+	\[\log\zeta(s)=\sum_{p\text{ prime}}\Bigg(\sum_{k=1}^\infty\frac1{kp^{ks}}\Bigg)=\Bigg(\sum_{p\text{ prime}}\frac1{p^s}\Bigg)+\sum_{p\text{ prime}}\Bigg(\sum_{k=2}^\infty\frac1{kp^{ks}}\Bigg).\]
+	We would like to focus on $\sum_p1/p^s$, so we quickly show that the other sum converges. All terms are positive, so it suffices to show that it is bounded above, for which we see
+	\[\sum_{p\text{ prime}}\Bigg(\sum_{k=2}^\infty\frac1{kp^{ks}}\Bigg)\le\sum_{p\text{ prime}}\Bigg(\sum_{k=2}^\infty\frac1{p^k}\Bigg)=\sum_{p\text{ prime}}\frac{1/p^2}{1-1/p}\le\sum_{n=2}^\infty\frac1{n(n-1)}=\sum_{n=2}^\infty\Bigg(\frac1{n-1}-\frac1n\Bigg)=1,\]
+	where we have telescoped in the last equality. Letting the value of this sum be $S(s)$, we see
+	\[\log\zeta(s)-S(s)=\sum_{p\text{ prime}}\frac1{p^s}<\sum_{p\text{ prime}}\frac1p.\]
+	Now, as $s\to1^+$, we see $\log\zeta(s)-S(s)\to+\infty$, so the theorem follows.
+\end{proof}
+% \begin{remark} \label{rem:euler-inf-primes}
+% 	Note that
+% 	\[\lim_{s\to1^+}\zeta(s)=+\infty,\]
+% 	so the factorization of \Cref{prop:euler-factor} requires there to be infinitely many primes. In fact, by taking logarithms of the factorization, we can see $\sum_p\frac1p=+\infty$.
+% \end{remark}
+The proof of \Cref{thm:dirichlet} more or less imitates the argument of \Cref{thm:inf-primes}. Roughly speaking, we will show that
 \[\sum_{\substack{p\text{ prime}\\p\equiv a\pmod q}}\frac1p=+\infty,\]
 from which our infinitude follows. Finding a way to extract out the equivalence class $a\pmod q$ will use a little character theory.
 
@@ -267,9 +346,14 @@ We want to extend our characters on $(\ZZ/q\ZZ)^\times$ to work on all $\ZZ$, bu
 We can finally define our generalization of $\zeta$.
 \begin{definition}[Dirichlet $L$-function]
 	Fix a Dirichlet character $\chi\pmod q$. Then we define the \textit{Dirichlet $L$-function} as
-	\[L(s,\chi)\coloneqq\sum_{n=1}^\infty\frac{\chi(n)}{n^s}=\prod_{p\text{ prime}}\frac1{1-\chi(p)p^{-s}}.\]
-	Note we have absolute convergence for $\op{Re}s>1$.
+	\[L(s,\chi)\coloneqq\sum_{n=1}^\infty\frac{\chi(n)}{n^s}.\]
+	By \Cref{prop:basic-dirichlet-series}, we have absolute convergence for $\op{Re}s>1$, and $L(s,\chi)$ defines a holomorphic function there.
 \end{definition}
-In fact, these definitions work for $\op{Re}s>0$, which we will talk about later.
+\begin{remark}
+	Continuing in the context of the definition, we note \Cref{prop:euler-factor} gives
+	\[L(1,\chi)=\prod_{p\text{ prime}}\Bigg(\sum_{k=0}^\infty\frac{\chi(p)^k}{p^{ks}}\Bigg)=\prod_{p\text{ prime}}\frac1{1-\chi(p)p^{-s}}\]
+	for $\op{Re}s>0$.
+\end{remark}
+In fact, the summation for $L(s,\chi)$ defines a holomorphic function for $\op{Re}s>0$, but seeing this requires a little care.
 
 \end{document}
