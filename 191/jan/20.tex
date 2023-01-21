@@ -8,77 +8,248 @@
 
 A syllabus was posted. There are some extra references posted.
 
-\subsection{Dirichlet \texorpdfstring{$L$}{ L}-Functions}
-We continue discussing the Dirichlet $L$-functions
-\[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}\]
-from last class. In particular, we move towards a proof of \Cref{thm:dirichlet}.
-\begin{remark}
-	Note $L(s,\chi)\ne0$ for $\op{Re}s>1$ due to the Euler product factorization.
-\end{remark}
-Arguing as in \Cref{thm:inf-primes}, we see that
-\[\log L(s,\chi)=\sum_{p\text{ prime}}-\log\big(1-\chi(p)p^{-s}\big)=\sum_{p\text{ prime}}\Bigg(\sum_{k=1}^\infty\frac{\chi(p)^k}{kpk^{ks}}\Bigg)\]
-for $\op{Re}s>1$. By isolating the $k>1$ terms in the same way, we see
-\[\log L(s,\chi)=\Bigg(\sum_{p\text{ prime}}\frac{\chi(p)}{p^s}\Bigg)+O(1)\]
-for $\op{Re}s>1$. Now, the idea is that we can sum over characters $\chi$ to get a sum over primes $p\equiv a\pmod q$, as described in \Cref{cor:indicate-g}.
-
-Thus, we are motivated to look at how $L(s,\chi)$ behaves as $s\to^+1$. In fact, for non-principal characters, we can easily extend to $\op{Re}s>0$.
-\begin{proposition}
-	Fix a non-principal Dirichlet character $\chi\pmod q$. Then $L(s,\chi)$ has an analytic continuation to $\op{Re}s>0$.
-\end{proposition}
+\subsection{Continuing \texorpdfstring{$L(s,\chi)$}{ L(s, chi)}}
+We are going to need the following technical result. Roughly speaking, it allows us to estimate infinite sums with a discrete part and a continuous part by summing the discrete part and integrating the continuous part. Oftentimes, a sum is difficult because of the way it mixes discrete and continuous portions, so it is useful to be able to separate them.
+\begin{theorem}[Abel summation] \label{thm:abel-summation}
+	Let $\{a_n\}_{n\in\NN}$ be a sequence of complex numbers, and define the partial sums be given by
+	\[A(t)\coloneqq\sum_{1\le n\le t}a_n.\]
+	For any real numbers $x,y\in\RR$ with $x<y$ and continuously differentiable function $f\colon(0,x]\to\CC$, we have
+	\[\sum_{0<n\le x}a_nf(n)=A(x)f(x)-\int_0^xA(t)f'(t)\,dt.\]
+\end{theorem}
 \begin{proof}
-	The idea is that
-	\[S(x)\coloneqq\sum_{n=1}^{\floor x}\chi(n)=O(1)\]
-	for any $N$. As such, we apply summation by parts. Let $L_n(s,\chi)$ denote the $n$th partial sum
-	\[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}=\int_1^\infty x^{-s}\,dS(n)=s\int_1^\infty S(x)x^{-s-1}\,dx\]
-	by integrating by parts via Riemann--Stieltjes integration. Thus, because $S(x)$ is bounded, we see that the integral converges absolutely for $\op{Re}s>0$.
-\end{proof}
-\begin{remark}
-	It follows from the proof that, for any $\sigma_0>0$, we see
-	\[L(s,\chi)<C(\sigma_0)\cdot(|s|+1)q\]
-	for $\op{Re}s>\sigma_0$, where $C(\sigma_0)\in\RR$ is some constant.
-\end{remark}
-And here is the situation for the principal character. Here, we can quickly reduce to the situation for $\zeta$.
-\begin{proposition} \label{prop:principal-character}
-	Let $\chi_0\pmod q$ be the principal character. Then
-	\[L(s,\chi_0)=\Bigg(\prod_{p\mid q}\left(1-p^{-s}\right)\Bigg)\zeta(s)\]
-\end{proposition}
-\begin{proof}
-	Expand with the Euler product.
-\end{proof}
-And now let's extend $\zeta$.
-\begin{proposition}
-	We provide a meromorphic continuation for $\zeta(s)$ over $\op{Re}s>0$, where we have a pole of order $1$ and residue $1$ at $s=1$.
-\end{proposition}
-\begin{proof}
-	Integrating by parts again, we see
+	The idea is to write $a_n=A(n)-A(n-1)$, so we write
 	\begin{align*}
-		\zeta(s) &= \sum_{n=1}^\infty\frac1{n^s} \\
-		&= \int_1^\infty x^{-s}\,d\floor x \\
-		&= x^{-s}\floor x\bigg|_1^\infty+\int_1^\infty sx^{-s-1}\floor x\,dx \\
-		&= 0+\int_1^\infty sx^{-s}\,dx+\int_1^\infty s\{x\}x^{-s-1}\,dx \\
-		&= \frac s{s-1}+\int_1^\infty s\{x\}x^{-s-1}\,dx.
+		\sum_{n\le x}a_nf(n) &= \sum_{n\le x}A(n)f(n)-\sum_{n\le x}A(n-1)f(n) \\
+		&= \sum_{0<n\le x}A(n)f(n)-\sum_{-1<n\le x-1}A(n)f(n+1) \\
+		&= A(\floor x)f(\floor x)-A(-1)f(0)-\sum_{0<n\le x-1}A(n)\big(f(n+1)-f(n)\big).
 	\end{align*}
-	The left term here is analytic for $\op{Re}s>0$ with the prescribed pole behavior, and the right term is some bounded analytic function. In fact, we can upper-bound the extra term by $c(\sigma_0)(|s|+1)$, where $\op{Re}s>\sigma_0>0$.
+	Note $A(-1)=0$. We now introduce an integral by noting $A(n)(f(n+1)-f(n))=\int_n^{n+1}A(t)f'(t)\,dt$, which upon summing over $n$ yields
+	\[\sum_{0<n\le x}a_nf(n)=A(\floor x)f(\floor x)-\int_0^{\floor x}A(t)f'(t)\,dt.\]
+	To finish, we see
+	\[A(\floor x)f(\floor x)=A(x)f(x)+A(\floor x)\big(f(\floor x)-f(x)\big)=A(x)f(x)-\int_{\floor x}^xA(t)\,dt,\]
+	which when combined with the previous equality finishes.
 \end{proof}
 \begin{remark}
-	Doing repeated integration by parts, one can extend the continuations provide above further to the left, but we will not do this. Instead, we will use a functional equation to continue to the left in one fell swoop.
+	One can use the theory of Riemann--Stieltjes integration to turn \Cref{thm:abel-summation} into just an application of integration by parts, but we will not need this.
 \end{remark}
+As an example application, we may give $L(s,\chi)$ an analytic continuation to $\{s:\op{Re}s>0\}$ when $\chi$ is not the principal character.
+\begin{proposition} \label{prop:continue-l-chi}
+	Let $\chi\pmod q$ be a non-principal Dirichlet character. Then the function $L(s,\chi)$ admits an analytic continuation to $\{s:\op{Re}s>0\}$.
+\end{proposition}
+\begin{proof}
+	For given $s$ with $\op{Re}s>1$, set $a_n\coloneqq\chi(n)$ and $f(x)\coloneqq1/x^s$. Then the partial sums $A(t)\coloneqq\sum_{1\le n\le t}a_n$ have
+	\[\sum_{n=1}^{kq}\chi(n)=\sum_{a=0}^{k-1}\sum_{r=1}^q\chi(aq+r)=k\sum_{r=1}^q\chi(r)=k\sum_{\substack{1\le r\le q\\\gcd(r,q)=1}}\chi(r)=k\cdot0\]
+	for any $k\ge0$, where in the last equality we have used \Cref{prop:ortho-relations}. Thus, for any $t\ge0$, find $k\in\ZZ$ such that $kq\le t<k(q+1)$, and we see
+	\[|A(t)|=\Bigg|\sum_{1\le n\le t}\chi(n)\Bigg|=\Bigg|\sum_{1\le n\le kq}\chi(n)+\sum_{kq<n\le t}\chi(n)\Bigg|\le\sum_{kq<n\le t}|\chi(n)|\le t-kq\le q.\]
+	Now, finally using \Cref{thm:abel-summation}, we see
+	\[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}=\left(\lim_{x\to\infty}A(x)x^{-s}\right)-\lim_{x\to\infty}\int_0^x\left(A(t)\cdot -st^{-s-1}\right)\,dt.\]
+	Because $\op{Re}s>1$, we see $\left|A(x)x^{-s}\right|\le qx^{-\op{Re}s}$ goes to $0$ as $x\to\infty$. Thus, we are left with
+	\[L(s,\chi)=s\int_0^\infty\frac{A(t)}{t^{s+1}}\,dt=s\underbrace{\int_1^\infty\frac{A(t)}{t^{s+1}}\,dt}_{I(s)}.\]
+	We claim that the right-hand side provides our analytic continuation to $\{s:\op{Re}s>0\}$. Indeed, it suffices to show that $I(s)$ is analytic on $\{s:\op{Re}s>0\}$. This is technical.
+	
+	Roughly speaking, we want to write
+	\[\left|\int_1^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le q\int_1^\infty\frac1{t^{\op{Re}s+1}}\,dt=q\cdot\frac{t^{\op{Re}s}}{-\op{Re}s}\bigg|_1^\infty=\frac q{\op{Re}s}\]
+	for any $\op{Re}s>0$, meaning that the integral converges, so we ought to have a holomorphic function. Well, for each $N$, we define
+	\[I_N(s)\coloneqq\int_1^N\frac{A(t)}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(A(n)\int_n^{n+1}t^{-s-1}\,dt\right)=\sum_{n=1}^{N-1}\left(A(n)\cdot\frac{(n+1)^{-s}-n^{-s}}{-s}\right)\]
+	so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
 
-\subsection{Towards \texorpdfstring{$L(1,\chi)$}{ L(1,chi)}}
-We now attack \Cref{thm:dirichlet} directly. Take $\op{Re}s>1$. Working in $G\coloneqq(\ZZ/q\ZZ)^\times$, \Cref{cor:indicate-g} tells us
-\[1_{[a]}(p)=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\chi(p),\]
-so it follows from our preceding discussion that
-\begin{equation}
-	\sum_{p\equiv a\pmod q}\frac1{p^s}=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\log L(s,\chi)+O(1). \label{eq:reduce-to-l}
-\end{equation}
-Thus, we want to study what happens to $L(s,\chi)$ as $s\to1^+$. Philosophically, if $L(s,\chi)$ is not zero or a pole at $s=1$, then we can legally take $\log L(s,\chi)$ and push the result into the $O(1)$ term.
+	By \Cref{lem:holo-limit}, it thus suffices to show that $I_n(s)\to I(s)$ uniformly on compact sets as $n\to\infty$. The main computation is to note that for each $s$ with $\op{Re}s>0$ and $n$, we may upper-bound
+	\[|I(s)-I_n(s)|=\left|\int_n^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le q\int_n^\infty t^{-\op{Re}s-1}\,dt=\frac{qn^{-\op{Re}s}}{\op{Re}s}.\]
+	Now, select some compact $D\subseteq\{s:\op{Re}s>0\}$. Because $D$ is compact, there exists $s\in D$ with minimal $\sigma\coloneqq\op{Re}s$. Note $\sigma>0$, so using the above bound, for any $\varepsilon>0$, select $N\coloneqq(\sigma\varepsilon/q)^{-1/\sigma}$. Thus, for any $n>N$ and $s\in D$, we see
+	\[I(s)-I_n(s)|\le\frac{qn^{-\op{Re}s}}{\op{Re}s}<\frac{qN^{-\sigma}}{\sigma}=\varepsilon,\]
+	which completes the proof.
+\end{proof}
+\begin{remark}
+	Using the notions and notations of the above proof, we see that
+	\[|L(s,\chi)|=\left|s\int_1^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le\frac{q|s|}{\op{Re}s}\]
+	for $\op{Re}s>0$. This upper-bound is occasionally helpful.
+\end{remark}
+One might wonder what happens to the principal character $\chi_0$. It turns out its behavior is tied to $\zeta$.
+\begin{lemma} \label{lem:l-s-principal}
+	Let $\chi_0\pmod q$ be the principal Dirichlet character. Then for $\op{Re}s>1$, we have
+	\[L(s,\chi)=\Bigg(\prod_{p\mid q}\left(1-p^{-s}\right)\bigg)\zeta(s).\]
+\end{lemma}
+\begin{proof}
+	By \Cref{rem:l-euler-prod}, we see
+	\[L(s,\chi)=\prod_{p\text{ prime}}\frac1{1-\chi(p)p^{-s}}=\prod_{p\nmid q}\frac1{1-p^{-s}},\]
+	so
+	\[L(s,\chi)\prod_{p\mid q}\frac1{1-p^{-s}}=\prod_{p\text{ prime}}\frac1{1-p^{-s}}=\zeta(s)\]
+	by \Cref{cor:euler-factor-zeta}, which finishes.
+\end{proof}
+Thus, we are interested in continuing $\zeta$. With a little more effort than \Cref{prop:continue-l-chi}, we may provide $\zeta(s)$ a meromorphic continuation to $\{s:\op{Re}s>0\}$. The main difficulty here is that we have a pole to deal with.
+\begin{proposition} \label{prop:continue-zeta}
+	The function $\zeta(s)$ has a meromorphic continuation to $\{s:\op{Re}s>0\}$. It is holomorphic everywhere except at $s=1$, where it has a simple pole of residue $1$.
+\end{proposition}
+\begin{proof}
+	For given $s$ with $\op{Re}s>1$, set $a_n\coloneqq1$ and $f(x)\coloneqq1/x^s$. Then the partial sums $A(t)\coloneqq\sum_{1\le n\le t}a_n$ have $A(t)=\floor t$, so \Cref{thm:abel-summation} grants
+	\[\zeta(s)=\sum_{n=1}^\infty\frac1{n^s}=\left(\lim_{x\to\infty}\floor x\cdot x^{-s}\right)-\lim_{x\to\infty}\int_0^x\left(\floor t\cdot -st^{-s-1}\right)\,dt.\]
+	Because $\op{Re}s>1$, we see $\left|\floor x\cdot x^{-s}\right|\le x^{1-\op{Re}s}$ goes to $0$ as $x\to\infty$. Thus, we are left with
+	\[\zeta(s)=s\int_0^\infty\frac{\floor t}{t^{s+1}}\,dt=s\int_1^\infty\frac{\floor t}{t^{s+1}}\,dt.\]
+	To extract out a main term, we write $\floor t=t+\{t\}$, giving
+	\[\zeta(s)=s\int_1^\infty t^{-s}\,dt+s\int_1^\infty\frac{\{t\}}{t^{s+1}}\,dt=\frac s{s-1}+s\underbrace{\int_1^\infty\frac{\{t\}}{t^{s+1}}\,dt}_{I(s)}.\]
+	We claim that the above expression defines our meromorphic continuation. Notably, the function $s/(s-1)=1+1/(s-1)$ is holomorphic everywhere except at $s=1$, where it has a simple pole of residue $1$.
 
-By \Cref{prop:principal-character}, we know that $L(s,\chi_0)\to\infty$ as $s\to1^+$ because $\zeta(s)\to1^+$. More precisely, we can write
-\[\frac1{\varphi(q)}\log L(s,\chi_0)=\frac1{\varphi(q)}\log\zeta(s)+O_q(1)=-\frac1{\varphi(q)}\log(1-s)+O_q(1).\]
-It remains to deal with the other characters, which is the meat of the proof. Notably, we know $L(1,\chi)$ is a legitimate complex number. Our goal is to show $L(1,\chi)\ne0$ for non-principal $\chi$ because otherwise we get another pole in \Cref{eq:reduce-to-l}, which could potentially cancel out the contribution of $L(s,\chi_0)$. As an outline, for ``complex'' characters $\chi$, we are able to compare $\chi$ and $\overline\chi$ to enforce $L(1,\chi)\ne0$, but the real characters require more ingenuity.
+	Thus, it remains to show that $s\cdot I(s)$ is a holomorphic function for $\op{Re}s>0$, where it suffices to show that $I(s)$ is a holomorphic function for $\op{Re}s>0$. This is mildly technical. At a high level, we would like to just note that
+	\[\left|\int_1^\infty\frac{\{t\}}{t^{s+1}}\,dt\right|\le\int_1^\infty\frac{1}{t^{\op{Re}s+1}}\,dt=\frac{t^{-\op{Re}s}}{-\op{Re}s}\bigg|_1^\infty=\frac1{\op{Re}s},\]
+	so the integral converges and ought to define a holomorphic function. Being more formal, we work with the finite integrals
+	\[I_N(s)\coloneqq\int_1^N\frac{\{t\}}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(\int_n^{n+1}\frac{t-n}{t^{s+1}}\,dt\right)=\sum_{n=1}^{N-1}\left(\frac{\left(n+1\right)^{-s+1}-n^{-s+1}}{-s+1}-n\cdot\frac{\left(n+1\right)^{-s}-n^{-s}}{-s}\right)\]
+	so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
 
-Let's see more explicitly what happens with complex characters. Suppose $\chi\ne\overline\chi$ so that $\chi(G)\not\subseteq\RR$. If $L(1,\chi)=0$, then we see $L(1,\overline\chi)=0$ as well, so
-\[\sum_{p\equiv a\pmod q}\frac1{p^s}=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\log L(s,\chi)+O(1),\]
-so the right-hand side goes to $-\infty$ as $s\to1^+$. But this doesn't make any sense because the left-hand side is surely positive. It remains to deal with the real characters.
+	By \Cref{lem:holo-limit}, it thus suffices to show that $I_n(s)\to I(s)$ uniformly on compact sets as $n\to\infty$. The main computation is to note that for each $s$ with $\op{Re}s>0$ and $n$, we may upper-bound
+	\[|I(s)-I_n(s)|=\left|\int_n^\infty\frac{\{t\}}{t^{s+1}}\,dt\right|\le\int_n^\infty\frac1{t^{\op{Re}s}}\,dt=\frac{n^{-\op{Re}s}}{\op{Re}s},\]
+	arguing as before. Now, select some compact $D\subseteq\{s:\op{Re}s>0\}$. Because $D$ is compact, there exists a minimal $\sigma\coloneqq\op{Re}s$ among all $s\in D$. Note $\sigma>0$, so for any $\varepsilon>0$, we use the above bounding to set $N\coloneqq(\sigma\varepsilon)^{-1/\sigma}$. Thus, for any $n>N$ and $s\in D$, we see
+	\[\left|I(s)-I_n(s)\right|\le\frac{n^{-\op{Re}s}}{\op{Re}s}<\frac{N^{-\sigma}}\sigma=\varepsilon,\]
+	which completes the proof.
+\end{proof}
+\begin{remark}
+	Doing repeated integration by parts, one can extend the continuations above further to the left, but we will not do this. Instead, we will use a functional equation to continue to all $\CC$ in one fell swoop.
+\end{remark}
+\begin{corollary} \label{cor:continue-principal-char}
+	Let $\chi_0\pmod q$ denote the principal Dirichlet character. Then $L(s,\chi)$ has a meromorphic continuation to $\{s:\op{Re}s>0\}$. It is holomorphic everywhere except for a simple pole at $s=1$.
+\end{corollary}
+\begin{proof}
+	Note that the function $\prod_{p\mid q}\left(1-p^{-s}\right)$ is entire and has its only zero at $s=0$. Combining \Cref{lem:l-s-principal} and \Cref{prop:continue-zeta} completes the proof.
+\end{proof}
+
+% \subsection{Dirichlet \texorpdfstring{$L$}{ L}-Functions}
+% We continue discussing the Dirichlet $L$-functions
+% \[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}\]
+% from last class. In particular, we move towards a proof of \Cref{thm:dirichlet}.
+% \begin{remark}
+% 	Note $L(s,\chi)\ne0$ for $\op{Re}s>1$ due to the Euler product factorization.
+% \end{remark}
+% Arguing as in \Cref{thm:inf-primes}, we see that
+% \[\log L(s,\chi)=\sum_{p\text{ prime}}-\log\big(1-\chi(p)p^{-s}\big)=\sum_{p\text{ prime}}\Bigg(\sum_{k=1}^\infty\frac{\chi(p)^k}{kpk^{ks}}\Bigg)\]
+% for $\op{Re}s>1$. By isolating the $k>1$ terms in the same way, we see
+% \[\log L(s,\chi)=\Bigg(\sum_{p\text{ prime}}\frac{\chi(p)}{p^s}\Bigg)+O(1)\]
+% for $\op{Re}s>1$. Now, the idea is that we can sum over characters $\chi$ to get a sum over primes $p\equiv a\pmod q$, as described in \Cref{cor:indicate-g}.
+
+% Thus, we are motivated to look at how $L(s,\chi)$ behaves as $s\to^+1$. In fact, for non-principal characters, we can easily extend to $\op{Re}s>0$.
+% \begin{proposition}
+% 	Fix a non-principal Dirichlet character $\chi\pmod q$. Then $L(s,\chi)$ has an analytic continuation to $\op{Re}s>0$.
+% \end{proposition}
+% \begin{proof}
+% 	The idea is that
+% 	\[S(x)\coloneqq\sum_{n=1}^{\floor x}\chi(n)=O(1)\]
+% 	for any $N$. As such, we apply summation by parts. Let $L_n(s,\chi)$ denote the $n$th partial sum
+% 	\[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}=\int_1^\infty x^{-s}\,dS(n)=s\int_1^\infty S(x)x^{-s-1}\,dx\]
+% 	by integrating by parts via Riemann--Stieltjes integration. Thus, because $S(x)$ is bounded, we see that the integral converges absolutely for $\op{Re}s>0$.
+% \end{proof}
+% \begin{remark}
+% 	It follows from the proof that, for any $\sigma_0>0$, we see
+% 	\[L(s,\chi)<C(\sigma_0)\cdot(|s|+1)q\]
+% 	for $\op{Re}s>\sigma_0$, where $C(\sigma_0)\in\RR$ is some constant.
+% \end{remark}
+% And here is the situation for the principal character. Here, we can quickly reduce to the situation for $\zeta$.
+% \begin{proposition} \label{prop:principal-character}
+% 	Let $\chi_0\pmod q$ be the principal character. Then
+% 	\[L(s,\chi_0)=\Bigg(\prod_{p\mid q}\left(1-p^{-s}\right)\Bigg)\zeta(s)\]
+% \end{proposition}
+% \begin{proof}
+% 	Expand with the Euler product.
+% \end{proof}
+% And now let's extend $\zeta$.
+% \begin{proposition}
+% 	We provide a meromorphic continuation for $\zeta(s)$ over $\op{Re}s>0$, where we have a pole of order $1$ and residue $1$ at $s=1$.
+% \end{proposition}
+% \begin{proof}
+% 	Integrating by parts again, we see
+% 	\begin{align*}
+% 		\zeta(s) &= \sum_{n=1}^\infty\frac1{n^s} \\
+% 		&= \int_1^\infty x^{-s}\,d\floor x \\
+% 		&= x^{-s}\floor x\bigg|_1^\infty+\int_1^\infty sx^{-s-1}\floor x\,dx \\
+% 		&= 0+\int_1^\infty sx^{-s}\,dx+\int_1^\infty s\{x\}x^{-s-1}\,dx \\
+% 		&= \frac s{s-1}+\int_1^\infty s\{x\}x^{-s-1}\,dx.
+% 	\end{align*}
+% 	The left term here is analytic for $\op{Re}s>0$ with the prescribed pole behavior, and the right term is some bounded analytic function. In fact, we can upper-bound the extra term by $c(\sigma_0)(|s|+1)$, where $\op{Re}s>\sigma_0>0$.
+% \end{proof}
+% \begin{remark}
+% 	Doing repeated integration by parts, one can extend the continuations provide above further to the left, but we will not do this. Instead, we will use a functional equation to continue to the left in one fell swoop.
+% \end{remark}
+
+\subsection{Reducing to \texorpdfstring{$L(1,\chi)$}{ L(1,chi)}}
+We now attack \Cref{thm:dirichlet} directly. As in \Cref{thm:inf-primes}, we will want to understand $\log L(s,\chi)$.
+\begin{lemma} \label{lem:log-l-s-chi}
+	Let $\chi\pmod q$ be a Dirichlet character. For any $s$ with $\op{Re}s>1$, we have
+	\[\log L(s,\chi)=\sum_{p\text{ prime}}\frac{\chi(p)}{p^s}+E(s,\chi),\]
+	where $|E(s,\chi)|\le1$.
+\end{lemma}
+\begin{proof}
+	Fix $s$ with $\op{Re}s>1$. Applying $\log$ to the Euler product of \Cref{rem:l-euler-prod}, we see
+	\[\log L(s,\chi)=\sum_{p\text{ prime}}-\log\left(1-\chi(p)p^{-s}\right)=\sum_{p\text{ prime}}\Bigg(\sum_{k=1}^\infty\frac{\chi(p)^k}{kp^{ks}}\Bigg).\]
+	The $k=1$ term of the right-hand sum is the main term present in the statement, so we need to bound the terms with $k>1$. Thus, for $\op{Re}s>1$, we compute
+	\[\Bigg|\sum_{p\text{ prime}}\Bigg(\sum_{k=2}^\infty\frac{\chi(p)^k}{kp^{ks}}\Bigg)\Bigg|\le\sum_{n=2}^\infty\Bigg(\sum_{k=2}^\infty\frac1{n^k}\Bigg)=\sum_{n=2}^\infty\frac{1/n^2}{1-1/n}=\sum_{n=2}^\infty\frac1{n(n-1)}=\sum_{n=2}^\infty\left(\frac1{n-1}-\frac1n\right)=1,\]
+	where we have telescoped in the last equality. This completes the proof.
+\end{proof}
+As an aside, we note that \Cref{lem:log-l-s-chi} provides us with a relatively large zero-free region for $L(s,\chi)$.
+\begin{corollary} \label{cor:dumb-zero-free}
+	Let $\chi\pmod q$ be a Dirichlet character. For any $s$ with $\op{Re}s>1$, we have $L(s,\chi)\ne0$.
+\end{corollary}
+\begin{proof}
+	By \Cref{lem:log-l-s-chi}, we see
+	\[|\log L(s,\chi)|\le\sum_{p\text{ prime}}\left|\frac{\chi(p)}{p^s}\right|+1\le\sum_{n=1}^\infty\frac1{n^{\op{Re}s}}+1,\]
+	which converges because $\op{Re}s>1$. Thus, $\log L(s,\chi)$ takes on a finite value for all $s$ with $\op{Re}s>0$, which implies $L(s,\chi)\ne0$.
+\end{proof}
+We now see that we can use \Cref{lem:log-l-s-chi} and \Cref{cor:indicate-g} to extract a particular congruence class.
+\begin{lemma} \label{lem:convert-to-l-1-chi}
+	Let $q$ be an integer. For brevity, set $G\coloneqq(\ZZ/q\ZZ)^\times$, and fix some $a\in G$. For any $s$ with $\op{Re}s>1$, we have
+	\[\sum_{\substack{p\text{ prime}\\p\equiv a\pmod q}}\frac1{p^s}=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\log L(s,\chi)+E(s),\]
+	where $|E(s)|\le1$.
+\end{lemma}
+\begin{proof}
+	\Cref{cor:indicate-g} tells us
+	\[1_{[a]}(p)=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline\chi(a)\chi(p),\]
+	so
+	\[\sum_{\substack{p\text{ prime}\\p\equiv a\pmod q}}\frac1{p^s}=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\Bigg(\overline\chi(a)\sum_{p\text{ prime}}\frac{\chi(p)}{p^s}\Bigg).\]
+	However, using the notation of \Cref{lem:log-l-s-chi}, we see
+	\[\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\Bigg(\overline\chi(a)\sum_{p\text{ prime}}\frac{\chi(p)}{p^s}\Bigg)=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline\chi(a)\log L(s,\chi)+\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline\chi(a)E(s,\chi).\]
+	Because $\#\widehat G=\#G=\varphi(q)$ by \Cref{prop:g-cong-g-dual}, we conclude that the right-hand error term has magnitude bounded by $1$, which completes the proof.
+\end{proof}
+We can now reduce \Cref{thm:dirichlet} to analyzing $L(1,\chi)$.
+\begin{proposition}
+	Let $q$ be an integer. Suppose that $L(1,\chi)\ne0$ for each non-principal Dirichlet character $\chi\pmod q$. Then, for all $a\in(\ZZ/q\ZZ)^\times$, we have
+	\[\sum_{\substack{p\text{ prime}\\p\equiv a\pmod q}}\frac1{p}=+\infty.\]
+	In particular, there are infinitely many primes $p\equiv a\pmod q$.
+\end{proposition}
+\begin{proof}
+	Note that $L(1,\chi)$ is at least a complex number for non-principal characters $\chi\pmod q$ by \Cref{prop:continue-l-chi}.
+
+	Let $\chi_0$ denote the principal character. By \Cref{cor:continue-principal-char}, we see $L(s,\chi_0)\to+\infty$ as $s\to1^+$: indeed, we know $L(s,\chi_0)$ must go to something in $\RR_{\ge0}\cup\{\infty\}$ because $L(s,\chi_0)\ge1$ when $s>1$ is real. But $L(s,\chi_0)$ cannot go to a finite value because then $L(s,\chi_0)$ would only have a removable singularity at $s=1$.
+
+	Thus, we also have $\log L(s,\chi_0)\to+\infty$ as $s\to1^+$. However, $\log L(s,\chi)\to\log L(1,\chi)$ as $s\to1^+$ for non-principal characters $\chi$, and by hypothesis, this is a finite limit. It follows that
+	\[\lim_{s\to1^+}\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\log L(s,\chi)=+\infty,\]
+	so the result follows from \Cref{lem:convert-to-l-1-chi}.
+\end{proof}
+So we want to understand $L(1,\chi)$ when $\chi$ is a non-principal character. By paying closer attention to the above proof, we can control most of our characters $\chi$.
+\begin{lemma} \label{lem:at-most-bad-chi}
+	Let $q$ be an integer, and set $G\coloneqq(\ZZ/q\ZZ)^\times$ for brevity. For each Dirichlet character $\chi\pmod q$, let $v(\chi)$ denote the order of vanishing of $L(s,\chi)$ at $s=1$. Then
+	\[\sum_{\chi\in\widehat G}v(\chi)\le0.\]
+	In other words, at most one non-principal character $\chi$ has $L(1,\chi)=0$, in which case $L(s,\chi)$ has a simple zero at $s=1$.
+\end{lemma}
+\begin{proof}
+	The idea here is that \Cref{lem:convert-to-l-1-chi} has a certainly nonnegative sum on the left-hand side, so not too many of the $L(s,\chi)$s on the right-hand side may be $0$, for otherwise the right-hand side would go to $-\infty$.
+
+	We make a few quick remarks on $v(\chi)$. Note \Cref{cor:continue-principal-char} implies $v(\chi_0)=-1$, where $\chi_0$ is the principal character. Additionally, $v(\chi)\ge0$ for all non-principal characters $\chi$ by \Cref{prop:continue-l-chi}, and $v(\chi)$ is finite because $L(s,\chi)$ is not constantly zero by \Cref{cor:dumb-zero-free}.
+
+	Thus, for each character $\chi$, we may write $L(s,\chi)=(s-1)^{v(\chi)}L_0(s,\chi)$ for some function $L_0(s,\chi)$ holomorphic on $\{s:\op{Re}s>0\}$ with $L_0(1,\chi)\ne0$. Setting up our application of \Cref{lem:convert-to-l-1-chi}, we see
+	\[\sum_{\chi\in\widehat G}\log L(s,\chi)=\Bigg(\sum_{\chi\in\widehat G}v(\chi)\Bigg)\log(s-1)+\Bigg(\sum_{\chi\in\widehat G}\log L_0(s,\chi)\Bigg)\]
+	for $\op{Re}s>1$. However, we now plug into \Cref{lem:convert-to-l-1-chi} with $a\coloneqq1$ so that $\overline{\chi(a)}=1$ for all $\chi$, giving
+	\[\sum_{\substack{p\text{ prime}\\p\equiv1\pmod q}}\frac1{p^s}=\frac1{\varphi(q)}\Bigg(\sum_{\chi\in\widehat G}v(\chi)\Bigg)\log(s-1)+\frac1{\varphi(q)}\Bigg(\sum_{\chi\in\widehat G}\log L_0(s,\chi)\Bigg)+E(s)\]
+	for $\op{Re}s>0$. As $s\to1^+$, the left-hand side remains nonnegative. On the right-hand side, the middle and right terms both remain finite, so the left term must also remain finite. However, $\log(s-1)\to-\infty$ as $s\to1^+$, so we must have $\sum_\chi v(\chi)\le0$ to ensure this term is nonnegative.
+
+	We now show the last sentence. Indeed, we have
+	\[\sum_{\chi\in\widehat G\setminus\{\chi_0\}}v(\chi)\le-v(\chi_0)=1,\]
+	so at most one $\chi\in\widehat G\setminus\{\chi_0\}$ may have $v(\chi)>0$, in which case $\chi$ has $v(\chi)=1$.
+\end{proof}
+For example, the above lemma lets us control ``complex'' characters.
+\begin{lemma}
+	Let $q$ be an integer. If $\chi\pmod q$ is a non-principal Dirichlet character with $\chi\ne\overline\chi$, then $L(1,\chi)\ne0$.
+\end{lemma}
+\begin{proof}
+	If $L(1,\chi)=0$, then we see
+	\[L(1,\overline\chi)=\lim_{s\to1^+}\sum_{n=1}^\infty\frac{\overline\chi(n)}{n^s}=\overline{\lim_{s\to1^+}\sum_{n=1}^\infty\frac{\chi(n)}{n^s}}=\overline{L(s,\chi)}=0.\]
+	But this grants two distinct characters $\chi$ and $\overline\chi$ with $L(1,\chi)=L(1,\overline\chi)=0$, violating \Cref{lem:at-most-bad-chi}.
+\end{proof}
+Thus, it remains to deal with the ``real'' non-principal characters $\chi$ with $\chi=\overline\chi$. This is genuinely difficult, so we will wait until next class for them.
 
 \end{document}
