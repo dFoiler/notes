@@ -1,0 +1,84 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{January 20}
+
+A syllabus was posted. There are some extra references posted.
+
+\subsection{Dirichlet \texorpdfstring{$L$}{ L}-Functions}
+We continue discussing the Dirichlet $L$-functions
+\[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}\]
+from last class. In particular, we move towards a proof of \Cref{thm:dirichlet}.
+\begin{remark}
+	Note $L(s,\chi)\ne0$ for $\op{Re}s>1$ due to the Euler product factorization.
+\end{remark}
+Arguing as in \Cref{thm:inf-primes}, we see that
+\[\log L(s,\chi)=\sum_{p\text{ prime}}-\log\big(1-\chi(p)p^{-s}\big)=\sum_{p\text{ prime}}\Bigg(\sum_{k=1}^\infty\frac{\chi(p)^k}{kpk^{ks}}\Bigg)\]
+for $\op{Re}s>1$. By isolating the $k>1$ terms in the same way, we see
+\[\log L(s,\chi)=\Bigg(\sum_{p\text{ prime}}\frac{\chi(p)}{p^s}\Bigg)+O(1)\]
+for $\op{Re}s>1$. Now, the idea is that we can sum over characters $\chi$ to get a sum over primes $p\equiv a\pmod q$, as described in \Cref{cor:indicate-g}.
+
+Thus, we are motivated to look at how $L(s,\chi)$ behaves as $s\to^+1$. In fact, for non-principal characters, we can easily extend to $\op{Re}s>0$.
+\begin{proposition}
+	Fix a non-principal Dirichlet character $\chi\pmod q$. Then $L(s,\chi)$ has an analytic continuation to $\op{Re}s>0$.
+\end{proposition}
+\begin{proof}
+	The idea is that
+	\[S(x)\coloneqq\sum_{n=1}^{\floor x}\chi(n)=O(1)\]
+	for any $N$. As such, we apply summation by parts. Let $L_n(s,\chi)$ denote the $n$th partial sum
+	\[L(s,\chi)=\sum_{n=1}^\infty\frac{\chi(n)}{n^s}=\int_1^\infty x^{-s}\,dS(n)=s\int_1^\infty S(x)x^{-s-1}\,dx\]
+	by integrating by parts via Riemann--Stieltjes integration. Thus, because $S(x)$ is bounded, we see that the integral converges absolutely for $\op{Re}s>0$.
+\end{proof}
+\begin{remark}
+	It follows from the proof that, for any $\sigma_0>0$, we see
+	\[L(s,\chi)<C(\sigma_0)\cdot(|s|+1)q\]
+	for $\op{Re}s>\sigma_0$, where $C(\sigma_0)\in\RR$ is some constant.
+\end{remark}
+And here is the situation for the principal character. Here, we can quickly reduce to the situation for $\zeta$.
+\begin{proposition} \label{prop:principal-character}
+	Let $\chi_0\pmod q$ be the principal character. Then
+	\[L(s,\chi_0)=\Bigg(\prod_{p\mid q}\left(1-p^{-s}\right)\Bigg)\zeta(s)\]
+\end{proposition}
+\begin{proof}
+	Expand with the Euler product.
+\end{proof}
+And now let's extend $\zeta$.
+\begin{proposition}
+	We provide a meromorphic continuation for $\zeta(s)$ over $\op{Re}s>0$, where we have a pole of order $1$ and residue $1$ at $s=1$.
+\end{proposition}
+\begin{proof}
+	Integrating by parts again, we see
+	\begin{align*}
+		\zeta(s) &= \sum_{n=1}^\infty\frac1{n^s} \\
+		&= \int_1^\infty x^{-s}\,d\floor x \\
+		&= x^{-s}\floor x\bigg|_1^\infty+\int_1^\infty sx^{-s-1}\floor x\,dx \\
+		&= 0+\int_1^\infty sx^{-s}\,dx+\int_1^\infty s\{x\}x^{-s-1}\,dx \\
+		&= \frac s{s-1}+\int_1^\infty s\{x\}x^{-s-1}\,dx.
+	\end{align*}
+	The left term here is analytic for $\op{Re}s>0$ with the prescribed pole behavior, and the right term is some bounded analytic function. In fact, we can upper-bound the extra term by $c(\sigma_0)(|s|+1)$, where $\op{Re}s>\sigma_0>0$.
+\end{proof}
+\begin{remark}
+	Doing repeated integration by parts, one can extend the continuations provide above further to the left, but we will not do this. Instead, we will use a functional equation to continue to the left in one fell swoop.
+\end{remark}
+
+\subsection{Towards \texorpdfstring{$L(1,\chi)$}{ L(1,chi)}}
+We now attack \Cref{thm:dirichlet} directly. Take $\op{Re}s>1$. Working in $G\coloneqq(\ZZ/q\ZZ)^\times$, \Cref{cor:indicate-g} tells us
+\[1_{[a]}(p)=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\chi(p),\]
+so it follows from our preceding discussion that
+\begin{equation}
+	\sum_{p\equiv a\pmod q}\frac1{p^s}=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\log L(s,\chi)+O(1). \label{eq:reduce-to-l}
+\end{equation}
+Thus, we want to study what happens to $L(s,\chi)$ as $s\to1^+$. Philosophically, if $L(s,\chi)$ is not zero or a pole at $s=1$, then we can legally take $\log L(s,\chi)$ and push the result into the $O(1)$ term.
+
+By \Cref{prop:principal-character}, we know that $L(s,\chi_0)\to\infty$ as $s\to1^+$ because $\zeta(s)\to1^+$. More precisely, we can write
+\[\frac1{\varphi(q)}\log L(s,\chi_0)=\frac1{\varphi(q)}\log\zeta(s)+O_q(1)=-\frac1{\varphi(q)}\log(1-s)+O_q(1).\]
+It remains to deal with the other characters, which is the meat of the proof. Notably, we know $L(1,\chi)$ is a legitimate complex number. Our goal is to show $L(1,\chi)\ne0$ for non-principal $\chi$ because otherwise we get another pole in \Cref{eq:reduce-to-l}, which could potentially cancel out the contribution of $L(s,\chi_0)$. As an outline, for ``complex'' characters $\chi$, we are able to compare $\chi$ and $\overline\chi$ to enforce $L(1,\chi)\ne0$, but the real characters require more ingenuity.
+
+Let's see more explicitly what happens with complex characters. Suppose $\chi\ne\overline\chi$ so that $\chi(G)\not\subseteq\RR$. If $L(1,\chi)=0$, then we see $L(1,\overline\chi)=0$ as well, so
+\[\sum_{p\equiv a\pmod q}\frac1{p^s}=\frac1{\varphi(q)}\sum_{\chi\in\widehat G}\overline{\chi(a)}\log L(s,\chi)+O(1),\]
+so the right-hand side goes to $-\infty$ as $s\to1^+$. But this doesn't make any sense because the left-hand side is surely positive. It remains to deal with the real characters.
+
+\end{document}
