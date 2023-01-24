@@ -1,0 +1,199 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{January 23}
+
+Today we finish the proof of \Cref{thm:dirichlet}.
+
+\subsection{The Dirichlet Convolution}
+As motivation, we might be interested in the product of two Dirichlet series. Formally, we might write
+\[\Bigg(\sum_{k=1}^\infty\frac{a_k}{k^s}\Bigg)\Bigg(\sum_{\ell=1}^\infty\frac{b_\ell}{\ell^s}\Bigg)=\sum_{k=1}^\infty\sum_{\ell=1}^\infty\frac{a_kb_\ell}{(k\ell)^s}=\sum_{n=1}^\infty\Bigg(\sum_{k\ell=n}a_kb_\ell\Bigg)\frac1{n^s}.\]
+Of course, we will want to formalize this intuitive argument to give the corresponding series the correct analytic properties, but we have at least arrived at the correct definition.
+\begin{definition}[Dirichlet convolution]
+	Fix functions $f,g\colon\NN\to\CC$. Then the \textit{Dirichlet convolution} $(f*g)\colon\NN\to\CC$ is defined by
+	\[(f*g)(n)\coloneqq\sum_{k\ell=n}f(k)g(\ell)=\sum_{d\mid n}f(d)g(n/d).\]
+\end{definition}
+And we may now take products of Dirichlet series.
+\begin{proposition} \label{prop:prod-dir-series}
+	Fix functions $f,g\colon\NN\to\CC$ such that $|f(n)|,|g(n)|=O\left(n^\sigma\right)$ for some $\sigma\in\RR$. Then define the series
+	\[F(s)\coloneqq\sum_{n=1}^\infty\frac{f(n)}{n^s},\qquad G(s)\coloneqq\sum_{n=1}^\infty\frac{g(n)}{n^s},\qquad D(s)\coloneqq\sum_{n=1}^\infty\frac{(f*g)(n)}{n^s}.\]
+	Then $D$ converges absolutely for $\op{Re}s>\sigma+1$, where it defines a holomorphic function given by $D(s)=F(s)G(s)$.
+\end{proposition}
+\begin{proof}
+	Fix $s$ with $\op{Re}s>\sigma+1$. We show that $D(s)$ converges absolutely and yields $D(s)=F(s)G(s)$, from which it follows that $D(s)$ is holomorphic over the region by using \Cref{prop:basic-dirichlet-series} on $F$ and $G$. Let $F_n(s)$, $G_n(s)$, and $D_n(s)$ denote the $n$th partial sums. Then we see
+	\[F_N(s)G_N(s)=\Bigg(\sum_{k=1}^N\frac{f(k)}{k^s}\Bigg)\Bigg(\sum_{\ell=1}^N\frac{g(\ell)}{\ell^s}\Bigg)=\underbrace{\sum_{n=1}^N\Bigg(\sum_{k\ell=n}f(k)g(\ell)\Bigg)\frac1{n^s}}_{D_N(s)}+\underbrace{\sum_{\substack{1\le k,\ell\le N\\k\ell>N}}\frac{f(k)g(\ell)}{(k\ell)^s}}_{R_N(s)\coloneqq}.\]
+	Thus, the key claim is that $R_N(s)\to0$ as $N\to\infty$. The main point is that $k\ell>N$ requires $k>\sqrt N$ or $\ell>\sqrt N$, so
+	\[|R_N(s)|\le\sum_{\substack{1\le k,\ell\le N\\k\ell>N}}\frac{|f(k)|\cdot|g(\ell)|}{(k\ell)^{\op{Re}s}}\le\Bigg(\sum_{k>\sqrt N}\frac{|f(k)|}{k^{\op{Re}s}}\Bigg)\Bigg(\sum_{\ell\ge1}\frac{|g(\ell)|}{\ell^{\op{Re}s}}\Bigg)+\Bigg(\sum_{k\ge1}\frac{|f(k)|}{k^{\op{Re}s}}\Bigg)\Bigg(\sum_{\ell>\sqrt N}\frac{|g(\ell)|}{\ell^{\op{Re}s}}\Bigg).\]
+	The absolute convergence of $F$ and $G$ at $s$ now causes the right-hand side to be
+	\[\Bigg(\sum_{k=1}^\infty\frac{|f(k)|}{k^{\op{Re}s}}\Bigg)\cdot0+0\cdot\Bigg(\sum_{\ell=1}^\infty\frac{|g(\ell)|}{\ell^{\op{Re}s}}\Bigg)=0\]
+	as $N\to\infty$, so we conclude $R_N(s)\to0$ as $N\to\infty$. Thus, we conclude
+	\[F(s)G(s)=\lim_{N\to\infty}(F_N(s)G_N(s))=\lim_{N\to\infty}D_N(s)+\lim_{N\to\infty}R_N(s)=D(s).\]
+	Lastly, we need to show that $D(s)$ actually converges absolutely. Well, we note that we can replace $f$ with $|f|$ and $g$ with $|g|$ and $s$ with $\op{Re}s$ everywhere in the above bounding to show that
+	\[\sum_{n=1}^\infty\left|\frac{(f*g)(n)}{n^s}\right|\le\sum_{n=1}^\infty\frac{(|f|*|g|)(n)}{n^{\op{Re}s}}=\Bigg(\sum_{k=1}^\infty\frac{|f(k)|}{k^{\op{Re}s}}\Bigg)\Bigg(\sum_{\ell=1}^\infty\frac{|g(\ell)|}{\ell^{\op{Re}s}}\Bigg),\]
+	and the right-hand side converges because $F(s)$ and $G(s)$ converge absolutely. Thus, $D(s)$ converges absolutely.
+\end{proof}
+\begin{example}
+	Let $d(n)$ denote the number of divisors of $n$. Then we see
+	\[\zeta(s)^2=\sum_{n=1}^\infty\frac{(1*1)(n)}{n^s}=\sum_{n=1}^\infty\frac{d(n)}{n^s}.\]
+	Here, $1\colon\NN\to\CC$ is the function which constantly returns $1$.
+\end{example}
+We might be interested in an Euler product factorization for a product of two Dirichlet series (as in \Cref{prop:euler-factor}), but this notably requires the relevant functions to be multiplicative. Thus, we now show that the Dirichlet convolution sends multiplicative functions to multiplicative functions.
+\begin{lemma} \label{lem:dir-conv-mult}
+	Let $f,g\colon\NN\to\CC$ be multiplicative functions. Then $(f*g)\colon\NN\to\CC$ is still multiplicative.
+\end{lemma}
+\begin{proof}
+	Let $n$ and $m$ be coprime positive integers. We must show $(f*g)(nm)=(f*g)(n)\cdot(f*g)(m)$. The key point is that there is a bijection between divisors $d\mid nm$ and pairs of divisors $d_n\mid n$ and $d_m\mid m$ by sending $(d_n,d_m)$ to $d$. We quickly show formally that this is a bijection.
+	\begin{itemize}
+		\item Well-defined: certainly $d_n\mid n$ and $d_m\mid m$ implies $d_nd_m\mid nm$.
+		\item Injective: suppose $d_nd_m=d_n'd_m'$ for $d_n,d_n'\mid n$ and $d_m,d_m'\mid m$. We show $d_n=d_n'$, and $d_m=d_m'$ follows by symmetry. Well, for each $p\mid n$, we see $p\nmid m$ because $\gcd(n,m)=1$, so $p\nmid d_m,d_m'$ as well, meaning
+		\[\nu_p(d_n)=\nu_p(d_nd_m)=\nu_p(d'_nd'_m)=\nu_p(d'_n)\]
+		for all $p\mid n$. However, $p\mid d_n,d_n'$ implies $p\mid n$, so we see that the prime factorizations of $d_n$ and $d_n'$ are the same, so $d_n=d_n'$.
+		\item Surjective: for each $d\mid nm$, define $d_n\coloneqq\gcd(d,n)$ and $d_m\coloneqq\gcd(d,m)$. Certainly $d_n\mid n$ and $d_m\mid m$, so it remains to show $d=d_nd_m$. Well, for each $p\mid n$, we see $\nu_p(d_n)=\nu_p(d)$ because $d\mid n$; and similarly, each $p\mid m$ has $\nu_p(d_m)=\nu_p(m)$. Because each prime $p\mid nm$ divides exactly one of $n$ or $m$, we see that
+		\[\nu_p(d_nd_m)=\nu_p(d_n)+\nu_p(d_m)=\nu_p(d)\]
+		by doing casework on $p\mid n$ or $p\mid m$.
+	\end{itemize}
+	We have written down all of this so that we may compute
+	\begin{align*}
+		(f*g)(nm) &= \sum_{d\mid nm}f(d)g(nm/d) \\
+		&= \sum_{d_n\mid n}\sum_{d_m\mid m}f(d_nd_m)g\left(\frac n{d_n}\cdot\frac m{d_m}\right) \\
+		&\stackrel*= \Bigg(\sum_{d_n\mid n}f(d_n)g(n/d_n)\Bigg)\Bigg(\sum_{d_m\mid m}f(d_m)g(m/d_m)\Bigg) \\
+		&= (f*g)(n)\cdot(f*g)(m).
+	\end{align*}
+	Here, we have used the multiplicativity at $\stackrel*=$, noting that $d_n\mid n$ and $d_m\mid m$ implies $\gcd(d_n,d_m)=1$ because $\gcd(n,m)=1$.
+\end{proof}
+
+\subsection{The Mellin Transform}
+In this subsection, we pick up a few facts about the Mellin transform. Roughly speaking, we are doing Fourier analysis on the group $\RR^+$ whose operation is multiplication. As such, the Haar measure is $dx/x$: for any Borel set $S\subseteq\RR^+$ and $a\in\RR^+$, we see
+\[\int_{aS}\frac{dx}x=\int_S\frac{d(ax)}{ax}=\int_S\frac aa\cdot\frac{dx}x=\int_S\frac{dx}x,\]
+so $dx/x$ is in fact a translation-invariant measure on $\RR^+$. Anyway, here is our definition of the Mellin transform.
+\begin{definition}[rapidly decaying]
+	A function $\varphi\colon\RR_{\ge0}\to\CC$ is \textit{rapidly decaying} at $0$ and $\infty$ if and only if $x^A\cdot\varphi(x)$ is bounded for all $A\in\RR$.
+\end{definition}
+\begin{definition}[Mellin transform]
+	Let $\varphi\colon\RR_{\ge0}\to\CC$ be a continuous function rapidly decaying at $0$ and $\infty$. Then the \textit{Mellin transform} is the function $\mc M\varphi\colon\CC\to\CC$ given by
+	\[(\mc M\varphi)(s)\coloneqq\int_0^\infty\varphi(x)x^s\,\frac{dx}x.\]
+\end{definition}
+We quickly check that the integral converges for any $s\in\CC$. Indeed, fixing $A,B>0$, we show that $\mc M\varphi$ converges for $-A<\op{Re}s<B$. Find constants $C_A$ and $C_B$ such that $\varphi(x)\le x^{A}C_A$ and $\varphi(x)\le x^{-B}C_B$. Now, it suffices to show that the integral absolutely converges, so upon setting $\sigma\coloneqq\op{Re}s$, we are showing
+\[\int_0^\infty\varphi(x)x^\sigma\,\frac{dx}x\]
+converges. Now, we split this integral into
+\[\int_0^1\varphi(x)x^{\sigma-1}\,dx+\int_1^\infty\varphi(x)x^{\sigma-1}\,dx\le C_A\int_0^1x^{A+\sigma-1}\,dx+C_B\int_1^\infty x^{-B+\sigma-1}\,dx,\]
+both of which converge because $A+\sigma-1>-1$ and $-B+\sigma-1<-1$.
+
+We will need two key properties of the Mellin transform, which we will not prove because they would take us too far afield.
+\begin{proposition}
+	Let $\varphi\colon\RR_{\ge0}\to\CC$ be a continuous function rapidly decaying at $0$ and $\infty$. For any $\sigma$, the functions $t\mapsto\mc M\varphi(\sigma+it)$ and $t\mapsto\mc M\varphi(\sigma-it)$ are rapidly decaying at $\infty$.
+\end{proposition}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{theorem}
+	Let $\varphi\colon\RR_{\ge0}\to\CC$ be a continuous function rapidly decaying at $0$ and $\infty$. For any $\sigma\in\RR$, we have
+	\[\varphi(x)=\frac1{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}(\mc M\varphi)x^{-s}\,dx.\]
+\end{theorem}
+\begin{proof}
+	Omitted.
+\end{proof}
+
+\subsection{Finishing Dirichlet's Theorem}
+Recall that we have left to show $L(1,\chi)\ne0$ for real characters $\chi$. We provide a slick proof of this result.
+\begin{lemma}
+	Let $\chi\pmod q$ be a ``real'' non-principal Dirichlet character, meaning $\chi=\overline\chi$. We show 
+\end{lemma}
+\begin{proof}
+	We combine two techniques called ``positivity'' and ``smoothing.'' The main point is that $L(1,\chi)=0$ implies that the zero of $L(s,\chi)$ at $s=1$ is able to cancel the pole of $\zeta(s)$ as $s=1$, implying that the function $\zeta(s)L(s,\chi)$ is holomorphic on $\{s:\op{Re}s>0\}$ by combining \Cref{prop:continue-l-chi,prop:continue-zeta}.
+
+	Anyway, we divide the proof in two steps.
+	\begin{enumerate}
+		\item Let's begin with our positivity result. Because we are interested in $\zeta(s)L(s,\chi)$, we will want to study the coefficients of this Dirichlet series, which are given by $(1*\chi)$ by \Cref{prop:prod-dir-series}. Note $(1*\chi)$ is multiplicative by \Cref{lem:dir-conv-mult}.
+
+		To set up our bounding, we claim that $(1*\chi)(n)\ge0$ for all $n\in\NN$, and $(1*\chi)\left(n^2\right)\ge1$. Because $(1*\chi)$ is multiplicative, we may write
+		\[(1*\chi)(n)=(1*\chi)\Bigg(\prod_{p\mid n}p^{\nu_p(n)}\Bigg)=\prod_{p\mid n}(1*\chi)\left(p^{\nu_p(n)}\right).\]
+		Thus, it suffices to show $(1*\chi)\left(p^k\right)\ge0$ for each prime-power $p^k$, and $(1*\chi)\left(p^k\right)\ge1$ when $k$ is even. Well, we can compute this directly as
+		\[(1*\chi)\left(p^k\right)=\sum_{d\mid p^k}\chi(d)=\sum_{\nu=0}^k\chi\left(p^\nu\right)=\sum_{\nu=0}^k\chi(p)^\nu.\]
+		Now, $\chi(p)=\overline{\chi(p)}$ by hypothesis on $\chi$, so because $|\chi(p)|=1$ by \Cref{rem:chars-to-s1}, we conclude $\chi(p)\in\{\pm1\}$. Thus, on one hand, if $\chi(p)=1$, then $(1*\chi)\left(p^\nu\right)=\nu+1\ge1$ always. On the other hand, if $\chi(p)=-1$, then $(1*\chi)\left(p^\nu\right)$ is $1$ when $\nu$ is even and $0$ if $\nu$ is odd. The claim follows.
+	
+		To finish, our positivity claim is that
+		\[\sum_{x<n\le2x}(1*\chi)(n)\ge\sum_{x<n^2\le2x}(1*\chi)\left(n^2\right)\ge\sum_{\sqrt x<n\le\sqrt{2x}}1=\floor{\sqrt{2x}}-\floor{\sqrt x}\ge(\sqrt2-1)\sqrt x-2.\]
+		Thus, for $x$ large enough, we see
+		\[\sum_{x<n\le2x}(1*\chi)(n)\ge\frac13\sqrt x.\]
+
+		\item We now apply smoothing Let $\psi\colon(0,\infty)\to[0,\infty)$ be a continuous function with support contained in $[0.9,2.1]$ such that $\psi(x)=1$ for $x\in[1,2]$. Then one sees
+		\[\sum_{n=1}^\infty\psi(n/x)(1*\chi)(m)\ge\sum_{x<n\le2x}(1*\chi)(n)\ge\frac13\sqrt x.\]
+		Note that this sum is finite because only finitely many $n$ have $n/x\le2.1$.
+	
+		We now use the Mellin transform $\mc M\varphi$. Indeed, note that $\varphi$ is rapidly decaying at $0$ and $\infty$ because $\varphi$ actually vanishes for $x<0.9$ and $x>2.1$. Now, we compute
+		\[\sum_{n=1}^\infty\psi(n/x)a(n)=\frac1{2\pi i}\int_{\op{Re}s=2}\Bigg(\widetilde\psi(s)\sum_{n=1}^\infty a(n)(n/x)^{-s}\Bigg)ds=\frac1{2\pi i}\int_{\op{Re}s=2}x^s(\zeta(s)L(s,\chi))\widetilde\psi(s)\,ds.\]
+		For $\op{Re}s\in[1/3,2]$ and $|\op{Im}s|>1$, we note $|x^s|\le x^{\op{Re}s}$ and $|\zeta(s)|,|L(s,\chi)|\ll_q(|s|+1)$.
+	
+		We now push the contour to the left: if $L(s,\chi)=0$, then $\zeta(s)L(s,\chi)$ is analytic on $\{s:\op{Re}s>0\}$, so we shift the contour over to $\op{Re}s=1/3$, so we see
+		\[\sqrt x\ll\frac1{2\pi i}\int_{\op{Re}s=1/3}x^s(\zeta(s)L(s,\chi))\widetilde\psi(s)\,ds\ll x^{1/3},\]
+		so the asymptotics don't match. This gives a contradiction.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	The product $L(s,\chi)\zeta(s)$ is the Dedekind $\zeta$-function associated to a real quadratic field.
+\end{remark}
+
+\subsection{A Little on Quadratic Forms}
+To say something in the direction of Dirichlet's class number formula, we discuss quadratic forms. In particular, we will discuss the reduction theory, which shows that there are finitely many classes of binary quadratic forms of given discriminant.
+\begin{definition}[binary quadratic form]
+	A \textit{quadratic form} is a function $f\colon\ZZ^2\to\ZZ$ given by $f(x,y)\coloneqq ax^2+bxy+cy^2$ where $a,b,c\in\ZZ$. If $\gcd(a,b,c)=1$, then we call the quadratic form \textit{primitive}.
+\end{definition}
+It is a problem of classical interest to determine when a quadratic form achieves a particular integer.
+
+Some quadratic forms are ``the same,'' in the sense that they are just a variable change away.
+\begin{example}
+	The quadratic forms $x_1^2+x_2^2$ and $y_1^2+2y_1y_2+2y_2^2$ are roughly the same by the change of variables given by
+	\[(y_1,y_2)=(x_1-x_2,x_2).\]
+\end{example}
+Here is our general definition.
+\begin{definition}[equivalent]
+	Two quadratic forms $f_1,f_2\colon\ZZ^2\to\ZZ$ are \textit{equivalent} if and only if there exists $M\in\op{SL}_2(\ZZ)$ such that
+	\[f_1(v)=f_2(Mv)\]
+	for all $v\in\ZZ^2$.
+\end{definition}
+\begin{remark}
+	Note that
+	\[ax^2+bxy+cy^2=\begin{bmatrix}
+		x & y
+	\end{bmatrix}\begin{bmatrix}
+		a & b/2 \\
+		b/2 & c
+	\end{bmatrix}\begin{bmatrix}
+		x \\ y
+	\end{bmatrix},\]
+	so we can associate our quadratic form to $\gamma\cdot f$ the matrix
+	\[(\gamma^\intercal)^{-1}\begin{bmatrix}
+		a & b/2 \\
+		b/2 & c
+	\end{bmatrix}\gamma^{-1}.\]
+\end{remark}
+One can check that the above equivalence is in fact an equivalence relation. In particular, we have defined an action of $\op{SL}_2(\ZZ)$ on the space of all quadratic forms, and the equivalence classes are the orbits.
+
+Of course, there are infinitely many quadratic forms, but by giving them a size, we can hope for a finiteness result.
+\begin{definition}[discriminant]
+	The \textit{discriminant} of the quadratic form $f(x,y)\coloneqq ax^2+bxy+cy^2$ is given by $b^2-4ac$. The number of equivalence classes of quadratic forms of discriminant $d$ is notated by $h(-d)$.
+\end{definition}
+One can show that the discriminant is invariant under the $\op{SL}_2\ZZ$ action, which is what makes the definition of $h(-d)$ legal. Here is our goal.
+\begin{theorem}
+	Let $d<0$ be an integer. Then $h(d)$ is finite.
+\end{theorem}
+\begin{remark}
+	It is also true that $h(d)$ is finite when $d\ge0$, but we will not show it here.
+\end{remark}
+Roughly speaking, we will want to relate the action of $\op{SL}_2(\ZZ)$ on quadratic forms with the action of $\op{SL}_2(\RR)$ on $\mathbb H\coloneqq\{z\in\CC:\op{Im}z>0\}$ given by
+\[\begin{bmatrix}
+	a & b \\
+	c & d
+\end{bmatrix}z\coloneqq\frac{az+b}{cz+d}.\]
+One can check that this is in fact a group action. As such, we will as an intermediate goal try to find a fundamental domain for the action of $\op{SL}_2(\ZZ)\subseteq\op{SL}_2(\RR)$ on $\HH$.
+\begin{remark}
+	To get us set up, we note that the orbit of $i$ under the action of $\op{SL}_2(\RR)$ is all of $\HH$, and its stabilizer consists of the matrices $\op{SO}_2(\RR)$. This can be checked directly. As such, we see
+	\[\frac{\op{SL}_2(\RR)}{\op{SO}_2(\RR)}\cong\HH.\]
+\end{remark}
+
+\end{document}
