@@ -1,0 +1,71 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{January 25}
+
+Last class, we were in the middle of proving \Cref{thm:hasse-mink}. I have edited directly into that proof for continuity reasons.
+
+\subsection{Introducing \texorpdfstring{$G$}{ G}-modules}
+We would like to fill in the boxes in the proof of \Cref{thm:hasse-mink}, so we introduce a little group cohomology. Fix a group $G$.
+\begin{defihelper}[$G$-module] \nirindex{G-module@$G$-module}
+	A \textit{$G$-module} is an abelian group $M$ equipped with a $G$-action. In other words, a $G$-module is a (left) $\ZZ[G]$-module. We will write the category of $G$-modules by $\mathrm{Mod}_G$.
+\end{defihelper}
+\begin{warn}
+	If $G$ is not abelian, then $\ZZ[G]$ is not abelian, so we are not doing commutative algebra.
+\end{warn}
+Recall that $\ZZ[G]$ is the free abelian group on $G$ as letters, where multiplication is given by
+\[\Bigg(\sum_{g\in G}a_gg\Bigg)\Bigg(\sum_{h\in G}b_hh\Bigg)=\sum_{g\in G}\sum_{h\in G}a_gb_h(gh).\]
+In other words, we extend the multiplication $g\cdot h=gh$ linearly.
+\begin{example} \label{ex:cyclic-group-module}
+	Let $G=\langle\sigma\rangle$ be a finite group of order $n$. Then we see $\ZZ[x]/\left(x^n-1\right)\cong\ZZ[G]$ by sending $x\mapsto\sigma$. Indeed, this certainly defines a homomorphism between these rings because $\sigma^n-1=0$, and it is certainly surjective. Lastly, it is injective: $p(x)\in\ZZ[x]$ vanishes under this map if and only if $p(\sigma)=0$. By taking $p\pmod{x^n-1}$, we may assume that $p=0$ or $\deg p<n$, but then $p(\sigma)$ will only vanish if $p=0$.
+\end{example}
+Note that the following are equivalent to $M$ being a $G$-module.
+\begin{itemize}
+	\item $M$ is a $\ZZ[G]$-module.
+	\item There is a homomorphism $\ZZ[G]\to\op{End}(M)$.
+	\item By hitting this with the free-forgetful adjunction, this is equivalent to having a morphism $G\to\op{Aut}(M)$. We are going to automorphisms because elements of $G$ are invertible, so their image in $\op{End}(M)$ needs to also be invertible.
+	\item There is an action $\cdot\colon G\times M\to M$ satisfying the following conditions for $g,g'\in G$ and $m,m'\in M$.
+	\begin{itemize}
+		\item $e\cdot m=m$.
+		\item $(g+g')(m+m')=gm+gm'+g'm+g'm'$.
+		\item $(gh)\cdot m=g(h\cdot m)$.
+	\end{itemize}
+\end{itemize}
+Here are some examples.
+\begin{example}
+	Let $G=\langle\sigma\rangle$ be a finite group of order $n$. By \Cref{ex:cyclic-group-module}, a $G$-module is a module over $\ZZ[x]/\left(x^n-1\right)$.
+\end{example}
+\begin{example}
+	For any group $G$, the abelian group $\ZZ$ can be given a ``trivial'' $G$-action by $g\cdot k\coloneqq k$ for all $g\in G$ and $k\in\ZZ$.
+\end{example}
+In the future, when we write down $\ZZ$, we mean $\ZZ$ with the trivial $G$-action.
+
+\subsection{Some Functors}
+Cohomology is interested in deriving the invariant functor $(-)^G\colon\mathrm{Mod}_G\to\mathrm{Ab}$ which sends a $G$-module $M$ to
+\[M^G\coloneqq\{m\in M:g\cdot m=m\text{ for all }g\in G\}.\]
+Alternatively, $M^G\simeq\op{Hom}_{\ZZ[G]}(\ZZ,M)$. Indeed, a map $\varphi\colon\op{Hom}_{\ZZ[G]}(\ZZ,M)$ means that we are choosing an element $\varphi(1)\in M$, and making this a $G$-module morphism requires
+\[g\cdot m=g\cdot\varphi(1)=\varphi(g\cdot1)=\varphi(1)=m\]
+for all $g\in G$. Thus, we see that $(-)^G$ is functorial automatically because $\op{Hom}_{\ZZ[G]}(\ZZ,-)$ is.
+
+There is also a notion of co-invariants, denoted $(-)_G\colon\mathrm{Mod}_G\to\mathrm{Ab}$ by
+\[M_G\coloneqq M/I_GM,\]
+where $I_G\subseteq\ZZ[G]$ is the submodule of elements of degree $0$. Equivalently, $M_G=\ZZ\otimes_{\ZZ[G]}M$, so we see that this construction is functorial.
+
+Here are some preliminary observations.
+\begin{itemize}
+	\item The functor $(-)^G$ is left-exact. This holds because $(-)^G\simeq\op{Hom}_{\ZZ[G]}(\ZZ,-)$, and the $\op{Hom}$ functor is left-exact.
+	\item The functor $(-)_G$ is right-exact. This holds because $(-)_G\simeq\ZZ\otimes_{\ZZ[G]}-$, and the $\otimes$ functor is right-exact.
+	\item For any element $x\in\ZZ[G]$, multiplication by $x$ defines a morphism of abelian groups $x\colon M\to M$ for any $G$-module $M$. For example, if $G$ is a finite group, define $N_G\coloneqq\sum_{g\in G}g$. We note $N_G\colon M\to M$ actually defines a map $M\to M^G$: indeed, for any $m\in M$ and $g\in G$, we see
+	\[g\cdot N_G(m)=g\cdot\sum_{h\in G}hm=\sum_{h\in G}ghm=\sum_{h\in G}hm\]
+	by re-indexing our sum. In fact, we note that $I_GM$ is in the kernel of this map because $N_G((g-1)m)=0$ for all $g\in G$, and the elements $(g-1)m$ generate $I_GM$.
+\end{itemize}
+In light of the last observation, we note that we have a natural transformation
+\[N_G\colon(-)_G\to(-)^G.\]
+One can check naturality by hand, but we won't bother. Using the first two observations, we see we want to derive our left-exact functor to the right (which will give group cohomology), and we want to derive our right-exact functor to the left (which will give group homology). In particular, we will take
+\[H^i(G,-)\coloneqq\op{Ext}^i_{\ZZ[G]}(\ZZ,-)\qquad\text{and}\qquad H_i(G,-)\coloneqq\op{Tor}_i^{\ZZ[G]}(\ZZ,-),\]
+which defines group cohomology and group homology. It turns out that the norm map will connect these together to create Tate cohomology.
+
+\end{document}
