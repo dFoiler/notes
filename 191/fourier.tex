@@ -1,0 +1,347 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+\section{The Fourier Transform}
+It will pay off for us later to have established a little Fourier analysis right now. Our exposition follows \cite[Chapter~5]{stein-fourier-analysis}.
+\begin{definition}[Schwarz]
+	A function $f\colon\RR\to\CC$ is \textit{Schwarz} if and only if $f$ is infinitely differentiable and the $n$th derivative $f^{(n)}$ satisfies that the function $x^A\cdot f^{(n)}(x)$ is bounded for all nonnegative integers $A$.
+\end{definition}
+\begin{remark} \label{rem:build-schwarz-functions}
+	Because the linear combination of bounded sets remains bounded, we see that Schwarz functions form a $\CC$-vector space. Also, by definition, if $f$ is Schwarz, then any derivative is also Schwarz.
+\end{remark}
+\begin{remark} \label{rem:integrate-schwarz}
+	If $f\colon\RR\to\RR$ is Schwarz, we note that $\left|x^Af(x)\right|$ is integrable over $\RR$ for any $A\ge0$. Indeed, let $k$ be an integer greater than $A+2$, and we are granted a constant $C$ such that $\left|x^kf(x)\right|\le C$. Thus,
+	\[\int_\RR\left|x^Af(x)\right|\,dx\le\int_{[-1,1]}\left|x^Af(x)\right|+\int_{|x|\ge1}\frac C{x^{A-k}}\,dx,\]
+	which is finite because $A-k<-2$.
+\end{remark}
+\begin{definition}[Fourier transform]
+	Let $f\colon\RR\to\CC$ be a Schwarz function. Then we define the \textit{Fourier transform} to be the function $\mc Ff\colon\RR\to\CC$ given by
+	\[(\mc Ff)(s)\coloneqq\int_\RR f(x)e^{-2\pi isx}\,dx.\]
+\end{definition}
+\begin{remark} \label{rem:fourier-transform-converges}
+	The integral converges because it absolutely converges: we note
+	\[\int_\RR\left|f(x)e^{-2\pi isx}\right|\,dx=\int_\RR|f(x)|\,dx\]
+	is finite by \Cref{rem:integrate-schwarz}. In fact, this shows that $\mc Ff$ is bounded.
+\end{remark}
+We now run some quick checks on the Fourier transform.
+\begin{lemma} \label{lem:fourier-checks}
+	Let $f\colon\RR\to\CC$ be a Schwartz function.
+	\begin{listalph}
+		\item For some $\lambda>0$, define $f_\lambda(x)\coloneqq f(\lambda x)$. Then $f_\lambda\colon\RR\to\CC$ is Schwartz, and $(\mc Ff_\lambda)(s)=\frac1\lambda(\mc Ff)\left(\frac s\lambda\right)$.
+		\item We have $(\mc Ff')(s)=2\pi is(\mc Ff)(s)$.
+		\item The function $\mc Ff$ is differentiable, and $(\mc Ff)'(s)$ is the Fourier transform of the function $g(x)\coloneqq-2\pi ixf(x)$.
+		\item The function $\mc Ff$ is Schwarz.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We show these one at a time.
+	\begin{listalph}
+		\item To show $f_\lambda$ is Schwarz, we note $f^{(n)}_\lambda(x)=\lambda^nf^{(n)}(\lambda x)$ for all $n\ge0$, so $x^n\cdot f^{(n)}_\lambda(x)$ is bounded because $(\lambda x)^nf^{(n)}(\lambda x)$ is. The last equality is a direct computation. We see
+		\begin{align*}
+			(\mc Ff_\lambda)(s) &= \int_\RR f_\lambda(x)e^{-2\pi isx}\,dx \\
+			&= \int_\RR f(\lambda x)e^{-2\pi i(s/\lambda)\lambda x}\,dx \\
+			&= \frac1\lambda\int_\RR f(x)e^{-2\pi i(s/\lambda)x}\,dx \\
+			&= \frac1\lambda(\mc Ff)\left(\frac s\lambda\right).
+		\end{align*}
+
+		\item Note $f'$ is Schwarz by \Cref{rem:build-schwarz-functions}, so the statement at least makes sense. Now, by integration by parts, we see
+		\begin{align*}
+			(\mc Ff')(s) &= \int_\RR f'(x)e^{-2\pi isx}\,dx \\
+			&= f(x)e^{-2\pi isx}\bigg|_{-\infty}^{\infty}-\int_\RR f(x)\left(2\pi ise^{-2\pi isx}\right)\,dx \\
+			&= 2\pi is(\mc Ff)(s).
+		\end{align*}
+		To justify the last equality, we see that $f(x)e^{-2\pi isx}\to0$ as $x\to\pm\infty$ because $f$ is Schwarz: note $\left|f(x)e^{-2\pi isx}\right|=|f(x)|$, and $|x f(x)|$ is bounded, so there is a constant $C$ such that $f(x)\le C/|x|$ for all $x\ne0$, meaning that $|f(x)|\to0$ as $x\to\pm\infty$.
+
+		\item Note $g$ is the product of infinitely differentiable functions and thus infinitely differentiable. Further, by induction, derivatives of $g$ are the $\CC$-linear of terms of the form $x^kf^{(\ell)}(x)$. Thus, for any integers $k,\ell\ge0$, the function $|x|^k\left|g^{(k)}(x)\right|$ is a $\CC$-linear combination of bounded functions because $f$ is Schwarz, so it follows that $|x|^k\left|g^{(\ell)}(x)\right|$ is bounded, so $g$ is Schwarz.
+		
+		The rest of the proof is a direct computation. For $t,t'\in\RR$, we see
+		\[\int_t^{t'}(\mc Fg)(s)\,ds=\int_t^{t'}\left(\int_\RR-2\pi ixf(x)e^{-2\pi isx}\,dx\right)\,ds.\]
+		We would like to exchange the two integrals. Well, by Fubini's theorem, we note that $\int_\RR|xf(x)|\,dx<\infty$ is finite by \Cref{rem:integrate-schwarz}, so
+		\[\int_t^{t'}\left(\int_\RR\left|-2\pi ixf(x)e^{-2\pi isx}\right|\,dx\right)\,ds\le2\pi|t'-t|\int_\RR|xf(x)|\,dx<\infty.\]
+		Thus, we may write
+		\begin{align*}
+			\int_t^{t'}(\mc Fg)(s)\,ds &= \int_\RR\left(\int_t^{t'}-2\pi ixf(x)e^{-2\pi isx}\,ds\right)\,dx \\
+			&= \int_\RR f(x)\left(e^{-2\pi it'x}-e^{-2\pi itx}\right)\,dx \\
+			&= (\mc Ff)(t')-(\mc Ff)(t).
+		\end{align*}
+		Thus, by the Fundamental theorem of calculus, we see
+		\[(\mc Ff)'(t)=\lim_{t'\to t}\frac{(\mc Ff)(t')-(\mc Ff)(t)}{t'-t}=\lim_{t'\to t}\left(\frac1{t'-t}\int_t^{t'}(\mc Fg)(s)\,ds\right)=(\mc Fg)(t).\]
+
+		\item By \Cref{rem:fourier-transform-converges}, the Fourier transform of a Schwarz function is bounded. Thus, it suffices to note that, for any nonnegative integers $k$ and $\ell$, the function $s\mapsto s^k(\mc Ff)^{(\ell)}(s)$ is the Fourier transform of the function
+		\[x\mapsto\frac1{(2\pi i)^k}\left(\frac d{dx'}\right)^{(k)}\left((-2\pi ix')^\ell f(x')\right)\bigg|_{x'=x}\]
+		by combining (b) and (c). This completes the proof.
+		\qedhere
+	\end{listalph}
+\end{proof}
+As an application, we can compute the Fourier transform of the Gaussian.
+\begin{exe}[Gaussian] \label{exe:gaussian}
+	Define $g\colon\RR\to\RR$ by $g(x)\coloneqq e^{-\pi x^2}$. Then $g$ is Schwarz, and $(\mc Fg)(x)=g(x)$.
+\end{exe}
+\begin{proof}
+	We build a differential equation that $\mc Fg$ solves, and then we solve that differential equation. Namely, by using \Cref{lem:fourier-checks} repeatedly, we see
+	\begin{align*}
+		(\mc Fg)'(s) &= \int_\RR-2\pi ixg(x)e^{-2\pi isx}\,dx \\
+		&= i\int_\RR g'(x)e^{-2\pi isx}\,dx \\
+		&= i(\mc Fg')(s) \\
+		&= -2\pi x(\mc Fg)(s),
+	\end{align*}
+	so $(\mc Fg)$ solves the differential equation $y'+2\pi y=0$. To solve this differential equation, we define $f(x)\coloneqq(\mc Fg)(x)e^{\pi x^2}$ and use the differential equation to write
+	\[f'(x)=(\mc Fg)(x)\cdot2\pi xe^{\pi x^2}-2\pi x(\mc Fg)(x)\cdot e^{\pi x^2}=0.\]
+	Thus, $f$ is a constant function, so there exists $a\in\CC$ such that $(\mc Fg)(x)=ae^{-\pi x^2}$ for all $x\in\RR$.
+
+	To finish, we need to introduce an initial condition. Well, we compute $(\mc Fg)(0)=1$ in the usual way, writing
+	\begin{align*}
+		(\mc Fg)(0)^2 &= \left(\int_\RR e^{-\pi x^2}\,dx\right)^2 \\
+		&= \int_\RR\int_\RR e^{-\pi\left(x^2+y^2\right)}\,dxdy \\
+		&= \int_0^{2\pi}\int_0^\infty e^{-\pi r^2}\,rdrd\theta \\
+		&= \int_0^{2\pi}\frac1{2\pi}\,d\theta \\
+		&= 1.
+	\end{align*}
+	However, surely $(\mc Fg)(0)\ge0$, so we conclude $(\mc Fg)(0)=1$. It follows that $a=1$, so $(\mc Fg)(x)=e^{-\pi x^2}$ for all $x\in\RR$.
+\end{proof}
+
+\section{Fourier Inversion}
+The goal of this subsection is to prove the Fourier inversion theorem; we continue to roughly follow \cite[Chapter~5]{stein-fourier-analysis}. Roughly speaking, this will follow from understanding the Gaussian. Here are the necessary tools.
+\begin{lemma} \label{lem:gaussian-concentrates}
+	Define the Gaussian $g\colon\RR\to\RR$ by $g(x)\coloneqq e^{-\pi x^2}$. For any $\delta>0$, we have
+	\[\lim_{\varepsilon\to0^+}\frac1\varepsilon\int_{|t|\ge\delta}g(t/\varepsilon)\,dt=0.\]
+\end{lemma}
+\begin{proof}
+	Changing variables, we see
+	\[\lim_{\varepsilon\to0^+}\int_{|t|\ge\delta}g(t/\varepsilon)=\lim_{\varepsilon\to0^+}\int_{|t|\ge\delta/\varepsilon}g(t)\,dt=\lim_{N\to\infty}\int_{|t|\ge N}g(t)\,dt,\]
+	where $N=\delta/\varepsilon$ in the last equality. However, $g$ is Schwarz by \Cref{exe:gaussian}, so $\int_\RR g(t)\,dt$ is finite by \Cref{rem:integrate-schwarz}, so
+	\[\lim_{N\to\infty}\int_{|t|\le N}g(t)\,dt=\int_\RR g(t)\,dt.\]
+	Rearranging, we see
+	\[\lim_{N\to\infty}\int_{|t|\ge N}g(t)\,dt=0,\]
+	which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:use-gaussian-concentrates}
+	Define the Gaussian $g\colon\RR\to\RR$ by $g(x)\coloneqq e^{-\pi x^2}$. For any bounded and continuous function $f\colon\RR\to\RR$, we have
+	\[f(0)=\lim_{\varepsilon\to0^+}\frac1\varepsilon\int_\RR f(t)g(t/\varepsilon)\,dt.\]
+\end{lemma}
+\begin{proof}
+	The point here is that, for any $\varepsilon>0$, we have
+	\begin{equation}
+		\frac1\varepsilon\int_\RR g(t/\varepsilon)\,dt=\int_\RR g(t)\,dt=(\mc Fg)(0)=g(0)=1 \label{eq:ints-to-one}
+	\end{equation}
+	by \Cref{exe:gaussian}. However, the functions $t\mapsto g(t/\varepsilon)$ concentrate at $t=0$ as $\varepsilon\to0^+$, so we expect that adding in an $f(t)$ to our integral will force the output to be $f(0)$.
+
+	As an aside, we go ahead and check that these integrals converge for each $\varepsilon>0$. Indeed, they absolutely converge: because $f$ is bounded, we may find $M_f\in\RR$ such that $|f(x)|\le M_f$ for each $x\in\RR$, which gives
+	\[\int_\RR|f(t)g(t/\varepsilon)|\,dt\le M_f\int_\RR g(t/\varepsilon)\,dt=\varepsilon M_f,\]
+	where we have used \eqref{eq:ints-to-one}.
+
+	We now proceed with the proof, which is somewhat technical. For psychological reasons, we set $h(x)\coloneqq f(x)-f(0)$ for all $x\in\RR$. Note $h$ is still bounded and continuous (it's a shift away from $f$). Further, for each $\varepsilon>0$, we see
+	\[\frac1\varepsilon\int_\RR h(t)g(t/\varepsilon)\,dt=\frac1\varepsilon\int_\RR f(t)g(t/\varepsilon)\,dt-\frac{f(0)}\varepsilon\int_\RR g(t/\varepsilon)\,dt=\frac1\varepsilon\int_\RR f(t)g(t/\varepsilon)\,dt-f(0),\]
+	where we have used \eqref{eq:ints-to-one} in the last equality, so it suffices to show
+	\[\lim_{\varepsilon\to0^+}\frac1\varepsilon\int_\RR h(t)g(t/\varepsilon)\,dt\stackrel?=0.\]
+	Well, fix any $\delta>0$. Note $h$ is continuous at $0$ and has $h(0)=0$, so we may find $\delta_0>0$ such that $|h(t)|<\delta$ for $|t|<\delta_0$. For the other values of $t$, we note $h$ is bounded, so we may find $M_h\ge0$ such that $|h(t)|<M_h$ for all $t$. Thus, we upper-bound
+	\begin{align*}
+		\left|\frac1\varepsilon\int_\RR h(t)g(t/\varepsilon)\,dt\right| &\le \frac1\varepsilon\int_{|t|\le\delta_0}|h(t)g(t/\varepsilon)|\,dt+\frac1\varepsilon\int_{|t|\ge\delta_0}|h(t)g(t/\varepsilon)|\,dt \\
+		&\le \frac\delta\varepsilon\int_{|t|\le\delta_0}g(t/\varepsilon)\,dt+\frac{M_h}\varepsilon\int_{|t|\ge\delta_0}g(t/\varepsilon)\,dt \\
+		&\le \frac\delta\varepsilon\int_\RR g(t/\varepsilon)\,dt+\frac{M_h}\varepsilon\int_{|t|\ge\delta_0}g(t/\varepsilon)\,dt \\
+		&= \delta+\frac{M_h}\varepsilon\int_{|t|\ge\delta_0}g(t/\varepsilon)\,dt.
+	\end{align*}
+	(As usual, we have used \eqref{eq:ints-to-one} in the last equality.) Thus, using \Cref{lem:gaussian-concentrates}, sending $\varepsilon\to0^+$ shows that
+	\[\lim_{\varepsilon\to0^+}\left|\frac1\varepsilon\int_\RR h(t)g(t/\varepsilon)\,dt\right|\le\delta\]
+	for any $\delta>0$, so sending $\delta\to0^+$ completes the proof.
+\end{proof}
+And here is our main attraction.
+\begin{theorem}[Fourier inversion]
+	Let $f\colon\RR\to\RR$ be a Schwarz function. For any $x\in\RR$, we have
+	\[f(x)=\int_\RR(\mc Ff)(s)e^{2\pi ixs}\,ds.\]
+\end{theorem}
+\begin{proof}
+	Expanding out the definition of $\mc Ff$, we are computing
+	\[\int_\RR\left(\int_\RR f(t)e^{-2\pi its}\,dt\right)e^{2\pi ixs}\,ds.\]
+	We would like to exchange the two integrals, but we do not have absolute convergence. As such, we employ a trick: fix some $\varepsilon>0$, and define the integral
+	\[f_\varepsilon(x)\coloneqq\int_\RR\int_\RR f(t)e^{2\pi i(x-t)s}e^{-\pi\varepsilon^2s^2}\,dtds.\]
+	Notably, we expect $f_\varepsilon(x)\to\int_\RR(\mc Ff)(s)e^{2\pi ixs}\,ds$ as $\varepsilon\to0^+$. As such, we compute the behavior of $\varepsilon\to0^+$ in two ways.
+	\begin{itemize}
+		\item We integrate over $dt$ first. Namely, we would like to send $\varepsilon\to0^+$, for which we use the Dominated convergence theorem. For each $\varepsilon>0$, note that we have the bound
+		\[\left|\int_\RR f(t)e^{2\pi i(x-t)s}e^{-\pi\varepsilon^2s^2}\,dt\right|\le e^{-\pi\varepsilon^2s^2}\int_\RR|f(t)|\,dt.\]
+		Now, $s\mapsto e^{-\pi\varepsilon^2s^2}$ is Schwarz by \Cref{exe:gaussian} (combined with (a) of \Cref{lem:fourier-checks}), so we may integrate the right-hand function over all $s\in\RR$ by \Cref{rem:integrate-schwarz}.
+
+		Thus, our integrand in $f_\varepsilon(x)$ is dominated by an integrable function, so the Dominated convergence theorem implies
+		\[\lim_{\varepsilon\to0^+}f_\varepsilon(x)=\int_\RR\left(\lim_{\varepsilon\to0^+}e^{-\pi\varepsilon^2s^2}\int_\RR f(x)e^{2\pi i(x-t)}\,dt\right)ds=\int_\RR(\mc Ff)(s)e^{2\pi ixs}\,ds.\]
+		\item We integrate over $ds$ first. As such, we begin by justifying our application of Fubini's theorem: checking for absolute convergence, we compute
+		\[\int_\RR\int_\RR\left|f(t)e^{2\pi i(x-t)s}e^{-\pi\varepsilon^2s^2}\right|\,dtds=\left(\int_\RR|f(t)|\,dt\right)\left(\int_\RR e^{-\pi\varepsilon^2s^2}\,ds\right).\]
+		Now, $f$ is Schwarz by hypothesis, as is $s\mapsto e^{-\pi\varepsilon^2s^2}$ by \Cref{exe:gaussian}, so both of these integrals are finite by \Cref{rem:integrate-schwarz}.
+
+		Thus, we may switch the order of our integration. Setting up notation, we let $g(x)\coloneqq e^{-\pi x^2}$ denote the Gaussian (so that $(\mc Fg)(s)=g(s)$ for all $s\in\RR$) and $g_\varepsilon(x)\coloneqq g(\varepsilon x)$. Then we see
+		\begin{align*}
+			f_\varepsilon(x) &= \int_\RR\int_\RR f(t)e^{2\pi i(x-t)s}e^{-\pi\varepsilon^2s^2}\,dsdt \\
+			&= \int_\RR f(t)\left(\int_\RR e^{-\pi(\varepsilon s)^2}e^{-2\pi i(t-x)}\,ds\right)dt \\
+			&= \int_\RR f(t)(\mc Fg_\varepsilon)(t-x)dt \\
+			&\stackrel*= \frac1\varepsilon\int_\RR f(t)g\left(\frac{t-x}\varepsilon\right)dt \\
+			&= \frac1\varepsilon\int_\RR f(t+x)g\left(t/\varepsilon\right)dt,
+		\end{align*}
+		where we have used part (a) of \Cref{lem:fourier-checks} at $\stackrel*=$. Sending $\varepsilon\to0^+$, \Cref{lem:use-gaussian-concentrates} tells us that
+		\[f(x)=\lim_{\varepsilon\to0^+}\frac1\varepsilon\int_\RR f(t+x)g(t/\varepsilon)\,dt=\lim_{\varepsilon\to0^+}f_\varepsilon(x).\]
+	\end{itemize}
+	Combining the above two computations completes the proof.
+\end{proof}
+
+\section{Fourier Coefficients}
+In order to say that we've done some Fourier analysis, we will also say a few things about Fourier series. We follow \cite[Chapter~2]{stein-fourier-analysis}.
+
+The idea here is that the functions $e_n\colon x\mapsto e^{2\pi inx}$ for $n\in\ZZ$ form an orthonormal set of continuous functions $\RR\to\CC$, where our (Hermitian) inner product is given by
+\[\langle f,g\rangle\coloneqq\frac1{2\pi i}\int_0^1f(x)\overline{g(x)}\,dx.\]
+Indeed, for any $n,m\in\ZZ$, we see
+\begin{equation}
+	\langle e_n,e_m\rangle=\int_0^1e^{2\pi inx}\overline{e^{2\pi imx}}\,dx=\int_0^1e^{2\pi i(m-n)x}\,dx=\begin{cases}
+		1 & \text{if }m=n, \\
+		0 & \text{if }m\ne n.
+	\end{cases} \label{eq:exps-are-orthonormal}
+\end{equation}
+Now, the functions $e_n$ are varied enough that we might hope that all sufficiently smooth $1$-periodic functions $f\colon\RR\to\CC$ can be written in terms of our orthonormal functions as
+\[f(x)=\sum_{n\in\ZZ}a_ne^{2\pi inx}\]
+for some coefficients $a_n\in\ZZ$. Thus, we might hope we can extract out the $n$th coefficient by
+\[\langle f,e_n\rangle=\int_0^1f(x)e^{-2\pi inx}\,dx.\]
+This motivates the following definition.
+\begin{definition}[Fourier coefficient]
+	Fix a continuous $1$-periodic function $f\colon\RR\to\CC$. Then we define the \textit{$n$th Fourier coefficient} as
+	\[a_n(f)\coloneqq\int_0^1f(x)e^{-2\pi inx}\,dx.\]
+\end{definition}
+\begin{remark} \label{rem:bound-coefs}
+	Note that the integral defining $a_n(f)$ converges absolutely. Indeed, $f$ is continuous on $[0,1]$ and hence bounded because $[0,1]$ is compact. Thus, we may find $M$ such that $|f(x)|\le M$ for $x\in[0,1]$, which implies
+	\[|a_n(f)|\le\int_0^1\left|f(x)e^{-2\pi inx}\right|\,dx\le M\int_0^1dx=M.\]
+\end{remark}
+Of course, one can weaken the requirement that $f$ be continuous, but we will have no need for these levels of generality.
+\begin{remark} \label{rem:shift-integration}
+	In fact, we note
+	\[a_n(f)=\int_t^{t+1}f(x)e^{2\pi inx}\,dx\]
+	for any $t\in\RR$. Because $x\mapsto f(x)e^{2\pi inx}$ is $1$-periodic, it suffices to show this for $t\in[0,1)$. Then the integral over $[t,t+1)=[t,1)\sqcup[1,1+t)$ is equal to the integral over $[0,t)\sqcup[t,1)=[0,1)$, where we have used the $1$-periodicity.
+\end{remark}
+Here is some basic arithmetic with these coefficients.
+\begin{lemma} \label{lem:linearity-of-fourier-coefs}
+	Fix continuous $1$-periodic functions $f,g\colon\RR\to\CC$.
+	\begin{listalph}
+		\item For any $z,w\in\CC$ and $n\in\ZZ$, we see $a_n(zf+wg)=za_n(f)+wa_n(g)$.
+		\item For any $n\in\ZZ$, we see $a_n(\overline f)=\overline{a_{-n}(f)}$.
+		\item Given $x_0\in\RR$, define $g(x)\coloneqq f(x+x_0)$. Then $a_n(g)=e^{-2\pi inx_0}a_n(f)$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item This follows from the fact that $\langle\cdot,\cdot\rangle$ is an inner product. Indeed,
+		\[a_n(zf+wg)=z\int_0^1f(x)e^{-2\pi inx}\,dx+w\int_0^1g(x)e^{-2\pi inx}\,dx=za_n(f)+wa_n(g).\]
+		\item We compute
+		\[a_n(\overline f)=\int_0^1\overline{f(x)}e^{-2\pi inx}\,dx=\overline{\int_0^1f(x)e^{2\pi inx}\,dx}=\overline{a_{-n}(f)}.\]
+		\item We compute
+		\[a_n(g)=\int_0^1f(x+x_0)e^{2\pi inx}\,dx=e^{-2\pi inx_0}\int_0^1f(x+x_0)e^{2\pi in(x+x_0)}\,dx=e^{-2\pi inx_0}a_n(f),\]
+		where the last inequality used \Cref{rem:shift-integration}.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Here is a slightly harder computation, still akin to \Cref{lem:fourier-checks}.
+\begin{lemma} \label{lem:defiv-fourier-coefs}
+	Fix a continuously differentiable $1$-periodic function $f\colon\RR\to\CC$. For $n\ne0$, we have
+	\[a_n(f')=-2\pi ina_n(f).\]
+\end{lemma}
+\begin{proof}
+	This is by integration by parts. Indeed, we compute
+	\begin{align*}
+		a_n(f') &= \int_0^1f'(x)e^{-2\pi inx}\,dx \\
+		&= \frac{f(x)e^{-2\pi inx}}{-2\pi in}\bigg|_0^1-\frac1{-2\pi in}\int_0^1f(x)e^{-2\pi inx}\,dx \\
+		&= 0+\frac1{2\pi in}\cdot a_n(f),
+	\end{align*}
+	which is what we wanted.
+\end{proof}
+The following is our key result.
+\begin{lemma} \label{lem:get-zero-from-coefs}
+	Fix a continuous $1$-periodic function $f\colon\RR\to\RR$ such that $f(0)\ne0$. Then $a_n(f)\ne0$ for some $n\in\ZZ$.
+\end{lemma}
+\begin{proof}
+	Define the function $p\colon\RR\to\CC$ by $p(x)\coloneqq e^{-2\pi inx}$. Roughly speaking, the idea is that $a_n(f)=0$ for all $n\in\ZZ$ implies that any ``polynomial in $p$'' named $q\in\CC\left[p,p^{-1}\right]$ written as
+	\[q\coloneqq\sum_{n\in\ZZ}q_np^n,\]
+	where all but finitely many of the $q_n$ vanish, will have
+	\[\int_{-1/2}^{1/2}f(x)q(x)\,dx=\sum_{n\in\ZZ}\left(q_n\int_{-1/2}^{1/2}f(x)e^{2\pi inx}\,dx\right)=\sum_{n\in\ZZ}q_na_n(f)=0\]
+	by \Cref{rem:shift-integration}. Indeed, we will be able to build a function $q\in\CC\left[p,p^{-1}\right]$ which is ``concentrated at $0$'' so that $f(0)\ne0$ is incompatible with all these integrals vanishing.
+
+	We now proceed with the proof. Quickly, we replace $f(x)$ with $f(x)/f(0)$, which is still continuous, $1$-periodic, and has $a_n(f/f(0))=a_n(f)/f(0)$ for all $n\in\ZZ$, so $a_n(f/f(0))\ne0$ implies $a_n(f)\ne0$. Thus, we may assume $f(0)=1$, and we still want to show $a_n(f)\ne0$ for some $n$.
+
+	We now set up some bounding, in steps.
+	\begin{enumerate}
+		\item Note $f$ is continuous on the compact set $[-1/2,1/2]$, so we may find some $M_f$ such that $|f(x)|\le M_f$ for all $x\in[-1/2,1/2]$.
+		\item Because $f$ is continuous, we may find $\delta_f>0$ such that $|f(x)-1|\le1/2$ for $|x|<\delta_f$. In particular, we see $f(x)\ge1/2$ for $|x|<\delta_f$. By making $\delta_f$ smaller if necessary, we will enforce $\delta_f\le1/4$.
+		\item Now, define $q_1(x)\coloneqq2\varepsilon+p(x)+p(x)^{-1}=2\varepsilon+\cos(2\pi x)$, for $\varepsilon\coloneqq\frac23(1-\cos(2\pi\delta_f))$. Note $\cos(2\pi x)$ is decreasing in the region in $[\delta_f,1/2]$, so in fact
+		\[\varepsilon\le\frac13(1-\cos(2\pi x))\]
+		for $x\in[\delta_f,1/2]$. Rearranging, we see
+		\[q_1(x)=2\varepsilon+\cos(2\pi x)\le1-\varepsilon\]
+		for $x\in[\delta_f,1/2]$. In fact, because $q_1(x)\ge-1+2\varepsilon$, we see that $|q_1(x)|\le1-\varepsilon$ for $x\in[\delta_f,1/2]$. Lastly, because $q_1$ is even, these inequalities hold on $[-1/2,-\delta_f]\cup[\delta_f,1/2]$.
+		\item Lastly, choose $\delta_q>0$ such that $|q_1(x)-q_1(0)|\le\varepsilon$ for $|x|<\delta_q$. In particular, $q_1(x)\ge1-\varepsilon$ for $|x|<\delta_q$. By making $\delta_q$ smaller if necessary, we may assume $\delta_q<\delta_f$, though this is actually implied.
+	\end{enumerate}
+	To finish, we define $q_N\coloneqq q_1^N$ for $N\in\NN$. (Notably, $q_1=q_1^1$.) The point is that $k\to\infty$ makes $q_N$ blow up at $0$ around points where $f$ is bounded below by $1/2$, but $q_N$ will vanish elsewhere. Indeed, using \Cref{rem:shift-integration}, we compute
+	\begin{align*}
+		\int_{-1/2}^{1/2}f(x)q_N(x)\,dx &= \int_{|x|\le\delta_q}f(x)q_N(x)\,dx+\int_{\delta_q\le|x|\le\delta_f}f(x)q_N(x)\,dx+\int_{\delta_f\le|x|\le1/2}f(x)q_N(x)\,dx \\
+		&\ge2\delta_q\cdot\frac12\left(1+\varepsilon\right)^N+2(\delta_f-\delta_q)\cdot\frac12\cdot0-2\left(\frac12-\delta_f\right)B\left(1-\varepsilon\right)^N \\
+		&\ge\delta_q\left(1+\varepsilon\right)^N-\delta_fB(1-\varepsilon)^N.
+	\end{align*}
+	Thus, as $N\to\infty$, the integral goes to $+\infty$. In particular, we can (in theory) find an (explicit) $N$ such that $\int_{-1/2}^{1/2}f(x)q_N(x)\,dx>0$. Now, we may write
+	\[q_N=\left(2\varepsilon+p+p^{-1}\right)^N=\sum_{n=-N}^Nq_{N,n}p^n\]
+	for some coefficients $q_{N,n}\in\RR$. Thus,
+	\[0<\int_{-1/2}^{1/2}f(x)q_N(x)\,dx=\sum_{n=-N}^N\left(q_{N,n}\int_{-1/2}^{1/2}f(x)e^{-2\pi inx}\,dx\right)=\sum_{n=-N}^Nq_{N,n}a_n(f),\]
+	where we have used \Cref{rem:shift-integration}. Thus, there exists $n$ with $|n|\le N$ such that $a_n(f)\ne0$.
+\end{proof}
+\begin{proposition} \label{prop:get-zero-from-coefs}
+	Fix a continuous $1$-periodic function $f\colon\RR\to\CC$ such that $a_n(f)=0$ for all $n\in\NN$. Then $f(x)=0$ for all $x\in\RR$.
+\end{proposition}
+\begin{proof}
+	This follows from \Cref{lem:get-zero-from-coefs} and the following reductions.
+	\begin{itemize}
+		\item It suffices to show the result for real-valued functions $f$. Indeed, we may write $f(x)\coloneqq u(x)+iv(x)$ for some real-valued, continuous, and $1$-periodic functions $u,v\colon\RR\to\RR$. (Namely, $u=\op{Re}f$ and $v=\op{Im}f$, and each adjective is inherited from $f$.) However, for each $n\in\NN$, we use \Cref{lem:linearity-of-fourier-coefs} to see
+		\[a_n(u)=a_n\left(\frac{f+\overline f}2\right)=\frac12\left(a_n(f)+\overline{a_{-n}(f)}\right)=0,\]
+		and
+		\[a_n(v)=a_n\left(\frac{f-\overline f}{2i}\right)=\frac1{2i}\left(a_n(f)-\overline{a_{-n}(f)}\right)=0.\]
+		Thus, if we can prove the result for real-valued functions, we see $a_n(u)=a_n(v)=0$ for all $n\in\ZZ$ forces $u=v=0$, so $f=u+iv=0$ also.
+		\item It suffices to show that $f(0)=0$, which is \Cref{lem:get-zero-from-coefs}. Indeed, for some fixed $x_0\in\RR$, we define $g(x)\coloneqq f(x+x_0)$. Note $g$ is still continuous and $1$-periodic. Further, \Cref{lem:linearity-of-fourier-coefs} tells us that $a_n(g)=e^{2\pi inx_0}a_n(f)=0$ for each $n\in\ZZ$. Thus, \Cref{lem:get-zero-from-coefs} implies $g(0)=0$, so $f(x_0)=g(0)=0$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+The point is that we know the linear transformation sending a continuous $1$-periodic function $f$ to the tuple of its coefficients $\{a_n(f)\}_{n\in\NN}$ is injective. We now expect that we can construct a partial inverse map by sending the tuple of coefficients to the corresponding Fourier series, which is what we show next.
+
+\section{Fourier Series}
+Now that we have our coefficients, we can define our Fourier series. We continue to follow \cite[Chapter~2]{stein-fourier-analysis}.
+\begin{definition}[Fourier series]
+	Fix a continuous $1$-periodic function $f\colon\RR\to\CC$. Then we define the $N$th partial sum of the \textit{Fourier series} of $f$ as
+	\[S_{f,N}(x)\coloneqq\sum_{n=-N}^Na_n(f)e^{2\pi inx}.\]
+	The \textit{Fourier series} is defined as $S_f(x)\coloneqq\lim_{N\to\infty}S_{f,N}(x)$, when this limit converges.
+\end{definition}
+The main goal of this subsection is to provide smoothness conditions on $f$ which will imply $f(x)=S(x)$ for all $x\in\RR$.
+
+We will begin by figuring out when this series will converge.
+\begin{lemma} \label{lem:fourier-series-converges}
+	Fix a twice continuously differentiable $1$-periodic function $f\colon\RR\to\CC$. Then the series $S_f(x)$ converges absolutely and uniformly.
+\end{lemma}
+\begin{proof}
+	This follows from \Cref{lem:defiv-fourier-coefs}. Indeed, for $n\ne0$, we see that
+	\[a_n(f)=\frac1{-2\pi in}\cdot a_n(f')=\frac{a_n(f'')}{4\pi^2n^2}.\]
+	Because $f''$ is continuous, \Cref{rem:bound-coefs} grants $M\in\RR$ such that $|a_n(f'')|\le M$, so it follows that $|a_n(f)|\le M/\left(4\pi^2n^2\right)$ for $n\ne0$. Thus, we see the series $S_f$ converges absolutely because
+	\[\sum_{n\in\ZZ}\left|a_n(f)e^{2\pi inx}\right|\le a_0(f)+\frac{2M}{4\pi^2}\sum_{n=1}^\infty\frac1{n^2}<\infty\]
+	for any $x\in\RR$. To get the uniform convergence, for any $N\in\NN$, we compute
+	\[\left|S_f(x)-S_{f,N}(x)\right|=\left|\sum_{|n|>N}a_n(f)e^{2\pi inx}\right|\le\sum_{|n|>N}\frac M{4\pi^2n^2}=\frac{2M}{4\pi^2}\sum_{n>N}\frac1{n^2}<\frac{2M}{4\pi^2}\int_N^\infty\frac1{t^2}\,dt=\frac{2M}{4\pi^2N},\]
+	which does vanish as $N\to\infty$.
+\end{proof}
+And in this situation, we can show that our Fourier series is well-behaved.
+\begin{theorem} \label{thm:fourier-series}
+	Fix a continuous $1$-periodic function $f\colon\RR\to\CC$. If the series $S_f$ converges absolutely and uniformly, then $S_f(x)=f(x)$ for all $x\in\RR$.
+\end{theorem}
+\begin{proof}
+	The point is to show that $a_n(S_f)=a_n(f)$ for all $n\in\ZZ$ so that the result will follow from \Cref{prop:get-zero-from-coefs}.
+
+	Quickly, note that the uniform convergence provided by hypothesis implies that $S_f$ is a continuous function because the partial sums $S_{f,N}$ are continuous. Further, $S_f$ is $1$-periodic: for any $x\in\RR$, we see
+	\[S_f(x+1)=\lim_{N\to\infty}\sum_{n=-N}^Na_n(f)e^{2\pi in(x+1)}=\lim_{N\to\infty}\sum_{n=-N}^Na_n(f)e^{2\pi inx}=S_f(x).\]
+	Thus, we are allowed to compute the Fourier coefficients
+	\[a_n(S_f)=\int_0^1\left(\sum_{m\in\ZZ}a_n(f)e^{2\pi i(m-n)x}\right)dx\]
+	for $n\in\ZZ$. We would like to exchange the sum and the integral, for which we use Fubini's theorem. Indeed, we see
+	\[\int_0^1\left(\sum_{m\in\ZZ}\left|a_n(f)e^{2\pi i(m-n)x}\right|\right)dx=\left(\int_0^1\,dx\right)\sum_{m\in\ZZ}|a_n(f)|=\sum_{m\in\ZZ}|a_n(f)|,\]
+	which converges because $S_f(0)$ converges absolutely by hypothesis. Thus, Fubini's theorem lets us write
+	\[a_n(S_f)=\sum_{m\in\ZZ}\left(\int_0^1a_n(f)e^{2\pi i(m-n)x}\,dx\right)=a_n(f),\]
+	where we have used \eqref{eq:exps-are-orthonormal} in the last equality. To finish the proof, we note $a_n(S_f-f)=0$ by \Cref{lem:linearity-of-fourier-coefs}. As such, $S_f-f=0$ by \Cref{prop:get-zero-from-coefs}, which finishes the proof.
+\end{proof}
+
+\end{document}
