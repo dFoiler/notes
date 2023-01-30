@@ -22,29 +22,55 @@ Roughly speaking, we will show the Prime number theorem by being able to study $
 \begin{definition}
 	For $x\in\RR$, we define the following functions.
 	\begin{align*}
-		\pi(x) &\coloneqq \sum_{\substack{p\text{ prime}\\p\le x}}1, \\
-		\Lambda(x) &\coloneqq\begin{cases}
+		\pi(x) &\coloneqq \sum_{p\le x}1, \\
+		\Lambda(n) &\coloneqq\begin{cases}
 			\log p & \text{if }n=p^\nu\text{ for }\nu\in\ZZ^+, \\
 			0 & \text{else},
 		\end{cases} \\
 		\psi(x) &\coloneqq \sum_{n\le x}\Lambda(n).
 	\end{align*}
 \end{definition}
-\begin{remark}
-	Note that
-	\[\psi(x)=\sum_{p\le x}\log p+\sum_{p\le x^{1/2}}\log p+\sum_{p\le x^{1/3}}\log p+\cdots=\sum_{p\le x}\log p+O_\varepsilon\left(x^{1/2+\varepsilon}\right).\]
-	The point is that the prime-powers don't actually contribute anything.
-\end{remark}
+Quickly, we note that the prime-powers we have included in $\Lambda(n)$ and $\psi(x)$ don't actually matter.
+\begin{lemma} \label{lem:no-prime-powers}
+	For any $x\ge2$, we have
+	\[\psi(x)=\sum_{p\le x}\log p+O\left(\sqrt x(\log x)^2\right).\]
+\end{lemma}
+\begin{proof}
+	Note
+	\[\psi(x)=\sum_{n\le x}\Lambda(n)=\sum_{k=1}^\infty\Bigg(\sum_{p^k\le x}\log p\Bigg).\]
+	Now, note $k\ge\log_2x$ implies that $p^k\ge2^k\ge x$ for all primes $p$, so we only need to sum up to $\log_2x$. As such, we upper-bound the $k>1$ sum as
+	\[\Bigg|\sum_{k=2}^{\log_2x}\Bigg(\sum_{p^k\le x}\log p\Bigg)\Bigg|\le|\log_2x-1|\cdot\Bigg|\sum_{n\le\sqrt x}\log(\sqrt x)\Bigg|\le\frac{\sqrt x(\log x)^2}{2\log2}.\]
+	Adding the $k=1$ sum back in, we see that
+	\[\psi(x)=\sum_{p\le x}\log p+O\left(\sqrt x(\log x)^2\right),\]
+	which is what we wanted.
+\end{proof}
 Now, here is our statement.
 \begin{theorem}[Prime number]
 	We have $\pi(x)\sim x/\log x$ as $x\to\infty$.
 \end{theorem}
 Here is why we mentioned $\psi$.
 \begin{proposition}
-	The statement $\psi(x)\sim x$ as $x\to\infty$ is equivalent to $\pi(x)\sim x/\log x$ as $x\to\infty$.
+	The following are equivalent.
+	\begin{listalph}
+		\item $\pi(x)\sim x/\log x$ as $x\to\infty$.
+		\item $\psi(x)\sim x$ as $x\to\infty$.
+	\end{listalph}
 \end{proposition}
 \begin{proof}
-	Summation by parts.
+	This is by summation by parts. We have two implications to show.
+	\begin{listalph}
+		\item Suppose (b), and we'll show (a). Let $a_n=\log n$ be $1$ if $n$ is prime and $0$ otherwise, and let $A(x)\coloneqq\sum_{n\le x}a_n$ denote the partial sums. By \Cref{lem:no-prime-powers}, we see
+		\[A(x)=\sum_{p\le x}\log p=\psi(x)+O\left(\sqrt x(\log x)^2\right).\]
+		In particular, $A(x)/x=\psi(x)+O\left(x^{-1/2}(\log x)^2\right)$ goes to $1$ as $x\to\infty$ by hypothesis.
+
+		Further, let $f(n)\coloneqq1/\log n$ if $n>1$ and $0$ at $n=1$. Then \Cref{thm:abel-summation} tells us
+		\[\pi(x)=\sum_{n\le x}a_nf(n)=A(x)f(x)-\int_0^xA(t)f'(t)\,dt=\frac{A(x)}{\log x}+\int_2^x\frac{A(t)}{(\log t)^2}\,dt,\]
+		so
+		\[\frac{\pi(x)}{x/\log x}=\frac{A(x)}{x}+\frac{\log x}x\int_2^x\frac{A(t)}{(\log t)^2}\,dt.\]
+		As $x\to\infty$, we know $A(x)/x\to 1$, so we have left to show that the right-hand term goes to $0$. Because $A(x)/x\to1$, we can find $N$ such that $x>N$ implies $A(x)/x\le2$. Thus, we can upper-bound
+		\[\frac{\log x}x\int_2^x\frac{A(t)}{(\log t)^2}\,dt\le2(\log x)\int_2^x\frac1{(\log t)^2}\,dt\]
+		for $x>N$.
+	\end{listalph}
 \end{proof}
 
 \subsection{Poisson Summation}
