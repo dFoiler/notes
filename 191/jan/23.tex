@@ -69,34 +69,82 @@ We might be interested in an Euler product factorization for a product of two Di
 In this subsection, we pick up a few facts about the Mellin transform. Roughly speaking, we are doing Fourier analysis on the group $\RR^+$ whose operation is multiplication. As such, the Haar measure is $dx/x$: for any Borel set $S\subseteq\RR^+$ and $a\in\RR^+$, we see
 \[\int_{aS}\frac{dx}x=\int_S\frac{d(ax)}{ax}=\int_S\frac aa\cdot\frac{dx}x=\int_S\frac{dx}x,\]
 so $dx/x$ is in fact a translation-invariant measure on $\RR^+$. Anyway, here is our definition of the Mellin transform.
-\begin{definition}[rapidly decaying]
-	A function $\varphi\colon\RR_{\ge0}\to\CC$ is \textit{rapidly decaying} at $0$ and $\infty$ if and only if $x^A\cdot\varphi(x)$ is bounded for all $A\in\RR$.
+\begin{definition}[decaying]
+	A function $\varphi\colon(0,\infty)\to\CC$ is \textit{decaying at a rate of $(\alpha,\beta)$} for real numbers $\alpha<\beta$ if and only if the functions $x^\alpha f(x)$ and $x^\beta f(x)$ are bounded.
 \end{definition}
 \begin{definition}[Mellin transform]
-	Let $\varphi\colon\RR_{\ge0}\to\CC$ be a continuous function rapidly decaying at $0$ and $\infty$. Then the \textit{Mellin transform} is the function $\mc M\varphi\colon\CC\to\CC$ given by
-	\[(\mc M\varphi)(s)\coloneqq\int_0^\infty\varphi(x)x^s\,\frac{dx}x.\]
+	Let $\varphi\colon(0,\infty)\to\CC$ be a continuous function decaying at  a rate of $(\alpha,\beta)$. Then the \textit{Mellin transform} is the function $\mc M\varphi$ given by
+	\[(\mc M\varphi)(s)\coloneqq\int_0^\infty\varphi(x)x^s\,\frac{dx}x\]
+	for $\alpha<\op{Re}s<\beta$.
 \end{definition}
-We quickly check that the integral converges for any $s\in\CC$. Indeed, fixing $A,B>0$, we show that $\mc M\varphi$ converges for $-A<\op{Re}s<B$. Find constants $C_A$ and $C_B$ such that $\varphi(x)\le x^{A}C_A$ and $\varphi(x)\le x^{-B}C_B$. Now, it suffices to show that the integral absolutely converges, so upon setting $\sigma\coloneqq\op{Re}s$, we are showing
-\[\int_0^\infty\varphi(x)x^\sigma\,\frac{dx}x\]
-converges. Now, we split this integral into
-\[\int_0^1\varphi(x)x^{\sigma-1}\,dx+\int_1^\infty\varphi(x)x^{\sigma-1}\,dx\le C_A\int_0^1x^{A+\sigma-1}\,dx+C_B\int_1^\infty x^{-B+\sigma-1}\,dx,\]
-both of which converge because $A+\sigma-1>-1$ and $-B+\sigma-1<-1$.
-
-We will need two key properties of the Mellin transform, which we will not prove because they would take us too far afield.
+\begin{remark} \label{rem:bound-mellin}
+	We quickly check that the integral $\mc M\varphi$ (absolutely) converges for $\alpha<\op{Re}s<\beta$. For each $\gamma\in\{\alpha,\beta\}$, find a constant $C_\gamma\in\RR$ such that $\left|x^\gamma\varphi(x)\right|\le C_\gamma$ for all $x\in(0,\infty)$. For our absolute convergence, we set $\sigma\coloneqq\op{Re}s\in(\alpha,\beta)$ and compute
+	\[\int_0^\infty\left|\varphi(x)x^s\right|\,\frac{dx}x\le \int_0^1C_\alpha x^{-\alpha+\sigma-1}\,dx+\int_1^\infty C_\beta x^{-\beta+\sigma-1}\,dx,\]
+	so both of the right-hand integrals converge because $-\alpha+\sigma-1>-1$ and $-\beta+\sigma-1<-1$. Notably, this shows that $(\mc M\varphi)$ is uniformly bounded by
+	\[\int_0^1C_\alpha x^{-\alpha+\alpha_0-1}\,dx+\int_1^\infty C_\beta x^{-\beta+\beta_0-1}\,dx\]
+	whenever $\sigma\in[\alpha_0,\beta_0]$.
+\end{remark}
+\begin{remark} \label{rem:mellin-to-fourier}
+	Fixing some $\sigma\in(\alpha,\beta)$, let $\psi(u)\coloneqq e^{-\sigma u}\varphi\left(e^{-u}\right)$. Provided that $\psi$ is Schwarz, changing variables by $x=e^{-u}$ gives
+	\[(\mc M\varphi)(\sigma+2\pi it)=\int_0^\infty\varphi(x)x^{\sigma+2\pi it}\,\frac{dx}x=\int_\RR\varphi\left(e^{-u}\right)e^{-\sigma u-2\pi itu}\,du=(\mc F\psi)(t).\]
+\end{remark}
+Here is a basic result on the Mellin transform.
+\begin{lemma} \label{lem:deriv-mellin-transform}
+	Fix a differentiable function $\varphi\colon(0,\infty)\to\CC$ such that $\varphi$ decays at a rate of $(\alpha,\beta)$. Defining $\psi(x)\coloneqq x\varphi'(x)$, for any $\alpha<\op{Re}s<\beta$, the integral defining $(\mc M\psi)(s)$ converges, and
+	\[(\mc M\psi)(s)=-s(\mc M\varphi)(s).\]
+\end{lemma}
+\begin{proof}
+	This is by integration by parts. Indeed, we compute
+	\begin{align*}
+		(\mc M\psi)(s) &= \int_0^\infty x\varphi'(x)x^s\,\frac{dx}x \\
+		&= x^s\varphi(x)\bigg|_0^\infty-s\int_0^\infty\varphi(x)x^s\,\frac{dx}x \\
+		&= -s(\mc M\varphi)(s),
+	\end{align*}
+	which is what we wanted. Note, $x^s\varphi(x)\to0$ as $x\to0^+$ and $x\to\infty$ because $\varphi$ decays at a rate of $(\alpha,\beta)$ and $\op{Re}s\in(\alpha,\beta)$.
+\end{proof}
+We will need two key properties of the Mellin transform.
 \begin{proposition} \label{prop:bound-mellin-transform}
-	Let $\varphi\colon\RR_{\ge0}\to\CC$ be a continuous function rapidly decaying at $0$ and $\infty$. Then $\mc M\varphi$ is entire. In fact, for any real number $A$ and $a<b$, the set
-	\[\left\{|t|^A\mc M\varphi(\sigma+it):\sigma\in[a,b],t\in\RR\right\}\]
-	is bounded.
+	Let $\varphi\colon(0,\infty)\to\CC$ be a continuous function decaying at a rate of $(\alpha,\beta)$. 
+	\begin{listalph}
+		\item The function $\mc M\varphi$ is holomorphic on $\{s:\alpha<\op{Re}s<\beta\}$.
+		\item Suppose that $\varphi$ is infinitely differentiable, and the $n$th derivatives decays at a rate of $(\alpha-n,\beta-n)$. Then for any integer $A\ge0$ and $[\alpha_0,\beta_0]\subseteq(\alpha,\beta)$, the set
+		\[\left\{|s|^A(\mc M\varphi)(s):\alpha_0\le\op{Re}s\le\beta_0\right\}\]
+		is bounded.
+	\end{listalph}
 \end{proposition}
 \begin{proof}
-	Omitted.
+	These are essentially bounding results.
+	\begin{listalph}
+		\item We use \Cref{lem:diff-under-sign}. Here, $f(s,t)\coloneqq\varphi(x)x^{s-1}$. We will show that $\mc M\varphi$ is holomorphic on the vertical strip $U\coloneqq\{s:-\alpha_0<\op{Re}s<\beta_0\}$ for any $\alpha<\alpha_0<\beta_0<\beta$, and the result will follow by taking the union over all $\alpha_0$ and $\beta_0$.
+
+		By hypothesis on $\varphi$, we can find a constant $C$ such that $\left|x^\alpha\varphi(x)\right|\le C$ and $\left|x^\beta\varphi(x)\right|\le C$ for each $x$. As such, we set
+		\[g(t)\coloneqq\begin{cases}
+			0 & x\le0 \\
+			C(\log x)x^{-\alpha+\alpha_0-1} & \text{if }x\in(0,1], \\
+			C(\log x)x^{-\beta+\beta_0-1} & \text{if }x>1.
+		\end{cases}\]
+		Note $\int_\RR g(t)\,dt<\infty$ by \Cref{rem:annoying-log-power-ints} because $-\alpha+\alpha_0-1>-1$ and $-\beta+\beta_0-1<-1$. Thus, we see that $x\in(0,1]$ gives
+		\[\left|\frac{\del}{\del s}\varphi(x)x^{s-1}\right|=\left|\varphi(x)(\log x)x^{s-1}\right|\le C(\log x)x^{-\alpha+\op{Re}s-1}\le C(\log x)x^{-\alpha+\alpha_0+1},\]
+		and similar for $x\in(1,\infty)$ comparing with $\beta_0$. The result now follows from \Cref{lem:diff-under-sign}.
+		\item This follows from \Cref{lem:deriv-mellin-transform}. Define $\varphi_0\coloneqq\varphi$ and $\varphi_{n+1}(x)\coloneqq x\varphi_n'(x)$ for each $n$. By induction, $\varphi_n$ decays at a rate of $(\alpha,\beta)$ for each $n$, and for each $n$, we see
+		\[\left|s^n(\mc M\varphi)(s)\right|=\left|(\mc M\varphi_n)(n)\right|\]
+		by \Cref{lem:deriv-mellin-transform}. However, for each $n$, we see that $(\mc M\varphi_n)$ is uniformly bounded on $[\alpha_0,\beta_0]$ by \Cref{rem:bound-mellin}, which is what we wanted.
+		\qedhere
+	\end{listalph}
 \end{proof}
 \begin{theorem} \label{thm:inv-mellin}
-	Let $\varphi\colon\RR_{\ge0}\to\CC$ be a continuous function rapidly decaying at $0$ and $\infty$. For any $\sigma\in\RR$, we have
+	Let $\varphi\colon(0,\infty)\to\CC$ be a function such that $\psi(u)\coloneqq e^{-\sigma u}\varphi\left(e^{-u}\right)$ is Schwarz. For any $\sigma\in\RR$ and $x\in(0,\infty)$, we have
 	\[\varphi(x)=\frac1{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}(\mc M\varphi)(s)x^{-s}\,ds.\]
 \end{theorem}
 \begin{proof}
-	Omitted.
+	We translate everything to the Fourier setting with \Cref{rem:mellin-to-fourier}, where \Cref{thm:fourier-inversion} finishes. Following this outline, we compute
+	\begin{align*}
+		\frac1{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}(\mc M\varphi)(s)x^{-s}\,ds &= \int_\RR (\mc M\varphi)(\sigma+2\pi it)x^{-\sigma-2\pi it}\,dt \\
+		&= x^{-\sigma}\int_\RR (\mc F\psi)(t)e^{2\pi i(-\log x)t}\,dt \\
+		&= x^{-\sigma}\cdot\psi(-\log x) \\
+		&= \varphi(x),
+	\end{align*}
+	which is what we wanted.
 \end{proof}
 
 \subsection{Finishing Dirichlet's Theorem}
@@ -122,11 +170,13 @@ We finish the proof of \Cref{thm:dirichlet}. By \Cref{prop:reduce-dir-to-l} and 
 		Thus, for $x$ large enough, we see
 		\[\sum_{x<n\le2x}(1*\chi)(n)\ge\frac13\sqrt x.\]
 
-		\item We now apply smoothing Let $\psi\colon(0,\infty)\to[0,\infty)$ be a continuous function with support contained in $[0.9,2.1]$ such that $\psi(x)=1$ for $x\in[1,2]$. Then one sees
-		\[\sum_{n=1}^\infty\psi(n/x)(1*\chi)(m)\ge\sum_{x<n\le2x}(1*\chi)(n)\ge\frac13\sqrt x.\]
+		\item We now apply smoothing Let $\varphi\colon(0,\infty)\to[0,\infty)$ be an infinitely differentiable function with support contained in $[0.9,2.1]$ such that $\varphi(x)=1$ for $x\in[1,2]$. Then one sees
+		\[\sum_{n=1}^\infty\varphi(n/x)(1*\chi)(m)\ge\sum_{x<n\le2x}(1*\chi)(n)\ge\frac13\sqrt x.\]
 		Note that this sum is finite because only finitely many $n$ have $n/x\le2.1$.
 	
-		We now use the Mellin transform $\mc M\varphi$. Indeed, note that $\varphi$ is rapidly decaying at $0$ and $\infty$ because $\varphi$ actually vanishes for $x<0.9$ and $x>2.1$. Now, we use \Cref{thm:inv-mellin} to compute
+		We now use the Mellin transform $\mc M\varphi$. Indeed, note that $\varphi$ is decaying at a rate of $(\alpha,\beta)$ for any $\alpha<\beta$ because $\varphi$ is continuous and has compact support, so the function $x^\alpha\varphi(x)$ is continuous and has compact support for any $\alpha$ and is thus bounded.
+		
+		Further, for any $\sigma>0$, the function $\psi(u)\coloneqq e^{-\sigma u}\varphi\left(e^{-u}\right)$ has compact support and is infinitely differentiable, so $x^k\psi^{(\ell)}(x)$ is continuous of compact support for all $k$ and $\ell$ and hence bounded. Thus, $\psi$ is Schwarz, so we can use \Cref{thm:inv-mellin} to compute
 		\[\sum_{n=1}^\infty\psi(n/x)(1*\chi)(n)=\frac1{2\pi i}\sum_{n=1}^\infty\int_{2-i\infty}^{2+i\infty}\left((\mc M\varphi)(s)x^{s}\cdot\frac{(1*\chi)(n)}{n^s}\right)ds.\]
 		Thus, we see that we would like to exchange the integral and the sum so that we can sum over $(1*\chi)$ to finally make $\zeta(s)L(s,\chi)$ appear. It suffices to show that this iterated ``integral'' absolutely converges, so for any $\sigma>0$, we may compute
 		\[I_\sigma(x)\coloneqq\int_{\sigma-i\infty}^{\sigma+i\infty}\sum_{n=1}^\infty\left|(\mc M\varphi)(s)x^{s}\cdot\frac{(1*\chi)(n)}{n^s}\right|ds=\int_{\sigma-i\infty}^{\sigma+i\infty}\left|(\mc M\varphi)(s)x^s\cdot\zeta(s)L(s,\chi)\right|\,ds\]
@@ -134,7 +184,7 @@ We finish the proof of \Cref{thm:dirichlet}. By \Cref{prop:reduce-dir-to-l} and 
 		\[|\zeta(s)L(s,\chi)|\le q\cdot\frac{|s|}\sigma\cdot|s|\left(\frac1{|1-\sigma|}+\frac1\sigma\right)=C_0(q,\sigma)|s|^2\]
 		by \Cref{rem:bound-l-chi,rem:bound-zeta}, where $C_0(q,\sigma)$ is some constant. Thus,
 		\[I_\sigma(x)\le C_0(q,\sigma)x^c\int_{\sigma-i\infty}^{\sigma+i\infty}(|\mc M\varphi)(s)|\left(\sigma^2+(\op{Im}s)^2\right)\,ds.\]
-		However, by \Cref{prop:bound-mellin-transform}, there is $C$ such that $|(\mc M\varphi)(s)|\le C(\op{Im}s)^{-4}$, so we bound
+		However, by \Cref{prop:bound-mellin-transform}, there is $C$ such that $|(\mc M\varphi)(s)|\le C|s|^{-4}\le C(\op{Im}s)^{-4}$ on the vertical strip of interest, so we bound
 		\begin{align*}
 			\frac{I(x)}{C_0(q,\sigma)x^c} &\le 
 			C\left(\int_{\sigma-i\infty}^{\sigma-i}\frac{\left(\sigma^2+(\op{Im}s)^2\right)}{(\op{Im}s)^4}\,ds\right)
@@ -168,7 +218,7 @@ We finish the proof of \Cref{thm:dirichlet}. By \Cref{prop:reduce-dir-to-l} and 
 	\end{enumerate}
 \end{proof}
 \begin{remark}
-	The product $L(s,\chi)\zeta(s)$ is the Dedekind $\zeta$-function associated to a real quadratic field.
+	The product $\zeta(s)L(s,\chi)$ is the Dedekind $\zeta$-function associated to a real quadratic field.
 \end{remark}
 
 \subsection{A Little on Quadratic Forms}

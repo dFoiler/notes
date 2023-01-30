@@ -33,6 +33,49 @@ We are going to need the following technical result. Roughly speaking, it allows
 	One can use the theory of Riemann--Stieltjes integration to turn \Cref{thm:abel-summation} into just an application of integration by parts, but we will not need this.
 \end{remark}
 As an example application, we may give $L(s,\chi)$ an analytic continuation to $\{s:\op{Re}s>0\}$ when $\chi$ is not the principal character.
+\begin{lemma}[Differentiation under the integral sign] \label{lem:diff-under-sign}
+	Let $U\subseteq\CC$ be open, and let $f\colon\RR\times U\to\CC$ and $g\colon\RR\to\RR$ be functions satisfying the following properties.
+	\begin{itemize}
+		\item The function $g$ is integrable and has $\int_\RR g(t)\,dt<\infty$.
+		\item For fixed $t$, the function $s\mapsto f(s,t)$ is holomorphic on $U$ and has $|\del f(s,t)/\del s|\le g(t)$ for all $s$.
+		\item For fixed $s$, the function $t\mapsto f(s,t)$ is measurable.
+	\end{itemize}
+	Then the function $F(s)\coloneqq\int_\RR f(s,t)\,dt$ is holomorphic on $U$.
+	%  and satisfies
+	% \[F'(s)=\int_\RR\frac{\del f(s,t)}{\del s}\,dt.\]
+\end{lemma}
+\begin{proof}
+	% Fix some $z\in U$, and we show the result at $z$. Because $U$ is open, we may find $r>0$ such that $z\in B(z,r)$. Now, for any $z'\in B(z,r)$, we let $\gamma\colon[0,1]\to B(z,r)$ denote the straight line from $z$ to $z'$. Thus, the Fundamental theorem of calculus grants
+	% \[\int_\RR\left(\int_\gamma\frac{\del f(s,t)}{\del s}\,ds\right)dt=\int_\RR\big(f(z',t)-f(z,t)\big)\,dt=F(z')-F(z).\]
+	% We would like to exchange these two integrals, so we use Fubini's theorem to check
+	% \[\int_\RR\left(\int_\gamma\left|\frac{\del f(s,t)}{\del s}\right|\,ds\right)dt\le\int_\RR\ell(\gamma)g(t)\,dt=\ell(\gamma)\int_\RR g(t)\,dt<\infty.\]
+	% Thus, we may interchange our integrals, whereupon we see
+	% \[\frac{F(z')-F(z)}{z'-z}=\frac1{z'-z}\int_\gamma\left(\int_\RR\frac{\del f(s,t)}{\del s}\,dt\right)ds\]
+	% for any $z'\ne z$. For brevity, we define $F_0(s)\coloneqq\int_\RR(\del f(s,t)/\del s)\,dt$, which we know absolutely converges by the above argument.
+	% Now, let $\{z_n\}_{n\in\NN}\subseteq B(z,r)$ denote any sequence distinct from $z$ but approaching $z$.
+	We use Morera's theorem. As such, there are two steps.
+	\begin{enumerate}
+		\item We show $F$ is continuous. Fix some $z\in U$, and we show the result at $z$. Because $U$ is open, we may find $r>0$ such that $z\in B(z,r)$. Now, for any $z'\in B(z,r)$, we let $\gamma\colon[0,1]\to B(z,r)$ denote a curve from $z$ to $z'$. Thus, the Fundamental theorem of calculus grants
+		\begin{align*}
+			|F(z')-F(z)| &= \left|\int_\RR\big(f(z',t)-f(z,t)\big)\,dt\right| \\
+			&= \left|\int_\RR\left(\int_\gamma\frac{\del f(s,t)}{\del s}\,ds\right)dt\right| \\
+			&\le \int_\RR\left(\int_\gamma\left|\frac{\del f(s,t)}{\del s}\right|\,ds\right)dt \\
+			&\le \int_\RR\ell(\gamma)g(t)\,dt \\
+			&= \ell(\gamma)\int_\RR g(t)\,dt.
+		\end{align*}
+		Thus, letting $\gamma$ denote the straight line from $z'$ to $z$ so that $\ell(\gamma)=|z'-z|$, sending $z'\to z$ forces $F(z')\to F(z)$, which is what we wanted.
+		\item Now, let $\gamma\colon[0,1]\to U$ denote a closed curve, and we show $\int_\gamma F(s)\,ds=0$. Indeed, the absolute convergence of the previous step allows us to use Fubini's theorem to write
+		\[\int_\gamma F(s)\,ds=\int_\gamma\left(\int_\RR\frac{\del f(s,t)}{\del s}\,dt\right)ds=\int_\RR\left(\int_\gamma\frac{\del f(s,t)}{\del s}\,ds\right)\,dt.\]
+		Now, $\int_\gamma(\del f(s,t)/\del s)\,ds$ is just $0$ because $s\mapsto f(s,t)$ is holomorphic, so $s\mapsto\del f(s,t)/\del s$ is also holomorphic. This completes the proof.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark} \label{rem:annoying-log-power-ints}
+	We do two small computations, using integration by parts. For $\sigma<-1$, we note that
+	\[\int_1^\infty(\log t)t^\sigma\,dt=\frac{(\log t)t^{\sigma+1}}{\sigma+1}\bigg|_1^\infty-\frac1{\sigma+1}\int_1^\infty t^\sigma\,dt<\infty.\]
+	Similarly, for $\sigma>-1$, we note that
+	\[\int_0^1(\log t)t^\sigma\,dt=\frac{(\log t)t^{\sigma+1}}{\sigma+1}\bigg|_0^1-\frac1{\sigma+1}\int_0^1t^\sigma\,dt<\infty.\]
+\end{remark}
 \begin{proposition} \label{prop:continue-l-chi}
 	Let $\chi\pmod q$ be a non-principal Dirichlet character. Then the function $L(s,\chi)$ admits an analytic continuation to $\{s:\op{Re}s>0\}$.
 \end{proposition}
@@ -49,15 +92,19 @@ As an example application, we may give $L(s,\chi)$ an analytic continuation to $
 	
 	Roughly speaking, we want to write
 	\[\left|\int_1^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le q\int_1^\infty\frac1{t^{\op{Re}s+1}}\,dt=q\cdot\frac{t^{\op{Re}s}}{-\op{Re}s}\bigg|_1^\infty=\frac q{\op{Re}s}\]
-	for any $\op{Re}s>0$, meaning that the integral converges, so we ought to have a holomorphic function. Well, for each $N$, we define
-	\[I_N(s)\coloneqq\int_1^N\frac{A(t)}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(A(n)\int_n^{n+1}t^{-s-1}\,dt\right)=\sum_{n=1}^{N-1}\left(A(n)\cdot\frac{(n+1)^{-s}-n^{-s}}{-s}\right)\]
-	so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
-
-	By \Cref{lem:holo-limit}, it thus suffices to show that $I_n(s)\to I(s)$ uniformly on compact sets as $n\to\infty$. The main computation is to note that for each $s$ with $\op{Re}s>0$ and $n$, we may upper-bound
-	\[|I(s)-I_n(s)|=\left|\int_n^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le q\int_n^\infty t^{-\op{Re}s-1}\,dt=\frac{qn^{-\op{Re}s}}{\op{Re}s}.\]
-	Now, select some compact $D\subseteq\{s:\op{Re}s>0\}$. Because $D$ is compact, there exists $s\in D$ with minimal $\sigma\coloneqq\op{Re}s$. Note $\sigma>0$, so using the above bound, for any $\varepsilon>0$, select $N\coloneqq(\sigma\varepsilon/q)^{-1/\sigma}$. Thus, for any $n>N$ and $s\in D$, we see
-	\[I(s)-I_n(s)|\le\frac{qn^{-\op{Re}s}}{\op{Re}s}<\frac{qN^{-\sigma}}{\sigma}=\varepsilon,\]
-	which completes the proof.
+	for any $\op{Re}s>0$, meaning that the integral converges, so we ought to have a holomorphic function. To make this computation rigorous, we will show that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$ for any $\sigma>0$, which will be enough by taking the union over all $\sigma$. Indeed, for some fixed $\sigma$, we set $g(t)\coloneqq q(\log t)/t^{\sigma+1}$ for $t>2$ and $0$ elsewhere so that
+	\[\left|\frac{\del}{\del s}\frac{A(t)}{t^{s+1}}\right|=\left|\frac{A(t)\log t}{t^{s+1}}\right|\le g(t)\]
+	for $\op{Re}s>\sigma$, and
+	\[\frac1q\int_\RR g(t)\,dt=\frac1q\int_1^\infty\frac{\log t}{t^{\sigma+1}}\,dt<\infty\]
+	by \Cref{rem:annoying-log-power-ints}. Thus, \Cref{lem:diff-under-sign} implies that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$, finishing the proof.
+	% Well, for each $N$, we define
+	% \[I_N(s)\coloneqq\int_1^N\frac{A(t)}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(A(n)\int_n^{n+1}t^{-s-1}\,dt\right)=\sum_{n=1}^{N-1}\left(A(n)\cdot\frac{(n+1)^{-s}-n^{-s}}{-s}\right)\]
+	% so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
+	% By \Cref{lem:holo-limit}, it thus suffices to show that $I_n(s)\to I(s)$ uniformly on compact sets as $n\to\infty$. The main computation is to note that for each $s$ with $\op{Re}s>0$ and $n$, we may upper-bound
+	% \[|I(s)-I_n(s)|=\left|\int_n^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le q\int_n^\infty t^{-\op{Re}s-1}\,dt=\frac{qn^{-\op{Re}s}}{\op{Re}s}.\]
+	% Now, select some compact $D\subseteq\{s:\op{Re}s>0\}$. Because $D$ is compact, there exists $s\in D$ with minimal $\sigma\coloneqq\op{Re}s$. Note $\sigma>0$, so using the above bound, for any $\varepsilon>0$, select $N\coloneqq(\sigma\varepsilon/q)^{-1/\sigma}$. Thus, for any $n>N$ and $s\in D$, we see
+	% \[I(s)-I_n(s)|\le\frac{qn^{-\op{Re}s}}{\op{Re}s}<\frac{qN^{-\sigma}}{\sigma}=\varepsilon,\]
+	% which completes the proof.
 \end{proof}
 \begin{remark} \label{rem:bound-l-chi}
 	Using the notions and notations of the above proof, we see that
@@ -91,15 +138,19 @@ Thus, we are interested in continuing $\zeta$. With a little more effort than \C
 
 	Thus, it remains to show that $s\cdot I(s)$ is a holomorphic function for $\op{Re}s>0$, where it suffices to show that $I(s)$ is a holomorphic function for $\op{Re}s>0$. This is mildly technical. At a high level, we would like to just note that
 	\[\left|\int_1^\infty\frac{\{t\}}{t^{s+1}}\,dt\right|\le\int_1^\infty\frac{1}{t^{\op{Re}s+1}}\,dt=\frac{t^{-\op{Re}s}}{-\op{Re}s}\bigg|_1^\infty=\frac1{\op{Re}s},\]
-	so the integral converges and ought to define a holomorphic function. Being more formal, we work with the finite integrals
-	\[I_N(s)\coloneqq\int_1^N\frac{\{t\}}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(\int_n^{n+1}\frac{t-n}{t^{s+1}}\,dt\right)=\sum_{n=1}^{N-1}\left(\frac{\left(n+1\right)^{-s+1}-n^{-s+1}}{-s+1}-n\cdot\frac{\left(n+1\right)^{-s}-n^{-s}}{-s}\right)\]
-	so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
-
-	By \Cref{lem:holo-limit}, it thus suffices to show that $I_n(s)\to I(s)$ uniformly on compact sets as $n\to\infty$. The main computation is to note that for each $s$ with $\op{Re}s>0$ and $n$, we may upper-bound
-	\[|I(s)-I_n(s)|=\left|\int_n^\infty\frac{\{t\}}{t^{s+1}}\,dt\right|\le\int_n^\infty\frac1{t^{\op{Re}s}}\,dt=\frac{n^{-\op{Re}s}}{\op{Re}s},\]
-	arguing as before. Now, select some compact $D\subseteq\{s:\op{Re}s>0\}$. Because $D$ is compact, there exists a minimal $\sigma\coloneqq\op{Re}s$ among all $s\in D$. Note $\sigma>0$, so for any $\varepsilon>0$, we use the above bounding to set $N\coloneqq(\sigma\varepsilon)^{-1/\sigma}$. Thus, for any $n>N$ and $s\in D$, we see
-	\[\left|I(s)-I_n(s)\right|\le\frac{n^{-\op{Re}s}}{\op{Re}s}<\frac{N^{-\sigma}}\sigma=\varepsilon,\]
-	which completes the proof.
+	so the integral converges and ought to define a holomorphic function. To make this computation rigorous, we will show that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$ for any $\sigma>0$, which will be enough by taking the union over all $\sigma$. Indeed, for some fixed $\sigma$, we set $g(t)\coloneqq(\log t)/t^{\sigma+1}$ for $t>1$ and $0$ elsewhere so that
+	\[\left|\frac{\del}{\del s}\frac{\{t\}}{t^{s+1}}\right|=\left|\frac{\{t\}\log t}{t^{s+1}}\right|\le g(t)\]
+	for $\op{Re}s>\sigma$, and
+	\[\int_\RR g(t)\,dt=\int_1^\infty\frac{\log t}{t^{\sigma+1}}\,dt<\infty\]
+	by \Cref{rem:annoying-log-power-ints}. Thus, \Cref{lem:diff-under-sign} implies that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$, finishing the proof.
+	% Being more formal, we work with the finite integrals
+	% \[I_N(s)\coloneqq\int_1^N\frac{\{t\}}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(\int_n^{n+1}\frac{t-n}{t^{s+1}}\,dt\right)=\sum_{n=1}^{N-1}\left(\frac{\left(n+1\right)^{-s+1}-n^{-s+1}}{-s+1}-n\cdot\frac{\left(n+1\right)^{-s}-n^{-s}}{-s}\right)\]
+	% so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
+	% By \Cref{lem:holo-limit}, it thus suffices to show that $I_n(s)\to I(s)$ uniformly on compact sets as $n\to\infty$. The main computation is to note that for each $s$ with $\op{Re}s>0$ and $n$, we may upper-bound
+	% \[|I(s)-I_n(s)|=\left|\int_n^\infty\frac{\{t\}}{t^{s+1}}\,dt\right|\le\int_n^\infty\frac1{t^{\op{Re}s}}\,dt=\frac{n^{-\op{Re}s}}{\op{Re}s},\]
+	% arguing as before. Now, select some compact $D\subseteq\{s:\op{Re}s>0\}$. Because $D$ is compact, there exists a minimal $\sigma\coloneqq\op{Re}s$ among all $s\in D$. Note $\sigma>0$, so for any $\varepsilon>0$, we use the above bounding to set $N\coloneqq(\sigma\varepsilon)^{-1/\sigma}$. Thus, for any $n>N$ and $s\in D$, we see
+	% \[\left|I(s)-I_n(s)\right|\le\frac{n^{-\op{Re}s}}{\op{Re}s}<\frac{N^{-\sigma}}\sigma=\varepsilon,\]
+	% which completes the proof.
 \end{proof}
 \begin{remark} \label{rem:bound-zeta}
 	Using the notions and notation of the above proof, we see that
