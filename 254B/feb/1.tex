@@ -1,0 +1,110 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 1}
+
+Today we're going to talk about $H^1$.
+\begin{remark}
+	There are many interpretations of $H^1$. For example, in algebraic geometry, we have $H^1(X,\OO_X^\times)=\op{Pic}X$. We won't discuss this, but we will see other things.
+\end{remark}
+\begin{remark}
+	In this lecture, we will be more or less discussing faithfully flat descent.
+\end{remark}
+
+\subsection{Yoneda Extensions}
+We're going to walk through quite a few interpretations of $H^1$. To begin, recall $H^1(G,M)=\op{Ext}^1_{\ZZ[G]}(\ZZ,M)$, essentially by definition. This in some sense classifies certain exact sequences. Namely, $\op{Ext}^1_{\ZZ[G]}(\ZZ,M)$ classifies short exact sequences of $G$-modules
+\[0\to M\to\mc E\to\ZZ\to0\]
+up to isomorphism of short exact sequences. (As an aside, note that all short exact sequences are $\ZZ$-split because $\ZZ$ is projective, so $\mc E\cong M\oplus\ZZ$ as abelian groups. Thus, the interesting part is the $G$-action.) Namely, an isomorphism of short exact sequences given by $\mc E$ and $\mc E'$ is a morphism $\varphi\colon E\to E'$ making the diagram
+% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIk0iXSxbMiwwLCJFIl0sWzMsMCwiXFxaWiJdLFs0LDAsIjAiXSxbMCwxLCIwIl0sWzEsMSwiTSJdLFsyLDEsIkUnIl0sWzMsMSwiXFxaWiJdLFs0LDEsIjAiXSxbMiw3LCJcXHZhcnBoaSJdLFsxLDYsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsOCwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwxXSxbMSwyXSxbMiwzXSxbMyw0XSxbNSw2XSxbNiw3XSxbNyw4XSxbOCw5XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	0 & M & \mc E & \ZZ & 0 \\
+	0 & M & {\mc E'} & \ZZ & 0
+	\arrow["\varphi", from=1-3, to=2-3]
+	\arrow[Rightarrow, no head, from=1-2, to=2-2]
+	\arrow[Rightarrow, no head, from=1-4, to=2-4]
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-4, to=1-5]
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=2-2, to=2-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow[from=2-4, to=2-5]
+\end{tikzcd}\]
+commute. Note $\varphi$ is an isomorphism by the Snake lemma.
+
+Let's see how this relates to cocycles. Namely, given a $1$-cocycle $f\colon G\to M$, we can define $\mc E_f$ as the abelian group $\mc E_f\coloneqq M\oplus\ZZ$ with action defined by
+\[g\cdot(m,n)\coloneqq(gm+nf(g),n).\]
+Notably, $f(g)=g\cdot(0,1)$, so the map sending cocycles to extensions here is injective. We can now check by hand that this defines an action as
+\begin{align*}
+	g_1(g_2\cdot(m,n)) &= g_1\cdot(g_2m+nf(g_2),n) \\
+	&= (g_1g_2m+ng_1f(g_2)+nf(g_1),n) \\
+	&\stackrel*= (g_1g_2m+nf(g_1g_2),n) \\
+	&= (g_1g_2)\cdot(m,n)
+\end{align*}
+where we have used the cocycle condition at $\stackrel*=$. Notably, we can read this argument backward to tell us that $Z^1(G,M)$ contains the data of a short exact of $G$-modules
+\[0\to M\to\mc E\to\ZZ\to0\]
+equipped with a section $s\colon\ZZ\to E$; explicitly, the choice of a section $s$ grants a decomposition $\mc E\cong M\oplus\ZZ$, from which we can read the cocycle in and out of the $G$-action as described above.
+
+To see how we mod out by coboundaries, we choose two sections $s,s'\colon\ZZ\to\mc E$, which can only differ by an element of $m\in M$. Tracking this through shows that the corresponding cocycle adjusts by exactly the coboundary given by $m\in M$.
+\begin{remark}
+	On the homework, we will check that an exact sequence
+	\[0\to M\to\mc E\to\ZZ\to0\]
+	grants an exact sequence
+	\[0\to M^G\to\mc E^G\to\ZZ\to H^1(G,M),\]
+	and one can check that the image of $1$ under $\ZZ\to H^1(G,M)$ exactly corresponds to the short exact sequence we started with.
+\end{remark}
+
+\subsection{Hilbert's Theorem 90}
+Let's talk around Hilbert's theorem 90. Roughly speaking, a $1$-cocycle $u_\bullet\colon G\to M$ is a function satisfying the relation
+\[u_{g_1g_2}=u_{g_1}\cdot g_1u_{g_2}.\]
+Note that the group law on $L^\times$ has been written multiplicatively.
+
+For the proof, consider the category $\mathrm{Mod}(L/K)$ of $G$-linear $L$-modules. Explicitly, we want $L$-vector spaces $V$ equipped with an $L$-semilinear action $\rho\colon G\to\op{Aut}_K(V)$ such that
+\[\rho_g(\ell v)=g\ell\cdot\rho_g(v).\]
+For example, given a $K$-vector space $V_0$, we set $V\coloneqq V_0\otimes_KL$ so that we have a natural $G$-action on $L$. We can see visually that
+\[\rho_g(\ell'\cdot(v\otimes\ell))=\rho_g(v\otimes\ell'\ell)=v\otimes g(\ell'\ell)=g\ell'\cdot(v\otimes\ell)=v\ell'\cdot\rho_g(v\otimes\ell).\]
+The main result is as follows.
+\begin{theorem}[Faithfully flat descent] \label{thm:easy-descent}
+	The functor $\mathrm{Mod}_K\to\mathrm{Mod}(L/K)$ given by $V_0\mapsto V_0\otimes_KL$ is an equivalence of categories.
+\end{theorem}
+\begin{remark}
+	Using the theorem, we can recover the inverse functor as $V\mapsto V^G$ because
+	\[(V_0\otimes_KL)^G\simeq V_0\otimes_KL^G=V_0\otimes_KK\simeq V_0.\]
+\end{remark}
+To see our $1$-cocycles, let's discuss \Cref{thm:easy-descent} for one-dimensional $L$-vector spaces $(V,\rho)$. Here, we write $V=Le$ for some basis $\{e\}$, and we define
+\[u_ge\coloneqq\varphi_g(e)\]
+so that the $u_g\in L^\times$ define our group action. Namely, we see $\varphi_g(\ell e)=g\ell\cdot u_ge$. Unsurprisingly, the group action condition given by $\rho$ will give rise to the cocycle condition (and conversely): in one direction, we note $u_\bullet\colon G\to M$ is a cocycle because
+\[u_{g_1g_2}e=\rho_{g_1g_2}(e)=\rho_{g_1}(\rho_{g_2}e)=\rho_{g_1}(u_{g_2}e)=\left(g_1u_{g_2}\cdot u_{g_1}\right)\cdot e.\]
+Lastly we note that adjusting $V$ by isomorphism is equivalent to adjusting the basis, and we can check that the effect of adjusting the basis to $e'=ae$ merely adjusts the cocycle by $g\mapsto(g-1)a$. In total, $H^1(G,L^\times)$ consists of the $1$-dimensional objects of $\mathrm{Mod}(L/K)$. (Notably, the tensor product provides the group structure on these objects.)
+
+We now use \Cref{thm:easy-descent}. Each $(V,\rho)\in\mathrm{Mod}(L/K)$ should actually arise as the form $V_0\otimes_KL$, and this corresponds to the identity element in $\mathrm{Mod}(L/K)$. Indeed, fixing some basis element $e\otimes1\in V_0\otimes_KL$, we can compute our cocycle $u_\bullet$ as
+\[u_g(e\otimes1)=\rho_g(e\otimes1)=e\otimes g1=e\otimes1,\]
+so $u_g=1$ everywhere. Thus, \Cref{thm:easy-descent} will imply the following.
+\begin{theorem}[Hilbert 90]
+	Fix a finite Galois field extension $L/K$ with Galois group $G=\op{Gal}(L/K)$. Then $H^1(G,L^\times)=0$.
+\end{theorem}
+Thus, it remains to show \Cref{thm:easy-descent}.
+\begin{proof}[Proof of \Cref{thm:easy-descent}]
+	We mentioned that the inverse functor is given by $(V,\rho)\mapsto V^G$. Thus, we divide the proof into checks.
+	\begin{enumerate}
+		\item We need an isomorphism $(V_0\otimes_KL)^G=V_0$. This is clear.
+		\item We need an isomorphism $V^G\otimes_KL\simeq V$ in $\mathrm{Mod}(L/K)$. Well, the morphism is given by $v\otimes\ell\mapsto\ell v$.
+
+		Now, the trick is to that it suffices to find a field extension $\Omega$ over $K$ such that
+		\[(V_\Omega)^G\otimes_\Omega(\Omega\otimes_KL)\to V\otimes_K\Omega\]
+		is an isomorphism in the category $\mathrm{Mod}(L\otimes_K\Omega/\Omega)$. Namely, being an isomorphism will be reflected back down because we are working with vector spaces (namely, determinant does not change when we base-change to a larger field). Explicitly, we note $V^G$ is the kernel of the map
+		\[V\to\prod_{g\in G}V\]
+		sending $v\mapsto(gv)_{g\in G}$, so $(V_\Omega)^G=V^G\otimes_K\Omega$. The point is that we are indeed allowed to base-change to the larger field, and we get to keep looking at $G$-invariants.
+
+		Anyway, we now set $\Omega\coloneqq L$. We thus can compute
+		\[V\otimes_K\Omega=V\otimes_L(L\otimes_K\Omega)=V\otimes_L\prod_{g\in G}L=\prod_{g\in G}V,\]
+		where the $G$-action on $\prod_{g\in G}V$ is by permutation. Thus, the $G$-invariants do indeed become $V$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\end{document}
