@@ -1,0 +1,87 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 1}
+
+Today we move towards a proof of the explicit formula.
+\begin{notation}
+	A sum/product over $\rho$ is over the zeroes of $\zeta(s)$.
+\end{notation}
+
+\subsection{Zeroes of \texorpdfstring{$\zeta$}{ Zeta}, Again}
+Let's provide a few applications of \Cref{lem:bound-zeroes}.
+\begin{corollary} \label{cor:bound-number-zeroes-small}
+	We have
+	\[\#\{\rho:\zeta(\rho)=0,\op{Im}\rho\in[T,T+1],\op{Re}\rho\in(0,1)\}=O(\log T).\]
+\end{corollary}
+\begin{proof}
+	This follows from \Cref{lem:bound-zeroes} by separating out our zeroes into intervals.
+\end{proof}
+We will be interested in contours $\gamma_T$ which look like large vertical rectangles; namely, they are the boundary of the rectangle $[-\varepsilon,1+\varepsilon]\times[-T,T]$. Notably, the top and bottom of the rectangle's contours will cancel out by the functional equation, so we only need to pay attention to the vertical parts of this contour.
+\begin{lemma} \label{lem:get-log-deriv-zeta}
+	For $t>3$, we have
+	\[\frac{\zeta'(s)}{\zeta(s)}=\sum_{|\op{Im}\rho-t|\le1}\frac1{s-\rho}+O(\log t)\]
+	for $\op{Re}s\in[-1,2]$. 
+\end{lemma}
+\begin{proof}
+	We consider
+	\[\frac{\zeta'(s)}{\zeta(s)}-\frac{\zeta'(2+it)}{\zeta(2+it)}.\]
+	Thus, we recall
+	\[\frac{\Xi'(s)}{\Xi(s)}=\frac1s-\frac1{s-1}-\frac12\log\pi+\frac12\frac{\Gamma'(s/2)}{\Gamma(s/2)}+\frac{\zeta'(s)}{\zeta(s)},\]
+	so we can just bound everything. Notably, we can use the infinite product to bound $\Xi'/\Xi$ and then compare everything. For example,
+	\[\frac{\zeta'(s)}{\zeta(s)}-\frac{\zeta'(2+it)}{\zeta(2+it)}=\sum_\rho\left(\frac1{s-\rho}-\frac1{2+it-\rho}\right)+O(\log t),\]
+	where the $O(\log t)$ includes the trivial zeroes of $\zeta$. Now, we notice
+	\[\left|\frac1{s-\rho}-\frac1{2+it-\rho}\right|\ll\frac1{|\op{Im}\rho-t|^2}\]
+	for $|\op{Im}\rho-t|\ge1$, so we can use \Cref{lem:bound-zeroes} to absorb most terms into $O(\log t)$. In total, we see
+	\[\frac{\zeta'(s)}{\zeta(s)}-\frac{\zeta'(2+it)}{\zeta(2+it)}=\sum_{|\op{Im}\rho-t|\le1}\frac1{s-\rho}+O(\log t),\]
+	and now the $2+it$ term can also be absorbed to $O(\log t)$.
+\end{proof}
+\begin{remark}
+	One can give more accurate bounding than the above, but we will not need it.
+\end{remark}
+We now return to the proof of \Cref{thm:num-zeroes-zeta}.
+\begin{proof}[Proof of \Cref{thm:num-zeroes-zeta}]
+	Use the argument principle on $\Xi$ on the box $[-1,2]\times[-T,T]$. In particular, by the functional equation, it suffices to just look at the right and top edges of this box. The hope is that we can use \Cref{lem:get-log-deriv-zeta} and the ideas in its proof to do the bounding for us. In particular, we will be working with the equation
+	\[\frac{\Xi'(s)}{\Xi(s)}=\frac1s-\frac1{1-s}-\frac12\log\pi+\frac12\frac{\Gamma'(s/2)}{\Gamma(s/2)}+\frac{\zeta'(s)}{\zeta(s)}.\]
+	Now, the main term in the argument will come from $\Gamma'(s)/\Gamma(s)$, which one can see using Stirling's asymptotics. Most of these terms are not going to matter on our contour. It turns out that the only difficulty is integrating $\zeta'/\zeta$ over the line $\{a+Ti:a\in[-1,2]\}$. Well, using the above estimates, we recall
+	\[\frac{\zeta'(s)}{\zeta(s)}=\sum_{|\op{Im}\rho-T|\le1}\frac1{s-\rho}+O(\log T),\]
+	where now the integral of the $1/(s-\rho)$ term is bounded by a constant, and the number of terms is $O(\log T)$ by \Cref{cor:bound-number-zeroes-small}, so everything is absorbed into the error term.
+\end{proof}
+
+\subsection{The Explicit Formula}
+Let's move towards the explicit formula. Here is our statement.
+\begin{theorem}
+	When $x$ is not a prime-power, we have
+	\[\psi(x)=x-\sum_\rho\frac{x^\rho}\rho-\frac{\zeta'(0)}{\zeta(0)}-\frac12\log\left(1-x^{-2}\right).\]
+\end{theorem}
+\begin{proof}
+	We first describe a heuristic. The main idea is to use contour integration, noting that
+	\begin{equation}
+		\frac1{2\pi i}\int_{c-i\infty}^{c+i\infty}y^s\,\frac{ds}s=\begin{cases}
+			0 & \text{if }y<1, \\
+			1 & \text{if }y>1,
+		\end{cases} \label{eq:vertical-integrate-is-indicator}
+	\end{equation}
+	where $c>1$ and $y\in(0,\infty)\setminus\{1\}$. The proof of this is essentially complex analysis where we ``complete the contour'' of this vertical line either off to $-\infty$ or off to $+\infty$ depending on $y<1$ or $y>1$.
+
+	Now, the point is that we can write
+	\[\psi(x)=\sum_{n\le x}\Lambda(x)\approx\frac1{2\pi i}\int_{c-i\infty}^{c+i\infty}-\frac{\zeta'(s)}{\zeta(s)}x^s\,\frac{ds}s,\]
+	where we have ignored convergence issues to exchange the Dirichlet series for $\zeta'/\zeta$ with this integral. The point now is that we can integrate $\zeta'/\zeta$ appropriately to give the formula.
+
+	To make this more rigorous, we need to do only finite computations. Thus, we define
+	\[I(y,T)\coloneqq\frac1{2\pi i}\int_{c-iT}^{c+iT}y^s\,\frac{ds}s.\]
+	We now note that our extra variable $c$ will be later set to $1+1/\log T$, so it is important to have this degree of freedom. Now, the proof of \eqref{eq:vertical-integrate-is-indicator} grants
+	\[|I(y,T)-1_{>1}(y)|\ll y^c\min\{1,1/|T\log y|\},\]
+	where the implied constant is absolute. Integrating over this, we see
+	\[\left|\psi(x)-\frac1{2\pi i}\int_{c-i\infty}^{c+i\infty}-\frac{\zeta'(s)}{\zeta(s)}x^s\,ds\right|\le\left(\sum_{n=1}^\infty\Lambda(n)(x/n)^c\min\left\{1,\frac1{|T\log(x/n)|}\right\}\right).\]
+	Now, setting $c=1+1/\log T$, we get an upper-bound of $O\left(x(\log x)^2/T\right)$. Roughly speaking, we note that $x$ away from particular $n$ are small; however, when $n$ is close to $x$, we can explicitly evaluate the logarithm as about $1/(n-x)$, and there the sum is roughly harmonic and thus grants a logarithmic growth.
+
+	We now do a contour shift on the integral
+	\[\int_{c-i\infty}^{c+i\infty}-\frac{\zeta'(s)}{\zeta(s)}x^s\,ds.\]
+	Roughly speaking, we will expand our box to look like $[-U,1+\varepsilon]\times[-T,T]$, sending $U\to\infty$ for fixed $T$. We will then send $T\to\infty$, always remembering to choose $T$ avoiding zeroes of $\zeta(s)$. In particular, by \Cref{cor:bound-number-zeroes-small}, we can be at least $1/\log T$ away from any particular zeroes. We will finish the proof next lecture.
+\end{proof}
+
+\end{document}
