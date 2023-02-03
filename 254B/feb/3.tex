@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 3}
+
+Today we will start applying group cohomology.
+\begin{remark}
+	Roughly speaking, cohomology is ``obstructions to something.'' The most bare-bones version of this is that cohomology measures the failure of some left exact-functors being fully exact.
+\end{remark}
+
+\subsection{Classification of Algebras}
+When $G$ is cyclic, we have a canonical isomorphism
+\[\widehat H^0(G,L^\times)\cong\widehat H^2(G,L^\times).\]
+We understand $\widehat H^0(G,L^\times)$ as $K^\times/\op N^L_K(L^\times)$, and it turns out that $\widehat H^2(G,L^\times)$ is understood as the ``Brauer group'' $\op{Br}(L/K)$. Later in life, we might want to use stranger algebraic groups than $(-)^\times$, such as $\op{GL}_n$ or $\op{PGL}_n$.
+
+There is a notion of ``non-abelian'' cohomology, where a group $G$ has an action on a group $M$ (where $M$ is not necessarily abelian!). In particular, we can simply define $H^1$ by cocycles as
+\[H^1(G,M)=\frac{\{f:g_1f(g_2)\cdot f(g_2)=f(g_1g_2)\text{ for }g_1,g_2\in M\}}{\left\{f:f(g)=(gm)m^{-1}\text{ for some fixed }m\in M\right\}}.\]
+Notably, $H^1(G,M)$ is just a set, pointed by the trivial equivalence class.
+
+As an application of this $H^1$, we pick up the following definition. Fix a Galois extension $L/K$ with $G=\op{Gal}(L/K)$. Given a $K$-algebra $A$, where the center of $A$ contains $K$. Given that $A\otimes_KL\cong M_n(L)$, we are interested if $A\cong M_n(K)$.
+\begin{example} \label{ex:bad-algebra}
+	Take the field extension $\CC/\RR$, and let $\HH$ be the quaternion algebra. We can see somewhat directly that $\HH\otimes_\RR\CC\cong M_2(\CC)$, but we cannot have an isomorphism $\HH\cong M_2(\RR)$. Indeed, just tracking where $i$ and $j$ and $k$ go from $\HH$ to $M_2(\RR)$, one can more or less write down lots of equations and see if they have a solution over $\RR$, for which the answer turns out to be no.
+\end{example}
+To study this question, we (morally) expect that the $G$-invariants of $A\otimes_KL$ to go to $G$-invariants of $M_n(L)$. Well, suppose we have an isomorphism $\sigma\colon A\otimes_KL\to M_n(L)$, so given $g\in G$, we ask if the following diagram commutes.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBXFxvdGltZXNfS0wiXSxbMSwwLCJNX24oTCkiXSxbMCwxLCJBXFxvdGltZXNfS0wiXSxbMSwxLCJNX24oTCkiXSxbMCwxLCJcXHNpZ21hIl0sWzAsMiwiMVxcb3RpbWVzIGciLDJdLFsxLDMsIk1fbihnKSJdLFsyLDMsIlxcc2lnbWEiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\begin{equation}
+	\begin{tikzcd}
+		{A\otimes_KL} & {M_n(L)} \\
+		{A\otimes_KL} & {M_n(L)}
+		\arrow["\sigma", from=1-1, to=1-2]
+		\arrow["{1\otimes g}"', from=1-1, to=2-1]
+		\arrow["{M_n(g)}", from=1-2, to=2-2]
+		\arrow["\sigma", from=2-1, to=2-2]
+	\end{tikzcd} \label{eq:desired-br-commutes}
+\end{equation}
+Indeed, if this diagram commutes for all $g\in G$, then $\sigma$ will restrict to an isomorphism
+\[(A\otimes_KL)^{1\otimes G}\stackrel\sigma\cong M_n(L)^G=M_n(K).\]
+Conversely, an isomorphism $A\cong M_n(K)$ makes our diagram commute essentially for free because we simply do not care about the $G$-action.
+\begin{remark}
+	Comparing with \Cref{ex:bad-algebra}, one notes that the isomorphism $\HH\otimes_\RR\CC\cong M_2(\CC)$ cannot be compatible with the Galois action; indeed, any such isomorphism sends (say) $i$ to a matrix whose entries are not purely real.
+\end{remark}
+To check the commutativity of the diagram, we start from $M_n(L)$ and go clockwise. Namely, we are sending $g\in G$ to
+\[f(g)\coloneqq g\sigma(1\otimes g)^{-1}\sigma^{-1}\in\op{Aut}_K(M_n(L)).\]
+Explicitly, we want $f(g)=1$ for all $g\in G$. Now, by the Skolem--Noether theorem, we have $\op{Aut}_L(M_n(L))\cong\op{PGL}_n(L)$. We now claim that the $f(g)=1$ condition reduces to a cocycle condition. Indeed,
+\begin{align*}
+	f(g_1g_2) &= g_1g_2\sigma\left(1\otimes g_2^{-1}g_1^{-1}\right)\sigma^{-1} \\
+	&= g_1g_2\sigma\left(1\otimes g_2^{-1}\right)\sigma^{-1}\left(1\otimes g_1^{-1}\right)\sigma\sigma^{-1} \\
+	&= g_1f(g_2)f(g_1).
+\end{align*}
+As an aside, we note that our choice of isomorphism $\sigma$ is only defined up to an automorphism in $\op{PGL}_n(L)$, which one can check will only adjust $f$ by a coboundary. In total, we see that the isomorphism class of $A$ produces a cocycle class in $H^1(G,\op{PGL}_n(L))$.
+
+We can also go from the cocycle straight to the algebra. Indeed, the data of a $K$-algebra can be written down as some commutative diagrams dealing with $A$ and $\otimes_K$. For example, associativity of our multiplication is the following diagram.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJBXFxvdGltZXNfS0FcXG90aW1lc19LQSJdLFsxLDAsIkFcXG90aW1lc19LQSJdLFswLDEsIkFcXG90aW1lc19LQSJdLFsxLDEsIkEiXSxbMCwxLCIxXFxvdGltZXNcXG11Il0sWzAsMiwiXFxtdVxcb3RpbWVzMSIsMl0sWzIsMywiXFxtdSJdLFsxLDMsIlxcbXUiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{A\otimes_KA\otimes_KA} & {A\otimes_KA} \\
+	{A\otimes_KA} & A
+	\arrow["1\otimes\mu", from=1-1, to=1-2]
+	\arrow["\mu\otimes1"', from=1-1, to=2-1]
+	\arrow["\mu", from=2-1, to=2-2]
+	\arrow["\mu", from=1-2, to=2-2]
+\end{tikzcd}\]
+In this way, we can upgrade our equivalence $\mathrm{Mod}_K\simeq\mathrm{Mod}(L/K)$ to an equivalence $\mathrm{Alg}(K)\cong\mathrm{Alg}(L/K)$. As such, given our cocycle $f\in H^1(G,\op{PGL}_n(L))$, we build our algebra as $M_n(L)$ equipped with a special $G$-action by
+\[ga=g^{-1}f(g)a,\]
+where this action is constructed by basically reading the diagram \eqref{eq:desired-br-commutes} backwards. One can check that this action is $G$-semilinear and so on, so we are safe.
+\begin{remark}
+	In fact, we have a bijection from $Z^1(G,\op{PGL}_n(L))$ with (classes of) $K$-algebras $A$ equipped with an isomorphism $\sigma\colon A\otimes_KL\to M_n(L)$.
+\end{remark}
+Let's take a step to $H^2$ for a moment. There is an exact sequence of $G$-modules
+\[1\to L^\times\to\op{GL}_n(L)\to\op{PGL}_n(L)\to1.\]
+Thus, even though we are studying $H^1(G,\op{PGL}_n(L))$, we see that we might hope we can understand what's going on in $H^2\left(G,L^\times\right)$.
+
+Well, we can just try to compute this like the Snake lemma. Given a cocycle $f\colon G\to\op{PGL}_n(L)$, we can choose some lifted map $\widetilde f\colon G\to\op{GL}_n(L)$. Roughly speaking, our element in $H^2$ will be the obstruction to $\widetilde f$ producing a cocycle. As such, we want to compute
+\[(g_1,g_2)\mapsto g_1\widetilde f(g_2)\widetilde f(g_1)\widetilde f(g_1g_2)^{-1}.\]
+Notably, we can see that this element is trivial in $\op{PGL}_n(L)$ because $f$ is a cocycle, so this must be an element of $L^\times$, meaning that we have described a $2$-cocycle in $H^2(G,L^\times)$. One can check that adjusting $f$ by a coboundary or changing the choice of lift does not adjust the class in $H^2$.
+\begin{remark}
+	It turns out that this describes an isomorphism $\op{Br}(L/K)\cong H^2(G,L^\times)$. Here, $\op{Br}(L/K)$ is a further quotient of algebras where for example $A$ is equivalent to $M_n(A)$.
+\end{remark}
+
+\end{document}
