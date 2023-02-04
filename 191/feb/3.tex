@@ -1,0 +1,78 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 3}
+
+Last time we were in the middle of the proof of the explicit formula. I have edited directly into yesterday's notes for continuity reasons.
+
+\subsection{The Explicit Formula, Continued}
+We now do a contour shift on the integral
+\[\int_{c-i\infty}^{c+i\infty}-\frac{\zeta'(s)}{\zeta(s)}x^s\,ds.\]
+Roughly speaking, we will expand our box to look like $[-U,c]\times[-T,T]$, sending $U\to\infty$ for fixed $T$. We will then send $T\to\infty$, always remembering to choose $T$ avoiding zeroes of $\zeta(s)$. In particular, by \Cref{cor:bound-number-zeroes-small}, we can be at least $1/\log T$ away from any particular zeroes. We will finish the proof next lecture.
+
+On this contour, the point is that $|x^s|\le x^{\op{Re}s}$, so for most of this contour, we don't have to care. For example, it will be enough to only care about $\op{Re}s>-1$. By the functional equation, it's enough to just look at the integral from $c+iT$ to $-1+iT$. To bound the size here, we change $T$ so that $\op{Im}s=T$ is at most $\gg1/\log T$ away from zeroes. Now, to bound, we see
+\[-\frac{\zeta'(s)}{\zeta(s)}=\sum_{|\op{Im}\rho-T|\le1}\underbrace{\frac1{s-\rho}}_{O(\log T)}+O(\log T)\]
+for, say, $-1\le\sigma\le2$. Thus, the contribution of the integral over $-1\le\sigma\le c$ is given by
+\[O\left((\log T)^2\int_{-1}^c\frac{x^{\sigma+iT}}{|\sigma+iT|}\,d\sigma\right)=O\left(\frac{x(\log T)^2}T\right),\]
+so this also goes to $0$ as $T\to\infty$.
+\begin{remark}
+	It is helpful for computations to have the functional equation
+	\[\zeta(1-s)=2^{1-s}\pi^{-s}\cos(\pi s/2)\Gamma(s)\zeta(s),\]
+	where we have notably used the reflection formula for $\Gamma$.
+\end{remark}
+As such, the value of $\zeta'/\zeta$ on $\{s:\op{Re}s\le-1\}$ is bounded by
+\[\left|\frac{\zeta'(s)}{\zeta(s)}\right|\ll\log|s|+1,\]
+where $s$ avoids circle of radius $1/2$ around the zeroes (including the trivial ones). (Note because the trivial zeroes only occur at the negative even integers, we can indeed choose $U$ at odd integers to be okay here.)
+
+We now report the bounds on the other parts of the contour, for completeness. Indeed, the entire contribution for $\op{Re}s\le-1$ is given by
+\[O\left(\frac{x(\log T)^2}T\right),\]
+where $U$ is a very large odd positive integer. Thus, we use residue calculus to see
+\[\psi(x)=x-\sum_{|\op{Im}s|\le T}\frac{x^\rho}\rho-\frac{\zeta'(0)}{\zeta(0)}-\frac12\log\left(1-x^{-s}\right)+O\left(\frac{x\log(xT)^2}T\right),\]
+where $x$ is not a prime power. Note the contributions of $-\frac12\log\left(1-x^{-s}\right)$ are coming from the trivial zeroes of $\zeta$. This completes the proof.
+
+\subsection{A Zero-Free Region}
+We are going to construct a zero-free region slightly to the left of (and including) $\op{Re}s=1$. In some sense, the explicit formula tells us that the Prime number theorem is equivalent to requiring $\zeta(1+it)\ne0$ for $t\in\RR$, where the point of the zero-free region is to control the nontrivial zeroes in the explicit formula.
+
+We are going to use positivity to create our zero-free region. We begin with a slick but weak proof.
+\begin{proposition}
+	Fix some $t_0\in\RR$ and $s\in\CC$ with $\op{Re}s>1$. Defining $\sigma_z(n)\coloneqq\sum_{d\mid n}d^z$, we have
+	\[\sum_{n=1}^\infty\frac{\left|\sigma_{it_0}(n)\right|^2}{n^s}=\frac{\zeta(s)^2\zeta(s+it_0)\zeta(s-it_0)}{\zeta(2s)}\]
+\end{proposition}
+\begin{proof}
+	Direct expansion with Euler factors.
+\end{proof}
+The point is that we can provide a meromorphic continuation of this function to $s\in\CC$, whose power we can plug into the following result.
+\begin{lemma}[Landau] \label{lem:landau}
+	Let $\{a_n\}_{n\in\NN}$ be a sequence of nonnegative real numbers, and define
+	\[D(s)\coloneqq\sum_{n=1}^\infty\frac{a_n}{n^s}.\]
+	Further, let $\sigma_0\in\RR$ be the smallest real numbers such that $D$ absolutely converges on $\op{Re}s>\sigma_0$. Then $D$ does not extend to an analytic function past $\sigma_0$.
+\end{lemma}
+\begin{proof}
+	This is just complex analysis, so we omit it.
+\end{proof}
+Thus, if we can find $t_0$ such that $\zeta(1+it_0)=0$, then we also have a zero at $\zeta(1-it_0)$, so in fact the function
+\[\frac{\zeta(s)^2\zeta(s+it_0)\zeta(s-it_0)}{\zeta(2s)}\]
+is analytic on $\op{Re}s>1/2$ and is zero at $1/2$. But this is an obvious contradiction because the series must absolutely converge by \Cref{lem:landau}, but we cannot vanish at $s=1/2$ by just staring at it. Thus, we could not actually have continued it any further.\todo{}
+\begin{remark}
+	Essentially the same proof can show that $L(s,\chi)\zeta(s)$ does not vanish at $s=0$, provided we give $L(s,\chi)$ an analytic continuation. We will do this later.
+\end{remark}
+
+\subsection{A General Lemma}
+The above zero-free region is technically enough to prove the Prime number theorem, but to get an error term, we will want to do better. As such, we pick up the following lemma.
+\begin{lemma}
+	Let $\{a_n\}_{n\in\NN}$ be a sequence of nonnegative real numbers, and define
+	\[D(s)\coloneqq\sum_{n=1}^\infty\frac{a_n}{n^s}.\]
+	Suppose $D$ satisfies the following conditions.
+	\begin{itemize}
+		\item $D(s)$ converges absolutely on $\op{Re}s>1$.
+		\item $D(s)$ has a pole of order $n$ at $s=1$.
+		\item We can define
+		\[\Xi(s)\coloneqq(s(1-s))^mD^s\Bigg(\prod_{i=1}^L\Gamma_\RR(s+\alpha_j)\Bigg)D(s)\]
+		for some $m$ and 
+	\end{itemize}
+\end{lemma}
+
+\end{document}
