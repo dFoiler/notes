@@ -23,6 +23,7 @@ Roughly speaking, we will show the Prime number theorem by being able to study $
 	For $x\in\RR$, we define the following functions.
 	\begin{align*}
 		\pi(x) &\coloneqq \sum_{p\le x}1, \\
+		\vartheta(x) &\coloneqq \sum_{p\le x}\log p, \\
 		\Lambda(n) &\coloneqq\begin{cases}
 			\log p & \text{if }n=p^\nu\text{ for }\nu\in\ZZ^+, \\
 			0 & \text{else},
@@ -33,7 +34,7 @@ Roughly speaking, we will show the Prime number theorem by being able to study $
 Quickly, we note that the prime-powers we have included in $\Lambda(n)$ and $\psi(x)$ don't actually matter.
 \begin{lemma} \label{lem:no-prime-powers}
 	For any $x\ge2$, we have
-	\[\psi(x)=\sum_{p\le x}\log p+O\left(\sqrt x(\log x)^2\right).\]
+	\[\psi(x)=\vartheta(x)+O\left(\sqrt x(\log x)^2\right).\]
 \end{lemma}
 \begin{proof}
 	Note
@@ -48,29 +49,63 @@ Now, here is our statement.
 \begin{theorem}[Prime number]
 	We have $\pi(x)\sim x/\log x$ as $x\to\infty$.
 \end{theorem}
-Here is why we mentioned $\psi$.
+Here is why we mentioned $\vartheta$ and $\psi$.
+\begin{lemma} \label{lem:get-pi-error}
+	Define $g(x)\coloneqq\vartheta(x)-x$. Then
+	\[\pi(x)=\int_2^x\frac1{\log t}\,dt+\frac2{\log2}+\frac{g(x)}{\log x}+\int_2^x\frac{g(t)}{t(\log t)^2}\,dt.\]
+\end{lemma}
+\begin{proof}
+	This is summation by parts. Let $a_n=\log n$ be $1$ if $n$ is prime and $0$ otherwise so that the partial sum up to $x$ of $a_n$ is given by $\vartheta(x)$. Further, let $f(n)\coloneqq1/\log n$ if $n>1$ and $0$ at $n=1$. Then \Cref{thm:abel-summation} tells us
+	\begin{align*}
+		\pi(x) &= \sum_{n\le x}a_nf(n) \\
+		&= \vartheta(x)f(x)-\int_0^x\vartheta(t)f'(t)\,dt \\
+		&= \frac{x}{\log x}+\int_2^x\frac{t}{t(\log t)^2}\,dt+\frac{g(x)}{\log x}+\int_2^x\frac{g(t)}{t(\log t)^2}\,dt \\
+		&= \int_2^x\frac1{\log t}\,dt+\frac2{\log2}+\frac{g(x)}{\log x}+\int_2^x\frac{g(t)}{t(\log t)^2}\,dt,
+	\end{align*}
+	which is what we wanted.
+\end{proof}
 \begin{proposition}
 	The following are equivalent.
 	\begin{listalph}
 		\item $\pi(x)\sim x/\log x$ as $x\to\infty$.
+		\item $\vartheta(x)\sim x$ as $x\to\infty$.
 		\item $\psi(x)\sim x$ as $x\to\infty$.
 	\end{listalph}
 \end{proposition}
 \begin{proof}
-	This is by summation by parts. We have two implications to show.
-	\begin{listalph}
-		\item Suppose (b), and we'll show (a). Let $a_n=\log n$ be $1$ if $n$ is prime and $0$ otherwise, and let $A(x)\coloneqq\sum_{n\le x}a_n$ denote the partial sums. By \Cref{lem:no-prime-powers}, we see
-		\[A(x)=\sum_{p\le x}\log p=\psi(x)+O\left(\sqrt x(\log x)^2\right).\]
-		In particular, $A(x)/x=\psi(x)+O\left(x^{-1/2}(\log x)^2\right)$ goes to $1$ as $x\to\infty$ by hypothesis.
+	By \Cref{lem:no-prime-powers}, we see
+	\[\frac{\vartheta(x)}x-\frac{\psi(x)}x=O\left(x^{-1/2}(\log x)^2\right)=o(1),\]
+	so
+	\[\lim_{x\to\infty}\frac{\vartheta(x)}x=\lim_{x\to\infty}\frac{\psi(x)}x,\]
+	provided that either limit exists. The equivalence of (b) and (c) follows.
 
-		Further, let $f(n)\coloneqq1/\log n$ if $n>1$ and $0$ at $n=1$. Then \Cref{thm:abel-summation} tells us
-		\[\pi(x)=\sum_{n\le x}a_nf(n)=A(x)f(x)-\int_0^xA(t)f'(t)\,dt=\frac{A(x)}{\log x}+\int_2^x\frac{A(t)}{(\log t)^2}\,dt,\]
+	We now show that (a) and (b) are equivalent to finish.
+	\begin{itemize}
+		\item Showing (a) implies (b) is by summation by parts. Let $a_n$ denote the prime indicator at $n$ so that the partial sum up to $x$ is $\pi(x)$. Further, define $f(x)\coloneqq\log x$ for $x\ge1$ and $0$ otherwise. Thus, \Cref{thm:abel-summation} implies
+		\begin{align*}
+			\vartheta(x) &= \sum_{n\le x}a_nf(n) \\
+			&= \pi(x)f(x)-\int_0^x\pi(t)f'(t)\,dt \\
+			&= \pi(x)\log x-\int_2^x\frac{\pi(t)}t\,dt,
+		\end{align*}
 		so
-		\[\frac{\pi(x)}{x/\log x}=\frac{A(x)}{x}+\frac{\log x}x\int_2^x\frac{A(t)}{(\log t)^2}\,dt.\]
-		As $x\to\infty$, we know $A(x)/x\to 1$, so we have left to show that the right-hand term goes to $0$. Because $A(x)/x\to1$, we can find $N$ such that $x>N$ implies $A(x)/x\le2$. Thus, we can upper-bound
-		\[\frac{\log x}x\int_2^x\frac{A(t)}{(\log t)^2}\,dt\le2(\log x)\int_2^x\frac1{(\log t)^2}\,dt\]
-		for $x>N$.\todo{}
-	\end{listalph}
+		\[\frac{\vartheta(x)}x=\frac{\pi(x)}{x/\log x}-\frac1x\int_2^x\frac{\pi(t)}t\,dt.\]
+		Given $\pi(x)\sim x/\log x$, the main term here has $\pi(x)/(x/\log x)\to1$ as $x\to\infty$, so we have left to show that the right term vanishes. Well, $|\pi(x)/(x/\log x)|\to1$ as $x\to\infty$ implies that this function has a maximum on $[2,\infty)$, so we let $M$ denote the maximum. Thus,
+		\[\left|\int_2^x\frac{\pi(t)}t\,dt\right|\le M\int_2^x\frac{\log t}t\,dt.\]
+		To finish, we use L'H\^opital's rule to note
+		\[\lim_{x\to\infty}\frac{M\int_2^x\log t/t\,dt}{x}=\lim_{x\to\infty}\frac{M\log x}x=0.\]
+		\item Showing (b) implies (a) follows from \Cref{lem:get-pi-error}. Indeed, note
+		\begin{equation}
+			\frac{\pi(x)}{x/\log x}=\frac{\int_2^x1/\log t\,dt}{x/\log x}+\frac{g(x)}x+\frac{\log x}x\int_2^x\frac{g(t)}{t(\log t)^2}\,dt, \label{eq:get-pi-error}
+		\end{equation}
+		where $g(x)\coloneqq\theta(x)-x$. Using L'H\^opital's rule, the main term has
+		\[\lim_{x\to\infty}\frac{\int_2^x1/\log t\,dt}{x/\log x}=\lim_{x\to\infty}\frac{1/\log x}{(\log x-1)/(\log x)^2}=\lim_{x\to\infty}\frac{1}{1-1/\log x}=1.\]
+		It remains to show that everything else on the right-hand side of \eqref{eq:get-pi-error} vanishes. We are given $g(x)/x\to0$ as $x\to\infty$, so we have nothing to worry about there. For the last term, $g(x)/x\to0$ implies that we can choose $N$ so that $x>N$ enforces $|g(x)|\le2x$, meaning
+		\[\left|\int_2^x\frac{g(t)}{t(\log t)^2}\,dt\right|\le\left|\int_2^N\frac{g(t)}{t(\log t)^2}\,dt\right|+\int_N^x\frac1{(\log t)^2}\,dt.\]
+		The left term is constant so vanishes as $x\to\infty$ when multiplied through by $\log x/x$. The right term will also vanish similarly: by L'H\^opital's rule, we see
+		\[\lim_{x\to\infty}\frac{\int_N^x\frac1{(\log t)^2}\,dt}{x/\log x}=\lim_{x\to\infty}\frac{1/(\log x)^2}{(\log x-1)/(\log x)^2}=\lim_{x\to\infty}\frac1{\log x-1}=0.\]
+		This completes the proof.
+		\qedhere
+	\end{itemize}
 \end{proof}
 
 \subsection{Poisson Summation}
