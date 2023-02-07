@@ -1,0 +1,83 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 6}
+
+Today we construct our zero-free region for $\zeta$.
+
+\subsection{A General Lemma}
+The above zero-free region is technically enough to prove the Prime number theorem, but to get an error term, we will want to do better. As such, we pick up the following lemma.
+\begin{lemma} \label{lem:zero-free-region}
+	Let $\{a_n\}_{n\in\NN}$ be a sequence of nonnegative real numbers, and define
+	\[D(s)\coloneqq\sum_{n=1}^\infty\frac{a_n}{n^s}.\]
+	Suppose $D$ satisfies the following conditions.
+	\begin{itemize}
+		\item $D(s)$ converges absolutely on $\op{Re}s>1$.
+		\item $D(s)$ has a pole of order $m>0$ at $s=1$.
+		\item We can define
+		\[\Xi(s)\coloneqq(s(1-s))^mD^s\Bigg(\prod_{i=1}^\ell\Gamma_\RR(s+\alpha_j)\Bigg)D(s)\]
+		for some $D$ and $m$. Here, $\Gamma_\RR(s)\coloneqq\pi^{-s/2}\Gamma(s/2)$ Then $\Xi(s)$ is entire, order $1$, and satisfies $\Xi(s)=\Xi(1-s)$.
+	\end{itemize}
+	Then $D$ has at most $m$ zeroes in $(1-c(\ell,m)/\log M,1)\subseteq\RR$, where $M\coloneqq(D+1)\prod_{i=1}^L(|\alpha_i|+1)$ is the ``analytic conductor,'' and $c(\ell,m)$ is a constant computable from $\ell$ and $m$.
+\end{lemma}
+\begin{remark}
+	More complex $L$-functions might have ``complex'' $\Gamma$-factors $\Gamma_\CC$. Roughly speaking, such factors arise from taking the Mellin transform of a Gaussian, so over $\RR$ we get $\Gamma_\RR$, but over $\CC$ we will get something a little different. For details, see \cite{tate-thesis}.
+\end{remark}
+It might look concerning that \Cref{lem:zero-free-region} only gives us an interval in the real numbers, but we can more carefully select our $D(s)$ to get a more comprehensive region.
+\begin{example} \label{ex:zeta-zero-free-region}
+	Given some $t_0\in\RR$, set
+	\[D(s)\coloneqq\zeta(s)^3\zeta(s+it_0)^2\zeta(s-it_0)^2\zeta(s+2it_0)\zeta(s-it_0).\]
+	Some trigonometry shows that $D(s)$ has nonnegative coefficients. Then one can use \Cref{lem:zero-free-region} on $D(s)$: note $m=3$, $\ell=9$, so $M\ll\log(|t_0|+1)$, meaning that we have at most $3$ zeroes in the interval $(1-c/\log(|t_0|+1),1)$ for some computable constant $c$. However, given $\beta\in(1-c/\log(|t_0|+1),1)$, if $\zeta(\beta+it_0)=0$, then $\zeta(\beta-it_0)=0$ as well, so $D$ actually gets four zeroes, which is contradiction. In particular, we get a zero-free region which looks like
+	\[\left\{s=\sigma+it):\sigma>1-\frac c{\log(|t|+1)}\right\}.\]
+\end{example}
+\begin{remark}
+	The magical $D(s)$ from \Cref{ex:zeta-zero-free-region} does come from a larger structure, but it is somewhat advanced to explain.
+	% https://publications.ias.edu/sites/default/files/ShalikaBday2002.pdf
+\end{remark}
+\begin{remark}
+	It might look upsetting that \Cref{ex:zeta-zero-free-region} does not achieve a full zero-free region of the form $\{s:\op{Re}s>c\}$ for some $c>0$, but the proof of such a region is not known.
+\end{remark}
+Now that we care about \Cref{lem:zero-free-region}, let's prove it.
+\begin{proof}[Proof of \Cref{lem:zero-free-region}]
+	Note $\Xi(0)\ne0$ by the functional equation. Now, factoring, we see
+	\[\Xi(s)=e^{A+Bs}\prod_{\Xi(\rho)=0}\left(1-\frac s\rho\right)e^{s/\rho}.\]
+	Taking the logarithmic derivative, we see
+	\[\frac{\Xi'(s)}{\Xi(s)}=B+\sum_{\Xi(\rho)=0}\left(\frac1{s-\rho}+\frac1\rho\right).\]
+	As an intermediate step, we claim
+	\[\op{Re}B=-\sum_{\Xi(\rho)=0}\op{Re}(1/\rho).\]
+	Note that summing over these zeroes in conjugate pairs will give us absolute convergence. Anyway, this follows from the functional equation: note $\Xi(s)=\Xi(1-s)$ grants
+	\[B+\sum_{\Xi(\rho)=0}\left(\frac1{1-s-\rho}+\frac1\rho\right)=-B-\sum_{\Xi(\rho)=0}\left(\frac1{s-\rho}+\frac1\rho\right).\]
+	The zeroes are symmetric by the functional equation, so the contribution given by $1/(1-s-\rho)=-1/(s-(1-\rho))$ and $1/(s-\rho)$ will cancel. This completes the proof of the claim.
+
+	As such, the product definition of $\Xi$ allows us to expand
+	\[\sum_{\Xi(\rho)=0}\frac1{s-\rho}=\frac ms+\frac m{s-1}+\frac{G'(s)}{G(s)}+\frac{D'(s)}{D(s)},\]
+	where
+	\[G(s)\coloneqq D^s\Bigg(\prod_{i=1}^\ell\Gamma_\RR(s+\alpha_j)\Bigg).\]
+	Now, for $s>1$, we know $D'(s)/D(s)<0$ by hypothesis on $D(s)$. As such, we are now in good shape because we more or less understand everything on our right-hand side, so we can translate it into knowledge about $\Xi$. In particular, we can show
+	\[\sum_{\Xi(\rho)=0}\frac1{s-\rho}\le\frac m{s-1}+\frac ms+C_1\log M,\]
+	where $C_1$ is some constant depending on $\ell$ and $m$. In particular, if we send $s\to1^+$ and have too many zeroes of $\Xi$ close to $1$, then the left-hand side should explode while the right-hand side grows slower.
+
+	As such, let
+	\[R_c\coloneqq\{\rho\in(1-c/\log M):\Xi(\rho)=0\},\]
+	where $c>0$ is some constant we will fix later. We see
+	\[\sum_{\rho\in R_c}\frac m{s-\rho}\le\frac m{s-1}+C_2\log M\]
+	as $s\to1^+$, for some perhaps different constant $C_2$. As such, for some $\delta>0$ we will fix later, we set $s\coloneqq1+\delta/\log M$ so that
+	\[\sum_{\rho\in R_c}\frac1{c+\delta}\le\frac m\delta+C_2\]
+	after cancelling out $C_2$. But taking, say, $c<1/(100mC_2)$ and $\delta<1/2C_2$ will enforce $\#R_c<m+1$, which is what we wanted.
+\end{proof}
+
+\subsection{The Prime Number Theorem, Finally}
+We are now ready to prove the Prime number theorem.
+\pntthm*
+\begin{proof}
+	We use the explicit formula. Namely, taking $T>3$, we recall
+	\[\psi(x)=x-\sum_{|\op{Im}\rho|\le T}\frac{x^\rho}\rho+O(1)+O\left(\frac{x(\log T)^2}T\right).\]
+	However, we can upper-bound
+	\[\left|\sum_{|\op{Im}\rho|\le T}\frac{x^\rho}\rho\right|\le\sum_{|\op{Im}\rho|\le T}\frac{x^\rho}{|\rho|}\le x\sum_{|\op{Im}\rho|\le T}\frac{x^{-c/\log(|t|+1)}}{|\rho|}\ll x^{1-c/\log T}(\log T)^2.\]
+	Taking $T=e^{c\sqrt{\log x}}$ to get a bound $|\psi(x)-x|\ll x\exp(-c\sqrt{\log x})$.
+\end{proof}
+
+\end{document}
