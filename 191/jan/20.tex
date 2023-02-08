@@ -32,49 +32,52 @@ We are going to need the following technical result. Roughly speaking, it allows
 \begin{remark}
 	One can use the theory of Riemann--Stieltjes integration to turn \Cref{thm:abel-summation} into just an application of integration by parts, but we will not need this.
 \end{remark}
-As an example application, we may give $L(s,\chi)$ an analytic continuation to $\{s:\op{Re}s>0\}$ when $\chi$ is not the principal character.
-\begin{lemma}[Differentiation under the integral sign] \label{lem:diff-under-sign}
-	Let $U\subseteq\CC$ be open, and let $f\colon\RR\times U\to\CC$ and $g\colon\RR\to\RR$ be functions satisfying the following properties.
+As an example application, we may give $L(s,\chi)$ an analytic continuation to $\{s:\op{Re}s>0\}$ when $\chi$ is not the principal character. We will need the following result, from \cite{mattner-diff-under-sign}.
+\begin{proposition}[Differentiation under the integral sign] \label{prop:diff-under-sign}
+	Let $(X,\mc S,\mu)$ be a measurable space, and let $U\subseteq\CC$ be open, and let $f\colon U\times X\to\CC$ and $g\colon X\to X$ be functions satisfying the following properties.
 	\begin{itemize}
-		\item The function $g$ is integrable and has $\int_\RR g(t)\,dt<\infty$.
-		\item For fixed $t$, the function $s\mapsto f(s,t)$ is holomorphic on $U$ and has $|\del f(s,t)/\del s|\le g(t)$ for all $s$.
-		\item For fixed $s$, the function $t\mapsto f(s,t)$ is measurable.
+		\item The function $g$ is integrable; namely, $\int_X g(t)\,dt<\infty$.
+		\item For fixed $x$, the function $z\mapsto f(z,x)$ is holomorphic on $U$ and has $|f(z,x)|\le g(x)$ for all $s$.
+		\item For fixed $z$, the function $x\mapsto f(z,x)$ is measurable.
 	\end{itemize}
-	Then the function $F(s)\coloneqq\int_\RR f(s,t)\,dt$ is holomorphic on $U$.
-	%  and satisfies
-	% \[F'(s)=\int_\RR\frac{\del f(s,t)}{\del s}\,dt.\]
-\end{lemma}
+	Then the function $F\colon U\to\CC$ given by $F(z)\coloneqq\int_Xf(z,x)\,dx$ is holomorphic on $U$ and satisfies
+	\[F'(z)=\int_X\frac{\del f}{\del z}(z,x)\,dx.\]
+\end{proposition}
 \begin{proof}
-	% Fix some $z\in U$, and we show the result at $z$. Because $U$ is open, we may find $r>0$ such that $z\in B(z,r)$. Now, for any $z'\in B(z,r)$, we let $\gamma\colon[0,1]\to B(z,r)$ denote the straight line from $z$ to $z'$. Thus, the Fundamental theorem of calculus grants
-	% \[\int_\RR\left(\int_\gamma\frac{\del f(s,t)}{\del s}\,ds\right)dt=\int_\RR\big(f(z',t)-f(z,t)\big)\,dt=F(z')-F(z).\]
-	% We would like to exchange these two integrals, so we use Fubini's theorem to check
-	% \[\int_\RR\left(\int_\gamma\left|\frac{\del f(s,t)}{\del s}\right|\,ds\right)dt\le\int_\RR\ell(\gamma)g(t)\,dt=\ell(\gamma)\int_\RR g(t)\,dt<\infty.\]
-	% Thus, we may interchange our integrals, whereupon we see
-	% \[\frac{F(z')-F(z)}{z'-z}=\frac1{z'-z}\int_\gamma\left(\int_\RR\frac{\del f(s,t)}{\del s}\,dt\right)ds\]
-	% for any $z'\ne z$. For brevity, we define $F_0(s)\coloneqq\int_\RR(\del f(s,t)/\del s)\,dt$, which we know absolutely converges by the above argument.
-	% Now, let $\{z_n\}_{n\in\NN}\subseteq B(z,r)$ denote any sequence distinct from $z$ but approaching $z$.
-	We use Morera's theorem. As such, there are two steps.
+	We use Morera's theorem to show $F$ is holomorphic and the Cauchy integral formula to compute the derivative. The intuition here is that we can control integrals of $F$ easier than its derivatives, so we will try to turn everything into an integral. For clarity, we proceed in steps.
 	\begin{enumerate}
-		\item We show $F$ is continuous. Fix some $z\in U$, and we show the result at $z$. Because $U$ is open, we may find $r>0$ such that $z\in B(z,r)$. Now, for any $z'\in B(z,r)$, we let $\gamma\colon[0,1]\to B(z,r)$ denote a curve from $z$ to $z'$. Thus, the Fundamental theorem of calculus grants
+		\item We show $F$ is continuous on $U$. Well, fix some $w\in U$, and we show $F$ is continuous at $w$; for concreteness, again find $r>0$ such that $B(w,r)\subseteq U$. Indeed, for some distinct $w'\in B(w,r)$, we let $\gamma\colon[0,1]\to U$ denote the straight line from $w$ to $w'$. Thus, the Fundamental theorem of calculus and Cauchy's integral formula grants
 		\begin{align*}
-			|F(z')-F(z)| &= \left|\int_\RR\big(f(z',t)-f(z,t)\big)\,dt\right| \\
-			&= \left|\int_\RR\left(\int_\gamma\frac{\del f(s,t)}{\del s}\,ds\right)dt\right| \\
-			&\le \int_\RR\left(\int_\gamma\left|\frac{\del f(s,t)}{\del s}\right|\,ds\right)dt \\
-			&\le \int_\RR\ell(\gamma)g(t)\,dt \\
-			&= \ell(\gamma)\int_\RR g(t)\,dt.
+			F(w')-F(w) &= \int_X\big(f(w',x)-f(w,x)\big)\,dx \\
+			&= \int_X\left(\int_\gamma\frac{\del f}{\del z}(z,x)\,dz\right)dx \\
+			&= \frac1{2\pi i}\int_X\left(\int_\gamma\int_{\gamma_z}\frac{f(z',x)}{(z-z')^2}\,dz'dz\right)dx,
 		\end{align*}
-		Thus, letting $\gamma$ denote the straight line from $z'$ to $z$ so that $\ell(\gamma)=|z'-z|$, sending $z'\to z$ forces $F(z')\to F(z)$, which is what we wanted.
-		\item Now, let $\gamma\colon[0,1]\to U$ denote a closed curve, and we show $\int_\gamma F(s)\,ds=0$. Indeed, the absolute convergence of the previous step allows us to use Fubini's theorem to write
-		\[\int_\gamma F(s)\,ds=\int_\gamma\left(\int_\RR\frac{\del f(s,t)}{\del s}\,dt\right)ds=\int_\RR\left(\int_\gamma\frac{\del f(s,t)}{\del s}\,ds\right)\,dt.\]
-		Now, $\int_\gamma(\del f(s,t)/\del s)\,ds$ is just $0$ because $s\mapsto f(s,t)$ is holomorphic, so $s\mapsto\del f(s,t)/\del s$ is also holomorphic. This completes the proof.
+		where $\gamma_z$ denotes the counterclockwise circle around $z$ of radius $r-\frac12|w-w'|$, which is inside $B(w,r)\subseteq U$ because $z$ is on the line connecting $w$ to $w'$. Now, taking absolute values everywhere, we see
+		\[|F(w')-F(w)|\le\frac1{2\pi}\int_X\left(\int_\gamma\int_{\gamma_z}\frac{g(t)}{\left|r-\frac12|w-w'|\right|^2}\,dz'dz\right)dx\le\frac1{2\pi}\int_Xg(t)\,dt\cdot\frac{\ell(\gamma)\cdot2\pi\left|r-\frac12|w-w'|\right|}{\left|r-\frac12|w-w'|\right|^2},\]
+		where we have used the computation $\ell(\gamma_z)=2\pi\left|r-\frac12|w-w'|\right|$ for each $z$. Now, as $w'\to w$, we see $\ell(\gamma)=|w-w'|$ goes to $0$, so the entire right-hand side goes to $0$. This completes the proof of continuity at $w$.
+
+		\item We show $F$ is holomorphic on $U$. It suffices to show that $F$ is differentiable at some fixed $w\in U$ and has the given derivative. As such, we find $r>0$ such that $B(w,r)\subseteq U$ and replace $f$ with its restriction to $B(w,r)\times X$ and $F$ with its restriction to $B(w,r)$. In particular, we have reduced to the case where $U$ is open and convex.
+		
+		Now, we already know $F$ is continuous, so we may use Morera's theorem. Well, let $\gamma\colon[0,1]\to U$ be some closed curve, and we want to show
+		\[\int_\gamma F(z)\,dz=\int_\gamma\int_Xf(z,x)\,dxdz\stackrel?=0.\]
+		We would like to exchange the two integrals, so we note we have absolute convergence because
+		\[\int_\gamma\int_X|f(z,x)|\,dxdz\le\int_\gamma\int_Xg(x)\,dxdz\le\ell(\gamma)\int_Xg(x)\,dx<\infty.\]
+		Thus, Fubini's theorem lets us write
+		\[\int_\gamma F(z)\,dz=\int_X\int_\gamma f(z,x)\,dzdx=\int_X0\,dx=0,\]
+		where we have used Cauchy's theorem to evaluate $\int_\gamma f(z,x)\,dz=0$; recall we reduced to the case where $U$ is convex above!
+
+		\item It remains to compute the derivative of $F$. Because $F$ is holomorphic, we may use the Cauchy integral formula: for any $w\in U$, find $r$ such that $B(w,r)\subseteq U$, and let $\gamma$ be the loop of radius $r/2$ around $w$. Then
+		\[F'(w)=\frac1{2\pi i}\int_\gamma\frac{F(z)}{(z-w)^2}\,dz=\frac1{2\pi i}\int_\gamma\int_X\frac{f(z,x)}{(z-w)^2}\,dxdz.\]
+		As usual, we would like to exchange the two integrals, so we note that we have absolute convergence because
+		\[\int_\gamma\int_X\left|\frac{f(z,x)}{(z-w)^2}\right|\,dxdz\le\int_\gamma\int_X\frac{g(x)}{(r/2)^2}\,dxdz\le\frac{\ell(\gamma)}{(r/2)^2}\int_Xg(x)\,dx<\infty.\]
+		Thus, Fubini's theorem lets us write
+		\[F'(w)=\int_X\left(\frac1{2\pi i}\int_\gamma\frac{f(z,x)}{(z-w)^2}\,dz\right)dx=\int_X\frac{\del f}{\del z}(w,x)\,dx,\]
+		where we have again applied the Cauchy integral formula.
 		\qedhere
 	\end{enumerate}
 \end{proof}
-\begin{remark} \label{rem:annoying-log-power-ints}
-	We do two small computations, using integration by parts. For $\sigma<-1$, we note that
-	\[\int_1^\infty(\log t)t^\sigma\,dt=\frac{(\log t)t^{\sigma+1}}{\sigma+1}\bigg|_1^\infty-\frac1{\sigma+1}\int_1^\infty t^\sigma\,dt<\infty.\]
-	Similarly, for $\sigma>-1$, we note that
-	\[\int_0^1(\log t)t^\sigma\,dt=\frac{(\log t)t^{\sigma+1}}{\sigma+1}\bigg|_0^1-\frac1{\sigma+1}\int_0^1t^\sigma\,dt<\infty.\]
+\begin{remark}
+	\Cref{prop:diff-under-sign} might look like needless abstract nonsense with the measure space floating around, but the point here is that we will be able to flexibly apply this result to exchange derivatives with both usual integrals and infinite sums.
 \end{remark}
 \begin{proposition} \label{prop:continue-l-chi}
 	Let $\chi\pmod q$ be a non-principal Dirichlet character. Then the function $L(s,\chi)$ admits an analytic continuation to $\{s:\op{Re}s>0\}$.
@@ -92,11 +95,11 @@ As an example application, we may give $L(s,\chi)$ an analytic continuation to $
 	
 	Roughly speaking, we want to write
 	\[\left|\int_1^\infty\frac{A(t)}{t^{s+1}}\,dt\right|\le q\int_1^\infty\frac1{t^{\op{Re}s+1}}\,dt=q\cdot\frac{t^{\op{Re}s}}{-\op{Re}s}\bigg|_1^\infty=\frac q{\op{Re}s}\]
-	for any $\op{Re}s>0$, meaning that the integral converges, so we ought to have a holomorphic function. To make this computation rigorous, we will show that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$ for any $\sigma>0$, which will be enough by taking the union over all $\sigma$. Indeed, for some fixed $\sigma$, we set $g(t)\coloneqq q(\log t)/t^{\sigma+1}$ for $t>2$ and $0$ elsewhere so that
-	\[\left|\frac{\del}{\del s}\frac{A(t)}{t^{s+1}}\right|=\left|\frac{A(t)\log t}{t^{s+1}}\right|\le g(t)\]
+	for any $\op{Re}s>0$, meaning that the integral converges, so we ought to have a holomorphic function. To make this computation rigorous, we will show that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$ for any $\sigma>0$, which will be enough by taking the union over all $\sigma$. Indeed, for some fixed $\sigma$, we define $g\colon[1,\infty)$ by $g(t)\coloneqq q/t^{\sigma+1}$ for $t>2$ and $0$ elsewhere so that
+	\[\left|\frac{A(t)}{t^{s+1}}\right|=\left|\frac{A(t)}{t^{s+1}}\right|\le g(t)\]
 	for $\op{Re}s>\sigma$, and
-	\[\frac1q\int_\RR g(t)\,dt=\frac1q\int_1^\infty\frac{\log t}{t^{\sigma+1}}\,dt<\infty\]
-	by \Cref{rem:annoying-log-power-ints}. Thus, \Cref{lem:diff-under-sign} implies that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$, finishing the proof.
+	\[\int_\RR g(t)\,dt=q\int_1^\infty t^{-\sigma-1}\,dt<\infty\]
+	because $\sigma>0$. Thus, \Cref{prop:diff-under-sign} implies that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$, finishing the proof.
 	% Well, for each $N$, we define
 	% \[I_N(s)\coloneqq\int_1^N\frac{A(t)}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(A(n)\int_n^{n+1}t^{-s-1}\,dt\right)=\sum_{n=1}^{N-1}\left(A(n)\cdot\frac{(n+1)^{-s}-n^{-s}}{-s}\right)\]
 	% so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
@@ -138,11 +141,11 @@ Thus, we are interested in continuing $\zeta$. With a little more effort than \C
 
 	Thus, it remains to show that $s\cdot I(s)$ is a holomorphic function for $\op{Re}s>0$, where it suffices to show that $I(s)$ is a holomorphic function for $\op{Re}s>0$. This is mildly technical. At a high level, we would like to just note that
 	\[\left|\int_1^\infty\frac{\{t\}}{t^{s+1}}\,dt\right|\le\int_1^\infty\frac{1}{t^{\op{Re}s+1}}\,dt=\frac{t^{-\op{Re}s}}{-\op{Re}s}\bigg|_1^\infty=\frac1{\op{Re}s},\]
-	so the integral converges and ought to define a holomorphic function. To make this computation rigorous, we will show that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$ for any $\sigma>0$, which will be enough by taking the union over all $\sigma$. Indeed, for some fixed $\sigma$, we set $g(t)\coloneqq(\log t)/t^{\sigma+1}$ for $t>1$ and $0$ elsewhere so that
-	\[\left|\frac{\del}{\del s}\frac{\{t\}}{t^{s+1}}\right|=\left|\frac{\{t\}\log t}{t^{s+1}}\right|\le g(t)\]
+	so the integral converges and ought to define a holomorphic function. To make this computation rigorous, we will show that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$ for any $\sigma>0$, which will be enough by taking the union over all $\sigma$. Indeed, for some fixed $\sigma$, we set $g(t)\coloneqq1/t^{\sigma+1}$ for $t>1$ and $0$ elsewhere so that
+	\[\left|\frac{\{t\}}{t^{s+1}}\right|\le g(t)\]
 	for $\op{Re}s>\sigma$, and
-	\[\int_\RR g(t)\,dt=\int_1^\infty\frac{\log t}{t^{\sigma+1}}\,dt<\infty\]
-	by \Cref{rem:annoying-log-power-ints}. Thus, \Cref{lem:diff-under-sign} implies that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$, finishing the proof.
+	\[\int_\RR g(t)\,dt=\int_1^\infty t^{-\sigma-1}\,dt<\infty\]
+	because $\sigma>0$. Thus, \Cref{prop:diff-under-sign} implies that $I(s)$ is holomorphic on $\{s:\op{Re}s>\sigma\}$, finishing the proof.
 	% Being more formal, we work with the finite integrals
 	% \[I_N(s)\coloneqq\int_1^N\frac{\{t\}}{t^{s+1}}\,dt=\sum_{n=1}^{N-1}\left(\int_n^{n+1}\frac{t-n}{t^{s+1}}\,dt\right)=\sum_{n=1}^{N-1}\left(\frac{\left(n+1\right)^{-s+1}-n^{-s+1}}{-s+1}-n\cdot\frac{\left(n+1\right)^{-s}-n^{-s}}{-s}\right)\]
 	% so that $I_N(s)\to I(s)$ as $N\to\infty$ for each $s$ with $\op{Re}s>0$. Notably, for each $N$, the above computation shows that $I_N$ is holomorphic on $\{s:\op{Re}s>0\}$.
