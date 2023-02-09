@@ -1,0 +1,118 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 8}
+
+We began class by proving the Prime number theorem. I have edited directly into those notes for continuity.
+
+\subsection{Quadratic Residue Speedrun}
+Fix a prime $p$, for simplicity. Let $\chi\pmod p$ be a Dirichlet character. Our goal is to prove an analytic continuation and functional equation for $L(s,\chi)$.
+\begin{proposition}
+	Fix a prime $p$. Then $\FF_p^\times$ is cyclic.
+\end{proposition}
+\begin{proof}
+	Standard.
+\end{proof}
+\begin{corollary}
+	Fix a prime $p$ and some $d\in\ZZ^+$.
+	\begin{listalph}
+		\item If $\gcd(d,p-1)=1$, then the function $\FF_p^\times\to\FF_p^\times$ defined by $x\mapsto x^d$ is an isomorphism.
+		\item If $d\mid p-1$, then each $a\in\FF_p^\times$ makes $x^d\equiv a\pmod p$ with either $0$ or $d$ solutions.
+	\end{listalph}
+\end{corollary}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item Let $g$ be a generator of $\FF_p^\times$. Then $g^d$ is also a generator and lives in the image of the map.
+		\item The map $x\mapsto x^d$ has kernel of size $d$. Thus, any element of the image has $d$ solutions to the equation; otherwise there are no solutions.
+		\qedhere
+	\end{listalph}
+\end{proof}
+This motivates the Legendre symbol.
+\begin{definition}[quadratic residue]
+	Fix an odd prime $p$. And some $a\in\ZZ$ not divisible by $p$.
+	\begin{itemize}
+		\item If $x^2\equiv a\pmod p$ has a solution, then $a$ is a \textit{quadratic residue}.
+		\item If $x^2\equiv a\pmod p$ does not have a solution, then $a$ is a \textit{nonquadratic residue}.
+	\end{itemize}
+	We will be silent about the case of $p\mid a$.
+\end{definition}
+\begin{definition}
+	Fix an odd prime $p$ and some $a\in\ZZ$. Then we define the \textit{Legendre symbol} by
+	\[\left(\frac ap\right)\coloneqq\begin{cases}
+		0 & \text{if }p\mid a, \\
+		1 & \text{if }a\text{ is a quadratic residue}, \\
+		-1 & \text{if }a\text{ is a nonquadratic residue}.
+	\end{cases}\]
+\end{definition}
+\begin{proposition}[Euler's criterion] \label{prop:euler-criterion}
+	Fix an odd prime $p$. For any $a\in\ZZ$, we have
+	\[\left(\frac ap\right)\equiv a^{(p-1)/2}\pmod p.\]
+\end{proposition}
+\begin{proof}
+	If $a\equiv0\pmod p$, there is nothing to say. If $a\equiv x^2\pmod p$ for some $x$, then $a^{(p-1)/2}\equiv x^{p-1}\equiv 1$. Lastly, if $a$ is a nonquadratic residue, then we see
+	\[\left(a^{(p-1)/2}-1\right)\left(a^{(p-1)/2}+1\right)\equiv0\pmod p,\]
+	but $x^{(p-1)/2}\equiv1\pmod p$ has already been granted $(p-1)/2$ roots as the quadratic residues, so we must instead have $a^{(p-1)/2}\equiv-1\pmod p$.
+\end{proof}
+\begin{corollary}
+	Fix an odd prime $p$. Then $\left(\frac{-1}p\right)=1$ if $p\equiv1\pmod 4$, and $\left(\frac{-1}p\right)=-1$ if $p\equiv-1\pmod 4$.
+\end{corollary}
+\begin{proof}
+	Use \Cref{prop:euler-criterion}.
+\end{proof}
+\begin{remark}
+	Note that $\left(\frac{\bullet}p\right)$ is the unique non-principal real character$\pmod p$. One can see this because the characters $\FF_p^\times\to\{\pm1\}$ must have order $2$, so we are looking for elements of order $2$ in $\widehat{\FF_p^\times}\cong\FF_p^\times$. But $\FF_p^\times$ has only one element of order $2$, so we know we have found the only such real non-principal character.
+\end{remark}
+\begin{remark}
+	More generally studying when $f(x)\equiv0\pmod p$ has solutions (and how it factors) has connections directly with the Langlands program and similar. We will not say more because this is (very) far outside the scope of the course.
+\end{remark}
+
+\subsection{Gauss Sums}
+We mentioned in \Cref{rem:gamma-is-gauss-sum} that $\Gamma$ is more or less a continuous version of a Gauss sum: it's some kind of multiplicative Fourier transform of an additive character. Well, here are the usual Gauss sums.
+\begin{definition}[Gauss sum]
+	Fix a prime $p$ and integer $m$. Then the \textit{Gauss sum} is
+	\[\tau(\chi,m)\coloneqq\sum_{n\in\FF_p^\times}e\left(\frac{nm}p\right)\chi(n).\]
+\end{definition}
+Namely, $\psi_m\colon n\mapsto e\left(\frac{nm}p\right)$ is our additive character, our measure is the counting measure, so we are indeed just looking at the multiplicative Fourier transform of an additive character.
+
+Let's show a few basic facts.
+\begin{lemma}
+	Fix a prime $p$ and integer $m$. Then for a nontrivial character $\chi$, we have
+	\[\tau(\chi,m)=\overline\chi(m)\tau(\chi,1).\]
+\end{lemma}
+\begin{proof}
+	This is just a change of variables.
+\end{proof}
+\begin{lemma}
+	Fix a prime $p$. Then $|\tau(\chi,1)|^2=p$.
+\end{lemma}
+\begin{proof}
+	This is essentially the Plancherel formula. Namely, we see
+	\begin{align*}
+		(p-1)|\tau(\chi,1)|^2 &= \sum_{m=0}^{p-1}|\tau(\chi,m)|^2 \\
+		&= \sum_{k,\ell\in\FF_p^\times}\Bigg(\chi(k)\overline\chi(\ell)\sum_{m=0}^{p-1}e\left(\frac{m(k-\ell)}p\right)\Bigg) \\
+		&= p\sum_{k\in\FF_p^\times}|\chi(k)|^2 \\
+		&= p(p-1),
+	\end{align*}
+	where we have used \Cref{cor:indicate-g}.
+\end{proof}
+As an aside, we set up the P\'olya--Vinogradov inequality.
+\begin{theorem}[P\'olya--Vinogradov inequality] \label{thm:polya-vinogradov}
+	Fix a prime $p$ and a nontrivial character $\chi\pmod p$. Then for any $a,b$, we have
+	\[\left|\sum_{a\le n\le b}\chi(n)\right|\ll\sqrt\beta\log p,\]
+	where the implicit constant does not depend on anything.
+\end{theorem}
+\begin{proof}
+	Roughly speaking, we are computing the inner product of $\chi$ and the indicator function of an interval. Using ``Plancherel's formula'' to bound completes the proof. The trick here is to ``complete the sum.'' Because $\sum_{n=0}^{p-1}\chi(n)=0$, we may assume that $a,b\le2p$. Expand everything to a Fourier series gives a few Gauss sums to complete the proof.
+\end{proof}
+\begin{corollary}
+	The least nonquadratic residue is $O(\sqrt x\log x)$.
+\end{corollary}
+\begin{proof}
+	This is direct from \Cref{thm:polya-vinogradov}.
+\end{proof}
+
+\end{document}
