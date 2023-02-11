@@ -1,0 +1,100 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 10}
+
+We continue discussing applications of the Gauss sum.
+
+\subsection{The P\'olya--Vinogradov Inequality}
+As an aside, we set up the P\'olya--Vinogradov inequality.
+\begin{theorem}[P\'olya--Vinogradov inequality] \label{thm:polya-vinogradov}
+	Fix a prime $p$ and a nontrivial character $\chi\pmod p$. Then for any $a,b$, we have
+	\[\left|\sum_{a\le n\le b}\chi(n)\right|\ll\sqrt p\log p,\]
+	where the implicit constant does not depend on anything.
+\end{theorem}
+\begin{proof}
+	Roughly speaking, we are computing the inner product of $\chi$ and the indicator function of an interval. Using ``Plancherel's formula'' to bound completes the proof. The trick here is to ``complete the sum.'' Because $\sum_{n=0}^{p-1}\chi(n)=0$, we may assume that $a,b\le p$. (If shifting yields $a\le p\le b\le p+a$, then we can flip the entire sum to make it  $b-p\le p-a\le p$.)
+
+	Now, the main point is to take the Fourier transform
+	\[\widehat{1_{[a,b]}}(m)=\sum_{a\le n\le b}e\left(-\frac{mn}p\right)\ll\frac pm,\]
+	where we have expanded out the geometric series to get this bound; namely, we are noting $\frac1{1-e(-1/p)}\approx p$. As such, we use the Fourier inversion formula \Cref{cor:indicate-g} to see
+	\[\left|\sum_{x\in\FF_p}1_{[a,b]}(x)\chi(x)\right|=\frac1p\left|\sum_{m,x\in\FF_p}\widehat{1_{[a,b]}}(m)e\left(\frac{mx}p\right)\chi(x)\right|.\]
+	Now, by \Cref{lem:mag-of-gauss-sum}, this is bounded above by
+	\[\frac1p\sum_{m=1}^{p-1}\widehat{1_{[a,b]}}\sqrt p\ll\frac1{\sqrt p}\cdot\sqrt p\sum_{m=1}^{p-1}\frac1m\ll\sqrt p\log p.\]
+	(Notably, the $m=0$ term provides no contribution.) This completes the proof.
+\end{proof}
+\begin{corollary}
+	The least nonquadratic residue is $O(\sqrt x\log x)$.
+\end{corollary}
+\begin{proof}
+	This is direct from \Cref{thm:polya-vinogradov}.
+\end{proof}
+\begin{remark}
+	For ``short'' intervals, one can do better, which is the point of the Burgess bound.
+\end{remark}
+
+\subsection{A Functional Equation for \texorpdfstring{$L(s,\chi)$}{ L(s, chi)}}
+Fix a prime $p$. Given a Dirichlet character $\chi\pmod p$, we would like to provide a functional equation akin to \Cref{thm:xi-func-eq}. Roughly speaking, there will be three cases.
+\begin{itemize}
+	\item $\chi$ could be the trivial character $\chi_0$.
+	\item $\chi$ could be the (unique) nontrivial real quadratic character $\left(\frac\bullet p\right)$.
+	\item $\chi$ could be a complex character satisfying $\chi\ne\overline\chi$.
+\end{itemize}
+We separate out these cases because it turns out that our knowledge of the second case is the worst.
+\begin{remark} \label{rem:trivial-character-func-eq}
+	Note that the case of $\chi=\chi_0$ is essentially just $\zeta$ with a few Euler factors, so its functional equation can be derived directly from \Cref{thm:xi-func-eq}.
+\end{remark}
+In light of \Cref{rem:trivial-character-func-eq}, we will focus on the case of $\chi\ne\chi_0$. Now, for $\alpha\in\RR$, an argument similar to \Cref{ex:use-ps} yields
+\[\sum_{n\in\ZZ}e^{-\pi(n+\alpha)^2/x}=x^{1/2}\sum_{n\in\ZZ}e^{-\pi n^2x+2\pi in\alpha}.\]
+In particular, taking $\alpha=m/p$ for $m\in\ZZ$ grants
+\[\sum_{n\in\ZZ}e^{-\pi(n+m/p)^2/x}=\left(\frac xp\right)^{1/2}\sum_{n\in\ZZ}e^{-\pi n^2x/p+2\pi inm/p}.\]
+To continue, we will work with $\chi(-1)=1$.\footnote{This is called the ``unramified at $\infty$ case'' because the place here at infinity is totally real.} Here, we set
+\[\Theta_\chi(x)\coloneqq\sum_{n\in\ZZ}\chi(n)e^{-\pi n^2x/p}.\]
+Roughly speaking, in the case where $\chi(-1)=-1$, this sum would completely vanish, so we would have to add a factor of $n$ or similar to make this summation behave. We will not say more about this case.
+
+Using \Cref{cor:indicate-g}, we see
+\begin{align*}
+	\Theta_\chi(x) &= \sum_{n\in\ZZ}\frac1{\tau(\overline\chi,1)}\Bigg(\sum_{m=0}^{p-1}\overline\chi(m)\Bigg)e^{mn/p}e^{-\pi n^2x/p} \\
+	&= \frac1{\tau(\overline\chi,1)}\sum_{m=0}^{p-1}\chi(m)\sum_{n\in\ZZ}e^{2\pi imn/p-\pi n^2x/p} \\
+	&\stackrel*= \frac1{\tau(\overline\chi,1)}\cdot\left(\frac xp\right)^{1/2}\sum_{m=0}^{p-1}\chi(m)\sum_{n\in\ZZ}e^{-\pi(n+m/p)^2p/x} \\
+	&= \frac1{\tau(\overline\chi,1)}\cdot\left(\frac xp\right)^{1/2}\sum_{m=0}^{p-1}\chi(m)\sum_{n\in\ZZ}e^{-\pi(pn+m)^2/(px)},
+\end{align*}
+where we have applied Poisson summation at $\stackrel*=$. Now, the summations loop over all residue classes in $pn+m$, so we see
+\[\Theta_\chi(x)=\frac1{\tau(\overline\chi,1)}\cdot\left(\frac xp\right)^{1/2}\sum_{t\in\ZZ}\chi(t)e^{-\pi r^2/(px)}=\frac1{\tau(\overline\chi,1)}\cdot\left(\frac xp\right)^{1/2}\Theta_{\overline\chi}(1/x),\]
+where we are also using the fact that $\chi$ is periodic$\pmod p$.
+
+Now, to find our functional equation, we write
+\[\Xi_\chi(s)\coloneqq p^{s/2}\pi^{-s/2}\Gamma(s/2)L(s,\chi).\]
+Here, the factor of $p$ roughly comes from some kind of conductor, and the $\pi^{-s/2}\Gamma(s/2)$ is our real $\Gamma$-factor. In particular, our functional equation will turn out to be the following result.
+\begin{theorem}[Functional equation for $\Xi_\chi$]
+	Fix a nontrivial Dirichlet character $\chi\pmod p$ such that $\chi(-1)=-1$. Then $\Xi_\chi(s)$ is entire and satisfies the functional equation
+	\[\Xi_\chi(s)=\varepsilon(\overline\chi)\Xi_{\overline\chi}(1-s),\]
+	where $\varepsilon_\chi\coloneqq\sqrt q/\tau(\chi)$.
+\end{theorem}
+\begin{proof}
+	We follow the proof of \Cref{thm:xi-func-eq}. One can compute the integral
+	\[\Gamma(s/2)(p/\pi)^{s/2}n^{-s}=\int_0^\infty e^{-\pi n^2x/p}x^{s/2}\,\frac{dx}x\]
+	for $\op{Re}s>1$. Summing, we see
+	\[\Xi_\chi(s)=\frac12\int_0^\infty\Theta_\chi(x)x^{s/2}\,\frac{dx}x.\]
+	At this point, one can see directly that this right-hand side is entire for all $s\in\CC$: indeed, $\Theta_\chi(x)$ rapidly decays at both $0$ and $\infty$, so its Mellin transform is safe for all $s\in\CC$. Thus, we already see that $\Xi_\chi$ is entire. In particular, this equality now holds for all $s\in\CC$.
+
+	Anyway, applying the usual variable change $x\mapsto1/x$, we see
+	\begin{align*}
+		\Xi_\chi(s) &= \frac12\int_0^\infty\Theta_\chi(1/x)x^{-s/2}\,\frac{dx}x \\
+		&= \frac12\int_0^\infty\left(\frac{p^{1/2}}{\tau(\overline\chi)}\Theta_{\overline\chi}(x)\right)x^{-s/2}\,\frac{dx}x,
+	\end{align*}
+	where we have used the functional equation for $\Theta_\chi$ at the last equality. Upon using the analytic continuation for $\Xi_{\overline\chi}$ provided by the previous paragraph, we get
+	\[\Xi_\chi(s)=\varepsilon_{\overline\chi}\Xi_{\overline\chi}(1-s).\]
+	This completes the proof.
+\end{proof}
+\begin{remark}
+	The element $\varepsilon_\chi$ in the functional equation is called ``the root number.'' There is a wealth of research trying to understand their behavior.
+\end{remark}
+\begin{remark}
+	We omit the case of $\chi(-1)=-1$.
+\end{remark}
+
+\end{document}
