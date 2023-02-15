@@ -1,0 +1,231 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 15}
+
+Let's begin our discussion of cohomology.
+
+\subsection{Abelian Categories}
+Let's be somewhat formal with our definition of an abelian category.
+\begin{definition}[pre-additive]
+	A category $\mc C$ is \textit{pre-additive} if and only if it is enriched over the category of abelian groups. In particular, for objects $X,Y.Z\in\mc C$, the set $\op{Mor}_\mc C(X,Y)$ is an abelian group, and for any $f\colon X\to Y$, the maps
+	\[(-\circ f)\colon\op{Mor}_{\mc C}(Y,Z)\to\op{Mor}_\mc C(X,Z)\qquad\text{and}\qquad(f\circ-)\colon\op{Mor}_\mc C(Z,X)\to\op{Mor}_\mc C(Z,Y)\]
+	are group homomorphisms.
+\end{definition}
+\begin{definition}[additive]
+	A pre-additive category $\mc C$ is \textit{additive} if and only if it has finite products.
+\end{definition}
+\begin{remark} \label{rem:prods-are-coprods}
+	In a pre-additive category, finite products and coproducts are canonically isomorphic. In other words, given objects $X,Y\in\mc C$, if $X\oplus Y$ exists, then so does $X\times Y$ (and conversely), and there is a canonical isomorphism between them.
+\end{remark}
+\begin{remark}
+	By \Cref{rem:prods-are-coprods}, the empty product and coproduct coincide, so we have an object which is both initial and final, which we see is our zero object. Thus, additive categories have a zero object.
+\end{remark}
+Let's explain \Cref{rem:prods-are-coprods} quickly. Roughly speaking, it turns out that both universal properties are equivalent to having a given object $Z$ fit into the following commutative diagram.
+% https://q.uiver.app/?q=WzAsNSxbMSwxLCJaIl0sWzAsMCwiWCJdLFsyLDAsIlgiXSxbMCwyLCJZIl0sWzIsMiwiWSJdLFsxLDAsIlxcaW90YV9YIiwyXSxbMCwyLCJcXHBpX1giLDJdLFsxLDIsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsMCwiXFxpb3RhX1kiXSxbMCw0LCJcXHBpX1kiXSxbMyw0LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	X && X \\
+	& Z \\
+	Y && Y
+	\arrow["{\iota_X}"', from=1-1, to=2-2]
+	\arrow["{\pi_X}"', from=2-2, to=1-3]
+	\arrow[Rightarrow, no head, from=1-1, to=1-3]
+	\arrow["{\iota_Y}", from=3-1, to=2-2]
+	\arrow["{\pi_Y}", from=2-2, to=3-3]
+	\arrow[Rightarrow, no head, from=3-1, to=3-3]
+\end{tikzcd}\]
+Here, we also require that $\pi_Y\iota_X=0$ and $\pi_X\iota_Y=0$ and ${\id_Z}=\iota_X\pi_X+\iota_Y\pi_Y$. It is not too hard to see that any object $Z$ with the above data is both a product $(Z,\pi_X,\pi_Y)$ and a coproduct $(Z,\iota_X,\iota_Y)$. For example, given an object $A$ with maps $\varphi_X\colon X\to A$ and $\varphi_Y\colon Y\to A$, we claim that having $\varphi\colon A\to Z$ with $\pi_X\varphi=\varphi_X$ and $\pi_Y\varphi=\varphi_Y$ is equivalent to
+\[\varphi=\iota_X\varphi_X+\iota_Y\varphi_Y,\]
+so our $\varphi\colon A\to Z$ and is unique. Indeed, this $\varphi$ works, and it is forced because
+\[\varphi={\id_Z}\circ\varphi=(\iota_X\pi_X+\iota_Y\pi_Y)\circ\varphi=\iota_X\varphi_X+\iota_Y\varphi_Y.\]
+Showing that $Z$ is a coproduct follows similarly.
+
+Conversely, if we (for example) have a coproduct $(Z,\iota_X,\iota_Y)$, we can build the projection map $\pi_X\colon Z\to X$ by applying to the universal property in the following diagram.
+% https://q.uiver.app/?q=WzAsNCxbMSwxLCJaIl0sWzIsMiwiWCJdLFsxLDAsIlgiXSxbMCwxLCJZIl0sWzMsMSwiMCIsMix7ImN1cnZlIjoyfV0sWzIsMSwiIiwwLHsiY3VydmUiOi0yLCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDAsIlxcaW90YV9YIiwyXSxbMywwLCJcXGlvdGFfWSJdLFswLDEsIlxccGlfWCIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	& X \\
+	Y & Z \\
+	&& X
+	\arrow["0"', curve={height=12pt}, from=2-1, to=3-3]
+	\arrow[curve={height=-12pt}, Rightarrow, no head, from=1-2, to=3-3]
+	\arrow["{\iota_X}"', from=1-2, to=2-2]
+	\arrow["{\iota_Y}", from=2-1, to=2-2]
+	\arrow["{\pi_X}"{description}, dashed, from=2-2, to=3-3]
+\end{tikzcd}\]
+Defining $\pi_Y$ similarly, we see that $\pi_Y\iota_X=0$ and $\pi_X\iota_Y=0$ for free, and then one can show that ${\id_Z}=\iota_X\pi_X+\iota_Y\pi_Y$.
+
+We now continue our march towards abelian categories.
+\begin{definition}[pre-abelian]
+	An additive category $\mc C$ is \textit{pre-abelian} if and only if it admits kernels and cokernels.
+\end{definition}
+\begin{remark}
+	Given $f,g\colon X\to Y$, we see that $\op{eq}(f,g)=\ker(f-g)$, so in fact we see we admit equalizers. Because we also admit coequalizers for similar reasons, we see that pre-abelian categories have finite limits and colimits.
+\end{remark}
+\begin{definition}[abelian]
+	A pre-abelian category $\mc C$ is \textit{abelian} if and only if every monomorphism is the kernel of some morphism, and every epimorphism is the cokernel of some morphism.
+\end{definition}
+Here, a monomorphism $f\colon X\to Y$ merely means that the induced maps $\op{Hom}_\mc C(Z,X)\to\op{Hom}_\mc C(Z,Y)$ is injective for any object $Z$, and epimorphisms are defined dually.
+
+We can combine the above definitions into the following cleaner one.
+\begin{proposition}
+	Fix a pre-abelian category $\mc C$. Then $\mc C$ is abelian if and only if the following hold.
+	\begin{listalph}
+		\item Every monomorphism is the kernel of its cokernel.
+		\item Every epimorphism is the cokernel of its kernel.
+		\item Further, any morphism can be factored as an epimorphism followed by a monomorphism.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Omitted. This more or less follows from expanding out our definitions.
+\end{proof}
+\begin{remark}
+	Freyd's embedding theorem says that any locally small abelian category has a faithful embedding to $\mathrm{Mod}_R$ for some ring $R$. As such, we will usually just reason in $\mathrm{Mod}_R$ instead of general abelian categories.
+\end{remark}
+
+\subsection{Complexes}
+Throughout, we fix an abelian category $\mc C$. We now discuss complexes.
+\begin{definition}[complex]
+	Fix an abelian category $\mc C$. Then a \textit{complex} is the data $(K^\bullet,d^\bullet)$ of objects $\{K^i:i\in\ZZ\}$ and maps $d^i\colon K^i\to K^{i+1}$ such that $d^{i+1}\circ d^i=0$ for each $i$. We will often notate this as
+	\[\cdots\to K^{-2}\xrightarrow{d^{-2}}K^{-1}\xrightarrow{d^{-1}}K^0\xrightarrow{d^0}K^1\xrightarrow{d^1}K^2\to\cdots.\]
+\end{definition}
+\begin{definition}[cohomology]
+	Fix a complex $(K^\bullet,d^\bullet)$ in an abelian category $\mc C$, the \textit{$i$th cohomology} for $i\in\ZZ$ is the object
+	\[H^i(K^\bullet)\coloneqq\frac{\ker d^i}{\im d^{i-1}},\]
+	where we have embedded in $K^i$. Note that there is a map $\im d^{i-1}\to\ker d^i$ because $d^{i}\circ d^{i-1}=0$.
+\end{definition}
+We also have morphisms.
+\begin{definition}[complex morphism]
+	Fix an abelian category $\mc C$. Then a \textit{morphism of complexes} $(K^\bullet,d_K^\bullet)\to(L^\bullet,d_L^\bullet)$ is a collection of maps $f^\bullet\colon K^\bullet\to L^\bullet$ making the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMTQsWzEsMCwiS157LTJ9Il0sWzIsMCwiS157LTF9Il0sWzMsMCwiS14wIl0sWzQsMCwiS14xIl0sWzUsMCwiS14yIl0sWzYsMCwiXFxjZG90cyJdLFs2LDEsIlxcY2RvdHMiXSxbMCwxLCJcXGNkb3RzIl0sWzAsMCwiXFxjZG90cyJdLFsxLDEsIkxeey0yfSJdLFsyLDEsIkxeey0xfSJdLFszLDEsIkxeMCJdLFs0LDEsIkxeMSJdLFs1LDEsIkxeMiJdLFs4LDBdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs0LDVdLFs3LDldLFs5LDEwXSxbMTAsMTFdLFsxMSwxMl0sWzEyLDEzXSxbMTMsNl0sWzAsOSwiZl57LTJ9Il0sWzEsMTAsImZeey0xfSJdLFsyLDExLCJmXjAiXSxbMywxMiwiZl4xIl0sWzQsMTMsImZeMiJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {K^{-2}} & {K^{-1}} & {K^0} & {K^1} & {K^2} & \cdots \\
+		\cdots & {L^{-2}} & {L^{-1}} & {L^0} & {L^1} & {L^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+		\arrow[from=1-6, to=1-7]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-5, to=2-6]
+		\arrow[from=2-6, to=2-7]
+		\arrow["{f^{-2}}", from=1-2, to=2-2]
+		\arrow["{f^{-1}}", from=1-3, to=2-3]
+		\arrow["{f^0}", from=1-4, to=2-4]
+		\arrow["{f^1}", from=1-5, to=2-5]
+		\arrow["{f^2}", from=1-6, to=2-6]
+	\end{tikzcd}\]
+\end{definition}
+\begin{remark} \label{rem:morphism-in-cohom}
+	A morphism $(f^\bullet)\colon(K^\bullet,d_K^\bullet)\to(L^\bullet,d_L^\bullet)$ gives rise (functorially) to maps
+	\[H^i(f^\bullet)\colon H^i(K^\bullet)\to H^i(L^\bullet)\]
+	for any $i\in\ZZ$. This is some technical argument dealing with the commutativity of the following diagram.
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJLXntpLTF9Il0sWzEsMCwiS15pIl0sWzIsMCwiS157aSsxfSJdLFsyLDEsIkxee2krMX0iXSxbMSwxLCJMXmkiXSxbMCwxLCJMXntpLTF9Il0sWzAsNSwiZl57aS0xfSJdLFsxLDQsImZeaSJdLFsyLDMsImZee2krMX0iXSxbMCwxLCJkX0tee2ktMX0iXSxbMSwyLCJkX0teaSJdLFs1LDQsImRfTF57aS0xfSIsMl0sWzQsMywiZF9MXmkiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{K^{i-1}} & {K^i} & {K^{i+1}} \\
+		{L^{i-1}} & {L^i} & {L^{i+1}}
+		\arrow["{f^{i-1}}", from=1-1, to=2-1]
+		\arrow["{f^i}", from=1-2, to=2-2]
+		\arrow["{f^{i+1}}", from=1-3, to=2-3]
+		\arrow["{d_K^{i-1}}", from=1-1, to=1-2]
+		\arrow["{d_K^i}", from=1-2, to=1-3]
+		\arrow["{d_L^{i-1}}"', from=2-1, to=2-2]
+		\arrow["{d_L^i}"', from=2-2, to=2-3]
+	\end{tikzcd}\]
+	Quickly, we see that an element of the image of $d_K^{i-1}$ does get mapped to the image of $d_L^i$ because $f^i\circ d_K^{i-1}=d_K^i\circ f^{i-1}$; similarly, the kernel gets mapped to the kernel. As such, our map on cohomology is well-defined, and we get to define our morphism. Functoriality checks are routine.
+\end{remark}
+And we even have a notion of exactness.
+\begin{definition}[exact]
+	Fix an abelian category $\mc C$. Given a sequence
+	\[(A^\bullet,d_A^\bullet)\to(B^\bullet,d_B^\bullet)\to(C^\bullet,d_C^\bullet),\]
+	this is \textit{exact} at $B^\bullet$ if and only if the corresponding maps on each degree $i$ are exact at $B^i$.
+\end{definition}
+Here is our central result for cohomology here.
+\begin{proposition}
+	Fix an abelian category $\mc C$ and an exact sequence
+	\[0\to(A^\bullet,d_A^\bullet)\to(B^\bullet,d_B^\bullet)\to(C^\bullet,d_C^\bullet)\to0\]
+	of complexes. Then there is a long exact sequence in cohomology as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMSwwLCJIXntpLTF9KEFeXFxidWxsZXQpIl0sWzIsMCwiSF57aS0xfShCXlxcYnVsbGV0KSJdLFszLDAsIkhee2ktMX0oQ15cXGJ1bGxldCkiXSxbMSwxLCJIXntpfShBXlxcYnVsbGV0KSJdLFsyLDEsIkhee2l9KEJeXFxidWxsZXQpIl0sWzMsMSwiSF57aX0oQ15cXGJ1bGxldCkiXSxbMCwwLCJcXGNkb3RzIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFs2LDBdLFszLDRdLFs0LDVdLFs1LDddLFsyLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {H^{i-1}(A^\bullet)} & {H^{i-1}(B^\bullet)} & {H^{i-1}(C^\bullet)} \\
+		& {H^{i}(A^\bullet)} & {H^{i}(B^\bullet)} & {H^{i}(C^\bullet)} & \cdots
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=1-4, to=2-2]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	The argument of \Cref{rem:morphism-in-cohom} grants us a morphism of exact sequences as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMSwwLCJBXmkvXFxpbSBkX0Fee2ktMX0iXSxbMiwwLCJCXmkvXFxpbSBkX0Jee2ktMX0iXSxbMywwLCJDXmkvXFxpbSBkX0Nee2ktMX0iXSxbNCwwLCIwIl0sWzAsMSwiMCJdLFsxLDEsIlxca2VyIGRfQV57aSsxfSJdLFsyLDEsIlxca2VyIGRfQl57aSsxfSJdLFszLDEsIlxca2VyIGRfQ157aSsxfSJdLFs0LDVdLFs1LDZdLFs2LDddLFswLDFdLFsxLDJdLFsyLDNdLFswLDUsImRfQV5pIl0sWzEsNiwiZF9CXmkiXSxbMiw3LCJkX0NeaSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& {A^i/\im d_A^{i-1}} & {B^i/\im d_B^{i-1}} & {C^i/\im d_C^{i-1}} & 0 \\
+		0 & {\ker d_A^{i+1}} & {\ker d_B^{i+1}} & {\ker d_C^{i+1}}
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow["{d_A^i}", from=1-2, to=2-2]
+		\arrow["{d_B^i}", from=1-3, to=2-3]
+		\arrow["{d_C^i}", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	Hitting this with the snake lemma gives us the desired exact sequence. Zippering our exact sequences together creates the full long exact sequence.
+\end{proof}
+We might be interested when two complexes give the same cohomology. This is typically done using a chain homotopy.
+\begin{definition}[chain homotopy]
+	Fix an abelian category $\mc C$ and complex morphisms $(f^\bullet),(g^\bullet)\colon(K^\bullet,d_K^\bullet)\to(L^\bullet,d_L^\bullet)$. Then a \textit{chain homotopy} is a collection of maps $h^i\colon K^i\to L^{i+1}$ such that $f-g=d_Lh+hd_K$. Here, this arithmetic is taking place in the following squares.
+	% https://q.uiver.app/?q=WzAsMTQsWzEsMCwiS157LTJ9Il0sWzIsMCwiS157LTF9Il0sWzMsMCwiS14wIl0sWzQsMCwiS14xIl0sWzUsMCwiS14yIl0sWzYsMCwiXFxjZG90cyJdLFs2LDEsIlxcY2RvdHMiXSxbMCwxLCJcXGNkb3RzIl0sWzAsMCwiXFxjZG90cyJdLFsxLDEsIkxeey0yfSJdLFsyLDEsIkxeey0xfSJdLFszLDEsIkxeMCJdLFs0LDEsIkxeMSJdLFs1LDEsIkxeMiJdLFs4LDBdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs0LDVdLFs3LDldLFs5LDEwXSxbMTAsMTFdLFsxMSwxMl0sWzEyLDEzXSxbMTMsNl0sWzAsOV0sWzEsMTBdLFsyLDExXSxbMywxMl0sWzQsMTNdLFsxLDksImheey0xfSIsMV0sWzIsMTAsImheMCIsMV0sWzMsMTEsImheMSIsMV0sWzQsMTIsImheMiIsMV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {K^{-2}} & {K^{-1}} & {K^0} & {K^1} & {K^2} & \cdots \\
+		\cdots & {L^{-2}} & {L^{-1}} & {L^0} & {L^1} & {L^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+		\arrow[from=1-6, to=1-7]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-5, to=2-6]
+		\arrow[from=2-6, to=2-7]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=1-5, to=2-5]
+		\arrow[from=1-6, to=2-6]
+		\arrow["{h^{-1}}"{description}, from=1-3, to=2-2]
+		\arrow["{h^0}"{description}, from=1-4, to=2-3]
+		\arrow["{h^1}"{description}, from=1-5, to=2-4]
+		\arrow["{h^2}"{description}, from=1-6, to=2-5]
+	\end{tikzcd}\]
+	Note that this diagram does not commute.
+\end{definition}
+Here is the main result.
+\begin{proposition}
+	Fix an abelian category $\mc C$ and complex morphisms $(f^\bullet),(g^\bullet)\colon(K^\bullet,d_K^\bullet)\to(L^\bullet,d_L^\bullet)$ such that we have a chain homotopy $h^\bullet$ between these morphisms. Then $f^\bullet$ and $g^\bullet$ induce the same morphism on cohomology.
+\end{proposition}
+\begin{proof}
+	We will show that $dh+hd$ induces the zero map on cohomology. This is now some diagram-chase: fixing some index $i$, we pick an element $a\in\ker d^i$ which we want to show has $(dh+hd)(a)\in\im d^{i-1}$. Well, we have $dha\in\im d^{i-1}$ automatically and $hda=0$ by construction of $a$, so we are done.
+\end{proof}
+We will start talking about resolutions next class.
+\begin{definition}[injective]
+	Fix an abelian category $\mc C$. Then an object $I\in\mc C$ is \textit{injective} if and only if any monomorphism $A\into B$ can extend any morphism $A\to I$ to a morphism $B\to I$.
+\end{definition}
+\begin{remark}
+	We will show on the homework that $\mathrm{Mod}_R$ and $\mathrm{Mod}_{\OO_X}$ both have enough injectives.
+\end{remark}
+
+\end{document}
