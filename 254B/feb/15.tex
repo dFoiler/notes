@@ -1,0 +1,87 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 15}
+We continue moving towards the Hasse norm theorem.
+
+\subsection{Reducing to Cohomology}
+Recall for a moment that we are interested in proving the Hasse norm theorem, which is roughly the statement that
+\[\frac{K^\times}{\op N^L_K(L^\times)}\to\prod_{v}\frac{K_v^\times}{\op N_{K_v}^{L_w}(L_w^\times)}\]
+is injective for cyclic extensions of global fields $L/K$, where $w$ is some fixed place over $v$. Well, using our Tate cohomology, we see that it is enough to show that the map
+\[H^2(\op{Gal}(L/K),L^\times)\to\prod_{v\in V_K}H^2(\op{Gal}(L_w/K_v),L_w^\times)\]
+is injective. The point here is to write down the short exact sequence
+\[1\to L^\times\to\AA_L^\times\to\AA_L^\times/L^\times\to1,\]
+where $\AA_L^\times$ are the id\'eles. This grants us the exact sequence in cohomology given by
+\[H^1(G,\AA_L^\times/L^\times)\to H^2(G,L^\times)\to H^2(G,\AA_L^\times).\]
+But now we note
+\[\AA_L^\times=\colim_{S\subseteq V_K}\AA_{L,S_L}^\times,\]
+where $S_L$ refers to the pre-image of $S$ under the restriction map $V_L\to V_K$. Notably, this is also an isomorphism of $G$-modules because we are looking at $S_L$-id\'eles. In particular, we have the following.
+\begin{proposition} \label{prop:global-to-local-idele}
+	Fix a finite Galois extension of global fields $L/K$. Then any $i\ge0$ has
+	\[H^i(G,\AA_L^\times)\cong\bigoplus_{v\in V_K}H^i(G_w,L_w^\times),\]
+	where $w$ is some fixed place over $v$.
+\end{proposition}
+\begin{proof}
+	The point here is that we can write
+	\[H^i(G,\AA_L^\times)=H^i\left(G,\colim_{S\subseteq V_K}\AA_{L,S_L}^\times\right)=\colim_{S\subseteq V_K}H^2(G,\AA_{L,S_L}^\times),\]
+	where this last equality holds by just checking by hand: indeed, there is of course a map from the left to the right by taking the given cocycle and pretending it is a colimit of cocycles; the inverse map simply says that any colimit of cocycles on the right can only have some bounded denominators because we're merely looking at a map $G^2\to\AA_{L,S_L}^\times$ to write down our cocycles.
+
+	Expanding this out, we get to write
+	\[H^i(G,\AA_L^\times)=\colim_{S\subseteq V_K}\Bigg(\prod_{v\in S}H^i\Bigg(G,\prod_{w\mid v}L_w^\times\Bigg)\times\prod_{v\notin S}H^i\Bigg(G,\prod_{w\mid v}\OO_w^\times\Bigg)\Bigg).\]
+	Now, the arguments of \Cref{cor:get-to-induced}, we see $\prod_{w\mid v}\OO_w^\times=\op{Ind}_{G_w}^G\OO_w^\times$ and similar for $L_w^\times$, so this becomes
+	\[H^i(G,\AA_L^\times)=\colim_{S\subseteq V_K}\Bigg(\prod_{v\in S}H^i(G,L_w^\times)\times\prod_{v\notin S}H^i(G_w,\OO_w^\times)\Bigg).\]
+	Now, for unramified places $v$, we see that $H^i(G_w,\OO_w^\times)$ vanishes by \Cref{lem:unramified-units-cohom}, so by throwing those places in $S$, we may ignore them. Thus, we get
+	\[H^i(G,\AA_L^\times)=H^i(G,\AA_L^\times)=\colim_{S\subseteq V_K}\prod_{v\in S}\prod_{v\in S}H^2(G_w,L_w^\times)=\bigoplus_{w\in V_L}H^2(G_v,L_v^\times),\]
+	which is what we wanted.
+\end{proof}
+\begin{remark}
+	Passing to the separable closure, we see
+	\[\colim_{K\subseteq L\subseteq K^{\mathrm{sep}}}H^2(\op{Gal}(L/K),\AA_L^\times)\]
+	is $\bigoplus_{v<\infty}\QQ/\ZZ$ plus some finite number of $\frac12\ZZ/\ZZ$ factors coming from infinite places.
+\end{remark}
+\begin{remark}
+	Tracking through the above proof shows that the map $H^2(G,L^\times)\to H^2(G,\AA_L^\times)$ factors into the map
+	\[H^2(G,L^\times)\to\bigoplus_vH^2(G_w,L_w^\times)\to\prod_{v\in V_K}H^2(G_w,L_w^\times).\]
+	In particular, we are getting that an element of $H^2(G,L^\times)$ vanishes in all but finitely many $H^2(G_w,L_w^\times)$ for free! Relating this back to our geometry, we are essentially saying that a $K$-quadratic form has a $K_v$-point for all but finitely many places $v$. But this is exactly \Cref{thm:focus-on-finite-places}, which we were able to show more directly.
+\end{remark}
+Thus, we see that we want the map $H^2(G,L^\times)\to H^2(G,\AA_L^\times)$ to be injective, so we see that what we really want to show is that $H^1(G,\AA_L^\times/L^\times)$ vanishes from our exact sequence, which we will do eventually.
+\begin{remark}
+	Note that the term before $H^1(G,\AA_L^\times/L^\times)$ in our long exact sequence is
+	\[H^1(G,\AA_L^\times)=\bigoplus_{v\in V_K}H^1(G_w,L_w^\times)=0\]
+	from \Cref{prop:global-to-local-idele}, so the kernel of $H^2(G,L^\times)\to H^2(G,\AA_L^\times)$ is indeed exactly $H^1(G,\AA_L^\times/L^\times)$.
+\end{remark}
+Unfortunately, showing $H^1(G,\AA_L^\times/L^\times)$ vanishes is genuinely difficult. Let's do it.
+
+\subsection{Cohomology of Cyclic Groups}
+We are going to want the following definition.
+\begin{definition}[Herbrand quotient]
+	Fix a finite cyclic group $G$ and a $G$-module $M$. Because $\widehat H^\bullet(G,M)$ is $2$-periodic, it is helpful to define the \textit{Herbrand quotient}
+	\[h(G,M)\coloneqq\frac{\#H^2(G,M)}{\#H^1(G,M)}\]
+	when these cohomology groups are finite.
+\end{definition}
+\begin{remark}
+	In some sense, this is a ``multiplicative'' variant of the topological Euler characteristic.
+\end{remark}
+\begin{lemma}
+	Fix a finite cyclic group $G$ and a finite $G$-module $M$. Then $h(G,M)=1$.
+\end{lemma}
+\begin{proof}
+	Set $G=\langle\sigma\rangle\cong\ZZ/n\ZZ$. We are interested in computing the cohomology of the complex
+	\[M\xrightarrow{T}M\xrightarrow{N}M\xrightarrow{T}M\to\cdots,\]
+	where $T=(\sigma-1)$ and $N=N_G$.
+	\begin{itemize}
+		\item If $M^G=0$, then the map $T$ has $\ker T=M^G=0$, so $T$ is an isomorphism because $M$ is finite. Further, $\im N_G\subseteq M^G=0$, so $N=0$. As such, we may compute our cohomology as $\widehat H^{-1}(G,M)=\widehat H^0(G,M)=0$ via Tate cohomology.
+		\item If $M^G=M$, then here $T$ is the zero map, and $N$ is the multiplication-by-$n$ map, so we may compute
+		\[\widehat H^{-1}(G,M)=\ker(n\colon M\to M)\qquad\text{and}\qquad\widehat H^0(G,M)=\frac{M}{nM}.\]
+		Using the classification of finite abelian groups, these both have the same size.
+		\item To finish the proof, we use induction on $M$. In particular, we have an exact sequence
+		\[0\to M^G\to M\to M'\to0.\]
+		If $M^G=0$ or $M^G=M$, then the above cases finish. Otherwise, both $M^G$ and $M'$ have strictly smaller cardinality, so the multiplicativity of the Herbrand quotient tells us that $h(G,M)=h(G,M^G)h(G,M')=1$, which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
