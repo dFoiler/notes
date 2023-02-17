@@ -1,0 +1,233 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 17}
+
+We continue talk about cohomology.
+
+\subsection{Functors for Abelian Categories}
+We might want to discuss functors between our categories, so we want them to respect some of our internal data.
+\begin{definition}[additive]
+	A functor $F\colon\mc A\to\mc B$ of abelian categories is \textit{additive} if and only if $A,A'\in\mc A$ implies
+	\[F\colon\op{Hom}_\mc A(A,A')\to\op{Hom}_\mc B(FA,FA')\]
+	is a group homomorphism.
+\end{definition}
+\begin{remark}
+	Note that additive functors preserve direct sums/products. Indeed, we saw last class that a direct sum/product of $X$ and $Y$ is an object $Z$ with maps $\iota_X\colon X\to Z$ and $\iota_Y\colon Y\to Z$ and $\pi_X\colon Z\to X$ and $\pi_Y\colon Z\to Y$ satisfying the equations
+	\[\pi_X\iota_X=\id_X,\qquad\pi_Y\iota_Y=\id_Y,\qquad\id_Z=\iota_X\pi_X+\iota_Y\pi_Y.\]
+	These equations are preserved by an additive functor, so $FZ$ is a direct sum of $FX$ and $FY$.
+\end{remark}
+\begin{definition}[exact]
+	An additive functor $F\colon\mc A\to\mc B$ is \textit{left-exact} if and only if it sends left-exact sequences
+	\[0\to A'\to A\to A''\]
+	to left-exact sequences
+	\[0\to FA'\to FA\to FA''.\]
+	The definition of \textit{right-exact} is entirely dual, and the $F$ is \textit{exact} if and only if it is both left-exact and right-exact.
+\end{definition}
+\begin{remark}
+	In fact, left-exact functors preserve all finite limits. Directly from the definition, left-exact functors preserve all kernels, so they also preserve equalizers because equalizers are just kernels in abelian categories. Further, because the functor is additive, it preserves finite products, so because all finite limits are an equalizer of some morphism of finite products, our functor does indeed preserve all finite limits.
+\end{remark}
+\begin{warn}
+	Our definition of left-exact requires the functor to be additive.
+\end{warn}
+
+\subsection{Injective Resolutions}
+To make cohomology work, we will want the following definition.
+\begin{definition}[enough injectives]
+	An abelian category $\mc A$ has \textit{enough injectives} if and only any object $A\in\mc A$ has a monomorphism $A\into I$ where $I$ is an injective object.
+\end{definition}
+Having enough injectives grant us injective resolutions.
+\begin{definition}
+	Fix an abelian category $\mc A$. Given an object $A\in\mc A$, an \textit{injective resolution} for $A$ is a complex $0\to I^\bullet$ of injective objects such that $H^0(I^\bullet)=A$ but $H^i(I^\bullet)=0$ for $i>0$.
+\end{definition}
+\begin{proposition}
+	Fix an abelian category $\mc A$ with enough injectives. For any $A\in\mc A$, there are injective modules $I^0,I^1,I^2,\ldots$ fitting into an (augmented) injective resolution
+	\[0\to A\to I^0\to I^1\to I^2\to\cdots.\]
+\end{proposition}
+\begin{proof}
+	Because $\mc A$ has enough injectives, we can embed $A\into I^0$ for some injective module $I^0$. This gives us a short exact sequence
+	\[0\to A\to I^0\to I^0/A\to0.\]
+	Now, because $\mc A$ has enough injectives, we can embed $I^0/A$ into some injective module $I^1$, so we get to extend our injective resolution $0\to A\to I^0\to I^1$. Running this argument inductively, we get the exact augmented injective resolution
+	\[0\to A\to I^0\to I^1\to I^2\to\cdots,\]
+	as desired.
+\end{proof}
+As an aside, Given an augmented injective resolution $A\to I^\bullet$, we note that there is a morphism of complexes
+% https://q.uiver.app/?q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIkEiXSxbMywwLCIwIl0sWzIsMCwiMCJdLFs0LDAsIlxcY2RvdHMiXSxbMCwxLCIwIl0sWzEsMSwiSV4wIl0sWzIsMSwiSV4xIl0sWzMsMSwiSV4yIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDNdLFszLDJdLFsyLDRdLFs1LDZdLFs2LDddLFs3LDhdLFs4LDldLFswLDUsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsNiwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMyw3XSxbMiw4XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	0 & A & 0 & 0 & \cdots \\
+	0 & {I^0} & {I^1} & {I^2} & \cdots
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-4, to=1-5]
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=2-2, to=2-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow[from=2-4, to=2-5]
+	\arrow[Rightarrow, no head, from=1-1, to=2-1]
+	\arrow[hook, from=1-2, to=2-2]
+	\arrow[from=1-3, to=2-3]
+	\arrow[from=1-4, to=2-4]
+\end{tikzcd}\]
+which is an isomorphism on cohomology. This motivates the following definition.
+\begin{definition}
+	Fix an abelian category $\mc A$. Then a morphism $A^\bullet\to B^\bullet$ is a \textit{quasi-isomorphism} if and only if it induces an isomorphism on cohomology.
+\end{definition}
+It turns out that any two injective resolutions for $A$ are quasi-isomorphic, but this takes some care.
+\begin{proposition} \label{prop:inj-res-are-homotopic}
+	Fix an abelian category $\mc A$. Given injective resolutions $0\to I^\bullet$ and $0\to J^\bullet$ of an object $A\in\mc A$, they are chain homotopic.
+\end{proposition}
+\begin{proof}
+	The main difficulty is constructing some morphism $I^\bullet\to J^\bullet$. This is done using the injectivity. Consider the following diagram.
+	% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIkEiXSxbMiwwLCJJXjAiXSxbMywwLCJJXjEiXSxbNCwwLCJJXjIiXSxbNSwwLCJcXGNkb3RzIl0sWzAsMSwiMCJdLFsxLDEsIkEiXSxbMiwxLCJKXjAiXSxbMywxLCJKXjEiXSxbNCwxLCJKXjIiXSxbNSwxLCJcXGNkb3RzIl0sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzQsNV0sWzYsN10sWzcsOF0sWzgsOV0sWzksMTBdLFsxMCwxMV0sWzEsNywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & A & {I^0} & {I^1} & {I^2} & \cdots \\
+		0 & A & {J^0} & {J^1} & {J^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-5, to=2-6]
+		\arrow[Rightarrow, no head, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	Because $J^0$ is injective, the inclusion $A\subseteq I^0$ allows us to extend $A\to J^0$ to a map $I^0\to J^0$ commuting, so we get to extend this as follows.
+	% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIkEiXSxbMiwwLCJJXjAiXSxbMywwLCJJXjEiXSxbNCwwLCJJXjIiXSxbNSwwLCJcXGNkb3RzIl0sWzAsMSwiMCJdLFsxLDEsIkEiXSxbMiwxLCJKXjAiXSxbMywxLCJKXjEiXSxbNCwxLCJKXjIiXSxbNSwxLCJcXGNkb3RzIl0sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzQsNV0sWzYsN10sWzcsOF0sWzgsOV0sWzksMTBdLFsxMCwxMV0sWzEsNywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw4XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & A & {I^0} & {I^1} & {I^2} & \cdots \\
+		0 & A & {J^0} & {J^1} & {J^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-5, to=2-6]
+		\arrow[Rightarrow, no head, from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+	\end{tikzcd}\]
+	We now continue this process. Namely, we have an inclusion $I^0/A\subseteq I^1$, so we can extend the map $I^0/A\to J^1$ to a map $I^1\to J^1$ to make the following diagram commute.
+	% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIkEiXSxbMiwwLCJJXjAiXSxbMywwLCJJXjEiXSxbNCwwLCJJXjIiXSxbNSwwLCJcXGNkb3RzIl0sWzAsMSwiMCJdLFsxLDEsIkEiXSxbMiwxLCJKXjAiXSxbMywxLCJKXjEiXSxbNCwxLCJKXjIiXSxbNSwxLCJcXGNkb3RzIl0sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzQsNV0sWzYsN10sWzcsOF0sWzgsOV0sWzksMTBdLFsxMCwxMV0sWzEsNywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw4XSxbMyw5XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & A & {I^0} & {I^1} & {I^2} & \cdots \\
+		0 & A & {J^0} & {J^1} & {J^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-5, to=2-6]
+		\arrow[Rightarrow, no head, from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+	\end{tikzcd}\]
+	We can now continue this process inductively.
+
+	Repeating this process, we also get a map $J^\bullet\to I^\bullet$ again induced by $\id_A\colon A\to A$. Composing our two morphisms of complexes and subtracting out the identity complex morphism, we want to show that any map of complexes looking like
+	% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIkEiXSxbMiwwLCJJXjAiXSxbMywwLCJJXjEiXSxbNCwwLCJJXjIiXSxbNSwwLCJcXGNkb3RzIl0sWzAsMSwiMCJdLFsxLDEsIkEiXSxbMiwxLCJJXjAiXSxbMywxLCJJXjEiXSxbNCwxLCJJXjIiXSxbNSwxLCJcXGNkb3RzIl0sWzAsMV0sWzEsMiwiZF57LTF9Il0sWzIsMywiZF4wIl0sWzMsNCwiZF4xIl0sWzQsNSwiZF4yIl0sWzYsN10sWzcsOCwiZF57LTF9Il0sWzgsOSwiZF4wIl0sWzksMTAsImReMSJdLFsxMCwxMSwiZF4yIl0sWzEsNywiMCIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw4LCJmXjAiXSxbMyw5LCJmXjEiXSxbNCwxMCwiZl4yIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & A & {I^0} & {I^1} & {I^2} & \cdots \\
+		0 & A & {I^0} & {I^1} & {I^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow["{d^{-1}}", from=1-2, to=1-3]
+		\arrow["{d^0}", from=1-3, to=1-4]
+		\arrow["{d^1}", from=1-4, to=1-5]
+		\arrow["{d^2}", from=1-5, to=1-6]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{d^{-1}}", from=2-2, to=2-3]
+		\arrow["{d^0}", from=2-3, to=2-4]
+		\arrow["{d^1}", from=2-4, to=2-5]
+		\arrow["{d^2}", from=2-5, to=2-6]
+		\arrow["0"', no head, from=1-2, to=2-2]
+		\arrow["{f^0}", from=1-3, to=2-3]
+		\arrow["{f^1}", from=1-4, to=2-4]
+		\arrow["{f^2}", from=1-5, to=2-5]
+	\end{tikzcd}\]
+	will have a chain homotopy with $0$. We now go construct our chain homotopy. Well, we simply define $h^0=0$, and then we define $h^1\colon I^1\to I^0$ by extending the map $I^0/A\to J^0$ by the inclusion $I^0/A\to I^1$.
+
+	We now continue the process inductively. For example, having $h^1$, we extend the map $I^1/I^0\to I^1$ given by $f^1-dh^1$ by the inclusion $I^1/I^0\to I^2$ to give a map $h^2\colon I^2\to I^1$ by our injectivity. This process will now work in general to complete the definition of our chain homotopy, which shows that we are in fact inducing the zero morphism on cohomology.
+\end{proof}
+
+\subsection{Right-Derived Functors}
+We are now reedy to define right-derived functors.
+\begin{definition}[right-derived functor]
+	Fix a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories, where $\mc A$ has enough injectives. Then we define the \textit{right-derived functor} $R^iF\colon\mc A\to\mc B$ by taking any object $A\in\mc A$, forming an injective resolution $A\to I^\bullet$ and computing $R^iF\coloneqq H^i(FI^\bullet)$.
+\end{definition}
+One ought to check that this construction is functorial and so on, but we won't bother with these checks.
+
+Here are some facts about right-derived functors, which we mostly won't prove.
+\begin{proposition}
+	Fix a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories, where $\mc A$ has enough injectives. Fix $A\in\mc A$.
+	\begin{listalph}
+		\item For $i<0$, we have $R^iF=0$.
+		\item The functors $R^iF$ are additive, and they are independent of the choice of injective resolution up to some sufficiently canonical isomorphism.
+		\item We have $R^0F=F$.
+		\item If $I$ is injective, then $R^iF=0$ for $i>0$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item This is by definition of the complex we are taking cohomology of.
+		\item The fact that the injective resolutions do not change $R^iF$ is by \Cref{prop:inj-res-are-homotopic}. Additivity follows from an argument about extending the addition of two morphisms, as discussed in \Cref{prop:inj-res-are-homotopic}.
+		\item Applying $F$ to
+		\[0\to A\to I^0\to I^1\]
+		grants
+		\[0\to FA\to FI^0\to FI^1,\]
+		so $R^0F(A)=H^0(FI^\bullet)=A$.
+		\item Use the injective resolution
+		\[0\to I\to I\to0\to0\to\cdots\]
+		of $I$, so we are computing the cohomology of
+		\[0\to FI\to0\to0\to\cdots,\]
+		so we do indeed vanish in higher degree.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Lastly, here is our main result.
+\begin{theorem} \label{thm:les}
+	Fix a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories, where $\mc A$ has enough injectives. Given an exact sequence
+	\[0\to A'\to A\to A''\to0,\]
+	there is a long exact sequence in cohomology given as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMCwwLCIwIl0sWzEsMCwiUl4wRihBJykiXSxbMywwLCJSXjBGKEEnJykiXSxbMiwwLCJSXjBGKEEpIl0sWzEsMSwiUl4xRihBJykiXSxbMiwxLCJSXjFGKEEpIl0sWzMsMSwiUl4xRihBJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDNdLFszLDJdLFsyLDRdLFs0LDVdLFs1LDZdLFs2LDddXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {R^0F(A')} & {R^0F(A)} & {R^0F(A'')} \\
+		& {R^1F(A')} & {R^1F(A)} & {R^1F(A'')} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	In fact, this construction is functorial in the short exact sequence.
+\end{theorem}
+\begin{proof}
+	It turns out that one can turn our short exact sequence into a short exact sequence of injective resolutions by some technical lemma and then take cohomology, using \Cref{prop:les-from-ses-complex}. Lastly, one can check that a morphism of short exact sequences induces a morphism of the long exact sequences by using the functoriality of the Snake lemma, using \Cref{prop:les-from-ses-complex} once more.
+\end{proof}
+Injective objects are somewhat hard to handle, so we introduce acyclic resolutions.
+\begin{definition}[acyclic]
+	Fix a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories, where $\mc A$ has enough injectives. An object $I\in\mc A$ is \textit{acyclic} if and only if $R^iF(I)=0$ for all $i>0$.
+\end{definition}
+\begin{proposition}
+	Fix a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories, where $\mc A$ has enough injectives. For $A\in\mc A$, we can compute cohomology using an acyclic resolution of $A$ instead of an injective one.
+\end{proposition}
+\begin{remark}
+	\Cref{thm:les} essentially says that $\left\{R^iF\right\}_{i\ge0}$ is a $\delta$-functor. In fact, our right-derived functors are ``universal,'' which means that any other $\delta$-functor $\left(T^i,\delta^i\right)$ with a natural transformation $R^0F\Rightarrow T^0$ can extend this natural transformation uniquely to a full morphism of the $\delta$-functors.
+\end{remark}
+
+\end{document}
