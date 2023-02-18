@@ -1,0 +1,69 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 17}
+
+The next two classes (Wednesday and Friday) will be recorded and posted online.
+
+\subsection{Deterministic Solovay--Strassen}
+Here is our main theorem, which tells us that the Solovay--Strassen primality test can be made deterministic.
+\begin{theorem} \label{thm:miller}
+	Suppose that $q$ is an odd integer which is not prime. Assuming GRH, then there exists $a\ll(\log q)^2$ such that
+	\[\left(\frac aq\right)\not\equiv a^{(q-1)/2}\pmod q.\]
+\end{theorem}
+We will require the following result.
+\begin{proposition} \label{prop:get-subgroup-from-small}
+	Let $q$ be an odd integer. Given a subgroup $A\subseteq(\ZZ/q\ZZ)^\times$. Assuming GRH, there exists an absolute constant $c$ such that
+	\[\left\{[k]\in(\ZZ/n\ZZ)^\times:k\le c(\log q)^2\right\}\subseteq A\]
+	implies $A=(\ZZ/q\ZZ)^\times$.
+\end{proposition}
+One can quickly prove \Cref{thm:miller} from \Cref{prop:get-subgroup-from-small}.
+\begin{proof}[Proof of \Cref{thm:miller}]
+	Indeed, the set
+	\[A\coloneqq\left\{a\in(\ZZ/q\ZZ)^\times:\left(\frac aq\right)\not\equiv a^{(n-1)/2}\pmod q\right\}\]
+	is a subgroup of $(\ZZ/q\ZZ)^\times$. Because $q$ is not prime, we know that $A\ne(\ZZ/q\ZZ)^\times$, so it follows from \Cref{prop:get-subgroup-from-small} that $A$ does not contain all $[k]\in(\ZZ/q\ZZ)^\times$ such that $k\le c(\log q)^2$. The conclusion follows.
+\end{proof}
+We now attack \Cref{prop:get-subgroup-from-small}.
+\begin{proof}[Proof of \Cref{prop:get-subgroup-from-small}]
+	Suppose for the sake of contradiction that $A\ne(\ZZ/q\ZZ)^\times$. Now, the quotient $(\ZZ/q\ZZ)^\times/A$ is nontrivial and abelian, so it has some nonzero character. Pulling this character to $(\ZZ/q\ZZ)^\times$, we have a Dirichlet character $\chi\pmod q$ such that
+	\[\chi(k)=1\]
+	for each $0\le k\le c(\log q)^2$ coprime to $n$.
+
+	As in the proof of the Prime number theorem, we want to consider the infinite sum
+	\[\sum_{n\le x}\Lambda(n)\chi(n)=\frac1{2\pi i}\int_{\op{Re}s=c}\left(-\frac{L'(s,\chi)}{L(s,\chi)}\right)x^s\frac{ds}s\]
+	and shift the contour over to the left. To do this, we apply smoothing $\psi$ to get a smooth function compactly supported on $[1/4,3/4]$. Arguing as in Dirichlet's theorem, we see
+	\[\sum_{n\ge0}\Lambda(n)\chi(n)\psi\left(\frac nx\right)=\frac1{2\pi i}\int_{\op{Re}s=2}\left(-\frac{L'(s,\chi)}{L(s,\chi)}\right)(\mc M\psi)(s)x^s\,ds.\]
+	Shifting the contour is somewhat delicate, but it can be done similarly as in our proof of the Prime number theorem. This gives
+	\[\sum_{n\ge0}\Lambda(n)\chi(n)\psi\left(\frac nx\right)=-\sum_{L(\rho,\chi)=0}(\mc M\psi)(\rho_\chi)x^{\rho_\chi}\]
+	plus some smaller error terms. By GRH, we may assume that all the roots lie on $\op{Re}s=\frac12$, so this is bounded (up to a constant) by
+	\[\sqrt x\log q.\]
+	Notably, the number of zeroes does not increase very much, especially in comparison to the rapid decay of $\mc M\psi$. As such, we see
+	\[x\ll\left|\sum_{n\ge0}\Lambda(n)\chi(n)\psi\left(\frac nx\right)\right|\ll\sqrt x\log q,\]
+	so $x\ll(\log q)^2$. However, setting $x=c(\log q)^2$ for $c$ large enough will break this bound, which is our contradiction.
+\end{proof}
+
+\subsection{Imprimitive Characters}
+Let's talk a little more about our characters.
+\begin{definition}[conductor] \nirindex{imprimitive}
+	Fix a Dirichlet character $\chi\pmod q$. Then the \textit{conductor} $f(\chi)$ is the minimal period of $\chi$ restricted $\{n\in\ZZ:\gcd(n,q)=1\}$. If $f(\chi)\ne q$, then $\chi$ is said to be \textit{imprimitive}.
+\end{definition}
+Roughly speaking, one can take characters and reduce them to the primitive case by pretending they are Dirichlet characters modulo their conductor.
+\begin{definition}[induces]
+	Fix a Dirichlet character $\chi\pmod q$ with conductor $f$. Then the Dirichlet character ``$\chi\pmod f$'' is primitive (by construction) and is said to \textit{induce} $\chi\pmod q$.
+\end{definition}
+\begin{example}
+	The principal Dirichlet characters are induced by the constantly $1$ character.
+\end{example}
+\begin{remark}
+	The point is that a Dirichlet character $\chi\pmod q$ induced by a primitive Dirichlet character $\chi'\pmod f$ has $L$-function given by
+	\[L(s,\chi')=L(s,\chi)\prod_{\substack{p\nmid f\\p\mid q}}\frac1{1-\chi'(p)p^{-s}}.\]
+	Note that these finitely many Euler factors do not add any zeroes or poles or similar.
+\end{remark}
+\begin{remark}
+	Under our philosophy that the real characters are the hard ones. By the Chinese remainder theorem, it suffices to understand characters modulo prime powers $p^\nu$. If $p$ is odd, then $\left(\ZZ/p^\nu\ZZ\right)^\times$ is cyclic, so the only real characters are either principal or is $\left(\frac\bullet p\right)$ depending on if the generator $g\in\left(\ZZ/p^\nu\ZZ\right)^\times$ gets sent to $-1$ or $1$. If $p=2$, then $\left(\ZZ/2^\nu\ZZ\right)\cong\langle-1\rangle\times\langle5\rangle=\ZZ/2\ZZ\times\ZZ/2^{\nu-2}\ZZ$ for $\nu\ge2$, and we can decompose this as one might expect. Namely, there is one modulo $4$ and two modulo $8$. 
+\end{remark}
+
+\end{document}
