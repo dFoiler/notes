@@ -1,0 +1,107 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 24}
+
+Today we finish the proof of \Cref{thm:dimension-bound-cohom}.
+
+\subsection{Finishing Dimension-Bounding Cohomology}
+We begin by proving the following result.
+\cohomcolimit*
+\noindent For this we will want the following result.
+\begin{lemma}
+	There are functorial injective resolutions $\op{Inj}\colon\mathrm{Ab}_X\to\mathrm{Kom}(\mathrm{Ab}_X)$.
+\end{lemma}
+\begin{proof}
+	We have shown that every object produces some injective resolution. The difficulty here lies in the functoriality of the morphisms between our injective resolutions. Roughly speaking, if one goes back through the proof of having enough injectives, then everything is functorial at every step, so we are okay building these resolutions in a functorial manner.
+\end{proof}
+\begin{lemma}
+	The categories $\mathrm{Ab}_X$ and $\mathrm{Mod}_{\OO_X}$ are Grothendieck abelian categories. In other words, directed colimits exist and are exact.
+\end{lemma}
+\begin{proof}
+	Roughly speaking, we must show that a directed system of exact sequences of sheaves
+	\[0\to\mc F_\alpha'\to\mc F_\alpha\to\mc F''_\alpha\to0\]
+	produces an exact sequence
+	\[0\to\colim\mc F'_\alpha\to\colim \mc F_\alpha\to\colim\mc F''_\alpha\to0.\]
+	I think one can check this stalk-locally because colimits commute with taking stalks.
+\end{proof}
+\begin{lemma}
+	Fix a Noetherian topological space $X$. If $\{\mc F_\alpha\}$ is a directed system of flasque sheaves, then the colimit is also flasque.
+\end{lemma}
+\begin{proof}
+	One can just check this directly. One can check that the presheaf
+	\[\mc L\colon U\mapsto\colim\mc F_\alpha(U)\]
+	is in fact a sheaf because our colimit is directed, and our space is directed. Thus, because colimits commute with cokernels, the surjectivity of the restriction maps commutes with the colimit.
+
+	Let's show that our presheaf $\mc L$ is in a sheaf.
+	\begin{itemize}
+		\item Identity: fix sections $a,b\in\mc L(U)$ and an open cover $\{U_\beta\}$ of $U$ such that $a|_{U_\beta}=b|_{U_\beta}$ vanishes for each $U_\beta$. We must show that $a$ vanishes. Well, $X$ is Noetherian, so every open subset is quasicompact, so we may replace our open cover with a finite one $\{U_i\}_{i=1}^n$.
+
+		Now, $a|_{U_i}=b|_{U_i}$ for each $i$. In fact, because we are in the colimit, we can find some $\alpha_i$ such that $a|_{U_i}=0$ in merely $\mc F_{\alpha_i}(U)$. Taking some $\alpha$ exceeding all the $\alpha_i$, we see that $a|_{U_i}=0$ for each $i$ in $\mc F_\alpha(U)$ (again, because are just in a colimit), so $a=0$ in $\mc F_\alpha(U)$ because $\mc F_\alpha$ is a sheaf.
+		\item The gluability condition now proceeds as usual. Namely, given some local conditions, we can glue up in some fixed $\mc F_\alpha$ and then use the above identity axiom to check that this works on all local conditions. We omit the details.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	One can use the above result to show that the infinite direct sum of flasque sheaves is a flasque sheaf by taking a direct colimit over the finite direct sums.
+\end{remark}
+We are now ready to show \Cref{lem:cohom-colimit}.
+\begin{proof}[Proof of \Cref{lem:cohom-colimit}]
+	Let the directed set by $\lambda$ so that $\mc F_\bullet$ is really a functor $\lambda\to\mathrm{Ab}_X$. Then we get injective resolutions
+	\[\lambda\xrightarrow{\mc F_\bullet}\mathrm{Ab}_X\xrightarrow{\op{Inj}}\mathrm{Kom}(\mathrm{Ab}_X).\]
+	Taking the colimit of the produced injective resolution term-wise produces still an exact flasque resolution: it's exact because taking directed colimits is exact, and it's flasque because the directed colimit of flasque sheaves remains flasque. Computing cohomology with this injective resolution will complete the proof because taking global sections commutes with taking directed colimits.
+
+	Let's see this more explicitly. For each $\alpha\in\lambda$, we get some injective resolution
+	\[0\to\mc F_\alpha\to\mc I^0_\alpha\to\mc I^1_\alpha\to\mc I^2_\alpha\to\cdots,\]
+	and then we produced an injective resolution
+	\[0\to\colim\mc F_\alpha\to\colim\mc I^0_\alpha\to\colim\mc I^1_\alpha\to\colim\mc I^2_\alpha\to\cdots.\]
+	Now, taking the global sections of these sheaves after colimits is okay because we showed that directed colimits commutes with taking sections above. Thus, we see global sections has
+	\[0\to\colim\mc F_\alpha(U)\to\colim\mc I^0_\alpha(U)\to\colim\mc I^1_\alpha(U)\to\colim\mc I^2_\alpha(U)\to\cdots,\]
+	and we can now compute cohomology here to finish.
+\end{proof}
+We now show \Cref{thm:dimension-bound-cohom}.
+\dimboundcohom*
+\begin{proof}
+	We show this in steps.
+	\begin{enumerate}
+		\item To begin, we reduce to the case where $X$ is irreducible, by induction. As such, suppose that $X=Z\cup Y$ where $Z$ is irreducible and closed, where we know the statement for $Y$. The point is that we can set $U\coloneqq X\setminus Z$ and use extension by zero. Let $j\colon U\subseteq X$ and $i\colon Z\subseteq X$ be the embeddings, and then any abelian sheaf $\mc F$ produces an exact sequence
+		\[0\to j_!j^*\mc F\to\mc F\to i_*i^*\mc F\to0,\]
+		which we can see is exact by checking stalk-locally. (The important point is that each $x\in X$ lies in exactly one of $Z$ or $U$.) We now want to hit this with the long exact sequence and use \Cref{lem:cohom-colimit}. The main claim is that
+		\[H^\bullet(X,j_!j^*\mc F)\stackrel?=H^\bullet(\overline U,j_!j^*\mc F),\]
+		which will complete the proof because $\overline U$ has fewer irreducible components than $X$, and we can use the long exact sequence above to finish the needed vanishing. Well, to see the claim, let $k\colon\overline U\subseteq X$ be the inclusion, and it suffices to show that $k_*k^*$ sends injective resolutions to flasque resolutions so that we can compute cohomology in the usual way via our injectives.
+
+		Well, taking $k_*$ is certainly sending flasque sheaves to flasque sheaves, so it suffices to check that $k^*$ sends flasque sheaves to flasque sheaves. For this, we see that
+		\[k^*\mc I(V)=\colim_{V'\supseteq V}\mc I(V')\]
+		because we know that taking colimits here is safe because this is a directed colimit. Thus, we can check that this is flasque more locally on our global sections, which is fine because taking colimits preserves surjectivity.
+
+		\item We now induct on dimension, assuming that $X$ is Noetherian. If $\dim X=0$, then being irreducible forces $X$ to be a single point, so taking global sections induces an equivalence of categories $\mathrm{Ab}_X\to\mathrm{Ab}$. This is exact, so all higher cohomology vanishes (namely, strictly after degree $0$), as needed.
+
+		Now for our induction, take $\dim X>0$, and fix $\mc F\in\mathrm{Ab}_X$. Set
+		\[B\coloneqq\bigcup_{U\subseteq X}\mc F(U),\]
+		and we let $\mc A$ be the set of finite subsets of $B$; note $\mc A$ is directed by inclusion. Now, for each $\alpha\in\lambda$, we let $\mc F_\alpha$ be the subsheaf of $\mc F$ generated by the finitely many sections in $\alpha$. More formally, for each $a\in B$, we see $a$ belongs to some $U_a\subseteq X$ and so induces a map
+		\[\underline\ZZ_{U_a}\to\mc F\]
+		by sending $1$ to $a$; the image here is the subsheaf generated by $a$. We can generalize this construction to arbitrary $\alpha\in\mc A$. Now, it suffices to show that each $\mc F_\alpha$ has vanishing cohomology by taking colimits over $\mc A$ to get up to $\mc F$.
+
+		Notably, for any $\alpha,\alpha'$ with $\alpha'\subseteq\alpha$, we have an exact sequence
+		\[0\to\mc F_{\alpha'}\to\mc F_\alpha\to\overline{\mc F}_{\alpha\setminus\alpha'}\to0,\]
+		where $\overline{\mc F}_{\alpha\setminus\alpha'}$ is some quotient of $\mc F_{\alpha\setminus\alpha'}$. Thus, by inducting on $|\alpha|$ (note that the quotient of $\mc F_{\alpha\setminus\alpha'}$ still has fewer generators), we may assume that $|\alpha|=1$.
+
+		Thus, we see that we may assume $\mc F$ is generated by a single section $a\in\mc F(U)$, which means that we have an exact sequence
+		\[0\to\mc K\to\ZZ_U\to\mc F\to0.\]
+		Notably, for each $x\in U$, we have an embedding $\mc K_x\subseteq\ZZ$ by taking stalks. Now, if $\mc K_x$ vanishes for all $x\in U$, then $\mc K$ itself will have to vanish because $\mc K$ is a sheaf. Otherwise, we can find the least positive integer $d$ such that $\mc R_x$ embeds into $d\ZZ\subseteq\ZZ=(\ZZ_U)_x$ for all $x$.
+
+		We claim that this $d$ is actually achieved. Well, we can find some small $V$ where $d\in\underline\ZZ$ will extend to a section on $\mc R$, so we claim that $\mc R|_V=d\underline\ZZ$. However, all the other stalks over $U$ are either vanishing or a subgroup of $d\underline\ZZ$, so we are forced to have equality by the minimality of $d$.
+
+		In total, our exact sequence now reads
+		\[0\to\mc R_v\to\mc R\to\mc R_{U\setminus V}\to0,\]
+		but irreducibility tells us that $\mc R_{U\setminus V}$ will have vanishing cohomology because it has smaller dimension. Thus, we are reduced to showing that $\underline\ZZ_U$ are going to have vanishing cohomology. But then we have the exact sequence
+		\[0\to\underline\ZZ_U\to\underline\ZZ\to\underline\ZZ_{X\setminus U}\to0.\]
+		The inductive hypothesis deals with $\underline\ZZ_{X\setminus U}$ as having smaller dimension, and $\underline\ZZ$ is flasque because it is a constant sheaf on an irreducible space! (Namely, all locally constant functions $V\to\ZZ$ must be constant because $V$ is irreducible.) Thus, $\underline\ZZ$ is going to have vanishing cohomology, so $\underline\ZZ_U$ has vanishing cohomology in large enough dimension, so we are done.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\end{document}
