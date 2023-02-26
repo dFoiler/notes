@@ -1,0 +1,401 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+In this chapter, we provide enough of the theory of entire functions in order to state and prove the Hadamard factorization theorem. Throughout this section, entire functions will be nonzero. We follow \cite[Chapter~5]{stein-complex-analysis}.
+
+\section{Counting Zeroes}
+It will be useful to bound the number of zeroes of a nonzero entire function, so we establish some notation.
+\begin{notation}
+	Fix a nonzero entire function $f\colon\CC\to\CC$. Then we let $Z_f(r)$ denote the multiset of complex numbers $z\in B(0,r)$ such that $f(z)=0$, counted with multiplicity. Additionally, we set $n_f(r)\coloneqq\#Z_f(r)$.
+\end{notation}
+\begin{remark} \label{rem:only-finite-zeroes}
+	If $f\colon\CC\to\CC$ is a nonzero entire function, then $n_f(r)$ is indeed finite: indeed, if $n_f(r)$ is infinite, then we claim $f=0$. To see this, we note $f$ has infinitely many zeroes in the compact set $\overline{B(0,r)}$, which has two cases.
+	\begin{itemize}
+		\item If $f$ has infinitely many distinct zeroes in $\overline{B(0,r)}$, then the zero-set of $f$ must have a limit point because it is an infinite subset of a compact set. But this implies $f=0$.
+		\item If $f$ has a zero $w$ of order infinity, then the Taylor expansion of $f$ around $w$ vanishes identically. It follows that $f$ vanishes in an open neighborhood of $w$, so $f$ has infinitely many zeroes, reducing to the previous case.
+	\end{itemize}
+\end{remark}
+We will shortly be able to roughly bound the number of zeroes of $f$ by the growth rate of $f$, but for the purpose of this section, we will not place constraints on the growth rate of $f$. To begin this counting, we pick up the following lemma.
+\begin{lemma} \label{lem:int-over-zeroes}
+	Fix a nonzero entire function $f\colon\CC\to\CC$ such that $f(0)\ne0$. For any $R>0$, we have
+	\[\int_0^Rn_f(r)\,\frac{dr}r=\sum_{\substack{f(z)=0\\|z|<R}}\log\left|\frac Rz\right|,\]
+	where the sum counts zeroes with multiplicity.
+\end{lemma}
+\begin{proof}
+	Note that the $f(0)\ne0$ hypothesis is included to ensure that the sum is well-defined. For each $z\in Z_f(R)$, we will use the indicator $1_{>|z|}(r)$ to indicate $z\in B(0,r)$. In particular, we compute
+	\begin{align*}
+		\int_0^Rn_f(r)\,\frac{dr}r &= \int_0^R\Bigg(\sum_{z\in Z_f(R)}1_{>|z|}(r)\Bigg)\,\frac{dr}r \\
+		&\stackrel*= \sum_{z\in Z_f(r)}\left(\int_0^R1_{>|z|}(r)\,\frac{dr}r\right) \\
+		&= \sum_{z\in Z_f(r)}\left(\int_{|z|}^R\frac{dr}r\right) \\
+		&= \sum_{z\in Z_f(r)}\log\left|\frac Rz\right|,
+	\end{align*}
+	which is what we wanted. Notably, we are able to switch the sum and integral in $\stackrel*=$ because the sum is finite by \Cref{rem:only-finite-zeroes}.
+\end{proof}
+As such, we are motivated to understand this summation of logarithms as a proxy to understand $n_f(r)$. This is the content of Jensen's theorem.
+\begin{theorem}[Jensen] \label{thm:jensen}
+	Fix a nonzero entire function $f\colon\CC\to\CC$ such that $f(0)\ne0$. Further, suppose $f$ does not vanish on $\del B(0,R)$ for some $R>0$. Then
+	\[\log|f(0)|=\sum_{\substack{f(z)=0\\|z|<R}}\log\left|\frac zR\right|+\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta.\]
+\end{theorem}
+\begin{proof}
+	This is essentially a consequence of the Cauchy integral formula. Again, note that $f(0)\ne0$ is required for the sum to make sense. Anyway, we proceed in steps to build up to the general case.
+	\begin{enumerate}
+		\item Suppose that $f$ does not vanish on $B(0,R)$ so that $f$ does not vanish on $\overline{B(0,R)}$. Here, the sum is empty, so we would like to show
+		\begin{equation}
+			\log|f(0)|\stackrel?=\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta. \label{eq:desired-no-vanish-jensen}
+		\end{equation}
+		The idea is to apply the Cauchy integral formula to a suitably defined logarithm of $f$. This logarithm will exist because $f$ is nonzero in our region.
+		
+		Quickly, we claim that $f$ does not vanish on $B(0,R+\varepsilon)$ for some $\varepsilon>0$. Indeed, suppose not. Then for each $n$, we can find $r_ne^{i\theta_n}\in B(0,R+1/n)$ such that $f(z_n)=0$. In particular, we see $R<r_n<R+1/n$ for each $n$, and $e^{i\theta_n}\in S^1$.
+		
+		Thus, $r_n\to R$ as $n\to\infty$, and having infinitely many elements $e^{i\theta_n}$ in the compact set $S^1$ forces the $\theta_n$ to have a subsequence $e^{i\theta_{n_k}}$ to converge to some $e^{i\theta}$. It follows that $r_{n_k}e^{i\theta_{n_k}}\to Re^{i\theta}$, so because $f^{-1}(\{0\})$ is closed, we see that $Re^{i\theta}$ lives in $f^{-1}(\{0\})$, so $f$ vanishes on some point in $\del B(0,R)$. This is a contradiction to the construction of $R$.
+
+		We now continue the proof with our $\varepsilon>0$ such that $f$ does not vanish $B(0,R+\varepsilon)$. Because $f$ does not vanish, and $B(0,R+\varepsilon)$ is simply connected, we can use \Cref{lem:no-vanish-has-log} to define $g$ so that $g$ is holomorphic and satisfies $f(z)=\exp(g(z))$.
+
+		We now apply the Cauchy integral formula to $g(z)$. Let $\gamma_R$ be the path $\theta\mapsto Re^{i\theta}$ so that the Cauchy integral formula grants
+		\begin{align*}
+			g(0) &= \frac1{2\pi i}\oint_{\gamma_R}\frac{g(z)}z\,dz \\
+			&= \frac1{2\pi i}\int_0^{2\pi}\frac{g\left(Re^{i\theta}\right)}{Re^{i\theta}}\cdot iRe^{i\theta}\,d\theta \\
+			&= \frac1{2\pi}\int_0^{2\pi}g\left(Re^{i\theta}\right)\,d\theta.
+		\end{align*}
+		Now, we see $\log|f(z)|=\log|\exp(g(z))|=\log\exp(\op{Re}g(z))=\op{Re}g(z)$, so taking real parts of the above equation yields \eqref{eq:desired-no-vanish-jensen}, as desired.
+
+		\item Suppose $f(z)=z-w$ for some nonzero $w\in B(0,R)$. Notably, $f$ has only the root $w$, so after some rearranging, we would like to show
+		\[0\stackrel?=\frac1{2\pi}\int_0^{2\pi}\log\left|e^{i\theta}-w/R\right|\,d\theta.\]
+		(Notably, $\log|f(0)|=w$.) We now would like to reduce to the previous case; set $\alpha\coloneqq R/w$ so that $|\alpha|>1$. Now, we send $\theta\mapsto-\theta$, so we see
+		\[\frac1{2\pi}\int_0^{2\pi}\log\left|e^{i\theta}-1/\alpha\right|\,d\theta=\int_0^{2\pi}\log\left|e^{-i\theta}-1/\alpha\right|\,d\theta=\frac1{2\pi}\int_0^{2\pi}\log\left|1-e^{i\theta}/\alpha\right|\,d\theta,\]
+		where we have factored out $\log\left|e^{-i\theta}\right|=\log1=0$.
+
+		Thus, we set $g(z)\coloneqq 1-z/\alpha$ so that $g$ is entire but does not vanish on $\overline{B(0,1)}$ so that the previous case implies
+		\[0=\log1=\log|g(z)|=\frac1{2\pi}\int_0^{2\pi}\log\left|g\left(e^{i\theta}\right)\right|\,d\theta=\frac1{2\pi}\int_0^{2\pi}\log\left|1-e^{i\theta}/\alpha\right|\,d\theta,\]
+		which is what we wanted.
+
+		\item To set up the finish of the proof, suppose that the theorem is true for the nonzero entire functions $f_1,f_2\colon\CC\to\CC$. Then we claim that the theorem is true for $f_1f_2$. Indeed, we see $(f_1f_2)(0)\ne0$ implies $f_1(0),f_2(0)\ne0$. Further, for any $R>0$, we see $f_1f_2$ not vanishing on $\del B(0,R)$ implies that $f_2f_2$ does not vanish on $\del B(0,R)$ also.
+
+		Thus, the theorem hypotheses hold for both $f_1$ and $f_2$ if they hold for $f_1f_2$. Now, for $i\in\{1,2\}$, let $Z_i(R)$ denote the multiset zeroes of $f_i$ in $B(0,R)$ counted with multiplicity. Then the multiset $Z_1(R)\cup Z_2(R)$ is the multiset of zeroes of $f_1f_2$ counted with multiplicity. Now, applying the theorem statement to both $f_1$ and $f_2$, we compute
+		\begin{align*}
+			\log|(f_1f_2)(0)| &= \log|f_1(0)|+\log|f_2(0)| \\
+			&= \sum_{z\in Z_1(R)}\log\left|\frac zR\right|+\frac1{2\pi}\int_0^{2\pi}\log\left|f_1\left(Re^{i\theta}\right)\right|\,d\theta \\
+			&\qquad+\sum_{z\in Z_2(R)}\log\left|\frac zR\right|+\frac1{2\pi}\int_0^{2\pi}\log\left|f_2\left(Re^{i\theta}\right)\right|\,d\theta \\
+			&= \sum_{z\in Z_1(R)\cup Z_2(R)}\log\left|\frac zR\right|+\frac1{2\pi}\int_0^{2\pi}\log\left|(f_1f_2)\left(Re^{i\theta}\right)\right|\,d\theta,
+		\end{align*}
+		so the theorem statement also holds for $f_1f_2$. This is what we wanted.
+
+		\item We now finish the proof in the general case. We define $g\colon\CC\setminus Z_f(R)\to\CC$ by
+		\[g(z)\coloneqq\frac{f(z)}{\prod_{w\in Z_f(R)}(z-w)}.\]
+		Now, the right-hand side will only have removable singularities at each element of $Z_f(R)$, so in fact we may extend analytically $g$ to all $\CC$ so that
+		\[f(z)=g(z)\prod_{w\in Z_f(R)}(z-w).\]
+		By the first step, the theorem statement holds for $g$, and by the second step, the theorem statement holds for each $z-w$. (Note $w\ne0$ because $0\notin Z_f(R)$ because $f(0)\ne0$.) Thus, by the previous step, we may inductively take the product to show that the theorem statement holds for $f$, which is what we wanted.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{corollary} \label{cor:roughly-count-zeroes}
+	Fix a nonzero entire function $f\colon\CC\to\CC$ such that $f(0)\ne0$. For any $R>0$ such that $f$ does not vanish on $\del B(0,R)$, we have
+	\[\int_0^Rn_f(r)\,\frac{dr}r=-\log|f(0)|+\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta.\]
+\end{corollary}
+\begin{proof}
+	By \Cref{lem:int-over-zeroes} and \Cref{thm:jensen}, we see
+	\[\int_0^Rn_f(r)\,\frac{dr}r=\sum_{\substack{f(z)=0\\|z|<R}}\log\left|\frac Rz\right|=-\log|f(0)|+\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta,\]
+	which is what we wanted.
+\end{proof}
+
+\section{Functions of Bounded Order}
+Here is the central definition of this section.
+\begin{definition}[order]
+	A function $f\colon\CC\to\CC$ has \textit{order bounded by $\rho$} for some $\rho>0$ if and only if there are $A,B>0$ such that
+	\[|f(z)|\le Ae^{B|z|^\rho}.\]
+	Then we define the \textit{order} $\rho(f)$ as the infimum of the real numbers $\rho\ge0$ such that $f$ has order bounded by $\rho$. Note that we are permitting $\rho(f)=+\infty$.
+\end{definition}
+Here are some starting examples and remarks.
+\begin{example}
+	Any polynomial $f(z)\in\CC[z]$ has order $0$. Indeed, write $f(z)=\sum_{k=0}^na_kz^k$ so that any $\rho>0$ has
+	\[\lim_{|z|\to\infty}|f(z)|e^{-|z|^\rho}\le\sum_{k=0}^n\lim_{r\to\infty}a_kr^ke^{-r^\rho}=\sum_{k=0}^n\lim_{r\to\infty}\frac{a_kr^{k/\rho}}{e^r}=0,\]
+	where the last equality holds by, say, L'H\^opital's rule. Thus, $z\mapsto|f(z)|e^{-|z|^\rho}$ is a bounded function on $\CC$ (there exists $R$ such that it is bounded by $1$ for $|z|>R$, and the continuous function is certainly bounded on the compact set $\overline{B(0,R)}$), so we can find $A>0$ such that $|f(z)|\le Ae^{-|z|^\rho}$ for any $z\in\CC$. It follows that $f$ has order bounded by $\rho$ for any $\rho>0$, so $\rho(f)=0$.
+\end{example}
+\begin{example} \label{ex:exp-orders}
+	For any $A,B,\rho>0$, the function $f(z)\coloneqq Ae^{B|z|^\rho}$ has order $\rho$. We now claim that $f$ has order bounded by $\rho'$ if and only if $\rho'\ge\rho$, which will finish the proof. This has the following components.
+	\begin{itemize}
+		\item If $\rho'=\rho$, then the inequality $|f(z)|\le Ae^{B|z|^\rho}$ tells us that $f$ has order bounded by $\rho'$.
+		\item For any $\rho'>\rho$, we claim that $f$ has order bounded by $\rho'$. Indeed, we see that
+		\[\lim_{|z|\to\infty}|f(z)|e^{-|z|^{\rho'}}=A\exp\left(\lim_{|z|\to\infty}B|z|^\rho\cdot\lim_{|z|\to\infty}\left(1-|z|^{\rho-\rho'}\right)\right)=0\]
+		because $|z|^\rho\to\infty$ as $|z|\to\infty$. Thus, $|f(z)|e^{-|z|^{\rho'}}$ is bounded, so we can find $M>0$ such that $|f(z)|\le Me^{|z|^{\rho'}}$ for any $z\in\CC$.
+		\item For any $0<\rho'<\rho$, we claim that $f$ does not have order bounded by $\rho'$. Indeed, suppose for the sake of contradiction that we have $A',B'>0$ such that $|f(z)|\le A'e^{B'|z|^{\rho'}}.$ Then the function $e^{B|z|^\rho-B'|z|^{\rho'}}$ is bounded above by $A'/A$, but
+		\[\lim_{|z|\to\infty}e^{B|z|^\rho-B'|z|^{\rho'}}=\exp\left(\lim_{|z|\to\infty}B|z|^{\rho'}\cdot\lim_{|z|\to\infty}\left(1-(B/B')|z|^{\rho'-\rho}\right)\right)=+\infty.\]
+	\end{itemize}
+\end{example}
+\begin{remark} \label{rem:order-bounded-by-is-trans}
+	For any function $f\colon\CC\to\CC$, if $f$ has order bounded by $\rho$, then $f$ has order bounded by $\rho'$ for any $\rho'>\rho$. Indeed, we are granted $A,B>0$ such that $|f(z)|\le Ae^{B|z|^\rho}$, so it suffices to find constants $A',B'>0$ such that $Ae^{B|z|^\rho}\le A'e^{B'|z|^{\rho'}}$. But $Ae^{B|z|^\rho}$ has order bounded by $\rho'$ by \Cref{ex:exp-orders}, so we are done.
+\end{remark}
+\begin{remark}
+	If $f$ has order bounded by $\alpha$, and $g$ has order bounded by $\beta$, then $fg$ has order bounded by $\max\{\alpha,\beta\}$. Without loss of generality, take $\alpha\ge\beta$. Now, $|g(z)|\le Ae^{B|z|^\beta}$ for some $A,B>0$, so \Cref{ex:exp-orders} implies that there exist $A',B'>0$ such that $|g(z)|\le A'e^{B'|z|^{\alpha}}$ because $\alpha\ge\beta$. But $f$ also has constants $A'',B''>0$ such that $|f(z)|\le A''e^{B''|z|^\alpha}$, so
+	\[|(fg)(z)|\le A'A''e^{(B'+B'')|z|^\alpha},\]
+	implying that $fg$ has order bounded by $\alpha$.
+\end{remark}
+\begin{remark} \label{rem:divide-by-z-keeps-order}
+	If the entire function $f\colon\CC\to\CC$ of order bounded by $\rho$ has a zero at $z=0$, then $g(z)\coloneqq f(z)/z$ still has order bounded by $\rho$. Indeed, we do know that there are $A,B>0$ such that $|f(z)|\le Ae^{B|z|^\rho}$ for $z\in\CC$. Now, $g(z)e^{-B|z|^\rho}$ is a continuous function and hence bounded by some constant $A'>0$ on $\overline{B(0,1)}$. However, $|z|>1$, we see
+	\[|g(z)|e^{-B|z|^\rho}\le|f(z)|e^{-B|z|^\rho}\le A.\]
+	Thus, we see $|g(z)|\le\max\{A,A'\}e^{B|z|^\rho}$, so $g$ has order bounded by $\rho$.
+\end{remark}
+It is a key fact, now, that we can count the number of zeroes of a function of bounded order.
+\begin{proposition} \label{prop:bound-zeroes-finite-order}
+	Fix a nonzero entire function $f\colon\CC\to\CC$ with order bounded by $\rho>0$. Then there exists a constant $C,D>0$ such that $n_f(R)\le Cr^\rho$ for $R>D$.
+\end{proposition}
+\begin{proof}
+	We would like to use \Cref{cor:roughly-count-zeroes}. We handle two cases.
+	\begin{enumerate}
+		\item Suppose $f(0)\ne0$ so that \Cref{cor:roughly-count-zeroes} applies. In particular, the key observation is that $n_f(r)$ is an increasing function. As such, we compute
+		\begin{align*}
+			\int_R^{2R}n_f(r)\,\frac{dr}r &= -\log|f(0)|+\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(2Re^{i\theta}\right)\right|\,d\theta \\
+			&\qquad-\left(-\log|f(0)|+\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta\right) \\
+			&= \frac1{2\pi}\int_0^{2\pi}\log\left|f\left(2Re^{i\theta}\right)\right|\,d\theta-\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta.
+		\end{align*}
+		However, because $|f(z)|\le Ae^{B|z|^\rho}$ for some $A,B>0$, we can upper-bound
+		\[\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(2Re^{i\theta}\right)\right|\,d\theta\le\frac1{2\pi}\int_0^{2\pi}\log\left|Ae^{BR^\rho}\right|\,d\theta=\log A+\frac{BR^\rho}{2\pi},\]
+		so it follows that
+		\[\int_R^{2R}n_f(r)\,\frac{dr}r\le\left|\frac1{2\pi}\int_0^{2\pi}\log\left|f\left(2Re^{i\theta}\right)\right|\,d\theta\right|+\left|\int_0^{2\pi}\log\left|f\left(Re^{i\theta}\right)\right|\,d\theta\right|\le2\log A+\frac {B\left(1+2^\rho\right)}{2\pi}R^\rho.\]
+		On the other hand, because $n_f$ is increasing, we can lower-bound
+		\[\int_R^{2R}n_f(r)\,\frac{dr}r\ge n_f(R)\int_R^{2R}\frac{dr}r=n_f(R)\log2.\]
+		In total, we see
+		\[n_f(R)R^{-\rho}\le\frac{2\log A}{\log 2}\cdot R^{-\rho}+\frac{B\left(1+2^\rho\right)}{2\pi}.\]
+		As $R\to\infty$, the right-hand side approaches $B\left(1+2^\rho\right)/2\pi$, so we can find some $D$ such that the right-hand side is less than or equal to $B\left(1+2^\rho\right)/\pi$ for $R>D$. Thus, $n_f(R)\le\frac{B\left(1+2^\rho\right)}{\pi}R^\rho$ for $R>D$, which is what we wanted.
+
+		\item We now reduce to the case where $f(0)\ne0$. Suppose $f$ has a zero order of $m$ at $0$. If $m=0$, then we are already done by the previous case. Otherwise, set $g(z)\coloneqq f(z)/z^m$, which has only a removable singularity at $z=0$ and thus extends to an entire function $g\colon\CC\to\CC$ such that $g(0)\ne0$ while $f(z)=z^mg(z)$. Note that $n_f(R)=m+n_g(R)$ for any $R>0$, and $g$ still has order bounded by $\rho$ by \Cref{rem:divide-by-z-keeps-order}.
+
+		It follows from the previous step that there are $C,D>0$ such that $R>D$ have
+		\[n_f(R)R^{-\rho}=mR^{-\rho}+n_g(R)R^{-\rho}=mR^{-\rho}+C.\]
+		Again, as $R\to\infty$, the right-hand side approaches $C$, so we can select $D'>0$ such that the right-hand side is less than or equal to $2C$. Thus, $n_f(R)\le2CR^\rho$ for $R>\max\{D,D'\}$, which finishes.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+Having a polynomial bound on the number of zeroes lets us bound sums with these zeroes.
+% \begin{notation}
+% 	Fix a nonzero entire function $f\colon\CC\to\CC$. Given a function $g\colon f^{-1}(\{0\})\to\CC$, we define
+% 	\[\sum_{f(z)=0}g(z)\coloneqq\lim_{R\to\infty}\sum_{z\in Z_f(R)}g(z).\]
+% 	Note that each sum is finite by \Cref{rem:only-finite-zeroes}.
+% \end{notation}
+\begin{corollary} \label{cor:bound-sum-of-zeroes}
+	Fix a nonzero entire function $f\colon\CC\to\CC$ of order bounded by $\rho>0$. Let $\{z_k\}_{k\in\NN}$ denote the nonzero zeroes of $f$. For any $\sigma>\rho$, the sum
+	\[\sum_{k=1}^\infty\frac1{|z_k|^\sigma}\]
+	converges. (Note that this sum may be finite.)
+\end{corollary}
+\begin{proof}
+	We use the dyadic decomposition. Because we are working with an infinite sum of positive numbers, it suffices to bound the sum from above. Now, from \Cref{prop:bound-zeroes-finite-order}, we see $n_f(R)\le CR^\rho$ for some $R>D$; by replacing $D$ with $2^{\ceil{\log D}}>D$ to no ill effect, we may assume that $D=2^d$ for some positive integer $d$. Thus, we write
+	\begin{align*}
+		\sum_{k=1}^\infty\frac1{|z_k|^\sigma} &= \sum_{z\in Z_f(D)\setminus\{0\}}\frac1{|z|^\sigma}+\lim_{R\to\infty}\sum_{\substack{f(z)=0\\|z|\ge D}}\frac1{|z|^\sigma} \\
+		&\le \sum_{z\in Z_f(D)\setminus\{0\}}\frac1{|z|^\sigma}+\sum_{k=d}^\infty\Bigg(\sum_{\substack{f(z)=0\\2^k\le|z|<2^{k+1}}}\frac1{|z|^\sigma}\Bigg) \\
+		&\le \sum_{z\in Z_f(D)\setminus\{0\}}\frac1{|z|^\sigma}+\sum_{k=d}^\infty\frac{n_f\left(2^{k+1}\right)}{2^{k\sigma}} \\
+		&\le \sum_{z\in Z_f(D)\setminus\{0\}}\frac1{|z|^\sigma}+C\sum_{k=d}^\infty\frac{2^{(k+1)\rho}}{2^{k\sigma}} \\
+		&\le \sum_{z\in Z_f(D)\setminus\{0\}}\frac1{|z|^\sigma}+2^\rho C\sum_{k=d}^\infty2^{k(\rho-\sigma)} \\
+		&\le \sum_{z\in Z_f(D)\setminus\{0\}}\frac1{|z|^\sigma}+2^\rho C\cdot\frac{2^{d(\rho-\sigma)}}{1-2^{\rho-\sigma}},
+	\end{align*}
+	which is indeed finite.
+\end{proof}
+
+\section{Elementary Factors}
+Hadamard's factorization theorem requires taking an infinite product of some special factors with prescribed zeroes. Here are those factors.
+\begin{definition}[elementary factor]
+	Given a nonnegative integer $n$, the \textit{elementary factor} $E_n(z)$ is given by
+	\[E_n(z)\coloneqq(1-z)e^{z+z^2/2+\cdots+z^n/n}.\]
+	In particular, $E_0(z)=1-z$.
+\end{definition}
+The proof of Hadamard's factorization theorem will roughly amount to combining \Cref{lem:no-vanish-has-log} with various bounds on elementary factors. As such, we take the time to establish the needed bounds on our elementary factors.
+\begin{lemma} \label{lem:elem-upper-bound}
+	Given a nonnegative integer $n$, we have $|1-E_n(z)|\le2e|z|^{n+1}$ if $|z|\le1/2$.
+\end{lemma}
+\begin{proof}
+	Because $|z|\le1/2$, we may use the power series to define $\log$. Thus, we see
+	\[E_n(z)=\exp\Bigg(\log(1-z)+\sum_{k=1}^n\frac{z^k}k\Bigg)=\exp\Bigg(-\sum_{k=1}^\infty\frac{z^k}k+\sum_{k=1}^n\frac{z^k}k\Bigg)=\exp\Bigg(\sum_{k>n}\frac{z^k}k\Bigg).\]
+	Now, for brevity, set $z'\coloneqq\sum_{k>n}z^k/k$. The bound on $z'$ we will need is
+	\[|z'|=\Bigg|z^{n+1}\sum_{k=0}^\infty\frac{z^k}{k+n+1}\Bigg|\le|z|^{n+1}\sum_{k=0}^\infty\frac{|z|^k}{k+n+1}\le|z|^{n+1}\sum_{k=0}^\infty\left(\frac12\right)^k=2|z|^{n+1}.\]
+	On the other hand, we see
+	\begin{align*}
+		|1-E_n(z)| &= |1-\exp(z')| \\
+		&= \Bigg|-\sum_{k=1}^\infty\frac{(z')^k}{k!}\Bigg| \\
+		&\le \sum_{k=1}^\infty\frac{|z'|^k}{k!} \\
+		&= \exp(|z'|)-1.
+	\end{align*}
+	However, $n\ge0$, so $|z'|\in[0,1]$. Thus, because $\exp$ is concave up, we see that
+	\[\exp(|z'|)-1\le(1-|z'|)(\exp(0)-1)+|z'|(\exp(1)-1)<e|z'|.\]
+	In total, we conclude $|1-E_n(z)|\le e|z'|\le2e|z|^{n+1}$.
+\end{proof}
+\begin{lemma} \label{lem:elem-lower-bound-small}
+	Given a nonnegative integer $n$, we have $|E_n(z)|\ge\exp\left(-2|z|^{n+1}\right)$ if $|z|\le1/2$.
+\end{lemma}
+\begin{proof}
+	As in the previous proof, $|z|\le1/2$ allows us to define $\log$ by power series so that
+	\[E_n(z)=\exp\Bigg(\sum_{k>n}\frac{z^k}k\Bigg).\]
+	Again, we set $z'\coloneqq\sum_{k>n}\frac{z^k}k$ for brevity and compute
+	\begin{align*}
+		|E_n(z)| &= |\exp(z')| \\
+		&= \exp(\op{Re}z') \\
+		&\ge \exp(-|z'|) \\
+		&= \exp\Bigg(-\sum_{k=n+1}^\infty\frac{|z|^k}{k}\Bigg) \\
+		&= \exp\Bigg(-|z|^{n+1}\sum_{k=0}\frac{|z|^k}{k+n+1}\Bigg) \\
+		&\ge \exp\Bigg(-|z|^{n+1}\sum_{k=0}(1/2)^k\Bigg) \\
+		&= \exp\left(-2|z|^{n+1}\right),
+	\end{align*}
+	which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:elem-lower-bound-big}
+	Given a nonnegative integer $n$, we have $|E_n(z)|\ge|1-z|\exp\left(-2|z|^n\right)$ for $|z|\ge1/2$.
+\end{lemma}
+\begin{proof}
+	Similar to the previous proof, we see
+	\[\left|\exp\Bigg(\sum_{k=1}^n\frac{z^k}k\Bigg)\right|=\exp\Bigg(\op{Re}\sum_{k=1}^n\frac{z^k}k\Bigg)=\exp\Bigg(\sum_{k=1}^n\frac{(\op{Re}z)^k}k\Bigg)\ge\exp\Bigg(-\sum_{k=1}^n\frac{|z|^k}k\Bigg).\]
+	However, we see
+	\[\sum_{k=1}^n\frac{|z|^k}k\le|z|^n\sum_{k=1}^n\frac{|z|^{k-n}}k\le|z|^n\sum_{k=1}^n\frac{(1/2)^{k-n}}1<|z|^n\sum_{k=0}^\infty\left(\frac12\right)^k=2|z|^n.\]
+	Combining,
+	\[|E_n(z)|=|1-z|\left|\exp\Bigg(\sum_{k=1}^n\frac{z^k}k\Bigg)\right|\ge|1-z|\exp\Bigg(-\sum_{k=1}^n\frac{|z|^k}k\Bigg)\ge|1-z|\exp\left(-2|z|^n\right),\]
+	which is what we wanted.
+\end{proof}
+
+\section{Hadamard Factorization}
+Throughout this section, $f\colon\CC\to\CC$ will be a nonzero entire function of (finite) order $\rho_0$; set $n\coloneqq\floor{\rho_0}$ for brevity. We will also let $\{z_k\}_{k\in\lambda}$ denote the nonzero zeroes of $f$ (with multiplicity), where $\lambda$ is either finite or $\NN$, ordered by magnitude. Notably, \Cref{rem:only-finite-zeroes} tells us that there are only finitely zeroes with fixed bounded magnitude, so such an ordering possible.
+
+The key to the proof will be the following lower bound on a product of elementary factors.
+\begin{lemma} \label{lem:elem-factor-prod-lower-bound}
+	Fix everything as above. Given a real number $s$ such that $\rho_0<s<n+1$, there is some $c>0$ such that
+	\[\left|\prod_{k\in\lambda}E_n(z/z_k)\right|\ge\exp\left(-c|z|^s\right)\qquad\text{for}\qquad|z-z_k|\ge|z_k|^{-n-1}\]
+	for $|z|$ sufficiently large, and the infinite product converges absolutely and uniformly on compacts to an entire function for all $z\in\CC$.
+\end{lemma}
+\begin{proof}
+	We begin by showing that the infinite product converges absolutely and uniformly on compacts to an entire function; we use \Cref{prop:inf-prod-holos}. Indeed, for any compact subset $D\subseteq\CC$, we know $D$ is bounded, so find $R$ such that $D\subseteq B(0,R)$. Then we are able to divide the infinite product into
+	\[\prod_{k\in\lambda} E_n(z/z_k)=\Bigg(\underbrace{\prod_{|z_k|\le2R}E_n(z/z_k)}_{P_1(z)\coloneqq}\Bigg)\Bigg(\underbrace{\prod_{|z_k|>2R}E_n(z/z_k)}_{P_2(z)\coloneqq}\Bigg)\]
+	because the $z_k$ have been ordered by magnitude. Now, the $P_1(z)$ factor is finite and will therefore not affect our convergence, so we focus on showing that $P_2$ converges absolutely and uniformly on $D$. Well, by \Cref{lem:elem-upper-bound}, we see that any $z_k$ with $|z_k|>2R$ gives $|z/z_k|<1/2$, so
+	\[|1-E_n(z/z_k)|\le2e|z/z_k|^{n+1}\le\frac{2R^{n+1}}{|z_k|^{n+1}},\]
+	but
+	\[\sum_{k\in\lambda}\frac{2R^{n+1}}{|z_k|^{n+1}}=2R^{n+1}\sum_{k\in\lambda}\frac1{|z_k|^{n+1}}\]
+	converges by \Cref{cor:bound-sum-of-zeroes}. Thus, \Cref{prop:inf-prod-holos} kicks in to tell us that our infinite product converges absolutely and uniformly on $D$.
+
+	It remains to show the lower bound. Quickly, note that no term of the product will ever vanish by definition of the elementary factors and the fact that $|z-z_k|\ge|z_k|^{-n-1}$ for each $z_k$. This is somewhat technical. As above, we divide the product into factors depending on $|z|$, though here we write
+	\[\prod_{k\in\lambda} E_n(z/z_k)=\Bigg(\underbrace{\prod_{|z_k|\le2|z|}E_n(z/z_k)}_{Q_1(z)\coloneqq}\Bigg)\Bigg(\underbrace{\prod_{|z_k|>2|z|}E_n(z/z_k)}_{Q_2(z)\coloneqq}\Bigg).\]
+	We now bound these terms independently.
+	\begin{itemize}
+		\item We control $Q_2$ using \Cref{lem:elem-lower-bound-small}. Indeed, we see
+		\begin{align*}
+			|Q_2(z)| &= \prod_{|z_k|>2|z|}|E_n(z/z_k)| \\
+			&\ge \prod_{|z_k|>2|z|}\exp\left(-2|z/z_k|^{n+1}\right) \\
+			&\stackrel*= \exp\Bigg(\sum_{|z_k|>2|z|}-2|z/z_k|^{n+1}\Bigg) \\
+			&= \exp\Bigg(-2|z|^{n+1}\sum_{|z_k|>2|z|}\frac1{|z_k|^{n+1}}\Bigg),
+		\end{align*}
+		and this last sum again converges by \Cref{cor:bound-sum-of-zeroes}; note $\stackrel*=$ is valid here by the continuity of $\exp$ and the fact that our infinite product already converges.
+
+		To finish our bounding here, we see
+		\[\frac1{|z_k|^{n+1}}\le\frac1{|z_k|^{n+1-s}}\cdot\frac1{|z_k|^{s}}\le\frac1{(2|z|)^{n+1-s}}\cdot\frac1{|z_k|^{s}},\]
+		because $n+1-s>0$, so
+		\[|Q_2(z)|\ge\exp\Bigg(-2^{s-n}|z|^s\sum_{|z_k|>2|z|}\frac1{|z_k|^s}\Bigg)=\exp\left(-c_1|z|^s\right)\]
+		for $c_2\coloneqq2^{s-n}\sum_{|z_k|>2|z|}1/|z_k|^s$. (The sum still converges by \Cref{cor:bound-sum-of-zeroes}.) Note $c_2>0$.
+
+		\item We control $Q_1$ using \Cref{lem:elem-lower-bound-big} and the fact that $|z-z_k|\ge|z_k|^{-n-1}$ for each $z_k$. Indeed, freely rearranging this finite product, we see
+		\begin{align*}
+			|Q_1(z)| &= \prod_{|z_k|\le2|z|}|E_n(z/z_k)| \\
+			&\ge \prod_{|z_k|\le2|z|}\Bigg(\left|1-\frac z{z_k}\right|\exp\left(-2|z/z_k|^n\right)\Bigg) \\
+			&= \prod_{|z_k|\le2|z|}\left|1-\frac z{z_k}\right|\cdot\exp\Bigg(-2|z|^n\sum_{|z_k|\le2|z|}\frac1{|z_k|^n}\Bigg).
+		\end{align*}
+		The left term here will be difficult to bound, but we can control the right term here as we did with $Q_2$. Indeed, we see
+		\[\frac1{|z_k|^n}\le\frac1{|z_k|^{n-s}}\cdot\frac1{|z_k|^{s}}\le\frac1{(2|z|)^{n-s}}\cdot\frac1{|z_k|^{s}},\]
+		because $n-s<0$, so
+		\[\exp\Bigg(-2|z|^n\sum_{|z_k|\le2|z|}\frac1{|z_k|^n}\Bigg)\ge\exp\Bigg(-2^{s-n+1}|z|^s\sum_{|z_k|>2|z|}\frac1{|z_k|^s}\Bigg)=\exp\left(-c_2|z|^s\right)\]
+		for $c_2'\coloneqq2^{s-n+1}|z|^s\sum_{|z_k|>2|z|}1/|z_k|^s$. Note $c_1'>0$.
+
+		We now focus on the left term. By hypothesis on $z$, we see
+		\begin{align*}
+			\prod_{|z_k|\le2|z|}\left|1-\frac z{z_k}\right| &= \prod_{|z_k|\le2|z|}\left|\frac{z-z_k}{z_k}\right| \\
+			&\ge \prod_{|z_k|\le2|z|}|z_k|^{-n-2} \\
+			&\ge \left((2|z|)^{-n-2}\right)^{n_f(2|z|)} \\
+			&= \exp\left(-(n+2)\log(2|z|)n_f(2|z|)\right).
+		\end{align*}
+		Now, $f$ has order bounded by $s>\rho_0$ (formally, one must use \Cref{rem:order-bounded-by-is-trans} here), so \Cref{prop:bound-zeroes-finite-order} tells us that $n_f(2|z|)\le C|z|^s$ for $|z|$ sufficiently large. In total, we set $c_1''\coloneqq-C(n+2)\log(2|z|)$ so that
+		\[\prod_{|z_k|\le2|z|}\left|1-\frac z{z_k}\right|\ge\exp\left(-c_1''|z|^s\right).\]
+		Thus, for $c_1\coloneqq c_1'+c_1''$, we see $|Q_1(z)|\ge\exp\left(-c_1|z|^s\right)$ for $|z|$ sufficiently large.
+	\end{itemize}
+	In total, we see that
+	\[\left|\prod_{k\in\lambda} E_n(z/z_k)\right|=|Q_1(z)|\cdot|Q_2(z)|\ge\exp\left(-(c_1+c_2)|z|^s\right)\]
+	for $|z|$ sufficiently large. This is what we wanted.
+\end{proof}
+We will use \Cref{lem:elem-factor-prod-lower-bound} in the following form.
+\begin{lemma} \label{lem:better-elem-prod-lower-bound}
+	Fix everything as above. Then there is an unbounded set of positive real numbers $R\subseteq\RR$ and constant $c>0$ such that
+	\[\left|\prod_{k\in\lambda} E_n(z/z_k)\right|\ge\exp\left(-c|z|^s\right)\qquad\text{for}\qquad|z|\in R.\]
+\end{lemma}
+\begin{proof}
+	Quickly, note that the infinite product makes sense by \Cref{lem:elem-factor-prod-lower-bound}. In order to use \Cref{lem:elem-factor-prod-lower-bound}, we let $\mu$ denote the Lebesgue measure and note
+	\[\mu\Bigg(\underbrace{\bigcup_{k\in\lambda}\left(|z_k|-|z_k|^{-n-1},|z_k|+|z_k|^{-n-1}\right)}_{S\coloneqq}\Bigg)\le2\sum_{k\in\lambda}\frac1{|z_k|^{n+1}}\]
+	converges by \Cref{cor:bound-sum-of-zeroes}, so $\mu(S)$ is finite. Now, we note that $|z-z_k|<|z_k|^{-n-1}$ for some $z_k$ implies $|z|\in\left(|z_k|-|z_k|^{-n-1},|z_k|+|z_k|^{-n-1}\right)\subseteq S$, so we are roughly looking for real numbers $r$ not in $S$.
+
+	Now, the ``sufficiently large'' condition on $|z|$ in \Cref{lem:elem-factor-prod-lower-bound} amounts to requiring $|z|>D$ for some $D>0$. Thus, we set
+	\[R\coloneqq\{r>D:r\notin S\}.\]
+	If $R$ were bounded above, then there would be some $M$ such that any $r>M$ has either $r\le D$ or $r\in S$, meaning that $(\max\{M,D\},\infty)\subseteq S$, which is a contradiction because $S$ has finite measure. Thus, $R$ is not bounded above.
+
+	Lastly, note that any $z\in\CC$ with $|z|\in R$ has $|z|$ sufficiently large and $|z|\notin S$ and thus $|z-z_k|\ge|z_k|^{-n-1}$ for each $z_k$, giving
+	\[\left|\prod_{k\in\lambda} E_n(z/z_k)\right|\ge\exp\left(-c|z|^s\right)\qquad\text{for}\qquad|z|=r_m\]
+	by \Cref{lem:elem-factor-prod-lower-bound}. This is what we wanted.
+\end{proof}
+In particular, the above lemma will be plugged into the following proposition.
+\begin{proposition} \label{prop:bounded-re-is-poly}
+	Fix an entire function $g\colon\CC\to\CC$ and positive real number $s>0$. Suppose there is a constant $C>0$ and an unbounded set of positive real numbers $R\subseteq\RR$ such that $\op{Re}g(z)\le C|z|^s$ if $|z|\in R$. Then $g$ is a polynomial of degree less than or equal to $s$.
+\end{proposition}
+\begin{proof}
+	This proof does not use the notation of the rest of the section. Because $g$ is analytic (by \Cref{rem:holo-is-ana}), there is $\varepsilon>0$ such that we may write
+	\[g(z)=\sum_{k=0}^\infty g_kz^k\]
+	for $z\in B(0,\varepsilon)$. By differentiating the power series by hand, we see that $g_n=g^{(n)}(0)/n!$ for each $n\ge0$. However, by Cauchy's integral formula in the form \Cref{cor:compute-deriv-via-int}, we let $\gamma_r$ denote the counterclockwise circle around $z=0$ with radius $r\in R$ and see
+	\begin{align*}
+		g_n &= \frac{g^{(n)}(0)}{n!} \\
+		&= \frac1{2\pi i}\oint_{\gamma_r}\frac{g(z)}{z^{n+1}}\,dz \\
+		&= \frac1{2\pi i}\int_0^{2\pi}\frac{g\left(re^{i\theta}\right)}{r^{n+1}e^{i\theta(n+1)}}\cdot rie^{i\theta}\,d\theta \\
+		&= r^{-n}\cdot\frac1{2\pi}\int_0^{2\pi}g\left(re^{i\theta}\right)e^{-in\theta}\,d\theta.
+	\end{align*}
+	To access $\op{Re}g$, we will want to take the conjugate of this. Well, the function $g(z)z^{n-1}$ is holomorphic for $n>0$, so
+	\begin{align*}
+		0 &= \oint_{\gamma_r}g(z)z^{n-1}\,dz \\
+		&= \oint_{\gamma_r}g\left(re^{i\theta}\right)\cdot r^{n-1}e^{i(n-1)\theta}\cdot rie^{i\theta}\,d\theta \\
+		&= r^n\oint_{\gamma_r}g\left(re^{i\theta}\right)e^{in\theta}\,d\theta.
+	\end{align*}
+	Thus, our conjugate integral is
+	\[\int_0^{2\pi}\overline{g\left(re^{i\theta}\right)}e^{-in\theta}\,d\theta=\overline{\int_0^{2\pi}g\left(re^{i\theta}\right)e^{in\theta}\,d\theta}=0\]
+	for $n>0$. Summing, we see
+	\[r^ng_n=\frac1{2\pi}\int_0^{2\pi}\left(g\left(re^{i\theta}\right)+\overline{g\left(re^{i\theta}\right)}\right)e^{-in\theta}\,d\theta=\frac1\pi\int_0^{2\pi}(\op{Re}g)\left(re^{i\theta}\right)e^{-in\theta}\,d\theta\]
+	for $n>0$. Now, we would like to use this integral to bound $|g_n|$, but we only have an upper bound on $\op{Re}g$, so some trickery is required. In particular, we note that $\int_0^{2\pi}Cr^se^{-in\theta}\,d\theta=0$ for any $n>0$, so we actually have
+	\[r^ng_n=\frac1\pi\int_0^{2\pi}\left((\op{Re}g)\left(re^{i\theta}\right)-Cr^s\right)e^{-in\theta}\,d\theta.\]
+	But now the integrand is always negative, so we can upper-bound the magnitude as
+	\begin{align*}
+		r^n|g_n| &\le \frac1\pi\int_0^{2\pi}\left|(\op{Re}g)\left(re^{i\theta}\right)-Cr^s\right|\,d\theta \\
+		&= \frac1\pi\int_0^{2\pi}Cr^s\,d\theta-\frac1\pi\int_0^{2\pi}(\op{Re}g)\left(re^{i\theta}\right)\,d\theta \\
+		&= 2Cr^s-\frac1\pi\op{Re}g_0.
+	\end{align*}
+	In particular, we see that $|g_n|\le2Cr^{s-n}-r^{-n}\cdot\frac1\pi\op{Re}g_0$, so for any $n>s$, sending $r\to\infty$ (possible because $R$ is unbounded) enforces $g_n=0$. It follows that $g$ is a polynomial of degree at most $\floor s$ on $B(0,\varepsilon)$ and therefore a polynomial everywhere by analytic continuation.
+\end{proof}
+\begin{remark}
+	Intuitively, we expect entire functions to have growth rate which is exponential if they are not polynomial. And indeed, this sort of statement will follow from Hadamard's factorization theorem, so it is not surprising that this is a necessary ingredient to the proof.
+\end{remark}
+We are finally able to state and prove Hadamard's factorization theorem.
+\begin{theorem}[Hadamard's factorization] \label{thm:hadamard}
+	Fix a nonzero entire function $f\colon\CC\to\CC$ of (finite) order $\rho_0$; set $n\coloneqq\floor{\rho_0}$ for brevity. We also let $\{z_k\}_{k\in\lambda}$ denote the nonzero zeroes of $f$ (with multiplicity), where $\lambda$ is either finite or $\NN$, ordered by magnitude. Further, let $m$ denote the order of the zero of $f$ at $z=0$. Then
+	\[f(z)=e^{g(z)}z^m\prod_{k\in\lambda} E_n(z/z_k)\]
+	for some polynomial $g(z)$ of degree at most $n$.
+\end{theorem}
+\begin{proof}
+	Set
+	\[G(z)\coloneqq\frac{f(z)}{z^m\prod_{k\in\lambda} E_n(z/z_k)}.\]
+	Note that $G$ has a removable singularity at $z=0$ because $m$ is the order of the zero of $f$ at $z=0$. Further, the infinite product in the denominator converges absolutely and uniformly on compacts to an entire function by \Cref{lem:elem-factor-prod-lower-bound}. As such, by \Cref{prop:inf-prod-holos}, it will vanish exactly on the $z_k$, so $G$ has only removable singularities at the $z_k$.
+
+	In total, we can continue $G$ to an entire function due to these removable singularities, and $G$ will have no zeroes because all zeroes of the numerator $f(z)$ are correctly cancelled out by the denominator. Thus, \Cref{lem:no-vanish-has-log} promises us an entire function $g\colon\CC\to\CC$ such that $G={\exp}\circ g$. Thus, we see
+	\[f(z)=e^{g(z)}z^m\prod_{k\in\lambda} E_n(z/z_k),\]
+	so it remains to show that $g$ is a polynomial of degree at most $n$. We would like to use \Cref{prop:bounded-re-is-poly} to finish, so we want to bound $g$.
+
+	Choose some $s\in(\rho_0,n+1)$ so that $f$ has order bounded by $s$ by \Cref{rem:order-bounded-by-is-trans}. By \Cref{rem:divide-by-z-keeps-order}, we see that $f(z)/z^m$ still has order bounded by $s$, so we can find constants $A,B>0$ such that
+	\[\left|\frac{f(z)}{z^m}\right|<Ae^{B|z|^s}.\]
+	Now, by \Cref{lem:better-elem-prod-lower-bound}, there is an unbounded set $R\subseteq\RR$ of positive real numbers and constant $c>0$ such that we can write
+	\[\left|\prod_{k\in\lambda}E_n(z/z_k)\right|\ge\exp\left(-c|z|^s\right)\]
+	if $|z|\in R$, so
+	\[|G(z)|=\left|\frac{f(z)}{z^m}\right|\cdot\left|\prod_{k\in\lambda}E_n(z/z_k)\right|^{-1}<Ae^{(B+c)|z|^s}.\]
+	However, $|G(z)|=|\exp(g(z))|=\exp(\op{Re}g(z))$, so we see that
+	\[\op{Re}g(z)\le\log A+(B+c)|z|^s\]
+	for $|z|\in R$. Replacing $R$ with $R\cap(1,\infty)$ (which is an unbounded subset if $R$ is unbounded), we may assume that $|z|>1$, so actually
+	\[\op{Re}g(z)\le(\log A)|z|^s+(B+c)|z|^s,\]
+	so \Cref{prop:bounded-re-is-poly} now kicks in and tells us that $g(z)$ is a polynomial of degree less than or equal to $s$. Because $\floor s=n$, this finishes.
+\end{proof}
+
+\end{document}

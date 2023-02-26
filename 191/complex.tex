@@ -1,0 +1,312 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+In this chapter, we review some basic facts of complex analysis. We do not provide proofs of all statements.
+
+\section{Holomorphic Functions}
+Complex analysis is the study of holomorphic functions, so we quickly provide a definition.
+\begin{definition}[holomorphic]
+	Fix a complex function $f\colon\Omega\to\CC$, where $\Omega\subseteq\CC$ is some subset. We say that $f$ is \textit{differentiable} at $z\in\Omega$ if and only if the limit
+	\[f'(z)\coloneqq\lim_{w\to z}\frac{f(z)-f(w)}{z-w}\]
+	exists. If $f$ is differentiable at all $z\in\Omega$, then we say $f$ is \textit{holomorphic} on $\Omega$.
+\end{definition}
+Here is the main test on holomorphic functions.
+\begin{theorem}[Cauchy--Riemann equations] \label{thm:cr-equations}
+	Fix a complex function $f\colon\Omega\to\CC$, where $\Omega$ is a nonempty open subset. Writing $f(x+yi)\coloneqq u(x,y)+iv(x,y)$, then $f$ is differentiable at $z_0=x_0+iy_0$ implies that
+	\[\begin{cases}
+		u_x(x_0,y_0) = v_y(x_0,y_0), \\
+		v_x(x_0,y_0) = -u_y(x_0,y_0).
+	\end{cases}\]
+\end{theorem}
+\begin{proof}
+	See \cite[Theorem~3.19]{nir-complex-analysis}. Intuitively, we are saying that $f$ is locally a scaled rotation, which is what multiplication by a complex numbers.
+\end{proof}
+\begin{remark}
+	Under suitably hypotheses, satisfying the Cauchy--Riemann equations implies that $f$ is differentiable at the point $z_0$. See \cite[Theorem~3.26]{nir-complex-analysis}.
+\end{remark}
+
+\section{Path Integrals}
+To do calculus on complex functions, we also want to know how to integrate them.
+\begin{definition}[path integral]
+	Fix a piecewise continuous function $f\colon\Omega\to\CC$, where $\Omega\subseteq\CC$ is some subset. Given a piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$, we define
+	\[\int_\gamma f(z)\,dz\coloneqq\int_0^1\op{Re}\big(f(\gamma(t))\gamma'(t)\big)\,dt+i\int_0^1\op{Im}\big(f(\gamma(t))\gamma'(t)\big)\,dt.\]
+	If $\gamma$ is closed (i.e., $\gamma(0)=\gamma(1)$), then we might write $\oint_\gamma f(z)\,dz$.
+\end{definition}
+As usual, limits commute with integrals under suitably uniformity hypotheses.
+\begin{lemma} \label{lem:swap-int-limit}
+	Fix an open subset $\Omega\subseteq\CC$ and a sequence $\{f_n\}_{n\in\NN}$ of piecewise continuous function $\Omega\to\CC$. Given a piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$, if $f_n\to f$ uniformly for some $f\colon\Omega\to\CC$, then
+	\[\lim_{n\to\infty}\oint_\gamma f_n(z)\,dz=\oint_\gamma f(z)\,dz.\]
+\end{lemma}
+\begin{proof}
+	See \cite[Lemma~4.62]{nir-complex-analysis}. Roughly speaking, the point is that we can upper-bound
+	\[\left|\oint_\gamma f(z)\,dz-\oint_\gamma f_n(z)\,dz\right|\le\oint_\gamma|f(z)-f_n(z)|\,dz\le\sup_{z\in\im\gamma}|f(z)-f_n(z)|\cdot\ell(\gamma),\]
+	which goes to $0$ as $n\to\infty$ by the uniformity.
+\end{proof}
+\begin{proposition} \label{prop:get-power-series}
+	Fix an open, connected subset $\Omega\subseteq\CC$. Fix a piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$ and a function $f\colon\Omega\to\CC$ continuous on $\im\gamma$. For any $z_0\in\Omega$, we have
+	\[\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz=\sum_{n=0}^\infty\left(\frac1{2\pi i}\oint_\gamma\frac{f(z)}{(z-w)^{n+1}}\,dz\right)(w-z_0)^n\]
+	for $w$ in some open neighborhood of $z_0$.
+\end{proposition}
+\begin{proof}
+	See \cite[Proposition~4.61]{nir-complex-analysis}. Roughly speaking, we begin by translating so that $z_0=0$; then for $|w|$ small enough (for example, avoiding $\im\gamma$ and $|w|<\frac12|z|$), we can write
+	\[\frac{f(z)}{z-w}=\frac{f(z)}z\cdot\frac1{1-(w/z)}=\sum_{n=0}^\infty\frac{f(z)w^n}{z^{n+1}},\]
+	and this geometric series converges absolutely and uniformly because $|w|<\frac12|z|$. Thus, the Weierstrass $M$-test grants uniform convergence, so we can integrate both sides over $\oint_\gamma$ and finish by switching the infinite sum and integral by \Cref{lem:swap-int-limit}.
+\end{proof}
+
+\section{The Cauchy Integral Formula}
+In this section, we provide various formulations of the Cauchy integral formula. The most basic formulation is as follows.
+\begin{theorem}[Cauchy--Goursat] \label{thm:cauchy-goursat}
+	Fix a simply connected open subset $\Omega\subseteq\CC$. If $f\colon\CC\to\CC$ is holomorphic on $\Omega$, then for any piecewise $C^1$ closed path $\gamma\colon[0,1]\to\Omega$, we have
+	\[\oint_\gamma f(z)\,dz=0.\]
+\end{theorem}
+\begin{proof}
+	See \cite[Theorem~4.65, Theorem~4.70]{nir-complex-analysis}. Intuitively, this result follows from Green's theorem combined with \Cref{thm:cr-equations}.
+\end{proof}
+We can extend this result in a few ways. For one, we can evaluate the function using integrals.
+\begin{theorem}[Cauchy integral formula] \label{thm:cif}
+	Fix an open connected subset $\Omega\subseteq\CC$ containing some $\overline{B(z_0,r)}$. If $f\colon\Omega\to\CC$ is holomorphic, then
+	\[f(w)=\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz\]
+	for $w\in B(z_0,r)$, where $\gamma$ is the counterclockwise path around $\del B(z_0,r)$.
+\end{theorem}
+\begin{proof}
+	See \cite[Theorem~4.63]{nir-complex-analysis}. Roughly speaking, one can use \Cref{thm:cauchy-goursat} in order to allow us to send $r\to0^+$ without changing the value of the integral. Then we note
+	\[\frac1{2\pi i}\oint_\gamma\frac{f(z)}{z-w}\,dz=\frac1{2\pi i}\oint_\gamma\frac{f(z)-f(w)}{z-w}\,dz+f(w)\cdot\frac1{2\pi i}\oint_\gamma\frac1{z-w}\,dz.\]
+	The integral on the right is just $1$, so we want to show that the other integral goes to $0$. Well, $\frac{f(z)-f(w)}{z-w}$ is roughly $f'(w)$ as $r\to0^+$, so we can upper-bound this integral by (say) $2|f'(w)|\cdot2\pi r$ for small $r$, which goes to $0$ as $r\to0^+$.
+\end{proof}
+\begin{remark}
+	Roughly speaking, using \Cref{thm:cauchy-goursat} again, the above proof more or less says that we can replace $\gamma$ with any counterclockwise path around $z_0$ provided that $\Omega$ is simply connected.
+\end{remark}
+\begin{remark} \label{rem:holo-is-ana}
+	Combining \Cref{thm:cif} with \Cref{prop:get-power-series} implies that holomorphic $f\colon\Omega\to\CC$ are locally equal to a power series.
+\end{remark}
+In fact, we can evaluate derivatives using integrals.
+\begin{corollary} \label{cor:compute-deriv-via-int}
+	Fix an open connected subset $\Omega\subseteq\CC$ containing some $\overline{B(z_0,r)}$. If $f\colon\Omega\to\CC$ is holomorphic, then
+	\[f^{(n)}(w)=\frac{n!}{2\pi i}\oint_\gamma\frac{f(z)}{(z-w)^{n+1}}\,dz\]
+	for $w\in\Omega$ and $n\ge0$, where $\gamma$ is the counterclockwise path around $\del B(z_0,r)$.
+\end{corollary}
+\begin{proof}
+	See \cite[Corollary~4.71]{nir-complex-analysis}. By \Cref{thm:cif} and \Cref{prop:get-power-series}, we may write
+	\[f(w)=\sum_{n=0}^\infty\left(\frac1{2\pi i}\oint_\gamma\frac{f(z)}{(z-w)^{n+1}}\,dz\right)(w-z_0)^n\]
+	for $w$ in some open neighborhood of $z_0$. (As usual, the deformation process with \Cref{thm:cauchy-goursat} allows us to shrink $\gamma$ as necessary.) But now we can, with some pain, take derivatives of this power series by hand (see \cite[Proposition~3.44]{nir-complex-analysis}) to achieve the result.
+\end{proof}
+As an application, we discuss analytic continuation.
+\begin{theorem}
+	Fix an open connected subset $\Omega\subseteq\CC$. Given holomorphic functions $f_1,f_2\colon\Omega\to\CC$, if
+	\[\{z\in\CC:f_1(z)=f_2(z)\}\]
+	contains an accumulation point, then $f_1=f_2$ on $\Omega$.
+\end{theorem}
+\begin{proof}
+	See \cite[Theorem~5.1]{nir-complex-analysis}. By working with $f_1-f_2$, it suffices to show that, if $f^{-1}(\{0\})$ has an accumulation point, then $f=0$. We show this by contraposition: suppose $f\ne0$, and we will show that each $z_0\in f^{-1}(\{0\})$ has some $r>0$ such that $B(z_0,r)\cap f^{-1}(\{0\})=\{z_0\}$. By shifting, we may assume that $z_0=0$. By \Cref{rem:holo-is-ana}, we see that $f$ is locally a power series around $z=0$. Because $f$ is nonzero, this local power series cannot identically vanish. However, this implies that there is some $m$ such that the power series for $f(z)/z^m$ has a nonzero constant term. However, $f(z)/z^m$ is then a continuous function which is nonzero at $0$ and is thus nonzero in an open neighborhood of $0$.
+\end{proof}
+
+\section{Building Primitives}
+We would like to build a converse for \Cref{thm:cauchy-goursat}.
+\begin{proposition} \label{prop:build-primitive}
+	Fix an open, connected subset $\Omega\subseteq\CC$ and a continuous function $f\colon\Omega\to\CC$. Given that
+	\[\oint_\gamma f(z)\,dz=0\]
+	for any closed piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$. Then there exists a holomorphic function $F\colon\Omega\to\CC$ such that $F'=f$.
+\end{proposition}
+\begin{proof}
+	See \cite[Theorem~4.44]{nir-complex-analysis}. By translating, we may assume $0\in\Omega$, and the point is to define
+	\[F(s)=f(0)+\int_\gamma f(s)\,ds,\]
+	where $\gamma$ is any closed piecewise $C^1$ path from $0$ to $z$. The hypothesis on $f$ implies that $F$ is well-defined. To show that $F'(w)=f(w)$ for any $w\in\Omega$, work in some small open neighborhood of $w$ so that we may assume $\Omega$ is convex. In particular, let $\gamma_z$ denote the straight line from $w$ to $z$ so that
+	\[\left|\frac{F(z)-F(w)}{z-w}-f(w)\right|=\left|\frac1{z-w}\int_{\gamma_z}f(s)\,ds-f(w)\right|\le\sup_{s\in\im\gamma_z}|f(s)-f(w)|.\]
+	However, $f$ is continuous, so this supremum goes to $0$ as $z\to w$.
+\end{proof}
+And here is our converse.
+\begin{theorem}[Morera] \label{thm:morera}
+	Fix an open, connected subset $\Omega\subseteq\CC$ and a continuous function $f\colon\Omega\to\CC$. Given that
+	\[\oint_\gamma f(z)\,dz=0\]
+	for any closed piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$. Then $f$ is holomorphic.
+\end{theorem}
+\begin{proof}
+	By \Cref{prop:build-primitive}, there exists holomorphic $F\colon\Omega\to\CC$ such that $F'=f$. However, $F$ is locally given by a power series by \Cref{rem:holo-is-ana}, so we can differentiate-term-by-term to tell us that $F$ is infinitely differentiable. In particular, $f$ is holomorphic.
+\end{proof}
+Here is are a couple useful corollaries of \Cref{thm:morera}.
+\begin{lemma} \label{lem:holo-limit}
+	Fix some open, connected subset $\Omega\subseteq\CC$ and some function $f\colon\Omega\to\CC$. Given holomorphic functions $f_n\colon\Omega\to\CC$ for each $n\in\NN$, if $f_n\to f$ uniformly on all compact subsets $D\subseteq U$, then $f$ is holomorphic. In fact, for each $w\in\Omega$, we have $f_n'(w)\to f'(w)$ as $n\to\infty$.
+\end{lemma}
+\begin{proof}
+	To show $f$ is holomorphic, the point is to use Morera's theorem. Quickly, note that to show $f$ is differentiable at some particular $z\in\Omega$, we may find $r>0$ such that $B(z,r)\subseteq\Omega$ and then replace $\Omega$ with $B(z,r)$; in particular, we may assume that $\Omega$ is simply connected. Each $f_n$ is continuous, so we see $f$ is continuous as well by the uniform convergence. Thus, fixing any closed piecewise $C^1$ path $\gamma\colon[0,1]\to U$, we would like to show
+	\[\oint_\gamma f(z)\,dz\stackrel?=0.\]
+	Note $\im\gamma$ is compact, so $f_n\to f$ uniformly on $\im\gamma$. Thus, fixing any $\varepsilon>0$, we can find some $N$ such that
+	\[|f(z)-f_n(z)|<\varepsilon\]
+	for all $n>N$. Fixing any $n>N$, we use \Cref{thm:cauchy-goursat} to see
+	\[\left|\oint_\gamma f(z)\,dz\right|=\left|\oint_\gamma f(z)\,dz-\oint_\gamma f_n(z)\,dz\right|\le\oint_\gamma|f(z)-f_n(z)|\,dz\le\varepsilon\ell(\gamma),\]
+	where $\ell(\gamma)$ is the length of $\gamma$. (Note $\ell(\gamma)$ is finite because $\gamma$ is piecewise $C^1$.) Sending $\varepsilon\to0^+$ finishes the application of \Cref{thm:morera}.
+
+	It remains to show the last sentence. The point is to use \Cref{cor:compute-deriv-via-int}. Well, for any fixed $w\in\Omega$, we again find some $r>0$ such that $B(w,r)\subseteq\Omega$. Then for some $\varepsilon\in(0,r)$, we let $\gamma$ be the counterclockwise path around $w$ with radius $\varepsilon$. Then \Cref{cor:compute-deriv-via-int} grants
+	\begin{align*}
+		|f'(w)-f_n'(w)| &= \left|\frac1{2\pi i}\oint_\gamma\frac{f(z)}{(z-w)^2}\,dz-\frac1{2\pi i}\oint_\gamma\frac{f_n(z)}{(z-w)^2}\,dz\right| \\
+		&\le \frac1{2\pi}\cdot\sup_{z\in\Omega}\{|f(z)-f_n(z)|\}\cdot\oint_\gamma\frac1{|z-w|^2}\,dz \\
+		&= \frac1{2\pi}\cdot\sup_{z\in\Omega}\{|f(z)-f_n(z)|\}\cdot\frac{2\pi\varepsilon}{\varepsilon^2}.
+	\end{align*}
+	Now, as $n\to\infty$, we see that $|f(z)-f_n(z)|\to0$ uniformly, so the final expression goes to $0$. This completes the proof.
+\end{proof}
+\begin{lemma} \label{lem:no-vanish-has-log}
+	Fix some simply connected open subset $\Omega\subseteq\CC$. Given a holomorphic function $f\colon\Omega\to\CC$ which vanishes nowhere, there exists a holomorphic function $g\colon\Omega\to\CC$ such that $f={\exp}\circ g$.
+\end{lemma}
+\begin{proof}
+	By shifting $\Omega$, we may assume that $0\in\Omega$. By scaling $f$ (which is the same as shifting $g$), we may assume that $f(0)=1$. Now, note that $f$ is locally a power series by \Cref{rem:holo-is-ana}, so $f'$ is holomorphic, so $f'/f$ is holomorphic because $f$ vanishes nowhere on $\Omega$. Thus, by \Cref{thm:cauchy-goursat}, we see that
+	\[\oint_\gamma\frac{f'(z)}{f(z)}\,dz=0\]
+	for any closed piecewise $C^1$ path $\gamma\colon[0,1]\to\Omega$, where here we are using the fact that $\Omega$ is simply connected. Thus, we let $g$ be a primitive for $f'/f$; by shifting $g$, we may assume that $g(0)=0$. Now let $h(z)\coloneqq\exp(g(z))/f(z)$ so that we want to show $h(z)=1$ for each $z$; note that $f$ is always nonzero, so $h$ is in fact holomorphic. Well, we see that
+	\[h'(z)=\frac{f(z)\cdot\exp(g(z))g'(z)-\exp(g(z))f'(z)}{f(z)^2}=0,\]
+	so $h$ is constant. But $h(0)=1$ by construction of $f$ and $g$, so $h(z)=1$ for each $z$.
+\end{proof}
+
+\section{Differentiation Under the Integral}
+While we're here, we pick up the following very useful technical result from \cite{mattner-diff-under-sign}.
+\begin{proposition}[Differentiation under the integral sign] \label{prop:diff-under-sign}
+	Let $(X,\mc S,\mu)$ be a measurable space, and let $U\subseteq\CC$ be open, and let $f\colon U\times X\to\CC$ and $g\colon X\to X$ be functions satisfying the following properties.
+	\begin{itemize}
+		\item The function $g$ is integrable; namely, $\int_X g(t)\,dt<\infty$.
+		\item For fixed $x$, the function $z\mapsto f(z,x)$ is holomorphic on $U$ and has $|f(z,x)|\le g(x)$ for all $s$.
+		\item For fixed $z$, the function $x\mapsto f(z,x)$ is measurable.
+	\end{itemize}
+	Then the function $F\colon U\to\CC$ given by $F(z)\coloneqq\int_Xf(z,x)\,dx$ is holomorphic on $U$ and satisfies
+	\[F'(z)=\int_X\frac{\del f}{\del z}(z,x)\,dx.\]
+\end{proposition}
+\begin{proof}
+	We use Morera's theorem to show $F$ is holomorphic and the Cauchy integral formula to compute the derivative. The intuition here is that we can control integrals of $F$ easier than its derivatives, so we will try to turn everything into an integral. For clarity, we proceed in steps.
+	\begin{enumerate}
+		\item We show $F$ is continuous on $U$. Well, fix some $w\in U$, and we show $F$ is continuous at $w$; for concreteness, again find $r>0$ such that $B(w,r)\subseteq U$. Indeed, for some distinct $w'\in B(w,r)$, we let $\gamma\colon[0,1]\to U$ denote the straight line from $w$ to $w'$. Thus, the Fundamental theorem of calculus and Cauchy's integral formula grants
+		\begin{align*}
+			F(w')-F(w) &= \int_X\big(f(w',x)-f(w,x)\big)\,dx \\
+			&= \int_X\left(\int_\gamma\frac{\del f}{\del z}(z,x)\,dz\right)dx \\
+			&= \frac1{2\pi i}\int_X\left(\int_\gamma\int_{\gamma_z}\frac{f(z',x)}{(z-z')^2}\,dz'dz\right)dx,
+		\end{align*}
+		where $\gamma_z$ denotes the counterclockwise circle around $z$ of radius $r-\frac12|w-w'|$, which is inside $B(w,r)\subseteq U$ because $z$ is on the line connecting $w$ to $w'$. Now, taking absolute values everywhere, we see
+		\[|F(w')-F(w)|\le\frac1{2\pi}\int_X\left(\int_\gamma\int_{\gamma_z}\frac{g(t)}{\left|r-\frac12|w-w'|\right|^2}\,dz'dz\right)dx\le\frac1{2\pi}\int_Xg(t)\,dt\cdot\frac{\ell(\gamma)\cdot2\pi\left|r-\frac12|w-w'|\right|}{\left|r-\frac12|w-w'|\right|^2},\]
+		where we have used the computation $\ell(\gamma_z)=2\pi\left|r-\frac12|w-w'|\right|$ for each $z$. Now, as $w'\to w$, we see $\ell(\gamma)=|w-w'|$ goes to $0$, so the entire right-hand side goes to $0$. This completes the proof of continuity at $w$.
+
+		\item We show $F$ is holomorphic on $U$. It suffices to show that $F$ is differentiable at some fixed $w\in U$ and has the given derivative. As such, we find $r>0$ such that $B(w,r)\subseteq U$ and replace $f$ with its restriction to $B(w,r)\times X$ and $F$ with its restriction to $B(w,r)$. In particular, we have reduced to the case where $U$ is open and convex.
+		
+		Now, we already know $F$ is continuous, so we may use Morera's theorem. Well, let $\gamma\colon[0,1]\to U$ be some closed curve, and we want to show
+		\[\int_\gamma F(z)\,dz=\int_\gamma\int_Xf(z,x)\,dxdz\stackrel?=0.\]
+		We would like to exchange the two integrals, so we note we have absolute convergence because
+		\[\int_\gamma\int_X|f(z,x)|\,dxdz\le\int_\gamma\int_Xg(x)\,dxdz\le\ell(\gamma)\int_Xg(x)\,dx<\infty.\]
+		Thus, Fubini's theorem lets us write
+		\[\int_\gamma F(z)\,dz=\int_X\int_\gamma f(z,x)\,dzdx=\int_X0\,dx=0,\]
+		where we have used Cauchy's theorem to evaluate $\int_\gamma f(z,x)\,dz=0$; recall we reduced to the case where $U$ is convex above!
+
+		\item It remains to compute the derivative of $F$. Because $F$ is holomorphic, we may use the Cauchy integral formula: for any $w\in U$, find $r$ such that $B(w,r)\subseteq U$, and let $\gamma$ be the loop of radius $r/2$ around $w$. Then
+		\[F'(w)=\frac1{2\pi i}\int_\gamma\frac{F(z)}{(z-w)^2}\,dz=\frac1{2\pi i}\int_\gamma\int_X\frac{f(z,x)}{(z-w)^2}\,dxdz.\]
+		As usual, we would like to exchange the two integrals, so we note that we have absolute convergence because
+		\[\int_\gamma\int_X\left|\frac{f(z,x)}{(z-w)^2}\right|\,dxdz\le\int_\gamma\int_X\frac{g(x)}{(r/2)^2}\,dxdz\le\frac{\ell(\gamma)}{(r/2)^2}\int_Xg(x)\,dx<\infty.\]
+		Thus, Fubini's theorem lets us write
+		\[F'(w)=\int_X\left(\frac1{2\pi i}\int_\gamma\frac{f(z,x)}{(z-w)^2}\,dz\right)dx=\int_X\frac{\del f}{\del z}(w,x)\,dx,\]
+		where we have again applied the Cauchy integral formula.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	\Cref{prop:diff-under-sign} might look like needless abstract nonsense with the measure space floating around, but the point here is that we will be able to flexibly apply this result to exchange derivatives with both usual integrals and infinite sums.
+\end{remark}
+
+\section{Infinite Products}
+Throughout analytic number theory, it is useful to take infinite products for one reason or another. In this section, we follow \cite[Section~5.3]{stein-complex-analysis}. We begin by discussing products of elements.
+\begin{definition}[absolutely converges]
+	Given a sequence of complex numbers $\{a_k\}_{k\in\NN}$, the infinite product
+	\[\prod_{k=1}^\infty(a_k+1)\]
+	\textit{converges absolutely} if and only if the product $\prod_{k=1}^\infty(|a_k|+1)$ converges.
+\end{definition}
+\begin{lemma} \label{lem:pointwise-inf-prods}
+	Let $\{a_k\}_{k\in\NN}$ be a sequence of complex numbers such that
+	\[\sum_{k=1}^\infty|a_k|<\infty.\]
+	Then the infinite product $\prod_{k=1}^\infty(1+a_k)$ converges and vanishes if and only if some factor vanishes.
+\end{lemma}
+\begin{proof}
+	If any factor vanishes, then the entire product converges to $0$, so there is nothing to say. Otherwise, assume that $a_k\ne-1$ for all $k$, and we must show that the infinite product converges to a nonzero value. We have two cases.
+	\begin{enumerate}
+		\item Suppose that $|a_n|<1/2$ for all $n$. Then we can use the power series to define $\log$. The main claim is that the infinite sum
+		\[\sum_{k=1}^\infty\log(1+a_k)\]
+		converges. In fact, it converges absolutely: we compute
+		\begin{align*}
+			\sum_{k=1}^\infty|\log(1+a_k)| &= \sum_{k=1}^\infty\left|\sum_{\ell=1}^\infty(-1)^\ell\frac{a_k^\ell}\ell\right| \\
+			&\le \sum_{k=1}^\infty\Bigg(\sum_{\ell=1}^\infty\frac{|a_k|^\ell}\ell\Bigg) \\
+			&\le \sum_{k=1}^\infty-\log(1-|a_k|).
+		\end{align*}
+		Now, $\log$ is concave down on $(0,\infty)$, so $-\log(1-x)$ is concave up on $[0,1/2]$, so comparing with a line segment, we see
+		\[-\log(1-|a_k|)\le\frac{(1/2-|a_k|)(-\log(1-0))+|a_k|(-\log(1-1/2))}{1/2}<|a_k|\cdot\frac{-\log(1-1/e)}{1/2}=2|a_k|\]
+		for each $|a_k|\in[0,1/2)$. Thus,
+		\[\sum_{k=1}^\infty|\log(1+a_k)|\le\sum_{k=1}^\infty-\log(1-|a_k|)\le\sum_{k=1}^\infty2|a_k|=2\sum_{k=1}^\infty|a_k|,\]
+		completing the proof of the claim.
+
+		To complete the proof in this case, we use the fact that $\exp$ is continuous to write
+		\begin{align*}
+			\prod_{k=1}^\infty(1+a_k) &= \lim_{n\to\infty}\prod_{k=1}^n(1+a_k) \\
+			&= \lim_{n\to\infty}\exp\Bigg(\sum_{k=1}^n\log(1+a_k)\Bigg) \\
+			&= \exp\Bigg(\lim_{n\to\infty}\sum_{k=1}^n\log(1+a_k)\Bigg) \\
+			&= \exp\Bigg(\sum_{k=1}^\infty\log(1+a_k)\Bigg),
+		\end{align*}
+		which we already know converges (absolutely). Additionally, we converge to a nonzero value because $\exp(z)\ne0$ for all $z\in\CC$. This is what we wanted.
+
+		\item In the general case, note that the convergence of the sum $\sum_{k=1}^\infty|a_k|$ enforces $|a_k|\to0$ as $k\to\infty$. Thus, there exists some $n$ such that $|a_k|<1/2$ for $k>N$, so we see
+		\[\prod_{k=1}^\infty(1+a_k)=\prod_{k=1}^n(1+a_k)\cdot\prod_{k=n+1}^\infty(1+a_k).\]
+		The left product is finite, and the right product converges by the previous step: note $\sum_{k=n+1}^\infty|a_k|<\infty$ because $\sum_{k=1}^\infty|a_k|<\infty$. Thus, the entire product converges, and it converges to a nonzero value because the left and right factors above are both nonzero.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark} \label{rem:inf-prod-abs-conv}
+	In fact, by replacing $\{a_k\}_{k\in\NN}$ with $\{|a_k|\}_{k\in\NN}$, the lemma tells us that
+	\[\prod_{k=1}^\infty(1+|a_k|)\]
+	also converges. In particular, the product converges absolutely.
+\end{remark}
+Now that we know how to take infinite products of elements, we can also take infinite products of functions. Here is our analogue of the Weierstrass $M$-test.
+\begin{proposition} \label{prop:inf-prod-holos}
+	Fix an open subset $\Omega\subseteq\CC$ and a sequence $\{f_k\}_{k\in\NN}$ of holomorphic functions $\Omega\to\CC$. Suppose that we have constants $\{c_k\}_{k\in\NN}\subseteq\CC$ such that
+	\[\sum_{k=1}^\infty|c_k|<\infty\qquad\text{and}\qquad|f_k(z)-1|<|c_k|\text{ for all }z.\]
+	Then the infinite product $f(z)\coloneqq\prod_{k=1}^\infty f_k(z)$ converges absolutely and uniformly on compacts to a holomorphic function $\Omega\to\CC$.
+\end{proposition}
+\begin{proof}
+	Set $a_k(z)\coloneqq f_k(z)-1$ for each $k$. Then we see
+	\[\sum_{k=1}^\infty|a_k(z)|\le\sum_{k=1}^\infty|c_k|<\infty,\]
+	so \Cref{rem:inf-prod-abs-conv} implies that the infinite product $f(z)$ converges absolutely for all $z\in\CC$.
+
+	Now, because each $f_k$ is holomorphic, each partial product defining $f$ is holomorphic, so it suffices by \Cref{lem:holo-limit} to show that the partial products converge uniformly to $f$. As in the previous proof, we have two cases.
+	\begin{enumerate}
+		\item Suppose that $|c_k|<1/2$ for each $k$. The idea is to use $\exp$ to turn our product into a sum. For technical reasons, we start by noting that $m>n$ gives
+		\[\left|\sum_{k=m}^n\log f_k(z)\right|\le\sum_{k=m}^n|\log(1+a_k(z))|\le\sum_{k=m}^n-\log(1-|a_k(z)|)\le\sum_{k=m}^n-\log(1-|c_k|)\le2\sum_{k=m}^n|c_k|,\]
+		where we have bounded as in the previous proof. (Here, $\log$ is defined using the power series.) In particular, this partial sum and even the full series has magnitude bounded by $C\coloneqq2\sum_{k=1}^\infty|c_k|$.
+
+		For psychological reasons, we note that $\exp$ has continuous and hence bounded derivative on the compact set $\overline{B(0,C)}$, so $\exp$ is Lipschitz continuous; let $L$ be the Lipschitz constant for $\exp$. The main computation is that any $z\in D$ have
+		\begin{align*}
+			\left|f(z)-\prod_{k=1}^nf_k(z)\right| &= \left|\exp\Bigg(\sum_{k=1}^\infty\log(1+a_k(z))\Bigg)-\exp\Bigg(\sum_{k=1}^n\log(1+a_k(z))\Bigg)\right| \\
+			&\le L\left|\sum_{k=n+1}^\infty\log(1+a_k(z))\right| \\
+			&\le 2L\sum_{k=n+1}^\infty|c_k|
+		\end{align*}
+		by the above bounding. However, as $n\to\infty$, this right-hand side goes to $0$ because $\sum_{k=1}^\infty|c_k|$ converges. The uniform convergence follows.
+
+		\item We reduce to the above case. Because $\sum_{k=1}^\infty|c_k|$ converges, we see $|c_k|\to0$ as $k\to\infty$, so there exists $n$ such that $|c_k|<1/2$ for $k>n$. Thus,
+		\[f(z)=\prod_{k=1}^nf_k(z)\cdot\prod_{k=n+1}^\infty f_k(z).\]
+		By the previous step, the convergence in the right (infinite) product is uniform, and the left term is a finite product, so the convergence in the original product is also uniform.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	It might look concerning that we have full uniform convergence instead of the usual more mild uniform convergence on compacts. However, the hypothesis requires that the $f_k$ are bounded, so $\Omega$ will have to be pretty small anyway if the $f_k$ are nonconstant.
+\end{remark}
+\begin{remark} \label{rem:vanishing-prod-in-abs-conv}
+	Note that the above proof shows that, for any $z\in\CC$, the sequence $\{a_n(z)\}_{n\in\NN}$ satisfies the hypotheses of \Cref{lem:pointwise-inf-prods}. Thus, $f(z)=0$ if and only if $f_k(z)=0$ for some $k$. As such, if $f(z)\ne0$, we note that the above proof tells us that the equality
+	\[\log f(z)=\sum_{k=1}^\infty\log f_k(z)\]
+	makes sense, and the sum converges absolutely.
+\end{remark}
+Because we are doing analysis, it will also be beneficial to be able to compute derivatives.
+\begin{corollary}
+	Fix an open subset $\Omega\subseteq\CC$ and a sequence $\{f_k\}_{k\in\NN}$ of holomorphic functions $\Omega\to\CC$. Suppose that we have constants $\{c_k\}_{k\in\NN}\subseteq\CC$ such that
+	\[\sum_{k=1}^\infty|c_k|<\infty\qquad\text{and}\qquad|f_k(z)-1|<|c_k|\text{ for all }z.\]
+	Then the infinite product $f(z)\coloneqq\prod_{k=1}^\infty f_k(z)$ satisfies
+	\[\frac{f'(z)}{f(z)}=\sum_{k=1}^\infty\frac{f_k'(z)}{f_k(z)}\]
+	if $f(z)\ne0$.
+\end{corollary}
+\begin{proof}
+	Let $p_n(z)$ denote the $n$th partial product. Combining \Cref{prop:inf-prod-holos} with \Cref{lem:holo-limit}, we know that $p_n'(z)\to f'(z)$ as $n\to\infty$. Now, $f(z)\ne0$ implies that $f_k(z)\ne0$ for each $k$ by \Cref{rem:vanishing-prod-in-abs-conv}, so $p_n(z)\ne0$ for each $n$ as well. Thus, we may add in the fact $p_n(z)\to f(z)$ as $n\to\infty$ to compute
+	\[\frac{f'(z)}{f(z)}=\lim_{n\to\infty}\frac{p_n'(z)}{p_n(z)}\stackrel*=\lim_{n\to\infty}\sum_{k=1}^n\frac{f_k'(z)}{f_k(z)}=\sum_{k=1}^\infty\frac{f_k'(z)}{f_k(z)}.\]
+	Note that $\stackrel*=$ holds because we can formally check that $\frac{(ab)'(z)}{(ab)(z)}=\frac{a'(z)}{a(z)}+\frac{b'(z)}{b(z)}$ for holomorphic functions $a$ and $b$ not vanishing at $z$. In particular, there is no need for a logarithm here.
+\end{proof}
+
+\end{document}

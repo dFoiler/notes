@@ -29,18 +29,6 @@ The statement of \Cref{thm:dirichlet} is purely elementary, but the standard pro
 The functions we will do analysis on are generalizations of the Riemann $\zeta$ function, defined as
 \[\zeta(s)\coloneqq\sum_{n=1}^\infty\frac1{n^s},\]
 which converges absolutely for $s\in\CC$ such that $\op{Re}s>1$. Indeed, we can show this.
-\begin{lemma} \label{lem:holo-limit}
-	Fix some open, connected subset $U\subseteq\CC$ and some function $f\colon U\to\CC$. Given holomorphic functions $f_n\colon U\to\CC$ for each $n\in\NN$, if $f_n\to f$ uniformly on all compact subsets $D\subseteq U$, then $f$ is holomorphic.
-\end{lemma}
-\begin{proof}
-	The point is to use Morera's theorem. Each $f_n$ is continuous, so we see $f$ is continuous as well. Thus, fixing any closed piecewise $C^1$ path $\gamma\colon[0,1]\to U$, we would like to show
-	\[\oint_\gamma f(z)\,dz\stackrel?=0.\]
-	Note $\im\gamma$ is compact, so $f_n\to f$ uniformly on $\im\gamma$. Thus, fixing any $\varepsilon>0$, we can find some $N$ such that
-	\[|f(z)-f_n(z)|<\varepsilon\]
-	for all $n>N$. Fixing any $n>N$, we find
-	\[\left|\oint_\gamma f(z)\,dz\right|=\left|\oint_\gamma f(z)\,dz-\oint_\gamma f_n(z)\,dz\right|\le\oint_\gamma|f(z)-f_n(z)|\,dz\le\varepsilon\ell(\gamma),\]
-	where $\ell(\gamma)$ is the length of $\gamma$. (Note $\ell(\gamma)$ is finite because $\gamma$ is piecewise $C^1$.) Sending $\varepsilon\to0^+$ finishes the proof.
-\end{proof}
 \begin{proposition} \label{prop:basic-dirichlet-series}
 	Let $f\colon\NN\to\CC$ denote a sequence of complex numbers such that $|f(n)|=O\left(n^\sigma\right)$ for some $\sigma\in\RR$. Then the series
 	\[D(s)\coloneqq\sum_{n=1}^\infty\frac{f(n)}{n^s}\]
@@ -71,6 +59,7 @@ The following factorization is due to Euler.
 \begin{proposition} \label{prop:euler-factor}
 	Let $f\colon\NN\to\CC$ be a multiplicative function such that $|f(n)|=O\left(n^\sigma\right)$. For any $s\in\CC$ such that $\op{Re}s>\sigma+1$, we have
 	\[\sum_{n=1}^\infty\frac{f(n)}{n^s}=\prod_{p\text{ prime}}\Bigg(\sum_{k=0}^\infty\frac{f\left(p^k\right)}{p^{ks}}\Bigg).\]
+	In fact, the product converges absolutely and uniformly on compacts.
 \end{proposition}
 \begin{proof}
 	Fix $s\in\CC$ with $\op{Re}s>\sigma+1$. Roughly speaking, this follows from unique prime factorization in $\ZZ$. For and $N$ and $M$ to be fixed later, define
@@ -89,7 +78,15 @@ The following factorization is due to Euler.
 	\[\left|P_{N,\infty}-\sum_{n=1}^\infty\frac{f(n)}{n^s}\right|=\left|\sum_{n\notin A_{N,\infty}}\frac{f(n)}{n^s}\right|\le\sum_{n\notin A_{N,\infty}}\left|\frac{f(n)}{n^s}\right|.\]
 	Now, we note that the smallest $n\notin A_{N,\infty}$ is at least $N$ because any $n<N$ has a prime factor less than $N$, so
 	\[\left|P_{N,\infty}-\sum_{n=1}^\infty\frac{f(n)}{n^s}\right|\le\sum_{n\ge N}\left|\frac{f(n)}{n^s}\right|,\]
-	and now we see that the right-hand side goes to $0$ as $N\to\infty$ because $\sum_{n=1}^\infty f(n)/n^s$ converges absolutely by \Cref{prop:basic-dirichlet-series}. The proposition follows.
+	and now we see that the right-hand side goes to $0$ as $N\to\infty$ because $\sum_{n=1}^\infty f(n)/n^s$ converges absolutely by \Cref{prop:basic-dirichlet-series}. The equality follows.
+
+	It remains to show that the product converges absolutely and uniformly on compacts. We use \Cref{prop:inf-prod-holos}. Indeed, fix some compact $D\subseteq\{s:\op{Re}s>\sigma+1\}$. Now, we want to upper-bound
+	\[a_p(s)=-1+\sum_{k=0}^\infty\frac{f\left(p^k\right)}{p^{ks}}=\sum_{k=1}^\infty\frac{f\left(p^k\right)}{p^{ks}}\]
+	on $D$. Well, let $\sigma_0$ denote the (achieved!) minimum of the continuous function $\op{Re}\colon D\to\RR$, and note that $\sigma_0>\sigma+1$. Now, $f(n)=O\left(n^\sigma\right)$ promises some constant $C$ such that $|f(n)|\le Cn^\sigma$ for all $n$. Thus, we see
+	\[|a_p(s)|\le\sum_{k=1}^\infty\left|\frac{f\left(p^k\right)}{p^{ks}}\right|\le C\sum_{k=1}^\infty\frac{p^{k\sigma}}{p^{k\sigma_0}}=C\cdot\frac{p^{\sigma-\sigma_0}}{1-p^{\sigma-\sigma_0}}<Cp^{\sigma-\sigma_0}.\]
+	Notably, the geometric series converges because $p^{\sigma-\sigma_0}<p^{-1}<1$. However, this finishes our check of absolute convergence by \Cref{prop:inf-prod-holos} because
+	\[\sum_{p\text{ prime}}Cp^{\sigma-\sigma_0}<C\sum_{n=1}^\infty\frac1{n^{\sigma_0-\sigma}}\]
+	converges because $\sigma_0-\sigma>1$.
 \end{proof}
 \begin{corollary} \label{cor:euler-factor-zeta}
 	We have
