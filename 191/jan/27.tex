@@ -202,8 +202,8 @@ In this subsection, we will collect a few facts about $\Gamma$ which will be hel
 	\[\Gamma(s)\Gamma(1-s)=\frac\pi{\sin(\pi s)}\ne0,\]
 	which forces $\Gamma(s)\ne0$. (Note this functional equation extends from $\{s:0<\op{Re}s<1\}$ to all $\CC\setminus\ZZ$ by uniqueness of analytic continuation.)
 \end{proof}
-\begin{remark}
-	\Cref{cor:continue-gamma} tells us that $1/\Gamma(s)$ is an entire function. Indeed, the poles of $\Gamma$ becomes $0$s, and $\Gamma$ has no zeroes to become poles!
+\begin{remark} \label{rem:recip-gamma-entire}
+	\Cref{cor:continue-gamma} tells us that $1/\Gamma(s)$ is an entire function. Indeed, the poles of $\Gamma$ becomes $0$s, and $\Gamma$ has no zeroes to become poles! Notably, \Cref{cor:continue-gamma} tells us that $1/\Gamma(s)$ is entire with only simple zeroes at the nonpositive integers $n$.
 \end{remark}
 While we're here, we give another application of \Cref{lem:add-gamma}.
 \begin{proposition} \label{prop:duplicate-gamma}
@@ -226,7 +226,209 @@ While we're here, we give another application of \Cref{lem:add-gamma}.
 \end{proof}
 
 \subsection{Bounds on \texorpdfstring{$\Gamma$}{ Gamma}}
-While $\Gamma$ is still fresh in our mind, we will prove a few bounds about it. We continue to roughly follow \cite{tao-gamma-function}.\todo{}
+While $\Gamma$ is still fresh in our mind, we will prove a few bounds about it. We continue to roughly follow \cite{tao-gamma-function}. From \Cref{thm:hadamard}, we know that a lower bound on $\Gamma$ will produce an upper bound on $1/\Gamma$ and thus a factorization of $1/\Gamma$. However, it will be convenient to actually provide this factorization first and then use it to produce bounds.
+\begin{proposition} \label{prop:hadamard-gamma}
+	For any $s\in\CC$, we have
+	\[\frac1{\Gamma(s)}=se^{\gamma s}\prod_{n=-1}^{-\infty}E_1(s/n).\]
+	Here, $\gamma$ is the Euler--Mascheroni constant, and $E_1(z)=(1-z)e^z$. In fact, this product converges absolutely and uniformly.
+\end{proposition}
+\begin{proof}
+	The infinite product converges absolutely and uniformly to an entire function by \Cref{lem:elem-factor-prod-lower-bound}. Indeed, we see that
+	\[\#\{k:-k<r\}=\floor r+1<r+1\ll r^{1+\varepsilon}\]
+	for any $\varepsilon>0$. (Formally, note $(r+1)r^{-1-\varepsilon}\to0$ as $r\to\infty$, so this continuous function is bounded.) So indeed, we have all the correct convergence.
+
+	It follows from the uniqueness of analytic continuation that we can just check the identity for $s\in\RR_{>0}$. Quickly, we remove the $\gamma$ term by writing
+	\begin{align*}
+		se^{\gamma s}\prod_{n=-1}^{-\infty}E_1(s/n) &= \lim_{n\to\infty}se^{\sum_{k=1}^ns/k-s\log n}\prod_{k=1}^n(1+s/k)e^{-s/k} \\
+		&= \lim_{n\to\infty}sn^{-s}\prod_{k=1}^n(1+s/k) \\
+		&= \lim_{n\to\infty}\frac{s(s+1)\cdots(s+n)}{n^sn!}.
+	\end{align*}
+	Thus, it suffices to show that
+	\[\Gamma(s)\stackrel?=\lim_{n\to\infty}\frac{n^sn!}{s(s+1)\cdots(s+n)}.\]
+	Using the functional equation $\Gamma(s+1)=s\Gamma(s)$ from \Cref{lem:ind-continue-gamma} inductively tells us that $\Gamma(n+1)=n!$ and $\Gamma(s+n+1)=(s+n)\cdots(s+1)s\Gamma(s)$, so we see
+	\[\lim_{n\to\infty}\frac{n^sn!}{s(s+1)\cdots(s+n)}=\lim_{n\to\infty}\left(n^s\cdot\frac{\Gamma(s)\Gamma(n+1)}{\Gamma(s+n+1)}\right).\]
+	Now using \Cref{lem:add-gamma}, this is
+	\begin{align*}
+		\lim_{n\to\infty}n^s\cdot\frac{\Gamma(s)\Gamma(n+1)}{\Gamma(s+n+1)} &= \lim_{n\to\infty}n^s\int_0^1t^{s-1}(1-t)^n\,dt \\
+		&= \lim_{n\to\infty}\int_0^1(nt)^{s-1}(1-t)^n\,ndt \\
+		&= \lim_{n\to\infty}\int_0^nt^{s-1}\left(1-\frac tn\right)^n\,dt.
+	\end{align*}
+	We would like to use the Dominated convergence to compute this limit of integrals as $\Gamma(s)$. As such, we for each $n$, define
+	\[f_n(t)\coloneqq t^{s-1}\left(1-\frac tn\right)^n1_{\le n}(t).\]
+	We would like to use the Dominated convergence theorem on the $f_n$. Well, for $t\ge n$, we see $f_n(t)=0$, and for $t<n$, we see
+	\[\log f_n(t)=(s-1)\log t+n\log\left(1-\frac tn\right)\stackrel*\le(s-1)\log t+n\left(1-\frac tn\right)=(s-1)\log t-t,\]
+	where $\stackrel*\le$ holds by using the power series $-\log(1-x)=x+\frac{x^2}2+\frac{x^3}3+\cdots$. Thus, $f_n(t)\le t^{s-1}e^{-t}$, which has a finite integral over $(0,\infty)$ bounded by $\Gamma(s)$. Thus, by the Dominated convergence theorem, we see
+	\[\lim_{n\to\infty}\int_0^\infty f_n(t)\,dt=\int_0^\infty\left(\lim_{n\to\infty}f_n(t)\right)\,dt=\int_0^\infty t^{s-1}e^{-t}\,dt=\Gamma(s),\]
+	where we have used the fact that $\left(1-\frac tn\right)^n\to e^{-t}$ as $n\to\infty$. (This also can be seen by taking logs and bounding the error term.) This completes the proof.
+\end{proof}
+\begin{corollary} \label{cor:bound-log-gamma-deriv}
+	For $s\in\CC\setminus\ZZ_{\le0}$, we have
+	\[\frac{\Gamma'(s)}{\Gamma(s)}=\lim_{n\to\infty}\Bigg(\log n-\sum_{k=0}^n\frac1{s+k}\Bigg).\]
+\end{corollary}
+\begin{proof}
+	Note that the product of \Cref{prop:hadamard-gamma} converges absolutely and uniformly. Thus, \Cref{cor:deriv-inf-prod} applies and tells us that
+	\[-\frac{\Gamma'(s)}{\Gamma(s)}=\frac{(1/\Gamma)'(s)}{(1/\Gamma)(s)}=\underbrace{\frac1s}_s+\underbrace{\gamma}_{e^{\gamma s}}+\sum_{k=-1}^{-\infty}\underbrace{\frac1k\cdot\frac{E_1'(s/k)}{E_1(s/k)}}_{E_1(s/k)}\]
+	wherever $1/\Gamma(s)\ne0$, which is exactly $s\in\CC\setminus\ZZ_{\le0}$ by \Cref{rem:recip-gamma-entire}. Now, we see
+	\[\frac{E_1'(z)}{E_1(z)}=\frac{1}{z-1}+1,\]
+	so
+	\[\frac{\Gamma'(s)}{\Gamma'(s)}=-\frac1s-\gamma+\sum_{k=-1}^{-\infty}\left(\frac1{-k}-\frac1{s-k}\right)=-\frac1s-\gamma+\sum_{k=1}^{\infty}\left(\frac1{k}-\frac1{s+k}\right),\]
+	where we must be very careful about signs. To finish, we use the definition of $\gamma$ to write
+	\[\frac{\Gamma'(s)}{\Gamma(s)}=\lim_{n\to\infty}\Bigg(-\frac1s+\log n-\sum_{k=1}^{n}\frac1k+\sum_{k=1}^n\left(\frac1{k}-\frac1{s+k}\right)\Bigg)=\lim_{n\to\infty}\Bigg(\log n-\sum_{k=0}^n\frac1{s+k}\Bigg),\]
+	which is what we wanted.
+\end{proof}
+Thus, to estimate $\Gamma'/\Gamma$, we want to know about the rate of growth of harmonic numbers. It turns out that Abel summation is not quite good enough for our purposes, so we will have to integrate by parts one more time.
+\begin{lemma}[Trapezoid rule] \label{lem:trapezoid}
+	Fix a continuously twice-differentiable function $f\colon[m,n]\to\CC$, where $m<n$ are integers. Then
+	\[\sum_{k=m}^nf(k)=\int_m^nf(t)\,dt+\frac{f(m)+f(n)}2+O\left(\int_m^n|f''(t)|\,dt\right).\]
+\end{lemma}
+\begin{proof}
+	This is integration by parts twice. Indeed, we see
+	\begin{align*}
+		\int_m^nf(t)\,dt &= \sum_{k=m}^{n-1}\int_k^{k+1}f(t)\,dt \\
+		&= \sum_{k=m}^{n-1}\left(\frac12f(k+1)--\frac12f(k)-\int_k^{k+1}\left(t-n-\frac12\right)f'(t)\,dt\right) \\
+		&= \sum_{k=m}^{n-1}\left(\frac{f(k+1)+f(k)}2-\int_k^{k+1}\left(t-n-\frac12\right)f'(t)\,dt\right) \\
+		&= \sum_{k=m}^{n-1}\Bigg(\frac{f(k+1)+f(k)}2-\left(\frac12\left(n+1-n-\frac12\right)^2-\frac18\right)f'(n+1) \\
+		&\qquad+\left(\frac12\left(n-n-\frac12\right)^2-\frac18\right)f'(n)+\int_k^{k+1}\left(\frac12\left(t-n-\frac12\right)^2-\frac18\right)f''(t)\,dt\Bigg) \\
+		&= \sum_{k=m}^{n-1}\Bigg(\frac{f(k+1)+f(k)}2+\frac12\int_k^{k+1}\left(\{t\}^2-\{t\}\right)f''(t)\,dt\Bigg) \\
+		&= \sum_{k=m}^nf(k)-\frac{f(m)+f(n)}2+\frac12\int_m^n\left(\{t\}^2-\{t\}\right)f''(t)\,dt.
+	\end{align*}
+	Rearranging the above equality finishes upon noting that the function $\frac{\{t\}^2-\{t\}}2$ has a maximum (for example, it is bounded in magnitude by $\frac{1+1}2=1$).
+\end{proof}
+And here is our estimate.
+\begin{proposition} \label{prop:bound-digamma}
+	Fix $\varepsilon\in(0,\pi)$. For $s\in\{z\in\CC:|\arg z|<\pi-\varepsilon\}$, we have
+	\[\frac{\Gamma'(s)}{\Gamma(s)}=\log s-\frac1{2s}+O_\varepsilon\left(1/|s|^2\right).\]
+\end{proposition}
+\begin{proof}
+	We use \Cref{cor:bound-log-gamma-deriv}. Using \Cref{lem:trapezoid}, we set $f(t)\coloneqq1/(s+t)$ so that
+	\begin{align*}
+		\sum_{k=0}^n\frac1{s+k} &= \int_0^n\frac1{s+t}\,dt+\frac{f(0)+f(n)}2+O\left(\int_0^n\frac2{|s+t|^3}\,dt\right) \\
+		&= \log(n+s)-\log s+\frac1{2s}+\frac1{2(n+s)}+O\left(\int_0^n\frac2{|s+t|^3}\,dt\right).
+	\end{align*}
+	We would like for the integral to be $O_\varepsilon\left(1/|s|^2\right)$ as $n\to\infty$. We have two cases.
+	\begin{itemize}
+		\item If $\op{Re}s\ge0$, then $|s+t|\ge\op{Re}(s+t)\ge t$ and $|s+t|\ge|s|$ for each $t\ge0$, so we can easily upper-bound
+		\begin{align*}
+			\int_0^n\frac2{|s+t|^3}\,dt &\le \int_0^1\frac2{|s+t|^3}\,dt+\int_1^\infty\frac2{|s+t|^3}\,dt\\
+			&\le \int_0^1\frac2{|s|^3}\,dt+\int_1^\infty\frac2{|t|^3}\,dt\\
+			&= \frac2{|s|^3}+\left(-\frac1{t^2}\bigg|_{1}^\infty\right) \\
+			&= \frac2{|s|^3}-1,
+		\end{align*}
+		which is in fact $O\left(1/|s|^2\right)$.
+
+		\item If $\op{Re}s<0$, then we note $\op{Im}s>0$ because $\arg z\ne\pi$. Here the bounding is harder; take $n>2|s|$ for convenience. For large values of $t$, we note $t\ge2|s|$ will make $|s+t|\ge t-|s|$ fairly large, so
+		\[\int_{2|s|}^n\frac2{|s+t|^3}\,dt\le\int_{2|s|}^\infty\frac2{(t-|s|)^3}\,dt=-\frac1{(t-|s|)^2}\bigg|_{2|s|}^\infty=\frac1{|s|^2},\]
+		which is $O\left(1/|s|^2\right)$.
+		
+		Now, the interval $t\in[0,2|s|]$ is more difficult to handle. Because $t$ is real, we note that $|s+t|=\sqrt{(t+\op{Re}s)^2+(\op{Im}s)^2}\ge|\op{Im}s|$, which is perhaps the best we can do because $s+t$ can have arbitrarily small real part in this interval. However, letting $\theta\coloneqq\arg z$, we note that
+		\[\frac{\op{Im}s}{|s|}=|\sin\theta|\ge\sin(\pi-\varepsilon)\]
+		by assumption on $\arg s$. Thus,
+		\[\int_0^{2|s|}\frac2{|s+t|^3}\,dt\le\int_0^{2|s|}\frac2{|\op{Im}s|^3}\,dt=2|s|\cdot\frac2{|\op{Im}s|^3}\le4|\sin(\pi-\varepsilon)|^3\cdot\frac1{|s|^2},\]
+		which is still $O_\varepsilon\left(1/|s|^2\right)$, so we are safe. Totaling our integrals finishes.
+	\end{itemize}
+	In total, we see that
+	\[\sum_{k=0}^n\frac1{s+k}=\log(n+s)-\log s+\frac1{2s}+\frac1{2(n+s)}+O_\varepsilon\left(1/|s|^2\right).\]
+	Thus, by \Cref{cor:bound-log-gamma-deriv}, we see
+	\begin{align*}
+		\frac{\Gamma'(s)}{\Gamma(s)} &= \lim_{n\to\infty}\Bigg(\log n-\sum_{k=0}^n\frac1{s+k}\Bigg) \\
+		&= \lim_{n\to\infty}\left(\log n-\log(n+s)+\log s-\frac1{2s}-\frac1{2(n+s)}+O_\varepsilon\left(1/|s|^2\right)\right) \\
+		&= \log s-\frac1{2s}+\lim_{n\to\infty}\left(\log\left(1-\frac s{n+s}\right)-\frac1{2(n+s)}\right)+O_\varepsilon\left(1/|s|^2\right) \\
+		&= \log s-\frac1{2s}+O_\varepsilon\left(1/|s|^2\right),
+	\end{align*}
+	which is what we wanted.
+\end{proof}
+Taking the integral of this allows us to recover a version of Stirling's approximation.
+\begin{proposition}[Stirling's approximation] \label{prop:stirling}
+	Fix $\varepsilon\in(0,\pi/2)$. For $s\in\{z\in\CC:|\arg z|<\pi-\varepsilon\}$, we have
+	\[\log\Gamma(s)=\left(s-\frac12\right)\log s-s+\frac12\log2\pi+O_\varepsilon(1/|s|).\]
+\end{proposition}
+\begin{proof}
+	Set $\Omega_\varepsilon\coloneqq\{z\in\CC:|\arg z|<\pi-\varepsilon\}$; note that $\Omega_\varepsilon$ is convex because (roughly speaking) any complex nonzero complex number on the line segment connecting two nonzero complex numbers $\alpha,\beta$ will have argument between the two arguments of $\alpha$ and $\beta$. Anyway, we proceed in steps.
+	\begin{enumerate}
+		\item The function $\Gamma$ is holomorphic on $\Omega_\varepsilon$ and does not vanish there by \Cref{rem:recip-gamma-entire}, so \Cref{lem:no-vanish-has-log} grants us a logarithm. In fact, using \Cref{rem:explicit-log} to get our explicit logarithm, we see
+		\[\log\Gamma(s)=\underbrace{\log\Gamma(1)}_0+\int_1^s\frac{\Gamma'(z)}{\Gamma(z)}\,dz,\]
+		where the integral here is along the straight line from $1$ to $s$ (which does live in $\Omega_\varepsilon$ because $\Omega_\varepsilon$ is convex). Thus, we see we do in fact want to integrate the bound given by \Cref{prop:bound-digamma}.
+
+		\item Being a little careful, we set
+		\[E_\varepsilon(s)\coloneqq\frac{\Gamma'(s)}{\Gamma(s)}-\log s+\frac1{2s}.\]
+		Notably, $E_\varepsilon$ is holomorphic on $\Omega_\varepsilon$ because the right-hand side here is holomorphic on $\Omega_\varepsilon$ (for suitably chosen $\log$), so $E_\varepsilon$ is in particular integrable. Additionally, we note that $|E_\varepsilon(s)|\le C_\varepsilon/|s|^2$ for some constant $C_\varepsilon$ and $|s|$ large enough. Thus, fixing $s$ and some large $N>|s|$, we compute for $|s|$ large enough that
+		\[\int_1^sE_\varepsilon(z)\,dz = \int_1^NE_\varepsilon(z)\,dz-\int_s^NE_\varepsilon(z)\,dz.\]
+		The left integral here converges absolutely as $N\to\infty$ because
+		\[\int_1^\infty|E_\varepsilon(z)|\,dz\le C_\varepsilon\int_1^\infty\frac1{z^2}\,dz=C_\varepsilon.\]
+		We would like to show that the right integral is $O_\varepsilon(1/|s|)$. However, if $s$ is close to the negative real axis, there are potentially large contributions of the integral when $z$ is roughly $0$, so we change our path.
+		
+		Instead of using the straight line from $s$ to $N$, we follow the arc of a circle with center at $z=0$ and radius $|s|$ until we hit the positive real axis (moving clockwise if $\op{Re}s>0$ and counterclockwise otherwise); then we move along the positive real axis from $|s|$ to $N$. Letting $\gamma$ denote this arc, we see
+		\begin{align*}
+			\left|\int_s^NE_\varepsilon(z)\,dz\right|&\le\left|\int_\gamma E_\varepsilon(z)\,dz\right|+\left|\int_{|s|}^NE_\varepsilon(z)\,dz\right| \\
+			&\le \ell(\gamma)\cdot\max_{z\in\im\gamma}\{|E_\varepsilon(z)|\}+\int_{|s|}^N|E_\varepsilon(z)|\,dz \\
+			&\le \pi|s|\cdot\frac{C_\varepsilon}{|s|^2}+C_\varepsilon\int_{|s|}^N\frac1{z^2}\,dz \\
+			&= \frac{C_\varepsilon\pi}{|s|}+\frac{C_\varepsilon}{|s|}-\frac{C_\varepsilon}N.
+		\end{align*}
+		In total, we see
+		\[\int_1^sE_\varepsilon(z)\,dz=\int_1^NE_\varepsilon(z)\,dz+O\left(\frac{C_\varepsilon\pi}{|s|}+\frac{C_\varepsilon}{|s|}-\frac{C_\varepsilon}N\right).\]
+		Sending $N\to\infty$ shows that this is
+		\[\int_1^sE_\varepsilon(z)\,dz=\underbrace{\int_1^\infty E_\varepsilon(z)\,dz}_{C\coloneqq}{}+{}O_\varepsilon(1/|s|),\]
+		which is good enough for our purposes.
+
+		\item Integrating over $E_\varepsilon$, we see
+		\begin{align*}
+			\log\Gamma(s) &= \int_1^s\frac{\Gamma'(z)}{\Gamma(z)}\,dz \\
+			&= \int_1^s\left(\log z-\frac1{2z}\right)\,dz+\int_1^sE_\varepsilon(z)\,dz \\
+			&= s\log s-s-\frac12\log s+C+O_\varepsilon(1/|s|) \\
+			&= \left(s-\frac12\right)\log s-s+C+O_\varepsilon(1/|s|)
+		\end{align*}
+		for some constant $C$ chosen above.
+		
+		\item It remains to show $C=\frac12\log2\pi$. For this, we use \Cref{prop:gamma-func-eq}. We restrict our attention to $\Omega'_\varepsilon\coloneqq\{z\in\CC:\varepsilon<|\arg z|<\pi-\varepsilon\}$. For $t>0$, set $s\coloneqq\frac12+it$; notably, $s,1-s\in\Omega_\varepsilon$ for $t>\frac12$ because this gives $\arg s,\arg(1-s)\in(-\pi/2,\pi/2)$. Also, $|s|=|1-s|\ge t$. Thus, on one hand, we can use our bound above to show
+		\begin{align*}
+			\log\Gamma(s)\Gamma(1-s) &= \log\Gamma(s)+\log\Gamma(1-s) \\
+			&= it\log\left(\frac12+it\right)-\left(\frac12+it\right)+C-it\log\left(\frac12-it\right)-\left(\frac12-it\right)+C+O_\varepsilon(1/|t|) \\
+			&= 2C+it\log\left(\frac{1/(2t)+i}{1/(2t)-i}\right)-1+O_\varepsilon(1/|t|).
+		\end{align*}
+		We are going to need to understand the log term here more carefully. Choosing a suitable branch of $\log$ (say, now away from the positive reals), we write $x\coloneqq1/t$ so that we are interested in the behavior of the holomorphic function $f(x)\coloneqq\log\left(\frac{x/2+i}{x/2-i}\right)$ at $x=0$. Notably, $f(0)=\log(-1)=\pi i$ (for some choice of branch of $\log$). Additionally, we see
+		\[f'(x)=\frac{1/2}{x/2+i}-\frac{1/2}{x/2-i}\]
+		yields $f'(0)=-i$. Thus, our power series for $f$ is given by $f(x)=\pi i-it+\cdots$,
+		so
+		\[\lim_{t\to\infty}\left(\pi t+it\log\left(\frac{1/(2t)+it}{1/(2t)-i}\right)\right)=\lim_{x\to0}\frac{if(x)+\pi}x=1.\]
+		On the other hand, we see
+		\begin{align*}
+			\log\left(\frac\pi{\sin(\pi s)}\right) &= \log\pi-\log\sin\left(\frac\pi2+\pi it\right) \\
+			&= \log\pi-\log\left(\frac{e^{i\pi/2-\pi t}-e^{-i\pi/2+\pi t}}{2i}\right) \\
+			&= \log\pi-\log\left(\frac{e^{\pi t}+e^{-\pi t}}{2}\right) \\
+			&= -\pi t+\log2\pi-\log\left(1+e^{-2\pi t}\right),
+		\end{align*}
+		up to multiples of $2\pi i$, so
+		\[2C+it\log\left(\frac{1/(2t)+i}{1/(2t)-i}\right)-1+O_\varepsilon(1/|t|)=-\pi t+\log2\pi-\log\left(1+e^{-2\pi t}\right).\]
+		Quickly, we rearrange this to
+		\[2C+\left(\pi t+it\log\left(\frac{1/(2t)+i}{1/(2t)-i}\right)-1\right)+O_\varepsilon(1/|t|)=\log2\pi-\log\left(1+e^{-2\pi t}\right).\]
+		Thus, sending $t\to\infty$ makes almost all terms vanish, leaving us with $C=\frac12\log2\pi$ (up to a multiple of $2\pi i$). This completes the proof.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{corollary}
+	Fix real numbers $a<b$. For any $\sigma\in[a,b]$, we have
+	\[|\Gamma(\sigma+it)|\sim_{a,b}\sqrt{2\pi}e^{-\pi|t|/2}|t|^{\sigma-1/2}\]
+	as $|t|\to\infty$.
+\end{corollary}
+\begin{proof}
+	For psychological reasons, we quickly reduce to the case where $t>0$. By definition of $\Gamma$, we see that $\Gamma(s)\in\RR$ if $s\in\RR_{>0}$, so $\Gamma(s)=\overline{\Gamma(\overline s)}$. However, these are both holomorphic functions, so the uniqueness of analytic continuation enforces
+	\[|\Gamma(\sigma+it)|=|\overline{\Gamma(\sigma+it)}|=|\Gamma(\overline{\sigma+it})|=|\Gamma(\sigma-it)|.\]
+	Thus, adjusting for the sign appropriately, we may assume $t>0$ in the argument which follows.
+
+	Now, this bound is an application of \Cref{prop:stirling}. Set $\varepsilon\coloneqq\pi/4$ and assume that $t>\max\{|a|,|b|\}$ throughout so that $\arg s\in(\pi/4,3\pi/4)$. Thus, noting $|s|\ge t$, we get the estimate
+	\begin{align*}
+		\log\Gamma(\sigma+it) &= \left(\sigma+it-\frac12\right)\log(\sigma+it)-(\sigma+it)+\frac12\log2\pi+O(1/t) \\
+		&= \left(\sigma-\frac12\right)\log t+it\log\left(\frac\sigma t+i\right)-\sigma+\frac12\log2\pi\\
+		&\qquad+\left(\sigma-\frac12\right)\log\left(\frac\sigma t+i\right)+it(\log t-1)+O(1/t).
+	\end{align*}
+	Because we want $|\Gamma(\sigma+it)|=\exp(\op{Re}\log\Gamma(\sigma+it))$, we are primarily interested in the real part of the above expression. Notably, $\log\left(\frac\sigma t+i\right)\to\log i=\pi i/2$ as $t\to\infty$, so this term contributes no real part. Similarly, $it(\log t-1)$ is purely imaginary and doesn't matter.
+
+	The hardest term left to understand is $it\log\left(\frac\sigma t+i\right)$. Well, set $x\coloneqq1/t$ and $f(x)\coloneqq\log(\sigma x+i)$, and we want to understand the behavior of $f$ around $x=0$. Notably, for suitably chosen $\log$, we are holomorphic at $x=0$ with $f(0)=\log i=i\pi/2$ and $f'(0)=\frac\sigma{\sigma\cdot0+i}=-\sigma i$. Thus,
+	\[\lim_{t\to\infty}\left(it\log\left(\frac\sigma t+i\right)-\sigma+\frac\pi2t\right)=\lim_{x\to0}\frac{if(x)+\frac\pi2-\sigma x}{x}=0,\]
+	so in total,
+	\[\lim_{t\to\infty}\log\left|\frac{\Gamma(\sigma+it)}{\sqrt{2\pi}e^{-\pi t/2}t^{\sigma-1/2}}\right|=\lim_{t\to\infty}\left(\left(\sigma-\frac12\right)\log t-\log t^{\sigma-1/2}+it\log\left(\frac\sigma t+i\right)-\sigma+\frac\pi2t\right)=0.\]
+	Taking $\exp$ of both sides completes the proof.
+\end{proof}
 
 \subsection{The Functional Equation}
 We now return to discussing the functional equation for $\zeta$. Being concrete, we will want to fix a particular Schwarz function $f\colon\RR\to\RR$. Staring at \Cref{cor:abstract-func-eq}, we see that it will be helpful to have control over both $f$ and $\mc Ff$, so we will take $f(x)\coloneqq e^{-\pi x^2}$, even this of course does not satisfy all the hypotheses. The associated function $S_f$ has a name.
@@ -388,7 +590,7 @@ This functional equation grants us some basic knowledge about the zeroes of $\ze
 	\begin{listalph}
 		\item More generally, we claim that $\overline{\zeta(\overline s)}=\zeta(s)$ for $s\in\CC\setminus\{1\}$, from which the claim will follow.
 		
-		Because $\zeta$ is holomorphic in this region, we see that $s\mapsto\overline{\zeta(s)}$ is also holomorphic. (Formally, we can just check that $\zeta(x+yi)=u(x+yi)+iv(x+yi)$ satisfying the Cauchy--Riemann equations implies that $u(x-yi)-iv(x-yi)$ does as well.) So by the uniqueness of analytic continuation, it suffices to check the result for $s\in\RR_{>1}$, which is clear because $\zeta$ is real on this line, so
+		Because $\zeta$ is holomorphic in this region, we see that $s\mapsto\overline{\zeta(\overline s)}$ is also holomorphic. (Formally, we can just check that $\zeta(x+yi)=u(x+yi)+iv(x+yi)$ satisfying the Cauchy--Riemann equations implies that $u(x-yi)-iv(x-yi)$ does as well.) So by the uniqueness of analytic continuation, it suffices to check the result for $s\in\RR_{>1}$, which is clear because $\zeta$ is real on this line, so
 		\[\zeta(s)=\zeta(\overline s)=\overline{\zeta(\overline s)}.\]
 
 		\item For any positive integer $n$, write

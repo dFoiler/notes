@@ -157,6 +157,11 @@ Here is are a couple useful corollaries of \Cref{thm:morera}.
 	\[h'(z)=\frac{f(z)\cdot\exp(g(z))g'(z)-\exp(g(z))f'(z)}{f(z)^2}=0,\]
 	so $h$ is constant. But $h(0)=1$ by construction of $f$ and $g$, so $h(z)=1$ for each $z$.
 \end{proof}
+\begin{remark} \label{rem:explicit-log}
+	Unwinding the proof of \Cref{prop:build-primitive} and \Cref{lem:no-vanish-has-log}, we see that we can actually explicitly define $g$ by
+	\[g(z)\coloneqq\log f(z_0)+\int_\gamma\frac{f'(z)}{f(z)}\,dz,\]
+	where $z_0\in\Omega$ is any point, and $\gamma$ is any path connecting $z_0$ to $z$.
+\end{remark}
 
 \section{Differentiation Under the Integral}
 While we're here, we pick up the following very useful technical result from \cite{mattner-diff-under-sign}.
@@ -256,6 +261,24 @@ Throughout analytic number theory, it is useful to take infinite products for on
 	\[\prod_{k=1}^\infty(1+|a_k|)\]
 	also converges. In particular, the product converges absolutely.
 \end{remark}
+We even have a converse to the above result.
+\begin{lemma} \label{lem:inf-prod-abs-conv-converse}
+	Fix a sequence of complex numbers $\{a_k\}_{k\in\NN}$ such that the infinite product
+	\[\prod_{k=1}^\infty(1+a_k)\]
+	converges absolutely. Then $\sum_{k=1}^\infty|a_k|$ converges.
+\end{lemma}
+\begin{proof}
+	We may replace $\{a_k\}_{k\in\NN}$ with $\{|a_k|\}_{k\in\NN}$ so that we can assume that the $a_k$ are positive real numbers. Now, the convergence of the infinite product allows us to use the continuity of $\log$ to write
+	\[\log\Bigg(\prod_{k=1}^\infty(1+a_k)\Bigg)=\log\Bigg(\lim_{n\to\infty}\prod_{k=1}^n(1+a_k)\Bigg)=\lim_{n\to\infty}\sum_{k=1}^n\log(1+a_k)=\sum_{k=1}^\infty\log(1+a_k).\]
+	In particular, this infinite sum converges, so $\log(1+a_k)\to0$ as $k\to\infty$, so we can find $N$ large enough so that $\log(1+a_k)<\log(3/2)$ for each $k>N$, meaning that $1+a_k<3/2$ and so $a_k<1/2$. But here we note that $\log$ is concave down, so
+	\[\log(1+a_k)\ge\frac{(1/2-a_k)\log(1+0)+a_k\log(1+1/2)}{1/2}=a_k\cdot2\log(3/2).\]
+	For psychological reasons, we note that $3\log(3/2)=\log(27/8)>\log3>1$, so we see $\log(1+a_k)>\frac23a_k$ here. In total, we see
+	\[\sum_{k=1}^\infty a_k=\sum_{k=1}^Na_k+\frac32\sum_{k>N}\frac23a_k\le\sum_{k=1}^Na_k+\frac32\sum_{k>N}\log(1+a_k)<\infty,\]
+	so the sum converges. This completes the proof.
+\end{proof}
+\begin{remark} \label{rem:inf-prod-abs-conv-vanishing}
+	Combining \Cref{lem:inf-prod-abs-conv-converse,lem:pointwise-inf-prods} shows that an infinite product which converges absolutely will only vanish if any of the factors vanish.
+\end{remark}
 Now that we know how to take infinite products of elements, we can also take infinite products of functions. Here is our analogue of the Weierstrass $M$-test.
 \begin{proposition} \label{prop:inf-prod-holos}
 	Fix an open subset $\Omega\subseteq\CC$ and a sequence $\{f_k\}_{k\in\NN}$ of holomorphic functions $\Omega\to\CC$. Suppose that we have constants $\{c_k\}_{k\in\NN}\subseteq\CC$ such that
@@ -296,15 +319,13 @@ Now that we know how to take infinite products of elements, we can also take inf
 	makes sense, and the sum converges absolutely.
 \end{remark}
 Because we are doing analysis, it will also be beneficial to be able to compute derivatives.
-\begin{corollary}
-	Fix an open subset $\Omega\subseteq\CC$ and a sequence $\{f_k\}_{k\in\NN}$ of holomorphic functions $\Omega\to\CC$. Suppose that we have constants $\{c_k\}_{k\in\NN}\subseteq\CC$ such that
-	\[\sum_{k=1}^\infty|c_k|<\infty\qquad\text{and}\qquad|f_k(z)-1|<|c_k|\text{ for all }z.\]
-	Then the infinite product $f(z)\coloneqq\prod_{k=1}^\infty f_k(z)$ satisfies
+\begin{corollary} \label{cor:deriv-inf-prod}
+	Fix an open subset $\Omega\subseteq\CC$ and a sequence $\{f_k\}_{k\in\NN}$ of holomorphic functions $\Omega\to\CC$. Suppose that the infinite product $f(z)\coloneqq\prod_{k=1}^\infty f_k(z)$ converges absolutely and uniformly on compacts. Then
 	\[\frac{f'(z)}{f(z)}=\sum_{k=1}^\infty\frac{f_k'(z)}{f_k(z)}\]
 	if $f(z)\ne0$.
 \end{corollary}
 \begin{proof}
-	Let $p_n(z)$ denote the $n$th partial product. Combining \Cref{prop:inf-prod-holos} with \Cref{lem:holo-limit}, we know that $p_n'(z)\to f'(z)$ as $n\to\infty$. Now, $f(z)\ne0$ implies that $f_k(z)\ne0$ for each $k$ by \Cref{rem:vanishing-prod-in-abs-conv}, so $p_n(z)\ne0$ for each $n$ as well. Thus, we may add in the fact $p_n(z)\to f(z)$ as $n\to\infty$ to compute
+	Let $p_n(z)$ denote the $n$th partial product. By \Cref{lem:holo-limit}, we know that $p_n'(z)\to f'(z)$ as $n\to\infty$. Now, $f(z)\ne0$ implies that $f_k(z)\ne0$ for each $k$ by \Cref{rem:vanishing-prod-in-abs-conv}, so $p_n(z)\ne0$ for each $n$ as well. Thus, we may add in the fact $p_n(z)\to f(z)$ as $n\to\infty$ to compute
 	\[\frac{f'(z)}{f(z)}=\lim_{n\to\infty}\frac{p_n'(z)}{p_n(z)}\stackrel*=\lim_{n\to\infty}\sum_{k=1}^n\frac{f_k'(z)}{f_k(z)}=\sum_{k=1}^\infty\frac{f_k'(z)}{f_k(z)}.\]
 	Note that $\stackrel*=$ holds because we can formally check that $\frac{(ab)'(z)}{(ab)(z)}=\frac{a'(z)}{a(z)}+\frac{b'(z)}{b(z)}$ for holomorphic functions $a$ and $b$ not vanishing at $z$. In particular, there is no need for a logarithm here.
 \end{proof}
