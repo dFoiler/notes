@@ -62,29 +62,66 @@ Today we began by completing the proof of the functional equation. I have direct
 % 	where $I(s)$ is holomorphic. This completes the proof.
 % \end{proof}
 
-\subsection{Zeroes of \texorpdfstring{$\zeta$}{ Zeta}}
-We would like to understand the zeroes of $\zeta(s)$, for which we use Cauchy's formula. Roughly speaking, we will study integrals
+\subsection{Counting Zeroes of \texorpdfstring{$\zeta$}{ Zeta}}
+We would like to understand the (nontrivial) zeroes of $\zeta(s)$, for which we use Cauchy's formula. Roughly speaking, we will study integrals
 \[\frac1{2\pi i}\oint_\gamma\frac{\zeta'(s)}{\zeta(s)}\,ds,\]
 where $\gamma$ is a contour over a very tall vertical strip in $\CC$.
 
-We will want the following bounds.
-\begin{lemma}[Stirling]
-	We have
-	\[\log\Gamma(s)=\left(s-\frac12\right)\log s+\frac12\log2\pi+O_\delta(1/|s|),\]
-	and
-	\[\frac{\Gamma'(s)}{\Gamma(s)}=\log s+O_\delta(1/|s|)\]
-	as $|s|\to\infty$ for $-\pi+\delta<\arg s<\pi-\delta$.
+It will be convenient to work with the more symmetric (and entire) function $\Xi$ instead of $\zeta$. Let's justify this.
+\begin{lemma}
+	We have an equality of multisets
+	\[\{s\in\CC:\Xi(s)=0\}=\{s\in\CC:\zeta(s)=0\text{ and }0\le\op{Re}s\le1\}.\]
 \end{lemma}
 \begin{proof}
-	Omitted.
+	Recall that $\Xi(s)=s(1-s)\pi^{-s/2}\Gamma(s/2)\zeta(s)$. We now show our two inclusions.
+	\begin{itemize}
+		\item If $\zeta(s)=0$ and $0\le\op{Re}s\le1$, then we $s\ne1$ (because $\zeta(s)$ has a pole there by \Cref{prop:continue-zeta}) and $s\ne0$ by \Cref{ex:zeta-zero}, and we note $\pi^{-s/2}\ne0$. Thus, $s\ne0$, so $\Gamma(s/2)\ne0$ by \Cref{cor:continue-gamma} as well, so the order of vanishing of $\zeta$ at $s$ equals the order of vanishing of $\Xi$ at $s$.
+		\item If $\Xi(s)=0$, then one of the factors must vanish. For $s=0$, we see $\Gamma(s/2)$ has a simple pole by \Cref{cor:continue-gamma} cancelling out the zero. For $s=1$, we see $\zeta(s)$ has a simple pole by \Cref{prop:continue-zeta} cancelling out the zero. Further, $\Gamma(s/2)$ has no zeroes at all by \Cref{rem:recip-gamma-entire}. Thus, we see we must have $\zeta(s)=0$, and in fact $s$ cannot be a trivial zero because $\Gamma(s/2)$ has simple poles there to cancel out those zeroes by \Cref{cor:continue-gamma}.
+		
+		So $s$ must be in the critical strip, where we note that all the other terms fail to vanish (in particular, $\Gamma$ fails to vanish by \Cref{rem:recip-gamma-entire}), so the order of vanishing of $\Xi$ at $s$ is equal to the order of vanishing of $\zeta$ at $s$.
+		\qedhere
+	\end{itemize}
 \end{proof}
-\begin{remark}
-	For $\sigma\in[a,b]$ for some fixed $a<b$, we have $\Gamma(\sigma+it)\sim e^{-\pi|t|/2}|t|^{\sigma-1/2}$ as $\to\infty$. Again, we omit this proof.
-\end{remark}
-We also want access to the Hadamard factorization theorem.
-\begin{theorem}
-	Fix an entire function $\varphi\colon\CC\to\CC$. Let $n(r)$ denote the number of zeroes $z$ such that $|z|<r$ and $\alpha$ the order of an entire function $\varphi$, one has $n(R)=O_\varepsilon\left(R^{\alpha+\varepsilon}\right)$ for any $\varepsilon>0$.
-\end{theorem}
+Quickly, we give a pretty basic bound on the number of zeroes from \Cref{prop:bound-zeroes-finite-order}.
+\begin{lemma}
+	The order of $\Xi$ is less than or equal to $1$.
+\end{lemma}
+\begin{proof}
+	Because $\Xi(s)=\Xi(1-s)$, we will focus on the region $\op{Re}s\ge1/2$. Recalling that $\Xi(s)=s(1-s)\pi^{-s/2}\Gamma(s/2)\zeta(s)$, we will simply compute the orders of these terms one at a time.
+	\begin{itemize}
+		\item The order of $s(1-s)$ is $0$ by \Cref{ex:poly-order}.
+		\item We note
+		\[\left|\pi^{-s/2}\right|=\left|e^{-s(\log\pi)/2}\right|=e^{-\op{Re}(s)(\log\pi)/2}.\]
+		In particular, $\op{Re}s>0$ implies that this term is less than or equal to $1$ and hence bounded by a polynomial and hence order $0$ by \Cref{ex:poly-order} again.
+		\item For $\op{Re}s>1/2$, we note that $|\arg s|<\pi/2$, so we can apply \Cref{prop:stirling}. In particular, we note that
+		\begin{align*}
+			\lim_{|s|\to\infty}\left|\frac{\Gamma(s)}{s^s}\right| &= \exp\left(\left|\lim_{|s|\to\infty}\frac{\log\Gamma(s)}{s\log s}\right|\right) \\
+			&= \exp\left(\lim_{|s|\to\infty}\frac{\left(s-\frac12\right)\log s-s+\frac12\log2\pi+O(1/|s|)}{s\log s}\right) \\
+			&= \exp\left(\left|1+\lim_{|s|\to\infty}\frac{\left(-\frac12\right)\log s-s+\frac12\log2\pi+O(1/|s|)}{s\log s}\right|\right) \\
+			&= \exp(1).
+		\end{align*}
+		Thus, $\left|\Gamma(s)/s^s\right|$, which is continuous in our region with $\op{Re}s>1/2$, is a bounded function.
+	\end{itemize}
+\end{proof}
+
+% We will want the following bounds.
+% \begin{lemma}[Stirling]
+% 	We have
+% 	\[\log\Gamma(s)=\left(s-\frac12\right)\log s+\frac12\log2\pi+O_\delta(1/|s|),\]
+% 	and
+% 	\[\frac{\Gamma'(s)}{\Gamma(s)}=\log s+O_\delta(1/|s|)\]
+% 	as $|s|\to\infty$ for $-\pi+\delta<\arg s<\pi-\delta$.
+% \end{lemma}
+% \begin{proof}
+% 	Omitted.
+% \end{proof}
+% \begin{remark}
+% 	For $\sigma\in[a,b]$ for some fixed $a<b$, we have $\Gamma(\sigma+it)\sim e^{-\pi|t|/2}|t|^{\sigma-1/2}$ as $\to\infty$. Again, we omit this proof.
+% \end{remark}
+% We also want access to the Hadamard factorization theorem.
+% \begin{theorem}
+% 	Fix an entire function $\varphi\colon\CC\to\CC$. Let $n(r)$ denote the number of zeroes $z$ such that $|z|<r$ and $\alpha$ the order of an entire function $\varphi$, one has $n(R)=O_\varepsilon\left(R^{\alpha+\varepsilon}\right)$ for any $\varepsilon>0$.
+% \end{theorem}
 Notably, for $\op{Re}s>1/2$, one has $|s(s-1)\zeta(s)|\ll|s|^3$. Further, one can check that $\Gamma$ has order $1$ as an entire function, so $s(1-s)\xi(s)$ has order at most $1$. Thus, Hadamard's factorization theorem enforces
 \[s(1-s)\xi(s)=e^{A+Bs}\prod_{\zeta(\rho)=0}\left(\left(1-\frac s\rho\right)e^{s/\rho}\right).\]
 Notably, this product will converge absolutely. For example, absolute convergence tells us

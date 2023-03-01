@@ -8,64 +8,122 @@
 
 We began class by proving the Prime number theorem. I have edited directly into those notes for continuity.
 
-\subsection{Quadratic Residue Speedrun}
+\subsection{Quadratic Residues}
 Fix a prime $p$, for simplicity. Let $\chi\pmod p$ be a Dirichlet character. Our goal is to prove an analytic continuation and functional equation for $L(s,\chi)$.
-\begin{proposition}
+\begin{proposition} \label{prop:fp-cyclic}
 	Fix a prime $p$. Then $\FF_p^\times$ is cyclic.
 \end{proposition}
 \begin{proof}
-	Standard.
+	We proceed in steps.
+	\begin{enumerate}
+		\item Given $a,b\in\FF_p^\times$ of orders $k$ and $\ell$, we claim that there is an element $x\in\FF_p^\times$ of order $\lcm(k,\ell)$. Roughly speaking, the idea is that $\gcd(k,\ell)=1$ will imply that $ab$ has order $k\ell$: of course, $(ab)^{k\ell}=1$, and to see that $k\ell$ is the smallest exponent, note $(ab)^n=1$ implies $(ab)^{nk}=1$, so $b^{nk}=1$, so $\ell\mid nk$, so $\ell\mid n$ because $\gcd(k,\ell)=1$. Analogously, $k\mid n$, so $k\ell\mid n$.
+		
+		To extend the above proof to the case of $\gcd(k,\ell)>1$, we use unique prime factorization. Set
+		\[k'\coloneqq\prod_{\nu_p(k)\ge\nu_p(\ell)}p^{\nu_p(k)}\qquad\text{and}\qquad\ell'\coloneqq\prod_{\nu_p(k)<\nu_p(\ell)}p^{\nu_p(\ell)}.\]
+		In particular, we see that $\nu_p(k')>0$ if and only if $\nu_p(k)\ge\nu_p(\ell)$, and $\nu_p(\ell')>0$ if and only if $\nu_p(k)<\nu_p(\ell)$. Thus, no prime $p$ divides both $k'$ and $\ell'$, so $\gcd(k',\ell')=1$. Further, by construction, we see $k'\mid k$ and $\ell'\mid\ell$ and
+		\[k'\ell'=\prod_{\nu_p(k)\ge\nu_p(\ell)}p^{\nu_p(k)}\cdot\prod_{\nu_p(k)<\nu_p(\ell)}p^{\nu_p(\ell)}=\prod_pp^{\max\{\nu_p(k),\nu_p(\ell)\}}=\lcm(k,\ell).\]
+		Thus, we see that $a^{k/k'}$ has order $k'$, and $b^{\ell/\ell'}$ has order $\ell'$, so their product $x\coloneqq a^{k/k'}b^{\ell/\ell'}$ has order $k'\ell'=\gcd(k,\ell)$.
+
+		\item Inductively applying the previous step to every $a\in\FF_p^\times$, we produce an element $g\in\FF_p^\times$ with order $n$ which is the least common multiple of the orders of all $a\in\FF_p^\times$. In particular, the order of $a\in\FF_p^\times$ divides into $n$, so we see that
+		\[a^n\equiv1\pmod p.\]
+		In particular, the equation $x^n-1=0$ has $p-1$ roots in $\FF_p$ given by the elements of $\FF_p^\times$. However, for a field, the number of roots of a polynomial is bounded by the degree, so $x^n-1=0$ has at most $n$ solutions, so we conclude $n\ge p-1$. Because the order of $g$ must divide $\#\FF_p^\times=p-1$, we conclude that $n\le p-1$ as well, so $n=p-1$ is forced. So $g$ is a generator of $\FF_p^\times$.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 \begin{corollary}
 	Fix a prime $p$ and some $d\in\ZZ^+$.
 	\begin{listalph}
-		\item If $\gcd(d,p-1)=1$, then the function $\FF_p^\times\to\FF_p^\times$ defined by $x\mapsto x^d$ is an isomorphism.
-		\item If $d\mid p-1$, then each $a\in\FF_p^\times$ makes $x^d\equiv a\pmod p$ with either $0$ or $d$ solutions.
+		\item The function $\mu_d\colon\FF_p^\times\to\FF_p^\times$ given by $\mu_d\colon x\mapsto x^d$ is a homomorphism.
+		\item If $\gcd(d,p-1)=1$, then $\mu_d$ is an isomorphism.
+		\item If $d\mid p-1$, then each $a\in\FF_p^\times$ makes $x^d\equiv a\pmod p$ have either $0$ or $d$ solutions.
 	\end{listalph}
 \end{corollary}
 \begin{proof}
 	Here we go.
 	\begin{listalph}
-		\item Let $g$ be a generator of $\FF_p^\times$. Then $g^d$ is also a generator and lives in the image of the map.
-		\item The map $x\mapsto x^d$ has kernel of size $d$. Thus, any element of the image has $d$ solutions to the equation; otherwise there are no solutions.
+		\item This holds because $\FF_p^\times$ is abelian: note $\mu_d(xy)=(xy)^d=x^dy^d=\mu_d(x)\mu_d(y)$.
+		\item Because $\gcd(d,p-1)=1$, we can find $k\pmod{p-1}$ such that $dk\equiv1\pmod{p-1}$. It follows that
+		\[\mu_k(\mu_d(x))=x^{dk}=x\qquad\text{and}\qquad\mu_d(\mu_k(x))=x^{kd}=x\]
+		for each $x\in\FF_p^\times$, where we are using the fact that the order of $x$ divides $p-1$. Thus, $\mu_k$ provides the inverse homomorphism for $\mu_d$, which shows that $\mu_d$ is an isomorphism.
+		\item If $x^d\equiv a\pmod p$ has no solutions, then there is nothing to say.
+		
+		Otherwise, fix a generator $g\in\FF_p^\times$ by \Cref{prop:fp-cyclic}, and suppose that $g^\ell\in\FF_p^\times$ is a solution to $x^d\equiv a\pmod p$ so that $a=g^{d\ell}$. Then we note some $x=g^k$ is a solution to $x^d=a$ if and only if
+		\[g^{dk}=x^d=a=g^{d\ell},\]
+		which is equivalent to $p-1\mid(dk-d\ell)$. Because $d\mid p-1$, this is equivalent to $\frac{p-1}d\mid (k-\ell)$, or $\ell\equiv k\pmod{\frac{p-1}d}$. As $\ell$ varies through $\ZZ/(p-1)\ZZ$, we see that there are exactly $(p-1)/d$ total options present for $\ell$.
 		\qedhere
 	\end{listalph}
 \end{proof}
 This motivates the Legendre symbol.
 \begin{definition}[quadratic residue]
-	Fix an odd prime $p$. And some $a\in\ZZ$ not divisible by $p$.
+	Fix an odd prime $p$ and some $a\in\ZZ$ not divisible by $p$.
 	\begin{itemize}
 		\item If $x^2\equiv a\pmod p$ has a solution, then $a$ is a \textit{quadratic residue}.
 		\item If $x^2\equiv a\pmod p$ does not have a solution, then $a$ is a \textit{nonquadratic residue}.
 	\end{itemize}
 	We will be silent about the case of $p\mid a$.
 \end{definition}
-\begin{definition}
+\begin{remark} \label{rem:qr-means-even}
+	Suppose $p$ is an odd prime. Given $a\in\FF_p^\times$, write $a=g^k$, where $g\in\FF_p^\times$ is a generator.
+	\begin{itemize}
+		\item If $k$ is even, then note $a$ is a quadratic residue because $a\equiv\left(g^{k/2}\right)^2\pmod p$.
+		\item Conversely, if $a$ is a quadratic residue, then $k$ is even. Indeed, if we can write $a\equiv x^2\pmod p$, then we see $p\nmid a$ enforces $p\nmid x$, so writing $x=g^\ell$ for some integer $\ell$, we must have
+		\[g^k=a=x^2=g^{2\ell}.\]
+		Rearranging, we have $k-2\ell\equiv0\pmod{p-1}$, but $p-1$ is even, so this forces $k$ to be even.
+	\end{itemize}
+\end{remark}
+\begin{definition}[Legendre symbol]
 	Fix an odd prime $p$ and some $a\in\ZZ$. Then we define the \textit{Legendre symbol} by
 	\[\left(\frac ap\right)\coloneqq\begin{cases}
-		0 & \text{if }p\mid a, \\
-		1 & \text{if }a\text{ is a quadratic residue}, \\
+		\phantom+0 & \text{if }p\mid a, \\
+		\phantom+1 & \text{if }a\text{ is a quadratic residue}, \\
 		-1 & \text{if }a\text{ is a nonquadratic residue}.
 	\end{cases}\]
 \end{definition}
+Here is a quick way to evaluate Legendre symbols.
 \begin{proposition}[Euler's criterion] \label{prop:euler-criterion}
 	Fix an odd prime $p$. For any $a\in\ZZ$, we have
 	\[\left(\frac ap\right)\equiv a^{(p-1)/2}\pmod p.\]
 \end{proposition}
 \begin{proof}
-	If $a\equiv0\pmod p$, there is nothing to say. If $a\equiv x^2\pmod p$ for some $x$, then $a^{(p-1)/2}\equiv x^{p-1}\equiv 1$. Lastly, if $a$ is a nonquadratic residue, then we see
-	\[\left(a^{(p-1)/2}-1\right)\left(a^{(p-1)/2}+1\right)\equiv0\pmod p,\]
-	but $x^{(p-1)/2}\equiv1\pmod p$ has already been granted $(p-1)/2$ roots as the quadratic residues, so we must instead have $a^{(p-1)/2}\equiv-1\pmod p$.
+	We proceed in cases.
+	\begin{itemize}
+		\item If $p\mid a$, then we see $0\equiv 0^{(p-1)/2}\pmod p$.
+		\item If $a\pmod p$ is a quadratic residue, then we can write $a\equiv b^2\pmod p$ for some $b\pmod p$. Note $p\nmid a$ forces $p\nmid b$, so we can compute
+		\[a^{(p-1)/2}=b^{p-1}\equiv1=\left(\frac ap\right)\pmod p,\]
+		as desired.
+		\item If $a\pmod p$ is a nonquadratic residue, then we pick up a generator $g\in\FF_p^\times$ from \Cref{prop:fp-cyclic}. As such, we can write $a=g^k$ for some integer $k$; note that $k$ is odd by \Cref{rem:qr-means-even}. As such, we compute
+		\[a^{(p-1)/2}\equiv g^{k(p-1)/2}=\left(g^{(p-1)/2}\right)^k\equiv(-1)^k=-1\pmod p.\]
+		Notably, $g^{(p-1)/2}\equiv-1\pmod p$ because $g^{(p-1)/2}$ cannot be $1\pmod p$ (because the order of $g$ is $p-1$), but $g^{(p-1)/2}$ must square to $1\pmod p$, which forces$g^{(p-1)/2}\equiv-1\pmod p$.
+		\qedhere
+	\end{itemize}
 \end{proof}
+\begin{remark}
+	Requiring $p\ne2$ might look concerning, but every residue in $\FF_2^\times=\{1\}$ is a square anyway, so the analysis here is somewhat trivial.
+\end{remark}
 \begin{corollary}
 	Fix an odd prime $p$. Then $\left(\frac{-1}p\right)=1$ if $p\equiv1\pmod 4$, and $\left(\frac{-1}p\right)=-1$ if $p\equiv-1\pmod 4$.
 \end{corollary}
 \begin{proof}
-	Use \Cref{prop:euler-criterion}.
+	If $p\equiv1\pmod4$, we write $p=1+4k$ and note
+	\[\left(\frac{-1}p\right)\equiv(-1)^{(p-1)/2}=(-1)^{2k}=1\pmod p,\]
+	so $p>2$ forces $\left(\frac{-1}p\right)=1$. Similarly, if $p\equiv-1\pmod4$, we write $p=-1+4k$ and note
+	\[\left(\frac{-1}p\right)\equiv(-1)^{(p-1)/2}=(-1)^{-1+2k}=-1\pmod p,\]
+	so $p>2$ forces $\left(\frac{-1}p\right)=-1$. This is what we wanted.
 \end{proof}
-\begin{remark}
-	Note that $\left(\frac{\bullet}p\right)$ is the unique non-principal real character$\pmod p$. One can see this because the characters $\FF_p^\times\to\{\pm1\}$ must have order $2$, so we are looking for elements of order $2$ in $\widehat{\FF_p^\times}\cong\FF_p^\times$. But $\FF_p^\times$ has only one element of order $2$, so we know we have found the only such real non-principal character.
-\end{remark}
+In our discussion of $L$-functions, the following result explains why we care about Legendre symbols.
+\begin{proposition}
+	Fix a prime $p$. Then the Legendre symbol $\left(\frac\bullet p\right)$ is the unique non-principal real Dirichlet character$\pmod p$.
+\end{proposition}
+\begin{proof}
+	Fix a real Dirichlet character $\chi\pmod p$. In particular, $\chi$ arises from a character $\chi\colon\FF_p^\times\to\RR^\times$, but by \Cref{rem:chars-to-s1}, we see that $\chi$ must output to $S^1\cap\RR^\times=\{\pm1\}$. Fixing a generator $g\in\FF_p^\times$ by \Cref{prop:fp-cyclic}, we have two cases.
+	\begin{itemize}
+		\item Suppose $\chi(g)=1$. Then for any $g^k\in\FF_p^\times$, we see $\chi\left(g^k\right)=\chi(g)^k=1$. Thus, $\chi\pmod p$ is the principal character.
+		\item Suppose $\chi(g)=-1$. Then for any $g^k\in\FF_p^\times$, we see
+		\[\chi\left(g^k\right)=\chi(g)=(-1)^k.\]
+		Now, comparing \Cref{rem:qr-means-even} with the definition of the Legendre symbol, we see that $\chi(a)=\left(\frac ap\right)$ for each $a\in\FF_p^\times$ because, upon writing $g=a^k$ for some integer $k$, both are $1$ when $k$ is even, and both are $-1$ when $k$ is odd. Lastly, both $\chi$ and $\left(\frac\bullet p\right)$ vanish on multiples of $p$, so we conclude that $\chi=\left(\frac\bullet p\right)$.
+	\end{itemize}
+	The above classification of real Dirichlet characters$\pmod p$ completes the proof.
+\end{proof}
 \begin{remark}
 	More generally studying when $f(x)\equiv0\pmod p$ has solutions (and how it factors) has connections directly with the Langlands program and similar. We will not say more because this is (very) far outside the scope of the course.
 \end{remark}
