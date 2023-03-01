@@ -1,0 +1,103 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 1}
+
+We continue talking about quasicoherent sheaves.
+
+\subsection{Finishing Cohomology of Quasicoherent Sheaves}
+Here is our result.
+\quasicohinjisflasque*
+\begin{proof}
+	We use Noetherian induction on the closed set $Y(I)\coloneqq\overline{\op{Supp}\widetilde I}$. As our base case, if $Y(I)$ is a singleton $\{x\}$, then the closed embedding $i\colon\{x\}\to X$ tells us that
+	\[\widetilde I=i_*i^*\widetilde I\]
+	by checking the obvious map at stalks. And now one can see that any skyscraper sheaf will be flasque by simply looking at it.
+
+	In general, we would like to show that $\Gamma(X,\mc I)\to\Gamma(U,\mc I)$ is surjective by simply always lifting to a global section before restricting. Now, if $Y\cap U=\emp$, then $\Gamma(U,\mc I)=0$, so there is nothing to say; as such, we may assume that $Y\cap U\ne\emp$. Using the standard base on the affine scheme, we may find $f\in A$ such that $D(f)\subseteq U$ and $D(f)\cap Y\ne\emp$.
+
+	Continuing, we set $Z\coloneqq V(f)$ so that we have the following commutative diagram.
+	% https://q.uiver.app/?q=WzAsNSxbMCwwLCJcXEdhbW1hX1ooWCxcXHdpZGV0aWxkZSBJKSJdLFsxLDAsIlxcR2FtbWFfe1pcXGNhcCBVfShVLFxcd2lkZXRpbGRlIEkpIl0sWzAsMSwiXFxHYW1tYShYLFxcd2lkZXRpbGRlIEkpIl0sWzEsMSwiXFxHYW1tYShVLFxcd2lkZXRpbGRlIEkpIl0sWzIsMSwiXFxHYW1tYShEKGYpKSxcXHdpZGV0aWxkZSBJKSJdLFswLDFdLFsxLDMsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzAsMiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMiwzXSxbMyw0XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\Gamma_Z(X,\widetilde I)} & {\Gamma_{Z\cap U}(U,\widetilde I)} \\
+		{\Gamma(X,\widetilde I)} & {\Gamma(U,\widetilde I)} & {\Gamma(D(f)),\widetilde I)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[hook, from=1-2, to=2-2]
+		\arrow[hook, from=1-1, to=2-1]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+	\end{tikzcd}\]
+	Now, the bottom composite is surjective by \Cref{lem:inj-localization-is-surj}.
+
+	We now proceed directly. Given $t\in\Gamma(U,\widetilde I)$, we see that we can lift $t|_{D(f)}$ to some $s\in\Gamma(X,\mc I)$ by this surjectivity. But then $s|_U-t$ will have support in $X\setminus D(f)=Z$. As such, if we could just show that the map
+	\[\Gamma_Z(X,\widetilde I)\to\Gamma_{Z\cap U}(U,\widetilde I)\]
+	is surjective, then we could lift $s|_U-t$ to some $r\in\Gamma_Z(X,\widetilde I)$ so that $(s-r)|_{D(f)}=s|_{D(f)}=t$, but $(s-r)|_U-t=(s|_U-t)-r|_U=0$. Thus, we want to show that the above map is surjective, which amounts to showing that the sheaf $\Gamma_Z(-,\mc I)=\widetilde{\Gamma_{(f)}(I)}$ is flasque, where this equality is by \Cref{rem:h0-qcoh}.
+
+	However, the support of $\widetilde{\Gamma_{(f)}(I)}$ is contained in $Z\cap Y$, where it is contained in $Y$ by construction of $I$ and contained in $Z$ by construction of $(f)$. But now we are done by Noetherian induction because $Z\cap Y$ is a smaller closed subset. Explicitly, we may suppose the result for all strictly smaller closed subsets than $Y$, for otherwise we would be able to build some infinite descending chain of closed sets in $\Spec A$, which is not possible because $A$ is Noetherian.
+\end{proof}
+\begin{corollary}
+	Fix a Noetherian scheme $X$. Then any quasicoherent sheaf $\mc F$ can be embedded into a flasque quasicoherent sheaf.
+\end{corollary}
+\begin{proof}
+	Over affine opens, we can embed into an injective module, which is flasque by the above. Taking the direct image sheaf to $X$ and then taking the product produces the desired flasque sheaf and embedding.
+\end{proof}
+\begin{remark}
+	Professor Barrett is unsure if injectives in the category of quasicoherent sheaf are actually acyclic for $\Gamma(X,-)$.
+\end{remark}
+
+\subsection{Serre's Criterion for Affines}
+Let's give a cohomological criterion for being affine.
+\begin{theorem}[Serre] \label{thm:serre}
+	Fix a Noetherian scheme $X$. Then the following are equivalent.
+	\begin{listalph}
+		\item $X$ is affine.
+		\item $H^i(X,\mc F)=0$ for all $i>0$ and quasicoherent sheaves $\mc F$ on $X$.
+		\item $H^1(X,\mc F)=0$ for all coherent sheaves $\mc F$ of ideals.
+	\end{listalph}
+\end{theorem}
+For this, we want the following lemma.
+\begin{lemma} \label{lem:affine-cover-is-affine}
+	A scheme $X$ is affine if and only if there exist global sections $f_1,\ldots,f_r\in\Gamma(X,\OO_X)$ which generate $\Gamma(X,\OO_X)$ such that all the subschemes $D(f_i)$ are affine.
+\end{lemma}
+\begin{proof}
+	This is by Exercise~II.2.17 of \cite{hartshorne}. We did this for homework last semester.
+\end{proof}
+Now let's show the theorem.
+\begin{proof}[Proof of \Cref{thm:serre}]
+	We show our implications in sequence. Note (a) implies (b) by \Cref{thm:qcoh-cohom}, and (b) implies (c) with no work, so the hard part is showing (c) implies (a). We would like to use \Cref{lem:affine-cover-is-affine}. Well, for each $p\in X$, we let $p\in U$ be some affine open neighborhood and set $Y\coloneqq X\setminus U$. Then we get some exact sequence
+	\[0\to\mc I_{Y\cup\{p\}}\to\mc I_Y\to k(p)\to0,\]
+	where we can check exactness at stalks. Now, by the long exact sequence we see
+	\[\Gamma(X,\mc I_Y)\to k(p)\to H^1(X,\mc I_{Y\cup\{p\}}),\]
+	where the last cohomology group vanishes by hypothesis. In total, our surjectivity produces $f\in\Gamma(X,\mc I_Y)\subseteq\Gamma(X,\OO_X)$ such that $f|_p=1$ in $k(p)$. Further, $f$ has support contained in $Y$, so $X_f\subseteq U$, so $X_f=X_f\cap U=U_f$ is an affine open neighborhood of $U$.
+
+	Thus, we have produced an affine open cover $\{X_f\}$ of $X$. Because $X$ is Noetherian, we see that $X$ is quasicompact, so we can reduce this to a finite affine open cover $\{X_{f_i}\}_{i=1}^r$. By \Cref{lem:affine-cover-is-affine}, it suffices to show that the $f_i$ generate $\Gamma(X,\OO_X)$. Well, each $f_i$ produces some map $\OO_X\to\OO_X$, so we get a map
+	\[\pi\colon\OO_X^r\to\OO_X\]
+	given by $(a_1,\ldots,a_r)\mapsto a_1f_1+\cdots+a_rf_r$. Notably, because the $X_{f_i}$ cover $X$, we see that this map is surjective by checking at stalks because we do not have $f_i|_p\in\mf m_p$ for all $i$ at any fixed point $p$. Letting $\mc F\coloneqq\ker\pi$, we get the short exact sequence
+	\[0\to\mc F\to\OO_X^r\stackrel\pi\to\OO_X\to0,\]
+	so it now suffices to show that $H^1(X,\ker\pi)$ because this will give us surjectivity on the right upon taking global sections. Well, we consider the filtration
+	\[\mc F=\mc F\cap\OO_X^r\supseteq\mc F\cap\OO_X^{r-1}\supseteq\cdots\supseteq\mc F\cap\OO_X\supseteq0.\]
+	Note that coherent sheaves are closed under taking kernels and finite products, so each of these intersections remains a coherent sheaf. Well, we do this by induction. Note $\mc F\cap\OO_X$ is a coherent sheaf of ideals, so its $H^1$ vanishes by hypothesis; this is our base case. To go up, we look at the following short exact sequence.
+	\[0\to\mc F\cap\OO_X^n\to\mc F\cap\OO_X^{n+1}\to\mc C_n\to0.\]
+	Thus, it now suffices to show that $\mc C_n$ has vanishing $H^1$ by the long exact sequence. Well, we note that we have a morphism of exact sequences.
+	% https://q.uiver.app/?q=WzAsMTAsWzEsMCwiXFxtYyBGXFxjYXBcXE9PX1hebiJdLFsyLDAsIlxcbWMgRlxcY2FwXFxPT19YXntuKzF9Il0sWzMsMCwiXFxtYyBDX24iXSxbMSwxLCJcXE9PX1hebiJdLFsyLDEsIlxcT09fWF57bisxfSJdLFszLDEsIlxcT09fWCJdLFswLDAsIjAiXSxbNCwwLCIwIl0sWzQsMSwiMCJdLFswLDEsIjAiXSxbNiwwXSxbMCwxXSxbMSwyXSxbMiw3XSxbOSwzXSxbMyw0XSxbNCw1XSxbNSw4XSxbMiw1LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFsxLDQsIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzAsMywiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {\mc F\cap\OO_X^n} & {\mc F\cap\OO_X^{n+1}} & {\mc C_n} & 0 \\
+		0 & {\OO_X^n} & {\OO_X^{n+1}} & {\OO_X} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[hook, from=1-4, to=2-4]
+		\arrow[hook, from=1-3, to=2-3]
+		\arrow[hook, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	In particular, we see that $\mc C_n$ is coherent by the top, and it embeds into $\OO_X$ by the Snake lemma, so it is a coherent sheaf of ideals and therefore has vanishing $H^1$ by hypothesis.
+\end{proof}
+
+\end{document}
