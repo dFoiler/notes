@@ -1,0 +1,85 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 1}
+
+We continue discussing the Burgess bound.
+
+\subsection{Proving the Burgess Bound}
+For the Burgess bound, we want the following moment result.
+\begin{notation}
+	We set $\chi_p\coloneqq\left(\frac\bullet p\right)$ to be the non-principal real Dirichlet character$\pmod p$.
+\end{notation}
+\begin{lemma} \label{lem:moment-of-char-sum}
+	Fix a prime $p$. Given some $B$, we have
+	\[\sum_{x=0}^{p-1}\left|\sum_{1\le b\le B}\chi(x+b)\right|^{2r}\le(2rB)^rp+2rB^{2r}\sqrt p.\]
+\end{lemma}
+Roughly speaking, it will turn out that understanding moments as above will be enough to control sums of polynomials.
+\begin{proof}
+	By Weil's bound above, we see that
+	\[\left|\sum_{x=0}^{p-1}\chi_p(x+b_1)\cdots\chi(x+b_{2r})\right|\le r\sqrt p,\]
+	provided that the $b_i$ are not just $r$ pairs. As such, we note that
+	\[\#\left\{(b_1,\ldots,b_{2r})\in[1,B]^{2r}:\text{they are not }r\text{ pairs}\right\}\le\binom{2r}rB^rr!\le(2r)^rB^r.\]
+	The left inequality is combinatorial: there are $\binom{2r}r$ elements to choose to be the left element of a pair, each has $B$ options, and then there are $r!$ ways to rearrange these pairs. To finish the proof, one fully expands out
+	\[\left|\sum_{1\le b\le B}\chi(x+b)\right|^{2r}\]
+	by using some kind of multinomial theorem. Most of the terms can be bounded as above, but some terms (namely, the ones which are $r$ pairs) must be bounded more crudely. Summing these as such completes the proof.
+\end{proof}
+Now here is our result.
+\begin{theorem}[Burgess]
+	Set
+	\[S_M(N)\coloneqq\sum_{M<n\le M+N}\chi_p(n).\]
+	Then
+	\[|S_M(N)|\ll_rN^{1-1/r}p^{(r+1)/\left(4r^2\right)}(\log p)^{1/r}\]
+	for all positive integers $r$.
+\end{theorem}
+\begin{proof}
+	This is by the moment method. Roughly speaking, this is stated so precisely in order to be able to induct on $N$. Comparing with the needed exponents, we are done except in the case where
+	\[Cp^{1/r+1/4r}\le N\le p^{1/2+1/4r}\log p,\]
+	where $C$ is some large absolute constant. Namely, the left is because $|S_M(N)\le N$, and the right is because $|S_M(N)|\le6\sqrt p\log p$ by \Cref{thm:polya-vinogradov}. For example, we may assume that $N<p$.
+
+	Now, the idea is to shift the sum $S_M(N)$ by some $0\le h<N$. This yields
+	\[S_M(N)=\sum_{M\le n\le M+N}\chi_p(n+h)+2\theta E(h),\]
+	where $|\theta|\le1$ and $E(h)=Ch^{1-1/r}p^{(r+1)/\left(4r^2\right)}(\log p)^{1/r}$. In particular, the $E(h)$ is covering the small overlaps from $M+1$ to $M+h$ and from $M+N+1$ to $M+N+h$.
+
+	To optimize our shifting, we will take $h=ab$ for $a\in[1,A]$ and $b\in[1,B]$, where $H\coloneqq AB$ is less than $N$. As such, doing all shifts at once, we see
+	\[S_M(N)=\frac1H\sum_{\substack{1\le a\le A\\1\le b\le B}}\sum_{M<n\le M+N}\chi(n+ab)+2\theta E(H).\]
+	To force this to behave (arithmetic progressions are hard!), we see
+	\[\left|\sum_{b=1}^B\chi_p(n+ab)\right|=\left|\sum_{1\le b\le B}\chi_p\left(a^{-1}n+b\right)\right|,\]
+	where the point is that we have turned this sum into a sum of some consecutive $\chi_p$s. As such, we may re-index everything as follows: we see
+	\[|S_M(N)|\le\frac1H\cdot V+2E(H),\]
+	where
+	\[V=\sum_{x=0}^{p-1}\left(v(x)\Bigg|\sum_{b=1}^B\chi(x+b)\Bigg|\right),\]
+	where $v(x)$ is the number of ordered pairs $(a,n)$ such that $a\in[1,A]$ and $n\in(M,M+N]$ and $a^{-1}n\equiv x\pmod p$. Note that $a^{-1}\pmod p$ makes sense because $A\le H\le N<p$. Roughly speaking, we are doing better now because $v(x)$ has somewhat controlled moments. For example, we see
+	\[V_1\coloneqq\sum_{x=0}^{p-1}v(x)\le AN,\]
+	and
+	\[V_2\coloneqq\sum_{x=0}^{p-1}v(x)^2\]
+	is also relatively small, as we will shortly see. In particular, we have the following upper bound.
+	\begin{lemma}
+		Fix everything as above. Then $V_2\le 8AN(AN/p+\log(3A))$.
+	\end{lemma}
+	\begin{proof}
+		We will show this next class. It is entirely elementary: the main point the number of integers in an arithmetic progression with difference $d$ from $a$ to $b$ is about $(b-a)/d$.
+	\end{proof}
+	Further, we may set
+	\[W_r\coloneqq\sum_{x=0}^{p-1}\left|\sum_{b=1}^B\chi_p(x+b)\right|^{2r}\le(2rB)^rp+2rB^{2r}\sqrt p\]
+	by \Cref{lem:moment-of-char-sum}, so H\"older's inequality yields
+	\[V\le V_1^{1-1/r}V_2^{1/2r}W^{1/2r}.\]
+	As a technical choice, we assume that $p$ is sufficiently large, which we may do by adjusting the constant $C$ appropriately. Now, we set $B\coloneqq\floor{rp^{1/(2r)}}$ so that $W<(4r)^{2r}p^{3/2}$ for $p$ large enough; this allows us to set $A\coloneqq\floor{N/\left(9rp^{1/(2r)}\right)}$ so that $AB<N$ (but is only off by some constant factor). From here, one computes
+	\[AN\le\frac{N^2}{9rp^{1/(2r)}}\le p(\log p)^2.\]
+	From the previous lemma, one sees $V_2\le AN(4\log p)^2$, and in total we see
+	\begin{align*}
+		V&\le V_1^{1-1/r}V_2^{1/(2r)}W^{1/(2r)} \\
+		&\le (AN)^{1-1/r}\left(AN\cdot(4\log p)^2\right)^{1/(2r)}\cdot\left((4r)^{2r}p^{3/2}\right)^{1/(2r)} \\
+		&\le (AN)^{1-1/(2r)}\cdot4r\cdot\left(4\log p\cdot p^{3/4}\right)^{1/r} \\
+		&\le 2N^{2-1/r}\left(p^{(r+1)/(2r)}\log p\right)^{1/r}.
+	\end{align*}
+	Now, we note $H=AB\le2N/9$ by construction of $A$ and $B$, and we can also see that $H\ge N/10$ by some computation, so the result follows.
+\end{proof}
+\begin{remark}
+	To see how this implies \Cref{thm:burgess}, the point is that $N>p^{1/4+\delta}$ will give $N^{1-1/r}\cdot p^{(r+1)/\left(4r^2\right)}$ relatively small. In particular, $p^{(r+1)/\left(4r^2\right)}$ is about $p^{1/(4r)}$, so we want $N$ to be at least $p^{1/4}$ plus perhaps some small thing.
+\end{remark}
+
+\end{document}
