@@ -1,0 +1,98 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 3}
+
+Here we go.
+
+\subsection{Introducing \v Cech Cohomology}
+One point of \v Cech cohomology is for computations, but we will see a little more. Fix a topological space $X$ and open cover $\mc U\coloneqq\{U_\alpha\}_{\alpha\in\lambda}$, and we fix a well-order $\le$ on $\lambda$. Now, given a sheaf of abelian groups $\mc F$ on $X$, we set
+\[C^p(\mf U,\mc F)\coloneqq\prod_{\alpha_0<\cdots<\alpha_p}\mc F(U_{\alpha_0,\ldots,\alpha_p}),\]
+where
+\[U_{\alpha_0,\ldots,\alpha_p}\coloneqq\bigcap_{i=0}^pU_{\alpha_i}.\]
+In other words, an element of $C^p(\mf U,\mc F)$ is an element $s_{\alpha_0,\ldots,\alpha_p}\in\mc F(U_{\alpha_0,\ldots,\alpha_p})$ for each $\alpha_0<\cdots<\alpha_p$. For our differential, we set
+\[\left(d^ps\right)_{\alpha_0<\cdots<\alpha_{p+1}}\coloneqq\sum_{q=0}^{p+1}(-1)^ks_{\alpha_0,\ldots,\widehat{\alpha_i},\ldots,\alpha_{q+1}},\]
+where the hat denotes omission. Here, we have implicitly restricted all sections to $U_{\alpha_0,\ldots,\alpha_{p+1}}$.
+\begin{example}
+	Give $X$ an open covering by $\{U_0,U_1,U_2\}$. Then $C^1(\mf U,\mc F)$ is a choice of sections $s_{01}\in\mc F(U_0\cap U_1)$ and $s_{02}\in\mc F(U_0\cap U_2)$ and $s_{12}\in\mc F(U_1\cap U_2)$. Here, we have $\left(d^1s\right)_{012}=s_{12}-s_{02}+s_{01}$. Note that all these sections make sense over $U_{012}$.
+\end{example}
+\begin{remark}
+	Notably, if $p>\#\lambda$, then our chain complex term vanishes.
+\end{remark}
+One can check that $d^2=0$ by hand. Roughly speaking, this amounts to the fact that there are two ways to remove two fixed indices $i$ and $j$ from the tuple $(\alpha_0,\ldots,\alpha_{p+2})$, which produce different signs. This grants the following definition.
+\begin{defihelper}[\v Cech cohomology] \nirindex{Cech cohomology@\v Cech cohomology}
+	Fix everything as above. The \textit{\v Cech cohomology} $\check H(\mf U,\mc F)$ groups are the cohomology groups of the complex $C(\mf U,\mc F)$.
+\end{defihelper}
+\begin{remark}
+	These cohomology functors do not give a $\delta$-functor. For example, if our open cover is given by $\mf U=\{X\}$, then the complex is given by
+	\[\Gamma(X,\mc F)\to0\to0\to\cdots,\]
+	whose cohomology does not give a long exact sequence.
+\end{remark}
+\begin{exe}
+	We compute the cohomology of $X=\PP^1_k$ where the sheaf is $\mc F=\Omega^1_X$.
+\end{exe}
+\begin{proof}
+	Let our open cover be given by $\mf U=\{U_0,U_\infty\}$ be the standard affine charts around $0$ and $\infty$.
+	\begin{itemize}
+		\item Note $C^0(\mf U,\mc F)$ consists of a choice of a section in $\mc F(U_0)=k[x]\,dx$ and a section in $\mc F(U_\infty)=k[y]\,dy$.
+		\item Note $C^1(\mf U,\mc F)$ consists of a choice of a section in $\mc F(U_0\cap U_1)=k[x,1/x]\,dx$.
+	\end{itemize}
+	In total, we want to compute the cohomology of the sequence
+	\[0\to k[x]\,dx\oplus k[y]\,dy\to k[x,1/x]\,dx\to0,\]
+	where the middle map is given by $(f(x)\,dx,g(y)\,dy)\mapsto(-g(1/x)/x^2\,dx-f(x)\,dx)$.
+	\begin{itemize}
+		\item Notably, $-g(1/x)/x^2$ is a polynomial of negative degree, so there is no way for cancellation to occur, so $\check H^0(\mf U,\mc F)=0$.
+		\item By letting $f$ and $g$ vary, we note that everything in $k[x,1/x]\,dx$ is hit except for the terms of the form $c/x\,dx$ for $c\in k^\times$, so $\check H^1(\mf U,\mc F)=k$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{exe}
+	We compute the cohomology of $S^1$ where the sheaf is $\mc F=\underline\ZZ$.
+\end{exe}
+\begin{proof}
+	Use the open cover $\mf U=\{U_0,U_1\}$ of two large arcs of $S^1$ fully covering $S^1$.
+	\begin{itemize}
+		\item We see that $C^0(\mf U,\underline\ZZ)$ is a choice of a section on $U_0$ and a section on $U_1$, both of which are connected, so we are looking at $\ZZ\oplus\ZZ$.
+		\item Similarly, $C^0(\mf U,\underline\ZZ)$ is a choice of a section of $U_0\cap U_1$, which consists of two disconnected arcs, so this is also $\ZZ\oplus\ZZ$.
+	\end{itemize}
+	In total, we want the cohomology of the complex given by
+	\[0\to\ZZ\oplus\ZZ\to\ZZ\oplus\ZZ\to0,\]
+	where the middle map is given by $(a,b)\mapsto(b-a,b-a)$. As such, we can see $\check H^0(\mf U,\mc F)=\ZZ$ and $\check H^1(\mf U,\mc F)=\ZZ$ by direct computation.
+\end{proof}
+
+\subsection{Abstract Remarks}
+To understand what \v Cech cohomology is doing, we want the following result.
+\begin{theorem} \label{thm:cech-is-correct}
+	Fix a topological space $X$ and open cover $\mf U=\{U_\alpha\}_{\alpha\in\lambda}$ where $\lambda$ is well-ordered. Further, suppose $\mc F$ is a sheaf on $X$ which is acyclic on the restrictions $U_\alpha$ for $\Gamma(U_\alpha,-)$. Then
+	\[\check H^\bullet(\mf U,\mc F)=H^\bullet(X,\mc F).\]
+\end{theorem}
+\begin{example}
+	If $X$ is a Noetherian scheme and $\mc F$ is a quasicoherent sheaf, then we can let $\mf U$ be any affine open cover by \Cref{thm:qcoh-cohom}.
+\end{example}
+Let's give some more general remarks. Roughly speaking, there is a spectral sequence
+\[E_2^{p,q}\coloneqq\check H^p(\mf U,\underline H^q(\mc F))\Rightarrow H^{p+q}(X,\mc F),\]
+where $\underline H^p(\mc F)(V)=H^q(V,\mc F)$ is a presheaf. Now, \v Cech cohomology is a tool for computing some cosimplicial limits: set $\Delta$ to be the ``simplex'' category whose objects are $[n]\coloneqq\{0,\ldots,n\}$, and we consider the order preserving maps in our category of simplexes. For example, there are two order-preserving maps $[0]\to[1]$, and more generally there are some canonical maps $[n]\to[n+1]$ depending on where we choose to pause.
+\begin{remark}
+	We have seen this in some context already. Namely, we are more or less considering ways to go back and forth along $U^{n+1}\to U^n$.
+\end{remark}
+There is some ``Dold--Kan'' correspondence, which gives an equivalence of between cosimplicial objects $\mathrm{CoSimp}(\mc A)$ of an abelian category $\mc A$ and the cochains of nonnegative degree in $\mathrm{CoCh}^{\ge0}(\mc A)$.
+
+Let's be more concrete about this discussion to see where our cohomology comes from. Let $\{U_\alpha\}_{\alpha\in\lambda}$ be an open cover of $X$. Then we get a cosimplicial object in the category of abelian groups given as follows.
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXG1jIEYoXFxtYyBVKSJdLFsxLDAsIlxcbWMgRihcXG1jIFVcXHRpbWVzXFxtYyBVKSJdLFsyLDAsIlxcbWMgRihcXG1jIFVcXHRpbWVzXFxtYyBVXFx0aW1lc1xcbWMgVSkiXSxbMywwLCJcXGNkb3RzIl0sWzAsMSwiIiwwLHsib2Zmc2V0IjotMX1dLFswLDEsIiIsMix7Im9mZnNldCI6MX1dLFsxLDJdLFsxLDIsIiIsMix7Im9mZnNldCI6Mn1dLFsxLDIsIiIsMix7Im9mZnNldCI6LTJ9XSxbMiwzXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\mc F(\mc U)} & {\mc F(\mc U\times\mc U)} & {\mc F(\mc U\times\mc U\times\mc U)} & \cdots
+	\arrow[shift left=1, from=1-1, to=1-2]
+	\arrow[shift right=1, from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+	\arrow[shift right=2, from=1-2, to=1-3]
+	\arrow[shift left=2, from=1-2, to=1-3]
+	\arrow[from=1-3, to=1-4]
+\end{tikzcd}\]
+Here, $\mc U$ is the disjoint union of the open sets in our open cover $\{U_\alpha\}_{\alpha\in\lambda}$. In particular, under the Dold--Kan correspondence, the above ``cosimplicial abelian group'' goes to the \v Cech complex, and the limit of these is precisely $\mc F(X)$ because $\mc F$ is a sheaf. However, $\mc F$ is a sheaf, so we can actually identify $\mc F(X)$ with the equalizer of the maps
+\[\mc F(\mc U)\rightrightarrows\mc F(\mc U\times\mc U).\]
+One can now upgrade the above ideas to give the desired equality in \Cref{thm:cech-is-correct}, for example replacing our limit with a homotopy limit.
+
+\end{document}
