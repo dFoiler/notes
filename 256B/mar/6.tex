@@ -1,0 +1,98 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 3}
+
+Today we prove \Cref{thm:cech-is-correct}. As an aside, our goal is to compute the cohomology of projective space.
+
+\subsection{\v Cech Cohomology is Correct}
+Throughout, $X$ will be a topological space, $\mf U=\{U_\alpha\}_{\alpha\in\lambda}$ will be an open cover where $\lambda$ is total-ordered, and $\mc F$ is a sheaf on $X$. Recall our main result, which we will not prove in full generality but instead just in our special case.
+\cechcorrect*
+\noindent We begin with the following lemma.
+\begin{lemma}
+	Fix a topological space $X$ and open cover $\mf U=\{U_\alpha\}_{\alpha\in\lambda}$ where $\lambda$ is total-ordered. Then $\check H^0(\mf U,\mc F)=H^0(X,\mc F)$.
+\end{lemma}
+\begin{proof}
+	Let $C^\bullet(\mf U,\mc F)$ denote the \v Cech complex. Then $\check H^0(\mf U,\mc F)$ is the kernel of the map $d^0\colon C^0(\mf U,\mc F)\to C^1(\mf U,\mc F)$. Well, $s\in C^0(\mf U,\mc F)$ lives in the kernel of this map if and only if each $\alpha<\beta$ in $\lambda$ has
+	\[0=(ds)_{\alpha\beta}=s_\alpha|_{U_\alpha\cap U_\beta}-s_\beta|_{U_\alpha\cap U_\beta},\]
+	so we are looking at exactly the coherence condition for our $\{s_\alpha\}_{\alpha\in\lambda}$ to assemble into a global section in $\Gamma(X,\mc F)=H^0(X,\mc F)$.
+\end{proof}
+Next we want to show that our \v Cech complex is a resolution we can use to compute cohomology, but we have to sheafify our complex first. Fix $X$, $\mc F$, and $\mf U=\{U_\alpha\}_{\alpha\in\lambda}$ as usual. We then define
+\[\mc C^p(\mf U,\mc F)\coloneqq\prod_{\alpha_0<\cdots<\alpha_p}j_*(\mc F|_{U_{\alpha_0,\ldots,\alpha_p}}),\]
+where throughout $j$ will denote the open embedding of the obvious open set. (Yes, the notation is ambiguous, but we already have too many indices floating around.) Note that this is a sheaf because restrictions, direct images, and products of sheaves produce sheaves. Notably, for any open $V\subseteq U$, we have
+\[\Gamma(V,\mc C^p(\mf U,\mc F))=C^p(\{U_\alpha\cap V\}_\alpha,\mc F),\]
+by construction, so we can define our differential as the one coming from $C^p(\{U_\alpha\cap V\}_\alpha,\mc F)$. This makes us a complex by checking locally on open sets.
+
+Now here is our resolution result.
+\begin{lemma}
+	Fix everything as above. Then
+	\[0\to\mc F\to\mc C^0(\mf U,\mc F)\to\mc C^1(\mf U,\mc F)\to\cdots\]
+	is an exact resolution of $\mc F$ with identity map chain homotopic to $0$ on stalks.
+\end{lemma}
+The game plan is to show that the identity map on the complex is chain homotopic to $0$, implying that we have an acyclic complex, which lets us compute cohomology from this. Anyway, let's prove the lemma.
+\begin{proof}
+	This exact in degree $0$ by the previous lemma.
+	
+	Now, we may check exactness for positive degrees on stalks; it is enough to show that we have a chain homotopy between the identity and $0$ because we already have a complex, so this establishes that every element of our kernel will arise from image. Thus, for our $x\in X$, we find $\beta$ such that $x\in U_\beta$. Then for each index $p$, we define $h\colon\mc C^p(\mf U,\mc F)_x\to\mc C^{p-1}(\mf U,\mc F)_x$ as follows: with $s_x\in\mc C^p(\mf U,\mc F)_x$, we may say $s_x=s|_x$ for some $s$ defined in an open neighborhood $V$ of $x$ contained in $U_\beta$. As such, we define
+	\[h(s_x)_{\alpha_0,\ldots,\alpha_{p-1}}\coloneqq s_{\beta,\alpha_0,\ldots,\alpha_{p-1}},\]
+	where we are defining $s_{\alpha_0,\ldots,\alpha_p}$ to vanish if any of the indices fail to be distinct and to equal $(\op{sgn}\sigma)s_{\sigma\alpha_0,\ldots,\sigma\alpha_p}$ if the indices are distinct, where $\sigma\in S_{p+1}$ is the permutation placing $(\alpha_0,\ldots,\alpha_p)$ so that $\sigma\alpha_0<\cdots<\sigma\alpha_{p+1}$. Note that the above definition is compatible with restriction of $s$, so $h$ is in fact defined on stalks.
+
+	It remains to show that $dh+hd=\id$, where $d$ is our differential. As such, given $s_x\in\mc C^p(\mf U,\mc F)_x$, we want to show that
+	\[(dh+hd)(s)_{\alpha_0,\ldots,\alpha_p}\stackrel?=0.\]
+	There are two cases.
+	\begin{itemize}
+		\item Suppose $\beta$ is one of the indices. On one hand, $hd(s)_{\alpha_0,\ldots,\alpha_{p}}$ will vanish automatically because we are adding in $\beta$ to our index list, so we have a repeat index, so this vanishes. On the other hand, we want to see that $dh(s)_{\alpha_0,\ldots,\alpha_{p}}$ vanishes. Well, we compute
+		\[dh(s)_{\alpha_0,\ldots,\alpha_p}=\sum_{k=0}^p(-1)^kh(s)_{\alpha_0,\ldots,\widehat{\alpha_k},\ldots,\alpha_p}=\sum_{k=0}^p(-1)^ks_{\beta,\alpha_0,\ldots,\widehat{\alpha_k},\ldots,\alpha_p}.\]
+		However, all these terms vanish unless with removed $\alpha_k$ index was the one equal to $p$ (of which there is exactly one), so transposing appropriately, we see that this last sum compresses down to just $s_{\alpha_0,\ldots,\alpha_p}$. Thus, $dh+hd=\id$ here.
+		\item Suppose $\beta$ is none of the indices. Then we must do some computation. On one hand, we see
+		\[hd(s)_{\alpha_0,\ldots,\alpha_p}=d(s)_{\beta,\alpha_0,\ldots,\alpha_p}=\sum_{k=0}^{p+1}(-1)^ks_{\beta,\alpha_0,\ldots,\widehat{\alpha_\bullet},\ldots,\alpha_p},\]
+		where the removed term in the last sum depends on where $\beta$ is placed among the remaining $\alpha_\bullet$s. On the other hand, we see
+		\[dh(s)_{\alpha_0,\ldots,\alpha_p}=\sum_{k=0}^p(-1)^kh(s)_{\alpha_0,\ldots,\widehat{\alpha_k},\ldots,\alpha_p}=\sum_{k=0}^{p-1}s_{\beta,\alpha_0,\ldots,\widehat{\alpha_k},\ldots,\alpha_p}.\]
+		Summing the above two expressions, the signs perfectly cancel except there is an extra term of the previous sum, which namely is where $\beta$ is removed, totaling to $s_{\alpha_0,\ldots,\alpha_p}$, as needed.
+	\end{itemize}
+	Thus, we have $dh+hd$ here, completing the proof of exactness at our stalk. Explicitly, for any element $s\in\ker d$, we see $s=dh(s)+hd(s)=dh(s)$, so $s\in\im d$.
+\end{proof}
+Our next step is to build some commonly acyclic sheaves.
+\begin{lemma}
+	Fix everything as above. If $\mc F$ is flasque, then $\mc F$ is acyclic for $\check H^\bullet(\mf U,-)$.
+\end{lemma}
+\begin{proof}
+	Note that restriction sends flasque sheaves to flasque sheaves, as do $j_*$ and products, so we see that each $\mc C^p(\mf U,\mc F)$ is flasque by definition. As such,
+	\[0\to\mc F\to\mc C^0(\mf U,\mc F)\to\mc C^1(\mf U,\mc F)\to\cdots\]
+	is a flasque resolution of $\mc F$. So taking global sections and computing cohomology with our usual sheaf cohomology, we see
+	\[0=H^i(X,\mc F)=H^p\Gamma(X,\mc C^\bullet(\mf U,\mc F))=H^pC^\bullet(\mf U,\mc F)=\check H^p(X,\mc F),\]
+	which is what we wanted.
+\end{proof}
+To continue, we recall the following fact.
+\begin{remark} \label{rem:extend-morphism-to-resolution}
+	Given objects $A$ and $B$ in an abelian category equipped with injective resolutions $A\to I^\bullet$ and $B\to J^\bullet$, then a morphism $\varphi\colon A\to B$ extends to a map on the injective resolutions unique up to homotopy. However, this proof really only requires $J^\bullet$ to be injective!
+\end{remark}
+From \Cref{rem:extend-morphism-to-resolution}, we note that the identity on $\mc F$ induces maps on our resolutions as follows, where $\mc F\to\mc I^\bullet$ is an injective resolution.
+% https://q.uiver.app/?q=WzAsMTIsWzAsMCwiMCJdLFswLDEsIjAiXSxbMSwwLCJcXG1jIEYiXSxbMSwxLCJcXG1jIEYiXSxbMiwwLCJcXG1jIEleMCJdLFszLDAsIlxcbWMgSV4xIl0sWzQsMCwiXFxtYyBJXjIiXSxbMiwxLCJcXG1jIENeMChcXG1mIFUsXFxtYyBGKSJdLFs1LDAsIlxcY2RvdHMiXSxbMywxLCJcXG1jIENeMShcXG1mIFUsXFxtYyBGKSJdLFs0LDEsIlxcbWMgQ14yKFxcbWYgVSxcXG1jIEYpIl0sWzUsMSwiXFxjZG90cyJdLFswLDJdLFsyLDRdLFs0LDVdLFs1LDZdLFs2LDhdLFsxLDNdLFszLDddLFs3LDldLFs5LDEwXSxbMTAsMTFdLFsyLDMsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsNywiIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzUsOSwiIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzYsMTAsIiIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	0 & {\mc F} & {\mc I^0} & {\mc I^1} & {\mc I^2} & \cdots \\
+	0 & {\mc F} & {\mc C^0(\mf U,\mc F)} & {\mc C^1(\mf U,\mc F)} & {\mc C^2(\mf U,\mc F)} & \cdots
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-4, to=1-5]
+	\arrow[from=1-5, to=1-6]
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=2-2, to=2-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow[from=2-4, to=2-5]
+	\arrow[from=2-5, to=2-6]
+	\arrow[Rightarrow, no head, from=1-2, to=2-2]
+	\arrow[dashed, from=1-3, to=2-3]
+	\arrow[dashed, from=1-4, to=2-4]
+	\arrow[dashed, from=1-5, to=2-5]
+\end{tikzcd}\]
+As such, we induce a unique map on cohomology $\check H^\bullet(\mf U,\mc F)\to H^\bullet(X,\mc F)$.
+\begin{theorem}
+	Fix everything as above, and suppose we have a separated Noetherian scheme $X$ and a quasicoherent sheaf $\mc F$ on $X$. Then the above maps are isomorphisms.
+\end{theorem}
+
+\end{document}
