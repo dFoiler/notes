@@ -1,0 +1,140 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 8}
+
+Today we talk about algebraic geometry.
+
+\subsection{Group Schemes}
+Fix an elliptic $k$-curve $(E,e)$. We are going to want to upgrade our group structure on $E(k)$ to a group scheme.
+\begin{definition}[group scheme]
+	Fix an $S$-scheme $X$. Then $X$, equipped with multiplication $\mu\colon X\times_SX\to X$ and identity $e\colon S\to X$ and inverse $\iota\colon X\to X$ morphisms, is a \textit{group scheme} if and only if the following squares commute.
+	\begin{itemize}
+		\item Associativity.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJYXFx0aW1lc19TWFxcdGltZXNfU1giXSxbMSwwLCJYXFx0aW1lc19TWCJdLFswLDEsIlhcXHRpbWVzX1NYIl0sWzEsMSwiWCJdLFswLDEsIlxcbXVcXHRpbWVzXFxpZF9YIl0sWzAsMiwie1xcaWRfWH1cXHRpbWVzIFgiLDJdLFsyLDMsIlxcbXUiXSxbMSwzLCJcXG11Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{X\times_SX\times_SX} & {X\times_SX} \\
+			{X\times_SX} & X
+			\arrow["{\mu\times\id_X}", from=1-1, to=1-2]
+			\arrow["{{\id_X}\times X}"', from=1-1, to=2-1]
+			\arrow["\mu", from=2-1, to=2-2]
+			\arrow["\mu", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		\item Identity.
+		% https://q.uiver.app/?q=WzAsNixbMSwwLCJYIl0sWzIsMCwiWFxcdGltZXNfU1MiXSxbMiwxLCJYXFx0aW1lc19TWCJdLFsxLDEsIlgiXSxbMCwwLCJTXFx0aW1lc19TWCJdLFswLDEsIlhcXHRpbWVzX1NYIl0sWzQsMCwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwxLCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDMsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwie1xcaWRfWH1cXHRpbWVzIGUiXSxbNCw1LCJlXFx0aW1lc1xcaWRfWCIsMl0sWzUsMywiXFxtdSJdLFsyLDMsIlxcbXUiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{S\times_SX} & X & {X\times_SS} \\
+			{X\times_SX} & X & {X\times_SX}
+			\arrow[Rightarrow, no head, from=1-1, to=1-2]
+			\arrow[Rightarrow, no head, from=1-2, to=1-3]
+			\arrow[Rightarrow, no head, from=1-2, to=2-2]
+			\arrow["{{\id_X}\times e}", from=1-3, to=2-3]
+			\arrow["{e\times\id_X}"', from=1-1, to=2-1]
+			\arrow["\mu", from=2-1, to=2-2]
+			\arrow["\mu"', from=2-3, to=2-2]
+		\end{tikzcd}\]
+		\item Inverse.
+		% https://q.uiver.app/?q=WzAsNSxbMSwwLCJYIl0sWzEsMiwiWCJdLFsxLDEsIlMiXSxbMCwxLCJYXFx0aW1lcyBYIl0sWzIsMSwiWFxcdGltZXMgWCJdLFswLDJdLFsyLDEsImUiLDJdLFswLDMsIlxcaW90YVxcdGltZXNcXGlkIiwyXSxbMywxLCJcXG11IiwyXSxbMCw0LCJ7XFxpZH1cXHRpbWVzXFxpb3RhIl0sWzQsMSwiXFxtdSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			& X \\
+			{X\times X} & S & {X\times X} \\
+			& X
+			\arrow[from=1-2, to=2-2]
+			\arrow["e"', from=2-2, to=3-2]
+			\arrow["\iota\times\id"', from=1-2, to=2-1]
+			\arrow["\mu"', from=2-1, to=3-2]
+			\arrow["{{\id}\times\iota}", from=1-2, to=2-3]
+			\arrow["\mu", from=2-3, to=3-2]
+		\end{tikzcd}\]
+	\end{itemize}
+\end{definition}
+We are not going to check these directly. Instead, we will adopt a functor-of-points point of view.
+
+Roughly speaking, for an $S$-scheme $X$ to take on a group scheme structure, it is enough for $h_X\coloneqq\op{Mor}_S(-,X)$ to lift to a contravariant functor $h_X^{\mathrm{ab}}\colon\mathrm{Sch}_S\opp\to\mathrm{Ab}$. This comes from the Yoneda lemma.
+\begin{theorem}[Yoneda]
+	Fix a category $\mc A$ and an object $A\in\mc A$. Then the functor taking $A\mapsto\op{Mor}_\mc A(-,A)$ defined on $\mc A\to\mathrm{Fun}(\mathrm{Sch}_S\opp,\mathrm{Set}$ is fully faithful.
+\end{theorem}
+\begin{proof}
+	Omitted.
+\end{proof}
+We will also want the fact that $\op{Hom}(-,X\times_SY)=\op{Hom}(-,X)\times_{\op{Hom}(-,S)}\op{Hom}(-,Y)$, which is more or less the definition of the fiber product.
+
+For example, let's construct our multiplication map. In particular, there is an addition map $\mu^{\mathrm{ab}}\colon h_X^{\mathrm{ab}}\times h_X^{\mathrm{ab}}\Rightarrow h_X^{\mathrm{ab}}$ because we are in the category of abelian groups. In particular, this map is given by the addition map
+\[\mu_T^{\mathrm{ab}}\colon h_X^{\mathrm{ab}}(T)\times h_X^{\mathrm{ab}}(T)\to h_X^{\mathrm{ab}}(T).\]
+Now, $\mu$ will produce a unique scheme morphism $\mu\colon X\times_SX\to X$ by the Yoneda lemma. A similar recipe gives us the inversion morphism $\iota\colon X\to X$ and the identity element, and the faithfulness of the Yoneda lemma allows us to lift diagrams satisfied by the natural transformations to diagrams satisfied by our scheme morphisms.
+\begin{remark}
+	In fact, because we are outputting $h_X^{\mathrm{ab}}$ to $\mathrm{Ab}$, we are in fact producing an abelian group structure on $E$.
+\end{remark}
+
+So with our elliptic $k$-curve $(E,e)$, we would like to upgrade our isomorphism
+\[E(k)\cong\Pic^0(E)\]
+to some isomorphism of schemes. The issue here is that we need to upgrade $\Pic$ to a functor.
+\begin{notation}
+	Given $S$-schemes $X$ and $T$, we define $X_T\coloneqq X\times_ST$.
+\end{notation}
+\begin{lemma}
+	Fix an elliptic $k$-curve $(E,e)$. Given a $k$-scheme $S$ and a line bundle $\mc L$ on $E_S$, the function $s\mapsto\deg(\mc L|_{E_s})$ is locally constant on $S$.
+\end{lemma}
+\begin{proof}
+	We refer to \cite[Theorem~III.9.9]{hartshorne}.
+\end{proof}
+As such, to upgrade $\Pic$ to a scheme, we may try to define the functor $S\mapsto\Pic^0(E_S)$. This doesn't work: letting $\pi_S\colon E_S\to S$ denote the projection, it turns out to be problematic that line bundles $\mc L$ on $S$ produce locally trivial line bundles $\pi_S^*\mc L\in\Pic^0(E_S)$. Roughly speaking, there now too many objects which look like the identity.
+
+To fix this, we have the following definition.
+\begin{definition}[rigidified line bundle]
+	Fix an elliptic $k$-curve $(E,e)$. Given a $k$-scheme $S$, a \textit{rigidified line bundle} is a pair $(\mc L,\sigma)$ where $\mc L$ is a line bundle on $E_S$, and $\sigma\colon e_S^*\mc L\cong\OO_S$ is an isomorphism. Here, $e_S\colon S\to E\times_kS$ is the section of $\pi_S$ given by the structure map $S\to\Spec k\to E$ and the identity map $\id_S\colon S\to S$.
+\end{definition}
+Quickly, we say that two such objects $(\mc L,\sigma)$ and $(\mc L',\sigma')$ are isomorphic if and only if there is an isomorphism $\varphi\colon\mc L\to\mc L'$ making the following diagram commute.
+% https://q.uiver.app/?q=WzAsMyxbMCwwLCJlX1NeKlxcbWMgTCJdLFsyLDAsImVfU14qXFxtYyBMJyJdLFsxLDEsIlxcT09fUyJdLFswLDEsImVfU14qXFx2YXJwaGkiXSxbMCwyLCJcXHNpZ21hIiwyXSxbMSwyLCJcXHNpZ21hJyJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{e_S^*\mc L} && {e_S^*\mc L'} \\
+	& {\OO_S}
+	\arrow["{e_S^*\varphi}", from=1-1, to=1-3]
+	\arrow["\sigma"', from=1-1, to=2-2]
+	\arrow["{\sigma'}", from=1-3, to=2-2]
+\end{tikzcd}\]
+Additionally, note that rigidified line bundles form a group under the tensor product.
+\begin{remark}
+	We compute rigidified line bundles $(\mc L,\sigma)$ over $S=\Spec k$. Certainly we have all line bundles, but note that two rigidified line bundles $(\mc L,\sigma)$ and $(\mc L',\sigma')$ will have a unique isomorphism because an isomorphism $\mc L\cong\mc L'$ is only defined up to a scalar in $k^\times$.
+\end{remark}
+Now here is the punchline.
+\begin{proposition}
+	We have a functor $\Pic^0_E\colon\mathrm{Sch}_k\opp\to\mathrm{Ab}$ given by sending a $k$-scheme $S$ to the group of rigidified line bundles $(\mc L,\sigma)$ over $E_S$ such that $\deg\mc L=0$.
+\end{proposition}
+\begin{proof}
+	That we produce an abelian group was discussed above. Functoriality comes because a $k$-morphism $f\colon S\to S'$ will make the sections commute as follows.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJFX1MiXSxbMCwxLCJTIl0sWzEsMSwiUyciXSxbMSwwLCJFX3tTJ30iXSxbMSwwLCJlX1MiXSxbMiwzLCJlX3tTJ30iXSxbMCwzLCJmIl0sWzEsMiwiZiJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{E_S} & {E_{S'}} \\
+		S & {S'}
+		\arrow["{e_S}", from=2-1, to=1-1]
+		\arrow["{e_{S'}}", from=2-2, to=1-2]
+		\arrow["f", from=1-1, to=1-2]
+		\arrow["f", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Now one can check that a rigidified line bundle on $S'$ appropriately pull back to rigidified line bundles on $S$.
+\end{proof}
+We now claim that we have a natural isomorphism $h_E\Rightarrow\Pic^0_E(S)$. Quickly, we note that $h_E(S)=E(S)$ is in natural bijection with sections $x\colon S\to E_S$ such that $\pi_S\circ x=\id_S$ because we can simply set $x$ to be determined by a map $S\to E$ and then apply the identity for $S\to S$. As such, we take a section $x\colon S\to E_S$ to the rigidified line bundle given by our section.
+\begin{lemma}
+	Fix everything as above. Given a section $x\mapsto S\to E_S$, then $x$ is a closed immersion and has image given by an effective Cartier divisor in $E_S$.
+\end{lemma}
+\begin{proof}
+	We refer to \cite[062Y]{stacks}.
+\end{proof}
+As such, given a section $x\mapsto S\to E_S$ to the line bundle given by
+\[\OO_{E_S}((e_S)-(x))\otimes_{\OO_{E_S}}\pi^*e_S^*\left((\OO_{E_S}((e_S)-(x)))^{-1}\right).\]
+This makes a rigidified line bundle, where our isomorphism $\sigma$ arises from noting that hitting the above line bundle $e_S^*$ makes this line bundle look like $\mc L\otimes\mc L^{-1}\cong\OO_S$ for some line bundle $\mc L=e_S^*\OO_{E_S}((e_S)-(x))$. Additionally, one can check that this construction is functorial in $x$, so we have indeed defined a natural transformation.
+
+It remains to check that we have an isomorphism of functors. Roughly speaking, this is a special case of cohomology and base-change. Fix a rigidified line bundle $(\mc L,\sigma)$; then we need a section $x\colon S\to E_S$ producing this rigidified line bundle. Well, we set $\mc M\coloneqq\mc L(-e)^{-1}$. In the case where $S=\Spec k$, we observe that $H^0(E,M)$ is one-dimensional, and $H^i(E,\mc M)=0$ for $i>0$ because $E$ is one-dimensional. As such, for general $S$, we see that $\pi_*\mc M$ is a line bundle with
+\[(\pi_*\mc M)(s)=\Gamma(E_s,\mc M|_{E_s})\]
+for each $s\in S$. (This is by our cohomology and base change.) We now want to recover $x$. Well, one can check that the map $\pi^*\pi_*\mc M\to\mc M$ is injective with flat cokernel (see \cite[00MF]{stacks}). Taking the support of $Q$ completes the proof.
+\begin{remark}
+	Roughly speaking, in the $S=\Spec k$ case, we can recover $\OO_E((e)-(x))$ as $\mc L$ by setting $\mc M\coloneqq\mc L(-e)^{-1}$ (which should hopefully by $\OO_E((x))$), and then we can recover $(x)$ from the line bundle $\mc M$. In particular, $H^0(E,\OO_E((x)))$ has one-dimensional global sections, from which we can recover $(x)$ by taking a cokernel as
+	\[\OO_E\to\OO_E(x)\to k(x)\to0\]
+	because $k(x)$ is our skyscraper sheaf which produces $(x)$. This is the motivation for the given proof.
+\end{remark}
+
+\end{document}
