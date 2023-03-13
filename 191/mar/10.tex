@@ -1,0 +1,64 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 8}
+
+Today we apply the Selberg sieve in order to count twin primes.
+
+\subsection{The Sieve Dimension}
+We work in the context of the Selberg sieve. Suppose now that $\beta_p\coloneqq pg(p)$ is actually bounded. Then we may compute
+\begin{align*}
+	-\log V(z) &= \sum_{p<z}-\log(1-g(p)) \\
+	&= \sum_{p<z}g(p)+O(1) \\
+	&= \sum_{p<z}\frac{\beta_p}p+O(1).
+\end{align*}
+In general, we hope that
+\[\sum_{p<z}\frac{\beta_p}p\sim\kappa\log\log z,\]
+roughly because $\beta_p$ ought to be bounded.
+\begin{remark}
+	Let's justify the above intuition. We claim that
+	\[\sum_{p\le z}\frac1p=\log\log z+O(1),\]
+	which will be enough by expanding out $\log V(z)$, expanding out the Taylor series, and only paying attention to the degree-one terms. Indeed, to see the above equality, one notes that
+	\[\sum_{d\le x}\Lambda(d)\floor{\frac xd}=\sum_{n\le x}\log n=x\log x-x+O(\log x),\]
+	but this left-hand side is about $\sum_{d\le x}\frac{\log p}p$, so the original equality follows by partial summation.
+\end{remark}
+This $\kappa$ is called the ``sieve dimension.'' Anyway, we see thus see that $V(z)\sim(\log z)^{-\kappa}$.
+\begin{example}
+	Suppose the sequence $a_n$ is constant. Then we have $g(d)=1/d$ always because
+	\[\sum_{n\equiv0\pmod d}a_n=\frac xd+O(1),\]
+	so we note that $\kappa=1$ because $\sum_{p\le x}\frac1p=\log\log x+O(1)$.
+\end{example}
+\begin{example}
+	Fix some $b$. Define $a_n$ to be $1$ if $n=m^2+b$ for some $m$ and $0$ otherwise. Then for any $p>2$ such that $p\nmid b$, we have
+	\[\beta_p=\#\left\{x\pmod p:p\mid x^2+b\right\}=\begin{cases}
+		2 & \text{if }\left(\frac{-b}p\right)=1, \\
+		0 & \text{otherwise}.
+	\end{cases}=\left(\frac{-b}p\right)+1\]
+	Now, by summation by parts, we see that $\sum_{p\le x}\left(\frac{-b}p\right)=o(x/\log x)$, so $\kappa=1$ follows by adding in the needed $1$ to our summing. Algebraic number theory is able to relate this situation to some counting of prime ideals with specified splitting behavior, which provides some context.
+\end{example}
+\begin{example}
+	We might ask how frequently the function $x^2+y^2+1$ is prime. Then one gets
+	\[\sum_{x,y\le T,d\mid f(x,y)}=g(d)X+r,\]
+	where one sets $X=4T^2$. Now, we define $g(p)$ to be the number of solutions to $x^2+y^2+1\equiv0\pmod p$. By summing appropriately over the Legendre symbol, we see that $g(p)=(1+O(1/\sqrt p))/p$, so the sieve dimension is $\kappa=1$ again.
+\end{example}
+
+\subsection{Bounding the Remainder Term}
+Here is our goal.
+\begin{theorem}
+	We show
+	\[\sum_{\substack{p\le x\\p+2\text{ is prime}}}1\ll\frac x{(\log x)^2}.\]
+\end{theorem}
+\begin{proof}
+	Fix some $x$. Define $a_n$ to be $1$ if $n$ takes the form $m(m+2)$ for some $m\le x$ and zero otherwise. Then for any $d$, we want that
+	\[\sum_{n\equiv0\pmod d}a_n=\beta_d\left(\frac xd+O(1)\right),\]
+	so we set $g(d)\coloneqq\beta_d/d$, and we note that we can make $g$ multiplicative by the Chinese remainder theorem (we are asking how frequently $m(m+2)$ is divisible by some fixed $d$), so we can evaluate at primes to find $g(2)=1/2$ and $g(p)=2/p$ for $p$ odd by counting the outputs.
+
+	Now, we set $z\coloneqq\sqrt x$. As in the Selberg sieve, we expect for
+	\[V(z)=\prod_{p<z}(1-g(p))=\frac12\prod_{2<p<z}\left(1-\frac2p\right).\]
+	We expect $V(z)\ll1/(\log x)^2$, which we get from taking the exponential of the estimate $\sum_{p\le z}\frac1p=\log\log p$ as in our discussion above.
+\end{proof}
+
+\end{document}

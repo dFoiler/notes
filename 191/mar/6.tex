@@ -1,0 +1,103 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 6}
+
+Let's begin sieve theory.
+
+\subsection{Elementary Sieve Theory}
+% Opera de Cribro
+% An Introduction to Sieve Methods
+Roughly speaking, the idea here is that we have some sequence $\{a_n\}_{n\in\NN}$ of nonnegative real numbers, and we want to compute the asymptotics of the sum
+\[\sum_{p\le N}a_p\]
+for $N$ large. The reason we call this ``sieve theory'' is that we are going to remove terms by inclusion--exclusion. In particular, we are going to assume that we have understanding of the sum in arithmetic progressions (say, with small arithmetic progressions) and then compute some our sum with some error terms.
+\begin{example}
+	If we let $a_n$ denote the condition that $n-2$ is prime, then
+	\[\sum_{p\le N}a_p\]
+	counts the number of twin prime pairs less than or equal to $N$.
+\end{example}
+To set up our sieving, we set the following notation.
+\begin{notation}
+	For real number $z$, we define
+	\[P_z\coloneqq\prod_{p\le z}p.\]
+\end{notation}
+The point is that we might instead sieve for
+\[\sum_{\substack{n\le N\\\gcd(n,P_z)=1}}a_n\]
+for $N$ large. In other words, we are asking for $n$ to not have small prime factors.
+
+Let's state a basic sieve, which is the Selberg sieve. Roughly speaking, the idea is to use M\"obius inversion to sieve out entries in our sum which have small prime factors. Here is the definition of the M\"obius function.
+\begin{defihelper}[$\mu$] \nirindex{Mobius@$\mu$}
+	We define the \textit{M\"obius} function $\mu\colon\NN\to\CC$ as
+	\[\mu(n)\coloneqq\begin{cases}
+		(-1)^k & \text{if }n=p_1\cdots p_k\text{ where }n\text{ is squarefree}, \\
+		0 & \text{if }n\text{ is not squarefree}.
+	\end{cases}\]
+	Note that $\mu(1)=(-1)^0=1$.
+\end{defihelper}
+\begin{remark}
+	Observe that $\mu$ is multiplicative. This is a direct computation.
+\end{remark}
+\begin{remark} \label{rem:m-inversion}
+	By the Euler product, we see that
+	\[\frac1{\zeta(s)}=\prod_p\left(1-\frac1{p^{-s}}\right)=\prod_p\Bigg(\sum_{k=0}^\infty\frac{\mu\left(p^k\right)}{p^{ks}}\Bigg)=\sum_{n=1}^\infty\frac{\mu(n)}{n^s}.\]
+	As such, using the Dirichlet convolution, we see that
+	\[\sum_{d\mid n,d\mid P_z}\mu(d)=\begin{cases}
+		1 & \text{if }\gcd(n,P_z)=1, \\
+		0 & \text{if }\gcd(n,P_z)>1.
+	\end{cases}\]
+	This is the M\"obius inversion formula.
+\end{remark}
+\begin{proposition}[Selberg sieve] \label{prop:selberg}
+	Fix a sequence $\mc A=\{a_n\}_{n=1}^N$ of nonnegative real numbers in $[0,1]$. Further, suppose that we have (large) integers $X$ and $D$ such that we may write
+	\[\sum_{n\le N}a_n=X\qquad\text{and}\qquad\sum_{n\equiv0\pmod d}g(d)X+r(d,\mc A),\]
+	for each squarefree $d$, where we satisfy the following conditions.
+	\begin{listroman}
+		\item $d$ is squarefree.
+		\item $g$ is multiplicative and $0\le g(p)<1$ for all $p$.
+		\item The sum $\sum_{d\le D}|r(d)|$ is relatively small.
+	\end{listroman}
+	Then we define $S(\mc A,P_z)\coloneqq\sum_{n\le N,\gcd(n,P_z)=1}a_n$. Then
+	\[S(\mc A,P_z)\le\frac XJ+\sum_{d\le D}\tau_3(d)|r(d,\mc A)|,\]
+	where $J$ is some effective constant, and $\tau_3(d)=\#\{(a,b,c):abc=d\}$.
+\end{proposition}
+\begin{remark}
+	It is true that $\tau_3(d)\ll_\varepsilon d^\varepsilon$ for any $\varepsilon>0$. This is a combinatorial result, which we will not show explicitly here.
+\end{remark}
+\begin{remark}
+	One expects that $J\approx V(z)\coloneqq\prod_{p\le z}(1-g(p))$. Roughly speaking, this is what we expect to occur if the primes behave randomly, meaning that there is absolutely no error in our inclusion--exclusion arguments.
+\end{remark}
+\begin{remark}
+	In the event that $g(p)=1/p$ always, one is able to bound (using the proof of the Selberg sieve)
+\end{remark}
+\begin{remark}
+	One can use the Brun sieve, which we have not introduced here, to ``truncate'' the above sums to produce a lower bound.
+\end{remark}
+\begin{remark}
+	If we can achieve $z>\sqrt N$, then our sum is actually
+	\[\sum_{z<p\le N}a_p\le S(\mc A,P_z).\]
+	Thus, we have the basic upper bound of
+	\[\sum_{p\le N}a_p\le S(\mc A,P_z)+z\]
+	because $a_n\le1$ always. In fact, if we can achieve $z=N^\alpha$ for small $\alpha>0$, then we achieve our upper bound as needed. However, we do not get good lower bounds from our sieving. Roughly speaking, $z=N^\alpha$ keeps values of $n$ which have at most $1/\alpha$ prime factors because the smallest prime permitted is $2$.
+\end{remark}
+Let's move towards a proof of \Cref{prop:selberg} over time. By M\"obius inversion in the form of \Cref{rem:m-inversion}, we may write
+\begin{align*}
+	S\coloneqq{}& \sum_{\substack{n\le N\\\gcd(n,P_z)=1}}a_n \\
+	={}& \sum_{n\le N}a_n\Bigg(\sum_{d\mid n,d\mid P_z}\mu(d)\Bigg) \\
+	={}& \sum_{d\mid P_z}\mu(d)\Bigg(\sum_{n\equiv0\pmod d}a_n\Bigg).
+\end{align*}
+Now, the idea is that only the terms with $d\le z$ should matter, which is why we defined $V(z)$ in that way.
+
+Roughly speaking, the idea is to define real parameters $\rho_1,\ldots,\rho_d$, where $d\le\sqrt D$ and $\rho_1=1$, and we examine the sums
+\[\sum_{n\le N}\Bigg(\sum_{\substack{d\le\sqrt D\\d\mid\gcd(n,P_z)}}\rho_d\Bigg)^2a_n,\]
+which we know must be an upper bound for $S=S(\mc A,P_z)$ because $\rho_1^2=1$ is our term in the event of $\gcd(n,P_z)=1$. The internal sum is a quadratic form in our parameters $\rho_\bullet$, so we will minimize its value by diagonalizing. For example, we can write
+\[S\le\sum_{d_1,d_2\mid P_z}\rho_{d_1}\rho_{d_2}\sum_{\substack{d_1,d_2\mid n\\n\le N}}a_n=\sum_{d_1,d_2\mid P_z}\rho_{d_1}\rho_{d_2}\left(g(\lcm(d_1,d_2))X+r(\lcm(d_1,d_2),\mc A)\right),\]
+which we hope gives us something to work with. As such, we define
+\[G\coloneqq\sum_{d_1,d_2\mid P_z}\rho_{d_1}\rho_{d_2}g(\lcm(d_1,d_2))\qquad\text{and}\qquad R\coloneqq\sum_{d_1,d_2\mid P_z}r(\lcm(d_1,d_2),\mc A)\rho_{d_1}\rho_{d_2}.\]
+Here, our main term is $G$, and our remainder term is $R$. Notably, if we can achieve $\rho_\bullet\in[0,1]$ for all $\rho_\bullet$, then we can immediately bound
+\[R\le\sum_{d_1,d_2\mid P_z}|r(\lcm(d_1,d_2),\mc A)|=\sum_{d\le D}\tau_3(d)|r(d,\mc A)|,\]
+where the last inequality simply counts the number of times some $r(d,\mc A)$ might appear in the sum. As such, the difficulty will arise in bounding the main term $G$.
+
+\end{document}

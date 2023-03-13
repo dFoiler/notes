@@ -1,0 +1,45 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 8}
+
+We continue discussing the Selberg sieve. I'm just going to edit into the previous day's lecture notes for continuity.
+
+\subsection{Bounding the Main Term}
+Roughly speaking, we are going to work through some Cauchy--Schwarz argument in order to achieve our lower bound on $G$. The idea is to view $G$ as a quadratic form in the $\rho_{d_\bullet}$, for which we have tools to optimize. In particular, we see that pairs $(d_1,d_2)$ each dividing $P_z$ is equivalent to coprime triples $(a,b,c)$ with product dividing $P_z$ by setting $c\coloneqq\gcd(d_1,d_2)$ and $a\coloneqq d_1/c$ and $b\coloneqq d_2/c$. As such, we see
+\[G=\sum_{\text{coprime }abc\mid P_z}g(abc)\rho_{ac}\rho_{bc}=\sum_{c\mid P}\Bigg(g(c)\sum_{\text{coprime }ab\mid(P_z/c)}g(a)g(b)\rho_{ac}\rho_{bc}\Bigg).\]
+We would like to relax the condition that $a$ and $b$ are coprime. For this, we use M\"obius inversion to get
+\[G=\sum_{c\mid P_z}\Bigg(g(c)\sum_{a,b\mid P_z/c}\Bigg(\sum_{d\mid\gcd(a,b)}\mu(d)\Bigg)g(a)g(b)\rho_{ac}\rho_{bc}\Bigg).\]
+Exchanging the order of summation to pull $d$ to the front, we get
+\[G=\sum_{c\mid P}\Bigg(g(c)\sum_{d\mid P_z/c}\mu(d)g(d)^2\Bigg(\sum_{m\mid P_z/(cd)}g(m)\rho_{cdm}\Bigg)^2\Bigg)\]
+by factoring out our square. To make our sum easier to optimize (namely, we would like the coefficient $g(m)$ to $g(cdm)$), we write this as
+\[G=\sum_{c\mid P_z}\Bigg(\frac1{g(c)}\sum_{d\mid P_z/c}\mu(d)\Bigg(\sum_{m\mid P_z/(cd)}g(cdm)\rho_{cdm}\Bigg)^2\Bigg).\]
+The internal sum only depends on $cd$, so we set $k\coloneqq cd$ and exchange the order of summation to see
+\[G=\sum_{k\mid P_z}\Bigg(\sum_{c\mid k}\frac{\mu(k/c)}{g(c)}\Bigg)\Bigg(\sum_{m\mid P_z/k}g(km)\rho_{km}\Bigg)^2.\]
+Now, the function $k\mapsto\sum_{c\mid k}\frac{\mu(k/c)}{g(c)}$ is just $\frac1h\coloneqq\frac1g*\mu$ and is therefore multiplicative, so we can factor appropriately to see
+\[\frac1{h(k)}=\sum_{c\mid k}\frac{\mu(k/c)}{g(c)}=\prod_{p\mid k}\Bigg(\sum_{c\mid p}\mu(p/c)\cdot\frac1{g(c)}\Bigg)=\prod_{p\mid k}\left(\frac1{g(p)}-1\right).\]
+Anyway, we go ahead and write
+\[G=\sum_{k\mid P_z}\frac1{h(d)}\Bigg(\sum_{k\mid m,m\mid P_z}g(m)\rho_m\Bigg)^2.\]
+We now apply a chance of variables to finish the diagonalization. For $d\le\sqrt D$, we set
+\[y_d\coloneqq\frac{\mu(d)}{h(d)}\sum_{\substack{d\mid m\\m\text{ squarefree}\\m\le\sqrt D}}g(m)\rho_m\]
+so that
+\[G=\sum_{d\le\sqrt D}h(d)y_d^2,\]
+where our constraint is given by $\rho_1=1$. Notably, we can invert our definition of $y_\bullet$ to see
+\[\rho_\ell=\frac{\mu(\ell)}{g(\ell)}\sum_{\substack{\ell\mid d\\d\le\sqrt D}}h(d)y_d,\]
+which we leave as an exercise. Thus, we are optimizing the quadratic form
+\[G=\sum_{d\le\sqrt D}h(d)y_d^2\]
+under the constraint that $1=\rho_1=\sum_{d\le\sqrt D}h(d)y_d$. In particular, by Cauchy--Schwarz, we can minimize $G$ as $1/J$, where
+\[J\coloneqq\sum_{d\le\sqrt D}h(d).\]
+However, we see
+\begin{align*}
+	J &= \sum_{k\mid\ell}\sum_{d\le\sqrt D,\gcd(d,\ell)=k}h(d) \\
+	&= \sum_{k\mid\ell}h(k)\sum_{m\le\sqrt D/k,\gcd(m,\ell)=1}h(m) \\
+	&\ge \Bigg(\sum_{k\mid\ell}h(k)\Bigg)\Bigg(\sum_{m\le\sqrt D/\ell,\gcd(m,\ell)=1}h(m)\Bigg) \\
+	&= \mu(\ell)\rho_\ell J.
+\end{align*}
+As such, we are able to bound $|\rho_\ell|\le1$. Notably, our bound on $G$ has now completed the proof of the Selberg sieve.
+
+\end{document}

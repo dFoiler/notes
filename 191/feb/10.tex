@@ -22,7 +22,7 @@ As an aside, we set up the P\'olya--Vinogradov inequality.
 	\[\widehat{1_{[a,b]}}(m)=\sum_{a\le n\le b}e\left(-\frac{mn}p\right)\ll\frac pm,\]
 	where we have expanded out the geometric series to get this bound; namely, we are noting $\frac1{1-e(-1/p)}\approx p$. As such, we use the Fourier inversion formula \Cref{cor:indicate-g} to see
 	\[\left|\sum_{x\in\FF_p}1_{[a,b]}(x)\chi(x)\right|=\frac1p\left|\sum_{m,x\in\FF_p}\widehat{1_{[a,b]}}(m)e\left(\frac{mx}p\right)\chi(x)\right|.\]
-	Now, by \Cref{lem:mag-of-gauss-sum}, this is bounded above by
+	Now, by \Cref{prop:mag-of-gauss-sum}, this is bounded above by
 	\[\frac1p\sum_{m=1}^{p-1}\widehat{1_{[a,b]}}\sqrt p\ll\frac1{\sqrt p}\cdot\sqrt p\sum_{m=1}^{p-1}\frac1m\ll\sqrt p\log p.\]
 	(Notably, the $m=0$ term provides no contribution.) This completes the proof.
 \end{proof}
@@ -36,18 +36,102 @@ As an aside, we set up the P\'olya--Vinogradov inequality.
 	For ``short'' intervals, one can do better, which is the point of the Burgess bound.
 \end{remark}
 
-\subsection{A Functional Equation for \texorpdfstring{$L(s,\chi)$}{ L(s, chi)}}
-Fix a prime $p$. Given a Dirichlet character $\chi\pmod p$, we would like to provide a functional equation akin to \Cref{thm:xi-func-eq}. Roughly speaking, there will be three cases.
-\begin{itemize}
-	\item $\chi$ could be the trivial character $\chi_0$.
-	\item $\chi$ could be the (unique) nontrivial real quadratic character $\left(\frac\bullet p\right)$.
-	\item $\chi$ could be a complex character satisfying $\chi\ne\overline\chi$.
-\end{itemize}
-We separate out these cases because it turns out that our knowledge of the second case is the worst.
-\begin{remark} \label{rem:trivial-character-func-eq}
-	Note that the case of $\chi=\chi_0$ is essentially just $\zeta$ with a few Euler factors, so its functional equation can be derived directly from \Cref{thm:xi-func-eq}.
+\subsection{The Functional Equation for \texorpdfstring{$L(s,\chi)$}{ L(s, chi)}}
+Given a primitive Dirichlet character $\chi\pmod q$, we would like to provide a functional equation akin to \Cref{thm:xi-func-eq}. It will be convenient to divide our analysis in the cases $\chi(-1)=1$ and $\chi(-1)=-1$. Notably, $\chi(-1)^2=\chi(1)=1$, so $\chi(-1)\in\{\pm1\}$ is indeed forced.
+\begin{remark} \label{rem:why-sign-chi}
+	Roughly speaking, the case of $\chi(-1)=1$ makes $L(s,\chi)$ a factor of the Dedekind $\zeta$-function of a real quadratic field, but the case of $\chi(-1)=-1$ makes $L(s,\chi)$ a factor of the Dedekind $\zeta$-function of an imaginary quadratic field. Because the infinite place of $\QQ$ splits differently in these cases, the $\Gamma$-factors used to complete our $L$-function will be different, which is why we must separate our analysis into cases.
 \end{remark}
-In light of \Cref{rem:trivial-character-func-eq}, we will focus on the case of $\chi\ne\chi_0$. Now, for $\alpha\in\RR$, an argument similar to \Cref{ex:use-ps} yields
+Despite the philosophical remark of \Cref{rem:why-sign-chi}, our entire discussion will avoid discussing number fields. As in the proof of \Cref{thm:xi-func-eq}, our functional equation will follow from the functional equation of a suitably defined $\Theta$-function.
+\begin{definition}
+	Fix a Dirichlet character $\chi\pmod q$.
+	\begin{itemize}
+		\item If $\chi(-1)=1$, we define, for $\op{Re}s>0$,
+		\[\Theta(s,\chi)\coloneqq\sum_{n\in\ZZ}\chi(n)e^{-\pi n^2s/q}.\]
+		\item If $\chi(-1)=-1$, we define, for $\op{Re}s>0$,
+		\[\Theta(s,\chi)\coloneqq\sum_{n\in\ZZ}n\chi(n)e^{-\pi n^2s/q}.\]
+	\end{itemize}
+\end{definition}
+Note that $\chi(-1)=-1$ would imply that
+\[\sum_{n\in\ZZ}\chi(n)e^{-\pi n^2s}=0,\]
+which explains why we should add the factor of $n$ here.
+\begin{lemma}
+	For any Dirichlet character $\chi\pmod q$ and $\varepsilon>0$, the sum defining $\Theta(s,\chi)$ converges absolutely and uniformly on $\{s:\op{Re}s\ge\varepsilon\}$. Thus, $\Theta(s,\chi)$ defines a holomorphic function on $\{s:\op{Re}s>0\}$.
+\end{lemma}
+\begin{proof}
+	Note that the second sentence follows from the first: by \Cref{lem:holo-limit}, we see that $\Theta(s,\chi)$ is holomorphic on $\{s:\op{Re}s\ge\varepsilon\}$ for any $\varepsilon>0$, so taking the union over all $\varepsilon>0$ achieves the result. We now show our convergences by the Weierstrass $M$-test.
+	\begin{itemize}
+		\item For $\chi(-1)=1$, we see
+		\[\sum_{n\in\ZZ}\left|\chi(n)e^{-\pi n^2s/q}\right|\le\sum_{n\in\ZZ}e^{-\pi n^2\op{Re}s/q}\le\sum_{n\in\ZZ}e^{-\pi n^2\varepsilon/q}=\Theta(\varepsilon/q),\]
+		which already converges by \Cref{rem:theta-converges}. Note that the bound $e^{-\pi n^2\varepsilon}$ is independent of $s$, which gives our uniformity.
+		\item For $\chi(-1)=-1$, we see
+		\[\sum_{n\in\ZZ}\left|n\chi(n)e^{-\pi n^2s/q}\right|\le\sum_{n\in\ZZ}|n|e^{-\pi n^2\op{Re}s/q}\le1+2\sum_{n=1}^\infty ne^{-\pi n\varepsilon/q}.\]
+		Because $ne^{-\pi n\varepsilon/q}$ is independent of $s$, it remains to show that the rightmost sum converges. Well, note that $n^3/e^{\pi n\varepsilon/q}\to0$ as $n\to\infty$, so because this is a continuous function, we actually see that it is bounded by some constant $C>0$, so we see
+		\[\sum_{n=1}^\infty ne^{-\pi n\varepsilon/q}\le\sum_{n=1}^\infty n\cdot\frac M{n^3}=M\sum_{n=1}^\infty\frac1{n^2},\]
+		which converges. For example, this is $\zeta(2)$, which converges by \Cref{prop:basic-dirichlet-series}, say.
+		\qedhere
+	\end{itemize}
+\end{proof}
+And here is our functional equation for $\Theta(s,\chi)$.
+\begin{proposition}
+	Fix a primitive Dirichlet character $\chi\pmod q$.
+	\begin{itemize}
+		\item If $\chi(-1)=1$, then for any $\op{Re}s>0$,
+		\[\Theta(s,\chi)=\frac{\sqrt{q}}{\tau(\overline\chi)}\cdot s^{-1/2}\Theta\left(\frac1s,\overline\chi\right).\]
+		\item If $\chi(-1)=-1$, then for any $\op{Re}s>0$,
+		\[\Theta(s,\chi)=\frac{i\sqrt{q}}{\tau(\overline\chi)}\cdot s^{-3/2}\Theta\left(\frac1s,\overline\chi\right).\]
+	\end{itemize}
+\end{proposition}
+\begin{proof}
+	The argument is similar to \Cref{prop:theta-func-eq}. Note that $\Theta(s,\chi)$ is holomorphic on the region $\{s:\op{Re}s>0\}$ by \Cref{rem:theta-converges}. On the other side, we note that $\op{Re}s>0$ implies that $\op{Re}(1/s)>0$ as well: writing $s=a+bi$ for $a>0$, we have $\frac1s=\frac{a-bi}{|s|^2}$, which also has positive real part. Thus, we see that $\Theta(1/s,\overline\chi)$ is the composite of holomorphic functions and is therefore holomorphic, as are $\frac{\sqrt{q}}{\tau(\overline\chi)}\cdot s^{-1/2}\Theta\left(\frac1s,\overline\chi\right)$ and $\frac{i\sqrt{q}}{\tau(\overline\chi)}\cdot s^{-3/2}\Theta\left(\frac1s,\overline\chi\right)$.
+
+	In total, by the uniqueness of analytic continuation, it therefore suffices to show that our holomorphic functions are equal on $\RR_{>0}$. As such, fix some $t>0$, and we use Poisson summation, roughly in the form of \Cref{cor:use-ps}.
+	\begin{itemize}
+		\item Suppose $\chi(-1)=1$. Then we note \Cref{lem:adjust-quad-gauss-sum} implies
+		\begin{align*}
+			\tau(\overline\chi)\Theta(t,\chi) &= \sum_{n\in\ZZ}\chi(n)\tau(\overline\chi)e^{-\pi n^2t/q} \\
+			&= \sum_{n\in\ZZ}\tau(\overline\chi,n)e^{-\pi n^2t/q} \\
+			&= \sum_{r=0}^{q-1}\Bigg(\overline\chi(r)\sum_{n\in\ZZ}e^{-\pi n^2t/q+2\pi inr/q}\Bigg).
+		\end{align*}
+		Now, taking the conjugate of \Cref{cor:use-ps}, the inner sum becomes
+		\[\sum_{n\in\ZZ}e^{-\pi n^2(t/q)+2\pi in(r/q)}=\frac1{\sqrt{t/q}}\sum_{n\in\ZZ}e^{-\pi(n+r/q)^2/(t/q)},\]
+		so
+		\begin{align*}
+			\tau(\overline\chi)\Theta(t,\chi) &= \sum_{r=0}^{q-1}\Bigg(\overline\chi(r)\cdot\frac1{\sqrt{t/q}}\sum_{n\in\ZZ}e^{-\pi(n+r/q)^2/(t/q)}\Bigg) \\
+			&= \frac{\sqrt q}{\sqrt t}\sum_{r=0}^{q-1}\Bigg(\sum_{n\in\ZZ}\overline\chi(r)e^{-\pi(qn+r)^2(1/t)}\Bigg) \\
+			&= \frac{\sqrt q}{\sqrt t}\underbrace{\sum_{n\in\ZZ}\overline\chi(n)e^{-\pi n^2(1/t)}}_{\Theta(1/t,\overline\chi)},
+		\end{align*}
+		where in the last equality we have used the absolute convergence of $\Theta(1/t,\overline\chi)$ to rearrange the sum. Rearranging our equality, we see
+		\[\Theta(t,\chi)=\frac{\sqrt{q}}{\tau(\overline\chi)}\cdot t^{-1/2}\Theta\left(\frac1t,\overline\chi\right).\]
+		\item Suppose $\chi(-1)=-1$. Again, we note that \Cref{lem:adjust-quad-gauss-sum} implies
+		\begin{align*}
+			\tau(\overline\chi)\Theta(t,\chi) &= \sum_{n\in\ZZ}\chi(n)\tau(\overline\chi)ne^{-\pi n^2t/q} \\
+			&= \sum_{n\in\ZZ}\tau(\overline\chi,n)ne^{-\pi n^2t/q} \\
+			&= \sum_{r=0}^{q-1}\Bigg(\overline\chi(r)\sum_{n\in\ZZ}ne^{-\pi n^2t/q+2\pi inr/q}\Bigg).
+		\end{align*}
+		This time around, Poisson summation in the form of \Cref{cor:use-ps} is not good enough for our purposes, but Poisson summation still suffices. Set $f\colon\RR\to\CC$ by $f(x)\coloneqq xe^{-\pi x^2(t/q)+2\pi ix(r/q)}$. Setting $g(x)\coloneqq e^{-\pi x^2}$, we note that $g'(x)=-2\pi xe^{-\pi x^2}$, so
+		\[f(x)=-\frac1{2\pi\sqrt{t/q}}g'(\sqrt{t/q}x)e^{2\pi ix(r/q)}.\]
+		Thus, \Cref{lem:fourier-checks} and \Cref{exe:gaussian} tell us that $f$ is Schwarz with Fourier transform given by
+		\begin{align*}
+			(\mc Ff)(s) &= -\frac1{2\pi\sqrt{t/q}}\cdot\frac1{\sqrt{t/q}}(\mc Fg')\left(\frac{s-r/q}{\sqrt{t/q}}\right) \\
+			&= -\frac1{2\pi(t/q)}\cdot2\pi i\left(\frac{s-r/q}{\sqrt{t/q}}\right)e^{-\pi(s-r/q)^2/(t/q)} \\
+			&= -i\sqrt qt^{-3/2}(qs-r)e^{-\pi(qs-r)^2/t}.
+		\end{align*}
+		Now applying \Cref{thm:ps}, we get
+		\[\sum_{n\in\ZZ}ne^{-\pi n^2t/q+2\pi inr/q}=\sum_{n\in\ZZ}f(n)=\sum_{n\in\ZZ}(\mc Ff)(n)=\sum_{n\in\ZZ}-i\sqrt qt^{-3/2}(qn-r)e^{-\pi(qn-r)^2/t}.\]
+		As such, we get rid of the sign here by noting $\overline\chi(-r)=-\overline\chi(r)$, so
+		\begin{align*}
+			\tau(\overline\chi)\Theta(t,\chi) &= \sum_{r=0}^{q-1}\Bigg(\overline\chi(r)\sum_{n\in\ZZ}-i\sqrt qt^{-3/2}(qn-r)e^{-\pi(qn-r)^2/t}\Bigg) \\
+			&= i\sqrt qt^{-3/2}\sum_{r=0}^{q-1}\Bigg(\sum_{n\in\ZZ}\overline\chi(qn-r)(qn-r)e^{-\pi(qn-r)^2/t}\Bigg) \\
+			&= i\sqrt qt^{-3/2}\underbrace{\sum_{n\in\ZZ}\overline\chi(n)ne^{-\pi n^2(1/t)}}_{\Theta(1/t,\overline\chi)}.
+		\end{align*}
+		Rearranging our equality, we see
+		\[\Theta(t,\chi)=\frac{\sqrt q}{\tau(\overline\chi)}\cdot t^{-3/2}\Theta\left(\frac1t,\overline\chi\right),\]
+		which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+We will focus on the case of $\chi\ne\chi_0$. Now, for $\alpha\in\RR$, an argument similar to \Cref{cor:use-ps} yields
 \[\sum_{n\in\ZZ}e^{-\pi(n+\alpha)^2/x}=x^{1/2}\sum_{n\in\ZZ}e^{-\pi n^2x+2\pi in\alpha}.\]
 In particular, taking $\alpha=m/p$ for $m\in\ZZ$ grants
 \[\sum_{n\in\ZZ}e^{-\pi(n+m/p)^2/x}=\left(\frac xp\right)^{1/2}\sum_{n\in\ZZ}e^{-\pi n^2x/p+2\pi inm/p}.\]
