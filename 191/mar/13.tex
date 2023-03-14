@@ -1,0 +1,78 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 13}
+
+Let's briefly introduce the Brun sieve.
+
+\subsection{The Brun Sieve}
+In contrast to the Selberg sieve, the Brun sieve provides a lower bound.
+\begin{theorem}[Brun sieve]
+	Fix a sequence $\mc A=\{a_n\}_{n=1}^N$ of nonnegative real numbers in $[0,1]$. Further, suppose that we have (large) integers $X$ and $D$ such that we may write
+	\[\sum_{n\le N}a_n=X\qquad\text{and}\qquad\sum_{n\equiv0\pmod d}g(d)X+r(d,\mc A),\]
+	for each squarefree $d$, where we satisfy the following conditions.
+	\begin{listroman}
+		\item $d$ is squarefree.
+		\item $g$ is multiplicative and $0\le g(p)<1$ for all $p$.
+	\end{listroman}
+	Then we can lower-bound $\mc S(\mc A,P_z)\coloneqq\sum_{n\le N,\gcd(n,P_z)=1}a_n$.
+\end{theorem}
+\begin{proof}[Idea]
+	We will not prove this rigorously. As before, we note
+	\[S(\mc A,P_z)=\sum_{n=1}^Na_n\Bigg(\sum_{d\mid\gcd(n,P_z)}\mu(d)\Bigg),\]
+	where the internal sum is an indicator for $\gcd(n,P_z)=1$. For the Brun sieve, we will optimize real numbers $\lambda_d^+$ and $\lambda_d^-$ for $1\le d\le D$ such that $\lambda_1^+=\lambda_1^-=1$ and
+	\[\sum_{d\mid n}\lambda_d^-\le0\le\sum_{d\mid n}\lambda_d^+\]
+	for each $n$. The point is that the $\lambda^\pm_\bullet$ behave as a truncated M\"obius function.
+
+	Assuming the existence of these real numbers, we get some error terms $R^+$ and $R^-$ such that
+	\[X\sum_{\substack{d\mid P_z\\d\le D}}\lambda_d^-g(d)-R^-\le S(\mc A,P_z)\le X\sum_{\substack{d\mid P_z\\d\le D}}\lambda_d^+g(d)+R^+,\]
+	where
+	\[R^\pm\coloneqq\sum_{\substack{d\mid P_z\\d\le D}}\left|\lambda_d^\pm r(d,\mc A)\right|.\]
+	We would like these remainder terms to be relatively small.
+
+	The point is that the magic goes into choosing the $\lambda^\pm_\bullet$. Roughly speaking, we will want to choose them to approximately agree with $\mu$ on small values. As such, we choose real parameters $y_m>0$, and let $D^+$ denote the set of squarefree positive integers $d=q_1\cdots q_r$ (with $q_i<q_{i+1}$) such that $q_m<y_m$ for each odd $m$, and we define $D^-$ analogously as the set of squarefree positive integers $d=q_1\cdots q_r$ (with $q_i<q_{i+1}$) such that $q_m<q_m$ for $m$ even. We now want to define
+	\[\lambda_d^\pm\coloneqq\mu(d)|_{D^\pm}\]
+	for each $d$. To ensure that this is nonzero for enough $d$, we set our parameters $y_m$ by
+	\[y_m\coloneqq\left(\frac D{p_1\cdots p_m}\right)^{1/\beta}\]
+	where $\beta\ge1$.
+\end{proof}
+
+\subsection{Twin Primes}
+We now bound the remainder term of our Selberg sieve.
+\begin{theorem}
+	Fix everything as in the Selberg sieve. Suppose we have an explicit constant $\kappa\in\NN$ such that $g(p)\ge\kappa/p$ for all but finitely many primes $p$. Then, letting $q$ denote the product of these finitely many primes, we have
+	\[J\ge\frac{(\frac12\log D)^\kappa}{k!H_q}\left(1-\frac{\kappa\ell(q)}{\frac12\log D}\right),\]
+	where $H_q$ and $\ell(q)$ are effective constants depending on $q$.
+\end{theorem}
+\begin{proof}
+	Explicitly, we will show that
+	\[H_q=\prod_{p\mid q}(1-g(p))\left(1-\frac1p\right)^{-\kappa}\qquad\text{and}\qquad\ell(q)=\sum_{p\mid q}g(p)\log p.\]
+	Define $\tau_\kappa(n)$ denote the number of $\kappa$-tuples of positive integers $(a_1,\ldots,a_k)$ such that $a_1\cdots a_\kappa=n$. (The point is to be able to rearrange summations with some ease.) Recall that
+	\[h(b)\coloneqq\prod_{p\mid b}\Bigg(\sum_{k=1}^\infty g(p)^k\Bigg)\]
+	for squarefree $b$. As an aside, a direct computation with sticks-and-stones tells us that
+	\begin{equation}
+		\sum_{n\ge0}\frac{\tau_\kappa\left(p^n\right)}{p^n}=\sum_{n\ge0}\frac{\binom{\kappa+n-1}{n-1}}{p^n}=\left(1-\frac1p\right)^{-\kappa}=\left(\frac{\varphi(p)}p\right)^{-\kappa}. \label{eq:compare-tau-kappa}
+	\end{equation}
+	Now, again by definition, we see
+	\[J=\sum_{\substack{\text{squarefree }a,b\\ab<\sqrt D\\a\mid q\\\gcd(b,q)=1}}h(a)h(b)\]
+	by unwinding the Selberg sieve. As such, we see that we want to find a lower bound for
+	\[F(x)\coloneqq\sum_{\substack{\text{squarefre }b<x\\\gcd(b,q)=1}}h(b).\]
+	Extending $g$ to be completely multiplicative for technical reasons, we can define $h(b)$ in the same way, and we note that we still have $g(b)\ge\tau_\kappa(b)/b$ by checking locally at prime-powers and then multiplying. Notably, by expanding out the products in $h(b)$, we see
+	\[F(x)\ge\sum_{\substack{b<x\\\gcd(b,q)=1}}g(b),\]
+	but our inequality $g(b)\ge\tau_\kappa(b)/b$ now grants
+	\[F(x)\ge\sum_{\substack{b<x\\\gcd(b,q)=1}}\frac{\tau_\kappa(b)}b.\]
+	Adding in the remainder terms by multiplying through with \eqref{eq:compare-tau-kappa}, we see that actually
+	\[F(x)\ge\left(\frac{\varphi(q)}q\right)^{\kappa}\sum_{b<x}\frac{\tau_\kappa(b)}b,\]
+	so upon expanding out $\tau_\kappa$ and using the integral bound for a sum, we see that
+	\[F(x)\ge\left(\frac{\varphi(q)}q\right)^{\kappa}\int_{\substack{x_1\cdots x_k<x\\x_1,\ldots,x_k\ge1}}\frac{dx_1\cdots dx_\kappa}{x_1\cdots x_\kappa}=\left(\frac{\varphi(q)}q\right)^\kappa\cdot\frac1{\kappa!}(\log x)^\kappa,\]
+	where we have omitted the computation of the integral. In total, we conclude
+	\[J\ge\frac1{k!}\sum_{\substack{\text{squarefree }a<\sqrt D\\a\mid q}}h(a)\left(\frac{\varphi(q)}q\log\left(\frac{\sqrt D}a\right)\right)^\kappa.\]
+	However, we can lower-bound $(1-y)^\kappa\ge1-\kappa y$, which turns this bound into
+	\[J\ge\frac1{k!}\left(\frac{\varphi(q)}q\log\sqrt D\right)^\kappa\sum_{\text{squarefree }a\mid q}h(a)\left(1-\kappa\cdot\frac{\log a}{\log\sqrt D}\right).\]
+	We will continue next class.
+\end{proof}
+
+\end{document}
