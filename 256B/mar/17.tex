@@ -1,0 +1,145 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 17}
+
+We are pleased to be joined by a goose today. The homework has been extended to next Friday.
+
+\subsection{Review of \texorpdfstring{$\delta$}{ Delta}-Functors}
+We are going to want to talk about universal $\delta$-functors quite a bit.
+\begin{defihelper}[$\delta$-functor] \nirindex{Delta-functor@$\delta$-functor}
+	Fix abelian categories $\mc A$ and $\mc B$. Then a \textit{$\delta$-functor} is a collection of functors $T^i\colon\mc A\to\mc B$ for $i\ge0$ and connecting morphisms $\delta^i$ (for $i\ge0$) such that a short exact sequence
+	\[0\to A'\to A\to A''\to0\]
+	gives rise to a long exact sequence
+	\[0\to T^0A'\to T^0A\to T^0A''\stackrel{\delta^0}\to T^1A'\to T^1A\to T^1A''\stackrel{\delta^1}\to T^2A'\to\cdots\]
+	natural in the short exact sequence.
+\end{defihelper}
+\begin{definition}
+	A \textit{morphism of $\delta$-functors} $\{T^\bullet,\delta^\bullet\},\{S^\bullet,\varepsilon^\bullet\}\colon\mc A\to\mc B$ of abelian categories is a collection of natural transformations $\eta^i\colon T^i\to S^i$ such that short exact sequences $0\to A'\to A\to A''\to0$ give rise to the following commuting square.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJUXmkoQScnKSJdLFsxLDAsIlRee2krMX0oQScpIl0sWzAsMSwiU15pKEEnJykiXSxbMSwxLCJTXntpKzF9KEEnKSJdLFswLDEsIlxcZGVsdGFeaSJdLFsyLDMsIlxcdmFyZXBzaWxvbl5pIl0sWzAsMiwiXFxldGFeaSJdLFsxLDMsIlxcZXRhXntpKzF9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{T^i(A'')} & {T^{i+1}(A')} \\
+		{S^i(A'')} & {S^{i+1}(A')}
+		\arrow["{\delta^i}", from=1-1, to=1-2]
+		\arrow["{\varepsilon^i}", from=2-1, to=2-2]
+		\arrow["{\eta^i}", from=1-1, to=2-1]
+		\arrow["{\eta^{i+1}}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+\end{definition}
+\begin{definition}[universal]
+	Fix a $\delta$-functor $\{T^\bullet,\delta^\bullet\}\colon\mc A\to\mc B$ of abelian categories. Then $\{T^\bullet,\delta^\bullet\}$ is \textit{universal} if and only if, for any other $\delta$-functor $\{S^\bullet,\varepsilon^\bullet\}$ and natural transformation $\eta^0\colon T^0\to S^0$, then $\eta^0$ extends to a full unique morphism $\eta^\bullet\colon\{T^\bullet,\delta^\bullet\}\to\{S^\bullet,\varepsilon^\bullet\}$.
+\end{definition}
+\begin{theorem}
+	Fix abelian categories $\mc A$ and $\mc B$. Then any universal $\delta$-functors $\{T^\bullet,\delta^\bullet\}$ and $\{S^\bullet,\varepsilon^\bullet\}$ equipped with a natural isomorphism $T^0\cong S^0$ are uniquely isomorphic.
+\end{theorem}
+\begin{proof}
+	The usual dimension-shifting argument goes through. Roughly speaking, use the definition of universal to construct morphisms going both ways and then show they will give our isomorphism.
+\end{proof}
+We might want to identify when particular $\delta$-functors are universal.
+\begin{definition}[effaceable]
+	A covariant additive functor $F\colon\mc A\to\mc B$ is \textit{effaceable} if and only if each $A\in\mc A$ has a monomorphism $u\colon A\into A'$ such that $Fu=0$.
+\end{definition}
+\begin{theorem} \label{thm:eff-is-uni}
+	Fix a $\delta$-functor $\{T^\bullet,\delta^\bullet\}\colon\mc A\to\mc B$ of abelian categories, and the functors $T^i$ are effaceable for $i>0$, then $\{T^\bullet,\delta^\bullet\}$ is universal.
+\end{theorem}
+\begin{corollary} \label{cor:derived-is-uni}
+	Derived functors are universal $\delta$-functors.
+\end{corollary}
+\begin{proof}
+	Explicitly, we have a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories and are examining the $\delta$-functor given by $R^\bullet F$. Well, using \Cref{thm:eff-is-uni}, we note that any object $A\in\mc A$ can be embedded into an injective object $I$, but then the embedding $u\colon A\to I$ is monic even though $R^iF(u)=0$ for $i>0$ because $R^iF(I)=0$ for $I>0$.
+\end{proof}
+Frequently in life, we are going to want to show that two $\delta$-functors are isomorphic, where one is derived. So if we can just show it at degree-$0$, and check that each is effaceable (e.g., it helps if one is a derived functor), we will be done immediately.
+\begin{remark}
+	Everything in the above discussion dualizes. For example, there is a notion of contravariant $\delta$-functors, coeffaceability, etc.
+\end{remark}
+
+\subsection{Computing Ext}
+Throughout, $(X,\OO_X)$ is a ringed space.
+\begin{proposition} \label{prop:ext-with-loc-frees}
+	Fix a ringed space $(X,\OO_X)$, and let $\mc F$ be an $\mathcal O_X$-module equipped with a resolution of locally free sheaves of finite rank given by $\mc L^\bullet\to\mc F\to0$. Then
+	\[\mathcal Ext^i(\mc F,\mc G)=H^i(\mathcal Hom(\mc L^\bullet,\mc G))\]
+	for any $\OO_X$-module $\mc G$.
+\end{proposition}
+\begin{proof}
+	We have three checks.
+	\begin{itemize}
+		\item Both are $\delta$-functors in $\mc G$. On the left, we are derived. On the right, we check this by hand. Suppose we have an exact sequence
+		\[0\to\mc G'\to\mc G\to\mc G''\to0.\]
+		Then because the $\mc L^\bullet$ is a complex of locally free sheaves, we see that we get an exact sequence of complexes
+		\[0\to\mc Hom(\mc L^\bullet,\mc G')\to\mc Hom(\mc L^\bullet,\mc G)\to\mc Hom(\mc L^\bullet,\mc G'')\to0.\]
+		Indeed, we may check this on stalks, but $\mc Hom(\mc L,\mc H)_x=\op{Hom}(\mc L_x,\mc H_x)$ (for example, use the fact that $\mc L$ is locally free here), so our exactness follows because $\mc L_x$ is free over $\OO_{X,x}$.
+		\item We check that both are universal. On the left, this follows from \Cref{cor:derived-is-uni}. On the right, we check effaceable using \Cref{thm:eff-is-uni}: we take any $\OO_X$-module $\mc G$, embed it into an injective module $\mc I$, and we see that $H^i(\mc Hom(\mc L^\bullet,\mc I))$ will end up vanishing because $\mc Hom(-,\mc I)$ is injective.
+		\item Lastly, we agree in degree-$0$ because both are $\mc Hom(\mc F,-)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:loc-free-preserve-inj}
+	Fix a ringed space $(X,\OO_X)$. If $\mc L$ is locally free, then $\mc L\otimes-$ preserves injectives.
+\end{lemma}
+\begin{proof}
+	Note that $\mc L\otimes-$ is left adjoint to $\mc Hom(\mc L,-)$, which is exact because $\mc L$ is locally free. So we are done by \Cref{lem:exact-left-adj}.
+\end{proof}
+\begin{proposition} \label{lem:twist-ext-by-vector-bundle}
+	Fix a ringed space $(X,\OO_X)$. Given a locally free sheaf $\mc L$ and an $\mathcal O_X$-module $\mc F$, we have
+	\[\op{Ext}^i(\mc F\otimes\mc L,\mc G)=\op{Ext}^i(\mc F,\mc L^\lor\otimes\mc G)\qquad\text{and}\qquad{\mc Ext}^i(\mc F\otimes\mc L,\mc G)={\mc Ext}^i(\mc F,\mc L^\lor\otimes\mc G)\]
+	for any $\OO_X$-module $\mc G$.
+\end{proposition}
+\begin{proof}
+	We use the lemma. Fix an injective resolution of $\mc G$ given by $0\to\mc G\to\mc I^\bullet$. Then we see $\op{Ext}^\bullet(\mc F\otimes\mc L,\mc G)$ is the cohomology of the complex
+	\[\op{Hom}(\mc F\otimes\mc L,\mc G)=\op{Hom}(\mc F\otimes\mc L,\mc I^\bullet)=\op{Hom}(\mc F,\mc L^\lor\otimes\mc I^\bullet),\]
+	but by \Cref{lem:loc-free-preserve-inj}, this last complex is an injective resolution of $\mc L^\lor\otimes\mc G$.
+\end{proof}
+We can now have some fun.
+\begin{proposition} \label{prop:ext-at-stalks}
+	Fix a Noetherian scheme $X$ and a coherent sheaf $\mc F$ on $X$. Then for any $\OO_X$-module $\mc G$, we show
+	\[\mc Ext^i(\mc F,\mc G)_x=\op{Ext}^i(\mc F_x,\mc G_x)\]
+	for any $x\in X$.
+\end{proposition}
+\begin{proof}
+	Everything is local on $X$, so we may assume that $X=\Spec A$ for some ring $A$. Then write $\mc F=\widetilde M$ and $\mc G=\widetilde N$. Thus, we may give $M$ a free resolution $L^\bullet\to M\to 0$, so \Cref{prop:ext-with-loc-frees} lets us compute
+	\[\mc Ext^i(\mc F,\mc G)_x=H^i(\mc Hom(\widetilde L^\bullet,\widetilde N))_x=H^i\left(\op{Hom}(L^\bullet_x,\mc G_x)\right)\]
+	by passing the stalks all the way through, where we are using the fact that exactness may be checked on stalks. However, we now see that we have a free resolution $L_x^\bullet\to F_x\to0$, so this last cohomology is simply $\op{Ext}^i(\mc F_x,\mc G_x)$, thus finishing the proof.
+\end{proof}
+\begin{proposition}
+	Fix a projective scheme $X$ over a Noetherian ring $A$. Now, let $\OO_X(1)$ be the very ample line bundle, and let $\mc F$ and $\mc G$ be coherent sheaves. Then for each $i$, we have
+	\[\op{Ext}^i(\mc F,\mc G(n))=\Gamma(X,\mc Ext^i(\mc F,\mc G(n)))\]
+	for $n$ sufficiently large.
+\end{proposition}
+\begin{proof}
+	We proceed in steps.
+	\begin{enumerate}
+		\item If $i=0$, we are just looking at global sections everywhere, so we are done.
+		\item If $\mc F=\OO_X$, then we note that the left-hand side is merely $H^i(X,\mc G(n))$ vanishes for $n$ large enough by \Cref{thm:higher-twist-dies}. Similar holds for the right-hand side by checking at stalks and using \Cref{prop:ext-at-stalks}.
+		\item If $\mc F$ is locally free, one uses \Cref{lem:twist-ext-by-vector-bundle} to move $\mc F$ over to the right coordinate and finish by the previous step.
+		\item To finish, we use dimension-shifting. Namely, we find a locally free sheaf $\mc E$ projecting onto $\mc F$, and we let $\mc R$ denote the kernel. This gives us a short exact sequence
+		\[0\to\mc R\to\mc E\to\mc F\to0\]
+		to dimension-shift with. Namely, for our induction, we see that we have natural maps as follows.
+		% https://q.uiver.app/?q=WzAsOCxbMCwwLCJcXG9we0V4dH1eaShcXG1jIEUsXFxtYyBHKG4pKSJdLFsxLDAsIlxcb3B7RXh0fV5pKFxcbWMgUixcXG1jIEcobikpIl0sWzIsMCwiXFxvcHtFeHR9XntpKzF9KFxcbWMgRixcXG1jIEcobikpIl0sWzMsMCwiXFxvcHtFeHR9XntpKzF9KFxcbWMgRSxcXG1jIEcobikpIl0sWzMsMSwiXFxHYW1tYShYLFxcbWMgRXh0XmkoXFxtYyBFLFxcbWMgRyhuKSkiXSxbMCwxLCJcXEdhbW1hKFgsXFxtYyBFeHReaShcXG1jIEUsXFxtYyBHKG4pKSJdLFsxLDEsIlxcR2FtbWEoWCxcXG1jIEV4dF5pKFxcbWMgUixcXG1jIEcobikpIl0sWzIsMSwiXFxHYW1tYShYLFxcbWMgRXh0XmkoXFxtYyBGLFxcbWMgRyhuKSkiXSxbMCwxXSxbMSwyXSxbMiwzXSxbMyw0XSxbMiw3XSxbNyw0XSxbNiw3XSxbNSw2XSxbMSw2XSxbMCw1XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\op{Ext}^i(\mc E,\mc G(n))} & {\op{Ext}^i(\mc R,\mc G(n))} & {\op{Ext}^{i+1}(\mc F,\mc G(n))} & {\op{Ext}^{i+1}(\mc E,\mc G(n))} \\
+			{\Gamma(X,\mc Ext^i(\mc E,\mc G(n))} & {\Gamma(X,\mc Ext^i(\mc R,\mc G(n))} & {\Gamma(X,\mc Ext^i(\mc F,\mc G(n))} & {\Gamma(X,\mc Ext^i(\mc E,\mc G(n))}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-4, to=2-4]
+			\arrow[from=1-3, to=2-3]
+			\arrow[from=2-3, to=2-4]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=1-2, to=2-2]
+			\arrow[from=1-1, to=2-1]
+		\end{tikzcd}\]
+		The rightmost terms vanish because $\mc E$ is locally free, and the top row is exact for free. Further, the two left maps are isomorphisms by the inductive hypothesis, so we will be done if we can show that the bottom row is exact in high enough twisting. Well, large twisting kills cohomology, so for $n$ large enough, taking global sections will be exact, which is what we wanted.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	Using spectral sequences, one may instead simply use the spectral sequence
+	\[H^p(X,\mc Ext^q(\mc F,\mc G))\Rightarrow\op{Ext}^{p+q}(\mc F,\mc G).\]
+	However, by twisting $\mc G$ high enough, we kill these cohomology objects for $n$ large enough, which provides the needed equality.
+\end{remark}
+
+\end{document}
