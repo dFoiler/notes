@@ -1,0 +1,73 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 20}
+
+Either today or tomorrow we will receive an email with our preference for a project.
+
+\subsection{Partitions via the Circle Method}
+Let's sketch the following results.
+\begin{theorem}[Hardy--Ramanujan]
+	Let $p(n)$ be the number of partitions of $n$. Then
+	\[p(n)\sim\frac1{4^n\sqrt3}\exp\left(\pi\sqrt{\frac{2n}3}\right).\]
+\end{theorem}
+\begin{proof}[Sketch]
+	Let $\eta\colon\HH\to\CC$ denote the function
+	\[\eta(z)\coloneqq e^{2\pi iz/24}\prod_{n=1}^\infty\left(1-e^{2\pi inz}\right).\]
+	Notably, we see
+	\[\eta(z)^{24}=\Delta(z)\coloneqq q\prod_{n=1}^\infty\left(1-q^n\right)^{24},\]
+	where $q\coloneqq e^{2\pi iz}$, and $\Delta$ is a modular form. In particular, we can compute
+	\[\eta(z+1)=e^{2\pi i/24}\eta(z)\qquad\text{and}\qquad\eta(-1/z)=\sqrt{-iz}\eta(z),\]
+	so $\eta$ is a modular form of weight $1/2$ and some level. (This second equality is a bit nontrivial.) Roughly speaking, we would like to integrate the contour from $-\infty$ to $-1/2-iy$ to $1/2+iy$ to $\infty$. By integrating over our product, we see
+	\[p(n)=\int_{iy}^{i(y+1)}\frac{e^{2\pi iz}}{\eta(z)}\cdot e^{-2\pi inz}\,dz.\]
+	The idea is to send $y\to0^+$. Namely, by the modularity condition, one sees that $|\eta(z)|^2(\op{Im}z)$ is invariant under the action of $\op{SL}_2(\ZZ)$, so $\eta(z)$ is forced to explode as $y\to0^+$. Being explicit, we set $y\coloneqq1/n$ for $n\to\infty$, and one can track through the action by $\op{SL}_2(\ZZ)$ to see that the ``main'' contribution into the integral over the aforementioned contour arises from rational $a/q$ with small denominators; this is due to the pole of $1/\eta$.
+\end{proof}
+\begin{remark}
+	One does not really need modularity to track through the circle method, even though it is fairly important in the above discussion. This is called the Hardy--Littlewood circle method.
+\end{remark}
+
+\subsection{Overview of the Circle Method}
+For the Hardy--Littlewood circle method, we are interested in nontrivial solutions to a Diophantine equation
+\[f(x_1,\ldots,x_n)=0\]
+where $f$ is homogeneous of degree $t$. Roughly speaking, as long as $n$ is large enough, the circle method will provide us with nontrivial solutions; in fact, when the circle method works, it is also able to track ``local obstructions'' to solutions: if (for example) it is difficult to obtain nontrivial solutions$\pmod p$ for some prime $p$, then this will be visible in the result.
+
+Now, set
+\[N_f(T)\coloneqq\#\left\{(x_1,\ldots,x_n)\in(\ZZ\cap[-T,T])^n:f(x_1,\ldots,x_n)=0\right\},\]
+and we can exchange the sum and the integral to see that
+\[N_f(T)=\int_0^1S_T(\alpha)\,d\alpha\qquad\text{where}\qquad S_T(\alpha)\coloneqq\sum_{-T\le x_1,\ldots,x_n\le T}e(\alpha f(x_1,\ldots,x_n)).\]
+To be more rigorous about our previous remark, the circle method (if it succeeds) will be able to show that $N_f(T)\sim cT^{n-t}$, where $c$ is some constant sensitive to local obstructions. For example, one can upper-bound $|S_T(\alpha)|\le S_T(0)$ absolutely, and $S_T(0)\sim(2T)^n$. To see local obstructions, we track $\alpha=a/q$ where $\gcd(a,q)=1$ to see
+\[S_T(a/q)=\sum_{-T\le x_1,\ldots,x_n\le T}e\left(\frac aqf(x_1,\ldots,x_n)\right)=\sum_{y\in(\ZZ/q\ZZ)^n}\Bigg(e\left(\frac aqf(y)\right)\sum_{\substack{-T\le x_1,\ldots,x_n\le T\\x\equiv y\pmod q}}1\Bigg).\]
+The rightmost sum is approximately $(2T/q)^n$, and then the left sum approximately picks up on some local density of solving $f\pmod q$. Thus, we hope we can integrate $S_T(\alpha)$ in two phases.
+\begin{itemize}
+	\item Major arcs: for $\alpha=a/q$ with small denominators, we compute some local densities. Tracking through error terms also lets us estimate $S_T(\alpha)$ close by these rationals.
+	\item Minor arcs: elsewhere (away from these rationals), we expect large cancellation to occur. Hopefully, we are able to run some computation to bound these terms.
+\end{itemize}
+Let's be more explicit. Fix some large $T$, and we will work with $q\le T^\beta$ for small $\beta$. For some $\gamma\approx1$, we work with $Q\coloneqq T^\gamma$. We now define the ``major arc''
+\[\mf M(a,q)\coloneqq\left\{\alpha\in[0,1]:\left|\alpha-\frac aq\right|<\frac1Q\right\},\]
+and we let $\mf M$ denote the union of the major arcs. Then the complement $\mf m\coloneqq[0,1]\setminus\mf M$ consists of the minor arcs. In total, we see
+\[N_f(T)=\int_\mf MS_T(\alpha)\,d\alpha+\int_\mf mS_T(\alpha)\,d\alpha,\]
+and if the circle method works, then we have
+\[N_f(T)\sim\int_\mf MS_T(\alpha)\,d\alpha\]
+as $T\to\infty$; a little work can show that this should evaluate as
+\[N_f(T)\sim\mu_\infty(T)\prod_{p\text{ prime}}\delta_p,\]
+where $\mu_\infty$ is the archimedean volume cut out by $f(x_1,\ldots,x_n)=0$ in the box $[-T,T]^n$, and $\delta_p$ arises as a density of solutions $f(x_1,\ldots,x_n)$ in $\ZZ_p$. For example, if there is a local obstruction (i.e., no solutions in some $\ZZ_p$ or $\RR$), then we will of course expect no solutions to appear.
+
+Here is an example of the power present here.
+\begin{theorem}[Heath--Brown]
+	Fix a homogeneous nonsingular cubic polynomial $f(x_1,\ldots,x_{10})$. Then $f(x)=0$ has infinitely many solutions $(x_1,\ldots,x_{10})$ where $\gcd(x_1,\ldots,x_{10})$.
+\end{theorem}
+\begin{remark}
+	In nine variables, it is possible to have local obstructions making the above theorem false.
+\end{remark}
+
+\subsection{Beginning Vinogradov's Theorem}
+The idea here is to use the circle method and apply ``diagonality.'' In particular, we define
+\[S(\alpha)=\sum_{x\le N}\Lambda(x)e(\alpha x)\]
+where $\alpha\in[0,1]$. One can now show that
+\[\int_0^1S(\alpha)^3e(-N\alpha)\,d\alpha=\sum_{x_1+x_2+x_3=N}\Lambda(x_1)\Lambda(x_2)\Lambda(x_3),\]
+so we see that the name of the game here is to show that the integral will be nonzero.
+
+\end{document}
