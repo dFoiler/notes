@@ -1,0 +1,59 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 22}
+
+We continue discussing Vinogradov's theorem. We hope to make good progress discussing the main term.
+
+\subsection{Major Arcs}
+Our end goal of is to show that
+\[\int_0^1S(\alpha)e(-N\alpha)\,d\alpha\sim c(N)N^2,\]
+where $c(N)$ is some collection of local densities; in particular, we will be able to bound it from above and below (by positive constants) for $N$ odd.
+
+Now, to define our major arcs, we choose some large $B>0$ and set $P\coloneqq(\log N)^B$ (to upper-bound our denominators) and $Q\coloneqq N/(\log N)^B$ (to quantify the allowed error). In particular, for $q\le P$ and $a$ with $\gcd(a,q)=1$, we define
+\[\mf M(a,q)\coloneqq\left\{\alpha:\left|\alpha-\frac aq\right|<\frac1Q\right\}.\]
+Notably, for $N$ large enough, all these majors are disjoint. Indeed, the point $P$ is quite small in comparison to our error $Q$, so noting that the distance between two rationals $\frac aq$ and $\frac{a'}{q'}$ is bounded above by $\frac1{qq'}>\frac1{P^2}\gg\frac1N$ does the trick. As such, we may write
+\[\mf M\coloneqq\bigsqcup_{\substack{1\le a<q\le P\\\gcd(a,q)=1}}\mf M(a,q)\qquad\text{and}\qquad\mf m\coloneqq[0,1]\setminus\mf M.\]
+For now, the goal is to bound $\int_\mf MS(\alpha)^3e(-N\alpha)\,d\alpha$ and $\int_\mf mS(\alpha)^3e(-N\alpha)\,d\alpha$. Note that, for $N$ large enough, $\mf M(a,q)\subseteq[0,1]$ for $1\le a<q$ because $q\le P\ll Q$.
+\begin{remark}
+	For minor arcs, we will have
+	\[\left|\int_\mf mS(\alpha)e(-N\alpha)\,d\alpha\right| \le\int_\mf m|S(\alpha)|^3\,d\alpha\le \sup_{\alpha\in\mf m}|S(\alpha)|\cdot\int_0^1|S(\alpha)|^2\,d\alpha.\]
+	Now, one can use some moment methods in order to bound the rightmost integral. Vinogradov's main contribution was to figure out how to bound the $L^\infty$-norm term $\sup_{\alpha\in\mf m}|S(\alpha)|$. (In particular, Vinogradov obtained a $\log$ saving here, which was good enough.)
+\end{remark}
+Let's focus on the major arcs for now. Here, living in some $\mf M(a,q)$, any $\alpha\in\mf M(a,q)$ can set $\beta\coloneqq\alpha-a/q$ so that $|\beta|<1/Q$. Writing this out, we have
+\[S(\alpha)=\sum_{x\le N}\Lambda(x)e\left(\frac aqx\right)e(\beta x).\]
+The plan is to study $\sum_{x\le y}\Lambda(x)e\left(\frac aqx\right)$ via the Prime number theorem for arithmetic progressions and then apply summation by parts to appropriately bound $S(\alpha)$. In particular, we are going to use Siegel's theorem to select our $B$ in our bounding.
+
+Well, we recall that, for any $q$ and $b$, we have
+\[\frac1{\varphi(q)}\sum_{\chi\pmod q}\tau(\overline\chi)\chi(b)=\begin{cases}
+	e(b/q) & \text{if }\gcd(b,q)=1, \\
+	0 & \text{ else},
+\end{cases}\]
+by the orthogonality relations. Thus,
+\[\sum_{\substack{\gcd(x,q)\\x\le N}}e(\alpha x)\Lambda(x)=\frac1{\varphi(q)}\sum_{\substack{\gcd(x,q)\\x\le N}}\sum_{\chi\pmod q}\tau(\overline\chi)\chi(x)\chi(a)\Lambda(x)e(\beta x).\]
+Now, we do have a good understanding of
+\[\psi(y,\chi)=\sum_{x\le y}\chi(x)\Lambda(x)\]
+by Siegel's theorem. By adding in values of $x$ with $\gcd(x,q)>1$, we see
+\[S(\alpha)=\frac1{\varphi(q)}\sum_{\chi\pmod q}\Bigg(\tau(\overline\chi)\chi(a)\underbrace{\sum_{k\le N}\chi(k)\Lambda(k)e(\beta k)}_{\Sigma(\chi)\coloneqq}\Bigg)+O\left((\log N)^2\right).\]
+By summation by parts, this inner sum is
+\[\Sigma(\chi)=e(N\beta)\psi(N,\chi)-2\pi i\beta\int_1^Ne(u\beta)\psi(u,\chi)\,du,\]
+where the point is that $\beta$ being small allows us to treat the right term as an error term. Now, if $\chi\ne\chi_0$, we can thus bound
+\[|\Sigma(\chi)|\ll_B\left(1+|\beta|N\right)Ne^{-c\sqrt{\log N}},\]
+where $c$ is some constant. Otherwise, in the case where $\chi=\chi_0$, one has to deal with $\psi(u,\chi)$ as no longer being negligible, so we need to deal with it when summing for our main contribution. As such, this is a little tricky. Set
+\[T(\beta)\coloneqq\sum_{k=1}^ne(k\beta).\]
+Then summation by parts yields
+\[T(\beta)=e(N\beta)N-2\pi i\beta\int_1^Ne(u\beta)\floor u\,du,\]
+which is comparable to $\Sigma(\chi_0)$ by Siegel's theorem. To be explicit, we set $R(u)\coloneqq\psi(u,\chi_0)-\floor u$, so we see
+\[\Sigma(\chi)=T(\beta)+e(N\beta)R(N)-2\pi i\beta\int_1^Ne(u\beta)R(u)\,du=T(\beta)+O_B\left(1+|\beta|Ne^{-c\sqrt{\log N}}\right).\]
+We now note that $\tau(\chi_0)=\mu(q)$ by direct expansion, so we achieve
+\[S(\alpha)=\frac{\mu(q)}{\varphi(q)}T(\beta)+O_B\left(Ne^{-c\sqrt{\log N}}\right),\]
+where the point is that all the non-principal characters have gone into the error term. Cubing, we find
+\[S(\alpha)^3e(-N\alpha)=\frac{\mu(q)^3}{\varphi(q)^3}e\left(-N\cdot\frac aq\right)\cdot T(\beta)^3e(-N\beta)+O\left(N^3e^{-c\sqrt{\log N}}\right),\]
+where the point is that $|T(\beta)|\ll N$, allowing us to move cross terms into the error term. As such, we may integrate
+\[\int_{\mf M(a,q)}S(\alpha)^3e(-N\alpha)\,d\alpha=\left(\int_{-1/a}^{1/a}T(\beta)^3e(-N\beta)\,d\beta\right)\Bigg(\sum_{\substack{q\le P\\\gcd(a,q)=1}}\frac{\mu(q)^3}{\varphi(q)^3}e\left(-N\cdot\frac aq\right)\Bigg)+O_B\left(N^2e^{-c\sqrt{\log N}}\right).\]
+Notably, it remains to discuss how to bound $T(\beta)$, which we will focus on next class.
+
+\end{document}
