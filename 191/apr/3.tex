@@ -1,0 +1,69 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 3}
+
+Today we bound the minor arcs. We are dealing with powers of $\log$s, so it's going to be a little technical today.
+
+\subsection{How to Bound Minor Arcs}
+We are going to apply Vinogradov's bilinear form  method. Roughly speaking, we have
+\[S(\alpha)\approx\sum_{p\le N}(\log p)e(\alpha p),\]
+and we want cancellations to occur for $\alpha$ away from rationals with small denominator. More generally, we might be interested in bounding a summation of the form
+\[\sum_{p\le N}f(p)\log p.\]
+This will be done in two steps.
+\begin{itemize}
+	\item Type I sums: for fixed$d$, we bound sums which look like
+	\[\sum_{\substack{n\le N\\d\mid n}}f(n).\]
+	\item Type II sums: for $d_1,d_2\approx N^\beta$, we bound the bilinear sums
+	\[\sum_{n\le N}f(nd_1)\overline{f(nd_2)}.\]
+\end{itemize}
+These then combine to yield the desired summation. Here is the result we will build towards.
+\begin{theorem}[Vinogradov] \label{thm:vinogradov-minor}
+	Suppose $\alpha\in\RR$ has $|\alpha-a/q|<1/q^2$ with $\gcd(a,q)=1$. Then
+	\[|S(\alpha)|\ll\left(Nq^{-1/2}+N^{4/5}+N^{1/2}q^{1/2}\right)(\log N)^4.\]
+	(The implied constant is absolute.)
+\end{theorem}
+Roughly speaking, this will provide a good bound on our minor arcs. For example, for $\alpha=1/4$, we don't get very much (it turns out to be worse than the trivial bound on $S$). However, for $\alpha$ irrational or rational with large denominator, we will get something more substantial. For example, $\alpha=\sqrt2$ is able to achieve
+\[|S(\alpha)|\ll N^{4/5}(\log N)^4.\]
+The point is that each $N$ has some $q\approx N^{1/2}$ such that $|\alpha-a/q|<1/q^2$ for some integer $a$. Explicitly, one should use the continued fraction expansion of $\sqrt2$ in order to achieve this bound.
+
+Thus, we see that we are moving towards a Diophantine approximation problem to apply \Cref{thm:vinogradov-minor}. Notably, we are interested in $\alpha$ which are not in the major arcs; namely, $\alpha\in\mf M(a,q)$ means that
+\[\left|\alpha-\frac aq\right|<\frac1Q\]
+with $q\le P=(\log N)^B$ and $Q=N/(\log N)^B$. However, by Dirichlet's approximation theorem (in Diophantine approximation), we can still find some $a/q$ such that
+\[\left|\alpha-\frac aq\right|<\frac1{qQ}.\]
+(This is essentially a Pigeonhole principle argument: consider integer multiples $0,\alpha,\ldots,Q\alpha$ and choose the smallest distance once considered$\pmod1$.) Notably, we have $q>P$ because $\alpha$ is not in a major arc, so we achieve
+\[|S(\alpha)|\ll\left(NP^{-1/2}+N^{4/5}+N^{1/2}Q^{1/2}\right)(\log N)^4\ll N(\log N)^{4-B/2},\]
+so we have successfully saved our $\log$ terms. Thus, we see that
+\[\left|\int_\mf mS(\alpha)^3e(-N\alpha)\,d\alpha\right|\le\sup_{\alpha\in\mf m}|S(\alpha)|\int_{[0,1]}|S(\alpha)|^2\,d\alpha\ll N(\log N)^{4-B/2}\sum_{k\le N}\Lambda(k)^2\le N^2(\log N)^{5-B/2}.\]
+Taking $B=2A+10$ achieves $\le N^2(\log N)^{-A}$, so we achieve
+\[\int_0^1S(\alpha)^3e(-N\alpha)\,d\alpha=\frac12\mf S(N)N^2+O\left(N^2(\log N)^{-A}\right),\]
+which will finish the proof.
+
+\subsection{Sieving in Minor Arcs}
+We now move towards proving \Cref{thm:vinogradov-minor}. This is going to be done via sieving; here is the relevant result.
+\begin{theorem}[Vinogradov's sieve] \label{thm:vinogradov-sieve}
+	Fix $U,V,N\ge2$ with $UV\le N$. Then
+	\begin{align*}
+		\left|\sum_{n\le N}f(n)\Lambda(n)\right| &\ll 1+(\log N)\sum_{t\le UV}\max_w\left|\sum_{w\le r\le N/t}f(rt)\right| \\
+		&\qquad+N^{1/2}(\log N)^3\max_{\substack{U\le M\le N/V\\V\le j\le N/M}}\sum_{V\le k\le N/M}\Bigg|\sum_{\substack{M\le m\le2M\\m\le N/k,N/j}}f(mk)\overline{f(mj)}\Bigg|^{1/2}.
+	\end{align*}
+\end{theorem}
+Roughly speaking, the point is that we are turning a summation on primes into sums on arithmetic progressions in the form of Type I and Type II described above. We will prove \Cref{thm:vinogradov-sieve} later; for now, we will explain how to apply it.
+
+The point is that the sums of the form Type I and Type II are just geometric series, so we can somewhat easily bound them. Explicitly, we have $f(x)\coloneqq e(\alpha x)$, so we have the following result.
+\begin{lemma}
+	Fix $N_1<N_2$. Then
+	\[\left|\sum_{N_1\le n\le N_2}e(\alpha n)\right|\ll\min\{N_2-N_1,1/\lfloor x\rceil\},\]
+	where $\lfloor\alpha\rceil$ is the distance between $\alpha$ and the nearest integer.
+\end{lemma}
+\begin{proof}
+	The $N_2-N_1$ bound arises from the triangle inequality. The other bound arises from bounding this by summing the geometric series; we get something like $\ll e(-\alpha)-1$ which produces the bound after noting $e(-\alpha)-1\approx-\alpha-1$.
+\end{proof}
+Thus, for the Type I sums, we see that
+\[\sum_{t\le UV}\max_w\left|\sum_{w\le r\le N/t}f(rt)\right|\le\sum_{t\le UV}\min\left\{\frac Nt,\frac1{\lfloor\alpha t\rfloor}\right\},\]
+which we now work towards upper-bounding. One could just take the $N/t$ only, but this will be a little problematic. The trick is to take some string of consecutive integers $t\in\{hq+1,hq+2,\ldots,hq+q\}$ as $h$ varies. We will continue next class.
+
+\end{document}
