@@ -1,0 +1,63 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 5}
+
+We continue.
+
+\subsection{Using Vaughan's Identity}
+We compare coefficients in \Cref{prop:vaughan} to write $\Lambda(n)=a_1(n)+a_2(n)+a_3(n)+a_4(n)$ where
+\[a_1(n)\coloneqq\begin{cases}
+	\Lambda(n) & \text{if }n\le U, \\
+	0 & \text{else},
+\end{cases}\]
+and
+\[a_2(n)\coloneqq-\sum_{\substack{mdr=n\\m\le U,d\le V}}\Lambda(m)\mu(d),\]
+and
+\[a_3(n)\coloneqq\sum_{hd=n,d\le V}\mu(d)\log h,\]
+and
+\[a_4(n)\coloneqq-\sum_{\substack{mk=n\\m>U,k>1}}\Lambda(m)\Bigg(\sum_{\substack{d\mid k\\d\le V}}\mu(d)\Bigg).\]
+(Notably, $\zeta'(s)/\zeta(s)=\sum_{n=1}^\infty(\log n)n^{-s}$.) The Type I and Type II sums will arise from these. Roughly speaking, the point is that we can estimate $a_2$ and $a_3$ via Type I sums because our values tend to be away from $n$. Further, $a_1$ can be estimated via the Prime number theorem, and $a_4$ can be estimated because the inner sum tends to vanish frequently. Namely, if $k\le V$, then the inner sum goes over all divisors of $d$, so it vanishes, so we might as well assume that $k>V$. So we are looking at some kind of Dirichlet convolution with longish arithmetic progressions, so we will be able to use Type II sums in our estimation.
+
+Now, we define
+\[S_j(N)\coloneqq\sum_{n\le N}f(n)a_j(n)\]
+for each $j\in\{1,2,3,4\}$, so we see
+\[\sum_{n\le N}f(n)\Lambda(n)=S_1(N)+S_2(N)+S_3(N)+S_4(N).\]
+We are now equipped to begin our bounding. By the Prime number theorem, we have $|S_1(N)|\le U$, so it's under control. For $S_2(N)$, we are computing
+\[S_2(N)=\sum_{t\le UV}\Bigg(\sum_{\substack{md=t\\m\le U,d\le V}}\mu(d)\Lambda(m)\Bigg)\sum_{r\le N/t}f(rt)\]
+after sufficient rearranging. (The point is that the new variable $t$ roughly amounts to the $n$ we had earlier, where we choose to sum over $rt$ as needed.) The inner sum in parentheses has cancellation by
+\[\Bigg|\sum_{\substack{md=t\\m\le U,d\le V}}\mu(d)\Lambda(m)\Bigg|\le\sum_{md=t}\Lambda(m)=\log t\le\log UV,\]
+where we are saying that we're okay losing various $\log$ factors. Thus, we see
+\[|S_2(N)|\ll(\log UV)\sum_{t\le UV}\Bigg|\sum_{r\le N/t}f(rt)\Bigg|,\]
+which does fit into the Type I sum contribution in \Cref{thm:vinogradov-sieve}.
+
+Now we move on to bounding $S_3(N)$. We use summation by parts here. Indeed, rearranging a sum and integral, we find
+\begin{align*}
+	S_3(N) &= \sum_{d\le V}\mu(d)\sum_{h\le N/d}(\log h)f(dh) \\
+	&= \sum_{d\le V}\mu(d)\sum_{h\le N/d}f(dh)\int_1^h\frac{dw}w \\
+	&= \int_1^N\sum_{d\le V}\mu(d)\sum_{w<h\le N/d}f(dh)\frac{dw}w \\
+	&\ll(\log N)\sum_{d\le V}\max_w\Bigg|\sum_{w<h\le N/d}f(dh)\Bigg|,
+\end{align*}
+which again fits into the Type I sum contribution in \Cref{thm:vinogradov-sieve}.
+
+Lastly, we need to bound $S_4$. Unsurprisingly, this is somewhat more involved. As discussed above, we can take $k>V$ in our expression for $a_4$ as
+\[a_4(n)=-\sum_{\substack{mk=n\\m>U,k>V}}\Lambda(m)\Bigg(\sum_{\substack{d\mid k\\d\le V}}\mu(d)\Bigg).\]
+Thus, we see
+\[S_4(N)=-\sum_{U<m\le N/V}\Lambda(m)\sum_{V\le k\le N/m}\Bigg(\sum_{\substack{d\mid k\\d\le V}}\mu(d)\Bigg)f(mk).\]
+We will now get bounds on this sum by the ``$TT^*$ method'' because $f(mk)$ as a matrix has a pretty small operator norm. In particular, we are going to give up trying to cancel $\Lambda$ and $\mu$ and instead focus solely on trying to estimate $f$. Explicitly, we claim that
+\begin{equation}
+	\Bigg|\sum_{M\le m\le2M}b_m\sum_{V<k\le N/m}c_kf(mk)\Bigg|\ll_f\sqrt{\sum_{M\le m\le2M}|b_m|^2}\cdot\sqrt{\sum_{V<k\le N/m}|c_k|^2}. \label{eq:almost-bound-s4-vinogradov}
+\end{equation}
+Here, the implied constant is $\Delta$, defined as the operator norm of the matrix $(f(mk))_{m,k}$. The point is that we are using some dyadic intervals in order to suitably bound. To see that it is enough to show \eqref{eq:almost-bound-s4-vinogradov}, we see
+\[S_4(N)\ll(\log N)\max_{U\le M\le N/V}\Delta\sqrt{\sum_{m=M}^{2M}|\Lambda(m)|^2}\cdot\sqrt{\sum_{V<k\le N/M}|d(k)|},\]
+which one can show is $\ll(\log N)^3N^{1/2}\max_{U\le M\le N/V}\Delta$, so it remains to see what $\Delta$ is. Well, this requires a closer analysis of \eqref{eq:almost-bound-s4-vinogradov}, so we note Cauchy--Schwarz yields
+\[\le\sqrt{\sum_{M\le m\le2M}|b_m|^2}\cdot\sqrt{\sum_{M\le m\le2M}\Bigg|\sum_{V<k\le N/m}c_kf(mk)\Bigg|^2}.\]
+Expanding, we may upper-bound this as
+\[\sqrt{\sum_{M\le m\le2M}|b_m|^2}\sqrt{\sum_{\substack{V\le j\le N/M\\V\le k\le N/M}}c_j\overline{c_k}\sum_{\substack{M\le m\le2M\\m\le N/j,m\le N/k}}f(mj)\overline{f(mk)}}.\]
+Upon noting $|c_j\overline{c_k}|\le\frac12\left(c_j^2+c_k^2\right)$, we can achieve an upper-bound of
+\[\max_{V<j\le N/M}\Bigg(\sum_{V<k\le N/m}\Bigg|\sum_{\substack{M\le m\le2M\\m\le N/j,m\le N/k}}f(mj)\overline{f(mk)}\Bigg|\Bigg)^{1/2}.\]
+
+\end{document}
