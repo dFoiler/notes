@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 12}
+
+We won't meet on Friday.
+
+\subsection{}
+Let's show the following nice result.
+\begin{theorem} \label{thm:large-sieve-ineq}
+	Fix $\delta\in(0,1/2)$ and some $\delta$-separated real numbers $x_1,\ldots,x_R$ on $\RR/\ZZ$. Then
+	\[\sum_{r=1}^R\left|\sum_{n=M}^{M+N-1}a_ne(nx_r)\right|^2\ll\left(N+\delta^{-1}\right)\norm a_2^2\]
+	for any vector $(a_1,\ldots,a_R)$.
+\end{theorem}
+Here, $\delta$-separated means that $\lVert x_i-x_j\rVert\ge\delta$ for each distinct $i$ and $j$ where $\lVert x\rVert$ is the distance from $x$ to the closest integer. The idea is to use duality and then the $TT^*$ method, followed by some smoothing to optimize. As a model, we will first show the following result.
+\begin{proposition}
+	Fix $\delta\in(0,1/2)$ and some $\delta$-separated real numbers $x_1,\ldots,x_R$ on $\RR/\ZZ$. Then
+	\[\sum_{r=1}^R\left|\sum_{n=M}^{M+N-1}a_ne(nx_r)\right|^2\ll\left(N+\delta^{-1}\log(1/\delta)\right)\norm a_2^2\]
+	for any vector $(a_1,\ldots,a_R)$.
+\end{proposition}
+\begin{proof}
+	Set $X\coloneqq N+\delta^{-1}\log(1/\delta)$. By duality, it suffices to show
+	\[\sum_{n=M}^{M+N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2\ll X\norm a_2^2.\]
+	However, we can compute
+	\begin{align*}
+		\sum_{n=M}^{M+N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2 &= \sum_{r,s\le R}c_r\overline{c_s}\sum_{n=M}^{M+N-1}e(n(x_r-x_s)) \\
+		&\ll \sum_{r\ne s}|c_r|\cdot|c_s|\cdot\frac1{\lVert x_r-x_s\rVert}+N\sum_{r\le R}|c_r|^2 \\
+		&\le \sum_{r\le R}|c_r|^2\left(N+\sum_{s\ne r}\frac1{\lVert x_r-x_s\rVert}\right).
+	\end{align*}
+	Now, to estimate this, the point is that the $x_i$ are $\delta$-separated, so we can estimate distances between the entire sum $\sum_{s\ne r}\frac1{\lVert x_r-x_s\rVert}$ as looking at worst like $\frac2\delta+\frac4\delta+\cdots+2$, which is harmonic. So the internal sum is $\ll\left(N+\delta^{-1}\log(1/\delta)\right)\norm c_2^2$, which is what we wanted.
+\end{proof}
+And now let's prove \Cref{thm:large-sieve-ineq}.
+\begin{proof}[Proof of \Cref{thm:large-sieve-ineq}]
+	For psychological reasons, we note that we can shift everything by $n\mapsto n-M$ so that we may assume $M=0$. Again, we set $X\coloneqq N+\delta^{-1}$ and observe that by duality it is enough to show
+	\[\sum_{n=M}^{M+N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2\ll X\norm a_2^2.\]
+	Motivated by Poisson summation, we write
+	\[\sum_{n=0}^{N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2\le e^\pi\sum_{n\in\ZZ}e^{-\pi(n/N)^2}\sum_{n=0}^{N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2.\]
+	Roughly speaking, we are adding weights to the summation in order to smooth ourselves a little more. Intuitively, the previous proof was trying to compute a Fourier transform of the indicator function on $[N,M+N)$, but this is poorly behaved, so the weights above will help us be closer to the truth. Anyway, we see
+	\begin{align*}
+		\sum_{n=0}^{N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2 &\le \sum_{n=0}^{N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2 \\
+		&= e^\pi\sum_{r,s}c_r\overline{c_s}\sum_{n\in\ZZ}e^{-\pi(n/N)^2}e(n(x_r-x_s)).
+	\end{align*}
+	Now, by Poisson summation, one sees
+	\[\sum_{n\in\ZZ}e^{-\pi(n/N)^2}e(n(x_r-x_s))=N\sum_{n\in\ZZ}e^{-\pi N^2(n+x_r-x_s)}=Ne^{-\pi N^2\lVert x_r-x_s\rVert^2}+O(1).\]
+	Here, the $O(1)$ includes all the terms which are away from $n=\lfloor x_r-x_s\rceil$, which we can upper-bound pretty explicitly via some kind of geometric series. 
+
+	In total, we achieve
+	\[\sum_{n=0}^{N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2\ll\sum_r|c_r|^2\cdot N\sum_se^{-\pi N^2\norm{x_r-x_s}^2}\]
+	by expanding out the summation as before. We now use the fact that our terms are $\delta$-separated, to bound our distances as having $1/\delta$ at most twice, having $2/\delta$ at most twice, so on and so forth. As such,
+	\[\sum_{n=0}^{N-1}\left|\sum_{r=1}^Rc_re(nx_r)\right|^2\ll\norm c_2^2N\sum_{k\ge0}e^{-\pi (j\delta N)^2}.\]
+	It remains to bound the right factor on the right-hand side, which we evaluate as
+	\[N\sum_{k\ge0}e^{-\pi(j\delta N)^2}\ll N\left(1+\int_0^\infty e^{-\pi(t\delta N)^2}\,dt\right)\ll N\left(1+\frac1{\delta N}\int_0^\infty e^{-\pi t^2}\,dt\right)\ll N+\frac1\delta,\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{Quick Applications}
+Here's a fun application to Farey fractions. Namely, for $Q\ge1$, consider the sequence of rational numbers
+\[\mc F_Q\coloneqq\{a/q:a,q\ge0\text{ and }\gcd(a,q)=1\text{ and }q\le Q\}.\]
+The point is that two distinct $x,x'\in\mc F_q$ will have $\norm{x-x'}\ge\frac1{Q^2}$ by writing $x=\frac aq$ and $x'=\frac{a'}{q'}$. Explicitly,
+\[\norm{x-x'}=\frac{|aq'-a'q|}{qq'}\ge\frac1{Q^2}.\]
+As such, we are seeing that $\mc F_Q$ is separated by $1/Q^2$. Here is our application.
+\begin{corollary}
+	Fix $N,Q\ge1$. Then
+	\[\sum_{q\le Q}\sum_{\substack{1\le a\le q\\\gcd(a,q)=1}}\left|\sum_{M\le n<M+N}b_ne\left(\frac aqn\right)\right|\ll\left(N+Q^2\right)\norm b_2^2\]
+	for any vector $b$ of complex numbers.
+\end{corollary}
+\begin{proof}
+	This follows directly from \Cref{thm:large-sieve-ineq}.
+\end{proof}
+Here is a quick application.
+\begin{theorem}
+	Let $S$ be a set of integers in $[M+1,M+N]$, and let $\mc P$ be the set of primes less than or equal to some $Q$. For some $\tau\in(0,1)$, if $S$ does not contain any $x\equiv h\pmod p$ for at least $\tau p$ values of $h\pmod p$ for each $p\in\mc P$, then
+	\[|S|\ll\frac{N+Q^2}{\tau|\mc P|}.\]
+\end{theorem}
+\begin{proof}
+	Omitted.
+\end{proof}
+
+\end{document}
