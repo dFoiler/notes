@@ -1,0 +1,76 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 17}
+
+To take about Brauer groups, we take the excuse to talk about sheaves over a site.
+
+\subsection{Sheaves on a Site}
+Fix a category $\mc C$.
+\begin{definition}[presheaf]
+	Fix a category $\mc C$. Then a \textit{presheaf} is a contravariant functor $F\colon\mc C\opp\to\mathrm{Set}$.
+\end{definition}
+\begin{example}
+	Let $\mc C$ be the discrete category of open sets of some topological space $X$. Namely, the objects are open subsets $U,V\subseteq X$, and the morphisms are given by containment $U\subseteq V$. As such, a presheaf on this category is some collections of objects $F(U)$ for open $U\subseteq X$ equipped with restriction maps $\op{res}\colon F(U)\to F(V)$ for any open sets $V\subseteq U$, satisfying some functoriality properties.
+\end{example}
+To make sheaves work, we need to add a few conditions on our category.
+\begin{definition}[site]
+	A \textit{site} is a category $\mc C$ equipped with a collection of ``covering'' maps
+	\[\op{Cov}U=\big\{\{\varphi_\alpha\colon U_\lambda\to U:\alpha\in\lambda\}\big\}\]
+	for each $U\in\mc C$, satisfying the following coherence conditions.
+	\begin{itemize}
+		\item Isomorphism: if $\varphi\colon U\to U'$ is an isomorphism, then $\{\varphi\colon U\to U'\}$ is in $\op{Cov}(U')$.
+		\item Refinement: suppose $\{\varphi_\alpha\colon U_\lambda\to U\}_{\alpha\in\lambda}\in\op{Cov}U$ and $\{\varphi_{\alpha\beta}\colon U_{\alpha\beta}\to U_\alpha\}_{\beta\in\lambda_\alpha}\in\op{Cov}(U_\alpha)$, then
+		\[\{\varphi_\alpha\circ\varphi_{\alpha\beta}\colon U_{\alpha\beta}\to U\}_{\alpha\in\lambda,\beta\in\lambda_\alpha}\in\op{Cov}U.\]
+		\item Pullback: if $\{\varphi_\alpha\colon U_\alpha\to U\}_{\alpha\in\lambda}\in\op{Cov}U$ and $V\to U$ is some morphism, then the fiber products $V\times_UU_\alpha$ all exist, and
+		\[\{V\times_UU_\alpha\to V\}_{\alpha\in\lambda}\in\op{Cov}V.\]
+	\end{itemize}
+\end{definition}
+\begin{example}
+	Let $\mc C$ be the discrete category of open sets of some topological space. Then our coverings are exactly collections of open sets which cover $U$. One can verify the axioms make sense.
+	\begin{itemize}
+		\item Isomorphism: if we have an isomorphism $U\cong U'$, then we must have $U=U'$, and $\{U\}$ is certainly a cover of $U$.
+		\item Refinement: we are simply describing an open cover for each of the $U_\alpha$ for a cover $\{U_\alpha\}_{\alpha\in\lambda}$, which will build to an open cover of $U$ by taking the union over all of them.
+		\item Pullback: the fiber product along $V\to U$ is $V\times_UU_\alpha=V\cap U_\alpha$, so we are simply describing an intersection of the open cover $\{U_\alpha\}_{\alpha\in\lambda}$ with $V\subseteq U$ to build an open cover of $V$.
+	\end{itemize}
+\end{example}
+Now, here is our definition of a sheaf.
+\begin{definition}[sheaf]
+	Fix a site $\mc C$. Then a \textit{sheaf} $\mc F$ is a presheaf such that all covers $\{\varphi_\alpha\colon U_\alpha\to U\}_{\alpha\in\lambda}\in\op{Cov}U$ make the sequence
+	\[F(U)\to\prod_{\alpha\in\lambda}F(U_\alpha)\to\prod_{\alpha,\beta\in\lambda}F(U_\alpha\times_UU_\beta)\]
+	an equalizer exact sequence; here, the right-hand map is induced because there are two maps $F(U_\alpha)\to F(U_\alpha\times_UU_\beta)$ and $F(U_\beta)\to F(U_\alpha\times_UU_\beta)$.
+\end{definition}
+This is exactly the usual definition for a sheaf: we are asserting that for any cover $\{\varphi_\alpha\colon U_\alpha\to U\}$ of $U$, providing an element of $F(U)$ is equivalent to providing an element of each $F(U_\alpha)$ which agree on the ``intersections'' $F(U_\alpha\times F_\beta)$. (The uniqueness is the identity axiom, and the existence is the gluability axiom.)
+
+Let's see some more examples.
+\begin{example}
+	Fix a group $G$. Then we let $\mc C$ be the corresponding one-object category. Here, a presheaf is a functor $F\colon\mc C\opp\to\mathrm{Set}$, so we are asking for a single set $S\coloneqq F(*)\in\mathrm{Set}$ such that each $g\in G=\op{Mor}(*,*)$ produces a morphism $Fg\colon S\to S$ such that
+	\[F(e)=\id_S\qquad\text{and}\qquad F(g\circ h)=F(h)\circ F(g).\]
+	Thus, presheaves are sets equipped with a right $G$-action.
+\end{example}
+\begin{example}
+	Fix a topological space $X$, and let $\mc C$ be the category of local homeomorphism $Y\to X$. Then we let our coverings be given by collections of maps $\op{Cov}U=\{\{\varphi_\alpha\colon U_\alpha\to U\}_{\alpha\in\lambda}\}$ such that the disjoint union map
+	\[\bigsqcup_{\alpha\in\lambda}U_\alpha\to U\]
+	is surjective. One can somewhat quickly check the axioms. Even though presheaves might be different on $\mc C$ than on the category of open sets on $X$, it turns out that the sheaves are the same.
+\end{example}
+\begin{example}
+	Let $\mc C$ be the category of topological spaces, and let our coverings $\op{Cov}X$ be given by the set of coverings in the category of open sets in $X$. A presheaf is asking us to specify a set for every topological space (satisfying some functoriality conditions). Further, it turns out that the category of sheaves consists of collections $(F_U,\theta_f)$ where $F_U$ is a sheaf on $U$ (as a topological space), and for any $f\colon U\to V$ there is an inverse image transition map $\theta_f^{-1}F_U\to F_V$; these satisfy some coherence conditions that one can write down.
+\end{example}
+For our next example, we want the following definition.
+\begin{definition}[\'etale algebra]
+	Fix a field $k$. Then an \textit{\'etale algebra} is a $k$-algebra which is a finite product of finite separable extensions of $k$.
+\end{definition}
+Geometrically, \'etale algebras as finite $k$-schemes $X$ which are separable over $k$.
+\begin{example}
+	Fix a field $K$. Then the category $\op{Et}_K$ is the category of \'etale algebras $X\to\Spec k$, and coverings $\op{Cov}X$ consist of collections $\{U_\alpha\to X\}_{\alpha\in\lambda}$ such that the disjoint union map
+	\[\bigsqcup_{\alpha\in\lambda}U_\alpha\to X\]
+	is surjective. For our sheaf condition, suppose that $L/K$ is a finite Galois condition with $G\coloneqq\op{Gal}(L/K)$. Then our presheaf $F\colon\mc C\opp\to\mathrm{Set}$ would like to send the map $\Spec L\to\Spec K$ to a set $S_L$ equipped with a $G$-action. Further, by pullback, we see that
+	\[\Spec L\times_{\Spec K}\Spec L=\Spec (L\times_KL)=\bigsqcup_{g\in G}\Spec L,\]
+	where the $G$-action now lands coordinate-wise. The point is that the sheaf condition on the covering $L\to K$ is requiring $F(K)=S_L^G$. In total, one can show that sheaves on $\op{Et}_K$ are sets with a condition action by $\op{Gal}(K^{\mathrm{sep}}/K)$.
+\end{example}
+Namely, we see that our Galois cohomology can arise from the above example.
+
+\end{document}
