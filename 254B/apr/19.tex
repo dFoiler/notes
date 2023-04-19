@@ -1,0 +1,133 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 19}
+
+The reading for today is Chapter 6 of Poonen's \textit{Rational Points on Varieties} and Chapters 1 and 2 of Olsson's \textit{Algebraic Spaces and Stacks}.
+
+\subsection{\'Etale Morphisms}
+We would like to mimic singular cohomology on a scheme. The correct notion turns out to be the \'etale site of a scheme, defined as follows.
+\begin{definition}[\'etale site]
+	Fix a scheme $X$. Then the \textit{\'etale site} is the category $\mathrm{\acute Et}(X)$ which is the category of schemes over $X$ with \'etale maps. We turn this into a site by defining a covering of the map $U\to X$ as a collection of maps $\{U_\alpha\to U\}_{\alpha\in\lambda}$ which are pointwise surjective.
+\end{definition}
+Wait, what does ``\'etale'' mean? Roughly speaking, \'etale morphisms are intended to be the algebraic geometry version of a ``local homeomorphism'' between two spaces. Here are some examples.
+\begin{itemize}
+	\item The map $\CC^\times\to\CC^\times$ given by squaring is some kind of local homeomorphism, which we can turn into the scheme map
+	\[\Spec \CC\left[x,x^{-1}\right]\to\Spec \CC\left[x,x^{-1}\right]\]
+	given by $x\mapsto x^2$.
+	\item Unramified maps of (smooth, proper) curves (over an algebraically closed field) feel like they should be local homeomorphisms in the topological sense, so this will also be \'etale.
+	\item Given a field extension $L/K$, then the map $\Spec\OO_L[1/N]\to\Spec\OO_K[1/N]$ is \'etale if and only if unramified.
+	\item Given a finite field extension $L/K$, then the map $\Spec L\to\Spec K$ is \'etale if and only if $L/K$ is separable.
+	\item Fix an elliptic curve $(E,e)$ over a ring $R$. Then the map $[n]\colon E\to E$ is \'etale if and only if $n\in R^\times$.
+\end{itemize}
+Anyway, here is our definition.
+\begin{definition}[\'etale]
+	A morphism of schemes $f\colon X\to Y$ is \textit{\'etale} if and only if the following conditions hold.
+	\begin{itemize}
+		\item $f$ is locally of finite presentation.
+		\item Hensel's lemma: for any map of rings $R'\to R$ so that the kernel $J\coloneqq\ker(R'\to R)$ has $J^2=0$, then a commutative square as below has a unique lift as shown.
+		% https://q.uiver.app/?q=WzAsNCxbMCwwLCJcXFNwZWMgUiJdLFswLDEsIlxcU3BlYyBSJyJdLFsxLDAsIlgiXSxbMSwxLCJZIl0sWzIsMywiZiJdLFswLDEsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzAsMl0sWzEsM10sWzEsMiwiISIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{\Spec R} & X \\
+			{\Spec R'} & Y
+			\arrow["f", from=1-2, to=2-2]
+			\arrow[hook, from=1-1, to=2-1]
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=2-1, to=2-2]
+			\arrow["{!}"{description}, dashed, from=2-1, to=1-2]
+		\end{tikzcd}\]
+	\end{itemize}
+\end{definition}
+The topological picture is that $R'$ essentially only adds a tangent direction to the point given by $\Spec R\to X$, so $f$ being a local homeomorphism basically means that we should be able to lift this tangent vector back up to $X$ uniquely.
+\begin{remark}
+	One can define smoothness in basically the same way, not requiring uniqueness.
+\end{remark}
+\begin{exercise}
+	Fix $Y\coloneqq\Spec A$ and $X\coloneqq A[x]/\left(x^n-a\right)$ where $n\ge1$ is an integer and $a\in A^\times$. We would like to know that the structure map $X\to Y$ is \'etale when $n\in A^\times$.
+\end{exercise}
+\begin{proof}
+	Certainly this is locally of finite presentation. Well, suppose we have a commuting diagram as follows.
+	% https://q.uiver.app/?q=WzAsOSxbMCwxLCJSJyJdLFswLDAsIlIiXSxbMSwwLCJBW3hdL1xcbGVmdCh4Xm4tYVxccmlnaHQpIl0sWzEsMSwiQSJdLFszLDEsImEiXSxbMiwxLCJcXGFscGhhJyJdLFsyLDAsIlxcYWxwaGEiXSxbNSwwLCJ4Il0sWzQsMCwiXFxiZXRhIl0sWzAsMSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzMsMF0sWzMsMl0sWzIsMV0sWzQsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDYsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNyw4LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		R & {A[x]/\left(x^n-a\right)} & \alpha && \beta & x \\
+		{R'} & A & {\alpha'} & a
+		\arrow[two heads, from=2-1, to=1-1]
+		\arrow[from=2-2, to=2-1]
+		\arrow[from=2-2, to=1-2]
+		\arrow[from=1-2, to=1-1]
+		\arrow[maps to, from=2-4, to=2-3]
+		\arrow[maps to, from=2-3, to=1-3]
+		\arrow[maps to, from=1-6, to=1-5]
+	\end{tikzcd}\]
+	The commutativity of the diagram is enforcing $\beta^n=\alpha$. We would like a unique lift of a map $A[x]/\left(x^n-a\right)\to R'$, which means that we want a unique solution $(\beta')^n=\alpha'$. Well, choosing any lift $\beta'_0$ of $\beta$ up in $R'$, we know that at least
+	\[(\beta'_0)^n=\alpha'+e\]
+	for $e\in\ker(R'\to R)$. We now need to adjust $\beta'_0$ by some $\gamma\in J$, so we expand
+	\[(\beta'_0+\gamma)^n=(\beta'_0)^n+n(\beta'_0)^{n-1}\gamma=\alpha'+e+n(\beta'_0)^{n-1}\gamma.\]
+	We would like this to equal $\alpha'$ on the nose, for which we see we must have
+	\[\gamma=-\frac e{n(\beta_0')^{n-1}}.\]
+	Thus, we have shown that there is a unique lift $\beta'$ of $\beta$ which solves $(\beta')^n=\alpha'$.
+\end{proof}
+\begin{remark}
+	If $n\notin A^\times$, then the above map need not be \'etale. For concreteness, take $a=1$ and suppose that $n=p$ is prime and vanishes in $A$. Here, we see $x^n-1=(x-1)^p$. To show that we are not \'etale, we use the following diagram.
+	% https://q.uiver.app/?q=WzAsNixbMCwxLCJBW3hdLyh4LTEpXntwKzF9Il0sWzAsMCwiQVt4XS8oeC0xKV5wIl0sWzEsMCwiQVt4XS8oeC0xKV5wIl0sWzEsMSwiQSJdLFszLDAsIngiXSxbMiwwLCJ4Il0sWzAsMSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzMsMF0sWzMsMl0sWzIsMV0sWzQsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{A[x]/(x-1)^p} & {A[x]/(x-1)^p} & x & x \\
+		{A[x]/(x-1)^{p+1}} & A
+		\arrow[two heads, from=2-1, to=1-1]
+		\arrow[from=2-2, to=2-1]
+		\arrow[from=2-2, to=1-2]
+		\arrow[from=1-2, to=1-1]
+		\arrow[maps to, from=1-4, to=1-3]
+	\end{tikzcd}\]
+	Here, we would like to lift $x$ to some $p$th root of $1$ in $A[x]/(x-1)^{p+1}$. Indeed, we can write any lift as $x+a(x-1)^p$ for some $a\in A$, but none of these elements to the $p$th power is going to equal $1$ in our ring.
+\end{remark}
+Let's prove some properties of \'etale morphisms.
+\begin{lemma}
+	Any \'etale morphism $f\colon X\to Y$ is flat.
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{lemma}
+	We have cancellation: if morphisms $f\colon U\to X$ and $g\colon V\to X$ are \'etale, then any map $h\colon U\to V$ such that $h=g\circ h$ is \'etale.
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{lemma}
+	We can check \'etale on fibers: a flat morphism $f\colon X\to Y$ such that the fibers $f\colon X_y\to y$ are \'etale for all $y\in Y$ will have $f$ \'etale.
+\end{lemma}
+\begin{proof}
+	Omitted.
+\end{proof}
+There's a lot more to say here, but we'll stop here.
+
+\subsection{Sheaves on the \'Etale Site}
+While we're here, let's give some motivation of \'etale morphisms for number theorists. Fix a scheme $X$ and integer $n$ invertible in $X$; i.e., $X$ is a scheme over $\ZZ[1/n]$. Now, in the \'etale topology, the sequence
+\[0\to\mu_n\to\mathbb G_m\stackrel{(-)^n}\to\mathbb G_m\to0\]
+is exact.\footnote{This exactness is false in the Zariski topology: take $X=\Spec\QQ$ and $n=2$.} To make sense of this, we need to remember what a sheaf is. For example, $\mathbb G_m$ is defined as the sheaf on the \'etale site by
+\[\mathbb G_m(U)\coloneqq\Gamma\left(U,\OO_U^\times\right)\]
+for any \'etale map $U\to X$. It is not obvious, but it is true that $\mathbb G_m$ is a sheaf on our \'etale site. Similarly, $\mu_n$ is defined by
+\[\mu_n(U)\coloneqq\left\{u\in\Gamma(U,\OO_U):u^n=1\right\}.\]
+Notably, $\mu_n$ is the kernel of a sheaf map, so $\mu_n$ remains a sheaf.
+
+The main content of our exactness is the check that $(-)^n\colon\mathbb G_m\to\mathbb G_m$ is surjective. Roughly speaking, here is the check we have to do: given some section $u\in\mathbb G_m(U)$, we would like a covering $\{U_\alpha\}_{\alpha\in\lambda}$ of $U$ and sections $v_\alpha\in\mathbb G_m(U_\alpha)$ such that
+\[v_\alpha^n=u|_{U_\alpha}\]
+for all $\alpha\in\lambda$. Quickly, by restricting $U$, we may assume that $U=\Spec A$ is affine, but then our \'etale cover is given by
+\[\Spec\frac{A[x]}{\left(x^n-u\right)}\to\Spec A,\]
+so we are done.
+
+Anyway, now that we have an exact sequence, one can check that our abelian category of sheaves of abelian groups on the \'etale site has enough injectives, so we can take cohomology as
+\[0\to\mu_n(X)\to\mathbb G_m(X)\to\mathbb G_m(X)\to H^1_{\mathrm{\acute et}}(X,\mu_n)\to H^1_{\mathrm{\acute et}}(X,\mathbb G_m)\to H^1_{\mathrm{\acute et}}(X,\mathbb G_m)\to\cdots.\]
+One can show that $H^1_{\mathrm{\acute et}}(X,\mathbb G_m)=H^1(X,\mathbb G_m)$.
+\begin{remark}
+	Similarly, if $(E,e)$ is an elliptic curve over a field $K$, and we have an integer $n\in K^\times$, then we produce an exact sequence
+	\[0\to E[n]\to E\stackrel{[n]}\to E\to0,\]
+	so we can again take cohomology. Again, we do not have such an exact sequence in the Zariski topology.
+\end{remark}
+The point is that we are in some sense recovering Galois cohomology from \'etale cohomology.
+
+\end{document}
