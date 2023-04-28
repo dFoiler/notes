@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 21}
+
+We continue our discussion of Linnik's theorem.
+
+\subsection{Reyni's Theorem}
+In a different direction, Linnik was able to show the following weakening of \Cref{conj:vinogradov}.
+\begin{restatable}{theorem}{linnikthm} \label{thm:linnik}
+	For any $\varepsilon>0$, we have
+	\[\left|\{p\le N:n(p)>p^\varepsilon\}\right|=O_\varepsilon\left(N^\varepsilon\right).\]
+\end{restatable}
+In fact, we will show that there are $O_\varepsilon(1)$ exceptions with $p\gg N^\varepsilon$. This will come from the large sieve, not using Bombieri--Vinogradov directly. From our discussion of the large sieve, we showed in \Cref{cor:quick-large-sieve} that
+\[\sum_{q\le Q}\sum_{\gcd(a,q)=1}\Bigg|\underbrace{\sum_{n=M+1}^{M+N}a_ne\left(\frac aqn\right)}_{S(a/q)\coloneqq}\Bigg|^2\ll\left(N+Q^2\right)\sum_{n=M+1}^{M+N}|a_n|^2.\]
+For this, we require the following result, which comes from the large sieve.
+\begin{theorem}[Reyni] \label{thm:reyni}
+	Let $S$ be a set of integers in $[M+1,M+N]$, and let $\mc P$ be the set of primes less than or equal to some $Q$. For some $\tau\in(0,1)$, if $S$ does not contain any integer $x$ such that $x\equiv h\pmod p$ for at least $\tau p$ values of $h\pmod p$ for each $p\in\mc P$, then
+	\[|S|\ll\frac{N+Q^2}{\tau|\mc P|}.\]
+\end{theorem}
+\begin{proof}
+	We use the large sieve. Let $Z(q,h)$ be the number of elements $z\in S$ with $z\equiv h\pmod q$; set $Z\coloneqq|S|$. To detect deviation from the expected, we are interested in
+	\[V(q)\coloneqq\sum_{h=0}^{q-1}\left|Z(q,h)-\frac Zq\right|^2.\]
+	Now, we claim that
+	\begin{equation}
+		\sum_{p\le Q}pV(p)\stackrel?\ll\left(N+Q^2\right)Z, \label{eq:ryeni-use-large-sieve}
+	\end{equation}
+	which will finish the proof after plugging into the hypotheses. This claim will follow from the large sieve: set $a_n\coloneqq1_S(n)$. Now, rearranging, we see
+	\[\sum_{a=1}^q\left|S\left(\frac aq\right)\right|^2=\sum_{m,n\in S}\Bigg(\sum_{a=1}^qe\left(\frac aq(m-n)\right)\Bigg)=q\sum_{h=1}^qZ(q,h)^2,\]
+	where the last equality holds because we only care about pairs $(m,n)\in S^2$ such that $m\equiv n\pmod q$, whereupon we get a contribution of $q$. Thus, we see
+	\[qV(q)\stackrel*=q\Bigg(\sum_{h=1}^qZ(q,h)^2-\frac{Z^2}q\Bigg)=\sum_{a=1}^q\left|S\left(\frac aq\right)\right|^2-Z^2=\sum_{a=1}^{q-1}\left|S\left(\frac aq\right)\right|^2.\]
+	Here, $\stackrel*=$ holds by expanding out the definition of $V(q)$, using the fact that the expected value of $Z(q,h)$ is $Z/q$ when averaged over all possible values of $h$. As such, we see
+	\[\sum_{p\le Q}pV(p)=\sum_{p\le Q}\sum_{\gcd(a,p)=1}\left|S\left(\frac ap\right)\right|^2,\]
+	so the large sieve grants
+	\[\sum_{p\le Q}pV(p)\ll\left(N+Q^2\right)Z,\]
+	which was the desired claim.
+
+	To finish, we need to discuss $\mc P$. Namely, for each $p\in\mc P$, we see that
+	\[V(p)\ge\tau p\cdot\frac{Z^2}{p^2}=\frac{\tau Z^2}p.\]
+	Plugging this into \eqref{eq:ryeni-use-large-sieve}, we see that $\tau Z^2|\mc P|\ll\left(N+Q^2\right)Z$, which rearranges into the desired inequality.
+\end{proof}
+
+\subsection{Smooth Numbers}
+To continue our discussion, we need the following definition.
+\begin{definition}[smooth]
+	Fix a real number $N>0$. An $N$-smooth positive integer is one whose prime factors are less than $N$.
+\end{definition}
+We will show the following result later.
+\begin{lemma} \label{lem:smooth}
+	Fix some $\varepsilon>0$. There is a constant $c_\varepsilon>0$ such that the number of $x^\varepsilon$-smooth numbers less than $x$ is at least $c_\varepsilon x$.
+\end{lemma}
+\begin{proof}
+	This proof is elementary and constructive. Without loss of generality, we may take $\varepsilon<1/10$; set $k\coloneqq\floor{1/\varepsilon}$. The point is to construct enough numbers of the form
+	\[n=mp_1\cdots p_k\]
+	where the $p_i$ are primes between $x^{\varepsilon-\varepsilon^2/2}$ and $x^\varepsilon$. Here, any $m$ achieve $n\le x$ must have
+	\[m\le n{p_1\cdots p_k}\le\frac{x}{x^{\varepsilon k-k\varepsilon^2/2}}\le x^\varepsilon,\]
+	so $m$ is $x^\varepsilon$-smooth and thus can be ignored. Now, the number of such $n$ is bounded below by
+	\[\frac1{k!}\sum_{\substack{p_1,\ldots,p_k\\x^{\varepsilon-\varepsilon^2/2}\le p_i\le x^\varepsilon}}\floor{\frac x{p_1\cdots p_k}}\gg\sum_{\substack{p_1,\ldots,p_k\\x^{\varepsilon-\varepsilon^2/2}\le p_i\le x^\varepsilon}}\frac x{p_1\cdots p_k}=x\left(\sum_{x^{\varepsilon-\varepsilon^2/2}\le p\le x^\varepsilon}\frac1p\right)^k.\]
+	Lower-bounding each term via Mertens's theorem, we achieve
+	\[\gg_\varepsilon x\left(\log\frac{\log x^\varepsilon}{\log x^{\varepsilon-\varepsilon^2}}+o(1)\right)^k.\]
+	The right-hand side is bounded below by a constant times $x$, so we are done.
+\end{proof}
+Now, let's explain why \Cref{lem:smooth} proves \Cref{thm:linnik}.
+\linnikthm*
+\begin{proof}
+	In \Cref{thm:reyni}, we work in the interval $\left[1,T^2\right]$; let $\mc P$ be the set of primes $p\in\left[T^\varepsilon,T\right]$ such that $n(p)>p^\varepsilon$. Now, $S$ is defined as the set of integers in our interval, where we remove integers $y$ such that $\left(\frac yp\right)=-1$ for some $p\in\mc P$. In other words, $S$ should be quadratic residues for $\mc P$.
+
+	In particular, for each $p\in\mc P$, we see that $S$ fails to contain about half of all residues$\pmod p$, so we may take $\tau=1/3$, whereupon \Cref{thm:reyni} grants
+	\[|S|\ll\frac{T^2}{|\mc P|}.\]
+	On the other hand, we claim that all $T^{\varepsilon^2}$-smooth numbers live in $S$. Indeed, the prime factor of any $T^{\varepsilon^2}$-smooth number must be less than $T^{\varepsilon^2}$, so it suffices to show the result for primes $p'\le T^{\varepsilon^2}$. Now, for any prime $p\in\mc P$, we see that
+	\[p'\le T^\varepsilon\le p^\varepsilon,\]
+	so the construction of $\mc P$ ensures $\left(\frac{p'}p\right)=1$.
+
+	In total, \Cref{lem:smooth} tells us that $T^2\ll_\varepsilon|S|$, so we see that $|\mc P|\ll_\varepsilon1$. In other words,
+	\[\mc P=\left\{p\ge T^\varepsilon:n(p)>p^\varepsilon\right\}\]
+	is finite, from which \Cref{thm:linnik} follows.
+\end{proof}
+
+\end{document}
