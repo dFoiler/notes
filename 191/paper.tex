@@ -16,12 +16,12 @@
 \title{Modular Forms and Converse Theorems}
 \author{Nir Elber}
 \date{5 May 2023}
-\lhead{} \chead{\textit{CONVERSE THEOREMS}} \rhead{}
+\lhead{} \chead{} \rhead{\textit{CONVERSE THEOREMS}}
 
 \begin{document}
 
 \begin{abstract}
-	\noindent We introduce the basics of modular forms in order to state and prove Hecke's converse theorem \cite{hecke-converse}. Throughout, we will give commentary at a high level, but all proofs will assume little background beyond complex analysis.
+	\noindent We introduce the basics of modular forms in order to state and prove Hecke's converse theorem \cite{hecke-converse}. Throughout, we will give commentary at a high level, but all proofs will assume little background beyond complex analysis and Fourier analysis.
 \end{abstract}
 
 \maketitle
@@ -282,12 +282,57 @@ Notably, if $a_0=0$, then $\Lambda$ is actually holomorphic on all $\CC$.
 	\[\Lambda(s,f)=\left(\int_1^\infty(f(yi)-a_0)y^s\,\frac{dy}y-\frac{a_0}s\right)+(-1)^{k/2}\left(\int_1^\infty(f(yi)-a_0)y^{k-s}\,\frac{dy}y-\frac{a_0}{k-s}\right).\]
 	Now, as discussed before, the integrals on the right-hand side converge absolutely and uniformly on compacts to a holomorphic function on all $\CC$, from which the meromorphic continuation of $\Lambda(s,f)$ follows. The above expression for $\Lambda(s,f)$ also implies that $\Lambda(s,f)=(-1)^{k/2}\Lambda(k-s,f)$ upon plugging in $k-s$.
 \end{proof}
+\begin{remark}
+	\Cref{prop:fe} is somewhat remarkable in that it tells us that $L(s,f)$ ``remembers'' the constant term $a_0$ of the modular form $f$ even though it is not featured in the actual $L$-function.
+\end{remark}
 
 \subsection{The Converse Theorem}
-The main input to \Cref{prop:fe} was the computation of $\Lambda(s,f)$ as a Mellin transform of $f(yi)-a_0$ plus the symmetry condition \eqref{eq:level-1-symmetry-condition}. As such, it is not too surprising that one can invert the Mellin transform in order to use the functional equation of $\Lambda$ to produce a symmetry condition for $f$.\todo{}
+The main input to \Cref{prop:fe} was the computation of $\Lambda(s,f)$ as a Mellin transform of $f(yi)-a_0$ plus the symmetry condition \eqref{eq:level-1-symmetry-condition}. As such, it is not too surprising that one can invert the Mellin transform in order to use the functional equation of $\Lambda$ to produce a symmetry condition for $f$. Here is our precise statement.
+\begin{theorem}[Hecke]
+	Let $\{a_n\}_{n=0}^\infty$ be a sequence of complex numbers such that $|a_n|=O\left(n^c\right)$ for some real number $c>0$. For $\op{Re}s>c+1$, define
+	\[L(s,f)\coloneqq\sum_{n=1}^\infty\frac{a_n}{n^s}\qquad\text{and}\qquad\Lambda(s,f)\coloneqq(2\pi)^{-s}\Gamma(s)L(s,f).\]
+	Further, suppose the following of $\Lambda$ for some even positive integer $k$.
+	\begin{itemize}
+		\item $\Lambda$ has a meromorphic continuation to $\CC$ with at worst simple poles at $s=0$ and $s=k$ with residues $-a_0$ and $(-1)^{k/2}a_0$, respectively
+		\item $\Lambda$ is bounded in the vertical strips $\{s:\sigma_1\le\op{Re}s\le\sigma_2,\left|\op{Im}s\right|\ge1\}$ for any real numbers $\sigma_1<\sigma_2$.
+		\item $\Lambda$ satisfies the functional equation $\Lambda(s,f)=i^k\Lambda(k-s,f)$.
+	\end{itemize}
+	Then $f(z)\coloneqq\sum_{n=0}^\infty a_ne^{2\pi inz}$ is a modular form of weight $k$.
+\end{theorem}
+\begin{proof}
+	The infinite series defining $f$ converges absolutely and uniformly on compacts for $\op{Im}z>0$ because $|a_n|=O\left(n^c\right)$. Thus, $f$ defines a holomorphic function on $\mathbb H$. Furthermore, as $z\to i\infty$, we see that $f(z)\to a_0$, so $f$ is holomorphic on $\mathbb H^*$. It remains to check the symmetry conditions in \eqref{eq:level-1-symmetry-condition}. By the definition of $f$, we note that $e^{2\pi in(z+1)}=e^{2\pi inz}$ for any $z\in\mathbb H$, so $f(z+1)=f(z)$ for any $z\in\mathbb H$. It remains to check that
+	\[f(-1/z)\stackrel?=z^kf(z)\]
+	for any $z\in\mathbb H$. Because $f$ is holomorphic on $\mathbb H$, the left- and right-hand sides of this equation are both holomorphic, so it suffices to check that $f(-1/z)=z^kf(z)$ on the positive imaginary axis. In other words, it suffices to check that
+	\begin{equation}
+		f(i/y)\stackrel?=i^ky^kf(yi) \label{eq:needed-s-symmetry}
+	\end{equation}
+	for any $y>0$. For this, we note that \Cref{lem:computed-completed-l-func} still computes the Mellin transform of $f(yi)-a_0$ for $\op{Re}s>c$, so for any $\sigma>\max\{c,k\}$, Mellin inversion implies
+	\[f(iy)-a_0=\frac1{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}\Lambda(s,f)y^{-s}\,ds.\]
+	Now, we will be able to produce \eqref{eq:needed-s-symmetry} after moving the contour and applying the functional equation. Moving the contour requires the following result.
+	\begin{proposition}[Phragmen--Lindel\"of principle] \label{prop:pl}
+		Suppose $f$ is a function holomorphic over $\{s\in\CC:\op{Re}s\in[\sigma_1,\sigma_2],\op{Im}s>c\}$. Further, suppose there is $\alpha>0$ such that $f(\sigma+it)=O\left(e^{t^\alpha}\right)$ for $\sigma\in[\sigma_1,\sigma_2]$. If $f(\sigma+it)=O_\sigma\left(t^M\right)$ for $\sigma\in\{\sigma_1,\sigma_2\}$, then $f(\sigma+it)=O\left(t^M\right)$ for $\sigma\in[\sigma_1,\sigma_2]$.
+	\end{proposition}
+	\begin{proof}
+		Omitted.
+	\end{proof}
+	We now attempt to move the contour from $\op{Re}s=\sigma$ to $\op{Re}s=k-\sigma$ via \Cref{prop:pl}. Because $\sigma>k$, we see that $L(s,f)$ absolutely converges and is therefore bounded on $\op{Re}s=\sigma$; thus, because $\Gamma(\sigma+it)\to0$ as $t\to\pm\infty$, we see that $\Lambda(\sigma+it,f)y^{-(\sigma+it)}\to0$ as $t\to\pm\infty$. The functional equation for $\Lambda$ implies that $\Lambda(k-(\sigma+it),f)y^{-(k-(\sigma+it))}\to0$ as $t\to\pm\infty$ as well, so \Cref{prop:pl} tells us that $\Lambda(k-s,f)y^{-s}\to0$ as $\op{Im}s\to\pm\infty$ uniformly for $\op{Re}s\in[k-\sigma,\sigma]$. Thus, noting that $\Lambda(s,f)$ has only at worst simple poles at $s=0$ and $s=k$ with known residues, the Residue theorem grants
+	\begin{align*}
+		\lim_{N\to\infty}\frac1{2\pi i}\left(\int_{\sigma-iN}^{\sigma+iN}\Lambda(s,f)y^{-s}\,ds-\int_{(k-\sigma)-iN}^{(k-\sigma)+iN}\Lambda(s,f)y^{-s}\,ds\right) &= \op{Res}_{s=0}\Lambda(s,f)y^{-s}+\op{Res}_{s=k}\Lambda(s,f)y^{-s} \\
+		&= -a_0+(-1)^{k/2}a_0y^{-k}.
+	\end{align*}
+	Bringing everything together, we use the functional equation to see
+	\begin{align*}
+		f(iy)-a_0 &= \frac1{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}\Lambda(s,f)y^{-s}\,ds \\
+		&= \frac1{2\pi i}\int_{(k-\sigma)-i\infty}^{(k-\sigma)+i\infty}\Lambda(s,f)y^{-s}\,ds-a_0+(-1)^{k/2}a_0y^{-k} \\
+		&= \frac{(-1)^{k/2}}{2\pi i}\int_{(k-\sigma)-i\infty}^{(k-\sigma)+i\infty}\Lambda(k-s,f)y^{-s}\,ds-a_0+(-1)^{k/2}a_0y^{-k} \\
+		&= \frac{(-1)^{k/2}}{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}\Lambda(s,f)y^{-(k-s)}\,ds-a_0+(-1)^{k/2}a_0y^{-k} \\
+		&= (-1)^{k/2}y^{-k}(f(i/y)-a_0)-a_0+(-1)^{k/2}a_0y^{-k}.
+	\end{align*}
+	Rearranging yields \eqref{eq:needed-s-symmetry}, so we are done.
+\end{proof}
 
-\section{Hecke Operators}
+% \section{Hecke Operators}
 
-% \printbibliography[title={References}]
+\printbibliography[title={References}]
 
 \end{document}
