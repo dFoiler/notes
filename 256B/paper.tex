@@ -328,6 +328,176 @@ We are now ready to prove our main theorem.
 %     If one tracks through the above arguments, we were are actually quite conservative in our use of colimits. We require coproducts, \Cref{lem:dual-facts} uses the existence of a final object, and the above proof uses the fact that we are able to take quotients by finite automorphism groups at the very end.
 % \end{remark}
 
+\section{Finite \'Etale Covers}
+The goal of this section is to prove \Cref{thm:etale-cover-galois}, which roughly speaking tells us that the category of finite \'etale covers of a (connected) scheme forms a Galois category.
+
+\subsection{\'Etale and Totally Split Morphisms}
+In this section, we review properties of \'etale morphisms and friends. We showed much of this in class, so we will omit proofs.
+\begin{definition}[unramified]
+    A scheme morphism $f\colon X\to S$ locally of finite presentation is \textit{unramified} if and only if one of the following equivalent conditions are satisfied.
+    \begin{itemize}
+        \item $\Omega_{X/S}=0$.
+        \item The diagonal $\Delta_f\colon X\to X\times_SX$ is an open embedding.
+        \item For any $x\in X$, we have $\mf m_{f(x)}\OO_{f(x)}=\mf m_x$ and the residue field extension $k(x)/k(f(x))$ is finite separable.
+    \end{itemize}
+\end{definition}
+We showed that these properties are equivalent in class; a proof is recorded in \cite[\href{https://stacks.math.columbia.edu/tag/02GF}{Lemma 02GF}]{stacks}.
+\begin{definition}[flat]
+    A scheme morphism $f\colon X\to S$ is \textit{flat at $x\in X$} if and only if the ring map $\OO_{S,f(x)}\to\OO_{X,x}$ is flat. Because exactness is checked stalk-locally, it is equivalent to require the following: for any affine open subschemes $\Spec A\subseteq S$ and $\Spec B\subseteq f^{-1}(\Spec A)$, the ring extension $f^\sharp\colon A\to B$ is flat.
+\end{definition}
+\begin{definition}[\'etale]
+    A scheme morphism $f\colon X\to S$ locally of finite presentation is \textit{\'etale} if and only if it is flat and unramified.
+\end{definition}
+The moral of this section is that finite \'etale maps are analogous to (finite) covering spaces in algebraic topology. To justify this, we begin by making an analogous definition for a trivial cover.
+\begin{definition}[totally split]
+    A scheme morphism $f\colon X\to S$ is \textit{totally split} if and only if we can decompose $S=\bigsqcup_{i=1}^\infty$
+\end{definition}
+\todo{}
+
+\subsection{A Little Descent}
+We will require a few descent results in the following discussion. It would take us much too far afield to prove these results in their correct context, so we will pick up exactly what we need. For brevity, we establish a general set-up for the following results: $f\colon X\to S$ is an affine morphism, and $p\colon S'\to S$ is some affine faithfully flat map.\footnote{One typically removes the requirements that $f$ and $p$ are affine, but this makes the arguments nontrivially harder, and anyway everything will be affine in our application.} Setting $X'\coloneqq X\times_SS'$, we produce the following pullback square.
+% https://q.uiver.app/?q=WzAsNCxbMCwxLCJYIl0sWzEsMSwiUyJdLFsxLDAsIlMnIl0sWzAsMCwiWCciXSxbMywyLCJmJyJdLFswLDEsImYiXSxbMiwxLCJwIl0sWzMsMCwicCciLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{X'} & {S'} \\
+	X & S
+	\arrow["{f'}", from=1-1, to=1-2]
+	\arrow["f", from=2-1, to=2-2]
+	\arrow["p", from=1-2, to=2-2]
+	\arrow["{p'}"', from=1-1, to=2-1]
+\end{tikzcd}\]
+Occasionally, we will want to work affine-locally, which is appealing because we required all morphisms to be affine. Thus, we go ahead and set ourselves us up with an affine open subscheme $\Spec A\subseteq S$ to build the following pullback square.
+% https://q.uiver.app/?q=WzAsNCxbMCwxLCJcXFNwZWMgQiJdLFsxLDEsIlxcU3BlYyBBIl0sWzEsMCwiXFxTcGVjIEEnIl0sWzAsMCwiXFxTcGVjIEInIl0sWzMsMiwiZiciXSxbMCwxLCJmIl0sWzIsMSwicCJdLFszLDAsInAnIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\begin{equation}
+    \begin{tikzcd}
+        {\Spec B'} & {\Spec A'} \\
+        {\Spec B} & {\Spec A}
+        \arrow["{f'}", from=1-1, to=1-2]
+        \arrow["f", from=2-1, to=2-2]
+        \arrow["p", from=1-2, to=2-2]
+        \arrow["{p'}"', from=1-1, to=2-1]
+    \end{tikzcd} \label{eq:affine-local-fpqc-set-up}
+\end{equation}
+Here, $\Spec B=f^{-1}(\Spec A)$ and $\Spec A'=p^{-1}(\Spec A)$ and $B'=B\otimes_AA'$.
+Our end goal will be to show that $f'$ finite \'etale implies that $f$ is also finite \'etale. Finiteness is not so bad.
+\begin{lemma} \label{lem:finite-descent}
+    Fix everything as above. If $f'$ is finite, then $f$ is also finite.
+\end{lemma}
+\begin{proof}
+    We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. We are given that $B'$ is a finite $A'$-module, and we want to show that $B$ is a finite $A$-module. Well, we can find some finitely many generators for $B'$ as an $A'$-module. In fact, writing any element $\sum_{i=1}^nb_i\otimes a'_i$ in $B'$ as $\sum_{i=1}^na'_i(b_i\otimes1)$, we see that we may assume that our finitely many generators for $B'$ take the form $\{a_i\otimes1\}_{i=1}^n$. As such, we have produced a map $A^n\to B$ such that the induced map
+    \[A^n\otimes_AA'\to B\otimes_AA'\]
+    is surjective. But we are now done: the complex $A^n\to B\to0$ becomes exact upon tensoring by $A'$ by the above, so faithful flatness of $A'$ as an $A$-module ensures that $A^n\to B$ is surjective.
+\end{proof}
+To show \'etale, more work will be required. By definition, it will be enough to show flatness and unramified-ness separately. Flatness is easier.
+\begin{lemma} \label{lem:flat-descent}
+    Fix everything as above. If $f'$ is flat, then $f$ is flat.
+\end{lemma}
+\begin{proof}
+    We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. We are given that $B'$ is a flat $A'$-algebra, and we want to show that $B$ is a flat $A$-algebra. Well, suppose that we have an exact sequence
+    \[M_1\to M_2\to M_3\]
+    of $A$-modules. Because $A'$ is flat over $A$, and $B'=B\otimes_AA'$ is flat over $A'$, we get the exact sequence
+    \[(B\otimes_AA')\otimes_{A'}(M_1\otimes_AA')\to(B\otimes_AA')\otimes_{A'}(M_2\otimes_AA')\to(B\otimes_AA')\otimes_{A'}(M_3\otimes_AA').\]
+    However, this exact sequence is isomorphic to the exact sequence
+    \[(B\otimes_AM_1)\otimes_AA'\to(B\otimes_AM_2)\otimes_AA'\to(B\otimes_AM_3)\otimes_AA',\]
+    so the faithful flatness of $A'$ finishes.
+\end{proof}
+We now turn towards being unramified. Allowing the hypothesis that $f$ is locally of finite presentation (we will have finite in the application), being unramified is equivalent to the diagonal being an open embedding. So our next goal is to discuss open embeddings. Roughly speaking, the point is that an open embedding is an isomorphism onto an open subset, so we will want to work with isomorphisms and with openness. Isomorphisms are easier.
+\begin{lemma} \label{lem:iso-descent}
+    Fix everything as above. If $f'$ is an isomorphism, then $f$ is also an isomorphism.
+\end{lemma}
+\begin{proof}
+    We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. Because $f'$ is an isomorphism, we see that
+    \[0\to A\otimes_AA'\stackrel{f'}\to B\otimes_AA'\to0\]
+    is exact, so it follows that $0\to A\stackrel f\to B\to0$ is exact, so the result follows.
+\end{proof}
+To discuss openness, we need a little topology.
+\begin{lemma} \label{lem:fpqc-quotient-top}
+    Let $f\colon S'\to S$ be a quasicompact faithfully flat map. Then $U\subseteq S$ is open if and only if $\varphi^{-1}(U)\subseteq S'$ is open.
+\end{lemma}
+\begin{proof}
+    The forward direction is by continuity of $f$. To continue, we make some reductions. By taking complements, it suffices to show that $Z'\coloneqq f^{-1}(Z)\subseteq S$ is closed implies that $Z\subseteq S$ is closed. Because $f$ is surjective, we see that $Z=f(Z')$, so upon giving $Z'$ the reduced scheme structure, it remains to show that $\varphi(Z')$ is closed in $S$.
+    
+    Well, by \cite[Lemma~II.4.5]{hartshorne}, it is enough to show that $f(Z')$ is stable under specialization. However, going down for flat extensions \cite[Lemma~10.11]{eisenbud-comm-alg} implies that $f(U')$ is stable under generalization for any open $U'\subseteq S'$, so $S\setminus f(Z')=f(S'\setminus Z')$ is stable under generalization (this equality holds because $f$ is surjective). It follows that $f(Z')$ is stable under specialization, as desired.
+\end{proof}
+We are now ready to execute our plan.
+\begin{lemma} \label{lem:open-descent}
+    Fix everything as above. If $f'$ is an open embedding, then $f$ is also an open embedding.
+\end{lemma}
+\begin{proof}
+    We follow \cite{emerton-descent}. To begin, note that the surjectivity of $p$ and $p'$ implies that
+    \[f'(X')=p^{-1}(p(f'(X')))=p^{-1}(f(p'(X')))=p^{-1}(f(X)),\]
+    so $p^{-1}(f(X))$ is open in $S'$, so $f(X)$ is open in $S$ by \Cref{lem:fpqc-quotient-top}. It remains to show that $X$ is an isomorphism onto $U\coloneqq f(X)$. Well, setting $U'\coloneqq f'(X')$, we note that $f\colon X\to U$ base-changes to the isomorphism $f'\colon X'\to U'$, so \Cref{lem:iso-descent} finishes.
+\end{proof}
+\begin{lemma} \label{lem:unramified-descent}
+    Fix everything as above. Suppose that $f$ is locally of finite presentation. If $f'$ is unramified, then $f$ is also unramified.
+\end{lemma}
+\begin{proof}
+    To set us up, we quickly acknowledge that an affine morphism $f\colon X\to S$ is separated and therefore has closed and hence affine diagonal $\Delta_f\colon X\to X\times_SX$. The point is that we will be able to use the above descent results on the diagonal $\Delta_f$.
+
+    Now, by definition, $f$ is unramified if and only if the diagonal $\Delta_f\colon X\to X\times_SX$ is an open embedding. However, base-changing by $p\colon S'\to S$, we know that $f'$ is unramified, so $\Delta_{f'}\colon X\to X\times_SX$ is an open embedding, so \Cref{lem:open-descent} tells us that $\Delta_f\colon X\to X\times_SX$ is an open embedding.
+\end{proof}
+\begin{proposition}
+    Fix everything as above. If $f'$ is finite \'etale, then $f$ is also finite \'etale.
+\end{proposition}
+\begin{proof}
+    We know that $f'$ is finite, flat, and unramified, so $f$ also inherits these properties by combining \Cref{lem:finite-descent,lem:flat-descent,lem:unramified-descent}. This finishes.
+\end{proof}
+
+\subsection{The Main Theorem}
+\begin{theorem} \label{thm:etale-cover-galois}
+    Fix a connected scheme $X$ and a geometric point $\overline x$ of $X$. Then the category $\mathrm{F\acute Et}(X)$ equipped with the functor $F\colon\mathrm{F\acute Et}(X)\to\mathrm{FinSet}$ by
+    \[FU\coloneqq U_{\overline x}\]
+    forms a Galois category.
+\end{theorem}
+
+\section{Examples}
+We close this paper with a few example computations, for fun.
+\begin{proposition}
+    Let $R$ be a finite ring for which $X\coloneqq\Spec R$ is connected. Then $R$ is a local ring, and $\pi_1(\Spec R)=\pi_1(\Spec k)\cong\widehat\ZZ$ where $k$ is the residue field.
+\end{proposition}
+\begin{proof}
+    We first show that $R$ is a local ring. Because $R$ is finite, we note that $\dim R=0$: for any prime $\mf p\in\Spec R$, we note that $\overline{\{\mf p\}}=V(\mf p)=\Spec R/\mf p$ is $\{\mf p\}$ because $R/\mf p$ is a finite integral domain and hence a field. Thus, because $\Spec R$ is connected, we see that it has one point.
+\end{proof}
+
+\subsection{A Little on Isogenies}
+Building off of the development of isogenies in my fall term paper \cite[Section~2.3]{elber-av}, we need the following facts. Our discussion follows \cite{egm-av}.
+% \begin{lemma} \label{lem:isogeny-by-adjs}
+% 	A homomorphism $\varphi\colon A\to B$ of abelian $k$-varieties is an isogeny if and only if it is faithfully flat and finite.
+% \end{lemma}
+% \begin{proof}
+% 	In one direction, suppose $\varphi$ is faithfully flat and finite. Then $\varphi$ is surjective (because faithfully flat) and hence dominant. Further, $\ker\varphi$ is finite because $\varphi$ is quasifinite (because finite).
+% 	In the other direction, suppose $\varphi$ is an isogeny. It has finite kernel by definition and so is quasifinite because all fibers are isomorphic to the kernel by the group law; see \cite[Remark~2.23]{elber-av}. Further, $\varphi$ is proper because $A$ and $B$ are, so it follows that $\varphi$ is finite. Continuing, $\varphi$ is dominant by definition, so because $\varphi$ is proper, it has closed image, so $\varphi(A)=B$ follows. Lastly, to check that $\varphi$ is flat, we note that all fibers are finite and hence have dimension $0$, from which we finish by ``miracle flatness'' \cite[Exercise~III.10.9]{hartshorne} because $A$ and $B$ are smooth $k$-varieties.
+% \end{proof}
+\begin{lemma} \label{lem:cancel-isos}
+	Fix isogenies $\alpha\colon A\to B$ and $\gamma\colon C\to D$ of abelian $k$-varieties. If homomorphisms $\beta_1,\beta_2\colon B\to C$ have $\gamma\circ\beta_1\circ\alpha=\gamma\circ\beta_2\circ\alpha$, then $\beta_1=\beta_2$.
+\end{lemma}
+\begin{proof}
+	After distributing appropriately, we are given that $\gamma\circ(\beta_1-\beta_2)\circ\alpha=0$. We now show that $\beta_1-\beta_2$ in two steps.
+	\begin{enumerate}
+		\item We argue that $\gamma\circ(\beta_1-\beta_2)=0$ directly. For brevity, set $\gamma_1\coloneqq\gamma\circ\beta_1$ and $\gamma_2\coloneqq\gamma\circ\beta_2$ so that $\gamma_1\circ\alpha=\gamma_2\circ\alpha$. Using \cite[Exercise~11.4.A]{rising-sea}, one has a closed subscheme $\iota\colon A'\into A$ given by $A'=\op{eq}(\gamma_1,\gamma_2)$. However, $\alpha$ is dominant and factors through $A'$, so $A'$ must be dense in $A$, so $A'=A$ follows because $A$ is reduced. In particular, $\gamma_1=\gamma_2$ is forced.
+		\item It remains to show that $\gamma\circ\beta_1=\gamma\circ\beta_2$ implies $\beta_1=\beta_2$. Well, $\gamma\circ(\beta_1-\beta_2)=0$, so $\beta_1-\beta_2$ must factor through the fiber $\gamma^{-1}(0_D)=\ker\gamma$. However, $B$ is connected, so $\beta_1-\beta_2$ must send it to a connected scheme, so $\ker\gamma$ being connected implies that $\beta_1-\beta_2$ maps $B$ to $\{0_C\}$. Lastly, $B$ is reduced, so its image will be a reduced closed subscheme of $\{0_C\}$, meaning that $\beta_1-\beta_2=0$ on the nose.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{proposition} \label{prop:iso-reflect}
+	Fix an isogeny $\varphi\colon A\to B$ of abelian $k$-varieties, and set $d\coloneqq\deg\varphi$. Then there exists an isogeny $\psi\colon B\to A$ of degree $d$ such that $\varphi\circ\psi=[d]_B$ and $\psi\circ\varphi=[d]_A$.
+\end{proposition}
+\begin{proof}
+	This proof requires the notion of fppf quotients, which we will not introduce here; as such, we will be quite sketchy. One can check that the isogeny $\varphi\colon A\to B$ identifies $B$ with the fppf quotient $A/\ker\varphi$. Further, one can show that $\ker\varphi$ is annihilated by $[d]_A$ (there is a difficulty here because $\varphi$ need not be separable---see \cite[Exercise~4.4]{egm-av}), so $[d]_A$ will factor through $\varphi$ as
+	\[A\stackrel\varphi\to B\stackrel\psi\to A.\]
+	So we have achieved $\psi\circ\varphi=[d]_A$. Further, we see
+	\[\varphi\circ\psi\circ\varphi=\varphi\circ[d]_A=[d]_B\circ\varphi,\]
+	so $\varphi\circ\psi=[d]_B$ follows from \Cref{lem:cancel-isos}.
+\end{proof}
+\begin{corollary}
+	Isogenies form an equivalence relation on abelian varieties.
+\end{corollary}
+\begin{proof}
+	The identity shows that an abelian variety is isogenous to itself. \Cref{prop:iso-reflect} tells us that the relation is reflexive. Lastly, the composition of isogenies is an isogeny because it is enough to check that the composition of dominant maps is dominant and that the dimensions are all equal.
+\end{proof}
+The point of all this discussion is to motivate defining
+\[\op{End}^0(A)\coloneqq\op{End}(A)\otimes_\ZZ\QQ,\]
+which is a $\QQ$-vector space of dimension at most
+
 \printbibliography[title={References}]
 
 \end{document}

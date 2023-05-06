@@ -1,0 +1,522 @@
+\documentclass{amsart}
+\usepackage[utf8]{inputenc}
+
+\newcommand{\nirpdftitle}{256B Term Paper}
+\usepackage{import}
+\inputfrom{.}{pre}
+\usepackage[backend=biber,
+    style=alphabetic,
+    sorting=ynt
+]{biblatex}
+\addbibresource{../bib.bib}
+\addtolength{\headheight}{12.0pt}
+
+\pagestyle{contentpage}
+
+\title{Rationality for Abelian Varieties over Finite Fields}
+\author{Nir Elber}
+\date{5 May 2023}
+\lhead{} \chead{} \rhead{\textit{ABELIAN VARIETIES}}
+
+\begin{document}
+
+% \begin{abstract}
+% 	\noindent We introduce the basics of modular forms in order to state and prove Hecke's converse theorem \cite{hecke-converse}. Throughout, we will give commentary at a high level, but all proofs will assume little background beyond complex analysis and Fourier analysis.
+% \end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\section{Introduction}
+The goal of this paper is to prove the rationality piece of the Weil conjectures for abelian varieties. As such, we begin by stating the Weil conjectures \cite{weil-conj}; our exposition here borrows from \cite{raskin-weil-conj}. Let $X$ be a projective variety over a finite field $k\coloneqq\FF_q$. The main character of the Weil conjectures is the following zeta function.
+\begin{definition}[$Z$-function]
+	Let $X$ be a projective variety over a finite field $k\coloneqq\FF_q$. Then we define the $Z$-function as a formal power series
+	\begin{equation}
+		Z(X,t)\coloneqq\exp\Bigg(\sum_{m=1}^\infty\#X\left(\FF_{q^m}\right)\frac{t^m}m\Bigg)\in\QQ\bb{t}. \label{eq:zeta-via-exp}
+	\end{equation}
+\end{definition}
+\begin{remark}
+	In analogy with the Riemann $\zeta$-function
+	\[\zeta(s)=\prod_{p\text{ prime}}\frac1{1-p^{-s}}=\prod_{\text{closed }\mf p\in\Spec\ZZ}\frac1{1-\#k(\mf p)^{-s}},\]
+	one can show that
+	\[Z\left(X,q^{-s}\right)=\prod_{\text{closed }x\in X}\frac1{1-\#k(x)^{-s}}.\]
+	The proof is not hard, but we will not need this, so we will not show it here; see \cite[Proposition~1.5]{raskin-weil-conj}.
+\end{remark}
+% However, $x\in X$ will have $k(x)$ a finite extension of $\FF_q$, so it is perhaps cleaner to write
+% \[\zeta(X,s)=\prod_{\text{closed }x\in X}\frac1{1-q^{-s\deg x}},\]
+% where we recall $\deg x\coloneqq[k(x):\FF_q]$, so we define the formal power series
+% \[Z(X,t)\coloneqq\prod_{\text{closed }x\in X}\frac1{1-t^{\deg x}}\]
+% by setting $t\coloneqq q^{-s}$. This formal power series will converge because there are only To see how this relates to point-counting, we compute
+% \begin{align*}
+% 	t\cdot\frac d{dt}\log Z(X,t) &= \sum_{\text{closed }x\in X}-t\cdot\frac d{dt}\log\left(1-t^{\deg x}\right) \\
+% 	&= \sum_{\text{closed }x\in X}\frac{t^{\deg x}}{1-t^{\deg x}} \\
+% 	&= \sum_{\text{closed }x\in X}\Bigg(\sum_{d=1}^\infty t^{d\deg x}\Bigg) \\
+% 	&= \sum_{m=1}^\infty\#\{\text{closed }x\in X:\deg x\mid m\}t^m \\
+% 	&= \sum_{m=1}^\infty\#X\left(\FF_{q^m}\right)t^m.
+% \end{align*}
+% In particular, we see
+% \begin{equation}
+	
+% \end{equation}
+% as a formal power series.
+% Now, the Weil conjectures concerns these formal power series $Z(X,t)$.
+Roughly speaking, $Z(X,t)$ is a gadget which stores information about the number of $\FF_{q^m}$-points in $X$; the Weil conjectures establish strong properties of $Z(X,t)$ and hence on these point-counts.
+\begin{theorem} \label{thm:weil}
+	Let $X$ be a projective variety over a finite field $k\coloneqq\FF_q$ of dimension $d$.
+	\begin{enumerate}
+		\item Rationality: $Z(X,t)$ can be written as
+		\[Z(X,t)=\frac{P_1(t)P_3(t)\cdots P_{2d-1}(t)}{P_0(t)P_1(t)\cdots P_{2d}(t)},\]
+		where $P_i\in\ZZ[t]$ is a polynomial.
+		\item Functional equation: we have
+		\[Z\left(X,q^{-d}t^{-1}\right)=\pm q^{de/2}t^eZ(X,t)\]
+		as formal power series, where $e$ is the Euler characteristic of $X$.
+		\item Riemann hypothesis: the roots of the polynomial $P_i$ have magnitude $q^{-i/2}$, for each $i$. Further, $P_0(t)=1-t$ and $P_{2d}(t)=1-q^dt$.
+	\end{enumerate}
+\end{theorem}
+We will not get close to fully proving \Cref{thm:weil}. Instead, the main goal of this paper is to prove rationality for abelian varieties.
+\begin{restatable}[Rationality]{theorem}{ratforabvar} \label{thm:rationality}
+	Let $A$ be an abelian variety over a finite field $\FF_q$ of dimension $d$. Then one has
+	\[Z(A,t)=\frac{P_1(t)P_3(t)\cdots P_{2d-1}(t)}{P_0(t)P_2(t)\cdots P_{2d}(t)}\]
+	where each $P_j(t)$ is a polynomial with integer coefficients, depending on the eigenvalues of the Frobenius $\pi_A\colon A\to A$.
+\end{restatable}
+The Frobenius morphism $\pi_A\colon A\to A$ of an abelian variety over a finite field will be defined in \Cref{def:frob}, and its eigenvalues are its eigenvalues as an operator on $V_\ell A$ for (any) prime $\ell$ coprime to $q$.
+
+\subsection{Layout}
+In \cref{sec:char-poly}, we define and prove basic properties about the characteristic polynomial of an endomorphism of an abelian variety. Most notable is that this characteristic polynomial agrees no matter which Tate module one chooses, which is shown in \Cref{prop:char-poly-correct}. Then we use this built theory to prove \Cref{thm:rationality} in \cref{sec:rat}; the main input here is an understanding of how the Frobenius morphism enables point-counting, shown in \Cref{prop:frob-counts-points}.
+
+Throughout, we use elliptic curves as our examples, and we dedicate \cref{sec:ec} to them. Most notably, we are able to complete the proof of the Weil conjectures in this case in \Cref{thm:rh,thm:fe}, and we go on to use this machinery to actually count points in \cref{subsec:count}.
+
+\subsection{Notation}
+Throughout, $k$ is a field. We let $\op{Hom}_k(A,B)$ denote the set of homomorphisms of abelian $k$-varieties $A\to B$, and set $\op{End}_k(A)\coloneqq\op{Hom}_k(A,A)$ and $\op{End}^0_k(A)\coloneqq\op{End}_k(A)\otimes_\ZZ\QQ$; notably, $\op{End}_k(A)$ is a free $\ZZ$-module of finite rank by \cite[Corollary~3.6]{elber-av}. We repress the subscript $k$ when no confusion will arise.
+
+For this paper, particularly relevant are the characteristic polynomial of an endomorphism $\varphi$ which will be denoted $P_\varphi$ and the Frobenius endomorphism of an abelian variety $A$ over a finite field which will be denoted $\pi_A$.
+\begin{remark}
+	Throughout this paper, we freely assume any theory about abelian varieties as established in \cite{elber-av}.
+\end{remark}
+
+\section{The Characteristic Polynomial} \label{sec:char-poly}
+In this section, we define the characteristic polynomial and establish its basic facts. Our exposition closely follows \cite[Section~I.10]{milne-av}. Throughout, $A$ is an abelian $k$-variety, and $\varphi\colon A\to A$ is an endomorphism. We also take a moment to establish the following example \cite[Example~2.1]{elber-av} which will pop up a few times throughout the paper.
+\begin{example} \label{ex:ec}
+	Let $k$ be a field with $\op{char}k\ne3$. Then $E\coloneqq\Proj k[X,Y,Z]/\left(Y^2Z-X^3-Z^3\right)$ is an elliptic curve. Indeed, this is the elliptic curve cut out in the plane by $y^2=x^3+1$, which we see does make an elliptic curve because it is smooth: the discriminant here is $3^3$, which is not $0$ because $\op{char}k\ne3$.
+\end{example}
+
+\subsection{The Definition}
+It will be beneficial for us to understand the characteristic polynomial of an endomorphism $\varphi\colon A\to A$. For any prime $\ell$ not divisible by $\op{char}k$, the endomorphism $\varphi$ induces a map $V_\ell\varphi\colon V_\ell A\to V_\ell A$, so it is tempting to define the characteristic polynomial as arising from these representations as
+\[P_\varphi(r)\stackrel?=\det(\varphi-r\mid V_\ell A).\]
+However, it is not clear that this definition is independent of $\ell$, or even that it has rational coefficients. We will be able to show these things, but not yet.
+
+For our definition, we would like to define the characteristic polynomial based on data internal to $\varphi$. As motivation, we have the following remark.
+\begin{remark}
+	For motivation, suppose our abelian variety is $A=\CC^d/\Lambda$ for some lattice $\Lambda$. Then we want the characteristic polynomial of $\varphi$ to arise from its action on $H_1(A,\QQ)\cong\Lambda\otimes_\ZZ\QQ$, which is the characteristic-$0$ analogue of $V_\ell A$. We're in characteristic $0$, so there are no separability concerns so, we can compute that we want
+	\[\left|P_\varphi(n)\right|=\left|\det(\varphi-[n]\mid H_1(A,\QQ))\right|\stackrel*=\#\left(\frac{\Lambda}{(\varphi-[n])\Lambda}\right)=\#\left(\frac{(\varphi-n)^{-1}\Lambda}{\Lambda}\right)=\#\ker(\varphi-[n])=\deg(\varphi-[n])\]
+	whenever $\varphi\ne [n]$. Here, $\stackrel*=$ is a general fact about lattices which follows from row-reducing the vector-space isomorphism $(\varphi-[n])\colon(\Lambda\otimes_\ZZ\QQ)\to(\Lambda\otimes_\ZZ\QQ)$.
+\end{remark}
+The point is that we will want to define $P_\varphi([n])$ as $\deg(\varphi-[n])$ for all integers $n$; notably, we can amend the situation of $\varphi=n$ by simply defining $\deg\varphi\coloneqq0$ when $\varphi$ fails to be an isogeny. However, from this definition, it is now not obvious that there exists a polynomial $P_\varphi$ which will interpolate the function $n\mapsto\deg(\varphi-[n])$, so this is our next task. For clarity, we will work in slight generality for the following results.
+\begin{lemma} \label{lem:almost-char-poly}
+	Fix an abelian $k$-variety $A$. For any endomorphisms $\alpha,\beta\in\op{End}(A)$, the function $n\mapsto\deg(n\alpha+\beta)$ can be interpolated by a unique polynomial $P_{\alpha,\beta}$ with rational coefficients and degree at most $2\dim A$. If $\alpha$ is an isogeny, then $P_{\alpha,\beta}$ has degree $2\dim A$ and leading coefficient $\deg\alpha$.
+\end{lemma}
+\begin{proof}
+	The uniqueness of $P_{\alpha,\beta}$ holds because $\ZZ$ is an infinite set: namely, any two polynomials interpolating the given points will have a difference equal to a polynomial with infinite roots, so the difference will vanish. As such, the concern is existence. Anyway, the main content of the proof requires intersection theory, which we will not bother to properly introduce here. For brevity, set $d\coloneqq\dim A$.
+	
+	Fix some symmetric very ample divisor $D$ on $A$; for brevity, set $D_n\coloneqq(n\alpha+\beta)^*D$. Flat pullback of the intersection product yields
+	\[\deg(n\alpha+\beta)\cdot\underbrace{(D,\ldots,D)}_{d}=\underbrace{(D_n,\ldots,D_n)}_d,\]
+	so we would like to know that $n\mapsto(D_n,\ldots,D_n)$ can be interpolated by a polynomial in $n$. Well, to compute $D_n$, we note that \cite[Corollary~2.13]{elber-av} implies
+	\[(n\alpha+\beta+\alpha+\alpha)^*D+(n\alpha+\beta)^*D+\alpha^*D+\alpha^*D=(n\alpha+\beta+\alpha)^*D+(n\alpha+\beta+\alpha)^*D+(2\alpha)^*D,\]
+	so
+	\[D_{n+2}-2D_{n+1}+D_n=-2\alpha^*D+(2\alpha)^*D.\]
+	Because $D$ is symmetric, \cite[Corollary~2.14]{elber-av} implies $-2\alpha^*D+(2\alpha)^*D=2\alpha^*D$. Now, we claim that
+	\begin{equation}
+		D_n\stackrel?=n(n-1)\alpha^*D+nD_1-(n-1)D_0 \label{eq:compute-dn}
+	\end{equation}
+	for any $n\in\ZZ$. Indeed, we set $E_n\coloneqq D_n-n(n-1)\alpha^*D-nD_1+(n-1)D_0$ so that one can compute
+	\[E_{n+2}-2E_{n+1}+E_n=0.\]
+	% \begin{align*}
+	% 	E_{n+2}-2E_{n+1}+E_n &= D_{n+2}-2D_{n+1}+D_n \\
+	% 	&\qquad-((n+2)(n+1)-2(n+1)n+n(n-1))\alpha^*D \\
+	% 	&\qquad-((n+2)-2(n+1)+n)D_1 \\
+	% 	&\qquad+((n+1)-2n+(n-1))D_0 \\
+	% 	&= 2\alpha^*D-2\alpha^*D-0+0 \\
+	% 	&= 0.
+	% \end{align*}
+	Thus, computing $E_0=0$ and $E_1=0$, we see that $E_n=0$ for all $n\in\ZZ$, from which \eqref{eq:compute-dn} follows.
+
+	We are now essentially done. Expanding $(D_n,\ldots,D_n)$ linearly shows that $n\mapsto(D_n,\ldots,D_n)$ is interpolated by a monic polynomial of degree $2d$, where the leading term is given by
+	\[\frac{(n(n-1)\alpha^*D,\ldots,n(n-1)\alpha^*D)}{(D,\ldots,D)}=n(n-1)^d\cdot\frac{(\alpha^*D,\ldots,\alpha^*D)}{(d,\ldots,D)}=(n(n-1))^d\deg\alpha,\]
+	as predicted.
+\end{proof}
+Before turning to look at characteristic polynomials, it will be helpful to work directly with $\deg$. Quickly, recall that $\deg\varphi=0$ if $\varphi\in\op{End}(A)$ fails to be an isogeny. We note that
+\[\deg(n\varphi)=\deg([n])\deg\varphi=n^{2\dim A}\deg\varphi,\]
+so we may define $\deg(q\varphi)=q^{2\dim A}\deg\varphi$ for any $q\varphi\in\op{End}^0(A)$.
+\begin{proposition} \label{prop:get-char-poly}
+	Fix an abelian $k$-variety $A$. For $\alpha,\beta\in\op{End}^0(A)$, there is a unique polynomial $P_{\alpha,\beta}\in\QQ[t]$ of degree at most $2\dim A$ such that
+	\[P_{\alpha,\beta}(q)=\deg(q\alpha+\beta).\]
+	Further, if $\alpha$ is an isogeny, then $P_{\alpha,\beta}$ has degree $2\dim A$ and leading coefficient $\deg\alpha$.
+\end{proposition}
+\begin{proof}
+	The proof of uniqueness is the same as \Cref{lem:almost-char-poly}, so the concern is existence. For brevity, set $d\coloneqq\dim A$.
+
+	To begin $\alpha,\beta\in\op{End}^0(A)$ has some $N$ such that $N\alpha,N\beta\in\op{End}^0(A)$, so \Cref{lem:almost-char-poly} produces us a polynomial $P_{N\alpha,N\beta}$ interpolating $n\mapsto\deg(nN\alpha+N\beta)$. We claim that the needed polynomial is $N^{-2d}P_{N\alpha,N\beta}$. Well, for any $\frac rs\in\QQ$ with $r,s\in\ZZ$, we would like to compute $N^{-2d}P_{N\alpha,N\beta}(r/s)$. For this, we note that
+	\[s^{-2d}P_{N\alpha,Ns\beta}(sn)=s^{-2d}\deg(nNs\alpha+Ns\beta)=\deg(nN\alpha+N\beta)=P_{N\alpha,N\beta}(n)\]
+	for any $n\in\ZZ$, by construction and the degree of $[s]$, so it follows that $s^{-2d}P_{N\alpha,Ns\beta}(st)=P_{N\alpha,N\beta}(t)$ as polynomials. In particular, plugging in $x=r/s$, we see that
+	\[N^{-2d}P_{N\alpha,N\beta}(r/s)=N^{-2d}s^{-2d}P_{N\alpha,Ns\beta}(r)=N^{-2d}s^{-2d}\deg(rN\alpha+Ns\beta)=\deg\left(\frac rs\alpha+\beta\right),\]
+	where the last equality is by how $\deg$ is defined on $\op{End}^0(A)$. This is what we wanted.
+\end{proof}
+At long last, here is our definition.
+\begin{definition}[characteristic polynomial]
+	Fix an abelian $k$-variety. For any endomorphism $\varphi\in\op{End}^0(A)$, we let $P_\varphi(x)\in\QQ[t]$ be the unique monic polynomial of degree $2\dim A$ interpolating $P_\varphi(q)=\deg(\varphi-q[1])$. This polynomial exists and is unique by \Cref{prop:get-char-poly}.
+\end{definition}
+\begin{remark}
+	We have not shown that $P_\varphi$ has integer coefficients in the case when $\varphi\in\op{End}(A)$. This is in fact true, but it is not obvious from the argument we gave above; namely, \Cref{lem:almost-char-poly} will only tell us that the polynomial has bounded denominator. Nonetheless, we will be able to show that $P_\varphi$ has integer coefficients much later in \Cref{cor:char-poly-coeffs-int}.
+\end{remark}
+\begin{example}
+	Fix an abelian $k$-variety. Setting $\varphi\coloneqq[r]$ for some $r\in\ZZ$, we see
+	\[P_{[r]}(n)=\deg([r]-[n])=\deg([r-n])=(r-n)^{2\dim A},\]
+	so $P_{[r]}(t)=(t-r)^{2\dim A}$, which does indeed have the required properties.
+\end{example}
+\begin{example} \label{ex:ec-use-nontrivial-aut}
+	Work in the context of \Cref{ex:ec}, and suppose $\op{char}k=0$, and suppose $\zeta_3\in k$. Define $\varphi\colon E\to E$ by $\varphi([X:Y:Z])\coloneqq\left[\zeta_3X:Y:Z\right]$, which is a scheme morphism fixing $0_E=[0:1:0]$ and thus an endomorphism. \Cref{lem:almost-char-poly} implies that $n\mapsto\deg(\varphi-[n])$ can be interpolated by our monic quadratic polynomial $P_\varphi$.
+	\begin{itemize}
+		\item Because $\varphi$ is an automorphism ($\varphi^3$ is the identity), $P_\varphi(0)=\deg\varphi=1$.
+		\item Because everything possible is separable, $P_\varphi(1)=\deg(\varphi-[1])$ is $\#\ker(\varphi-[1])(\overline k)$, so we want to count $[X:Y:Z]\in E(\CC)$ such that $\varphi([X:Y:Z])=[X:Y:Z]$. This is equivalent to $X=0$, so we have either $[0:1:0]$ or $[0:\pm1:1]$, so $P_\varphi(1)=3$ follows.
+	\end{itemize}
+	Interpolating the above points, we conclude $P_\varphi(x)=x^2+x+1$. This is indeed monic with integer coefficients.
+\end{example}
+% \begin{remark}
+% 	With a little more work, one can show that ${\deg}\colon\op{End}^0(A)\to\QQ$ itself defines a ``homogeneous polynomial function of degree $2\dim A$,'' suitably stated. We will not need this in the sequel, so we will not bother.
+% \end{remark}
+
+\subsection{Degree Is Polynomial}
+Because it is not so much more work, we might as well upgrade \Cref{prop:get-char-poly} to show that $\deg\colon\op{End}^0(A)\to\QQ$ is essentially a polynomial. One must be a little careful with this, so here is our definition.
+\begin{definition}[polynomial function]
+	Fix a $k$-vector space $V$. A map $f\colon V\to k$ is a \textit{polynomial} if and only if, for any linearly independent set of vectors $\{v_1,\ldots,v_n\}\subseteq V$, there exists a polynomial $P\in k[x_1,\ldots,x_n]$ such that
+	\[f(c_1v_1+\cdots+c_nv_n)=P(c_1,\ldots,c_n)\]
+	for any scalars $c_1,\ldots,c_n\in k$. If $P$ has some property (such as being homogeneous, having bounded total degree, or bounded degree in any variable), we apply the same descriptor to $f$.
+\end{definition}
+Here is a quick way to check that we have a polynomial function.
+\begin{lemma} \label{lem:get-poly-func}
+	Fix a vector space $V$ over an infinite field $k$. Given a function $f\colon V\to k$, suppose there exists a nonnegative integer $d$ such that $c\mapsto f(cv+w)$ is a polynomial function $k\to k$ of degree at most $d$, for any $v,w\in V$. Then $f$ is a polynomial function of degree at most $d$ in any variable.
+\end{lemma}
+\begin{proof}
+	By inducting on $n$, we claim that any finite set $\{v_1,\ldots,v_n,w\}$ makes the function
+	\[(x_1,\ldots,x_n)\mapsto f(x_1v_1+\cdots+x_nv_n+w)\]
+	a polynomial function of degree at most $d$ in any variable. At $n=0$, this is a constant function, so there is nothing to say. For the inductive step, we view $(x_1,\ldots,x_{n+1})\mapsto f(x_1v_1+\cdots+x_nv_n+x_{n+1}v_{n+1}+w)$ as a function in $x_{n+1}$ so that the hypothesis implies that it is a polynomial function
+	\[f(x_1v_1+\cdots+x_nv_n+x_{n+1}v_{n+1}+w)=\sum_{i=0}^da_i(x_0,\ldots,x_n)x_{n+1}^i\]
+	of degree at most $d$, where the coefficients $a_i$ are just some function $k^n\to k$.
+	
+	It remains to show that the coefficients $a_i(x_0,\ldots,x_n)$ are themselves polynomials of degree at most $d$ in any variable. Well, choose $n+1$ distinct scalars $c_0,\ldots,c_{n+1}\in k$ to yield the equations
+	\[f(x_1v_1+\cdots+x_nv_n+c_jv_{n+1}+w)=\sum_{i=0}^da_i(x_0,\ldots,x_n)x_j^i\]
+	for any $c_j$. We may now use Cram\'er's rule in order to solve for the coefficients $a_i(x_0,\ldots,x_n)$ in terms of the polynomial functions $(x_1,\ldots,x_n)\mapsto f(x_1v_1+\cdots+x_nc_n+c_jv_{n+1}+w)$; note that this application of Cram\'er's rule is legitimate because the matrix $\big\{c_j^i\big\}_{0\le i,j\le d}$ has nonzero determinant by the Vandermonde determinant---here we have used that the $c_j$ are distinct. Thus, the $a_i(x_0,\ldots,x_n)$ are (linear combinations of) polynomials of degree at most $d$ in any variable, so the result follows.
+\end{proof}
+Thus, \Cref{prop:get-char-poly} immediately produces the following result.
+\begin{proposition} \label{prop:deg-is-poly}
+	Fix an abelian $k$-variety $A$. Then $\deg\colon\op{End}^0(A)\to\QQ$ is a homogeneous polynomial function of degree $2\dim A$.
+\end{proposition}
+\begin{proof}
+	We have a polynomial function by combining \Cref{lem:get-poly-func} with \Cref{prop:get-char-poly}. Thus, fixing a basis $\{\varphi_0,\ldots,\varphi_n\}$ of $\op{End}^0(A)$, we get a polynomial $P\in\QQ[x_1,\ldots,x_n]$ such that
+	\[\deg(c_1\varphi_1+\cdots+c_n\varphi_n)=P(c_1,\ldots,c_n).\]
+	Because $\QQ$ is an infinite field, this polynomial $P$ is unique: indeed, if $P$ and $Q$ are polynomials both satisfying the above, then $P-Q$ vanishes on $\QQ^n$, so it must vanish. For example, for fixed $(c_1,\ldots,c_{n-1})\in\QQ^{n-1}$, the function $P(c_1,\ldots,c_{n-1},x)-Q(c_1,\ldots,c_{n-1},x)$ is a polynomial with infinite roots and thus must vanish; this allows us to induct downwards to achieve $P=Q$.
+
+	We must still show that $P$ is a homogeneous polynomial of degree $2d\coloneqq2\dim A$. In other words, we would like to show that $P(\lambda x_1,\ldots,\lambda x_n)=\lambda^{2d}P(x_1,\ldots,x_n)$ for any $\lambda\in\QQ$. For $\lambda=0$, there is nothing to say. Otherwise, we note that
+	\[\lambda^{-2d}P(\lambda c_1,\ldots,\lambda c_n)=\lambda^{-2d}\deg(\lambda c_1\varphi_1+\cdots+\lambda c_n\varphi_n)=\deg(c_1\varphi_1+\cdots+c_n\varphi_n)=P(c_1,\ldots,c_n)\]
+	for any $(c_1,\ldots,c_n)\in\QQ^n$. The uniqueness of the polynomial $P$ establishes the conclusion.
+\end{proof}
+
+\subsection{Coherence with Tate Modules}
+We advertized at the start that $P_\varphi$ that should be the characteristic polynomial of $\varphi$ acting on the $\QQ_\ell$-vector space $V_\ell A$. In this subsection, we show this, but we warn that the argument is somewhat technical. The following lemma explains how we will show that our two polynomials are the same.
+\begin{lemma} \label{lem:get-poly-eq}
+	Fix monic polynomials $P,Q\in\QQ_\ell[t]$ of the same degree, and factor them as $\overline{\QQ_\ell}[t]$ as $P(t)=\prod_{i=1}^N(t-\alpha_i)$ and $Q(t)=\prod_{i=1}^N(t-\beta_i)$. If
+	\[\left|\prod_{i=1}^NF(\alpha_i)\right|_\ell=\left|\prod_{i=1}^NF(\beta_i)\right|_\ell\]
+	for any $F\in\ZZ[t]$, then $P=Q$.
+\end{lemma}
+\begin{proof}
+	We make two quick reductions.
+	\begin{itemize}
+		\item We may actually choose any $F\in\QQ[t]$. Indeed, by clearing denominators, we may find $d\in\ZZ$ so that $(dF)\in\ZZ[t]$, from which we calculate
+		\[\left|\prod_{i=1}^NF(\alpha_i)\right|_\ell=|d|_\ell^{-N}\left|\prod_{i=1}^N(dF)(\alpha_i)\right|_\ell=|d|_\ell^{-N}\left|\prod_{i=1}^N(dF)(\beta_i)\right|_\ell=\left|\prod_{i=1}^NF(\beta_i)\right|_\ell.\]
+		\item Continuity allows us to choose $F\in\QQ_\ell[t]$. Notably, the function $\QQ_\ell^n\to\RR$ defined by
+		\[(c_1,\ldots,c_n)\mapsto\left|\prod_{i=1}^N\Bigg(\sum_{j=0}^nc_j\alpha_i^j\Bigg)\right|_\ell-\left|\prod_{i=1}^N\Bigg(\sum_{j=0}^nc_j\alpha_i^j\Bigg)\right|_\ell\]
+		is continuous and vanishes on the dense subset $\QQ^n\subseteq\QQ_\ell^n$, so it will vanish on all of $\QQ_\ell^n$.
+	\end{itemize}
+	Fix some $\gamma\in\overline{\QQ_\ell}$, and let $d$ and $e$ be the order of vanishing of $P$ and $Q$ at $\gamma$, respectively. Because $P$ and $Q$ are monic and have the same degree, it is enough to show that $d=e$ as $\gamma$ ranges over $\overline{\QQ_\ell}$.
+
+	The idea, now, is to let $F$ be the monic minimal polynomial for some $\gamma'\in\QQ_\ell(\gamma)$ which is ``close'' to $\gamma$; notably, $\QQ_\ell(\gamma)$ is a finite extension of $\QQ_\ell$ and thus complete. To use the hypothesis efficiently, we let $H\subseteq\op{Gal}(\overline{\QQ_\ell}/\QQ_\ell)$ denote a subset such that $\{\sigma(\gamma):\sigma\in H\}$ is the set of Galois conjugates of $\gamma$. Thus, we compute
+	\[\left|\prod_{i=1}^NF(\alpha_i)\right|=\left|\prod_{i=1}^N\Bigg(\prod_{\sigma\in H}(\alpha_i-\sigma(\gamma'))\Bigg)\right|_\ell=\prod_{\sigma\in H}\prod_{i=1}^N\left|\alpha_i-\sigma(\gamma')\right|.\]
+	Now, $P$ has coefficients in $\QQ_\ell$, so $\sigma P=P$ for any $\sigma\in H$, so $\sigma$ merely permutes the roots $\alpha_i$. As such, we find
+	\[\left|\prod_{i=1}^NF(\alpha_i)\right|=\prod_{\sigma\in H}\Bigg(\prod_{i=1}^N\left|\sigma(\alpha_i)-\sigma(\gamma')\right|_\ell\Bigg)=\prod_{\sigma\in H}\Bigg(\prod_{i=1}^N\left|\alpha_i-\gamma'\right|_\ell\Bigg),\]
+	where the last equality holds because automorphisms $\sigma$ do not adjust $\left|\cdot\right|_\ell$. Taking roots and applying the hypothesis, we conclude
+	\[\prod_{i=1}^N\left|\gamma'-\alpha_i\right|_\ell=\prod_{i=1}^N\left|\gamma'-\beta_i\right|_\ell\]
+	for any $\gamma'\in\QQ_\ell(\gamma)$. Thus, supposing without loss of generality that $d\ge e$, we see
+	\[1=\lim_{\gamma'\to\gamma}\Bigg(\left|\gamma-\gamma'\right|^{d-e}\cdot\prod_{\substack{1\le i\le N\\\alpha_i\ne\gamma}}\left|\alpha_i-\gamma'\right|\cdot\prod_{\substack{1\le i\le N\\\beta_i\ne\gamma}}\left|\beta_i-\gamma'\right|\Bigg),\]
+	so $d=e$ is follows.
+\end{proof}
+The condition in \Cref{lem:get-poly-eq} might look annoying to interface with, but it will come from the following lemma. Most notably, we will plug in $E=\op{End}^0(A)$ and $k=\QQ$ and $d=\deg$ in the sequel.
+\begin{lemma} \label{lem:input-to-get-poly-eq}
+	Let $E$ be a finite-dimensional algebra over an infinite field $k$. Suppose that $d\colon E\to k$ is a polynomial function such that $d(\alpha\beta)=d(\alpha)d(\beta)$ for any $a,b\in E$. Given $\varphi\in E$, suppose $P_\alpha(t)$ is a monic polynomial interpolating $c\mapsto d(\varphi-c)$. Factoring $P_\varphi(t)=\prod_{i=1}^N(t-\alpha_i)$, we have
+	\[d(F(\alpha))=d(c)(-1)^{N\deg F}\prod_{i=1}^NF(\alpha_i)\]
+	for any $F\in K[t]$ with leading coefficient $c$.
+\end{lemma}
+\begin{proof}
+	The point is to extend $k$ to include the roots of $F$ and the roots of $P_\varphi$. Indeed, let $\ell$ be some finite extension of $k$ containing these roots. Then $E_\ell\coloneqq E\otimes_k\ell$ is also a finite-dimensional $\ell$-algebra: letting $\{\gamma_1,\ldots,\gamma_n\}$ denote a basis of $E$ as a $k$-vector space, these elements remain a basis of $E_\ell$ as an $\ell$-vector space. On $E$, there is a polynomial $P\in k[t_1,\ldots,t_n]$ such that
+	\[d(c_1\gamma_1+\cdots+c_n\gamma_n)=P(\gamma_1,\ldots,\gamma_n)\]
+	for any $(c_1,\ldots,c_n)\in k^n$. Thus, we define $d_\ell$ by this same polynomial $P$ to be a polynomial function $E_\ell\to\ell$. We are given that $d(\alpha\beta)=d(\alpha)d(\beta)$ for any $\alpha,\beta\in E$, so we see that
+	\[d_\ell(c_1\gamma_1+\cdots+c_n\gamma_n)d_\ell(d_1\gamma_1+\cdots+d_n\gamma_n)-d_\ell((c_1\gamma_1+\cdots+c_n\gamma_n)(d_1\gamma_1+\cdots+d_n\gamma_n))\]
+	is some large polynomial function $\ell^{2n}\to\ell$ vanishing on $k^{2n}$, so it must vanish as a polynomial (because $k$ is an infinite field), so we retain $d_\ell(\alpha\beta)=d_\ell(\alpha)d_\ell(\beta)$ for any $\alpha,\beta\in E_\ell$.
+
+	The rest of the proof is computation. If $F=0$, there is noting to say; otherwise, factor the polynomial $F$ as $F(t)=c\prod_{j=1}^d(t-\beta_j)$ with $c\ne0$, so we compute
+	\[d(F(\alpha)/c)=d_\ell\Bigg(\prod_{j=1}^d(\alpha-\beta_j)\Bigg)=\prod_{j=1}^dd_\ell(\alpha-\beta_j)=\prod_{j=1}^dP_\varphi(\beta_j)=\prod_{j=1}^d\prod_{i=1}^N(\beta_j-\alpha_i)=(-1)^{dN}\prod_{i=1}^NF(\alpha_i),\]
+	finishing.
+\end{proof}
+And here is our result.
+\begin{proposition} \label{prop:char-poly-correct}
+	Fix an abelian $k$-variety $A$, and fix an endomorphism $\varphi\in\op{End}(A)$. For any prime $\ell$ not divisible by $\op{char}k$, the characteristic polynomial $P_\varphi$ agrees with the characteristic polynomial of $V_\ell\varphi\colon V_\ell A\to V_\ell A$.
+\end{proposition}
+\begin{proof}
+	We have two steps. The main point is to show that
+	\begin{equation}
+		\left|\deg\varphi\right|_\ell=\left|\det V_\ell\varphi\right|_\ell \label{eq:desired-to-give-char-coherence}
+	\end{equation}
+	for any endomorphism $\varphi\in\op{End}(A)$. We proceed in steps.
+	\begin{enumerate}
+		\item If $\varphi$ fails to be an isogeny, then $\deg\varphi=0$ by definition, and we claim $\det V_\ell\varphi=0$ as well. Indeed, note $\ker\varphi$ is an abelian group scheme of positive dimension, and upon taking the connected component $B\subseteq\ker\varphi$ of $0_A\in\ker\varphi$, we see that $B$ is an abelian subvariety of positive dimension. Then $V_\ell B\subseteq V_\ell A$ lives in the kernel of $T_\ell\varphi$ and has positive dimension, so $\det V_\ell\varphi=0$ follows.
+		\item Suppose $\varphi\colon A\to A$ is a purely inseparable isogeny. In this case, we must have $p\coloneqq\op{char}k>0$. Here, $d\coloneqq\deg\varphi$ is the degree of a purely inseparable field extension and hence must be a power of $p$, so $\left|\deg\varphi\right|_\ell=1$ follows.
+		
+		On the other hand, it is a fact that $\ker\varphi$ is a $p$-group. Note that this is not entirely obvious due to inseparability, and we will not show it here, instead referencing to \cite[Exercise~4.4]{egm-av}.\footnote{This fact is used to show that isogenies form a reflexive relation, so it can be considered as ``basic'' as that, though the correct proof requires an understanding of finite group schemes.} The point is that $\varphi$ has no $\ell$-power-torsion, so $\varphi\colon A\left[\ell^\nu\right]\to A\left[\ell^\nu\right]$ is always an isomorphism, so $T_\ell\varphi\colon T_\ell A\to T_\ell A$ is an isomorphism. As such, the determinant of the map $V_\ell[d]$ had better live in $\ZZ_\ell^\times$ (because $V_\ell[d]$ arises from an isomorphism of $\ZZ_\ell$-modules), yielding $\left|\deg V_\ell\varphi\right|_\ell=1$ as well.
+		\item Suppose $\varphi\colon A\to A$ is a separable isogeny. Here, we can compute $\deg\varphi=\#\ker\varphi(\overline k)$, so
+		\[\left|\deg\varphi\right|_\ell=\left|\#(\ker\varphi)(\overline k)\right|_\ell=\frac1{\#(\ker\varphi)(\overline k)(\ell)},\]
+		where $(\ker\varphi)(\overline k)(\ell)$ denotes the Sylow $\ell$-subgroup of $(\ker\varphi)(\overline k)$. However, $(\ker\varphi)(\overline k)(\ell)$ is exactly the $\ell$-power torsion killed by $\varphi$, so it is equal in size to $\coker T_\ell\varphi$ by examining the cokernel of this limit. However, by row-reducing the isomorphism $T_\ell\varphi\colon T_\ell A\to T_\ell A$, we see $[T_\ell A:\im T_\ell\varphi]$ is exactly equal to $\det T_\ell\varphi$
+		\item Because any map $A\to A$ of $k$-varieties can be split into separable and inseparable pieces, and \eqref{eq:desired-to-give-char-coherence} is multiplicative in $\varphi$ on both sides, we conclude that \eqref{eq:desired-to-give-char-coherence} holds for any isogeny.
+	\end{enumerate}
+	We are now ready to conclude, using \Cref{lem:get-poly-eq}. Let $Q_{\varphi}$ be the characteristic polynomial of $V_\ell\varphi\colon V_\ell A\to V_\ell A$, and factor $P_\varphi(t)=\prod_{i=1}^{2\dim A}(t-\alpha_i)$ and $Q_\varphi(t)=\prod_{i=1}^{2\dim A}(t-\beta_i)$. Indeed, we know that these are both monic polynomials of degree $2\dim A$, by their constructions.
+	
+	For our application, observe that $f\mapsto\deg f$ is a polynomial map by \Cref{prop:deg-is-poly}, and $f\mapsto\det V_\ell\varphi$ is a polynomial map because $\op{End}(V_\ell A)\to\QQ$ is a polynomial map, and both are multiplicative functions. Thus, for any $F\in\ZZ[t]$ with leading coefficient $c\ne0$, \Cref{lem:input-to-get-poly-eq} and \eqref{eq:desired-to-give-char-coherence} achieve
+	\[\left|\prod_{i=1}^{2\dim A}F(\alpha_i)\right|_\ell=\left|d(c)\right|_\ell\left|\deg F(\varphi)\right|_\ell=\left|d(c)\right|_\ell\left|\det V_\ell\varphi\right|_\ell=\left|\prod_{i=1}^{2\dim A}F(\beta_i)\right|_\ell,\]
+	so \Cref{lem:get-poly-eq} implies $P_\varphi=Q_\varphi$, as desired.
+\end{proof}
+We now use our newfound power to prove some results which are quite non-obvious using the original definition $P_\varphi$.
+\begin{corollary} \label{cor:char-poly-coeffs-int}
+	Fix an endomorphism $\varphi\colon A\to A$ of an abelian $k$-variety $A$. Then $P_\varphi$ has integer coefficients.
+\end{corollary}
+\begin{proof}
+	We follow \cite[Corollary~12.10]{egm-av}. Note that the ring $\op{End}^0(A)$ is finite and hence integral over $\ZZ$, so $\varphi\in\op{End}^0(A)$ is integral, so we can find a monic polynomial $P\in\ZZ[x]$ such that $P(\varphi)=0$. Choosing any prime $\ell$ not divisible by $\op{char}k$, functoriality of $V_\ell$ then implies $P(V_\ell\varphi)=0$, but this implies that all eigenvalues of $V_\ell\varphi$ are algebraic integers. Thus, the coefficients of $P_\varphi$ are algebraic integers by \Cref{prop:char-poly-correct}, so they are integers because $P_\varphi\in\QQ[x]$.
+\end{proof}
+\begin{corollary} \label{cor:power-of-char-poly}
+	Fix an endomorphism $\varphi\colon A\to A$ of an abelian $k$-variety $A$, and factor $P_\varphi(t)=\prod_{i=1}^{2\dim A}(t-\alpha_i)$. Then
+	\[P_{\varphi^m}(t)=\prod_{i=1}^{2\dim A}\left(t-\alpha_i^m\right).\]
+\end{corollary}
+\begin{proof}
+	Choose any prime $\ell$ not divisible by $\op{char}k$, and set $d\coloneqq\dim A$ for brevity. In light of \Cref{prop:char-poly-correct}, $P_\varphi$ and $P_{\varphi^m}$ are the characteristic polynomials of the linear transformations $V_\ell\varphi$ and $V_\ell\varphi^m=(V_\ell\varphi)^m$, respectively. Thus, we are trying to show that the multiset of eigenvalues of $(V_\ell\varphi)^m$ is given by $\left\{\alpha_1^m,\ldots,\alpha_{2d}^m\right\}$, which is just a linear algebra: passing to the algebraic closure, we may write $V_\ell\varphi$ as a triangular matrix $2d\times2d$ matrix $M$, where the eigenvalues are on the diagonal. But then $(V_\ell\varphi)^m$ is given by the matrix $M^m$, and the eigenvalues are still on the diagonal and the $m$th power of the eigenvalues on the diagonal of $M$.
+\end{proof}
+\begin{example}
+	We continue in the context of \Cref{ex:ec-use-nontrivial-aut}. Here is an alternate computation of $P_\varphi$: factor $P_\varphi(x)=(x-\alpha)(x-\beta)$. Then we see
+	\[(x-1)^2=P_{\id_E}(x)=P_{\varphi^3}(x)=\left(x-\alpha^3\right)\left(x-\beta^3\right),\]
+	so $\alpha^3=\beta^3=1$. However, $\alpha=1$ or $\beta=1$ implies $\deg(\varphi-[1])=0$, which is false because $\varphi-[1]$ has finite kernel (which we computed). Thus, we must have $\{\alpha,\beta\}=\left\{\zeta_3,\zeta_3^2\right\}$, so $P_\varphi(x)=x^2+x+1$ again.
+\end{example}
+
+\section{Rationality} \label{sec:rat}
+With a firm understanding of the characteristic polynomial, we are now ready to approach our proof of \Cref{thm:rationality}. We follow \cite[Chapter~16]{egm-av}.
+
+\subsection{The Frobenius}
+Throughout, $k\coloneqq\FF_q$ is a finite field, where $q$ is a prime-power $p^\nu$. We let $A$ denote an abelian $k$-variety. We would like to count $A\left(\FF_{q^m}\right)$ as $m$ varies. Intuitively speaking, we see that an $\overline{\mathbb F_q}$-point $(a_1,\ldots,a_n)\in A$ comes from $\FF_q$ if and only if each coordinate $a_i$ lives in $\FF_q$, which is equivalent to $a_i^q=a_i$. Thus, we want a notion of Frobenius for our varieties.
+\begin{definition}[Frobenius] \label{def:frob}
+	Let $X$ be a variety over the finite field $k\coloneqq\FF_q$. Then the \textit{Frobenius morphism} $\pi_X\colon X\to X$ is defined as follows.
+	\begin{itemize}
+		\item $\pi_X$ is the identity on the topological space.
+		\item $\pi_X^\sharp\colon\OO_X\to\OO_X$ is the $q$th-power map.
+	\end{itemize}
+	Note that $\pi_X\colon X\to X$ is a morphism of $k$-schemes because the $q$th-power map fixes $k$.
+\end{definition}
+\begin{remark}
+	It is more typical to define the (relative) Frobenius as the $p$th-power map and define the above Frobenius as some kind of power of the above map, but we will have no need for this construction.
+\end{remark}
+\begin{remark} \label{rem:deg-of-frob}
+	We note that the degree of the Frobenius map $\pi_X\colon X\to X$ is $q^{\dim X}$. Indeed, we want to compute the degree of the $\FF_q$-algebra field extension $K(X)\to K(X)$ given by taking $q$th powers. But $K(E)$ has transcendence degree $\dim X$ over $\FF_q$, this transcendence degree will give degree $q^{\dim X}$.
+\end{remark}
+\begin{remark} \label{rem:frob-is-endo}
+	When $A$ is an abelian variety over $k\coloneqq\FF_q$, we see that $\pi_A\colon A\to A$ is a map of $k$-schemes fixing the rational point $0_A\in A(k)$. It follows that $\pi_A$ is an endomorphism.
+\end{remark}
+Let's now make the above motivation rigorous.
+\begin{lemma} \label{lem:get-fq-points-from-frob}
+	Let $X$ be a variety over a finite field $k\coloneqq\FF_q$. Then $X(k)$ is the set of points fixed in $X(\overline k)$ by $\pi_X$.
+\end{lemma}
+\begin{proof}
+	We are showing that a geometric point $\overline x\in X(\overline k)$ is a rational point if and only if $\pi_X(\overline x)=\overline x$. Translating to scheme theory, if the maps $\Spec\overline k=\Spec\overline k\stackrel{\overline x}\to X$ and $\Spec\overline k\stackrel{\pi_{k}}\to\Spec\overline k\stackrel{\overline x}\to X$ agree, then $\overline x$ factors uniquely through $\Spec k$.
+
+	Thus, we would like to show that the scheme $\Spec k$ is the coequalizer of the maps $\pi_k,{\id}\colon\Spec\overline k\to\Spec\overline k$. This can be checked on affine schemes, whereupon taking the opposite category we are trying to show that $k$ is the equalizer of the maps $\pi_k,{\id}\colon\overline k\to\overline k$. Well, for any $k$-algebra $A$ equipped with a map $f\colon A\to\overline k$ such that $f=\pi_k\circ f$, we see that $\pi_k(f(a))=f(a)$, so $f(a)\in\overline k$ is fixed by the $q$th-power map, so $f(a)\in k$, so $f$ does indeed factor uniquely through $k$.
+\end{proof}
+\begin{proposition} \label{prop:frob-counts-points}
+	Let $A$ be an abelian variety over a finite field $k\coloneqq\FF_q$. Then
+	\[P_{\pi_A^m}(1)=\#A\left(\FF_{q^m}\right)\]
+	for any positive integer $m$. Note that $\pi_A^m$ is an endomorphism by \Cref{rem:frob-is-endo}.
+\end{proposition}
+\begin{proof}
+	Replacing $A$ by $A_{\FF_{q^m}}$, we may assume that $k=\FF_{q^m}$; notably, we can check by hand that the Frobenius of $A_{\FF_{q^m}}$ is $\pi_A^m$ because these are both the $q^m$-power map on sheaves. Namely, we now want to show that $P_\pi(1)=\#A(k)$.
+	
+	To begin, the definition of $P_\pi$ yields $P_\pi(1)=\deg(\pi-{\id})$. On the other hand, \Cref{lem:get-fq-points-from-frob} implies that $A(k)$ consists of the geometric points $x\in A(\overline k)$ such that $\pi_A(x)=x$, which is equivalent to $x\in\ker(\pi_A-{\id})(\overline k)$. Thus, we are trying to show
+	\[\deg(\pi_A-{\id})\stackrel?=\#\ker(\pi_A-{\id})(\overline k),\]
+	so we are trying to show that $\pi_A-{\id}$ is separable. In fact, we claim that $\pi_A-{\id}$ is \'etale. We do know that $\pi_A-\id$ is an isogeny because it has finite kernel: indeed, it has kernel $A(k)$, which is finite because $A$ is a finite-type scheme over a finite field.
+	
+	But now, to show \'etale, we observe for psychological reasons that it is enough to show that $\pi_A-\id$ is \'etale at $0$, which is fixed. Now, we can merely show that $\pi_A-\id$ is an isomorphism on Zariski cotangent spaces $\mf m_0/\mf m_0^2\to\mf m_0/\mf m_0^2$, where $y=(\pi_A-{\id})(x)$; this is enough by \cite[Proposition~III.10.4]{hartshorne}, upon passing to the algebraic closure. But $\pi_A$ is the $q$th-power map and will thus annihilate everything in the cotangent space, so we are only looking at $-\id$, which is of course an isomorphism.
+\end{proof}
+\begin{corollary} \label{cor:count-points-on-ab-var}
+	Let $A$ be an abelian variety over a finite field $\FF_q$. Factor $P_{\pi_A}(t)=\prod_{i=1}^{2\dim A}(t-\alpha_i)$. Then
+	\[\#A\left(\FF_{q^m}\right)=\prod_{i=1}^{2\dim A}\left(1-\alpha_i^m\right)\]
+	for any positive integer $m$.
+\end{corollary}
+\begin{proof}
+	In light of \Cref{prop:frob-counts-points}, it is enough to note that
+	\[P_{\pi^m_A}(t)=\prod_{i=1}^{2\dim A}\left(t-\alpha_i^m\right)\]
+	by \Cref{cor:power-of-char-poly} and plug in $1$.
+\end{proof}
+\begin{example}
+	Work in the context of \Cref{ex:ec}, and set $k\coloneqq\FF_5$. Note $P_{\pi_E}(0)=5$ by \Cref{rem:deg-of-frob}. Further, we see
+	\[E(\FF_5)=\{[0 : 1 : 0], [0 : 1 : 1], [0 : 4 : 1], [2 : 2 : 1], [2 : 3 : 1], [4 : 0 : 1]\}\]
+	has cardinality $6$, so $P_{\pi_E}(1)=6$ by \Cref{cor:count-points-on-ab-var}. Interpolating, we see $P_{\pi_E}(x)=x^2+5$, so \Cref{cor:count-points-on-ab-var} promises
+	\[\#E\left(\FF_{q^m}\right)=\left(1-(-i\sqrt5)^m\right)\left(1-(i\sqrt5)^m\right)=\begin{cases}
+		\left(5^{m/2}+1\right)^2 & \text{if }m\equiv0\pmod2, \\
+		5^m+1 & \text{if }m\equiv1\pmod2.
+	\end{cases}\]
+	For example, one can compute $\#E\left(\FF_{5^{10}}\right)=9771876=3126^2$ and $\#E\left(\FF_{5^{11}}\right)=48828126=5^{11}+1$.
+\end{example}
+
+\subsection{Rationality}
+In this section, we use linear algebra to prove rationality (as in \Cref{thm:weil}) for abelian varieties. To motivate ourselves, we recast \Cref{cor:count-points-on-ab-var} into linear algebra.
+\begin{lemma} \label{lem:count-points-by-trace}
+	Let $A$ be an abelian variety over a finite field $\FF_q$ of dimension $d$. Then
+	\[\#A\left(\FF_{q^m}\right)=\sum_{j=0}^{2d}(-1)^j\tr\left(\pi_A\mid\wedge^jV_\ell A\right),\]
+	where $\alpha_I\coloneqq\prod_{i\in I}\alpha_i$.
+\end{lemma}
+\begin{proof}
+	Expanding \Cref{cor:count-points-on-ab-var} fully, one sees
+	\[\#A\left(\FF_{q^m}\right)=\prod_{i=1}^{2d}\left(1-\alpha_i^m\right)=\sum_{\substack{I\subseteq\{1,\ldots,2d\}}}(-1)^{\#I}\alpha_I^m.\]
+	However, a computation with exterior powers is able to show that
+	\[\tr\left(\pi_A\mid\land^jV_\ell A\right)=\sum_{\substack{I\subseteq\{1,\ldots,2d\}\\\#I=j}}\alpha_I\]
+	We will not show this rigorously, but here is a sketch: it is easy to see if $\pi_A$ is diagonalizable because $\pi_A$ remains diagonalizable on $\land^jV_\ell A$ with eigenvectors given by wedge products of eigenvectors. From here, one could argue that diagonal operators are Zariski dense to finish or generalize the given argument to work with upper-triangular matrices instead of diagonal ones. Anyway, the point is that
+	\[\#A\left(\FF_{q^m}\right)=\sum_{j=0}^{2d}\Bigg((-1)^j\prod_{\substack{I\subseteq\{1,\ldots,2d\}\\\#I=j}}\alpha_I\Bigg)=\sum_{j=0}^{2d}(-1)^j\tr\left(\pi_A\mid\land^jV_\ell A\right),\]
+	as desired.
+\end{proof}
+It is remarkable that \Cref{lem:count-points-by-trace} has essentially erased the characteristic polynomial view, though of course it is present in the background. Anyway, to continue, we require the following linear algebra result.
+\begin{lemma} \label{lem:remove-exp-zeta}
+	Fix an endomorphism $\varphi\colon V\to V$ of a finite-dimensional $k$-vector space $V$. Then
+	\[\exp\Bigg(\sum_{m=1}^\infty\tr\left(\varphi^m\mid V\right)\frac{t^m}m\Bigg)=\det\left({\id}-\varphi t\mid V\right)^{-1}\]
+	as formal power series in $t$.
+\end{lemma}
+\begin{proof}
+	We follow \cite[Lemma~C.4.1]{hartshorne}. The proof is by induction on $\dim V$. If $\dim V=1$, then $\varphi$ is a scalar, say $\lambda$, so the equality reads
+	\[\exp\Bigg(\sum_{m=1}^\infty\frac{(\lambda t)^m}m\Bigg)=\exp(-\log(1-\lambda t))=\frac1{1-\lambda t},\]
+	as needed. For the induction, let the left-hand side of the desired equation be $L(\varphi,V)$, and let the right-hand side by $R(\varphi,V)$. For an exact sequence
+	\[0\to V'\to V\to V''\to0\]
+	of vector spaces, suppose $\varphi\colon V\to V$ is an operator fixing $V'$; in general, we can let $V'$ be the subspace spanned by a single eigenvector of $\varphi$. Now, $\varphi$ is also an operator on $V''$, and we see that $L(\varphi,V)=L(\varphi,V')L(\varphi,V'')$ because trace is additive, and $R(\varphi,V)=R(\varphi,V')R(\varphi,V'')$ because determinant is multiplicative. (Explicitly, one can observe that the short exact sequence splits and note that replacing $\varphi$ with the operator given by the splitting has the same traces and determinants.) Thus, the inductive hypothesis gives $R(\varphi,V')=L(\varphi,V')$ and $R(\varphi,V'')=L(\varphi,V'')$, so we conclude.
+\end{proof}
+We are finally ready to prove \Cref{thm:rationality}.
+\ratforabvar*
+\begin{proof}
+	Using \eqref{eq:zeta-via-exp}, we may plug in \Cref{lem:count-points-by-trace} to see
+	\begin{align*}
+		Z(A,t) &= \exp\Bigg(\sum_{m=1}^\infty\#A\left(\FF_{q^m}\right)\frac{t^m}m\Bigg) \\
+		&= \exp\Bigg(\sum_{m=1}^\infty\sum_{j=0}^{2d}(-1)^j\tr\left(\pi_A\mid\wedge^jV_\ell A\right)\frac{t^m}m\Bigg) \\
+		&= \prod_{j=0}^{2d}\exp\Bigg(\sum_{m=1}^\infty\tr\left(\pi_A\mid\wedge^jV_\ell A\right)\frac{t^m}m\Bigg)^{(-1)^j} \\
+		&= \prod_{j=0}^{2d}\det({\id}-t\pi_A\mid\wedge^jV_\ell A)^{(-1)^{j+1}},
+	\end{align*}
+	where we have used \Cref{lem:remove-exp-zeta} in the last equality. Thus, using the discussion of the eigenvalues of $\pi_A$ from \Cref{lem:count-points-by-trace}, we see that
+	\[P_j(t)\coloneqq\det({\id}-t\pi_A\mid\wedge^jV_\ell A)=\prod_{\substack{I\subseteq\{1,\ldots,2d\}\\\#I=j}}(1-t\alpha_I),\]
+	which finishes the rationality of $Z(A,t)$ upon plugging in for $P_j(t)$. Lastly, we see that the coefficients of $P_j(t)$ are rational because they any Galois automorphism will merely permute the $\alpha_i$ and thus the $\alpha_I$ for set $\#I=j$. Additionally, all the coefficients are algebraic integers, so $P_j$ as integer coefficients.
+\end{proof}
+\begin{remark} \label{rem:go-no-further}
+	To prove the rest of \Cref{thm:weil}, one needs information about the eigenvalues $\alpha_i$ of $\pi_A$. For example, it might appear that one can use \Cref{thm:rationality} to produce the functional equation purely formally, but one (approximately) needs to know that all the $\alpha_i$ have magnitude $\sqrt q$ for this argument to go through, which is essentially the Riemann hypothesis. Anyway, showing these facts is nonetheless easier in the case of abelian varieties than in general, due to the theory of the Rosati involution; see \cite[Section~I.14]{milne-av}, for example.
+\end{remark}
+
+\section{Elliptic Curves} \label{sec:ec}
+For a source of examples, we turn our attention to elliptic curves, where we will be able to complete the proof of the Weil conjectures. We follow \cite[Section~V.2]{silverman}.
+
+\subsection{The Weil Conjectures}
+Now let $E$ be an elliptic curve over a finite field $\FF_q$. In this dimension-$1$ case, the difficulty of understanding eigenvalues described in \Cref{rem:go-no-further} collapses because there are only two eigenvalues, so we are able to achieve the remaining Weil conjectures.
+\begin{lemma} \label{lem:almost-rh}
+	Let $E$ be an elliptic curve over a finite field $\FF_q$. Then
+	\[P_{\pi_E}(t)=t^2-at+q\]
+	where $a\coloneqq(q+1)-\#E(\FF_q)$. In particular, the eigenvalues of $\pi_E$ have magnitude $\sqrt q$.
+\end{lemma}
+\begin{proof}
+	Note $P_{\pi_E}$ is monic by definition. Also, $P_{\pi_E}(0)=\deg\pi_E$ by definition of $P_{\pi_E}$, and $\deg\pi_E=q$ by \Cref{rem:deg-of-frob}. Thus, the story so far is that
+	\[P_{\pi_E}(t)=t^2-at+q\]
+	for some integer $a\in\ZZ$. However, \Cref{prop:frob-counts-points} tells us that $\#E(\FF_q)=1-a+q$, from which the first claim follows.
+	
+	For the last sentence, note that the eigenvalues $\alpha_1$ and $\alpha_2$ of $\pi_E$ are roots of $P_{\pi_E}$, so the discussion above implies $\alpha_1\alpha_2=q$. Now, we see $P_{\pi_E}(r)=\deg(\pi_E-r[1])\ge0$ for any $r\in\QQ$, so continuity implies that $P_{\pi_E}(r)\ge0$ for any $r\in\RR$ also. Thus, $P_{\pi_E}$ either has $\alpha_1=\alpha_2$ (and so $\alpha_1=\alpha_2=\pm\sqrt q$) or has two roots in $\CC$ which are conjugate (and so $\left|\alpha_1\right|=\left|\alpha_2\right|=\sqrt q$), but we are okay in either case.
+\end{proof}
+\begin{theorem}[Riemann hypothesis] \label{thm:rh}
+	Let $E$ be an elliptic curve over a finite field $\FF_q$. Then the factorization in \Cref{thm:rationality} is
+	\[Z(E,t)=\frac{1-at+qt^2}{(1-t)(1-qt)}\]
+	where $a\coloneqq (q+1)-\#E(\FF_q)$. Furthermore, the roots of $P_1(t)=1-at+t^2$ have magnitude $q^{-1/2}$.
+\end{theorem}
+\begin{proof}
+	Let $\alpha_1$ and $\alpha_2$ be the eigenvalues of $\pi_E$. Using the description of $Z(E,t)$ provided by the proof of \Cref{thm:rationality}, we see $P_0(t)=1-t$ and $P_1(t)=(1-t\alpha_1)(1-t\alpha_2)=t^2P_{\pi_E}(1/t)$ and $P_2(t)=(1-qt)$. Combining this information with \Cref{lem:almost-rh}, we see
+	\[Z(E,t)=\frac{1-at+t^2}{(1-t)(1-qt)}\]
+	where $a=(q+1)-\#E(\FF_q)$. Now, the roots of $P_1(t)$ are $1/\alpha_1$ and $1/\alpha_2$, so they have magnitude $q^{-1/2}$ by \Cref{lem:almost-rh}.
+\end{proof}
+\begin{theorem}[Functional equation] \label{thm:fe}
+	Let $E$ be an elliptic curve over a finite field $\FF_q$. Then, as formal power series,
+	\[Z\left(E,q^{-1}t^{-1}\right)=Z(E,t).\]
+\end{theorem}
+\begin{proof}
+	This is purely formal from \Cref{thm:rh}. Explicitly,
+	\[Z\left(E,q^{-1}t^{-1}\right)=\frac{1-a\cdot\frac1{qt}+q\cdot\frac1{q^2t^2}}{\left(1-\frac1{qt}\right)\left(1-q\cdot\frac1{qt}\right)}=\frac{qt^2-at+1}{(qt-1)(t-1)}=Z(E,t),\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{Counting Points} \label{subsec:count}
+As an application of our hard work, we note that we can in fact use these results to count points.
+\begin{corollary}[Hasse]
+	Let $E$ be an elliptic curve over a finite field $\FF_q$. For any $m\ge0$, we have
+	\[\left|\#E(\FF_q)-(q+1)\right|\le2\sqrt q.\]
+\end{corollary}
+\begin{proof}
+	By \Cref{lem:almost-rh}, we see that $a\coloneqq(q+1)-\#E(\FF_q)$ is the sum of two complex numbers of magnitude $\sqrt q$, so $\left|a\right|\le2\sqrt q$.
+\end{proof}
+\begin{example} \label{ex:hasse-ex}
+	We work in the context of \Cref{ex:ec}, and set $k\coloneqq\FF_7$. Here is a table of values $\#E\left(\FF_{7^m}\right)$ and their distance from $7^m+1$.
+	\[\begin{array}{c|c|c|c}
+		m & \#E\left(\FF_{7^m}\right) & \left(7^m+1\right)-\#E\left(\FF_{7^m}\right) & \floor{\sqrt{7^m}} \\\hline
+		1 & 12 & -4 & 5 \\
+		2 & 48 & 2 & 14 \\
+		3 & 324 & 20 & 37 \\
+		5 & 16572 & 236 & 259 \\
+		10 & 282453168 & 22082 & 33614
+	\end{array}\]
+\end{example}
+\begin{corollary} \label{cor:count-by-recursion}
+	Let $E$ be an elliptic curve over a finite field $\FF_q$. For each positive integer $m$, define $a_m\coloneqq q^m+1-\#E\left(\FF_{q^m}\right)$, and set $a_0\coloneqq2$. Then, for any $m\ge0$, one has
+	\[a_{m+2}=a_1a_{m+1}-qa_m.\]
+\end{corollary}
+\begin{proof}
+	Let $\alpha_1$ and $\alpha_2$ be the eigenvalues of $\pi_E$. By \Cref{cor:count-points-on-ab-var}, we see
+	\[\#E\left(\FF_{q^m}\right)=\left(1-\alpha_1^m\right)\left(1-\alpha_2^m\right)=(\alpha_1\alpha_2)^m-\alpha_1^m-\alpha_2^m+1\]
+	for any $m\ge1$. By \Cref{lem:almost-rh}, we see $\alpha_1\alpha_2=q$, so rearranging the above equation gives $a_m=\alpha_1^m+\alpha_2^m$ for any $m\ge1$, but we note that $2=a_0=\alpha_1+\alpha_2$ as well. From here, proving the recurrence relation is purely formal: for any $m\ge0$, we compute
+	\begin{align*}
+		a_{m+2}-a_1a_{m+1}+qa_m &= \left(\alpha_1^{m+2}+\alpha_2^{m+2}\right)-(\alpha_1+\alpha_2)\left(\alpha_1^{m+1}+\alpha_2^{m+1}\right)+q\left(\alpha_1^m+\alpha_2^m\right) \\
+		&= \left(\alpha_1^{m+2}+\alpha_2^{m+2}\right)-\left(\alpha_1^{m+2}+\alpha_2^{m+2}\right)-\alpha_1\alpha_2\left(\alpha_1^m+\alpha_2^m\right)+q\left(\alpha_1^m+\alpha_2^m\right) \\
+		&= 0,
+	\end{align*}
+	where in the last equality we have used the fact that $\alpha_1\alpha_2=q$.
+\end{proof}
+\begin{example}
+	We execute \Cref{cor:count-by-recursion} in the context of \Cref{ex:ec} where $k\coloneqq\FF_7$. One can compute
+	\begin{align*}
+		E(\FF_7) &= \{[0:1:0], [0:1:1], [0:6:1], [1:3:1], [1:4:1], [2:3:1], \\
+		&\qquad[2:4:1], [3:0:1], [4:3:1], [4:4:1], [5:0:1], [6:0:1]\},
+	\end{align*}
+	so $\#E(\FF_7)=12$, as in \Cref{ex:hasse-ex}. So we have $a_0=2$ and $a_1=-4$, from which we get the following table.
+	\[\begin{array}{c|c|c|c|c}
+		m+2 & a_1a_{m+1} & -7a_m & a_{m+2} & \#E\left(\FF_{q^{m+2}}\right)=\left(7^{m+2}+1\right)-a_{m+2} \\\hline
+		2 & 16 & -14 & 2 & 48 \\
+		3 & -8 & 28 & 20 & 324 \\
+		4 & -80 & -14 & -94 & 2496 \\
+		5 & 376 & -140 & 236 & 16572 \\
+		6 & -944 & 658 & -286 & 117936 \\
+		7 & 1144 & -1652 & -508 & 824052 \\
+	\end{array}\]
+\end{example}
+
+\printbibliography[title={References}]
+
+\end{document}
