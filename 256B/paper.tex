@@ -16,7 +16,7 @@
 \title{The \'Etale Fundamental Group}
 \author{Nir Elber}
 \date{5 May 2023}
-\lhead{} \chead{} \rhead{\textit{FUNDAMENTAL GROUP}}
+\lhead{} \chead{} \rhead{\textit{THE \'ETALE FUNDAMENTAL GROUP}}
 
 \begin{document}
 
@@ -30,9 +30,30 @@
 \tableofcontents
 
 \section{Introduction}
-Say words.\todo{}
+The goal of this paper is to prove the existence of the \'etale fundamental group and compute a few basic examples. We postpone any technical discussion for later, but approximately speaking, the \'etale fundamental group $\pi_1(X)$ takes a connected scheme $X$ and produces the profinite completion of what one would expect is the usual topological fundamental group.
 
-\section{Abstract Nonsense}
+As such, $\pi_1(X)$ is able to keep track of some desirable topology. For example, we will be able to show that projective space over an algebraically closed field has vanishing $\pi_1$, and we will be able to show that the fundamental group of an elliptic curve (which is essentially a torus) is the profinite completion of $\ZZ^2$. It is also true, though we will not show it, that $\pi_1$ is a truly topological invariant, in that it is invariant under homeomorphism \cite[\href{https://stacks.math.columbia.edu/tag/0BQN}{Proposition 0BQN}]{stacks}. However, the \'etale fundamental group is interesting beyond what it can recover from topology. For example, for a field $k$, one has
+\[\pi_1(\Spec k)=\op{Gal}(\overline k/k),\]
+so we are also managing to capture arithmetic information.
+
+Now motivated, we go into a little detail. The \'etale fundamental group comes from a more abstract theory of Galois categories. We could define Galois categories now, but we will wait until \Cref{def:galois-cat} so that we can spend the time to provide a few examples as well, but roughly speaking it is a category $\mc C$ equipped with a special functor $F\colon\mc C\to\mathrm{FinSet}$. What is remarkable about this theory is that it manages to include not just the construction of the \'etale fundamental group but also the Galois theory of fields and the theory of finite covering spaces from algebraic topology (though we will not discuss algebraic topology in this paper).
+
+With this in mind, there are two goals for this paper: understand Galois categories, and apply this understanding to scheme theory. As such, our first main result is about Galois categories.
+\begin{restatable}{theorem}{maingaloisthm} \label{thm:main-galois-theorem}
+    Let $\mc C$ be a Galois category with fiber functor $F$; set $G\coloneqq\op{Aut}F$. Then $F\colon\mc C\to\mathrm{FinSet}(G)$ is an equivalence of categories.
+\end{restatable}
+This is remarkable because, as stated above, Galois categories are present in many contexts, so our abstract theory is able to show that they're all talking about finite $G$-sets for some explicitly describable profinite group $G$. Our second result establishes that the built theory applies to schemes.
+\begin{restatable}{theorem}{mainschemethm} \label{thm:etale-cover-galois}
+    Fix a connected scheme $X$ and a geometric point $\overline x$ of $X$. Then the category $\mathrm{F\acute Et}(X)$ of finite \'etale covers of $X$ equipped with the base-change functor $F\colon\mathrm{F\acute Et}(X)\to\mathrm{FinSet}$ by
+    \[FY\coloneqq Y_{\overline x}\]
+    forms a Galois category.
+\end{restatable}
+% This result looks like it would just involve running a few checks, but we will dedicate quite some time to proving it. The primary difficulty arises from the fact that Galois categories have finite colimits, and finite colimits do not exist in the category of schemes in general.
+
+\subsection{Layout}
+We spend all of \cref{sec:galois-cat} building the theory of Galois categories, culminating in the proof of \Cref{thm:main-galois-theorem} in \cref{subsec:main-galois-thm}. We then apply this theory to schemes in \cref{sec:finite-et-covers}. After picking up a few tools, we prove \Cref{thm:etale-cover-galois} in \cref{subsec:main-thm}. We then close the paper by computing a few basic examples in \cref{sec:examples}.
+
+\section{Galois Categories} \label{sec:galois-cat}
 In this section, we define a Galois category and prove that they are equivalent to $\mathrm{FinSet}(G)$ for a profinite group $G$ in \Cref{thm:main-galois-theorem}.
 
 \subsection{Basic Facts}
@@ -40,7 +61,7 @@ Following \cite[\href{https://stacks.math.columbia.edu/tag/0BMY}{Definition 0BMY
 \begin{definition}[connected]
     Fix a category $\mc C$. An object $A\in\mc C$ is \textit{connected} if and only if it is not initial and has no nontrivial proper subobjects. In other words, $A$ is not an initial, and any monomorphism $B\into A$ is either an isomorphism or has $B$ initial.
 \end{definition}
-\begin{definition}[Galois category]
+\begin{definition}[Galois category] \label{def:galois-cat}
     A \textit{Galois category} is a category $\mc C$ together with a functor $F\colon\mc C\to\mathrm{FinSet}$ satisfying the following conditions.
     \begin{itemize}
         \item $\mc C$ has finite limits and colimits.
@@ -51,41 +72,43 @@ Following \cite[\href{https://stacks.math.columbia.edu/tag/0BMY}{Definition 0BMY
     Here, $F$ is called the \textit{fiber functor}.
 \end{definition}
 \begin{remark}
-    This definition is not the standard one; see for example \cite[Definition~2.1]{cadoret-galois}. In particular, one often assumes that $\mc C$ has quotients by finite automorphisms groups instead of assuming that we have all colimits. Later, in \Cref{thm:main-galois-theorem}, we will see that these categories are equivalent to the category of finite $G$-sets for a profinite group $G$, so the definitions do in fact coincide. We have chosen the above definition rather than the usual weaker one because the above definition is more memorable.
+    This definition is not the standard one; see for example \cite[Definition~2.1]{cadoret-galois}. In particular, one often assumes that $\mc C$ has quotients by finite automorphisms groups instead of assuming that we have all finite colimits.
+    % Later, in \Cref{thm:main-galois-theorem}, we will see that these categories are equivalent to the category of finite $G$-sets for a profinite group $G$, so the definitions do in fact coincide.
+    We have chosen the above definition because the above definition is more memorable.
 \end{remark}
 Here are the chief examples. We will be pretty terse.
 \begin{example} \label{ex:g-sets}
     Fix a profinite group $G$. Then the category of finite $G$-sets $\mathrm{FinSet}(G)$ equipped with the forgetful functor $F\colon\mathrm{FinSet}(G)\to\mathrm{FinSet}$ is a Galois category. Let's quickly run the checks.
     \begin{itemize}
         \item $\mathrm{FinSet}(G)$ has finite limits and colimits by using the constructions in $\mathrm{Set}$.
-        \item Connected objects are transitive $G$-sets: if $A$ is connected, then the orbit $Ga$ of any element $a\in A$ has the embedding $Ga\into A$, from which $Ga=A$ follows. Conversely, if $A$ is transitive, then any nontrivial subobject $B\into A$ has an element of $A$ and therefore has all $A$ because $A$ is transitive. In total, we see that every object in $\mathrm{FinSet}(G)$ is the finite disjoint union of connected objects by taking the orbits of the $G$-action.
-        \item Lastly, $F$ is exact and reflects isomorphisms because we are taking the constructions of limits and colimits from $\mathrm{Set}$.
+        \item Connected objects are transitive $G$-sets, which implies that any $G$-set is decomposable into connected objects. Indeed, if $A$ is connected, then the orbit $Ga$ of any element $a\in A$ has the embedding $Ga\into A$, from which $Ga=A$ follows. Conversely, if $A$ is transitive, then any nontrivial subobject $B\into A$ has an element of $A$ and therefore has all $A$ because $A$ is transitive.
+        % In total, we see that every object in $\mathrm{FinSet}(G)$ is the finite disjoint union of connected objects by taking the orbits of the $G$-action.
+        \item Lastly, $F$ is exact and reflects isomorphisms because constructions are inherited from $\mathrm{Set}$.
     \end{itemize}
 \end{example}
 \begin{example} \label{ex:salgk}
     Fix a field $k$. Let $\mc C\coloneqq\mathrm{SAlg}(k)\opp$ denote the opposite category of finite separable $k$-algebras, and define $F$ by the set of embeddings $FA\coloneqq\op{Hom}_k(A,k^{\mathrm{sep}})$. Let's quickly run the checks.
     \begin{itemize}
         \item The category of $k$-algebras has an initial object $k$, fiber coproducts given by $\otimes$, a terminal object $0$, and fiber products, so $\mc C$ has finite limits and colimits.
-        \item Note that any finite separable $k$-algebra is the product of separable field extensions of $k$, so it suffices to show that separable field extensions $\ell$ of $k$ are connected objects. Indeed, given an epimorphism $\ell\onto A$ onto a nonzero $k$-algebra $A$, write $A=\prod_{i=1}^n\ell_i$ where $\ell_i/k$ is finite separable. Then $\ell$ surjects onto each $\ell_i$, but this map is injective because $\ell$ is a field, so $\ell=\ell_i$ for each $i$. Further, $\ell\onto\ell^n$ can only be surjective as $k$-vector spaces if and only if $n=1$ for dimension reasons, so $A=\ell$ follows.
+        \item Note that any finite separable $k$-algebra is the product of separable field extensions of $k$, so it suffices to show that separable field extensions $\ell$ of $k$ are connected objects. Indeed, given an epimorphism $\ell\onto A$ onto a nonzero $k$-algebra $A$, write $A=\prod_{i=1}^n\ell_i$ where $\ell_i/k$ is finite separable. Then, for each $i$, we see $\ell\onto\ell_i$, but also $\ell\into\ell_i$ because $\ell$ is a field, so $\ell=\ell_i$; lastly $n=1$ for dimension reasons.
 
         In fact, conversely, if $A$ is a connected object, then write $A=\prod_{i=1}^n\ell_i$. The surjections $A\onto\ell_i$ for each $i$ imply that $n=1$ and $A\cong\ell_1$ because $A$ is connected.
-        \item One can compute directly that $F$ is exact by tracking through fiber products and coproducts.
-        \item Suppose we have a morphism $f\colon A\to B$ such that $Ff\colon\op{Hom}_k(B,k^{\mathrm{sep}})\to\op{Hom}_k(A,k^{\mathrm{sep}})$ is a bijection. By decomposition into connected objects, we may assume that $A$ and $B$ are both fields.
+        \item One can compute directly that $F$ is exact by tracking through fiber products and coproducts. Lastly, separability of our extensions implies $F$ reflects isomorphisms.
     \end{itemize}
 \end{example}
-\Cref{ex:g-sets} is especially compelling to keep in mind in the following discussion. To set us up, here are some basic facts which we will use later without remark. The idea here is to turn desirable facts into facts about limits, colimits, and isomorphisms, and then use the required properties of $F$.
+\Cref{ex:g-sets} is especially compelling to keep in mind in the following discussion. To set us up, here are some basic facts. The idea here is to turn desirable facts into facts about limits, colimits, and isomorphisms, and then use the required properties of $F$.
 \begin{lemma} \label{lem:dual-facts}
     Let $\mc C$ and $\mc D$ be categories with finite limits and colimits, and let $F\colon\mc C\to\mc D$ be an exact functor which reflects isomorphisms.
     \begin{listalph}
-        \item For a morphism $f\colon A\to B$ in $\mc C$, then $f$ is monic or epic if and only if $Ff$ is monic or epic, respectively.
-        \item For an object $A\in\mc C$, then $A$ is initial or final if and only if $FA$ is monic or epic, respectively.
+        \item For $f\colon A\to B$ in $\mc C$, then $f$ is monic or epic if and only if $Ff$ is monic or epic, respectively.
+        \item For $A\in\mc C$, then $A$ is initial or final if and only if $FA$ is monic or epic, respectively.
     \end{listalph}
 \end{lemma}
 \begin{proof}
     We show these individually.
     \begin{listalph}
-        \item We show the monic case; the epic case follows dually. Now, $f\colon A\to B$ is monic if and only if the diagonal map $\Delta_f\colon A\to A\times_BA$ is an isomorphism. Because $F$ reflects isomorphisms and is exact, this diagonal map is an isomorphism if and only if the diagonal map $F\Delta_f\colon FA\to FA\times_{FB}FA$ is an isomorphism, which is equivalent to the map $Ff\colon FA\to FB$ being monic.
-        \item We show the initial case; the final case follows dually. Quickly, if $A$ is initial, then $FA$ is initial because $F$ is exact. Now, let $I$ be an initial object. Then an object $A\in\mc C$ is initial if and only if the morphism $I\to A$ is an isomorphism, which because $F$ reflects isomorphisms is equivalent to $FI\to FA$ being an isomorphism. But $FI$ is initial as just discussed, so $FI\cong FA$ implies that this is equivalent to $FA$ being initial.
+        \item We show the monic case; the epic case follows dually. Now, $f$ is monic if and only if $\Delta_f\colon A\to A\times_BA$ is an isomorphism. The hypothesis on $F$ makes this equivalent to the diagonal map $F\Delta_f\colon FA\to FA\times_{FB}FA$ being an isomorphism, which is equivalent to the map $Ff$ being monic.
+        \item We show the initial case; the final case follows dually. If $A$ is initial, then $FA$ is initial because $F$ is exact. Conversely, let $I$ be an initial object. Then $A\in\mc C$ is initial if and only if $I\cong A$, which by hypothesis on $F$ is equivalent to $FI\cong FA$ being an isomorphism. But $FI$ is initial as just discussed, so $FI\cong FA$ is equivalent to $FA$ being initial.
         \qedhere
     \end{listalph}
 \end{proof}
@@ -93,40 +116,37 @@ Here are the chief examples. We will be pretty terse.
     Let $(\mc C,F)$ be a Galois category. Then $F$ is faithful.
 \end{lemma}
 \begin{proof}
-    Fix morphisms $f,g\colon X\to Y$ such that $Ff=Fg$. Because $\mc C$ has limits, we may set $E\coloneqq\op{eq}(f,g)$. Because $F$ is exact, we see $FE=\op{eq}(Ff,Fg)$. Now, $Ff=Fg$, so the structure morphism $FE\to FX$ is an isomorphism, so because $F$ reflects isomorphisms, we see that the structure morphism $E\to X$ is an isomorphism, so $f=g$ follows.
+    Fix morphisms $f,g\colon X\to Y$ such that $Ff=Fg$. Because $\mc C$ has limits, we may set $E\coloneqq\op{eq}(f,g)$. Because $F$ is exact, we see $FE=\op{eq}(Ff,Fg)$, but $Ff=Fg$, so $FE=FX$, so $E=X$ because $F$ reflects isomorphisms, so $f=g$ follows.
 \end{proof}
 Next, we take a moment to understand how objects decompose into connected objects.
 \begin{lemma} \label{lem:connected-maps}
     Let $(\mc C,F)$ be a Galois category.
     \begin{listalph}
         \item Suppose $X$ is not initial and $Y$ is connected. Then any morphism $f\colon X\to Y$ is epic.
-        \item Fix morphisms $f,g\colon X\to Y$ such that $X$ is connected. If $Ff(x_0)=Fg(x_0)$ for some fixed $x_0\in FX$, then $f=g$.
-        \item Fix a morphism $f\colon X\to Y$ where $X$ is connected and $Y=\bigsqcup_{i=1}^nY_i$. Then there exists a unique $i$ such that $f$ factors through $Y_i$.
-        \item Decomposition into connected objects is unique up to permutation and isomorphism class of the factors.
-        % \item Decompose objects $X,Y\in\mc C$ into connected objects $X=\bigsqcup_{i=1}^mX_i$ and $Y=\bigsqcup_{j=1}^nY_j$. Then any morphism $f\colon X\to Y$ is induced by some map $\sigma\colon\{1,\ldots,m\}\to\{1,\ldots,n\}$ and morphisms $f_i\colon X_i\to Y_{\sigma i}$.
+        \item Fix $f,g\colon X\to Y$ such that $X$ is connected. If $Ff(x_0)=Fg(x_0)$ for some $x_0\in FX$, then $f=g$.
+        \item Fix $f\colon X\to Y$ where $X$ is connected and $Y=\bigsqcup_{i=1}^nY_i$. Then there exists a unique $i$ such that $f$ factors through $Y_i$.
+        \item Decomposition into connected objects is unique up to permutation and isomorphism.
     \end{listalph}
 \end{lemma}
-Intuitively, (a) tells us that nontrivial mappings to connected objects are surjective; (b) tells us that a single element ``drags'' along all elements in a morphism from a connected object; lastly, (c) is some version of the Intermediate value theorem, telling us that mapping out of a connected object should only go to a connected object.
+Intuitively, (a) tells us that nontrivial mappings to connected objects are surjective; (b) tells us that a single element ``drags'' along all elements in a morphism from a connected object; and, (c) tells us that mapping out of a connected object should only go to a connected object.
 \begin{proof}
     We show these individually.
     \begin{listalph}
-        \item Let $E$ be the equalizer of the two inclusions $i_1,i_2\colon Y\to Y\sqcup_XY$. It suffices to show that the structure map $E\to Y$ is an isomorphism: indeed, this implies that $i_1=i_2$, but this implies that $FY\sqcup_{FX}FY$ must equal the image of $FY\to FY\sqcup_{FX}FY$ by checking on elements, so because $F$ reflects isomorphisms, we see that $Y\sqcup_XY\to Y$ is an isomorphism, meaning $X\to Y$ is epic.
+        \item Let $E$ be the equalizer of the two inclusions $i_1,i_2\colon Y\to Y\sqcup_XY$. It suffices to show that $E\cong Y$: indeed, this implies that $i_1=i_2$, meaning $FY\sqcup_{FX}FY$ must equal the image of $FY\to FY\sqcup_{FX}FY$ by checking on elements, so $Y\sqcup_XY\cong Y$, so $X\to Y$ is epic.
 
-        Now, note that the structure morphism $E\to Y$ is monic, so because $Y$ is connected, we see that $E$ is either initial or $E\to Y$ is an isomorphism. To see that $E$ is not initial, it suffices by \Cref{lem:dual-facts} to show that $FE\ne\emp$. For this, we note that $X$ is not initial, and there is a map $X\to E$ by the universal property of $E$, so there is a map $FX\to FE$ where $FX$ is nonempty by \Cref{lem:dual-facts} again.
+        Now, $E\to Y$ is monic, so because $Y$ is connected, we see that $E$ is either initial or $E\cong Y$. But $E$ is not initial by \Cref{lem:dual-facts}: note $FE\ne\emp$ because we have a map $X\to E$ and so a map $FX\to FE$.
 
-        \item Set $E\coloneqq\op{eq}(f,g)$. We want to show that the structure map $E\to X$ is an isomorphism. Note $X$ is connected, so it suffices to show that $E$ is not initial. By \Cref{lem:dual-facts}, it suffices to show that $FE$ is nonempty, for which we note the fact that $F$ is exact tells us that
-        \[FE=\op{eq}(Ff,Fg)=\{x\in X:Ff(x)=Fg(x)\}\]
-        contains $x_0$.
+        \item Set $E\coloneqq\op{eq}(f,g)$. We want $E\cong X$. Note $X$ is connected, so because $E\into X$, it suffices to show $E$ is not initial. By \Cref{lem:dual-facts}, it suffices to show $FE\ne\emp$, but $x_0\in\op{eq}(Ff,Fg)=FE$ by hypothesis.
 
-        \item For each $i$, set $E_i\coloneqq X\times_YY_i$. Because $Y_i\into Y$ is monic, we see that $E_i\into X$ is also monic; because $X$ is connected, we see that either $E_i$ is initial (equivalently, $FE_i=\emp$ by \Cref{lem:dual-facts}) or the structure map $E_i\to X$ is an isomorphism. However, passing through $F$, we see
+        \item For each $i$, set $E_i\coloneqq X\times_YY_i$. Because $Y_i\into Y$ is monic, $E_i\into X$ is monic; because $X$ is connected, we see that $E_i$ is initial (equivalently, $FE_i=\emp$ by \Cref{lem:dual-facts}) or $E_i\cong X$. Passing through $F$,
         \[FE_i=FX\times_{FY}FY_i=\{(x,y)\in FX\times FY_i:Ff(x)=y\}.\]
-        Now, fixing any $x_0\in FX$, we can find $i_0$ so that $Ff(x_0)\in FY_{i_0}$, so at least one of the $FE_i$ is nonempty. In total, we see that $f$ factors as
+        Now, fixing any $x_0\in FX$, find $i_0$ such that $Ff(x_0)\in FY_{i_0}$, so $FE_i\ne\emp$ and $E_i\cong X$. But then $f$ is
         \[X\cong E_{i_0}\to Y_{i_0}\to Y.\]
-        Lastly, To see that $i_0$ is unique, note that $f$ factoring through $Y_i$ implies that $FE_i$ is nonempty by the above argument. But only $FE_{i_0}$ is nonempty because $\im Ff\subseteq FY_{i_0}$.
+        Lastly, to see that $i_0$ is unique, note that $f$ factoring through $Y_i$ implies that $FE_i$ is nonempty by the above argument. But only $FE_{i_0}$ is nonempty because $\im Ff\subseteq FY_{i_0}$.
 
-        \item Suppose we have an isomorphism $f\colon\bigsqcup_{i=1}^mX_i\cong\bigsqcup_{j=1}^nY_j$. Each $f_i\colon X_i\to\bigsqcup_{j=1}^nY_j$ factors through some $Y_{\sigma i}$ as a surjection $f_i\colon X_i\to Y_{\sigma i}$ by (a) and (c). We want to show that $n=m$, that $\sigma$ is a permutation, and that each $f_i$ is an isomorphism. Well, passing through $F$, we see $Ff$ is an isomorphism, so
+        \item Suppose we have an isomorphism $f\colon\bigsqcup_{i=1}^mX_i\cong\bigsqcup_{j=1}^nY_j$. Each $f_i\colon X_i\to\bigsqcup_{j=1}^nY_j$ factors through some $Y_{\sigma i}$ as a surjection $f_i\colon X_i\to Y_{\sigma i}$ by (a) and (c). We want to show that $n=m$, that $\sigma$ is a permutation, and that each $f_i$ is an isomorphism. Well, $Ff$ is an isomorphism, so
         \[\#FY=\#\im Ff\stackrel{(1)}\le\sum_{j\in\im\sigma}^m\#FY_j\stackrel{(2)}\le\#FX.\]
-        Because we actually have $\#FX=\#FY$, equalities must follow everywhere. But equality in (1) only holds if each $\sigma$ is bijective, and equality in (2) only holds if each $Ff_i$ is injective and thus bijective, so each $f_i$ is an isomorphism. This finishes.
+        Because $\#FX=\#FY$, equalities follow everywhere. But equality in (1) only holds if each $\sigma$ is bijective, and equality in (2) only holds if each $Ff_i$ is injective and thus bijective.
         %
         % \item The main crux here is the definition of $\sigma$. Define $E_{ij}\coloneqq X_i\times_YY_j$ for each $i$ and $j$; intuitively, we expect the $E_{ij}$ to be initial for all but one $j$, and this special $j$ will be $\sigma(i)$.
         %
@@ -138,7 +158,7 @@ Intuitively, (a) tells us that nontrivial mappings to connected objects are surj
 \end{proof}
 
 \subsection{Galois Objects}
-Throughout, fix a Galois category $(\mc C,F)$. As in field theory, Galois objects will play an important role. As in Galois theory, we are going to essentially look for objects with a maximal number of automorphisms.
+Throughout, fix a Galois category $(\mc C,F)$. As in Galois theory, we look for objects with a maximal number of automorphisms.
 \begin{remark} \label{rem:motivate-galois}
     Suppose $X$ is connected, and fix $x_0\in X$. We note that two automorphisms $f,g\colon X\to X$ are equal as soon as they are equal on $x_0\in FX$ by \Cref{lem:connected-maps}, so
     \[\#\op{Aut}X=\#\{Ff(x_0):f\in\op{Aut}X\}\le\#FX.\]
@@ -146,189 +166,174 @@ Throughout, fix a Galois category $(\mc C,F)$. As in field theory, Galois object
 \begin{definition}[Galois]
     Fix a category $\mc C$. An object $X\in\mc C$ is \textit{Galois} if and only if $X$ is connected and $\#\op{Aut}X=\#FX$.
 \end{definition}
-By \Cref{rem:motivate-galois}, we see that a connected object $X$ is Galois if and only if $\{Ff(x_0):f\in\op{Aut}X\}=FX$ for each $x_0\in FX$. In other words, it is equivalent to require the action of $\op{Aut}X$ on $FX$ to be transitive. Roughly speaking, this will be helpful because one often wants to build maps $X\to X$ based on how they behave on the level of $FX\to FX$, and being Galois allows us to do this. Anyway, here are our examples.
+By \Cref{rem:motivate-galois}, we see that a connected object $X$ is Galois if and only if $\{Ff(x_0):f\in\op{Aut}X\}=FX$ for each $x_0\in FX$, or equivalently, the action of $\op{Aut}X$ on $FX$ to be transitive. Galois objects will be helpful because it allows us to build automorphisms of $X$ based on $FX$. Anyway, here are our examples.
 \begin{example} \label{ex:g-set-galois}
     Let $G$ be a profinite group. As discussed in \Cref{ex:g-sets}, connected objects in $\mathrm{FinSet}(G)$ are transitive $G$-sets, which up to isomorphism look like $G/H$ for some open subgroup $H$. Note that an automorphism $\sigma\colon G/H\to G/H$ must satisfy
     \[\sigma(gH)=g\sigma(H)\]
-    for any $gH\in G/H$, so it is enough to specify $\sigma(H)=g_0H$. However, we see $\sigma(gH)\coloneqq gg_0H$ is well-defined if and only if $g_0Hg_0^{-1}=H$. For example, if $H$ is normal, then this is $\sigma(H)=g_0H$ is always well-defined, so the action of $\op{Aut}_GG/H$ on $G/H$ is transitive, so $G/H$ is Galois. Conversely, if this action is transitive, then for any $g_0H\in G/H$, the map defined by setting $\sigma(H)=g_0H$ is well-defined, so $g_0Hg_0^{-1}=H$; it follows $H$ is normal. Thus, the Galois objects look like $G/H$ where $H$ is an open normal subgroup of $G$.
+    for any $gH\in G/H$, so it is enough to specify $\sigma(H)=g_0H$. However, we see $\sigma(gH)\coloneqq gg_0H$ is well-defined if and only if $g_0Hg_0^{-1}=H$. Thus, $\op{Aut}_GG/H$ acts transitively on $G/H$ if and only if $g_0Hg_0^{-1}=H$ for all $g_0\in G$, so the Galois objects look like $G/H$ where $H$ is an open normal subgroup of $G$.
 \end{example}
 \begin{example} \label{ex:galois-field}
-    Fix a field $k$, and let $\mc C\coloneqq\mathrm{SAlg}(k)\opp$ as in \Cref{ex:salgk}. As discussed, connected objects are finite separable field extensions $\ell/k$. Now, $\ell$ is a Galois object if and only if
-    \[\#\op{Hom}_k(\ell,k^{\mathrm{sep}})=\op{Aut}(\ell/k),\]
-    which is one equivalent condition to the extension $\ell/k$ being Galois.
+    Fix a field $k$, and let $\mc C\coloneqq\mathrm{SAlg}(k)\opp$ as in \Cref{ex:salgk}. As discussed, connected objects are finite separable field extensions $\ell/k$, so $\ell$ is a Galois object if and only if $\ell/k$ is Galois: both are equivalent to
+    \[\#\op{Hom}_k(\ell,k^{\mathrm{sep}})=\op{Aut}(\ell/k).\]
 \end{example}
 A central fact about Galois field extensions is that one can always embed a separable extension into a Galois one. Motivated by this (and \Cref{ex:galois-field}), we show the following result.
 \begin{proposition} \label{prop:galois-cover}
     Fix a Galois category $(\mc C,F)$. For any connected object $X$, there is a Galois object $Y$ equipped with an epimorphism $Y\to X$.
 \end{proposition}
 \begin{proof}
-    By \Cref{lem:connected-maps}, it suffices to exhibit some morphism $Y\to X$ at all from a Galois object. For brevity, set $n\coloneqq\#FX$. We now proceed in steps.
+    By \Cref{lem:connected-maps}, it suffices to exhibit any morphism $Y\to X$. For brevity, set $n\coloneqq\#FX$.
     \begin{enumerate}
-        \item We construct our object. The main difficulty here is a rig object with the desired number of isomorphisms, so we use a different group action to help us out. In particular, observe that $X^{n}$ has a natural $S_n$-action by permuting the indices.
+        \item We construct $Y$. We want $\op{Aut}Y$ to be large, so we will use the $S_n$-action on $X^n$ for help later.
 
-        Now, list the $n$ elements of $FX$ as $\{s_1,\ldots,s_n\}$, where $n>0$ because $FX$ is nonempty by \Cref{lem:dual-facts}. As such, to find the desirable connected object, we decompose $X^n$ into connected components as
-        \[X^{n}=\bigsqcup_{i=1}^mY_i.\]
-        Now, $(s_1,\ldots,s_n)\in FX^{n}$, so it lives in exactly one of the $FY_i$. Choose $Y$ so that $(s_1,\ldots,s_n)\in FY$. Notably, the composite $Y\into X^{n}\onto X$ (where the last map is any projection) defines some morphism from $Y\to X$, so it remains to show that $Z$ is Galois.
+        List the $n$ elements of $FX$ as $\{s_1,\ldots,s_n\}$, where $n>0$ because $FX$ is nonempty by \Cref{lem:dual-facts}. To make $Y$ interact with the $S_n$-action on $X^n$, we choose $Y$ among the connected components of $X^n$ so that $(s_1,\ldots,s_n)\in FY$. We have a map $Y\to X^n\to X$, so it remains to show that $Y$ is Galois.
 
-        \item As an intermediate step, we claim that any $(t_1,\ldots,t_n)\in FY$ has all the $t_\bullet$ distinct. Indeed, suppose that $t_i=t_j$ for some $i<j$. Now, consider the diagonal map
+        \item We claim that any $(t_1,\ldots,t_n)\in FY$ has all the $t_\bullet$ distinct. Indeed, suppose that $t_i=t_j$ for some $i<j$; we claim $t_i'=t_j'$ for any $(t_1,\ldots,t_n)\in FY$, which will finish. Now, consider the diagonal
         \[\Delta_{ij}\colon X^{n-1}\to X^n\]
-        defined by $(x_1,\ldots,x_{j-1},x_{j+1},\ldots,x_n)\mapsto(x_1,\ldots,x_{j-1},x_i,x_{j+1},\ldots,x_n)$. Here, we see $(t_1,\ldots,t_n)\in FY$ implies that $FY$ intersects with the image of $F\Delta_{ij}\colon FX^{n-1}\to FX^n$.
-        
-        Thus, letting $Y'$ denote the connected component in $X^{n-1}$ so that $(t_1,\ldots,t_{j-1},t_{j+1},\ldots,t_n)\in FY$, we note that we have induced a surjective map $Y'\to Y$ by \Cref{lem:connected-maps}. But then $FY'$ surjects onto $FY$, so $FY$ lives in the image of $F\Delta_{ij}$, so $t_i'=t_j'$ for any $(t_1',\ldots,t_n')\in FY$. But this is false by construction of $Y$, so we are done.
+        defined by $(x_1,\ldots,x_{j-1},x_{j+1},\ldots,x_n)\mapsto(x_1,\ldots,x_{j-1},x_i,x_{j+1},\ldots,x_n)$. In particular, letting $Y'$ denote the connected component in $X^{n-1}$ such that $(t_1,\ldots,t_{j-1},t_{j+1},\ldots,t_n)\in FY$, we have an epimorphism $Y'\to Y$ by \Cref{lem:connected-maps}. But then $FY'\onto FY$, so $FY\subseteq F\Delta_{ij}$, as claimed.
 
-        \item We now show that the action of $\op{Aut}Y$ is transitive on $FY$, which is enough to show that $Y$ is Galois. For each $g\in S_n$, we note that the automorphism $g\colon X^n\to X^n$ will send $Y$ to a unique connected component by \Cref{lem:connected-maps}. Define $G$ to be the subgroup of $S_n$ such that each $g\in G$ sends $Y$ gets to $Y$. Because each element of $g$ is invertible, we see that $G$ embeds into $\op{Aut}Y$.
+        \item We show that the action of $\op{Aut}Y$ is transitive on $FY$. For each $g\in S_n$, the automorphism $g\colon X^n\to X^n$ will send $Y$ to a unique connected component by \Cref{lem:connected-maps}. Define $G$ to be the subgroup of $S_n$ such that each $g\in G$ sends $Y$ gets to $Y$; note $G$ embeds into $\op{Aut}Y$.
 
         In fact, by the argument in \Cref{lem:connected-maps}, we see that $g\in S_n$ has $g\in G$ if and only if
         \[g(s_1,\ldots,s_n)\in FY.\]
-        This is enough to complete the proof. Indeed, for any $(t_1,\ldots,t_n)\in FY$, the previous step shows that the $t_\bullet$ are distinct, so we may find $g\in S_n$ such that $g(s_1,\ldots,s_n)=(t_1,\ldots,t_n)\in FY$. It follows that $g\in G$, so we have found an automorphism $g\in\op{Aut}Y$ sending $(s_1,\ldots,s_n)$ to $(t_1,\ldots,t_n)$.
+        This is enough. Indeed, for any $(t_1,\ldots,t_n)\in FY$, the $t_\bullet$ are distinct, so find $g\in S_n$ such that $g(s_1,\ldots,s_n)=(t_1,\ldots,t_n)\in FY$. Then $g\in G$, and $g\colon(s_1,\ldots,s_n)\mapsto(t_1,\ldots,t_n)$, as needed.
         \qedhere
     \end{enumerate}
 \end{proof}
 
 \subsection{The Profinite Group}
-Throughout, fix a Galois category $(\mc C,F)$. In this section we motivate and construct the profinite group needed to prove \Cref{thm:main-galois-theorem}. Namely, the difficulty here is even in recognizing that we can in fact the recover the group $G$ from the category $(\mc C,F)$. As motivation, we have the following remark.
+Throughout, fix a Galois category $(\mc C,F)$. In this section we motivate and construct the profinite group in \Cref{thm:main-galois-theorem}. The difficulty is recovering the group $G$ from the category $(\mc C,F)$. As motivation, we have the following remark.
 \begin{remark}
-    Fix a profinite group $G$, and let $F\colon\mathrm{FinSet}(G)\to\mathrm{FinSet}$ denote the forgetful functor. We claim that $G\cong\op{Aut}F$. Well, send any element $g\in G$ to the automorphism $\eta(g)\colon F\Rightarrow F$ by left multiplication by $g$. Here are our checks.
+    Fix a profinite group $G$, and let $F\colon\mathrm{FinSet}(G)\to\mathrm{FinSet}$ denote the forgetful functor. We claim $G\cong\op{Aut}F$ by sending $g\in G$ to the automorphism $\eta(g)\colon F\Rightarrow F$ by left multiplication by $g$. Checking naturality and that $\eta$ is a homomorphism are straightforward.
     \begin{itemize}
-        \item Well-defined: $G$-linearity of morphisms $X\to Y$ in $\mathrm{FinSet}(G)$ implies that $\eta(g)$ is natural, and $\eta(g)$ is an automorphism because it has inverse $\eta(g^{-1})$.
-        \item Homomorphism: for any $X\in\mc C$ and $x\in X$, we see $\eta(gh)_X(x)=gh\cdot x=(\eta(g)\eta(h))_X(x)$.
-        \item Injective: if $\eta(g)\colon F\Rightarrow F$ is trivial, then $g$ fixes $G/H$ for any open subgroup $H\subseteq G$, so $g\in H$ always. Because $G$ is the inverse limit of the groups $G/H$, we conclude $g$ is the identity.
-        \item Surjective: fix any automorphism $\eta\colon F\Rightarrow F$. Then for any open subgroup $H\subseteq G$ can find some $g_H\in G$ such that $\eta_{G/H}(H)=g_HG$. Naturality of $\eta$ implies that the tuple $\{g_H\}_{H\subseteq G}$ defines an element of $g\in G$, and we can then check that $\eta=\eta(g)$ because the actions on $G/H$ are the same.
+        \item Injective: if $\eta(g)\colon F\Rightarrow F$ is $\id_F$, then for any open subgroup $H\subseteq G$, $g$ fixes $G/H$, so $g\in H$ always.
+        \item Surjective: fix an $\eta\colon F\Rightarrow F$. For each open subgroup $H\subseteq G$ find $g_H\in G$ such that $\eta_{G/H}(H)=g_HG$. Naturality of $\eta$ implies that $\{g_H\}_{H\subseteq G}$ defines an element of $g\in G$, and we can check $\eta=\eta(g)$.
     \end{itemize}
 \end{remark}
-As such, we hope to recover the desired group $G$ from $\op{Aut}F$. We quickly remark that there is a natural injection
+As such, we hope to recover the desired group $G$ from $\op{Aut}F$. We remark that there is a natural injection
 \begin{equation}
     \op{Aut}F\to\prod_{X\in\mc C}\op{Aut}FX \label{eq:aut-f-top}
 \end{equation}
-sending $\eta\in\op{Aut}F$ to the bijection $\eta_X\colon FX\to FX$. In this way, we will be able to have $\op{Aut}F$ act on $FX$ for objects $X\in\mc C$, and in fact this map gives $\op{Aut}F$ its topology.
+sending $\eta\in\op{Aut}F$ to $\eta_X\colon FX\to FX$. This makes $\op{Aut}F$ into a profinite group acting on the $FX$.
 \begin{lemma}
-    Fix a Galois category $(\mc C,F)$. Then the injection \eqref{eq:aut-f-top} makes $\op{Aut}F$ into a closed subgroup of the product, where each finite set $\op{Aut}FX$ has been given the discrete topology. Thus, the induced topology makes $\op{Aut}F$ into a profinite group.
+    Fix a Galois category $(\mc C,F)$. Then \eqref{eq:aut-f-top} makes $\op{Aut}F$ into a closed subgroup of the product, where each finite set $\op{Aut}FX$ has been given the discrete topology. Thus, $\op{Aut}F$ is a profinite group.
 \end{lemma}
 \begin{proof}
-    Quickly, the last sentence does follow from the previous one: the infinite product of compact, Hausdorff, totally disconnected spaces (for example, discrete ones) retains these properties. Thus, taking the closed subset $\op{Aut}F$ will continue to retain these properties (most notably, being compact). Notably, we are omitting the checks that $\op{Aut}F$ is a topological group with the given topology.
+    The last sentence does follow from the previous one: the infinite product of compact, Hausdorff, totally disconnected spaces (for example, discrete ones) retains these properties. Thus, taking the closed subset $\op{Aut}F$ will continue to enjoy these properties.
 
-    Intuitively, the naturality condition on automorphisms of $F$ are essentially a list of equations we require an object in $\prod_{X\in\mc C}\op{Aut}FX$ to satisfy, and subsets cut out by equations should be closed. One can make this argument rigorous, but it is faster to argue directly. We show the complement of $\op{Aut}F$ in the product is open: if $(\eta_X)_{X\in\mc C}\in\prod_{X\in\mc C}\op{Aut}FX$ is not in the image of $\op{Aut}F$, then it fails the naturality condition somewhere. Namely, there is a morphism $f\colon X\to Y$ and element $x\in FX$ such that $Ff(\eta_X(x))\ne\eta_Y(Ff(x))$. With this in mind, we define
+    Intuitively, the naturality condition on automorphisms of $F$ is a list of equations we require an object in $\prod_{X\in\mc C}\op{Aut}FX$ to satisfy, and subsets cut out by equations are closed. To rigorize, we show the complement of $\op{Aut}F$ is open: if $(\eta_X)_{X\in\mc C}\in\prod_{X\in\mc C}\op{Aut}FX$ is not in the image of $\op{Aut}F$, then it fails naturality, so there is a morphism $f\colon X\to Y$ and element $x\in FX$ such that $Ff(\eta_X(x))\ne\eta_Y(Ff(x))$. Thus, define
     \[U_X\coloneqq\{\varphi\in\op{Aut}FX:\varphi(x)=\eta_X(x)\}\qquad\text{and}\qquad U_Y\coloneqq\{\varphi\in\op{Aut}FY:\varphi(Ff(x))=\eta_Y(Ff(x))\}.\]
-    Defining $U_Z\coloneqq\op{Aut}FZ$ for each object $Z\notin\{X,Y\}$, we see that
-    \[U\coloneqq\prod_{Z\in\mc C}U_Z\]
-    is an open set in the product $\prod_{X\in\mc C}\op{Aut}FX$, it contains $\eta$, and is disjoint from the image of $\op{Aut}F$ because any $\eta'\in\op{Aut}F$ must have $Ff(\eta'_X(x))=\eta'_Y(Ff(x))$.
+    Then setting $U_Z\coloneqq\op{Aut}FZ$ for each object $Z\notin\{X,Y\}$, we see that $U\coloneqq\prod_{Z\in\mc C}U_Z\subseteq\prod_{X\in\mc C}\op{Aut}FX$ is open, contains $\eta$, and is disjoint from the image of $\op{Aut}F$ because any $\eta'\in U$ has $Ff(\eta'_X(x))\ne\eta'_Y(Ff(x))$.
 \end{proof}
 \begin{remark} \label{rem:f-maps-to-g-set}
-    Another reason that $G\coloneqq\op{Aut}F$ is a good candidate group is that $F\colon\mc C\to\mathrm{FinSet}$ naturally upgrades to a functor $F\colon\mc C\to\mathrm{FinSet}(G)$. For example, each $X\in\mc C$ has $FX$ a $G$-set via the map $G\to\op{Aut}FX$ in \eqref{eq:aut-f-top}. And to be functorial, we note that a morphism $f\colon X\to Y$ in $\mc C$ has
-    \[Ff(F\sigma_X(x))=F\sigma_Y(Ff(x))\]
-    for any $x\in FX$, so $Ff\colon FX\to FY$ is $G$-linear.
+    Another reason that $G\coloneqq\op{Aut}F$ is a good candidate is that $F\colon\mc C\to\mathrm{FinSet}$ naturally upgrades to a functor $F\colon\mc C\to\mathrm{FinSet}(G)$. For example, each $X\in\mc C$ has $FX$ a $G$-set via the map $G\to\op{Aut}FX$ in \eqref{eq:aut-f-top}. To be functorial, note a morphism $f\colon X\to Y$ makes $Ff$ $G$-linear: for any $x\in FX$ and $\sigma\in G$, note
+    \[Ff(F\sigma_X(x))=F\sigma_Y(Ff(x)).\]
 \end{remark}
 
-\subsection{The Main Theorem}
-One difficulty in \Cref{thm:main-galois-theorem} is that the example $\mathrm{SAlg}(k)\opp$ forces us to expect $G$ to in some sense encode all automorphisms of $\op{Aut}X$ for each connected object $X$. In other words, we need $\op{Aut}F$ to have lots of action on connected objects. Let's show this.
+\subsection{The Main Theorem} \label{subsec:main-galois-thm}
+One difficulty in \Cref{thm:main-galois-theorem} is that the example $\mathrm{SAlg}(k)\opp$ forces us to expect $G$ to encode all automorphisms of $\op{Aut}X$ for each connected object $X$. In other words, $\op{Aut}F$ should have lots of action on connected objects. Let's show this.
 \begin{proposition} \label{prop:galois-transitive}
-    Fix a Galois category $(\mc C,F)$. Then $\op{Aut}F$ acts transitively on $FX$ for any Galois object $X$.
+    Fix a Galois category $(\mc C,F)$ and Galois object $X$. Then $\op{Aut}F$ acts transitively on $FX$.
 \end{proposition}
 \begin{proof}
-    The primary difficulty here is to come up with a description of the functor $F$ which is more internal to the category $\mc C$. We proceed in steps.
+    The primary difficulty here is to describe $F$ in a way more internal to $\mc C$. We proceed in steps.
     \begin{enumerate}
-        \item We set some notation to be used throughout the proof. Let $\Lambda$ denote the collection of isomorphism classes of Galois objects in $\mc C$, and let $X_\alpha$ be a representative of $\alpha\in\Lambda$ for each $\alpha$. In order to move morphisms around, we fix some $x_\alpha\in FX_\alpha$ for $\alpha\in\Lambda$.
+        \item We set some notation. Let $\Lambda$ index the collection of isomorphism classes of Galois objects, and let $X_\alpha$ be a representative of $\alpha\in\Lambda$; to move morphisms around, fix some $x_\alpha\in FX_\alpha$.
 
-        We now give $\Lambda$ a partial order by $\alpha\ge\beta$ if and only if there is a map $X_\alpha\to X_{\beta}$. (\Cref{lem:connected-maps} tells us that we should think of $X_\lambda$ as bigger than $X_{\alpha}$ when $\alpha\ge\beta$.) Anytime we have a morphism $g_{\beta\alpha}\colon X_\alpha\to X_{\beta}$, we note that $\op{Aut}X_{\beta}$ acts transitively on $FX_{\beta}$, we can post-compose $g_{\beta\alpha}$ by an automorphism of $\op{Aut}X_{\beta}$ to move $g_{\beta\alpha}(x_\alpha)$ to $x_{\beta}$. Doing so produces a map $f_{\beta\alpha}\colon X_\alpha\to X_{\beta}$ such that
+        We now give $\Lambda$ a partial order by $\alpha\ge\beta$ if and only if there is a map $X_\alpha\to X_{\beta}$. Anytime we have a morphism $X_\alpha\to X_{\beta}$, the transitive action of $\op{Aut}X_{\beta}$ on $FX_{\beta}$ grant us $f_{\beta\alpha}\colon X_\alpha\to X_{\beta}$ such that
         \[Ff_{\beta\alpha}(x_\alpha)=x_{\beta}.\]
-        By \Cref{lem:connected-maps}, this map $f_{\beta\alpha}\colon X_{\beta}\to X_\alpha$ is unique; notably, this implies that $\alpha\ge\beta\ge\gamma$ enforces $f_{\gamma\beta}\circ f_{\beta\alpha}=f_{\gamma\alpha}$ by checking where $x_\alpha$ goes.
+        \Cref{lem:connected-maps} implies $f_{\beta\alpha}\colon X_{\beta}\to X_\alpha$ is unique; notably, this implies $\alpha\ge\beta\ge\gamma$ has $f_{\gamma\beta}\circ f_{\beta\alpha}=f_{\gamma\alpha}$.
 
-        Lastly, we acknowledge that $\ge$ turns $\Lambda$ into a directed set: for any $\alpha,\beta\in\Lambda$, choose any connected component $Z$ of $X_\alpha\times X_\beta$ and then use \Cref{prop:galois-cover} to find $X_\gamma$ with a map $X_\gamma\to Z$. Thus, we have maps $X_\gamma\to Z\to X_\alpha\times X_\beta\to X_\alpha$ and similar for $X_\beta$, establishing $\gamma\ge\alpha,\beta$.
+        Lastly, $\Lambda$ is a directed set: for any $\alpha,\beta\in\Lambda$, use \Cref{prop:galois-cover} to find some $X_\gamma$ mapping to any connected component of $X_\alpha\times X_\beta$, so we will have maps $X_\gamma\to X_\alpha$ and $X_\gamma\to X_\beta$.
 
-        \item Acknowledging the difficulty, we show that $F$ is ``pro-representable'' by objects in $\mc C$. Define the functor $F'\colon\mc C\to\mathrm{FinSet}$ by
+        \item \label{item:pro-rep-fiber} Acknowledging the difficulty, we show that $F$ is ``pro-representable.'' Define $F'\colon\mc C\to\mathrm{FinSet}$ by
         \[F'\coloneqq\colim_{\alpha\in\Lambda}\op{Mor}_\mc C(X_\alpha,-).\]
-        Intuitively, we want to move the colimit inside $\op{Mor}$ to say that $F'$ is represented by some limit in $\mc C$, but $\mc C$ might not have this limit. Now, we claim that $F'\cong F$ by $\eta\colon F'\Rightarrow F$ defined by $\eta_X(f_\alpha)=Ff_\alpha(x_\alpha)$. Here are our checks.
-        \begin{itemize}
-            \item Well-defined: suppose the maps $f_\alpha\colon X_\alpha\to X$ and $f_\beta\colon X_\beta\to X$ represent the same element in the colimit $F'X$. Without loss of generality, we may use the fact that $\Lambda$ is directed to assume $\alpha\ge\beta$ so that $f_\alpha$ being the same as $f_\beta$ in $F'X$ forces $f_\beta\alpha f_\alpha=f_\beta$, so $Ff_\beta(x_\beta)=Ff_\beta(Ff_{\beta\alpha}(x_\alpha))=Ff_\alpha(x_\alpha)$. Thus, $\eta_X$ is well-defined.
-            \item Natural: given a map $f\colon X\to Y$, we need to check $\eta_Y\circ F'f=Ff\circ\eta_X$. Well, for any map $f_\alpha\colon X_\alpha\to X$ in $F'X$, we compute
-            \[Ff(\eta_X(f_\alpha))=Ff(Ff_\alpha(x_\alpha))=\eta_Y(f\circ f_\alpha)=\eta_Y(F'f(f_\alpha)).\]
-            \item Injective: because $\Lambda$ is directed, it suffices to show that $\eta_X(f_\alpha)=\eta_X(g_\alpha)$ implies $f_\alpha=g_\alpha$ for any maps $f_\alpha,g_\alpha\colon X_\alpha\to X$ in $F'X$. Well, we are given $Ff_\alpha(x_\alpha)=Ff_\beta(x_\beta)$, so \Cref{lem:connected-maps} finishes.
-            \item Surjective: for an object $X$, we show that $\eta_X$ surjects onto $FX$. Well, pick up some $x\in FX$. Now, decomposing $X$ into connected objects, we see that $x\in FZ$ for some connected subobject $Z\into X$, so the naturality of $t$ implies that it is enough to show that $\eta_Z$ hits $x$. Similarly, finding some Galois object $Y$ with an epimorphism $Y\to Z$ by \Cref{lem:connected-maps}, the naturality of $t$ implies that it is enough to show that $\eta_Y$ hits some point in the fiber of $x$ in the map $FY\to FZ$.
+        Intuitively, we want to move the colimit inside $\op{Mor}$ to say that $F'$ is represented by some limit in $\mc C$, but $\mc C$ might not have this limit. Anyway, we claim that $F'\cong F$ by $\eta\colon F'\Rightarrow F$ defined by $\eta_X(f_\alpha)=Ff_\alpha(x_\alpha)$. We omit the check that $\eta$ is well-defined and natural because these are purely formal. For injectivity, note because $\Lambda$ is directed, it suffices to show $\eta_X(f_\alpha)=\eta_X(g_\alpha)$ implies $f_\alpha=g_\alpha$ for any maps $f_\alpha,g_\alpha\colon X_\alpha\to X$ in $F'X$, but this comes from \Cref{lem:connected-maps}.
 
-            In total, we may assume that $X$ is Galois, and by adjusting $X$ up to isomorphism, we may assume that $X=X_\alpha$ for some $\alpha\in\Lambda$. At this point, it suffices to find some map $f\colon X_\alpha\to X_\alpha$ such that $Ff(x_\alpha)=x$, which exists because the action of $\op{Aut}X_\alpha$ on $FX_\alpha$ is transitive because $X_\alpha$ is Galois.
-        \end{itemize}
+        Lastly, for surjectivity, we show $\eta_X$ is surjective for any $X\in\mc C$. Well, fix $x\in FX$. If $X=X_\alpha$ is Galois (for some $\alpha\in\Lambda$), note $\op{Aut}X_\alpha$ acts transitively on $FX_\alpha$, so we may find some $f_\alpha\colon X_\alpha\to X_\alpha$ such that $\eta_{X_\alpha}(f_\alpha)=Ff(x_\alpha)=x$. In the general case, use \Cref{prop:galois-cover} to find some Galois $X'$ surjecting onto the connected component $Z\into X$ with $x\in FZ$, so the naturality of $\eta$ implies it is enough to show that $\eta_{X'}$ is surjective and thus hits a point in the fiber of $x$ in $FZ$.
 
-        \item As in the proof of \Cref{prop:galois-cover}, we are going to want a well-behaved subgroup of $\op{Aut}F$ to witness our transitivity, so we build this subgroup. Namely, the previous step more or less us tells us that it suffices to think about the automorphism groups $\op{Aut}X_\alpha$ for $\alpha\in\Lambda$. For brevity, set $A_\alpha\coloneqq\op{Aut}X_\alpha$, and we will take a limit of these $A_\alpha$.
+        % Thus, we may assume that $X$ is Galois; set $X=X_\alpha$ for some $\alpha\in\Lambda$. But now it suffices to find some $f\colon X_\alpha\to X_\alpha$ such that $Ff(x_\alpha)=x$, which exists because .
+        % \begin{itemize}
+        %     \item Well-defined: suppose the maps $f_\alpha\colon X_\alpha\to X$ and $f_\beta\colon X_\beta\to X$ represent the same element in the colimit $F'X$. Without loss of generality, we may use the fact that $\Lambda$ is directed to assume $\alpha\ge\beta$ so that $f_\alpha$ being the same as $f_\beta$ in $F'X$ forces $f_\beta\alpha f_\alpha=f_\beta$, so $Ff_\beta(x_\beta)=Ff_\beta(Ff_{\beta\alpha}(x_\alpha))=Ff_\alpha(x_\alpha)$. Thus, $\eta_X$ is well-defined.
+        %     \item Natural: given a map $f\colon X\to Y$, we need to check $\eta_Y\circ F'f=Ff\circ\eta_X$. Well, for any map $f_\alpha\colon X_\alpha\to X$ in $F'X$, we compute
+        %     \[Ff(\eta_X(f_\alpha))=Ff(Ff_\alpha(x_\alpha))=\eta_Y(f\circ f_\alpha)=\eta_Y(F'f(f_\alpha)).\]
+        %     \item Injective: 
+        %     \item Surjective: for 
+        % \end{itemize}
+
+        \item As in the proof of \Cref{prop:galois-cover}, we want a subgroup of $\op{Aut}F$ to witness our transitivity; we now build this subgroup. The previous step more or less us tells us that it suffices to think about the automorphism groups $A_\alpha\coloneqq\op{Aut}X_\alpha$ for $\alpha\in\Lambda$. We will take a limit of these $A_\alpha$.
 
         To define this limit, we want surjections $A_\alpha\to A_\beta$ commuting with the actions on $X_\alpha$ and $X_\beta$. In other words, whenever $\alpha\ge\beta$, we claim that there is a unique map $t_{\beta\alpha}\colon A_\alpha\to A_\beta$ such that
         \begin{equation}
             f_{\beta\alpha}\circ\sigma_\alpha=t_{\beta\alpha}(\sigma_\alpha)\circ f_{\beta\alpha} \label{eq:t-uni-prop}
         \end{equation}
-        for each $\sigma_\alpha\in A_\alpha$. Because $X_\alpha$, the map $t_{\beta\alpha}(\sigma_\alpha)$ is certainly unique by \Cref{lem:connected-maps} if it exists because the above equation specifies $Ft_{\beta\alpha}(\sigma_\alpha)(x_\beta)=Ff_{\beta\alpha}(F\sigma_\alpha(x_\alpha))$. In fact, because $X_\alpha$ is connected, it suffices to check that $Ft_{\beta\alpha}(\sigma_\alpha)(x_\beta)=Ff_{\beta\alpha}(F\sigma_\alpha(x_\alpha))$ to show that the equality of maps $X_\alpha\to X_\beta$ by \Cref{lem:connected-maps} again. But now certainly such a $t_{\beta\alpha}$ exists because $X_\beta$ is Galois.
+        for each $\sigma_\alpha\in A_\alpha$. Because $X_\alpha$ is connected, plugging in $x_\alpha$ implies the map $t_{\beta\alpha}(\sigma_\alpha)$ is unique if it exists by \Cref{lem:connected-maps}. In fact, because $X_\alpha$ is connected, it suffices to check that $Ft_{\beta\alpha}(\sigma_\alpha)(x_\beta)=Ff_{\beta\alpha}(F\sigma_\alpha(x_\alpha))$. But now certainly $t_{\beta\alpha}(\sigma_\alpha)$ exists because $X_\beta$ is Galois.
 
-        Now, uniqueness of the $t_{\beta\alpha}$ implies that $\alpha\ge\beta\ge\gamma$ yields $t_{\gamma\beta}\circ t_{\beta\alpha}=t_{\gamma\alpha}$. Furthermore, we note $t_{\beta\alpha}\colon A_\alpha\to A_\beta$ is surjective. Indeed, for any automorphism $\sigma_\beta\in A_\beta$, use the fact that $f_{\beta\alpha}\colon X_\alpha\to X_\beta$ is surjective to pick some $x'_\alpha$ in the fiber of $\sigma_\beta(x_\beta)$. Then the fact that $X_\alpha$ allows us to find $\sigma_\alpha$ such that $F\sigma_\alpha(x_\alpha)=x'_\alpha$, so
-        \[Ff_{\beta\alpha}(F\sigma_\alpha(x_\alpha))=F\sigma_\beta(Ff_{\beta\alpha}(x_\alpha)).\]
-        It follows $f_{\beta\alpha}\circ\sigma_\alpha=\sigma_\beta\circ f_{\beta\alpha}$, so $t_{\beta\alpha}(\sigma_\alpha)=\sigma_\beta$ by uniqueness satisfying \eqref{eq:t-uni-prop}.
+        Uniqueness of the $t_{\beta\alpha}$ implies that $\alpha\ge\beta\ge\gamma$ yields $t_{\gamma\beta}\circ t_{\beta\alpha}=t_{\gamma\alpha}$. Further, $t_{\beta\alpha}$ is surjective. Indeed, for any automorphism $\sigma_\beta\in A_\beta$, note $f_{\beta\alpha}\colon X_\alpha\to X_\beta$ is surjective, so pick $x'_\alpha\in f_{\beta\alpha}^{-1}(\{\sigma_\beta(x_\beta)\})$. Then find $\sigma_\alpha$ such that $F\sigma_\alpha(x_\alpha)=x'_\alpha$, so
+        \[Ff_{\beta\alpha}(F\sigma_\alpha(x_\alpha))=Ff_{\beta\alpha}(x'_\alpha)=F\sigma_\beta(Ff_{\beta\alpha}(x_\alpha)).\]
+        It follows $f_{\beta\alpha}\circ\sigma_\alpha=\sigma_\beta\circ f_{\beta\alpha}$, so $t_{\beta\alpha}(\sigma_\alpha)=\sigma_\beta$ by uniqueness of $t_{\beta\alpha}$.
 
-        In total, we have produced an inverse system $\{A_\alpha\}_{\alpha\in\Lambda}$ with surjective transition maps, so the limit $A\coloneqq\lim_{\alpha\in\Lambda}A_\alpha$ is a profinite group, and the quotient maps $A\to A_\alpha$ are surjective for each $\alpha\in\Lambda$.
+        In total, we have produced an inverse system $\{A_\alpha\}_{\alpha\in\Lambda}$ with surjective transition maps, so the limit $A\coloneqq\lim_{\alpha\in\Lambda}A_\alpha$ is a profinite group with surjective quotients $A\to A_\alpha$.
 
-        \item We now map $A\opp\to\op{Aut}F'\cong\op{Aut}F$ to finish the proof. Indeed, map $A\opp\to\op{Aut}F'$ by having $\sigma\in A$ produce the automorphism $\sigma\colon F\Rightarrow F$
+        \item We now map $A\opp\to\op{Aut}F'\cong\op{Aut}F$ to finish. Indeed, send $\sigma\in A$ to $\sigma\colon F\Rightarrow F$ by
         \[\sigma(f_\beta)\coloneqq f_\beta\circ\sigma_\beta.\]
-        To see that $\sigma$ is well-defined, note that $f_\alpha\colon X_\alpha\to X$ and $f_\beta\colon X_\beta\to X$ representing the same object in $F'X$ (without loss of generality) requires $\alpha\ge\beta$ so that $f_\beta\circ f_{\beta\alpha}=f_\alpha$. But then \eqref{eq:t-uni-prop} tells us that $f_\beta\circ\sigma_\beta=f_\alpha\circ\sigma_\alpha$.
+        Uniqueness of the transition maps in \eqref{eq:t-uni-prop} shows $\sigma\colon F\Rightarrow F$ is well-defined. Checking naturality and that $A\opp\to\op{Aut}F'$ is a homomorphism are purely formal, so we omit those checks.
+        % To see that $\sigma$ is well-defined, note that $f_\alpha\colon X_\alpha\to X$ and $f_\beta\colon X_\beta\to X$ representing the same object in $F'X$ (without loss of generality) requires $\alpha\ge\beta$ so that $f_\beta\circ f_{\beta\alpha}=f_\alpha$. But then \eqref{eq:t-uni-prop} tells us that $f_\beta\circ\sigma_\beta=f_\alpha\circ\sigma_\alpha$.
 
-        To see that $\sigma$ is natural, note that a morphism $f\colon X\to Y$ and element $f_\alpha\colon X_\alpha\to X$ of $F'X$ has
-        \[\sigma_Y(F'f(f_\alpha))=f\circ f_\alpha\circ\sigma_\alpha=F'f(\sigma_X(f_\alpha)).\]
-        We also acknowledge that we have made a group homomorphism $A\opp\to\op{Aut}F'$, which one can see directly.
+        % To see that $\sigma$ is natural, note that a morphism $f\colon X\to Y$ and element $f_\alpha\colon X_\alpha\to X$ of $F'X$ has
+        % \[\sigma_Y(F'f(f_\alpha))=f\circ f_\alpha\circ\sigma_\alpha=F'f(\sigma_X(f_\alpha)).\]
+        % We also acknowledge that we have made a group homomorphism $A\opp\to\op{Aut}F'$, which one can see directly.
         
-        As an aside, for some $\alpha\in\Lambda$, it will be helpful to note that the action of $\sigma\in A$ on $FX_\alpha$ can either come from $\sigma_\alpha\in\op{Aut}X_\alpha$ or via the maps $A\opp\to\op{Aut}F'\to\op{Aut}F\to\op{Aut}FX_\alpha$. In fact, these actions coincide: the element $x_\alpha\in FX_\alpha$ corresponds to ${\id_{X_\alpha}}\in F'X_\alpha$, which $\sigma_\alpha$ sends to $\sigma_\alpha\in F'X_\alpha$, which corresponds to $F\sigma_\alpha(x_\alpha)\in FX_\alpha$. Thus, the action induced by the composite is simply $F\sigma_\alpha\colon FX_\alpha\to FX_\alpha$ because we checked it on $x_\alpha$, which is enough by \Cref{lem:connected-maps}.
-
-        To finish the proof, we note that the action of $A_\alpha$ on $X_\alpha$ is transitive because $X_\alpha$ is Galois. Lifting these automorphisms up to $A$ and then mapping to $\op{Aut}F$ does not change the action on $X_\alpha$ as just discussed, so we conclude that the action of $\op{Aut}F$ is transitive on $X_\alpha$, as required.
+        Wrapping up, for some $\alpha\in\Lambda$, the action of $\sigma\in A$ on $FX_\alpha$ can either come from $\sigma_\alpha\in\op{Aut}X_\alpha$ or via $A\opp\to\op{Aut}F'\to\op{Aut}F\to\op{Aut}FX_\alpha$, but one can verify these are the same.
+        % In fact, these actions coincide: the element $x_\alpha\in FX_\alpha$ corresponds to ${\id_{X_\alpha}}\in F'X_\alpha$, which $\sigma_\alpha$ sends to $\sigma_\alpha\in F'X_\alpha$, which corresponds to $F\sigma_\alpha(x_\alpha)\in FX_\alpha$. Thus, the action induced by the composite is simply $F\sigma_\alpha\colon FX_\alpha\to FX_\alpha$ because we checked it on $x_\alpha$, which is enough by \Cref{lem:connected-maps}.
+        As such, the action of $A\onto A_\alpha$ on $X_\alpha$ is transitive because $X_\alpha$ is Galois, so $\op{Aut}F$ also acts transitively on $X_\alpha$.
         \qedhere
     \end{enumerate}
 \end{proof}
+\begin{remark} \label{rem:profinite-fiber-functor-unique}
+    Fix a profinite group $G$. The above proof shows any two fiber functors $F_1,F_2\colon\mathrm{FinSet}(G)\to\mathrm{FinSet}$ are naturally isomorphic; this tells us ``Galois'' is a property of the category, not the fiber functor. Indeed, using the notation above, $\Lambda$ is the set of quotients $G/H$ where $H\subseteq G$ is an open normal subgroup. By choosing $x_\alpha$ judiciously, we can make the $f_{\alpha\beta}$ into the natural projections $G/H\onto G/H'$ whenever $H\subseteq H'$. But then \eqref{item:pro-rep-fiber} above tells us that $F_1$ and $F_2$ are both isomorphic to
+    \[\colim_{\alpha\in\Lambda}\op{Mor}_\mc C(X_\alpha,-).\]
+\end{remark}
 \begin{corollary} \label{cor:connected-to-connected}
-    Fix a Galois category $(\mc C,F)$. Then $G\coloneqq\op{Aut}F$ acts transitively on $FX$ for any connected object $X$. In other words, the upgraded fiber functor $F\colon\mc C\to\mathrm{FinSet}(G)$ of \Cref{rem:f-maps-to-g-set} sends connected objects to connected objects.
+    Fix a Galois category $(\mc C,F)$. Then $G\coloneqq\op{Aut}F$ acts transitively on $FX$ for any connected object $X$. In other words, if $X$ is connected, then $FX\in\mathrm{FinSet}(G)$ is connected (recall \Cref{rem:f-maps-to-g-set}).
 \end{corollary}
 \begin{proof}
-    Quickly, note that the last sentence follows from the previous one because connected objects in $\mathrm{FinSet}(G)$ are exactly the transitive $G$-sets, as described in \Cref{ex:g-sets}.
-    
-    Now, by \Cref{prop:galois-cover}, we may find a Galois object $Y$ with epimorphism $f\colon Y\to X$. The transitivity of $G$ acting on $FY$ from \Cref{prop:galois-transitive} will translate into transitivity on $FX$. Explicitly, fix elements $x,x'\in FX$, and find lifts $y,y'\in FY$ of them. Transitivity of the $G$-action of $FY$ promises $\sigma\in G$ such that $F\sigma_Y(y)=y'$, so
-    \[F\sigma_X(x)=F\sigma_X(Ff(y))=Ff(F\sigma_Y(y))=Ff(y')=x',\]
-    so we conclude that the action of $G$ on $FX$ is transitive.
+    The last sentence follows from the previous one because connected objects in $\mathrm{FinSet}(G)$ are exactly the transitive $G$-sets by \Cref{ex:g-sets}. Now, by \Cref{prop:galois-cover}, find a Galois object $Y$ with epimorphism $f\colon Y\to X$. The transitivity of $G$ acting on $FY$ from \Cref{prop:galois-transitive} will translate into transitivity on $FX$. Explicitly, fix elements $x,x'\in FX$, and find lifts $y,y'\in FY$ of them. Transitivity of the $G$-action of $FY$ promises $\sigma\in G$ such that $F\sigma_Y(y)=y'$, so we can calculate $F\sigma_X(x)=x'$.
 \end{proof}
 \begin{corollary} \label{cor:galois-to-galois}
-    Fix a Galois category $(\mc C,F)$. The upgraded fiber functor $F\colon\mc C\to\mathrm{FinSet}(G)$ of \Cref{rem:f-maps-to-g-set} sends Galois objects to Galois objects.
+    Fix a Galois category $(\mc C,F)$. Set $G\coloneqq\op{Aut}F$. If $X\in\mc C$ is Galois, then $FX\in\mathrm{FinSet}(G)$ is Galois (recall \Cref{rem:f-maps-to-g-set}).
 \end{corollary}
 \begin{proof}
-    Let $X\in\mc C$ be Galois. For example, $X$ is connected, so by \Cref{cor:connected-to-connected} $FX$ is connected, so (up to isomorphism) we may write $FX=G/H$ for some open subgroup $H\subseteq G$. Now, $\op{Aut}Y$ acts transitively on $G/H$ via $F\colon\op{Aut}Y\to\op{Aut}_G(G/H)$, so we actually see that $\op{Aut}_G(G/H)$ is acting transitively on $G/H$. It follows that $G/H$ is Galois.
+    Let $X\in\mc C$ be Galois. For example, $X$ is connected, so $FX$ is connected by \Cref{cor:connected-to-connected}, so we may write $FX=G/H$ for some open subgroup $H\subseteq G$. Now, $\op{Aut}X$ acts transitively on $G/H$ via $F\colon\op{Aut}X\to\op{Aut}_G(G/H)$, so we see that $\op{Aut}_G(G/H)$ is acting transitively on $G/H$, as needed.
 \end{proof}
 We are now ready to prove our main theorem.
-\begin{theorem} \label{thm:main-galois-theorem}
-    Let $\mc C$ be a Galois category with fiber functor $F$; set $G\coloneqq\op{Aut}F$. Then $F\colon\mc C\to\mathrm{FinSet}(G)$ is an equivalence of categories.
-\end{theorem}
+\maingaloisthm*
 \begin{proof}
-    We showed that this $F$ makes sense in \Cref{rem:f-maps-to-g-set}. The main difficulties in this proof are that $F$ is full and essentially surjective, so we quickly get the other checks out of the way. Note $F$ is faithful by \Cref{lem:faithful}. We also acknowledge that decomposing some $X\in\mc C$ into connected objects $X=\bigsqcup_{i=1}^nX_i$ yields
-    \[FX=\bigsqcup_{i=1}^nFX_i\]
-    because $F$ is exact. (Note that coproducts in $\mathrm{FinSet}(G)$ and $\mathrm{FinSet}$ are the same.) \Cref{cor:connected-to-connected} implies that each $FX_i$ is connected, so we see that $F$ preserves the decomposition into connected objects.
+    We showed that this $F$ makes sense in \Cref{rem:f-maps-to-g-set}. The difficulties in this proof are that $F$ is full and essentially surjective. Namely, note $F$ is faithful by \Cref{lem:faithful}.
 
-    We now show that $F$ is full and essentially surjective.
-    \begin{itemize}
-        \item Full: fix some $G$-linear map $s\colon FX\to FY$, and we will show that $s=Ff$ for some $f\colon X\to Y$. This requires turning $s$ into an object we can manipulate, so we define
-        \[\op{Graph}(s)\coloneqq\{(x,y)\in FX\times FY:y=s(x)\}.\]
-        Note that $\op{Graph}(s)$ is a $G$-set because $s$ is $G$-linear: note $y=s(x)$ implies $gy=s(gx)$ for any $g\in G$. By decomposing $X\times Y$ into connected objects $\bigsqcup_{i=1}^nZ_i$, so
-        \[FX\times FY=\bigsqcup_{i=1}^nFZ_i\]
-        as discussed above. Matching the decomposition of $\op{Graph}(s)$ up with various connected components in the above decomposition, we produce some subobject $Z\subseteq X\times Y$ such that $FZ=\op{Graph}(s)$. (Namely, take the union of the $Z_i$ which map to $\op{Graph}(s)$.) Now, the projection $p_X\colon\op{Graph}(s)\to X$ is an isomorphism, so it arises from an isomorphism $p\colon Z\to X$ where $p_X=Fp$. In total, we see that $s\colon FX\to FY$ is the composite
-        \[FX\stackrel{Fp}\leftarrow FZ=\op{Graph}(s)\stackrel{Fp_Y}\to FY,\]
-        and each of these morphisms arise from morphisms in $\mc C$. Thus, $s$ is the image of a morphism $X\to Y$.
-        \item Essentially surjective: because $\mathrm{FinSet}(G)$ is already a Galois category by \Cref{ex:g-sets}, it suffices to show that any connected object $G/H$ (where $H\subseteq G$ is an open subgroup) is isomorphic to $FZ$ for some $Z\in\mc C$.
+    We now show that $F$ is full. Fix some $G$-linear map $s\colon FX\to FY$, and we will show that $s=Ff$ for some $f\colon X\to Y$. The main point will be to use the fact that $F$ reflects isomorphisms. To set up, set
+    \[\op{Graph}(s)\coloneqq\{(x,y)\in FX\times FY:y=s(x)\}.\]
+    Note that $\op{Graph}(s)$ is a $G$-set because $s$ is $G$-linear. Decomposing $X\times Y$ into connected objects $\bigsqcup_{i=1}^nZ_i$,
+    \[FX\times FY=\bigsqcup_{i=1}^nFZ_i,\]
+    so each $FZ_i$ is connected by \Cref{cor:connected-to-connected}. Matching the decomposition of $\op{Graph}(s)$ up with various connected components in the above decomposition, we produce some subobject $Z\subseteq X\times Y$ such that $FZ=\op{Graph}(s)$. Now, the projection $p_X\colon\op{Graph}(s)\to FX$ is an isomorphism, so it arises from an isomorphism $p\colon Z\to X$! In total, $s\colon FX\to FY$ is the composite
+    \[FX\stackrel{Fp}\leftarrow FZ=\op{Graph}(s)\stackrel{Fp_Y}\to FY,\]
+    and each of these morphisms arise from morphisms in $\mc C$. Thus, $s$ is the image of a morphism $X\to Y$.
+
+    Lastly, we show $F$ is essentially surjective. Because $\mathrm{FinSet}(G)$ is already a Galois category by \Cref{ex:g-sets}, it suffices to show that any connected object $G/H$ (where $H\subseteq G$ is an open subgroup) is isomorphic to $FX$ for some $X\in\mc C$. The hard part is to build some Galois $X'$ with a map $FX'\to G/H$. Using the topology on $G$, we know that there is a basic open set around $\{e\}$ in $H$, so we can find objects $\{X_1,\ldots,X_n\}\subseteq\mc C$ (with $n>0$) such that
+    \[\left\{g\in G:g_{X_i}=e_{X_i}={\id_{FX_i}}\text{ for }i=1,2,\ldots,n\right\}\subseteq H.\]
+    Note that we may assume the $X_i$ are connected: indeed, if $g_X=\id_{FX}$ and $g_Y=\id_{FY}$, then $g_{X\sqcup Y}=\id_{X\sqcup Y}$, so we may decompose each $X_i$ into connected components. We now define $X'$ via \Cref{prop:galois-cover} to be a Galois object equipped with an epimorphism onto some connected component of $\prod_{i=1}^nX_i$.
     
-        The hard part is to build some Galois $X'$ with a cover $FX'\to G/H$. Using the topology on $G$, we know that there is a basic open set around $\{e\}$ in $H$, so we can find objects $\{X_1,\ldots,X_n\}\subseteq\mc C$ (with $n>0$) such that
-        \[\left\{g\in G:g_{X_i}=e_{X_i}={\id_{FX_i}}\text{ for }i=1,2,\ldots,n\right\}\subseteq H.\]
-        Quickly, note that we may assume the $X_i$ are connected: indeed, if $g_X=\id_{FX}$ and $g_Y=\id_{FY}$, then $g_{X\sqcup Y}=\id_{X\sqcup Y}$ by looking at each component in $X\sqcup Y$, so we may decompose each $X_i$ above into connected components to get a smaller basic subgroup. We now define $X$ via \Cref{prop:galois-cover} to be a Galois object equipped with an epimorphism onto some connected component of $\prod_{i=1}^nX_i$.
-        
-        Connectivity of the $X_i$ implies that the induced maps $X'\to X_i$ and hence $FX'\to FX_i$ are epic. Note $FX'$ is Galois by \Cref{cor:galois-to-galois}, so we may write $FX'=G/H'$ for some open normal subgroup $H'\subseteq G$. Notably, any $\sigma\in H'$ fixes $FY$ and so fixes each $FX_i$ due to the $G$-linear surjections $FX'\to FX_i$, so it follows that $\sigma\in H$ by the construction of the $X_i$. Thus, we have a surjection $FX'\to G/H$ via the surjection $G/H'\to G/H$.
-    
-        We are now essentially done. Namely, let $X$ be the quotient of $X'$ by the subgroup of
-        \[(H/H')\opp\subseteq(G/H')\opp=\op{Aut}_G(G/H')=\op{Aut}_GFX'=\op{Aut}X'.\]
-        (Here, we are taking opposite groups because an element $g\in G$ acts on $G/H'$ by $\sigma_g\colon g_0H'\mapsto g_0gH'$ as discussed in \Cref{ex:g-set-galois}, and the map $g\mapsto\sigma_g$ is a map $G\opp\to\op{Aut}_G(G/H')$.) Because $F$ is exact, it follows that the $FX$ is the quotient of $G/H'$ by the action of $H/H'$ on $FX'=G/H'$, which leaves us with $FX=G/H$.
-        \qedhere
-    \end{itemize}
+    Connectivity of the $X_i$ implies that the induced maps $X'\to X_i$ and hence $FX'\to FX_i$ are epic. Note $FX'$ is Galois by \Cref{cor:galois-to-galois}, so we may write $FX'=G/H'$ for some open normal subgroup $H'\subseteq G$. Notably, any $\sigma\in H'$ fixes $FY$ and so fixes each $FX_i$, so $\sigma\in H$ by the construction of the $X_i$. Thus, we have a surjection $FX'=G/H'\onto G/H$. To finish, let $X$ be the quotient of $X'$ by the subgroup of
+    \[(H/H')\opp\subseteq(G/H')\opp=\op{Aut}_G(G/H')=\op{Aut}_GFX'=\op{Aut}X'.\]
+    (We are taking opposite groups because an element $g\in G$ acts on $G/H'$ by $\sigma_g\colon g_0H'\mapsto g_0gH'$ as discussed in \Cref{ex:g-set-galois}.) Because $F$ is exact, it follows that $FX=(FX')/(H/H')\opp=(G/H')/(H/H')\opp=G/H$.
 \end{proof}
+\begin{remark} \label{rem:fiber-functor-unique}
+    Combining \Cref{thm:main-galois-theorem} with \Cref{rem:profinite-fiber-functor-unique}, we see that the fiber functor of any Galois category is roughly unique. In particular, $\op{Aut}F$ depends only on the category $\mc C$ itself.
+\end{remark}
 % \begin{remark}
 %     If one tracks through the above arguments, we were are actually quite conservative in our use of colimits. We require coproducts, \Cref{lem:dual-facts} uses the existence of a final object, and the above proof uses the fact that we are able to take quotients by finite automorphism groups at the very end.
 % \end{remark}
 
-\section{Finite \'Etale Covers}
+\section{Finite \'Etale Covers} \label{sec:finite-et-covers}
 The goal of this section is to prove \Cref{thm:etale-cover-galois}, which roughly speaking tells us that the category of finite \'etale covers of a (connected) scheme forms a Galois category.
 
 \subsection{\'Etale and Totally Split Morphisms}
@@ -348,14 +353,42 @@ We showed that these properties are equivalent in class; a proof is recorded in 
 \begin{definition}[\'etale]
     A scheme morphism $f\colon X\to S$ locally of finite presentation is \textit{\'etale} if and only if it is flat and unramified.
 \end{definition}
-The moral of this section is that finite \'etale maps are analogous to (finite) covering spaces in algebraic topology. To justify this, we begin by making an analogous definition for a trivial cover.
+The moral of this section is that finite \'etale maps are analogous to (finite) covering spaces in algebraic topology. To justify this, we begin by making an analogous definition for a trivial cover and then show that our finite \'etale maps are ``\'etale-locally'' trivial. Here are our trivial covers.
 \begin{definition}[totally split]
-    A scheme morphism $f\colon X\to S$ is \textit{totally split} if and only if we can decompose $S=\bigsqcup_{i=1}^\infty$
+    A scheme morphism $f\colon X\to S$ is \textit{totally split} if and only if we can decompose $S=\bigsqcup_{\alpha\in\Lambda}^\infty S_\alpha$ into open subschemes such that $f^{-1}(S_\alpha)\cong S_\alpha\sqcup\cdots\sqcup S_\alpha$ (for some finite number of $S_\alpha$s) and$f^{-1}(S_\alpha)\to S_\alpha$ is the natural projection.
 \end{definition}
-\todo{}
+\begin{proposition} \label{prop:finite-etale-is-locally-trivial}
+    Fix a finite \'etale map $f\colon X\to S$. Then there is a finite faithfully flat map $S'\to S$ so that the base-change $f'\colon X'\to S'$ is totally split, where $X'\coloneqq X\times_SS'$.
+\end{proposition}
+\begin{proof}
+    To begin, we decompose $S$ into connected components $\bigsqcup_{\alpha\in\Lambda}^\infty S_\alpha$. If we can show that $f^{-1}(S_\alpha)\to S_\alpha$ is totally split for each $\alpha\in\Lambda$, then we can just zipper these pieces together to show that $f$ is totally split. Thus, replacing $S$ with a connected component $S_\alpha$ and $X$ with $f^{-1}(S_\alpha)$, we may assume that $S$ is connected.
 
-\subsection{A Little Descent}
-We will require a few descent results in the following discussion. It would take us much too far afield to prove these results in their correct context, so we will pick up exactly what we need. For brevity, we establish a general set-up for the following results: $f\colon X\to S$ is an affine morphism, and $p\colon S'\to S$ is some affine faithfully flat map.\footnote{One typically removes the requirements that $f$ and $p$ are affine, but this makes the arguments nontrivially harder, and anyway everything will be affine in our application.} Setting $X'\coloneqq X\times_SS'$, we produce the following pullback square.
+    Now, because $f$ is finite and flat, it is locally free, so because $S$ is connected, the degree of $f$ at each point in $S$ is constant. Thus, we may induct on $n\coloneqq\deg f$. If $n=0$, then there is nothing to say because this requires $X=\emp$, so $f$ is already (vacuously) totally split. Otherwise, take $n>0$, and $X$ is nonempty. Because $f$ is finite and unramified, the diagonal $\Delta_f\colon X\to X\times_SX$ is both an open and closed embedding, so we can write
+    \[X\times_SX=X\sqcup Y\]
+    for some open and closed subscheme $Y\subseteq X\times_SX$, where we have identified $X$ with its image along $\Delta_f$. Now, degree of a locally free morphism is preserved by base-change,\footnote{This can be checked affine-locally: if a free $A$-algebra $B$ has rank $n$, then $B\otimes_AA'$ is a free $A'$-algebra of rank $n$ for any nonzero $A$-algebra $A'$} so the projection $p_2\colon X\times_SX\to X$ continues to have degree $n$. However, one element in any fiber of $p_2$ will come from the image of $X$ along the diagonal $\Delta_f$, so the other $n-1$ elements must come from $Y$, meaning that the composite
+    \[Y\to X\times_SX\to X\]
+    has degree $n-1$. Thus, the inductive hypothesis promises a finite faithfully flat $X$-scheme $S'$ such that the base-change $Y\times_XS'\to S'$ of the above composite is totally split.
+    
+    We now claim that $S'$ is the desired $S$-scheme. To visualize the base-change $X\times_SS'\to S'$, we build the following diagram.
+    % https://q.uiver.app/?q=WzAsNixbMiwwLCJYIl0sWzIsMSwiUyJdLFsxLDEsIlgiXSxbMSwwLCJYXFx0aW1lc19TWCJdLFswLDEsIlMnIl0sWzAsMCwiWFxcdGltZXNfU1MnIl0sWzAsMSwiZiJdLFs1LDQsImYnIl0sWzMsMl0sWzUsM10sWzMsMF0sWzIsMV0sWzQsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+    \[\begin{tikzcd}
+        {X\times_SS'} & {X\times_SX} & X \\
+        {S'} & X & S
+        \arrow["f", from=1-3, to=2-3]
+        \arrow["{f'}", from=1-1, to=2-1]
+        \arrow[from=1-2, to=2-2]
+        \arrow[from=1-1, to=1-2]
+        \arrow[from=1-2, to=1-3]
+        \arrow[from=2-2, to=2-3]
+        \arrow[from=2-1, to=2-2]
+    \end{tikzcd}\]
+    To see that $X\times_SS'\to S'$ is totally split, we note that fiber products commute with disjoint unions because fiber products can be computed affine-locally, so the composite
+    \[X\times_SS'=(X\times_SX)\times_XS'=(X\sqcup Y)\times_XS'=(X\times_XS')\sqcup(Y\times_SS')\to S'\]
+    remains totally split because the disjoint union of totally split morphisms is totally split. Lastly, we note that $S'\to S$ is finite and faithfully flat because the maps $S'\to X$ and $X\to S$ are both finite and faithfully flat. In particular, $f\colon X\to S$ is surjective because the degree $n$ is locally constantly positive.
+\end{proof}
+
+\subsection{Affine Descent}
+We will require a few descent results in the following discussion. It would take us much too far afield to prove these results in their correct context, so we will pick up exactly what we need. For brevity, we establish a general set-up for the following results: $f\colon X\to S$ is an affine morphism, and $p\colon S'\to S$ is some affine faithfully flat map. Setting $X'\coloneqq X\times_SS'$, we produce the following pullback square.
 % https://q.uiver.app/?q=WzAsNCxbMCwxLCJYIl0sWzEsMSwiUyJdLFsxLDAsIlMnIl0sWzAsMCwiWCciXSxbMywyLCJmJyJdLFswLDEsImYiXSxbMiwxLCJwIl0sWzMsMCwicCciLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 \[\begin{tikzcd}
 	{X'} & {S'} \\
@@ -378,79 +411,168 @@ Occasionally, we will want to work affine-locally, which is appealing because we
     \end{tikzcd} \label{eq:affine-local-fpqc-set-up}
 \end{equation}
 Here, $\Spec B=f^{-1}(\Spec A)$ and $\Spec A'=p^{-1}(\Spec A)$ and $B'=B\otimes_AA'$.
-Our end goal will be to show that $f'$ finite \'etale implies that $f$ is also finite \'etale. Finiteness is not so bad.
-\begin{lemma} \label{lem:finite-descent}
-    Fix everything as above. If $f'$ is finite, then $f$ is also finite.
-\end{lemma}
-\begin{proof}
-    We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. We are given that $B'$ is a finite $A'$-module, and we want to show that $B$ is a finite $A$-module. Well, we can find some finitely many generators for $B'$ as an $A'$-module. In fact, writing any element $\sum_{i=1}^nb_i\otimes a'_i$ in $B'$ as $\sum_{i=1}^na'_i(b_i\otimes1)$, we see that we may assume that our finitely many generators for $B'$ take the form $\{a_i\otimes1\}_{i=1}^n$. As such, we have produced a map $A^n\to B$ such that the induced map
-    \[A^n\otimes_AA'\to B\otimes_AA'\]
-    is surjective. But we are now done: the complex $A^n\to B\to0$ becomes exact upon tensoring by $A'$ by the above, so faithful flatness of $A'$ as an $A$-module ensures that $A^n\to B$ is surjective.
-\end{proof}
-To show \'etale, more work will be required. By definition, it will be enough to show flatness and unramified-ness separately. Flatness is easier.
-\begin{lemma} \label{lem:flat-descent}
-    Fix everything as above. If $f'$ is flat, then $f$ is flat.
-\end{lemma}
-\begin{proof}
-    We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. We are given that $B'$ is a flat $A'$-algebra, and we want to show that $B$ is a flat $A$-algebra. Well, suppose that we have an exact sequence
-    \[M_1\to M_2\to M_3\]
-    of $A$-modules. Because $A'$ is flat over $A$, and $B'=B\otimes_AA'$ is flat over $A'$, we get the exact sequence
-    \[(B\otimes_AA')\otimes_{A'}(M_1\otimes_AA')\to(B\otimes_AA')\otimes_{A'}(M_2\otimes_AA')\to(B\otimes_AA')\otimes_{A'}(M_3\otimes_AA').\]
-    However, this exact sequence is isomorphic to the exact sequence
-    \[(B\otimes_AM_1)\otimes_AA'\to(B\otimes_AM_2)\otimes_AA'\to(B\otimes_AM_3)\otimes_AA',\]
-    so the faithful flatness of $A'$ finishes.
-\end{proof}
-We now turn towards being unramified. Allowing the hypothesis that $f$ is locally of finite presentation (we will have finite in the application), being unramified is equivalent to the diagonal being an open embedding. So our next goal is to discuss open embeddings. Roughly speaking, the point is that an open embedding is an isomorphism onto an open subset, so we will want to work with isomorphisms and with openness. Isomorphisms are easier.
-\begin{lemma} \label{lem:iso-descent}
-    Fix everything as above. If $f'$ is an isomorphism, then $f$ is also an isomorphism.
-\end{lemma}
-\begin{proof}
-    We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. Because $f'$ is an isomorphism, we see that
-    \[0\to A\otimes_AA'\stackrel{f'}\to B\otimes_AA'\to0\]
-    is exact, so it follows that $0\to A\stackrel f\to B\to0$ is exact, so the result follows.
-\end{proof}
-To discuss openness, we need a little topology.
+Our end goal will be to show that $f'$ finite \'etale implies that $f$ is also finite \'etale.
 \begin{lemma} \label{lem:fpqc-quotient-top}
     Let $f\colon S'\to S$ be a quasicompact faithfully flat map. Then $U\subseteq S$ is open if and only if $\varphi^{-1}(U)\subseteq S'$ is open.
 \end{lemma}
 \begin{proof}
     The forward direction is by continuity of $f$. To continue, we make some reductions. By taking complements, it suffices to show that $Z'\coloneqq f^{-1}(Z)\subseteq S$ is closed implies that $Z\subseteq S$ is closed. Because $f$ is surjective, we see that $Z=f(Z')$, so upon giving $Z'$ the reduced scheme structure, it remains to show that $\varphi(Z')$ is closed in $S$.
     
-    Well, by \cite[Lemma~II.4.5]{hartshorne}, it is enough to show that $f(Z')$ is stable under specialization. However, going down for flat extensions \cite[Lemma~10.11]{eisenbud-comm-alg} implies that $f(U')$ is stable under generalization for any open $U'\subseteq S'$, so $S\setminus f(Z')=f(S'\setminus Z')$ is stable under generalization (this equality holds because $f$ is surjective). It follows that $f(Z')$ is stable under specialization, as desired.
+    Well, by \cite[Lemma~II.4.5]{hartshorne}, it is enough to show that $f(Z')$ is stable under specialization. However, going up for flat extensions \cite[Lemma~10.11]{eisenbud-comm-alg} implies that $f(U')$ is stable under generalization for any open $U'\subseteq S'$, so $S\setminus f(Z')=f(S'\setminus Z')$ is stable under generalization (this equality holds because $f$ is surjective). It follows that $f(Z')$ is stable under specialization, as desired.
 \end{proof}
-We are now ready to execute our plan.
-\begin{lemma} \label{lem:open-descent}
-    Fix everything as above. If $f'$ is an open embedding, then $f$ is also an open embedding.
-\end{lemma}
-\begin{proof}
-    We follow \cite{emerton-descent}. To begin, note that the surjectivity of $p$ and $p'$ implies that
-    \[f'(X')=p^{-1}(p(f'(X')))=p^{-1}(f(p'(X')))=p^{-1}(f(X)),\]
-    so $p^{-1}(f(X))$ is open in $S'$, so $f(X)$ is open in $S$ by \Cref{lem:fpqc-quotient-top}. It remains to show that $X$ is an isomorphism onto $U\coloneqq f(X)$. Well, setting $U'\coloneqq f'(X')$, we note that $f\colon X\to U$ base-changes to the isomorphism $f'\colon X'\to U'$, so \Cref{lem:iso-descent} finishes.
-\end{proof}
-\begin{lemma} \label{lem:unramified-descent}
-    Fix everything as above. Suppose that $f$ is locally of finite presentation. If $f'$ is unramified, then $f$ is also unramified.
-\end{lemma}
-\begin{proof}
-    To set us up, we quickly acknowledge that an affine morphism $f\colon X\to S$ is separated and therefore has closed and hence affine diagonal $\Delta_f\colon X\to X\times_SX$. The point is that we will be able to use the above descent results on the diagonal $\Delta_f$.
-
-    Now, by definition, $f$ is unramified if and only if the diagonal $\Delta_f\colon X\to X\times_SX$ is an open embedding. However, base-changing by $p\colon S'\to S$, we know that $f'$ is unramified, so $\Delta_{f'}\colon X\to X\times_SX$ is an open embedding, so \Cref{lem:open-descent} tells us that $\Delta_f\colon X\to X\times_SX$ is an open embedding.
-\end{proof}
-\begin{proposition}
-    Fix everything as above. If $f'$ is finite \'etale, then $f$ is also finite \'etale.
+\begin{proposition} \label{prop:descent}
+    Fix everything as above.
+    \begin{enumerate}[label=(\alph*)]
+        \item If $f'$ is finite, then $f$ is also finite.
+        \item If $f'$ is flat, then $f$ is flat.
+        \item If $f'$ is an isomorphism, then $f$ is also an isomorphism.
+        \item If $f'$ is an open embedding, then $f$ is also an open embedding.
+        \item Suppose that $f$ is locally of finite presentation. If $f'$ is unramified, then $f$ is also unramified.
+        \item If $f'$ is finite \'etale, then $f$ is finite \'etale.
+    \end{enumerate}
 \end{proposition}
 \begin{proof}
-    We know that $f'$ is finite, flat, and unramified, so $f$ also inherits these properties by combining \Cref{lem:finite-descent,lem:flat-descent,lem:unramified-descent}. This finishes.
+    Here we go.
+    \begin{listalph}
+        \item We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. We are given that $B'$ is a finite $A'$-module, and we want to show that $B$ is a finite $A$-module. Well, we can find some finitely many generators for $B'$ as an $A'$-module. In fact, writing any element $\sum_{i=1}^nb_i\otimes a'_i$ in $B'$ as $\sum_{i=1}^na'_i(b_i\otimes1)$, we see that we may assume that our finitely many generators for $B'$ take the form $\{a_i\otimes1\}_{i=1}^n$. As such, we have produced a map $A^n\to B$ such that the induced map
+        \[A^n\otimes_AA'\to B\otimes_AA'\]
+        is surjective. But we are now done: the complex $A^n\to B\to0$ becomes exact upon tensoring by $A'$ by the above, so faithful flatness of $A'$ as an $A$-module ensures that $A^n\to B$ is surjective.
+        \item We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. We are given that $B'$ is a flat $A'$-algebra, and we want to show that $B$ is a flat $A$-algebra. Well, suppose that we have an exact sequence
+        \[M_1\to M_2\to M_3\]
+        of $A$-modules. Because $A'$ is flat over $A$, and $B'=B\otimes_AA'$ is flat over $A'$, we get the exact sequence
+        \[(B\otimes_AA')\otimes_{A'}(M_1\otimes_AA')\to(B\otimes_AA')\otimes_{A'}(M_2\otimes_AA')\to(B\otimes_AA')\otimes_{A'}(M_3\otimes_AA').\]
+        However, this exact sequence is isomorphic to the exact sequence
+        \[(B\otimes_AM_1)\otimes_AA'\to(B\otimes_AM_2)\otimes_AA'\to(B\otimes_AM_3)\otimes_AA',\]
+        so the faithful flatness of $A'$ finishes.
+        \item We work affine-locally, with \eqref{eq:affine-local-fpqc-set-up}. Because $f'$ is an isomorphism, we see that
+        \[0\to A\otimes_AA'\stackrel{f'}\to B\otimes_AA'\to0\]
+        is exact, so it follows that $0\to A\stackrel f\to B\to0$ is exact, so the result follows.
+        \item We follow \cite{emerton-descent}. To begin, note that the surjectivity of $p$ and $p'$ implies that
+        \[f'(X')=p^{-1}(p(f'(X')))=p^{-1}(f(p'(X')))=p^{-1}(f(X)),\]
+        so $p^{-1}(f(X))$ is open in $S'$, so $f(X)$ is open in $S$ by \Cref{lem:fpqc-quotient-top}. It remains to show that $X$ is an isomorphism onto $U\coloneqq f(X)$. Well, setting $U'\coloneqq f'(X')$, we note that $f\colon X\to U$ base-changes to the isomorphism $f'\colon X'\to U'$, so (c) finishes.
+        \item To set us up, we quickly acknowledge that an affine morphism $f\colon X\to S$ is separated and therefore has closed and hence affine diagonal $\Delta_f\colon X\to X\times_SX$. The point is that we will be able to use the above descent results on the diagonal $\Delta_f$.
+
+        Now, by definition, $f$ is unramified if and only if the diagonal $\Delta_f\colon X\to X\times_SX$ is an open embedding. However, base-changing by $p\colon S'\to S$, we know that $f'$ is unramified, so $\Delta_{f'}\colon X\to X\times_SX$ is an open embedding, so (d) tells us that $\Delta_f\colon X\to X\times_SX$ is an open embedding.
+        \item By (a), $f$ is finite. Then (b) and (e) imply $f$ is \'etale.
+        \qedhere
+    \end{listalph}
 \end{proof}
+% We now turn towards being unramified. Allowing the hypothesis that $f$ is locally of finite presentation (we will have finite in the application), being unramified is equivalent to the diagonal being an open embedding. So our next goal is to discuss open embeddings. Roughly speaking, the point is that an open embedding is an isomorphism onto an open subset, so we will want to work with isomorphisms and with openness. Isomorphisms are easier.
+% \begin{lemma} \label{lem:iso-descent}
+%     Fix everything as above. 
+% \end{lemma}
+% \begin{proof}
+    
+% \end{proof}
+% To discuss openness, we need a little topology.
 
-\subsection{The Main Theorem}
-\begin{theorem} \label{thm:etale-cover-galois}
-    Fix a connected scheme $X$ and a geometric point $\overline x$ of $X$. Then the category $\mathrm{F\acute Et}(X)$ equipped with the functor $F\colon\mathrm{F\acute Et}(X)\to\mathrm{FinSet}$ by
-    \[FU\coloneqq U_{\overline x}\]
-    forms a Galois category.
-\end{theorem}
+% We are now ready to execute our plan.
+% \begin{lemma} \label{lem:open-descent}
+%     Fix everything as above. 
+% \end{lemma}
+% \begin{proof}
+    
+% \end{proof}
+% \begin{lemma} \label{lem:unramified-descent}
+%     Fix everything as above. 
+% \end{lemma}
+% \begin{proof}
+    
+% \end{proof}
+% \begin{proposition} \label{prop:finite-etale-descent}
+%     Fix everything as above. If $f'$ is finite \'etale, then $f$ is also finite \'etale.
+% \end{proposition}
+% \begin{proof}
+    
+% \end{proof}
 
-\section{Examples}
+\subsection{The Main Theorem} \label{subsec:main-thm}
+We now use the tools from the previous two subsections to prove \Cref{thm:etale-cover-galois}. We begin by defining the relevant category.
+\begin{definition}
+    Fix a scheme $X$. Then $\mathrm{F\acute Et}(X)$ is the category of morphisms $f\colon Y\to X$ of finite \'etale maps to $X$. We will frequently identify the objects $f$ with their codomains $Y$.
+\end{definition}
+\begin{remark}
+    Because \'etale morphisms and finite morphisms satisfy cancellation, any morphism $f\colon Y\to Y'$ of $X$-schemes in $\mathrm{F\acute Et}(X)$ will be finite \'etale. Indeed, we note that the Cancellation theorem \cite[Theorem~11.2.1]{rising-sea} allows us to merely check that the diagonal of a finite \'etale map is finite \'etale, which is true because the diagonal of a finite map is closed and the diagonal of an \'etale map is an open embedding.
+\end{remark}
+The goal is to show that $\mathrm{F\acute Et}(X)$ is Galois, where the fiber functor is given by base-change to a geometric point. We begin with the checks internal to the category.
+\begin{proposition} \label{prop:fet-limits-colimits}
+    Fix a scheme $X$. The category $\mathrm{F\acute Et}(X)$ has finite limits and colimits.
+\end{proposition}
+\begin{proof}
+    Showing finite limits is easier, so we check these first. The category of $X$-schemes has a terminal object (namely, $\id_X$), and $\id_X\colon X\to X$ is finite \'etale, so this terminal object remains terminal in $\mathrm{F\acute Et}(X)$. Additionally, the category of $X$-schemes has fiber products given by the usual fiber products, and the fiber product of two finite \'etale maps will still have finite \'etale structure morphism, so these remain the fiber products in $\mathrm{F\acute Et}(X)$. It follows that $\mathrm{F\acute Et}(X)$ has all finite limits.
+
+    We now show finite colimits. It suffices to show that we have coproducts and coequalizers. The category of schemes has coproducts given by disjoint union, and the disjoint union of two finite \'etale schemes over $X$ will remain finite \'etale because being finite \'etale can be checked affine-locally, so disjoint unions continue to provide coproducts in $\mathrm{F\acute Et}(X)$.
+
+    Lastly, we turn to coequalizers. As above, we would like to retrieve these coequalizers from some subcategory of $\mathrm{Sch}$, and here we work in the category $\mathrm{Aff}(X)$ of affine $X$-schemes. In particular, by \cite[Exercise~II.5.17]{hartshorne} or \cite[\href{https://stacks.math.columbia.edu/tag/01SA}{Lemma 01SA}]{stacks}, we see $\mathrm{Aff}(X)\opp$ is equivalent to the category of quasicoherent $\OO_X$-algebras, so $\mathrm{Aff}(X)$ has coequalizers because $\OO_X$-algebras have equalizers. To be explicit, fix finite \'etale morphisms $f,g\colon Y_1\to Y_2$ for which we would like to construct a coequalizer. In particular, $Y_1$ and $Y_2$ are affine over $X$, so we see $Y_1=\Spec_X\mc A_1$ and $Y_2=\Spec_X\mc A_2$ for $\OO_X$-algebras $\mc A_1$ and $\mc A_2$. Notably, because $Y_1$ and $Y_2$ are finite and flat over $X$, we see $\mc A_1$ and $\mc A_2$ are finite locally free $\OO_X$-algebras.
+
+    Now, define the $\OO_X$-algebra $\mc C\coloneqq\op{eq}(f^\sharp,g^\sharp)$. The anti-equivalence described in the previous paragraph promises that $\Spec_X\mc C$ is the coequalizer of $f,g\colon Y_1\to Y_2$, so it suffices to show that the structure map $\Spec_X\mc C\to X$ is in fact finite \'etale. This map is already affine, so \Cref{prop:descent} allows us to check that we remain finite \'etale after any affine faithfully flat base-change. Well, applying \Cref{prop:finite-etale-is-locally-trivial} to the maps $Y_1\to X$ and $Y_2\to X$ (each) lets us assume that $Y_1\to X$ and $Y_2\to X$ are totally split. (The construction of $\mc C$ commutes with base-change.)
+
+    Continuing with reductions, we may check that $\Spec_X\mc C\to X$ is finite \'etale locally on the target, so we replace $X$ with a connected component to assume that $X$ is connected. In this case, $Y_i\cong X_1\sqcup\cdots\sqcup X_{n_i}$ where $X_j=X$ for each $j$, where the structure maps $Y_i\to X$ are the natural projection. As such, the map $f\colon Y_1\to Y_2$ looks like
+    \[\bigsqcup_{i=1}^{n_1}X_i\to\bigsqcup_{j=1}^{n_2}X_j.\]
+    Now, each $X_i$ in the source is connected and thus can only map to a single $X_j$ in the target. In fact, the factored map $X_i\to X_{\alpha(i)}$ must be the identity because it is an $X$-morphism. The same argument for $g$ products a similar function $\beta\colon\{1,\ldots,n_1\}\to\{1,\ldots,n_2\}$. Inverting everything, we see that
+    \[f^\sharp,g^\sharp\colon\prod_{j=1}^{n_2}\OO_{X_j}\to\prod_{i=1}^{n_1}\OO_{X_i}\]
+    factors through identities $\OO_X=\OO_X$ in each coordinate. Thus, we can compute that the equalizer $\mc C=\op{eq}(f^\sharp,g^\sharp)$ is indeed finite locally free.
+\end{proof}
+\begin{lemma} \label{lem:fin-et-connected}
+    Fix a scheme $X$. An object $Y$ in $\mathrm{F\acute Et}(X)$ is connected if and only if $Y$ is connected as a scheme. Thus, any object in $\mathrm{F\acute Et}(X)$ is the finite coproduct of connected objects.
+\end{lemma}
+\begin{proof}
+    In one direction, suppose that $Y$ is a disconnected scheme so that we can write $Y=Y_1\sqcup Y_2$. Then the composites $Y_1,Y_2\to Y\to X$ make $Y_1$ and $Y_2$ into objects in $\mathrm{F\acute Et}(X)$; notably, the inclusions $Y_1,Y_2\to Y$ are both closed (hence finite) and open (hence \'etale). Further, the maps $Y_1,Y_2\to Y$ are open embeddings and hence  monic in $\mathrm{Sch}$ and so also monic in the subcategory $\mathrm{F\acute Et}(X)$, so we have given $Y$ a nontrivial subobject, meaning $Y$ is not connected as an object in $\mathrm{F\acute Et}(X)$.
+
+    Conversely, suppose $Y$ is a connected scheme, and suppose we have a monomorphism $f\colon Y'\to Y$ in $\mathrm{F\acute Et}(X)$ from a non-initial (i.e., nonempty) scheme $Y'$; we show that $f$ is an open embedding, which will finish because $f$ has closed image (because finite) and $Y$ is connected. Well, the finite limits in $\mathrm{Sch}(X)$ and $\mathrm{F\acute Et}(X)$ agree by \Cref{prop:fet-limits-colimits}, so we note $f$ being monic in $\mathrm{F\acute Et}(X)$ is equivalent to the diagonal $\Delta_f\colon Y'\to Y'\times_YY'$ being an isomorphism, so $f$ is monic in $\mathrm{Sch}(X)$.
+
+    In total, $f$ is universally injective and flat and locally of finite presentation and hence open, so $f$ is a homeomorphism onto an open subset $Y_0\coloneqq f(X)\subseteq Y$. Thus, replacing $Y$ by $Y_0$ (note $f$ remains monic), we may assume that $f$ is surjective and hence faithfully flat, and we want to show that $f$ is an isomorphism. Well, $f$ is affine, so \Cref{prop:descent} lets us check that $f$ is an isomorphism after base-change by an affine faithfully flat map, so we base-change $f$ by itself to note that the projection $\pi_2\colon Y'\times_YY'\to Y'$ is an isomorphism because the composite
+    \[Y'\stackrel{\Delta_f}\to Y'\times_YY'\to Y'\]
+    is the identity, and $\Delta_f$ is an isomorphism. This finishes.
+\end{proof}
+\begin{proposition} \label{prop:fin-et-connected-decomp}
+    Fix a connected scheme $X$. Then any object in $\mathrm{F\acute Et}(X)$ is the finite coproduct of connected objects.
+\end{proposition}
+\begin{proof}
+    Fix an object $f\colon Y\to X$ in $\mathrm{F\acute Et}(X)$. By \Cref{lem:fin-et-connected}, a decomposition of $Y$ into a disjoint union of connected schemes is also a decomposition into connected objects, so it suffices to show that $Y$ has only finitely many connected components.
+    
+    Well, fix any $y\in Y$ and set $x\coloneqq f(y)$. Because $f$ is finite, the fiber $f^{-1}(\{x\})$ has only finitely many points; let $Y_1,\ldots,Y_n$ be the connected components of each element in the fiber $f^{-1}(\{x\})$. We claim that these are all the connected components of $Y$, which will finish. Indeed, fix some connected component $Y'$ in $Y$. Then note $f$ is topologically open (because flat) and closed (because proper), so $f(Y')$ is nonempty, closed, and open in $X$, so $f(Y')=X$ because $X$ is connected. So $x\in f(Y')$, so we can find some $y_0\in Y'$ such that $y_0\in f^{-1}(\{x\})$, so $Y'$ is equal to one of the $Y_i$.
+\end{proof}
+As mentioned previously, our fiber functor will arise from base-change, so it remains to understand base-change.
+\begin{lemma} \label{lem:exact-base-change}
+    Let $X'\to X$ be a scheme morphism. Then the base-change functor $\mathrm{F\acute Et}(X)\to\mathrm{F\acute Et}(X')$ sending $Y\mapsto Y\times_XX'$ is exact.
+\end{lemma}
+\begin{proof}
+    Quickly, note that the functor is well-defined because finite \'etale morphisms are preserved by base-change.
+
+    As usual, limits are easier. For left-exactness, we note that the base-change of the terminal object $\id_X$ in $\mathrm{F\acute Et}(X)$ is $\id_{X'}$, which is the terminal object in $\mathrm{F\acute Et}(X')$. Further, taking fiber products commutes with base-change: for morphisms $Y_1,Y_2\to Y$ in $\mathrm{F\acute Et}(X)$, we can check
+    \[(Y_1\times_YY_2)\times_XX'=(Y_1\times_XX')\times_{Y\times_XX'}(Y_2\times_XX')\]
+    by chasing around pullback squares.
+
+    For right-exactness, we note that the base-change of a disjoint union $Y_1\sqcup Y_2$ remains becomes the disjoint union $(Y_1\times_XX')\sqcup(Y_2\times_XX')$ by running the computation affine-locally. To check that coequalizers are preserved by base-change, one must run through the construction of coequalizers in \Cref{prop:fet-limits-colimits}. Indeed, given morphisms $f,g\colon Y_1\to Y_2$, we defined $\op{coeq}(f,g)$ as $\Spec_X\mc C$ where $\mc C\coloneqq\op{eq}(f^\sharp,g^\sharp)$. Now, the universal property ensures a map
+    \[\op{coeq}(f,g)_{X'}\to\op{coeq}(f_{X'},g_{X'}),\]
+    where the subscript denotes base-change, and we want to show that this map is an isomorphism. Well, we argue as in arguing as in \Cref{prop:fet-limits-colimits}: by \Cref{prop:descent}, it suffices to check that this is an isomorphism after base-change by a faithfully flat affine morphism, so we may assume that all morphisms are totally split. Also, we may check isomorphisms affine-locally, so we may assume $X$ and $X'$ are both affine and connected. But in this case we had a concrete construction of $\op{coeq}$ as arising from some equalizer of finite free algebras, and this commutes with base-change.
+\end{proof}
+In fact, we are trying to understand base-change to a geometric point, so the following example will be helpful.
+\begin{example} \label{ex:pi-k-alg-closed}
+    Let $k$ be an algebraically closed field, and set $X\coloneqq\Spec k$. Then we claim $\mathrm{F\acute Et}(X)\cong\mathrm{FinSet}$. Indeed, we send the finite \'etale cover $f\colon Y\to X$ directly to the set $Y$, which is finite because $f$ is quasifinite. In particular, $\OO_Y$ is a finite separable $k$-algebra, which is just a finite product of $k$s because $k$ is algebraically closed, and the points in $Y$ correspond to factors in the product. From this one can see that our functor is fully faithful and essentially surjective.
+\end{example}
+\mainschemethm*
+\begin{proof}
+    Quickly, we note that $F$ is actually the base-change functor to $\overline x$ follows by the equivalence to $\mathrm{FinSet}$ given in \Cref{ex:pi-k-alg-closed}, so in particular $F$ is well-defined and exact by \Cref{lem:exact-base-change}. For a few other checks, note \Cref{prop:fet-limits-colimits} implies that $\mathrm{F\acute Et}(X)$ has finite limits and colimits, and \Cref{prop:fin-et-connected-decomp} implies that objects are the finite coproduct of connected objects.
+
+    It remains to show that $F$ reflects isomorphisms. Well, fix a morphism $f\colon Y\to Y'$ in $\mathrm{F\acute Et}(X)$ such that $Ff\colon Y_{\overline x}\to Y'_{\overline x}$ is an isomorphism.
+    % We can decompose $Y'$ into a finite disjoint union of connected components, and base-changing to any of these connected components continues to have $Ff$ be an isomorphism, so we can replace $Y'$ with any connected component and $Y$ with its inverse image. In particular, $Y'$ is now connected.
+    Now, $f$ is finite \'etale, so $\OO_{Y}$ is a finite locally free $\OO_{Y'}$-algebra. As such, to check that $\OO_Y$ is rank-$1$ over $\OO_{Y'}$, but this rank can be computed after base-change by $\overline x$, where we know the ranks coincide because $Ff$ is an isomorphism.
+\end{proof}
+At long last, here is our definition.
+\begin{definition}[\'etale fundamental group]
+    Fix a connected scheme $X$ and a geometric point $\overline x$ of $X$. Then the \textit{\'etale fundamental group} $\pi_1(X,\overline x)$ is the automorphism group of the base-change functor $F\colon\mathrm{F\acute Et}(X)\to\mathrm{FinSet}$ defined by $FY\coloneqq Y_{\overline x}$.
+\end{definition}
+\begin{remark}
+    One might be upset that it looks like $\pi_1(X,\overline x)$ depends on the choice of geometric point, but \Cref{rem:fiber-functor-unique} assures us that it does not.
+\end{remark}
+
+\section{Examples} \label{sec:examples}
 We close this paper with a few example computations, for fun.
+
+\subsection{Basic Examples}
+
 \begin{proposition}
     Let $R$ be a finite ring for which $X\coloneqq\Spec R$ is connected. Then $R$ is a local ring, and $\pi_1(\Spec R)=\pi_1(\Spec k)\cong\widehat\ZZ$ where $k$ is the residue field.
 \end{proposition}
