@@ -1,0 +1,278 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{Modular Arithmetic and Sage}
+In this section, we review the elementary number theory we will use in these notes. The goal of the present chapter is to be able to solve the equation
+\[ax+by=1\]
+as quickly as possible, but we will encounter Diophantine approximation in the process.
+
+\subsection{Local Obstructions}
+A theme that will reappear in this course is that of ``local obstructions,'' so we introduce the idea now. Here are some examples.
+\begin{example}
+	The only integer solution to the equation $x^2+y^2=3z^2$ is $(x,y,z)=(0,0,0)$.
+\end{example}
+\begin{proof}[Solution]
+	Of course $(0,0,0)$ is a solution, so the main content is showing that it is the only one. Suppose that $(x,y,z)$ is a nonzero solution, and we suppose that $(x,y,z)$ is minimal with respect to $\left|x\right|+\left|y\right|+\left|z\right|>0$. If all the terms are even, then $(x/2,y/2,z/2)$ is also an integer solution with $\left|x/2\right|+\left|y/2\right|+\left|z/2\right|<\left|x\right|+\left|y\right|+\left|z\right|$, violating minimality. Thus, we may assume that at least one of the terms is odd. We have two cases; the main point is that $x^2\equiv0,1\pmod4$ for any integer $x$.
+	\begin{itemize}
+		\item If $z$ is odd, then we are asking for
+		\[x^2+y^2\equiv3\pmod4.\]
+		But $x^2,y^2\pmod4\in\{0,1\}$ cannot achieve this.
+		\item If $z$ is even, then we are asking for
+		\[x^2+y^2\equiv0\pmod4.\]
+		However, without loss of generality we will have $x$ odd and so $x^2\equiv1\pmod4$. But then $x^2+y^2\equiv1+y^2\pmod4$ will never be $0\pmod4$.
+	\end{itemize}
+	All cases have caused contradiction, so we have finished the proof.
+\end{proof}
+\begin{example}
+	There are no integer solutions to the equation $6x+9y=2$.
+\end{example}
+\begin{proof}[Solution]
+	Reducing$\pmod3$ means that any integer solution to $6x+9y=2$ implies $0\equiv2\pmod3$, which is a contradiction.
+\end{proof}
+Now that we've seen some examples, let's make explicit what is going on.
+\begin{idea} \label{idea:local}
+	Given an equation $f(x_1,\ldots,x_n)=0$, we can check if $f$ has solutions in $\ZZ$ by first checking if there are solutions to
+	\[f(x_1,\ldots,x_n)\equiv0\pmod m\]
+	for integers $m$.
+\end{idea}
+What is useful about \Cref{idea:local} is that checking for solutions$\pmod m$ amounts to a finite computation where variables live in $\ZZ/m\ZZ$, and we can simply run the finite computation to check.
+
+Of course, \Cref{idea:local} is not perfectly robust, but it will guide our discussion of Diophantine equations throughout this course.
+\begin{nex}
+	One can show that
+	\[\left(x^2-2\right)\left(x^2-3\right)\left(x^2-6\right)=0\]
+	has solutions$\pmod p$ for all primes $p$, but there is no integer solution.
+\end{nex}
+Here is an example which is akin to \Cref{idea:local} but not quite the same.
+\begin{example}
+	There are no integer solutions to $x^2+y^2=2xy-1$.
+\end{example}
+\begin{proof}[Solution]
+	This equation is actually $(x-y)^2=-1$, which has no solutions because $(x-y)^2>-1$ for any real numbers $x,y\in\RR$.
+\end{proof}
+\begin{example}
+	There are no integer solutions to $x^2+y^2=6$.
+\end{example}
+\begin{proof}[Solution]
+	We see that $x\in\{0,\pm1,\pm2\}$ forces $y\in\left\{\pm\sqrt6,\pm\sqrt5,\pm\sqrt2\right\}$, none of which provide integer solutions. However, if $\left|x\right|\ge3$, then
+	\[x^2+y^2=9+y^2>6,\]
+	from which we see that there are not even real solutions!
+\end{proof}
+The above examples teach us that it is also useful to check for real-valued solutions to an equation in addition to checking$\pmod m$ for various integers $m$. These are also ``local obstructions.''
+
+\subsection{The Law of Linear Reciprocity}
+\Cref{idea:local} is useful for determining when a linear equation of the form $ax+by=1$ cannot have solutions. The goal of the present section is to show that these ``local obstructions'' are the only obstructions. Namely, we will prove a result of the following type.
+\begin{prop} \label{prop:bezout-as-local-to-global}
+	Let $a$, $b$, and $c$ be integers. Then there are integers $x,y\in\ZZ$ such that $ax+by=c$ if and only if, for any integer $m$, there are integers $x_m,y_m\in\ZZ$ such that
+	\[ax+by\equiv c\pmod m.\]
+\end{prop}
+In other words, it is enough to check locally. However, \Cref{prop:bezout-as-local-to-global} is not very helpful for actually trying to determine if $ax+by=c$ has solutions: we would have to check $ax+by\equiv c\pmod m$ for infinitely many moduli $m$, which is not a finite computation! Thankfully, we have the following more effective version of \Cref{prop:bezout-as-local-to-global}.
+\begin{prop} \label{prop:bezout-as-local-to-global-2}
+	Let $a$, $b$, and $c$ be integers. Then there are integers $x,y\in\ZZ$ such that $ax+by=c$ if and only if there are integers $x,y\in\ZZ$ such that
+	\[ax+by\equiv c\pmod b.\]
+\end{prop}
+In other words, the only modulus we have to check is $m=b$. Let's prove \Cref{prop:bezout-as-local-to-global-2}.
+\begin{proof}[Proof of \Cref{prop:bezout-as-local-to-global-2}]
+	Of course having integers $x$ and $y$ such that $ax+by=c$ will imply that $ax+by\equiv c\pmod b$. Conversely, suppose we have integers $x_0$ and $y_0$ such that
+	\[ax_0+by_0\equiv c\pmod b.\]
+	Then we know there is some integer $y_1$ such that
+	\[ax_0+by_0=c+by_1,\]
+	so $ax_0+b(y_0-y_1)=c$ provides an integer solution to $ax+by=c$.
+\end{proof}
+\begin{example}
+	The equation $3x+5y=1$ has integer solutions.
+\end{example}
+\begin{proof}[Solution]
+	By \Cref{prop:bezout-as-local-to-global-2}, it suffices to check$\pmod3$. Then we are looking for integers $x$ and $y$ such that
+	\[3x+5y\equiv1\pmod3.\]
+	Well, $(x,y)=(0,2)$ will do the trick.
+\end{proof}
+\begin{example}
+	The equation $2x+4y=3$ has no integer solutions.
+\end{example}
+\begin{proof}[Solution]
+	By \Cref{prop:bezout-as-local-to-global-2}, it suffices to check$\pmod2$. Then we are looking for integers $x$ and $y$ such that
+	\[2x+4y\equiv3\pmod2.\]
+	But this implies $0\equiv3\pmod2$, which is a contradiction, so there can be no integer solutions.
+\end{proof}
+\Cref{prop:bezout-as-local-to-global-2} also allows us to prove the ``reciprocity'' theorem. These are also a major theme in number theory, though we will not see even close to the full story in this course. What is remarkable in the following result is that we have found a way to switch the modulus of our ``local obstruction'' around, perhaps at the cost of adjusting the equation being considered. Such statements are in general very profitable!
+\begin{proposition}[law of linear reciprocity] \label{prop:linear-recip}
+	Let $a$, $b$, and $c$ be integers. Then there is an integer $x$ such that $ax\equiv c\pmod b$ if and only if there is an integer $x$ such that $bx\equiv c\pmod a$.
+\end{proposition}
+\begin{proof}
+	There is an integer $x$ such that $ax\equiv c\pmod b$ if and only if there are integers $x$ and $y$ such that $ax=c-by$, which is equivalent to
+	\[ax+by=c.\]
+	This condition is now symmetric in $a$ and $b$, so running the above argument backwards provides equivalence to finding an integer $x$ such that $bx\equiv c\pmod a$.
+\end{proof}
+\begin{example}
+	The equation $93x+35y=1$ has integer solutions.
+\end{example}
+\begin{proof}[Solution]
+	By \Cref{prop:bezout-as-local-to-global-2}, it is equivalent to check that
+	\[23x\equiv93x+35y\equiv1\pmod{35}\]
+	has integer solutions. By \Cref{prop:linear-recip}, this is equivalent to having integer solutions to
+	\[12x\equiv35x\equiv1\pmod{23}.\]
+	Going again, by \Cref{prop:linear-recip}, this is equivalent to having integer solutions to
+	\[11x\equiv23x\equiv1\pmod{12}.\]
+	Continuing, by \Cref{prop:linear-recip}, this is equivalent to having integer solutions to
+	\[x\equiv12x\equiv1\pmod{11},\]
+	for which we see that $x=1$ works.
+\end{proof}
+\begin{example}
+	The equation $289x+323y=2$ has no integer solutions.
+\end{example}
+\begin{proof}[Solution]
+	By \Cref{prop:bezout-as-local-to-global-2}, it is equivalent to check that
+	\[34y\equiv289x+323y\equiv2\pmod{289}\]
+	has integer solutions. By \Cref{prop:linear-recip}, this is equivalent to having integer solutions to
+	\[17x\equiv289x\equiv2\pmod{34}.\]
+	One more time, \Cref{prop:linear-recip} says that it is equivalent to have integer solutions to
+	\[0\equiv34x\equiv2\pmod{17},\]
+	which is false.
+\end{proof}
+
+\subsection{B\'ezout's Theorem}
+\Cref{prop:linear-recip} does a good job of determining when there are integer solutions to an equation of the form $ax+by=c$, but we would like a more efficient characterization, and we would also like an efficient way to write down the solutions. We begin with the more uniform characterization.
+\begin{theorem}[B\'ezout] \label{thm:bezout}
+	Let $a$, $b$, and $c$ be integers. Then there are integers $x$ and $y$ such that $ax+by=c$ if and only if $\gcd(a,b)$ divides $c$.
+\end{theorem}
+We are going to prove \Cref{thm:bezout} multiple times, essentially to emphasize different points of view on this area of number theory. To begin, let's establish that \Cref{prop:linear-recip} is in fact able to provide a proof.
+\begin{proof}[Proof of \Cref{thm:bezout} via \Cref{prop:linear-recip}]
+	We imitate the previous examples. Note that $ax+by=c$ if and only if $(-a)(-x)+by=c$ and similar for other choices of signs, so we might as well assume that $a$ and $b$ and $c$ are all nonnegative integers. Additionally, having solutions for $ax+by=c$ is a condition symmetric on $a$ and $b$, so we might as well assume that $a\le b$.
+
+	We induct on $a$. If $a=0$, then either $b=0$, and we have a solution if and only if $c=0=\gcd(a,b)$, or $b\ne0$, and we have a solution if and only if $c=by=\gcd(a,b)y$ for some integer $y$. Otherwise, $a>0$. Now, by \Cref{prop:bezout-as-local-to-global-2}, we have an integer solution if and only if
+	\[ry\equiv ax+by\equiv c\pmod a\]
+	has an integer solution, where $r$ is chosen so that $b\equiv r\pmod a$ and $0\le r<a$. By \Cref{prop:linear-recip}, this is now equivalent to having an integer solution to
+	\[ax\equiv c\pmod{b-a},\]
+	which by \Cref{prop:bezout-as-local-to-global-2} is equivalent to having an integer solution to $rx+ay=c$. But now we have replaced $(a,b)$ with $(r,a)$, where $r<a$ and $\gcd(a,b)=\gcd(r,a)$, so induction completes the argument.
+\end{proof}
+The above argument is fairly involved, so it is rewarding to know that the following cleaner proof exists.
+\begin{proof}[Proof of \Cref{thm:bezout} via well-ordering]
+	It suffices to show that
+	\[\{ax+by:x,y\in\ZZ\}=\gcd(a,b)\ZZ.\]
+	Quickly, if $a=b=0$, then both sides are $\{0\}$, so there is nothing to say. Otherwise, we may assume that at least one of $a$ or $b$ is nonzero. Certainly $\gcd(a,b)$ divides $ax+by$ for any $x,y\in\ZZ$, so $\{ax+by:x,y\in\ZZ\}\subseteq\gcd(a,b)\ZZ$. It remains to show the other inclusion, which is equivalent to showing $\gcd(a,b)\in\{ax+by:x,y\in\ZZ\}$.
+
+	Well, we expect $\gcd(a,b)$ to be the smallest positive element of $\{ax+by:x,y\in\ZZ\}$, so we let $g$ denote this smallest positive element, and we want to show that $g=\gcd(a,b)$. (This $g$ exists by the well-ordering of $\NN$. Note that $\{ax+by:x,y\in\ZZ\}$ certainly has some positive element because it contains $a^2+b^2>0$.) Certainly $\gcd(a,b)$ divides $g$ by the argument of the previous paragraph, so it suffices to show that $g$ divides $\gcd(a,b)$, for which we will show that $g\mid a$ and $g\mid b$.
+
+	In fact, we will only show that $g\mid a$, and $g\mid b$ follows symmetrically. For this, we use the division algorithm to write
+	\[a=gq+r\]
+	for some integers $q,r\in\ZZ$ where $0\le r<g$. Now, $r=a-gq$ will live in $\{ax+by:x,y\in\ZZ\}$, but $r<g$ forces $r$ to not be a positive element in this set by minimality, so we must have $r=0$. Thus, $a=gq$, which means $g\mid a$, as needed.
+\end{proof}
+The drawback of the above cleaner proof is that it is difficult to see how to turn it into an effective algorithm to actually compute $x$ and $y$. Indeed, the argument does not even make it clear how to find $x,y\in\ZZ$ such that
+\[ax+by=\gcd(a,b),\]
+which is in some sense the crux of the matter because we can then multiply $x$ and $y$ by $c/\gcd(a,b)$. With some care, we will be able to provide an effective algorithm, but it will take some care.
+
+\subsection{The Extended Euclidean Algorithm}
+The motivation to our algorithm will begin with wanting an efficient way to compute $\gcd(a,b)$, which we need to use \Cref{thm:bezout} anyway. The Euclidean algorithm is based on the following lemma.
+\begin{lemma} \label{lem:ea}
+	Let $a$ and $b$ be integers. For any integer $q$, we have $\gcd(a,b)=\gcd(a-bq,b)$.
+\end{lemma}
+\begin{proof}
+	Note that an integer $d$ divides $a$ and $b$ implies that $d$ divides $a-bq$ and $b$; the converse holds by a symmetric argument. Thus, the conclusion follows from taking the least elements of the sets
+	\[\{d\in\ZZ_{\ge0}:d\mid a\text{ and }d\mid b\}=\{d\in\ZZ_{\ge0}:d\mid a-bq\text{ and }d\mid b\},\]
+	finishing.
+\end{proof}
+We are now equipped to see an example of the Euclidean algorithm.
+\begin{example} \label{ex:ea}
+	We use the ``Euclidean algorithm'' to compute $\gcd(93,35)$.
+\end{example}
+\begin{solution}
+	To begin, we repeatedly use the division algorithm to write
+	\begin{align*}
+		93 &= 2\cdot35+23 \\
+		35 &= 1\cdot23+12 \\
+		23 &= 1\cdot12+11 \\
+		12 &= 1\cdot11+1 \\
+		11 &= 11\cdot1+0.
+	\end{align*}
+	Thus, repeatedly applying \Cref{lem:ea}, we see
+	\[\gcd(93,35)=\gcd(35,23)=\gcd(23,12)=\gcd(12,11)=\gcd(11,1)=1,\]
+	which is what we wanted.
+\end{solution}
+\begin{exe}
+	Use the Euclidean algorithm to compute $\gcd(47,31)$.
+\end{exe}
+It is somewhat technical to make a rigorous argument avoid the above process. Take a moment to read and digest the following statement.
+\begin{proposition}[Euclidean algorithm] \label{prop:ea}
+	Let $a_0$ and $a_1$ be positive coprime integers. Define the integer sequences $a_2,a_3,\ldots$ and $q_0,q_1,\ldots$ recursively by
+	\[a_n=q_na_{n+1}+a_{n+2}\qquad\text{where}\qquad0\le a_{n+2}<a_{n+1}\]
+	where $q_n\coloneqq\floor{a_n/a_{n+1}}$ if $a_{n+1}>0$ and $(a_{n+2},q_n)\coloneqq(0,0)$ otherwise. Then there is a minimal $N$ such that $a_n=0$ for $n>N$, and $a_N=\gcd(a_0,a_1)$.
+\end{proposition}
+\begin{proof}
+	By construction of the sequence, if $a_{n+1}>0$, then $0\le a_{n+2}<a_{n+1}$. Thus, if $a_{n+1}>0$ always, then $a_1,a_2,\ldots$ is a strictly decreasing sequence of positive integers, which is impossible by the well-ordering of the positive integers.
+	
+	So indeed, there is some integer $N$ such that $a_{N+1}=0$, and we may choose $N$ to be minimal with this property so that $a_N\ne0$. (Note that $a_0\ne0$, so there is some $n$ with $a_n\ne0$.) Then $a_{N+1}=0$ by construction, and the definition of our recursion enforces $a_n=0$ for all $n>N$.
+
+	It remains to show that $a_N=\gcd(a_0,a_1)$. The main claim is that $\gcd(a_0,a_1)=\gcd(a_n,a_{n+1})$ for any $0\le n\le N$, which will complete the proof by plugging in $n=N$. We show this claim by induction: there is nothing to say for $n=0$, and for any $n<N$ so that $a_{n+1}>0$, we see that
+	\[\gcd(a_n,a_{n+1})=\gcd(q_na_{n+1}+a_{n+2},a_{n+1})=\gcd(a_{n+1},a_{n+2}),\]
+	which completes the inductive step.
+\end{proof}
+\Cref{prop:ea} grants us another proof of \Cref{thm:bezout}.
+\begin{proof}[Proof of \Cref{thm:bezout} via \Cref{prop:ea}]
+	As usual, we start off with the ``easier'' direction: if $ax+by=c$ for some $x,y\in\ZZ$, then we note $\gcd(a,b)$ divides $ax+by$ and so divides $c$.
+
+	We use \Cref{prop:ea} to show the harder direction. Both the condition $ax+by=c$ and $\gcd(a,b)\mid c$ remain invariant to adjusting the sign of $a$ and $b$, so we may assume $a,b\ge0$. Additionally, if $a=0$, then both conditions are equivalent to $b\mid c$; a symmetric argument works for $b=0$. Thus, we may assume that $a,b>0$.
+
+	Now, set $a_0\coloneqq a$ and $a_1\coloneqq b$ and build the sequence $a_2,a_3,\ldots$ of \Cref{prop:ea}. By induction, we see that
+	\[a_n\in\{a_0x+a_1y:x,y\in\ZZ\}.\]
+	Indeed, there is nothing to say for $n=0$ and $n=1$. Then for the induction, we note that $\{a_0x+a_1y:x,y\in\ZZ\}$ is closed under $\ZZ$-linear combination, so containing $a_n$ and $a_{n+1}$ implies containing $a_{n+2}=a_n-q_na_{n+1}$. Thus, using \Cref{prop:ea}, we see that $a_N=\gcd(a,b)$ takes the form $ax+by$ for $x,y\in\ZZ$, completing the proof.
+\end{proof}
+We are finally able to read the above proof closely to have an effective algorithm to compute $x$ and $y$ solving $ax+by=\gcd(a,b)$. This is called the ``extended Euclidean algorithm'' and is best seen by example.
+\begin{example}
+	We use the ``extended Euclidean algorithm'' to find integers $x$ and $y$ such that $93x+35y=1$.
+\end{example}
+\begin{proof}
+	The idea is to run the Euclidean algorithm backwards ``solving'' for the remainders. Indeed, using the computations of \Cref{ex:ea}, we see
+	\begin{align*}
+		1 &= 12-1\cdot11 \\
+		11 &= 23-1\cdot12 \\
+		12 &= 35-1\cdot23 \\
+		23 &= 93-2\cdot35.
+	\end{align*}
+	We now plug in for each successive remainder, writing
+	\begin{align*}
+		1 &= 12-1\cdot11 \\
+		&= 12-1\cdot(23-1\cdot12) = 2\cdot12-1\cdot23 \\
+		&= 2\cdot(35-1\cdot23)-1\cdot23 = 2\cdot35-3\cdot23 \\
+		&= 2\cdot35-3\cdot(93-2\cdot35) = 8\cdot35-3\cdot93.
+	\end{align*}
+	Thus, $(x,y)=(-3,8)$ will do the trick.
+\end{proof}
+\begin{exe}
+	Use the extended Euclidean algorithm to find integers $x$ and $y$ such that $47x+31y=1$.
+\end{exe}
+
+\subsection{Problems}
+Do at least ten points worth of the following exercises.
+\begin{prob}[1 point]
+	Let $n\equiv3\pmod4$. Show that there are not two integers $x,y\in\ZZ$ such that $x^2+y^2=n$.
+\end{prob}
+\begin{prob}[2 points]
+	Let $n\equiv7\pmod 8$. Show that there are not three integers $x,y,z\in\ZZ$ such that $x^2+y^2+z^2=n$.
+\end{prob}
+\begin{prob}[2 points]
+	Let $a$ and $b$ be integers. Suppose that there are pairs of integers $(x,y)$ and $(x',y')$ such that $ax+by=ax'+by'=1$. Show that
+	\[x\equiv x'\pmod b\qquad\text{and}\qquad y\equiv y'\pmod a.\]
+\end{prob}
+\begin{prob}[2 points]
+	Define the Fibonacci sequence $\{F_n\}_{n=0}^\infty$ by $F_0=0$, $F_1=1$, and $F_{n+2}=F_{n+1}+F_n$ for any $n\ge0$. Show that $\gcd(F_{n+1},F_n)=1$ for any $n\ge0$.
+\end{prob}
+\begin{prob}[3 points]
+	Compute $\gcd(1027,1738)$. Then find integers $x$ and $y$ such that $1027x+1738y=\gcd(1027,1738)$.
+\end{prob}
+\begin{prob}[3 points]
+	Let $a$, $b$, and $c$ be integers with $\gcd(a,b,c)=1$. Show that there exist integers $x,y,z\in\ZZ$ such that $ax+by+cz=1$.
+\end{prob}
+\begin{prob}[5 or 6 points]
+	Implement the extended Euclidean algorithm.
+	\begin{listalph}
+		\item For five points, write (and submit) a function in Python with takes as input two coprime positive integers $a$ and $b$ and outputs integers $x$ and $y$ such that $ax+by=1$. Your function should implement the extended Euclidean algorithm.
+		\item For an additional point, make the function work for any coprime integers $a$ and $b$.
+	\end{listalph}
+	Your test case is $(a,b)=\left(12345678901,10987654321\right)$.
+\end{prob}
+
+\end{document}

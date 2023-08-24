@@ -1,0 +1,354 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{Finite Continued Fractions}
+
+In this section, we begin our discussion of continued fractions with a discussion of finite continued fractions. The reward for our efforts will be a more memory-efficient version of the extended Euclidean algorithm.
+
+\subsection{Connection to Continued Fractions}
+We begin with the definition of a continued fraction.
+\begin{definition}[continued fraction]
+	A \textit{continued fraction} expansion is an expression of the form
+	\[a_0+\dfrac1{a_1+\dfrac1{a_2+\dfrac1{a_3+\ddots}}},\]
+	which we will notate by $[a_0;a_1,a_2,\ldots]$. The terms $a_\bullet$ are the \textit{continued fraction coefficients}.
+\end{definition}
+In our application, the terms $a_0,a_1,a_2,\ldots$ will always be integers, and $a_1,a_2,\ldots$ will always be positive integers, but we take the moment to remark that this definition operates just fine even if these are not integers. This specialization does guarantee that we never run into division-by-zero problems, which is its principal advantage.
+\begin{remark} \label{rem:cf-limit}
+	For the present section, our continued fractions will always be finite in length. In other words, our continued fractions will look like $[a_0;a_1,a_2,\ldots,a_n]$ for some perhaps large $n$. In the next section, we will allow continued fractions to have infinite length by defining
+	\[[a_0;a_1,a_2,\ldots]\coloneqq\lim_{n\to\infty}[a_0;a_1,a_2,\ldots,a_n],\]
+	but we will have to prove that this limit exists before providing this definition.
+\end{remark}
+Continued fractions will be very interesting to us in the sequel, approximately speaking because they provide good rational approximations to real numbers. To start us off, suppose we have a real number $\alpha$, and we would like to find coefficients $a_0,a_1,a_2,\ldots\in\ZZ$ such that $\alpha=[a_0;a_1,a_2,\ldots]$. In fact, we will be able to enforce $a_1,a_2,\ldots\in\ZZ_{\ge0}$. To see how, note that if we want
+\[\alpha=a_0+\dfrac1{a_1+\dfrac1{a_2+\dfrac1{a_3+\ddots}}},\]
+then we should have $a_0\coloneqq\floor\alpha$. Once we agree what $a_0$ should be, we may rearrange this equation into
+\[\frac1{\alpha-a_0}=a_1+\dfrac1{a_2+\dfrac1{a_3+\ddots}}.\]
+Now we are trying to compute the continued fraction for $(\alpha-\floor\alpha)^{-1}>1$, so we may recurse. Namely, set $a_1\coloneqq\floor{(\alpha-\floor\alpha)^{-1}}$ and then rearrange again.
+
+Here's an example.
+\begin{example} \label{ex:cf}
+	We express $93/35$ as a continued fraction.
+\end{example}
+\begin{solution}
+	We write
+	\begin{align*}
+		\frac{93}{35} &= 2+\dfrac{23}{35} \\
+		&= 2+\dfrac1{35/23} \\
+		&= 2+\dfrac1{1+\frac{12}{23}} \\
+		&= 2+\dfrac1{1+\frac1{23/12}} \\
+		&= 2+\dfrac1{1+\dfrac1{1+\frac{11}{12}}} \\
+		&= 2+\dfrac1{1+\dfrac1{1+\frac1{12/11}}} \\
+		&= 2+\dfrac1{1+\dfrac1{1+\dfrac1{1+\dfrac1{11}}}},
+	\end{align*}
+	so $\frac{93}{35}=[2;1,1,1,11]$.
+\end{solution}
+\begin{exercise}
+	Express $47/31$ as a continued fraction.
+\end{exercise}
+Compare \Cref{ex:ea} with \Cref{ex:cf}: the coefficients $[2;1,1,1,11]$ match up exactly with the quotients appearing in the Euclidean algorithm. Rigorizing this is a little technical, but it is not too hard.
+\begin{proposition} \label{prop:cf-by-ea}
+	Let $a_0$ and $a_1$ be coprime positive integers, and define integer sequences $q_0,q_1,\ldots,q_N$ and $a_0,a_1,a_2,\ldots,a_N$ recursively as in \Cref{prop:ea} by
+	\[a_n=q_na_{n+1}+a_{n+2}\]
+	for any $n\ge0$, where $0<a_{n+2}<a_{n+1}$ and terminating once $a_N=1$ so that $a_{N+1}=0$. Then $\frac{a_0}{a_1}=[q_0;q_1,q_2,\ldots,q_N]$.
+\end{proposition}
+\begin{proof}
+	Recall that $N$ exists by the Euclidean algorithm. We induct on $N$. If $N=1$, then $a_1=1$ and
+	\[a_0=q_0a_1+a_2\]
+	forces $a_2=0$ and $q_0=a_0$. Thus, $a_0=\frac{a_0}{a_1}=q_0=[q_0]$.
+
+	Now take $N>1$ (which implies $a_2>0$), and suppose the statement is true at $N-1$. Then we see $a_0=q_0a_1+a_2$ implies
+	\[\frac{a_0}{a_1}=q_0+\frac1{a_1/a_2}.\]
+	Thus, running the Euclidean algorithm with the coprime positive integers $a_1$ and $a_2$, we find that $\frac{a_1}{a_2}=[q_1;q_2,\ldots,q_N]$ by the inductive hypothesis. It follows
+	\[\frac{a_0}{a_1}=q_0+\frac1{[q_1;q_2,\ldots,q_N]}=[q_0;q_1,q_2,\ldots,q_N],\]
+	which is what we wanted.
+\end{proof}
+\begin{remark} \label{rem:adjust-finite-cf}
+	\Cref{prop:cf-by-ea} also has the nice side effect of showing that any rational number is equal to some finite continued fraction. However, note this continued fraction is not unique: given integers $a_0,a_1,a_2,\ldots,a_n$ with $a_1,a_2,\ldots,a_n$ positive, one has
+	\[[a_0;a_1,a_2,\ldots,a_{n-1},a_n]=[a_0;a_1,a_2,\ldots,a_{n-1},a_n-1,1]\]
+	when $a_n>1$, and otherwise
+	\[[a_0;a_1,a_2,\ldots,a_{n-1},1]=[a_0;a_1,a_2,\ldots,a_{n-1}+1].\]
+	In particular, given any rational number $q$, we can find $n$ of any parity such that there are integers $a_0,a_1,a_2,\ldots,a_n$ with $a_1,a_2,\ldots,a_n$ positive and $q=[a_0;a_1,a_2,\ldots,a_n]$.
+\end{remark}
+The proof of \Cref{prop:cf-by-ea} is fairly instructive: many of our arguments involving continued fractions are going to be inductive ones using identities like
+\[q_0+\frac1{[q_1;q_2,\ldots,q_N]}=[q_0;q_1,q_2,\ldots,q_N].\]
+
+\subsection{Continued Fraction Convergents}
+We mentioned at the outset that continued fractions provide good rational approximations for numbers. The way that this is done is by taking a long continued fraction $[a_0;a_1,a_2,\ldots]$ and ``truncating'' it at some point to produce the shorter (and notably finite) continued fraction $[a_0;a_1,a_2,\ldots,a_n]$. This truncation process is so important it has a name.
+\begin{definition}[convergent]
+	Given a continued fraction $[a_0;a_1,a_2,\ldots]$ and some $n\ge0$, the truncation $[a_0;a_1,a_2,\ldots,a_n]$ is the \textit{$n$th convergent}, often denoted
+	\[\frac{h_n}{k_n}\coloneqq[a_0;a_1,\ldots,a_n].\]
+\end{definition}
+As usual, we begin with an example.
+\begin{example} \label{ex:cf-convergents}
+	We compute the continued fraction convergents of $93/35$.
+\end{example}
+\begin{solution}
+	In \Cref{ex:cf}, we computed that $\frac{93}{35}=[2;1,1,1,11]$, so here are our convergents.
+	\begin{itemize}
+		\item The zeroth convergent is $[2]=2$.
+		\item The first convergent is $[2;1]=2+\frac11=3$.
+		\item The second convergent is $[2;1,1]=2+\frac1{1+1}=\frac52$.
+		\item The third convergent is $[2;1,1,1]$ is
+		\[[2;1,1,1]=2+\dfrac1{1+\dfrac1{1+1}}=2+\frac1{3/2}=\frac83.\]
+		\item The fourth convergent is $[2;1,1,1,11]=\frac{93}{35}$.
+		\qedhere
+	\end{itemize}
+\end{solution}
+\begin{exercise}
+	Compute the continued fraction convergents of $47/31$.
+\end{exercise}
+The process outlined in \Cref{ex:cf-convergents} is rather annoying to execute by hand. We did not even compute $[2;1,1,1,11]$ by hand, but already $[2;1,1,1]$ required some focus. In general, the problem with computing these convergents is that we are basically doing a totally new computation for every convergent.
+
+However, there is a much faster way to compute these convergents: the ``magic box'' algorithm. For a sense of wonder, we will describe the algorithm first and then prove that it works second. We begin with the following grid.
+\[\begin{array}{cc|ccccc}
+	&& 2 & 1 & 1 & 1 & 11 \\\hline
+	0 & 1 \\
+	1 & 0
+\end{array}\]
+Explicitly, the $0$s and $1$s on the leftmost two columns will always be there in all computations, and the top row is made of our coefficients $[2;1,1,1,11]$. We now fill in the grid column-by-column, moving from left to right. For the next leftmost column, we multiply the coefficient $2$ by the previous column and then add the column before that. In other words, we compute
+\[\begin{bmatrix}
+	0 \\ 1
+\end{bmatrix}+2\begin{bmatrix}
+	1 \\ 0
+\end{bmatrix}=\begin{bmatrix}
+	2 \\ 1
+\end{bmatrix},\]
+so the next column in our grid is as follows.
+\[\begin{array}{cc|ccccc}
+	&     & 2 & 1 & 1 & 1 & 11 \\\hline
+	0 & 1 & 2 \\
+	1 & 0 & 1
+\end{array}\]
+Indeed, $2/1$ is the zeroth convergent. We now repeat the process: multiply $1$ by the previous column and then add the column before that, writing
+\[\begin{bmatrix}
+	1 \\ 0
+\end{bmatrix}+1\begin{bmatrix}
+	2 \\ 1
+\end{bmatrix}=\begin{bmatrix}
+	3 \\ 2
+\end{bmatrix},\]
+making our grid as follows.
+\[\begin{array}{cc|ccccc}
+	&     & 2 & 1 & 1 & 1 & 11 \\\hline
+	0 & 1 & 2 & 3 \\
+	1 & 0 & 1 & 2
+\end{array}\]
+Indeed, $3/1$ is the first convergent. We now fill in the rest of the grid.
+\[\begin{array}{cc|ccccc}
+	&     & 2 & 1 & 1 & 1 & 11 \\\hline
+	0 & 1 & 2 & 3 & 5 & 8 & 93\\
+	1 & 0 & 1 & 1 & 2 & 3 & 35
+\end{array}\]
+And indeed, we see the remaining convergents $5/2$, $8/3$, and $93/35$ appear from our grid.
+\begin{exe}
+	Execute this ``magic box'' algorithm to compute the continued fraction convergents of $47/31$.
+\end{exe}
+\begin{exe} \label{exe:magic-box-minor}
+	Compute the following $2\times2$ ``minors'' of our grid, as follows.
+	\[\det\begin{bmatrix}
+		0 & 1 \\
+		1 & 0
+	\end{bmatrix},\quad\det\begin{bmatrix}
+		1 & 2 \\
+		0 & 1
+	\end{bmatrix},\quad\det\begin{bmatrix}
+		2 & 3 \\
+		1 & 1
+	\end{bmatrix},\quad\det\begin{bmatrix}
+		3 & 5 \\
+		1 & 2
+	\end{bmatrix},\quad\ldots.\]
+	Do you see any patterns?
+\end{exe}
+Proving that the magic box algorithm works is again somewhat technical. Perhaps the main difficulty is figuring out how to state the result, but the proof is still tricky. For now, we will settle for the following statement, but we will establish the refinement \Cref{cor:actual-convergents-magic-box} shortly.
+\begin{proposition}[magic box] \label{prop:magic-box}
+	Let $a_0,a_1,a_2,\ldots$ be real numbers, where $a_1,a_2,\ldots$ are positive. Define the sequences $\{h_n\}_{n=-2}^\infty$ and $\{k_n\}_{n=-2}^\infty$ of real numbers recursively by
+	\[\begin{bmatrix}
+		h_{-2} & h_{-1} \\
+		k_{-2} & k_{-1}
+	\end{bmatrix}=\begin{bmatrix}
+		0 & 1 \\
+		1 & 0
+	\end{bmatrix}\qquad\text{and}\qquad\begin{bmatrix}
+		h_{n+2} \\
+		k_{n+2}
+	\end{bmatrix}=a_{n+2}\begin{bmatrix}
+		h_{n+1} \\
+		k_{n+1}
+	\end{bmatrix}+\begin{bmatrix}
+		h_n \\
+		k_n
+	\end{bmatrix}\]
+	for $n\ge-2$. Then
+	\[[a_0;a_1,\ldots,a_n]=\frac{h_n}{k_n}\]
+	for any $n\ge0$.
+\end{proposition}
+\begin{proof}
+	The requirement that $a_1,a_2,\ldots$ be positive is entirely to avoid division by zero errors. We also take a moment to recognize that the $a_\bullet$ are being allowed to be real numbers rather than only integers. This will actually be relevant to the proof!
+	
+	We induct on $n$. For $n=0$, we can compute that $(h_0,k_0)=a_0(1,0)+(0,1)=(a_0,1)$, so $\frac{h_0}{k_0}=a_0=[a_0]$. For $n=1$, we can compute that $(h_1,k_1)=a_1(a_0,1)+(1,0)=(a_1a_0+1,a_1)$, so
+	\[\frac{h_1}{k_1}=\frac{a_1a_0+1}{a_1}=a_0+\frac1{a_1}=[a_0;a_1].\]
+	Now take $n\ge2$. The trick for the inductive step is to write
+	\[[a_0;a_1,\ldots,a_{n-2},a_{n-1},a_n] = a_0+\dfrac1{a_1+\dfrac1{\ddots+a_{n-2}+\dfrac1{a_{n-1}+\dfrac1{a_n}}}}=\left[a_0;a_1,\ldots,a_{n-2},a_{n-1}+\frac1{a_n}\right].\]
+	We may now apply the inductive hypothesis to this altered continued fraction, which is legal because $a_{n-1}+1/a_n$ is surely a positive real number. Explicitly, define the sequence $a'_0,a'_1,\ldots,a'_{n-1}$ where $a'_m\coloneqq a_m$ for $m<n-1$ and $a'_{n-1}\coloneqq a_{n-1}+\frac1{a_n}$, and then define the sequence $\{h'_m\}_{m=-2}^{n-1}$ and $\{k'_m\}_{m=-2}^\infty$ as in the proposition so that
+	\[[a_0;a_1,\ldots,a_{n-2},a_{n-1},a_n]=[a'_0;a'_1,\ldots,a'_{n-1}]=\frac{h'_{n-1}}{k'_{n-1}}.\]
+	To compute $h'_{n-1}$ and $k'_{n-1}$ we acknowledge that the construction of the $a'_\bullet$ implies that $h'_m=h_m$ and $k'_m=k_m$ for $m<n-1$. So we see that
+	\begin{align*}
+		\begin{bmatrix}
+			h'_{n-1} \\
+			k'_{n-1}
+		\end{bmatrix} &= a'_{n-1}\begin{bmatrix}
+			h'_{n-2} \\
+			k'_{n-2}
+		\end{bmatrix}+\begin{bmatrix}
+			h'_{n-3} \\
+			k'_{n-3}
+		\end{bmatrix} \\
+		&= \left(a_{n-1}+\frac1{a_n}\right)\begin{bmatrix}
+			h_{n-2} \\
+			k_{n-2}
+		\end{bmatrix}+\begin{bmatrix}
+			h_{n-3} \\
+			k_{n-3}
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			\left(a_{n-1}+\frac1{a_n}\right)h_{n-2}+h_{n-3} \\
+			\left(a_{n-1}+\frac1{a_n}\right)k_{n-2}+k_{n-3}
+		\end{bmatrix}.
+	\end{align*}
+	From here, we compute
+	\begin{align*}
+		\frac{h'_{n-1}}{k'_{n-1}} &= \frac{a_{n-1}a_nh_{n-2}+h_{n-2}+a_nh_{n-3}}{a_{n-1}a_nk_{n-2}+k_{n-2}+a_nk_{n-3}} \\
+		&= \frac{a_n(a_{n-1}h_{n-2}+h_{n-3})+h_{n-2}}{a_n(a_{n-1}k_{n-2}+k_{n-3})+k_{n-2}} \\
+		&= \frac{a_nh_{n-1}+h_{n-2}}{a_nk_{n-1}+k_{n-2}} \\
+		&= \frac{h_n}{k_n},
+	\end{align*}
+	which completes the proof.
+\end{proof}
+\begin{remark}
+	The proof of \Cref{prop:magic-box} in fact works even if we merely assume that the $a_\bullet$ are indeterminate variables.
+\end{remark}
+\begin{example} \label{ex:cf-fib}
+	Define the Fibonacci sequence $\{F_n\}_{n=0}^\infty$ by $F_0=0$ and $F_1=1$ and $F_{n+2}=F_{n+1}+F_n$ for any $n\ge0$. Then for any $n\ge0$,
+	\[\underbrace{[1;1,\ldots,1]}_{n+1}=\frac{F_{n+2}}{F_{n+1}}.\]
+\end{example}
+\begin{solution}
+	We proceed by induction on $n$, using \Cref{prop:magic-box}. From there, we may compute that $h_0/k_0=1/1=F_2/F_1$ and $h_1/k_1=2/1=F_3/F_2$. For the inductive step, we note that \Cref{prop:magic-box} yields
+	\[h_{n+2}=h_{n+1}+h_n\qquad\text{and}\qquad k_{n+2}=k_{n+1}+k_n\]
+	for any $n\ge0$, which is the recursion for the Fibonacci sequence.
+\end{solution}
+
+\subsection{More on the Magic Box Algorithm}
+\Cref{prop:magic-box} essentially explains why the magic box works, though perhaps there is some doubt that the fractions $h_n/k_n$ is in reduced form. Let's show this. We begin by explaining \Cref{exe:magic-box-minor}.
+\begin{corollary} \label{cor:magic-box-minor}
+	Let $a_0,a_1,a_2,\ldots$ be real numbers, where $a_1,a_2,\ldots$ are positive, and define $\{h_n\}_{n=-2}^\infty$ and $\{k_n\}_{n=-2}^\infty$ as in \Cref{prop:magic-box}. Then
+	\[\det\begin{bmatrix}
+		h_n & h_{n+1} \\
+		k_n & k_{n+1}
+	\end{bmatrix}=(-1)^{n+1}\]
+	for any $n\ge-2$.
+\end{corollary}
+\begin{proof}
+	This is essentially row-reduction. We proceed by induction on $n$. At $n=-2$, we see that $\det\begin{bsmallmatrix}
+		0 & 1 \\
+		1 & 0
+	\end{bsmallmatrix}=-1$. For the inductive step, suppose the statement for $n$, and we show $n+1$. We note
+	\[\begin{bmatrix}
+		h_{n+2} \\
+		k_{n+2}
+	\end{bmatrix}=a_{n+2}\begin{bmatrix}
+		h_{n+1} \\
+		k_{n+1}
+	\end{bmatrix}+\begin{bmatrix}
+		h_n \\
+		k_n
+	\end{bmatrix}\]
+	allows us to use column operations in order to see
+	\[\det\begin{bmatrix}
+		h_{n+1} & h_{n+2} \\
+		k_{n+1} & k_{n+2}
+	\end{bmatrix}=\det\begin{bmatrix}
+		h_{n+1} & h_{n} \\
+		k_{n+1} & k_{n}
+	\end{bmatrix}=-\det\begin{bmatrix}
+		h_{n} & h_{n+1} \\
+		k_{n} & k_{n+1}
+	\end{bmatrix}=-(-1)^{n+1}=(-1)^{n+2},\]
+	which is what we wanted.
+\end{proof}
+\begin{corollary} \label{cor:actual-convergents-magic-box}
+	Let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive, and define $\{h_n\}_{n=-2}^\infty$ and $\{k_n\}_{n=-2}^\infty$ as in \Cref{prop:magic-box}. Then, for any $n\ge0$,
+	\[[a_0;a_1,\ldots,a_n]=\frac{h_n}{k_n},\]
+	and $h_n/k_n$ is a fraction in reduced form with $k_n\ge1$.
+\end{corollary}
+\begin{proof}
+	The equality follows directly from \Cref{prop:magic-box}. Additionally, note that $h_n$ and $k_n$ are integers because they are terms of a sequence defined by integer recursion. Thus, to complete the proof, we must show that $\gcd(h_n,k_n)=1$ and that $k_n\ge1$ for $n\ge0$. On one hand, we see $\gcd(h_n,k_n)=1$ is direct from \Cref{cor:magic-box-minor}. On the other hand, $k_n\ge1$ follows from a quick induction because $k_{-1}=0$ and $k_0=a_1\ge1$ and so $k_{n+2}=a_{n+2}k_{n+1}+k_n\ge1$ always.
+\end{proof}
+\Cref{cor:magic-box-minor} has in fact suggested a faster algorithm (in terms of memory) than the Extended Euclidean algorithm. Let's see this by example.
+\begin{example}
+	We find integers $x$ and $y$ such that $93x+35y=1$.
+\end{example}
+\begin{solution}
+	As in \Cref{ex:ea}, we begin by writing
+	\begin{align*}
+		93 &= 2\cdot35+23 \\
+		35 &= 1\cdot23+12 \\
+		23 &= 1\cdot12+11 \\
+		12 &= 1\cdot11+1 \\
+		11 &= 11\cdot1+0.
+	\end{align*}
+	From here, we apply the magic box algorithm \Cref{prop:magic-box} to build the following grid.
+	\[\begin{array}{cc|ccccc}
+		  &   & 2 & 1 & 1 & 1 & 11 \\\hline
+		0 & 1 & 2 & 3 & 5 & 8 & 93 \\
+		1 & 0 & 1 & 1 & 2 & 3 & 35
+	\end{array}\]
+	Tracking \Cref{cor:magic-box-minor} through, we see that
+	\[35\cdot8-93\cdot3=\det\begin{bmatrix}
+		8 & 93 \\
+		3 & 25
+	\end{bmatrix}=1,\]
+	so $(x,y)=(-3,8)$ works.
+\end{solution}
+\begin{remark}
+	Here are a few ways to ``check'' the magic box algorithm.
+	\begin{itemize}
+		\item If using the magic box algorithm to compute convergents of the fraction $p/q$, then the last column of the magic box grid should yield $p/q$.
+		\item The magic box algorithm has $2\times2$ minors controlled by \Cref{cor:magic-box-minor}, so one can compute a few of these for security.
+	\end{itemize}
+\end{remark}
+
+\subsection{Problems}
+Do at least 10 points worth of the following exercises.
+\begin{prob}[1 point]
+	Find integer sequences $a_0,a_1,a_2,\ldots,a_m$ and $b_0,b_1,b_2,\ldots,b_n$ with $a_1,a_2,\ldots,a_m$ and $b_1,b_2,\ldots,b_n$ positive such that the sequences are distinct, but
+	\[[a_0;a_1,\ldots,a_m]=[b_0;b_1,\ldots,b_n].\]
+\end{prob}
+\begin{prob}[2 points]
+	Compute the continued fraction convergents of $1738/1027$.
+\end{prob}
+\begin{prob}[3 points]
+	Let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive, and define $\{h_n\}_{n=-2}^\infty$ and $\{k_n\}_{n=-2}^\infty$ as in \Cref{prop:magic-box}. Show that
+	\[\left|\det\begin{bmatrix}
+		h_n & h_{n+2} \\
+		k_n & k_{n+2}
+	\end{bmatrix}\right|=1.\]
+	Additionally, predict the sign as a function on $n$.
+\end{prob}
+\begin{prob}[5 or 6 points]
+	Let $a_0,a_1,a_2,\ldots,a_m$ and $b_0,b_1,b_2,\ldots,b_n$ be integers with $a_1,a_2,\ldots,a_m$ and $b_1,b_2,\ldots,b_n$ positive. Suppose
+	\[[a_0;a_1,a_2,\ldots,a_m]=[b_0;b_1,b_2,\ldots,b_n].\]
+	\begin{listalph}
+		\item For five points, suppose $m=n$. Show that $a_k=b_k$ for all $0\le k\le m$.
+		\item For an additional point, suppose $m<n$. Show that $m=n-1$ and $a_k=b_k$ for $0\le k\le m-1$.
+	\end{listalph}
+\end{prob}
+\begin{prob}[5 points]
+	Write (and submit) a function in Python which takes as input a list of integers $[a_0,a_1,a_2,\ldots]$ with $a_1,a_2,\ldots$ positive and an index $n$ and outputs the $n$th convergent $[a_0;a_1,a_2,\ldots,a_n]$. You should implement the magic box algorithm.
+	
+	Your test case is $[2;1,2,1,1,4,1,1,6,1]$.
+\end{prob}
+
+\end{document}

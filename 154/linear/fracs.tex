@@ -1,0 +1,349 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{Infinite Continued Fractions}
+In this section, we examine continued fractions more closely. Our main task will be to show that continued fractions provide good and in fact the best rational approximations for a given irrational number. Of course, it will be a nontrivial task in order to make sense of what ``best'' means in this context. To set up our intuition, we will say that a fraction $h/k$ provides a good rational approximation for a real number $\alpha$ if the difference
+\[\left|\alpha-\frac hk\right|\]
+is smaller than one might expect it to be. Of course, for any given denominator, we know that $\floor{k\alpha}\le k\alpha<\floor{k\alpha}+1$, so
+\[\left|\alpha-\frac{\floor{k\alpha}}k\right|\le\frac1k,\]
+so a bound of $1/k$ is not too impressive. In fact, if $\alpha$ is irrational, we will be able to show that there are infinitely many rational numbers $h/k$ such that
+\[\left|\alpha-\frac hk\right|<\frac1{\sqrt 5k^2},\]
+and we will be able to show that this bound is essentially sharp.
+
+\subsection{Convergence of Infinite Continued Fractions}
+Thus far our discussion has been focused on finite continued fractions. We would now like to extend this discussion to infinite continued fractions. As in \Cref{rem:cf-limit}, we would like to define
+\[[a_0;a_1,a_2,\ldots]\stackrel?\coloneqq\lim_{n\to\infty}[a_0;a_1,a_2,\ldots,a_n],\]
+but we should begin by showing that this limit in fact exists. The idea is to show that the infinite continued fraction is an infinite series, and then we can use known results on infinite series to complete the proof. As such, we begin by turning $[a_0;a_1,a_2,\ldots]$ into a series.
+\begin{lemma} \label{lem:convergent-diff}
+	Let $a_0,a_1,a_2,\ldots$ be real numbers, where $a_1,a_2,\ldots$ are positive, and let $\{h_n/k_n\}_{n=0}^\infty$ denote the continued fraction convergents $h_n/k_n\coloneqq[a_0;a_1,a_2,\ldots,a_n]$ where $k_n\ge1$ and $\gcd(h_n,k_n)=1$. Then
+	\[\frac{h_n}{k_n}-\frac{h_{n+1}}{k_{n+1}}=\frac{(-1)^{n+1}}{k_nk_{n+1}}.\]
+	Thus,
+	\[\frac{h_n}{k_n}=\frac{h_0}{k_0}+\sum_{m=0}^{n-1}\frac{(-1)^m}{k_mk_{m+1}}.\]
+\end{lemma}
+\begin{proof}
+	Note that $\{h_n\}_{n=0}^\infty$ and $\{k_n\}_{n=0}^\infty$ are the sequences constructed in \Cref{prop:magic-box} by \Cref{cor:actual-convergents-magic-box}. As such, the first claim follows directly from \Cref{cor:magic-box-minor}. The second claim now follows from writing
+	\[\frac{h_n}{k_n}=\frac{h_0}{k_0}+\sum_{m=0}^{n-1}\left(\frac{h_{m+1}}{k_{m+1}}-\frac{h_m}{k_m}\right)=\frac{h_0}{k_0}+\sum_{m=0}^{n-1}\frac{(-1)^{m}}{k_mk_{m+1}},\]
+	which is what we wanted.
+\end{proof}
+\begin{proposition} \label{prop:basic-cf-bound}
+	Let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive, and let $\{h_n/k_n\}_{n=0}^\infty$ denote the continued fraction convergents $h_n/k_n\coloneqq[a_0;a_1,\ldots,a_n]$ where $k_n\ge1$ and $\gcd(h_n,k_n)=1$. Then
+	\[\alpha\coloneqq\lim_{n\to\infty}[a_0;a_1,a_2,\ldots,a_n]\]
+	converges, and
+	\[\frac1{k_n(k_{n+1}+k_n)}<\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{k_nk_{n+1}}\]
+	for each $n\ge0$.
+\end{proposition}
+\begin{proof}
+	As usual, note that $\{h_n\}_{n=0}^\infty$ and $\{k_n\}_{n=0}^\infty$ are the sequences constructed in \Cref{prop:magic-box} by \Cref{cor:actual-convergents-magic-box}. To begin, we compute the limit as
+	\[\alpha=\lim_{n\to\infty}\frac{h_n}{k_n} = \frac{h_0}{k_0}+\sum_{n=0}^\infty\frac{(-1)^{n}}{k_nk_{n+1}},\]
+	where we have used \Cref{lem:convergent-diff} in the last equality. Now, the sequence $\{k_n\}_{n=0}^\infty$ is strictly increasing by \Cref{prop:magic-box} because $a_1,a_2,\ldots$ are all positive integers. Thus, the summation above absolute converges: an induction shows $k_n\ge n+1$, so
+	\[\frac{h_0}{k_0}+\sum_{n=0}^\infty\left|\frac{(-1)^{n}}{k_nk_{n+1}}\right|\le\frac{h_0}{k_0}+\sum_{n=0}^\infty\frac1{(n+1)(n+2)}<\infty.\]
+	As such, the limit does in fact converge.
+
+	To compute the error term, we use the error bound for alternating series. To begin the computation, note that the above work allows us to write
+	\[\left|\alpha-\frac{h_n}{k_n}\right| = \left|\frac{h_0}{k_0}+\sum_{m=0}^\infty\frac{(-1)^{m}}{k_mk_{m+1}}-\frac{h_0}{k_0}-\sum_{m=0}^{n-1}\frac{(-1)^{m}}{k_mk_{m+1}}\right| = \left|\sum_{m=n}^\infty\frac{(-1)^{m}}{k_mk_{m+1}}\right|.\]
+	Because the sequence $\{k_m\}_{m=0}^\infty$ is strictly increasing, the terms in the sum are monotonously decreasing in magnitude to zero, so the error bound for alternating series forces $\left|\alpha-h_n/k_n\right|<1/(k_nk_{n+1})$, which proves the upper bound for our error.
+
+	To prove the lower bound of the error, we adjust for signs and note that the sum is
+	% Adjusting for signs, we see that this sum is
+	\begin{align*}
+		\left|\alpha-\frac{h_n}{k_n}\right| &= \left|\sum_{m=0}^\infty\frac{(-1)^{m}}{k_{m+n}k_{m+n+1}}\right| \\
+		&= \left|\sum_{m=0}^\infty\left(\frac1{k_{2m+n}k_{2m+n+1}}-\frac1{k_{2m
+		+n+1}k_{2m+n+2}}\right)\right| \\
+		&= \left|\sum_{m=0}^\infty\frac1{k_{2m+n+1}}\cdot\frac{k_{2m+n+2}-k_{2m+n}}{k_{2m+n}k_{2m+n+2}}\right|.
+	\end{align*}
+	Because $\{k_n\}_{n=0}^\infty$ is a strictly increasing sequence, all the terms of the sum are positive, so we may remove the absolute signs to see
+	\[\left|\alpha-\frac{h_n}{k_n}\right|>\frac1{k_{n+1}}\cdot\frac{k_{n+2}-k_{n}}{k_{n}k_{n+2}}.\]
+	Thus, to prove the desired lower bound, we must show $k_{n+1}k_{n+2}<(k_{n+1}+k_n)(k_{n+2}-k_n)$. This rearranges to $k_n^2<k_n(k_{n+1}+k_{n+2})$, which is true.
+	% \[\left|\alpha-\frac{h_n}{k_n}\right|\le\sum_{m=0}^\infty\frac1{k_{2m+n+1}}\cdot\frac{k_{2m+n+2}-k_{2m+n}}{k_{2m+n}k_{2m+n+2}}\]
+\end{proof}
+\begin{remark}
+	\Cref{prop:basic-cf-bound} tells us that $h_n/k_n$ will be a ``better'' rational approximation for $\alpha$ when $k_{n+1}$ is particularly large. For example, $\pi=[3; 7, 15, 1, 292, 1,1,1]$, so we would guess that
+	\[[3;7,15,1]=\frac{355}{113}=3.14159292035\ldots\]
+	is a particularly good rational approximation of $\pi$, and indeed it is. Notably, $[3;7]=22/7$ is also a remarkable rational approximation.
+\end{remark}
+As such, we may make the following definition.
+\begin{definition}[infinite continued fraction]
+	Let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive. Then we define the \textit{infinite continued fraction}
+	\[[a_0;a_1,a_2,\ldots]\coloneqq\lim_{n\to\infty}[a_0;a_1,a_2,\ldots,a_n].\]
+\end{definition}
+\begin{example} \label{ex:phi-contd-frac}
+	We have
+	\[\varphi\coloneqq\frac{1+\sqrt5}2=[1;1,1,\ldots].\]
+\end{example}
+\begin{solution}
+	By \Cref{prop:basic-cf-bound}, we know that $[1;1,1,\ldots]$ converges to some real number $\alpha$. Further,
+	\[\alpha=1+\dfrac1{1+\dfrac1{1+\ddots}}=1+\frac1\alpha,\]
+	which rearranges to $\alpha^2-\alpha-1=0$, so
+	\[\alpha\in\left\{\frac{1\pm\sqrt5}2\right\}.\]
+	However, we claim that $\alpha>0$. With the tools we have, this is somewhat annoying to show, but we remark that \Cref{lem:convergents-alternate} makes this relatively easy. Anyway, let $\{h_n/k_n\}_{n=0}^\infty$ denote the continued fraction convergents. \Cref{prop:magic-box} implies that $h_0/k_0=1/1$ and $h_1/k_1=2/1$, so
+	\[\left|\alpha-1\right|=\left|\alpha-\frac{h_0}{k_0}\right|<\frac1{k_0k_1}=1,\]
+	so $\alpha>0$. Thus, $\alpha=\varphi$.
+\end{solution}
+\begin{exe} \label{exe:cf-twos}
+	Compute $[2;2,2,\ldots]$.
+\end{exe}
+The above examples have the amusing feature that $[a_0;a_1,a_2,\ldots]$ is irrational. This is not a coincidence. The following result is perhaps our first ``Diophantine approximation'' result.
+\begin{proposition} \label{prop:many-rats-is-irrat}
+	Let $\alpha$ be a real number, and let $C>0$. Then $\alpha$ is irrational if there is a sequence of rational numbers $\{h_n/k_n\}_{n=0}^\infty$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac C{k_n^2}\]
+	for each $n\ge0$.
+\end{proposition}
+\begin{proof}
+	We show the contrapositive. Suppose that $\alpha=p/q$ is rational with $q\ge1$ and $\gcd(p,q)=1$, and we show that there are only finitely many rational numbers $h/k$ such that $\left|\alpha-h/k\right|<C/k^2$; we may assume that $k\ge1$ and that $\gcd(h,k)=1$ in our fractions $h/k$. Now, for any given $k$, we note that our inequality rearranges to
+	\[\left|h-k\alpha\right|<\frac Ck,\]
+	so there are only finitely many integers $h$ in our interval. Thus, it suffices to upper-bound $k$. Well, plugging in $\alpha=p/q$ and clearing fractions reveals that we want
+	\[\left|qh-pk\right|<\frac{Cp}k.\]
+	Now, we claim that $k\le\max\{Cp,q\}$, which completes the proof. Well, suppose that $k>Cp$, and we will show $k=q$. Indeed, $qh-pk$ is an integer with magnitude less than $1$, so it follows that $qh-pk=0$, so in fact
+	\[qh=pk.\]
+	By the uniqueness of our representation of rational numbers, it follows that $k=q$. Explicitly, $q\mid pk$, but $\gcd(q,p)=1$, so $q\mid k$. A symmetric argument shows $k\mid q$, so $k,q\ge1$ establishes $k=q$.
+\end{proof}
+\begin{remark}
+	\Cref{prop:many-rats-is-irrat} is fairly surprising result! Approximately speaking, it says that having ``too many'' good rational approximations of a given real number actually forces the real number to be irrational! We will prove a converse shortly in \Cref{cor:cf-gives-rat-approx}.
+\end{remark}
+\begin{remark}
+	Here is a way to intuit \Cref{prop:many-rats-is-irrat}: there is a sense in which rational numbers cannot be ``too close to each other'' simply because
+	\[\left|\frac ab-\frac cd\right|\ge\frac1{\left|bd\right|}.\]
+	Thus, we should not be able to use rational numbers to provide good rational approximations of rational numbers.
+\end{remark}
+\begin{corollary}
+	Let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive. Then $[a_0;a_1,a_2,\ldots]$ is irrational.
+\end{corollary}
+\begin{proof}
+	Let $\{h_n/k_n\}_{n=0}^\infty$ denote the continued fraction convergents $h_n/k_n\coloneqq[a_0;a_1,\ldots,a_n]$ where $k_n\ge1$ and $\gcd(h_n,k_n)=1$. Then \Cref{prop:basic-cf-bound} establishes that
+	\[\left|[a_0;a_1,a_2,\ldots]-\frac{h_n}{k_n}\right|<\frac1{k_nk_{n+1}}<\frac1{k_n^2}\]
+	for each $n\ge0$, where the last inequality follows because $\{k_n\}_{n=0}^\infty$ is strictly increasing. \Cref{prop:many-rats-is-irrat} completes the proof.
+\end{proof}
+
+\subsection{Building Infinite Continued Fractions}
+Given an irrational real number $\alpha\in\RR\setminus\QQ$, we would like to construct a sequence of integers $a_0,a_1,a_2,\ldots$ with $a_1,a_2,\ldots$ positive and $\alpha=[a_0;a_1,a_2,\ldots]$. We did this by hand for $\varphi$ in \Cref{ex:phi-contd-frac}, but this is not a general algorithm.
+
+Let's describe what the algorithm should be. Suppose we could write $\alpha=[a_0;a_1,a_2,\ldots]$. Then
+\[\alpha=a_0+\dfrac1{a_1+\dfrac1{a_2+\ddots}}\]
+forces $a_0=\floor\alpha$. From here, define $\alpha_1\coloneqq(\alpha-a_0)^{-1}$, and we see
+\[\alpha_1=a_1+\dfrac1{a_2+\ddots}.\]
+Then we can see that we must have $a_1=\floor{\alpha_1}$, and we go on to define $\alpha_2=(\alpha_1-a_1)^{-1}$ and continue the process. This suggests the following result.
+\begin{proposition} \label{prop:cf-algo}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number. Define the sequence of real numbers $\{\alpha_n\}_{n=0}^\infty$ and integers $\{a_n\}_{n=0}^\infty$ by $\alpha_0\coloneqq\alpha$ and
+	\[a_n\coloneqq\floor{\alpha_n}\qquad\text{and}\qquad\alpha_{n+1}\coloneqq\frac1{\alpha_n-a_n}\]
+	Then $a_0,a_1,a_2,\ldots$ are integers, and $a_1,a_2,\ldots$ are positive, and $\alpha=[a_0;a_1,a_2,\ldots]$.
+\end{proposition}
+\begin{proof}
+	Quickly, we note that there are no division by zero problems: by construction, the $a_\bullet$ are all integers, and the recursion implies that $\alpha_{n+1}$ is irrational if and only if $\alpha_n$ is irrational, so induction implies that all the $\alpha_\bullet$ are irrational. Next up, we note that $a_n<\alpha_n<a_n+1$ for each $n\ge0$ (recall $\alpha_n$ is irrational for each $n$), so $0<\alpha_n-a_n<1$ for each $n\ge0$, so $a_{n+1}\ge1$ for each $n\ge0$, so $a_1,a_2,\ldots$ are in fact positive integers.
+
+	It remains to show $\alpha=[a_0;a_1,a_2,\ldots]$. This is somewhat technical. The main claim is that
+	\[\alpha\stackrel?=[a_0;a_1,\ldots,a_n,\alpha_{n+1}]\]
+	for each $n\ge0$. We show this by induction. For $n=-1$, there is nothing to say because $\alpha=\alpha_0$. For the induction, we write
+	\begin{align*}
+		\alpha &= [a_0;a_1,\ldots,a_n,\alpha_{n+1}] \\
+		&= [a_0;a_1,\ldots,a_n,\floor{\alpha_{n+1}}+\{\alpha_{n+1}\}] \\
+		&= \left[a_0;a_1,\ldots,a_n,a_{n+1}+\frac1{\alpha_{n+2}}\right] \\
+		&= \left[a_0;a_1,\ldots,a_n,a_{n+1},a_{n+2}\right],
+	\end{align*}
+	which completes the induction.
+
+	We now finish the proof that $\alpha=[a_0;a_1,a_2,\ldots]$. For each $n\ge0$, set $h_n/k_n\coloneqq[a_0;a_1,\ldots,a_n]$ and $h_{n+1}'/k_{n+1}'\coloneqq[a_0;a_1,a_2,\ldots,a_n,\alpha_{n+1}]$ as constructed in \Cref{prop:magic-box}. Then applying \Cref{lem:convergent-diff} implies
+	\begin{align*}
+		\alpha-[a_0;a_1,a_2,\ldots,a_n] &= [a_0;a_1,\ldots,a_n,\alpha_{n+1}]-[a_0;a_1,a_2,\ldots,a_n] \\
+		&= \frac{h_0}{k_0}+\sum_{m=0}^{n-1}\frac{(-1)^m}{k_mk_{m+1}}-\frac{h_0}{k_0}-\sum_{m=0}^{n-1}\frac{(-1)^m}{k_mk_{m+1}}-\frac{(-1)^n}{k_nk_{n+1}'} \\
+		&= \frac{(-1)^n}{k_nk_{n+1}'}.
+	\end{align*}
+	Thus,
+	\[\left|\alpha-[a_0;a_1,a_2,\ldots,a_n]\right|\le\frac1{k_n^2},\]
+	where we have used the fact that $k_{n+1}'=\alpha_{n+1}k_n+k_{n-1}\ge k_n$. Sending $n\to\infty$ makes $k_n\to\infty$, so we conclude $[a_0;a_1,\ldots,a_n]\to\alpha$ as $n\to\infty$.
+\end{proof}
+\begin{exe}
+	Use \Cref{prop:cf-algo} (and Sage) to compute the first $10$ continued fraction coefficients of $\pi$.
+\end{exe}
+\begin{remark} \label{rem:inf-cf-uniq}
+	In contrast to \Cref{rem:adjust-finite-cf}, the continued fraction attached to irrational $\alpha\in\RR\setminus\QQ$ is unique. The proof is approximately along the lines as the argument at the start of the subsection. Namely, suppose we have integers $a_0,a_1,a_2,\ldots$ and $b_0,b_1,b_2,\ldots$ with $a_1,a_2,\ldots$ and $b_1,b_2,\ldots$ positive, and suppose
+	\[[a_0;a_1,a_2,\ldots]=[b_0;b_1,b_2,\ldots].\]
+	We want to show $a_n=b_n$ for all $n$. Because $[a_0;a_1,a_2,\ldots]=a_0+[a_1;a_2,\ldots]^{-1}$, it suffices by induction to show that $a_0=b_0$.
+	Well, $a_1,b_1\ge1$ implies $[a_1;a_2,\ldots],[b_1,b_2,\ldots]>1$, so
+	\[a_0=\floor{a_0+\frac1{[a_1;a_2,\ldots]}}=\floor{[a_0;a_1,a_2,\ldots]}=\floor{[b_0;b_1,b_2,\ldots]}=b_0.\]
+\end{remark}
+\Cref{prop:cf-algo} allows us to make the following terminology.
+\begin{definition}[convergent]
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number. By \Cref{prop:cf-algo}, we may find integers $a_0,a_1,a_2,\ldots$ where $a_1,a_2,\ldots$ are positive and $\alpha=[a_0;a_1,a_2,\ldots]$. Then the \textit{$n$th continued fraction convergent of $\alpha$} is $[a_0;a_1,a_2,\ldots,a_n]$.
+\end{definition}
+\begin{corollary} \label{cor:cf-gives-rat-approx}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number. Then there is a sequence of rational numbers $\{h_n/k_n\}_{n=0}^\infty$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{k_n^2}\]
+	for each $n\ge0$.
+\end{corollary}
+\begin{proof}
+	We use continued fraction convergents. Let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. Then \Cref{prop:basic-cf-bound} implies
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{k_nk_{n+1}}.\]
+	Because $k_{n+1}>k_n$ by the recursion, the conclusion follows.
+\end{proof}
+
+\subsection{Convergents Are Good Rational Approximations}
+As before, let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive, and let $\{h_n/k_n\}_{n=0}^\infty$ denote the continued fraction convergents $h_n/k_n\coloneqq[a_0;a_1,\ldots,a_n]$ where $k_n\ge1$ and $\gcd(h_n,k_n)=1$. \Cref{prop:basic-cf-bound} immediately implies that
+\[\left|\alpha-\frac{h_n}{k_n}\right|\le\frac1{k_n^2},\]
+but we can improve this result somewhat. The goal of the present section is to show that there are infinitely many $n$ for which
+\[\left|\alpha-\frac{h_n}{k_n}\right|\le\frac1{\sqrt 5k_n^2},\]
+and the following example explains that the constant $\sqrt5$ is the best possible.
+\begin{example} \label{ex:phi-hurwitz-sharp}
+	Let $\varphi=\frac{1+\sqrt5}2=[1;1,1,\ldots]$ as in \Cref{ex:phi-contd-frac}. By \Cref{ex:cf-fib}, the $n$th continued fraction convergent is $F_{n+2}/F_{n+1}$. For any $c>\sqrt5$, we have
+	\[\left|\varphi-\frac{F_{n+2}}{F_{n+1}}\right|<\frac1{cF_{n+1}^2}\]
+	for only finitely many $n$.
+\end{example}
+\begin{solution}
+	% The lower bound in \Cref{prop:basic-cf-bound} implies
+	% \[\left|\varphi-\frac{F_{n+2}}{F_{n+1}}\right|>\frac1{F_{n+1}(F_{n+1}+F_{n+2})}=\frac1{F_{n+1}F_{n+3}}.\]
+	% Thus, upon rearranging, it suffices to show that there are only finitely many $n$ for which
+	% \[\frac{F_{n+1}}{F_{n+2}}\]
+	Set $\overline\varphi\coloneqq\frac{1-\sqrt5}2$, which is the negative solution of $x^2=x+1$; note $\varphi+\overline\varphi=1$ and $\varphi\overline\varphi=-1$. An induction $n$ proves Binet's formula
+	\[F_n\stackrel?=\frac{\varphi^n-\overline\varphi^n}{\sqrt5}.\]
+	Indeed, the above equality holds at $n=0$ and $n=1$ by a direct computation, and taking a linear combination of the relations $\varphi^{n+2}=\varphi^{n+1}+\varphi^n$ and $\overline\varphi^{n+2}=\overline\varphi^{n+1}+\overline\varphi^n$ proves the inductive step.
+
+	We now carefully study the error. For any $n\ge0$, we see
+	\begin{align*}
+		5\left(\varphi F_{n+1}^2-F_{n+2}F_{n+1}\right) &= \varphi\left(\varphi^{n+1}-\overline\varphi^{n+1}\right)^2-\left(\varphi^{n+2}-\overline\varphi^{n+2}\right)\left(\varphi^{n+1}-\overline\varphi^{n+1}\right) \\
+		&= \varphi\left(\varphi^{2n+2}+\overline\varphi^{2n+2}-2(\varphi\overline\varphi)^{n+1}\right)-\left(\varphi^{2n+3}+\overline\varphi^{2n+3}-(\varphi\overline\varphi)^{n+1}(\varphi+\overline\varphi)\right) \\
+		% &= (-1)^n(2\varphi+1)+\varphi\overline\varphi^{2n+2}-\overline\varphi^{2n+3} \\
+		&= (-1)^n(2\varphi-1)+\overline\varphi^{2n+2}\left(\varphi-\overline\varphi\right) \\
+		&= (-1)^n\sqrt5+\overline\varphi^{2n+2}\sqrt5.
+	\end{align*}
+	Thus,
+	\begin{equation}
+		cF_{n+1}^2\left|\varphi-\frac{F_{n+2}}{F_{n+1}}\right|=\frac c{\sqrt5}\left|(-1)^n+\overline\varphi^{2n+2}\right|. \label{eq:phi-error}
+	\end{equation}
+	As $n\to\infty$, we see $\overline\varphi^{2n+2}\to0$, so the error above approaches $c/\sqrt5>1$. Thus, only finitely many $n$ have the above quantity less than $1$, which is what we wanted.
+\end{solution}
+\begin{remark}
+	Carefully tracking through \Cref{ex:phi-hurwitz-sharp} tells us that
+	\[\left|\varphi-\frac{F_{n+2}}{F_{n+1}}\right|<\frac1{\sqrt5F_{n+1}^2}\]
+	exactly for the even $n$. Indeed, this follows from \eqref{eq:phi-error} upon noting $-\overline\varphi^{2n+2}<0$. Compare this result with the statement and proof of \Cref{thm:hurwitz}.
+\end{remark}
+\begin{exe} \label{exe:sqrr-2-hurwitz}
+	Set $\alpha\coloneqq\sqrt2$, and let $\{h_n/k_n\}_{n=0}^\infty$ be the continued fraction convergents of $\alpha$. Find the largest real number $c>0$ for which there exist infinitely many integers $n\ge0$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{ck_n^2}.\]
+\end{exe}
+As should be somewhat evident by the $\sqrt5$ in our bounds and in the above proof, the arguments here are going to be somewhat ad-hoc. The following result starts us off.
+\begin{lemma} \label{lem:convergents-alternate}
+	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. For any $n\ge0$, we have
+	\[\frac{h_{2n}}{k_{2n}}<\frac{h_{2n+2}}{k_{2n+2}}<\frac{h_{2n+3}}{k_{2n+3}}<\frac{h_{2n+1}}{k_{2n+1}}.\]
+\end{lemma}
+\begin{proof}
+	Applying \Cref{lem:convergent-diff}, we are trying to show
+	\[\frac{h_{2n}}{k_{2n}}\stackrel?<\frac{h_{2n}}{k_{2n}}+\frac1{k_{2n}k_{2n+1}}-\frac1{k_{2n+1}k_{2n+2}}\stackrel?<\frac{h_{2n}}{k_{2n}}+\frac1{k_{2n}k_{2n+1}}-\frac1{k_{2n+1}k_{2n+2}}+\frac1{k_{2n+2}k_{2n+3}}\stackrel?<\frac{h_{2n}}{k_{2n}}+\frac1{k_{2n}k_{2n+1}}.\]
+	Simplifying, we want to show
+	\[0\stackrel?<\frac1{k_{2n}k_{2n+1}}-\frac1{k_{2n+1}k_{2n+2}}\stackrel?<\frac1{k_{2n}k_{2n+1}}-\frac1{k_{2n+1}k_{2n+2}}+\frac1{k_{2n+2}k_{2n+3}}\stackrel?<\frac1{k_{2n}k_{2n+1}}.\]
+	The leftmost inequality is equivalent to $k_{2n}<k_{2n+2}$, which is true. The middle inequality is equivalent to $0<1/(k_{2n+2}k_{2n+3})$, which is true. Lastly, the rightmost inequality is equivalent to $k_{2n+1}<k_{2n+3}$, which is true.
+\end{proof}
+\begin{proposition} \label{prop:every-other-conv}
+	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. For any $m\ge0$, there exists $n\in\{2m,2m+1\}$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{2k_n^2}.\]
+\end{proposition}
+\begin{proof}
+	The point is that one of $h_{2m}/k_{2m}$ or $h_{2m+1}/k_{2m+1}$ is going to be ``closer'' to $\alpha$. By \Cref{lem:convergents-alternate}, we see that $\{h_{2m}/k_{2m}\}_{m=0}^\infty$ is a strictly ascending sequence of rational numbers, which converges to $\alpha$ by definition of $\alpha$. Analogously, $\{h_{2m+1}/k_{2m+1}\}_{m=0}^\infty$ is a strictly descending sequence of rational numbers which also converges to $\alpha$. Thus,
+	\[\frac{h_{2m}}{k_{2m}}<\alpha<\frac{h_{2m+1}}{k_{2m+1}}.\]
+	By \Cref{lem:convergent-diff}, the length of this interval is $1/(k_{2m}k_{2m+1})$.
+
+	Now, suppose for contradiction that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|\ge\frac1{2k_n^2}\]
+	for $n\in\{2m,2m+1\}$. Then we must have
+	\[\frac{h_{2m}}{k_{2m}}+\frac1{2k_{2m}^2}\le\alpha\le\frac{h_{2m+1}}{k_{2m+1}}-\frac1{2k_{2m+1}^2}.\]
+	This rearranges to
+	\[\frac1{2k_{2m}^2}+\frac1{2k_{2m+1}^2}\le\frac1{k_{2m}k_{2m+1}}\]
+	by \Cref{lem:convergent-diff}, but this is equivalent to $(k_{2m}-k_{2m+1})^2\le0$, or $k_{2m}=k_{2m+1}$. This is a contradiction because the sequence $\{k_n\}_{n=0}^\infty$ is strictly increasing.
+\end{proof}
+With a little more care in the last half of the argument, we can achieve the desired result.
+\begin{theorem}[Hurwitz] \label{thm:hurwitz}
+	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. For any $m\ge0$, there exists $n\in\{3m,3m+1,3m+2\}$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{\sqrt 5k_n^2}.\]
+\end{theorem}
+\begin{proof}
+	The proof is along the same lines as \Cref{prop:every-other-conv}. Without loss of generality, we work with even $m$ in order to make our inequalities better-behaved; the argument for odd $m$ is analogous but requires reversing a few inequalities. Anyway, if $m$ is even, \Cref{lem:convergents-alternate} implies
+	\[\frac{h_{3m}}{k_{3m}}<\frac{h_{3m+2}}{k_{3m+2}}<\alpha<\frac{h_{3m+1}}{k_{3m+1}}.\]
+	(The location of $\alpha$ adjusts in the case where $m$ is odd.) Now, suppose for the sake of contradiction that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|\ge\frac1{\sqrt 5k_n^2}\]
+	for each $n\in\{3m,3m+1,3m+2\}$. Removing the absolute values, we receive the inequalities
+	\[\frac{h_{3m}}{k_{3m}}+\frac1{\sqrt5k_{3m}^2}\le\alpha,\quad\alpha\le\frac{h_{3m+1}}{k_{3m+1}}-\frac1{\sqrt5k_{3m+1}^2},\quad\text{and}\quad\frac{h_{3m+2}}{k_{3m+2}}+\frac1{\sqrt5k_{3m+2}^2}\le\alpha,\]
+	which imply
+	\[\frac{h_{3m}}{k_{3m}}+\frac1{\sqrt5k_{3m}^2}\le\frac{h_{3m+1}}{k_{3m+1}}-\frac1{\sqrt5k_{3m+1}^2},\quad\text{and}\quad\frac{h_{3m+2}}{k_{3m+2}}+\frac1{\sqrt5k_{3m+2}^2}\le\frac{h_{3m+1}}{k_{3m+1}}-\frac1{\sqrt5k_{3m+1}^2}.\]
+	By \Cref{lem:convergent-diff}, these rearrange into
+	\[\frac1{k_{3m}^2}+\frac1{k_{3m+1}^2}\le\frac{\sqrt5}{k_{3m}k_{3m+1}},\quad\text{and}\quad\frac1{k_{3m+1}^2}+\frac1{k_{3m+2}^2}\le\frac{\sqrt5}{k_{3m+1}k_{3m+2}}.\]
+	By \Cref{prop:magic-box}, we see that $k_{3m}+k_{3m+1}\le k_{3m+2}$, so our inequalities read
+	\[\frac1{k_{3m}^2}+\frac1{k_{3m+1}^2}\le\frac{\sqrt5}{k_{3m}k_{3m+1}},\quad\text{and}\quad\frac1{k_{3m+1}^2}+\frac1{(k_{3m}+k_{3m+1})^2}\le\frac{\sqrt5}{k_{3m+1}(k_{3m}+k_{3m+1})}.\]
+	Now, we set $q\coloneqq k_{3m+1}/k_{3m}$ to homogenize the inequalities. This gives
+	\[q^2+1\le\sqrt5q,\quad\text{and}\quad(q+1)^2+1\le\sqrt5(q+1).\]
+	In other words, we are asking for $\{q,q+1\}\subseteq\left\{x\in\RR:x^2+1\le\sqrt 5x\right\}$. To solve for $q$, we note $x^2-\sqrt5x+1=0$ exactly when $x=\frac{\sqrt5\pm1}2$, so $\left\{x\in\RR:x^2+1\le\sqrt 5x\right\}$ is the closed interval from $\frac{\sqrt5-1}2$ up to $\frac{\sqrt5+1}2$. Thus, we must have $q=\frac{\sqrt5-1}2$, which is a contradiction because $q$ is rational while $\frac{\sqrt5-1}2$ is irrational!
+\end{proof}
+
+\subsection{Convergents Are Best Rational Approximations}
+Now that we are somewhat acquainted with what it means to be a ``good'' rational approximation, we are ready to state and prove our main result on continued fractions. It is a converse to \Cref{prop:every-other-conv}.
+\begin{theorem} \label{thm:cf-bound}
+	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. Given a rational number $h/k$ with $\gcd(h,k)=1$ and $k\ge1$, if
+	\[\left|\alpha-\frac hk\right|<\frac1{2k^2},\]
+	then $(h,k)=(h_n,k_n)$ for some $n$.
+\end{theorem}
+Approximately speaking, \Cref{thm:cf-bound} tells us that the best rational approximations of a real number are all continued fraction convergents.
+
+It will be helpful to have a criterion to check that a fraction is a convergent. This is the content of the following lemma.
+\begin{lemma} \label{lem:cf-detect}
+	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. Suppose we have rational numbers $h/k$ and $h'/k'$ with $k>k'>0$ and $\left|hk'-h'k\right|=1$ and
+	\[\alpha=\frac{h\beta+h'}{k\beta+k'}\]
+	for some $\beta>1$. Then there is $n\ge1$ such that $(h',k')=(h_{n-1},k_{n-1})$ and $(h,k)=(h_{n},k_{n})$.
+\end{lemma}
+\begin{proof}
+	By \Cref{rem:adjust-finite-cf}, we may write
+	\[\frac hk=[a_0;a_1,a_2,\ldots,a_n]\]
+	with $a_n$ with parity chosen so that $h'k-hk'=(-1)^{n+1}$. (This is what we expect from \Cref{cor:magic-box-minor}.) Quickly, we let $\{p_n/q_n\}_{m=0}^n$ denote the convergents of $[a_0;a_1,a_2,\ldots,a_n]$. We know $(h,k)=(p_n,q_n)$. From here, the proof has two steps.
+	\begin{enumerate}
+		\item We show $(h',k')=(p_{n-1},q_{n-1})$. By \Cref{cor:magic-box-minor}, we know
+		\[p_{n-1}q_n-p_nq_{n-1}=(-1)^n=h'k-hk'=h'q_n-p_nk'.\]
+		Reducing$\pmod{q_n}$, we see that $-p_nq_{n-1}\equiv-p_nk'$, so $q_{n-1}\equiv k'$, but $0<k',q_{n-1}<q_n$, so $k'=q_{n-1}$. Plugging this in and simplifying then forces $p_{n-1}=h'$, which is what we wanted.
+		\item We show that $[a_0;a_1,a_2,\ldots,a_n]$ is the beginning of the continued fraction of $\alpha$. Well, \Cref{prop:cf-algo} allows us to write
+		\[\beta=[a_{n+1};a_{n+2},a_{n+3},\ldots]\]
+		for integers $a_{n+1},a_{n+2},a_{n+3},\ldots$ with $a_{n+2},a_{n+3},\ldots$ positive. In fact, $a_{n+1}=\floor\beta\ge1$ is positive by construction. Now, \Cref{prop:magic-box} implies
+		\[\alpha=\frac{h\beta+h'}{k\beta+k'}=\frac{p_n\beta+p_{n-1}}{q_n\beta+q_{n-1}}=[a_0;a_1,a_2,\ldots,a_n,\beta]=[a_0;a_1,a_2,\ldots,a_n,a_{n+1},a_{n+2},\ldots].\]
+		(Note we have implicitly used the uniqueness of the continued fraction, shown in \Cref{rem:inf-cf-uniq}.) Thus, we see $(p_m,q_m)=(h_m,k_m)$ for $0\le m\le n$, from which $(h',k')=(p_{n-1},q_{n-1})=(h_{n-1},k_{n-1})$ and $(h,k)=(p_n,q_n)=(h_n,k_n)$ follows.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+We are now ready to prove \Cref{thm:cf-bound}.
+\begin{proof}[Proof of \Cref{thm:cf-bound}]
+	We use \Cref{lem:cf-detect}. To choose $h'$ and $k'$, we use \Cref{rem:adjust-finite-cf} to write
+	\[\frac hk=[a_0;a_1,a_2,\ldots,a_n]\]
+	with $a_n$ with parity chosen so that $n$ is even if and only if $\alpha>h/k$. (This is what we expect from \Cref{lem:convergents-alternate}.) Then let $\{p_m/q_m\}_{m=0}^n$ be the continued fraction convergents; for example, $(h,k)=(p_n,q_n)$, and we set $(h',k')\coloneqq(p_{n-1},q_{n-1})$. The construction gives $k>k'>0$, and $\left|hk'-h'k\right|=1$ by \Cref{cor:magic-box-minor}.
+	
+	Now, we know that we can certainly find some $\beta\in\RR$ such that
+	\[\alpha=\frac{h\beta+h'}{k\beta+k'}\]
+	by rearranging. (Explicitly, we need to know that $\alpha k-h\ne0$ to set $\beta\coloneqq(h'-\alpha k')/(\alpha k-h)$, which is true because $\alpha$ is irrational.) Our goal is to show $\beta>1$, which will complete the proof by \Cref{lem:cf-detect}. Well, comparing with our error, we see
+	\[\alpha-\frac hk=\frac{h\beta+h'}{k\beta+k'}-\frac hk=\frac{h'k-hk'}{(k\beta+k')k}=\frac{(-1)^n}{(k\beta+k')k},\]
+	where we applied \Cref{cor:magic-box-minor} in the last equality. We arranged the parity $n$ so that the left-hand side is positive if and only if $(-1)^n=1$, so we may now write
+	\[1>2k^2\left|\alpha-\frac hk\right|=\frac{2k}{k\beta+k'},\]
+	so $\beta>2-k'/k$, which is bigger than $1$ because $k'<k$. This completes the proof.
+\end{proof}
+
+\subsection{Problems}
+Do at least ten points worth of the following exercises.
+\begin{prob}[2 points]
+	Work \Cref{exe:cf-twos}.
+\end{prob}
+\begin{prob}[3 points]
+	Work \Cref{exe:sqrr-2-hurwitz}.
+\end{prob}
+\begin{prob}[3 points]
+	Let $a_0,a_1,a_2,\ldots$ be integers with $a_1,a_2,\ldots$ positive. Suppose that there exists an integer $m$ such that $a_n=a_{n+m}$ for all $n$. Show that $[a_0;a_1,a_2,\ldots]$ is the root of a polynomial with integer coefficients and of degree two.
+\end{prob}
+\begin{prob}[4 points]
+	Find an irrational number $\alpha\in\RR\setminus\QQ$ and integers $h$ and $k$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^2},\]
+	but $h/k$ is not a continued fraction convergent of $\alpha$.
+\end{prob}
+\begin{prob}[5 points]
+	Write (and submit) a Python program which takes as input an irrational number $\alpha\in\RR\setminus\QQ$ and an index $n$ and then outputs the $n$th coefficient $a_n$ of the corresponding continued fraction $[a_0;a_1,a_2,\ldots]$ equal to $\alpha$.
+\end{prob}
+\begin{prob}[8 points] \label{prob:not-too-many-nines}
+	Let $\alpha\in\RR$ be irrational and $[a_0;a_1,a_2,\ldots]$ its continued fraction expansion. Fix $N$ sufficiently large. Suppose that among the first $1000N$ digits of the decimal expansion of $\alpha$, the last $999N$ of them are all zeroes or all nines. Then there exists some $n\le5N$ so that $a_n>10^{100N}$.
+\end{prob}
+\begin{prob}[2 points]
+	Use \Cref{prob:not-too-many-nines} to conclude that for any sufficiently large $N$, the last $999N$ digits of the first $1000N$ decimal digits in the decimal expansion of $\sqrt5$ cannot be all zeroes or all nines.
+\end{prob}
+
+\end{document}
