@@ -8,4 +8,120 @@
 
 It begins.
 
+\subsection{Logistics}
+Here are some logistical notes.
+\begin{itemize}
+	\item There is a \href{https://bcourses.berkeley.edu/courses/1528862}{\texttt{bCourses}}.
+	\item We will use \cite{marker}.
+	\item Professor Montalb\'an and Scanlon will teach the course jointly.
+	\item There will be a midterm (in-class on the 19th of October) and final exam (take-home over three days).
+	\item There are suggested but technically ungraded exercises. They are helpful.
+	\item We will assume basic first-order logic, and examples will be taken from a few other areas of mathematics.
+	\item This is a graduate class. It will be pretty fast.
+\end{itemize}
+We are studying model theory, which is the study of models and theories. Our main two theorems are the Compactness theorems and results on admitting types. We will use these results again and again.
+
+\subsection{Languages and Structures}
+Let's review chapter 1 of \cite{marker}. Here is a language.
+\begin{definition}[language]
+	A \textit{language} $\mathcal L$ consists of the sets $\mathcal F$, $\mathcal R$, and $\mathcal C$ of symbols. Here, $\mathcal F$ are functions, $\mathcal R$ are relations, and $\mathcal C$ are constants. Notably, there is an arity function $n\colon(\mathcal F\cup\mathcal R)\to\NN$.
+\end{definition}
+Concretely, fix a language $\mathcal L=(\mathcal F,\mathcal R,\mathcal C)$. If $f\in\mathcal F$ and $n(f)=3$, then we say that $f$ has arity three; the analogous statement holds for relations.
+
+We will often abbreviate a language to just a long tuple. For example, the notation $(\NN,0,1,+,\le)$ has the domain $\NN$ and constants $0$ and $1$ and function $+$ and relation $\le$, even though the notation has not made it obvious what any of these things are.
+
+So far we only have the prototype of data. Here is the data.
+\begin{definition}[structure]
+	Fix a language $\mathcal L$. Then an \textit{$\mathcal L$-structure} $\mathcal M$ consists of the following data.
+	\begin{itemize}
+		\item Domain: a set $M$.
+		\item Functions: for each $f\in\mathcal F$, there is a function $f^{\mathcal M}\colon M^{n(f)}\to M$.
+		\item Relations: for each $R\in\mathcal R$, there is a relation $R^\mathcal M\subseteq M^{n(r)}$.
+		\item Constants: for each $c\in\mathcal C$, there is a constant $c^\mathcal M\in M$.
+	\end{itemize}
+	The various $(-)^\mathcal M$ data are called \textit{interpretations}.
+\end{definition}
+\begin{example}
+	Consider the language $\mathcal L$ with the constants $0$ and $1$ and operations $+$ and $\times$. Then $\NN$ is an $\mathcal L$-structure, in the obvious way.
+\end{example}
+In general, algebra provides many examples of languages.
+
+We would like to relate our structures.
+\begin{defihelper}[homomorphism, embedding, isomorphism] \nirindex{embedding} \nirindex{isomorphism} \nirindex{homomorphism}
+	Fix a language $\mathcal L$. An \textit{$\mathcal L$-homomorphism} $\eta\colon\mathcal M\to\mathcal N$ of $\mathcal L$-structures $\mathcal M$ and $\mathcal N$ is a one-to-one map $\eta\colon M\to N$ preserving the interpretations, as follows.
+	\begin{itemize}
+		\item Functions: for each $f\in\mathcal F$, we have $\eta\circ f^\mathcal M=f^\mathcal N\circ\eta^{n(f)}$.
+		\item Relations: for each $R\in\mathcal R$, if $\overline m\in R^\mathcal M$, then $\eta^{n(R)}(m)\in R^\mathcal N$.
+		\item Constants: for each $c\in\mathcal C$, we have $\eta\left(c^\mathcal M\right)=c^\mathcal N$.
+	\end{itemize}
+	If $\eta\colon M\to N$ is one-to-one and the relations condition is an equivalence, then $\eta$ is an \textit{$\mathcal L$-embedding}. If $\eta\colon M\to N$ is the identity $M\subseteq N$, then we say that $\mathcal M$ is an $\mathcal L$-substructure. In addition, if $\eta$ is onto, then $\eta$ is an \textit{$\mathcal L$-isomorphism}.
+\end{defihelper}
+Explicitly, being a substructure means that the functions and relations are restricted appropriately, and the constants remain the same.
+\begin{example}
+	In the language of groups, subgroups make substructures. A similar sentence holds for other algebraic structures.
+\end{example}
+
+\subsection{Formulae}
+Thus far we have described a vocabulary: the language provides the data for us to manipulate. We now discuss how to ``speak'' in this language.
+\begin{definition}[term]
+	Let $\mathcal L$ be a language. The set of \textit{$\mathcal L$-terms} is the smallest set $\mathcal T$ satisfying the following.
+	\begin{itemize}
+		\item Constants: for each $c\in\mathcal C$, we have $c\in\mathcal T$.
+		\item Variables: $x_i\in\mathcal T$ for each $i\in\NN$. Notably, we have only countably many variables.
+		\item Functions: if $t_1,\ldots,t_n\in\mathcal T$ where $n=n(f)$ for some $f\in\mathcal F$, then $f(t_1,\ldots,t_n)\in\mathcal T$.
+	\end{itemize}
+	Given an $\mathcal L$-structure $\mathcal M$ and term $t\in\mathcal T$ with variables $x_1,\ldots,x_n$ and elements $a_1,\ldots,a_n\in M$, we define $t^\mathcal M(\overline a)$ in the obvious way.
+\end{definition}
+Terms are basically just nouns. We would now like to put them into sentences.
+\begin{definition}[atomic formula]
+	The set of \textit{atomic $\mathcal L$-formulae} is the set of expressions of one of the following forms.
+	\begin{itemize}
+		\item Equality: $t_1=t_2$ for any $\mathcal L$-terms $t_1$ and $t_2$.
+		\item Relations: $R(t_1,\ldots,t_n)$ for any $n$-ary relation $R$ and $\mathcal L$-terms $t_1,\ldots,t_n$.
+	\end{itemize}
+\end{definition}
+\begin{definition}[formula]
+	The set of \textit{$\mathcal L$-formulae} is the smallest set satisfying the following.
+	\begin{itemize}
+		\item Any atomic $\mathcal L$-formula $\varphi$ is an $\mathcal L$-formula.
+		\item For any $\mathcal L$-formulae $\varphi$ and $\psi$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ are $\mathcal L$-formulae.
+		\item For any variable $v_i$ for $i\in\NN$, then $\exists v_i\varphi$ is an $\mathcal L$-formula.
+	\end{itemize}
+\end{definition}
+One can then define the shorthand ``$\varphi\to\psi$'' for $\lnot\varphi\lor\psi$ and ``$\forall v_i\varphi$'' for $\lnot\exists v_i\lnot\varphi$.
+
+Now that we can talk about our structure, we would like to know if we are making sense.
+\begin{definition}[free variable]
+	Fix a language $\mathcal L$. A variable $v$ in a formula $\varphi$ is \textit{free} if and only if it is not bound to any quantifier $\exists v$ or $\forall v$. If $\varphi$ has free variables contained in the variables $x_1,\ldots,x_n$, we write $\varphi(x_1,\ldots,x_n)$.
+\end{definition}
+This definition is vague because we have not said what ``bound'' means, but it is rather obnoxious to explain what it is rigorously, so we will not bother.
+\begin{definition}[sentence]
+	Fix a language $\mathcal L$. An $\mathcal L$-formula with no free variables is a \textit{sentence}.
+\end{definition}
+\begin{definition}[truth]
+	Fix an $\mathcal L$-structure $\mathcal M$. Further, fix an $\mathcal L$-formula $\varphi(x_1,\ldots,x_n)$ and a tuple $\overline a\in M^n$. Then we define \textit{truth} as $\mathcal M\models\varphi(\overline a)$ to mean that $\varphi$ is true upon plugging in $\overline a$, where our definition is inductive on atomic formulae as follows.
+	\begin{itemize}
+		\item $\mathcal M\models(t_1=t_2)(\overline a)$ if and only if $t_1^\mathcal M(\overline a)=t_2^\mathcal M(\overline a)$.
+		\item $\mathcal M\models R(t_1,\ldots,t_n)$ if and only if $\left(t_1^\mathcal M(\overline a),\ldots,t_2^\mathcal M(\overline a)\right)\in R^\mathcal M$.
+	\end{itemize}
+	We define truth inductively on formulae now as follows.
+	\begin{itemize}
+		\item $\mathcal M\models(\varphi\land\psi)(\overline a)$ if and only if $\mathcal M\models\varphi(\overline a)$ and $\mathcal M\models\psi(\overline a)$.
+		\item $\mathcal M\models(\varphi\lor\psi)(\overline a)$ if and only if $\mathcal M\models\varphi(\overline a)$ or $\mathcal M\models\psi(\overline a)$.
+		\item $\mathcal M\models\lnot\varphi(\overline a)$ if and only if we do not have $\mathcal M\models\varphi(\overline a)$.
+		\item $\mathcal M\models\exists v\varphi(\overline a,v)$ if and only if there exists $b\in M$ such that $\mathcal M\models\varphi(\overline a,b)$.
+	\end{itemize}
+	In this case, we say that $\mathcal M$ \textit{satisfies, models, etc.} $\varphi(\overline a)$ and so on.
+\end{definition}
+Here is our first result of substance.
+\begin{proposition}
+	Fix a language $\mathcal L$ and an $\mathcal L$-embedding $\eta\colon\mathcal M\to\mathcal N$. Further, fix a quantifier-free formula $\varphi$. Then $\mathcal M\models\varphi(\overline a)$ if and only if $\mathcal N\models\varphi$.
+\end{proposition}
+\begin{proof}
+	Induction. Roughly speaking, the point is that the interpretations are the same before and after.
+\end{proof}
+\begin{remark}
+	If we allow variables, the statement is false. For example, $(\NN,0,\le)$ embeds into $(\ZZ,0,\le)$, but $\forall x(0\le x)$ is true in the first formula while false in the second.
+\end{remark}
+
 \end{document}
