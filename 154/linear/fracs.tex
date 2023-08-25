@@ -87,16 +87,16 @@ As such, we may make the following definition.
 \end{exe}
 The above examples have the amusing feature that $[a_0;a_1,a_2,\ldots]$ is irrational. This is not a coincidence. The following result is perhaps our first ``Diophantine approximation'' result.
 \begin{proposition} \label{prop:many-rats-is-irrat}
-	Let $\alpha$ be a real number, and let $C>0$. Then $\alpha$ is irrational if there is a sequence of rational numbers $\{h_n/k_n\}_{n=0}^\infty$ such that
-	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac C{k_n^2}\]
+	Let $\alpha$ be a real number, and let $C>0$ and $\varepsilon>0$. Then $\alpha$ is irrational if there is a sequence of rational numbers $\{h_n/k_n\}_{n=0}^\infty$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac C{k_n^{1+\varepsilon}}\]
 	for each $n\ge0$.
 \end{proposition}
 \begin{proof}
-	We show the contrapositive. Suppose that $\alpha=p/q$ is rational with $q\ge1$ and $\gcd(p,q)=1$, and we show that there are only finitely many rational numbers $h/k$ such that $\left|\alpha-h/k\right|<C/k^2$; we may assume that $k\ge1$ and that $\gcd(h,k)=1$ in our fractions $h/k$. Now, for any given $k$, we note that our inequality rearranges to
-	\[\left|h-k\alpha\right|<\frac Ck,\]
+	We show the contrapositive. Suppose that $\alpha=p/q$ is rational with $q\ge1$ and $\gcd(p,q)=1$, and we show that there are only finitely many rational numbers $h/k$ such that $\left|\alpha-h/k\right|<C/k^{1+\varepsilon}$; we may assume that $k\ge1$ and that $\gcd(h,k)=1$ in our fractions $h/k$. Now, for any given $k$, we note that our inequality rearranges to
+	\[\left|h-k\alpha\right|<\frac C{k^\varepsilon},\]
 	so there are only finitely many integers $h$ in our interval. Thus, it suffices to upper-bound $k$. Well, plugging in $\alpha=p/q$ and clearing fractions reveals that we want
-	\[\left|qh-pk\right|<\frac{Cp}k.\]
-	Now, we claim that $k\le\max\{Cp,q\}$, which completes the proof. Well, suppose that $k>Cp$, and we will show $k=q$. Indeed, $qh-pk$ is an integer with magnitude less than $1$, so it follows that $qh-pk=0$, so in fact
+	\[\left|qh-pk\right|<\frac{Cp}{k^\varepsilon}.\]
+	Now, we claim that $k\le\max\left\{(Cp)^{1/\varepsilon},q\right\}$, which completes the proof. Well, suppose that $k^\varepsilon>Cp$, and we will show $k=q$. Indeed, $qh-pk$ is an integer with magnitude less than $1$, so it follows that $qh-pk=0$, so in fact
 	\[qh=pk.\]
 	By the uniqueness of our representation of rational numbers, it follows that $k=q$. Explicitly, $q\mid pk$, but $\gcd(q,p)=1$, so $q\mid k$. A symmetric argument shows $k\mid q$, so $k,q\ge1$ establishes $k=q$.
 \end{proof}
@@ -283,41 +283,48 @@ Now that we are somewhat acquainted with what it means to be a ``good'' rational
 \end{theorem}
 Approximately speaking, \Cref{thm:cf-bound} tells us that the best rational approximations of a real number are all continued fraction convergents.
 
-It will be helpful to have a criterion to check that a fraction is a convergent. This is the content of the following lemma.
-\begin{lemma} \label{lem:cf-detect}
-	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. Suppose we have rational numbers $h/k$ and $h'/k'$ with $k>k'>0$ and $\left|hk'-h'k\right|=1$ and
-	\[\alpha=\frac{h\beta+h'}{k\beta+k'}\]
-	for some $\beta>1$. Then there is $n\ge1$ such that $(h',k')=(h_{n-1},k_{n-1})$ and $(h,k)=(h_{n},k_{n})$.
-\end{lemma}
-\begin{proof}
-	By \Cref{rem:adjust-finite-cf}, we may write
-	\[\frac hk=[a_0;a_1,a_2,\ldots,a_n]\]
-	with $a_n$ with parity chosen so that $h'k-hk'=(-1)^{n+1}$. (This is what we expect from \Cref{cor:magic-box-minor}.) Quickly, we let $\{p_n/q_n\}_{m=0}^n$ denote the convergents of $[a_0;a_1,a_2,\ldots,a_n]$. We know $(h,k)=(p_n,q_n)$. From here, the proof has two steps.
-	\begin{enumerate}
-		\item We show $(h',k')=(p_{n-1},q_{n-1})$. By \Cref{cor:magic-box-minor}, we know
-		\[p_{n-1}q_n-p_nq_{n-1}=(-1)^n=h'k-hk'=h'q_n-p_nk'.\]
-		Reducing$\pmod{q_n}$, we see that $-p_nq_{n-1}\equiv-p_nk'$, so $q_{n-1}\equiv k'$, but $0<k',q_{n-1}<q_n$, so $k'=q_{n-1}$. Plugging this in and simplifying then forces $p_{n-1}=h'$, which is what we wanted.
-		\item We show that $[a_0;a_1,a_2,\ldots,a_n]$ is the beginning of the continued fraction of $\alpha$. Well, \Cref{prop:cf-algo} allows us to write
-		\[\beta=[a_{n+1};a_{n+2},a_{n+3},\ldots]\]
-		for integers $a_{n+1},a_{n+2},a_{n+3},\ldots$ with $a_{n+2},a_{n+3},\ldots$ positive. In fact, $a_{n+1}=\floor\beta\ge1$ is positive by construction. Now, \Cref{prop:magic-box} implies
-		\[\alpha=\frac{h\beta+h'}{k\beta+k'}=\frac{p_n\beta+p_{n-1}}{q_n\beta+q_{n-1}}=[a_0;a_1,a_2,\ldots,a_n,\beta]=[a_0;a_1,a_2,\ldots,a_n,a_{n+1},a_{n+2},\ldots].\]
-		(Note we have implicitly used the uniqueness of the continued fraction, shown in \Cref{rem:inf-cf-uniq}.) Thus, we see $(p_m,q_m)=(h_m,k_m)$ for $0\le m\le n$, from which $(h',k')=(p_{n-1},q_{n-1})=(h_{n-1},k_{n-1})$ and $(h,k)=(p_n,q_n)=(h_n,k_n)$ follows.
-		\qedhere
-	\end{enumerate}
-\end{proof}
-We are now ready to prove \Cref{thm:cf-bound}.
+% It will be helpful to have a criterion to check that a fraction is a convergent. This is the content of the following lemma.
+% \begin{lemma} \label{lem:cf-detect}
+% 	Let $\alpha\in\RR\setminus\QQ$ be irrational, and let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\alpha$. Suppose we have rational numbers $h/k$ and $h'/k'$ with $k>k'>0$ and $\left|hk'-h'k\right|=1$ and
+% 	\[\alpha=\frac{h\beta+h'}{k\beta+k'}\]
+% 	for some $\beta>1$. Then there is $n\ge1$ such that $(h',k')=(h_{n-1},k_{n-1})$ and $(h,k)=(h_{n},k_{n})$.
+% \end{lemma}
+% \begin{proof}
+% 	By \Cref{rem:adjust-finite-cf}, we may write
+% 	\[\frac hk=[a_0;a_1,a_2,\ldots,a_n]\]
+% 	with $a_n$ with parity chosen so that $h'k-hk'=(-1)^{n+1}$. (This is what we expect from \Cref{cor:magic-box-minor}.) Quickly, we let $\{p_n/q_n\}_{m=0}^n$ denote the convergents of $[a_0;a_1,a_2,\ldots,a_n]$. We know $(h,k)=(p_n,q_n)$. From here, the proof has two steps.
+% 	\begin{enumerate}
+% 		\item We show $(h',k')=(p_{n-1},q_{n-1})$. By \Cref{cor:magic-box-minor}, we know
+% 		\[p_{n-1}q_n-p_nq_{n-1}=(-1)^n=h'k-hk'=h'q_n-p_nk'.\]
+% 		Reducing$\pmod{q_n}$, we see that $-p_nq_{n-1}\equiv-p_nk'$, so $q_{n-1}\equiv k'$, but $0<k',q_{n-1}<q_n$, so $k'=q_{n-1}$. Plugging this in and simplifying then forces $p_{n-1}=h'$, which is what we wanted.
+% 		\item We show that $[a_0;a_1,a_2,\ldots,a_n]$ is the beginning of the continued fraction of $\alpha$. Well, \Cref{prop:cf-algo} allows us to write
+% 		\[\beta=[a_{n+1};a_{n+2},a_{n+3},\ldots]\]
+% 		for integers $a_{n+1},a_{n+2},a_{n+3},\ldots$ with $a_{n+2},a_{n+3},\ldots$ positive. In fact, $a_{n+1}=\floor\beta\ge1$ is positive by construction. Now, \Cref{prop:magic-box} implies
+% 		\[\alpha=\frac{h\beta+h'}{k\beta+k'}=\frac{p_n\beta+p_{n-1}}{q_n\beta+q_{n-1}}=[a_0;a_1,a_2,\ldots,a_n,\beta]=[a_0;a_1,a_2,\ldots,a_n,a_{n+1},a_{n+2},\ldots].\]
+% 		(Note we have implicitly used the uniqueness of the continued fraction, shown in \Cref{rem:inf-cf-uniq}.) Thus, we see $(p_m,q_m)=(h_m,k_m)$ for $0\le m\le n$, from which $(h',k')=(p_{n-1},q_{n-1})=(h_{n-1},k_{n-1})$ and $(h,k)=(p_n,q_n)=(h_n,k_n)$ follows.
+% 		\qedhere
+% 	\end{enumerate}
+% \end{proof}
+% We are now ready to prove \Cref{thm:cf-bound}.
 \begin{proof}[Proof of \Cref{thm:cf-bound}]
-	We use \Cref{lem:cf-detect}. To choose $h'$ and $k'$, we use \Cref{rem:adjust-finite-cf} to write
+	We use \Cref{rem:adjust-finite-cf} to write
 	\[\frac hk=[a_0;a_1,a_2,\ldots,a_n]\]
-	with $a_n$ with parity chosen so that $n$ is even if and only if $\alpha>h/k$. (This is what we expect from \Cref{lem:convergents-alternate}.) Then let $\{p_m/q_m\}_{m=0}^n$ be the continued fraction convergents; for example, $(h,k)=(p_n,q_n)$, and we set $(h',k')\coloneqq(p_{n-1},q_{n-1})$. The construction gives $k>k'>0$, and $\left|hk'-h'k\right|=1$ by \Cref{cor:magic-box-minor}.
+	with $a_n$ with parity chosen so that $n$ is even if and only if $\alpha>h/k$. (This is what we expect from \Cref{lem:convergents-alternate}.) Then let $\{p_m/q_m\}_{m=0}^n$ be the continued fraction convergents; for example, $(h,k)=(p_n,q_n)$.
+	% , and we set $(h',k')\coloneqq(p_{n-1},q_{n-1})$. The construction gives $k>k'>0$, and $\left|hk'-h'k\right|=1$ by \Cref{cor:magic-box-minor}.
 	
-	Now, we know that we can certainly find some $\beta\in\RR$ such that
-	\[\alpha=\frac{h\beta+h'}{k\beta+k'}\]
-	by rearranging. (Explicitly, we need to know that $\alpha k-h\ne0$ to set $\beta\coloneqq(h'-\alpha k')/(\alpha k-h)$, which is true because $\alpha$ is irrational.) Our goal is to show $\beta>1$, which will complete the proof by \Cref{lem:cf-detect}. Well, comparing with our error, we see
-	\[\alpha-\frac hk=\frac{h\beta+h'}{k\beta+k'}-\frac hk=\frac{h'k-hk'}{(k\beta+k')k}=\frac{(-1)^n}{(k\beta+k')k},\]
+	The main idea is to show that the continued fraction expansion of $\alpha$ begins $[a_0;a_1,a_2,\ldots,a_n,\ldots]$. To realize this, we must continue the continued fraction. Well, we know that we can certainly find some $\beta\in\RR$ such that
+	\[\alpha=\frac{p_n\beta+p_{n-1}}{q_n\beta+q_{n-1}}\]
+	by rearranging. (Explicitly, we need to know that $\alpha k-h\ne0$ to set $\beta\coloneqq(h'-\alpha k')/(\alpha k-h)$, which is true because $\alpha$ is irrational.) The main claim is that $\beta>1$. Well, comparing with our error, we see
+	\[\alpha-\frac hk=\frac{p_n\beta+p_{n-1}}{q_n\beta+q_{n-1}}-\frac{p_n}{q_n}=\frac{p_{n-1}q_n-p_nq_{n-1}}{(q_n\beta+q_{n-1})q_n}=\frac{(-1)^n}{(q_n\beta+q_{n-1})q_n},\]
 	where we applied \Cref{cor:magic-box-minor} in the last equality. We arranged the parity $n$ so that the left-hand side is positive if and only if $(-1)^n=1$, so we may now write
-	\[1>2k^2\left|\alpha-\frac hk\right|=\frac{2k}{k\beta+k'},\]
-	so $\beta>2-k'/k$, which is bigger than $1$ because $k'<k$. This completes the proof.
+	\[1>2p_n^2\left|\alpha-\frac{p_n}{q_n}\right|=\frac{2p_n}{p_n\beta+p_{n-1}},\]
+	so $\beta>2-p_{n-1}/p_n$, which is bigger than $1$ because $p_{n-1}<p_n$.
+	
+	We now convert $\beta>1$ into the result. Well, \Cref{prop:cf-algo} allows us to write
+	\[\beta=[a_{n+1};a_{n+2},a_{n+3},\ldots]\]
+	for integers $a_{n+1},a_{n+2},a_{n+3},\ldots$ with $a_{n+2},a_{n+3},\ldots$ positive. In fact, $a_{n+1}=\floor\beta\ge1$ is positive by construction; here is where we used $\beta>1$. We conclude that
+	\[\alpha=\frac{p_n\beta+p_{n-1}}{q_n\beta+q_{n-1}}=[a_0;a_1,\ldots,a_n,\beta]=[a_0;a_1,\ldots,a_n,a_{n+1},a_{n+2},\ldots].\]
+	By the uniqueness of the continued fraction (see \Cref{rem:inf-cf-uniq}), we conclude that $(p_m,q_m)=(h_m,k_m)$ for $0\le m\le n$, which completes the proof upon setting $m=n$.
 \end{proof}
 
 \subsection{Problems}
