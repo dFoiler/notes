@@ -14,6 +14,541 @@
 % transcendence of e
 % continued fraction expansion of e
 
-Now that we have some experience with finding good rational approximations to real numbers, we are able to more firmly step foot into the field of Diophantine approximation.
+Now that we have some experience with finding good rational approximations to real numbers, we are able to more firmly step foot into the field of Diophantine approximation. The content in this section is more intensive than in previous sections because it is essentially topics in Diophantine approximation.
+
+\subsection{Irrationality Measure}
+Fix an irrational number $\alpha\in\RR\setminus\QQ$. From one perspective, the arc of the previous section was to go from knowing that there are infinitely rational numbers $h/k$ such that
+\[\left|\alpha-\frac hk\right|<\frac1k\]
+to knowing that there are infinitely many rational numbers $h/k$ such that
+\[\left|\alpha-\frac hk\right|<\frac1{k^2}.\]
+This is an amazing improvement: going from $k$ to $k^2$ is a full exponent! But then we spent a lot of time improving the above result into
+\[\left|\alpha-\frac hk\right|<\frac1{\sqrt 5k^2},\]
+which feels less significant because we are only improving by a constant. Of course, \Cref{ex:phi-hurwitz-sharp} established that we cannot do better than this in general, but for some real numbers, it will be possible. With this in mind, we take the following definition.
+\begin{definition}[irrationality measure]
+	Fix a real number $\alpha\in\RR$. Then the \textit{irrationality measure} $\mu(\alpha)$ of $\alpha$ is the least upper bound on the set of real numbers $r$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^r}\]
+	for infinitely many rational numbers $h/k$ with $k>0$. Note that we allow $\mu(\alpha)=\infty$.
+\end{definition}
+\begin{remark} \label{rem:mu-alpha-at-least-1}
+	Note that there always is some real number $r$ such that $\left|\alpha-\frac hk\right|<\frac1{k^r}$ for infinitely many rational numbers $h/k$, which makes the above definition make sense. Indeed, we may take $r=1$. To see this, for any positive integer $k$, set $h\coloneqq\floor{k\alpha}$ as in the previous section, so we find
+	\[\left|\alpha-\frac hk\right|=\frac{\left|k\alpha-\floor{k\alpha}\right|}{k}<\frac1k.\]
+	So there are indeed infinitely many rational numbers $h/k$ such that $\left|\alpha-\frac hk\right|<\frac1k$ as we let $k$ vary.
+\end{remark}
+Here are some early examples.
+\begin{example} \label{ex:mu-rat-one}
+	Let $\alpha$ be a rational number. Then $\mu(\alpha)=1$.
+\end{example}
+\begin{proof}[Solution]
+	\Cref{rem:mu-alpha-at-least-1} establishes $\mu(\alpha)\ge1$. Further, for any $r>1$, there are only finitely many rational numbers $h/k$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^r}\]
+	by \Cref{prop:many-rats-is-irrat}. Thus, $\mu(\alpha)\le1$, so the result follows.
+\end{proof}
+\begin{lemma} \label{lem:irrat-measure-at-least-2}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number. Then $\mu(\alpha)\ge2$.
+\end{lemma}
+\begin{proof}
+	This follows directly from \Cref{cor:cf-gives-rat-approx} upon unwinding.
+\end{proof}
+\begin{example} \label{ex:mu-phi}
+	We have $\mu\left(\varphi\right)=2$, where $\varphi=\frac{1+\sqrt5}2$.
+\end{example}
+\begin{proof}[Solution]
+	\Cref{lem:irrat-measure-at-least-2} tells us that $\mu(\varphi)\ge2$, so we just need to show that $\mu(\varphi)\le 2$. It suffices to show that, for any $\varepsilon>0$, there are only finitely many rational numbers $h/k$ such that
+	\[\left|\varphi-\frac hk\right|<\frac1{k^{2+2\varepsilon}}.\]
+	Well, for sufficiently large $k$, we have $2k^{2+\varepsilon}<k^{2+2\varepsilon}$, so it is enough to show that there are finitely many rational numbers $h/k$ such that
+	\[\left|\varphi-\frac hk\right|<\frac1{2k^{2+\varepsilon}}.\]
+	By \Cref{thm:cf-bound}, all such rational numbers $h/k$ are continued fraction convergents. Thus, we take a moment to recall that $\{F_{n+2}/F_{n+1}\}_{n=0}^\infty$ are the continued fraction convergents of $\varphi$ by \Cref{ex:cf-fib}, so it is enough to show that there are finitely many nonnegative integers $n$ such that
+	\[\left|\varphi-\frac{F_{n+2}}{F_{n+1}}\right|<\frac1{2F_{n+1}^{2+\varepsilon}}.\]
+	However, \Cref{prop:basic-cf-bound} tells us that any nonnegative integer $n$ has
+	\[\frac1{F_{n+1}(F_{n+1}+F_{n+2})}<\left|\varphi-\frac{F_{n+2}}{F_{n+1}}\right|,\]
+	so rearranging implies that it is enough to show there are only finitely many $n$ with
+	\[2F_{n+1}^{\varepsilon}<\frac{F_{n+1}+F_{n+2}}{F_{n+1}}=1+\frac{F_{n+2}}{F_{n+1}}.\]
+	However, $F_{n+2}/F_{n+1}\to\varphi$ as $n\to\infty$, so the right-hand side is bounded while the left-hand side is not, so indeed there can be only finitely many $n$ satisfying the above inequality.
+\end{proof}
+\begin{exe} \label{exe:mu-root-2}
+	Show that $\mu\left(\sqrt2\right)=2$.
+\end{exe}
+\begin{remark}
+	It is not too hard to show that the continued fraction expansion for any quadratic irrational number $\alpha$ is eventually periodic, so the arguments of the previous two examples show that $\mu(\alpha)=2$.
+\end{remark}
+\begin{example}[Liouville] \label{ex:liouville-number}
+	The real number
+	\[L\coloneqq\sum_{k=0}^\infty\frac1{2^{k!}}\]
+	has $\mu(L)=+\infty$.
+\end{example}
+\begin{proof}
+	Quickly, note that the series converges because it is bounded above by $\sum_{k=0}^\infty1/2^k=2$. Now, for each natural $n$, define
+	\[L_n\coloneqq\sum_{k=0}^n\frac1{2^{k!}}\]
+	to be the $n$th partial sum of $L$. Then $L_n$ is a rational number with denominator $2^{n!}$, but
+	\begin{equation}
+		\left|L-L_n\right|=\sum_{k=n+1}^\infty\frac1{2^{k!}}<\sum_{k=(n+1)!}^\infty\frac1{2^k}=\frac1{2^{(n+1)!-1}}. \label{eq:l-bound}
+	\end{equation}
+	We are now ready to claim that $\mu(L)>r$ for any real number $r$. Indeed, for any real number $r$, we claim that there are infinitely many rational numbers $h/k$ such that $\left|\alpha-h/k\right|<1/k^r$. In fact, we claim that there are infinitely many $n$ such that
+	\[\left|\alpha-L_n\right|<\frac1{2^{rn!}}.\]
+	Indeed, \eqref{eq:l-bound} implies that it is enough to show that
+	\[\frac1{2^{(n+1)!-1}}<\frac1{2^{rn!}}\]
+	for $n$ sufficiently large, which is equivalent to $rn!<(n+1)!-1$ for $n$ sufficiently large, which is equivalent to $r<n+1-1/n!$ for $n$ sufficiently large, which is true.
+\end{proof}
+Before continuing, we should note that essentially all real numbers $\alpha$ have irrationality measure $2$. In particular, \Cref{ex:mu-phi} is typical, and \Cref{ex:liouville-number} is highly remarkable.
+\begin{proposition} \label{prop:almost-all-mu-two}
+	Almost all real numbers $\alpha\in\RR$ have $\mu(\alpha)=2$. In other words, for any $\varepsilon>0$, there is a countable collection of bounded intervals $\{(a_n,b_n)\}_{n=0}^\infty$ containing all $\alpha\in\RR$ with $\mu(\alpha)=2$ but
+	\[\sum_{n=0}^\infty(b_n-a_n)<\varepsilon.\]
+\end{proposition}
+\begin{proof}
+	Let $S$ be the set of all $\alpha\in\RR$ with $\mu(\alpha)\ne2$. For brevity, let a subset $N\subseteq\RR$ be a ``null set'' if and only if, for all $\varepsilon>0$, there is a countable collection of bounded intervals $\{(a_n,b_n)\}_{n=0}^\infty$ containing $N$ such that
+	\[\sum_{n=0}^\infty(b_n-a_n)<\varepsilon.\]
+	For example, we see that the union of countably many null sets is a null set by combining the countable collections $\{(a_n,b_n)\}_{n=0}^\infty$ together. Additionally, a point $\{x\}$ is a null set because $x$ is covered by $(x-\varepsilon/2,x+\varepsilon/2)$ for any $\varepsilon>0$. It follows from the previous two sentences that $\QQ$ is a null set (it's a countable union of points), and thus it is enough to show that $S\setminus\QQ$ is a null set.
+
+	Now, by \Cref{lem:irrat-measure-at-least-2}, we see that $\alpha\in S\setminus\QQ$ must have $\mu(\alpha)>2$. For any real number $\varepsilon>0$, we claim that
+	\[S_\varepsilon\coloneqq\{\alpha\in\RR:\mu(\alpha)>2+\varepsilon\}\]
+	is a null set. By taking the union of $S=S_1\cup S_{1/2}\cup S_{1/3}\cup\cdots$, it will follow that $S$ is a null set. By taking another countable union, it is enough to show that $S_{\varepsilon,M}\coloneqq S_\varepsilon\cap[-M,M]$ is a null set for any $M>0$. Well, any $\alpha\in S_\varepsilon$ has infinitely many rational numbers $h/k$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^{2+\varepsilon}}.\]
+	In particular, $\alpha\in S_{\varepsilon,M}$ is contained in the set
+	\[S_{\varepsilon,M,K}\coloneqq\left\{\alpha\in[-M,M]:\left|\alpha-\frac hk\right|<\frac1{k^{2+\varepsilon}}\text{ for some }h\in\ZZ\text{ and }k\in\ZZ\cap[K,\infty)\right\}\]
+	for any $K>1$. However, the above set is a countable union of small intervals: for each integer $k>K$, the set of relevant $\alpha$ have $2Mk+1$ options for $h$, and then each $h$ has an interval of length $2/k^{2+\varepsilon}$ around it. The point is that $S_{\varepsilon,M,K}$ is covered by a countable union of intervals whose lengths total
+	\[\sum_{k>K}(2Mk+1)\cdot\frac2{k^{2+\varepsilon}}<\sum_{k>K}3Mk\cdot\frac2{k^{2+\varepsilon}}=6M\sum_{k>K}\frac1{k^{1+\varepsilon}}.\]
+	However, the series $\sum_{k=1}^\infty1/k^{1+\varepsilon}$ converges, so the above length must go to zero as $K\to\infty$. Thus, for any $\delta>0$, we can find $K$ large enough so that $S_{\varepsilon,M,K}$ is covered by a countable union of intervals whose lengths sum to less than $\delta$; this means that $S_{\varepsilon,M}$ is a null set, completing the proof.
+\end{proof}
+
+\subsection{Irrationality Measure via Continued Fractions}
+\Cref{ex:mu-phi} has reminded us of the important fact that continued fraction convergents provide the best rational approximations. Thus, we might expect the irrationality measure to be controlled by the continued fraction convergents, which is indeed the case.
+\begin{lemma} \label{lem:mu-by-convergents}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number with continued fraction convergents $\{h_n/k_n\}_{n=0}^\infty$. Then
+	\[\mu(\alpha)=\limsup_{n\to\infty}\frac{-\log\left|\alpha-h_n/k_n\right|}{\log k_n}.\]
+\end{lemma}
+\begin{proof}
+	Let the $\limsup$ be $L$. Quickly, recall that \Cref{prop:basic-cf-bound} implies
+	\[\frac{-\log\left|\alpha-p_n/q_n\right|}{\log q_n}\ge\frac{-\log\left(1/q_n^2\right)}{\log q_n}=2\]
+	for all $n$, so $L\ge2$ has some lower bound.
+
+	For a given real number $r$, we claim that $\mu(\alpha)>r$ if and only if $L>r$, which complete the proof. Note that we may assume $r\ge2$ because $\mu(\alpha)\ge2$ by \Cref{lem:irrat-measure-at-least-2} and $L\ge2$ already. Well, $\mu(\alpha)>r$ is equivalent to having some $\varepsilon>0$ such that there are infinitely many rational numbers $h/k$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^{r+\varepsilon}}.\]
+	Because $r\ge2$, we see that $r+\varepsilon>2$. Additionally, for $k$ large enough, we have $2k^2<2k^{r+\varepsilon/2}<k^{r+\varepsilon}$, so all sufficiently large $k$ must have $h/k$ a continued fraction convergent. As such, this is equivalent to having infinitely many nonnegative integers $n$ such that
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{k_n^{r+\varepsilon}},\]
+	or
+	\[\frac{-\log\left|\alpha-h_n/k_n\right|}{\log k_n}>r+\varepsilon.\]
+	This is now equivalent to $L\ge r+\varepsilon$ for our $\varepsilon>0$, which is equivalent to $L>r$, completing the proof.
+\end{proof}
+\begin{proposition} \label{prop:mu-by-convergents}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number with continued fraction $[a_0;a_1,a_2,\ldots]$ and convergents $\{h_n/k_n\}_{n=0}^\infty$. Then
+	\[\mu(\alpha)=1+\limsup_{n\to\infty}\frac{\log k_{n+1}}{\log k_n}=2+\limsup_{n\to\infty}\frac{\log a_{n+1}}{\log k_n}.\]
+\end{proposition}
+\begin{proof}
+	We show the equalities separately.
+	\begin{itemize}
+		\item The left equality follows from \Cref{lem:mu-by-convergents}. To see this, note that \Cref{prop:basic-cf-bound} implies
+		\[\frac1{2k_nk_n+1}<\frac1{k_n(k_n+k_{n+1})}<\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{k_nk_{n+1}}\]
+		for any nonnegative integer $n$. Thus, \Cref{lem:mu-by-convergents} implies
+		\[\limsup_{n\to\infty}\frac{\log 2k_nk_{n+1}}{\log k_n}\ge\mu(\alpha)\ge\limsup_{n\to\infty}\frac{\log k_nk_{n+1}}{\log k_n},\]
+		which is equivalent to
+		\[1+\limsup_{n\to\infty}\left(\frac{\log k_{n+1}}{\log k_n}+\frac{\log 2}{\log k_n}\right)\ge\mu(\alpha)\ge1+\limsup_{n\to\infty}\frac{\log k_{n+1}}{\log k_n},\]
+		For any $\varepsilon>0$, there is $N$ big enough so that $\log2/\log k_n<\varepsilon$ for $n>N$, meaning
+		\[1+\varepsilon+\limsup_{n\to\infty}\frac{\log k_{n+1}}{\log k_n}\ge\mu(\alpha)\ge1+\limsup_{n\to\infty}\frac{\log k_{n+1}}{\log k_n}.\]
+		Sending $\varepsilon\to0^+$ completes the proof.
+		\item The right equality follows from \Cref{prop:magic-box}. To see this, recall from \Cref{prop:magic-box} that
+		\[k_{n+1}=a_{n+1}k_n+k_{n-1}=a_{n+1}k_n\left(1+\frac{k_{n-1}}{a_{n+1}k_n}\right)\]
+		for $n\ge1$, so
+		\[\limsup_{n\to\infty}\frac{\log k_{n+1}}{\log k_n}=1+\limsup_{n\to\infty}\left(\frac{\log a_{n+1}}{\log k_n}+\frac{\log\left(1+\frac{k_{n-1}}{a_{n+1}k_n}\right)}{\log k_n}\right).\]
+		Notably, $0\le k_{n-1}/(a_{n+1}k_n)\le1$ for all $n\ge1$, so we conclude that
+		\[\limsup_{n\to\infty}\frac{\log a_{n+1}}{\log k_n}\le\mu(\alpha)-2\le\limsup_{n\to\infty}\left(\frac{\log a_{n+1}}{\log k_n}+\frac{\log2}{\log k_n}\right).\]
+		Now, for any $\varepsilon>0$, we can find $N$ so that $\log2/\log k_n<\varepsilon$ for $n>N$, so sending $\varepsilon\to0^+$ as above completes the proof.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\Cref{prop:mu-by-convergents} now gives us quite a bit of control over irrationality measure as long as we have control over the continued fraction. Here are some examples.
+\begin{example}
+	Recall from \Cref{ex:phi-contd-frac} that $\varphi=[1;1,1,\ldots]$. \Cref{prop:mu-by-convergents} allows us to conclude that $\mu(\alpha)=0$ immediately because $\log1=0$.
+\end{example}
+\begin{corollary} \label{cor:bounded-cf-is-mu-2}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number with continued fraction $[a_0;a_1,a_2,\ldots]$. If there is a polynomial $f\in\ZZ[x]$ such that $a_n<f(n)$ for sufficiently large $n$, then $\mu(\alpha)=2$.
+\end{corollary}
+\begin{proof}
+	By \Cref{prop:mu-by-convergents}, it is enough to show that
+	\[\limsup_{n\to\infty}\frac{\log a_{n+1}}{\log k_n}=0.\]
+	Now, because $a_n<f(n)$ for sufficiently large $n$, and $f(n)<n^{\deg f+1}$ for sufficiently large $n$, it is enough to show
+	\[\limsup_{n\to\infty}\frac{d\log n}{\log k_n}\le0\]
+	for any $d>0$. Of course, we can now factor out the $d$ and thus ignore it.
+
+	The main point is that $\{k_n\}_{n=0}^\infty$ increases at least exponentially. Explicitly, we claim is that $k_n\ge 1.5^{n-1}$ for any nonnegative $n$. This is by induction: certainly $k_0=1\ge1.5^{-1}$ and $k_1=a_0\ge1.5^0$. Then for the induction, we see
+	\[k_{n+2}=a_{n+2}k_{n+1}+k_n\ge1.5^n+1.5^{n-1}>1.5^{n-2},\]
+	where the last inequality holds because it rearranges to $1.5+1>1.5^2$, which is true.
+	
+	Applying the main claim, we see that
+	\[0\le\limsup_{n\to\infty}\frac{\log n}{\log k_n}\le\limsup_{n\to\infty}\frac{\log n}{1.5n}=0,\]
+	which completes the proof.
+\end{proof}
+\begin{corollary} \label{cor:construct-mu}
+	Let $r$ be any real number at least $2$. Then there is an irrational $\alpha\in\RR\setminus\QQ$ such that $\mu(\alpha)=r$.
+\end{corollary}
+\begin{proof}
+	For psychological reasons, we relegate $r=2$ to \Cref{ex:mu-phi}. Otherwise, we may assume $r>2$.
+
+	We construct $\alpha$ by infinite continued fraction $[a_0;a_1,a_2,\ldots]$, defining the $a_n$ inductively using \Cref{prop:magic-box}. Define $a_0\coloneqq1$ and $a_1\coloneqq2$ so that we have $k_0\coloneqq1$ and $k_1\coloneqq2$. Then for each $n\ge1$, define $a_{n+1}\coloneqq\floor{k_n^{r-2}}$ and then $k_{n+1}\coloneqq a_{n+1}k_n+k_{n-1}$ (as in \Cref{prop:magic-box}). Then there is an integer sequence $\{h_n\}_{n=0}^\infty$ such that the rational numbers $\{h_n/k_n\}_{n=0}^\infty$ are the continued fraction convergents of $\alpha\coloneqq[a_0;a_1,a_2,\ldots]$. By \Cref{cor:inf-cf-is-irrat}, we see that $\alpha$ is in fact irrational.
+
+	It remains to show that $\mu(\alpha)=r$. By \Cref{prop:mu-by-convergents}, we would like to show that
+	\[r-2\stackrel?=\limsup_{n\to\infty}\frac{\log a_{n+1}}{\log k_n}=\limsup_{n\to\infty}\frac{\log\floor{k_n^{r-2}}}{\log k_n}.\]
+	In fact, we claim that
+	\[\lim_{n\to\infty}\frac{\log\floor{n^{r-2}}}{\log n}\stackrel?=r-2,\]
+	which is good enough upon taking the limit along the subsequence $\{k_n\}_{n=0}^\infty$. Well, we see that
+	\[r-2=\frac{\log n^{r-2}}{\log n}\le\frac{\log\floor{n^{r-2}}}{\log n}\le\frac{\log n^{r-2}}{\log n}+\frac1{\log n}=r-2+\frac1{\log n}\]
+	for any sufficiently large $n$, so we conclude upon taking $n\to\infty$.
+\end{proof}
+
+\subsection{Algebraic Bounds on Irrationality Measure}
+One reason Diophantine approximation attracted the attention of number theorists is that one is able to use the condition that a number is algebraic in order to bound approximations. The prototypical and simplest result of this type is due to Liouville.
+\begin{defihelper}[algebraic, transcendental] \nirindex{algebraic} \nirindex{transcendental}
+	A nonzero complex number $\alpha\in\CC$ is \textit{algebraic of degree $d$} if and only if $\alpha$ is the root of an irreducible polynomial with rational coefficients and of degree $d$. We denote this degree $d$ by $\deg\alpha$. If no such polynomial exists, then $\alpha$ is called \textit{transcendental}.
+\end{defihelper}
+\begin{remark} \label{rem:deg-alpha-uniq}
+	Let's see that $\deg\alpha$ is well-defined: suppose that $\alpha$ is algebraic and hence the root of an irreducible polynomial $f$; by well-ordering, we may choose $f$ to be of least degree. Then for any $g\in\QQ[x]$ such that $g(\alpha)=0$, we claim that $f$ divides $g$ (as polynomials in $\QQ[x]$); taking $g$ irreducible then forces $\deg f=\deg g$. Well, using the division algorithm for $\QQ[x]$, we may write
+	\[g(x)=q(x)f(x)+r(x)\]
+	where $r=0$ or $0\le\deg r<\deg f$. Plugging in $\alpha$, we see that $r(\alpha)=0$. Now, if $r\ne0$, then we may factor $r$, and one of the irreducible factors will be irreducible, vanish at $\alpha$, and have degree less than $\deg f$, contradicting the minimality of $f$. So instead $r=0$, meaning $f$ divides $g$.
+\end{remark}
+\begin{proposition}[Liouville] \label{prop:liouville}
+	Fix an algebraic real number $\alpha\in\RR$ of degree $d\ge2$. Then there exists a real number $\varepsilon>0$ such that
+	\[\left|\alpha-\frac hk\right|>\frac\varepsilon{k^d}\]
+	for any rational number $h/k$ with $k>0$.
+\end{proposition}
+\begin{proof}
+	Let $f$ be an irreducible polynomial with integer coefficients of degree $d\ge2$ where $f(\alpha)=0$. Namely, we may assume that $f$ has integer coefficients by multiplying out a common denominator.
+	
+	The main claim is that $\left|f(h/k)\right|\ge1/k^d$. Indeed, $f(h/k)\ne0$ because $f$ may have no rational roots; explicitly, $f(h/k)=0$ implies that $kx-h$ divides $f(x)$ by \Cref{rem:deg-alpha-uniq}, but $f$ is irreducible, so this cannot be. But because $f$ has integer coefficients, we may clear denominators to see $k^nf(h/k)$ is an integer. Explicitly, write $f(x)=\sum_{i=0}^df_ix^i$ for integers $f_\bullet$, from which we find
+	\[k^nf\left(\frac hk\right)=\sum_{i=0}^df_ih^ik^{d-i}\in\ZZ.\]
+	Thus, $\left|k^nf(h/k)\right|\ge1$, and the claim follows.
+
+	To see how the above claim helps us, we note that
+	\[f(\alpha)-f\left(\frac hk\right)\approx\left(\alpha-\frac hk\right)f'(\alpha),\]
+	but the left-hand side has magnitude bounded below by $1/k^d$, so rearranging ought to give the result.
+	
+	%Making this rigorous is a bit obnoxious.
+	% Note that $f'(\alpha)\ne0$, for otherwise we would have $f$ divides $f'$ by \Cref{rem:deg-alpha-uniq}, which is impossible because $\deg f>\deg f'$. Because $f'$ is a polynomial and in particular continuous, we may find $\varepsilon>0$ such that $\left|f'(\beta)\right|$
+	To make this rigorous, we begin by promising $\varepsilon<1$ so that we might as well assume $\left|\alpha-h/k\right|<1$. This allows us to make $\approx$ above into a genuine equality by using the Mean value theorem to find $\beta$ between $\alpha$ and $h/k$ such that
+	\[f(\alpha)-f\left(\frac hk\right)=\left(\alpha-\frac hk\right)f'(\beta).\]
+	Taking absolute values and using the main claim, we find
+	\[\left|\alpha-\frac hk\right|\ge\left|\frac{f(h/k)}{f'(\beta)}\right|\ge\frac1{\left|f'(\beta)\right|k^d}.\]
+	We now choose $\varepsilon>0$ small enough so that $\left|f'(\beta_0)\right|<1/\varepsilon$ for any $\beta_0\in[\alpha-1,\alpha+1]$; such an upper bound exists because $f'$ is a continuous function, and $[\alpha-1,\alpha+1]$ is compact. Because $\beta$ is between $\alpha$ and $h/k$, and $h/k$ is at most $1$ away from $\alpha$, this choice of $\varepsilon$ completes the proof.
+\end{proof}
+\begin{corollary} \label{cor:alg-bounds-mu}
+	Fix an algebraic real number $\alpha\in\RR$ of degree $d\ge2$. Then $\mu(\alpha)\le d$.
+\end{corollary}
+\begin{proof}
+	For any $\varepsilon>0$, we show that there are only finitely many rational numbers $h/k$ with $k>0$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^{d+\varepsilon}},\]
+	which will show that $\mu(\alpha)<d+\varepsilon$ and hence complete the proof upon sending $\varepsilon\to0^+$. Well, \Cref{prop:liouville} grants some real number $\delta>0$ such that
+	\[\left|\alpha-\frac hk\right|>\frac\delta{k^d}\]
+	for any rational number $h/k$ with $k>0$. Now, for sufficiently large $k>(1/\delta)^{1/\varepsilon}$, so $1/k^{d+\varepsilon}<\delta/k^d$, so indeed $\left|\alpha-h/k\right|<1/k^{d+\varepsilon}$ is false for sufficiently large $k$.
+\end{proof}
+\begin{example} \label{ex:liouville-trans}
+	By \Cref{ex:liouville-number}, the number $L\coloneqq\sum_{n=0}^\infty2^{-n!}$ has $\mu(L)=+\infty$. Thus, \Cref{cor:alg-bounds-mu} implies that $L$ is transcendental.
+\end{example}
+Historically, examples of the type \Cref{ex:liouville-trans} were the first numbers proven to be transcendental.
+
+\Cref{prop:liouville} is not at all sharp. Using bivariate polynomials instead of single polynomials, Thue was able to sharpen \Cref{prop:liouville} into the following.
+\begin{theorem}[Thue] \label{thm:thue}
+	Fix an algebraic real number $\alpha\in\RR$ of degree $d\ge3$. Then for any $\varepsilon>0$, there are only finitely many rational numbers $h/k$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^{(d+1)/2+\varepsilon}}.\]
+	In other words, $\mu(\alpha)\le(d+1)/2$.
+\end{theorem}
+The proof of \Cref{thm:thue} would add between five and ten pages to these notes, so we will not include it. However, it does not require anything much more serious than what we will cover in the remainder of this subsection.
+
+Anyway, \Cref{thm:thue} is still not sharp. The following result is due to Roth and is work that earned Roth the Fields medal.
+\begin{theorem}[Roth] \label{thm:roth}
+	Fix an algebraic real number $\alpha\in\RR$. Then for any $\varepsilon>0$, there are only finitely many rational numbers $h/k$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{k^{2+\varepsilon}}.\]
+	In other words, $\mu(\alpha)=2$.
+\end{theorem}
+It follows that all the numbers $\alpha$ we constructed in \Cref{cor:construct-mu} with $\mu(\alpha)>2$ were in fact transcendental! The proof of \Cref{thm:roth} would certainly take us too far afield, so we will not show it here.
+
+Even though we will not prove \Cref{thm:thue}, we will use it to the following result on Diophantine equations, as a means to reconnect with our roots.
+\begin{theorem}[Thue] \label{thm:dio-thue}
+	Let $f(x)=\sum_{k=0}^df_kx^k\in\ZZ[x]$ be an irreducible polynomial of degree $d\ge3$. For any $c\in\ZZ$, the equation
+	\[\sum_{k=0}^df_kx^ky^{d-k}=c\]
+	has finitely many integer solutions $(x,y)$.
+\end{theorem}
+\begin{proof}[Proof using \Cref{thm:thue}]
+	The idea is that $x/y$ should be a good rational approximation to some real root of $f$, only finitely many of which should exist by \Cref{thm:thue}.
+
+	Suppose for the sake of contradiction that there are infinitely many such solutions $\{(x_n,y_n)\}_{n=0}^\infty$. Our first task is to massage this sequence to converge (in some sense) to a root of $f$. For any given $y$, the equation we are solving is a polynomial in $x$ equal to some constant, so there are only finitely many solutions. As such, we must have $\left|y_n\right|\to\infty$ as $n\to\infty$, so for example we may assume that $y_n\ne0$ and that $\{\left|y_n\right|\}_{n=0}^\infty$ is a strictly increasing sequence. In this case, we see that
+	\[f\left(\frac xy\right)=\sum_{k=0}^df_k\cdot\left(\frac xy\right)^k=y^{-d}\sum_{k=0}^df_kx^ky^{d-k}=\frac c{y^d}\]
+	for each solution $(x,y)$ with $y\ne0$. Now, $f$ is a polynomial of positive degree, so $\left|f(x)\right|\to\infty$ as $x\to\infty$, so having $\left|f(x/y)\right|=c/y^d\le c$ forces $x/y$ to live in some bounded interval $[-M,M]$. But then the infinite sequence $\{x_n/y_n\}_{n=0}^\infty$ must have a convergent subsequence, so we may assume that $\{x_n/y_n\}_{n=0}^\infty$ does in fact converge. Because $f(x_n/y_n)=c/y_n^d\to0$ as $n\to\infty$, we see that $\{x_n/y_n\}_{n=0}^\infty$ converges to some real root $\alpha$ of $f$.
+
+	Our second task is to bound $\left|\alpha-x_n/y_n\right|$. Well, we may factor the irreducible polynomial $f$ over $\CC$ as
+	\[f(x)=f_d\prod_{k=1}^d(x-\alpha_k),\]
+	where $\{\alpha_1,\ldots,\alpha_d\}$ are the roots of $f$. We go ahead and rearrange the roots so that $\alpha_1=\alpha$. As usual, note that these roots are disjoint for otherwise any double root would be a root shared by $f(x)$ and $f'(x)$, implying that $\gcd(f'(x),f(x))$ is a nontrivial factor of $f(x)$, thus violating irreducibility. We now see that
+	\[f_d\prod_{k=1}^d\left|\alpha_k-\frac{x_n}{y_n}\right|=f\left(\frac{x_n}{y_n}\right)=\frac c{\left|y_n\right|^d}\]
+	for each $n\ge2$. We now isolate the $\left|\alpha-x_n/y_n\right|$ error term. For each $k\ne2$, we find
+	\[\left|\alpha_k-\frac xy\right|>\left|\alpha_k-\alpha\right|-\left|\alpha-\frac xy\right|.\]
+	Now, by removing finitely many rational numbers from our sequence $\{x_n/y_n\}_{n=0}^\infty$, we may assume that $\left|\alpha-x_n/y_n\right|$ is less than $\frac12\left|\alpha_k-\alpha\right|$ for each $k\ne2$, which gives $\left|\alpha_k-x_n/y_n\right|>\frac12\left|\alpha_k-\alpha\right|$. Thus,
+	\[\left|\alpha-\frac{x_n}{y_n}\right|<\underbrace{\frac c{f_d}\prod_{k=2}^d\frac2{\left|\alpha_k-\alpha\right|}}_{\delta\coloneqq}\cdot\frac1{\left|y_n\right|^d}.\]
+	Now, for $\left|y_n\right|$ sufficiently large, we will have $\delta/\left|y_n\right|^d<1/\left|y_n\right|^{(d+1)/2+1/4}$, so the infinitude of these rational approximations $\{x_n/y_n\}_{n=0}^\infty$ is now in direct contradiction with \Cref{thm:thue}.
+\end{proof}
+\begin{example}
+	The polynomial $f(x)\coloneqq x^3-2$ is irreducible of degree $3$. So \Cref{thm:dio-thue} implies that $x^3-2y^3=-7$ has only finitely many integer solutions $(x,y)$.
+\end{example}
+
+\subsection{\texorpdfstring{$e$}{e} Is Transcendental}
+Thus far we have only constructed transcendental numbers by showing they have large irrationality measure, but we know from \Cref{prop:almost-all-mu-two} that almost all real numbers have irrationality measure two. Because the set of algebraic numbers is countable (because the set of integer polynomials is countable), it follows that almost all transcendental numbers have irrationality measure two.
+
+The goal of the next two subsections is to provide a single example of a transcendental number with irrationality measure two. In particular, we will show that $e$ is transcendental and that $\mu(e)=2$. In this subsection, we will show that $e$ is transcendental; our exposition closely follows \cite{conrad-e-trans}. To give us a flavor of the proof, we begin by showing that $e$ is irrational.
+\begin{proposition} \label{prop:e-irrat}
+	The real number $e$ is irrational.
+\end{proposition}
+\begin{proof}
+	The main claim is that there is a sequence of rational numbers $\{p_n/q_n\}_{n=0}^\infty$ such that $\left|q_ne-p_n\right|\to0$ and $q_n\to\infty$ as $n\to\infty$. Indeed, we set $q_n\coloneqq n!$ and $p_n\coloneqq\floor{q_ne}$, which we compute by writing
+	\[n!e=n!\sum_{k=0}^\infty\frac1{k!}=\sum_{k=0}^n\frac{n!}{k!}+\sum_{n=k+1}^\infty\frac{n!}{k!},\]
+	so
+	\[n!e-\sum_{k=0}^n\frac{n!}{k!}=\sum_{k=n+1}^\infty\frac1{(n+1)(n+2)\cdots(k-1)k}<\sum_{k=n+1}\frac1{(n+1)^{k-n}}=\sum_{n=1}^\infty\frac1{(n+1)^k}=\frac{1/(n+1)}{1-1/(n+1)}\le1,\]
+	meaning $p_n=\sum_{k=0}^nn!/k!$, and
+	\[\left|q_ne-p_n\right|<\left|\frac{1/(n+1)}{1-1/(n+1)}\right|=\frac1n,\]
+	so indeed $\left|q_ne-p_n\right|\to0$ as $n\to\infty$.
+
+	We now complete the proof. Suppose for the sake of contradiction that $e=p/q$ for some rational number $p/q$ with $q>0$ and $\gcd(p,q)=1$. Then $\left|q_np/q-p_n\right|\to0$ as $n\to\infty$ by the above argument, so $\left|q_np-p_nq\right|\to0$. However, $q_np-p_nq$ is an integer, so $q_np=p_nq$ for $n$ sufficiently large. But this does not make sense; for example, choosing $n$ to be any prime, we see that $n\mid q_n$, so $n\mid p_nq$, but $p_n\equiv1\pmod n$ by definition of $p_n$, so $n\mid q$ instead. Thus, $q$ must be larger than any prime, which is a contradiction.
+\end{proof}
+\begin{remark}
+	The above proof is in some sense the same argument as \Cref{prop:many-rats-is-irrat} applied to $e$; namely, we are using the close approximations $p_n/q_n$ to $e$ in order to derive a contradiction with the fact that all nonzero integers have magnitude at least $1$. We have written it in the above manner to make the connection to the following transcendentality lemma clearer.
+\end{remark}
+The crux of the above argument is the sequence of rational numbers $\{p_n/q_n\}_{n=0}^\infty$ such that $\left|q_ne-p_n\right|\to0$ as $n\to\infty$. In order to show that $e$ fails to be algebraic, the key is to find a way to simultaneously approximate not just $e$ but also its powers. The following lemma explains how we will do this approximation.
+\begin{lemma} \label{lem:get-trans-simul}
+	Fix a nonzero real number $\alpha\in\RR$ and a positive integer $d$. Further, suppose that we have sequences of rational numbers $\{p_{1n}/q_n\},\{p_{2n}/q_n\},\ldots,\{p_{dn}/q_n\}$ satisfying the following.
+	\begin{listalph}
+		\item Approximation: for each $k$, we have $\left|q_n\alpha^k-p_{nk}\right|\to0$ as $n\to\infty$.
+		\item Technical: for each $n$, there is a common divisor $g_n$ of the $p_{\bullet n}$ which is coprime to $q_n$ but satisfies $g_n\to\infty$ as $n\to\infty$.
+	\end{listalph}
+	Then $\alpha$ is not the root of an irreducible polynomial in $\ZZ[x]$ of degree $d$.
+\end{lemma}
+\begin{proof}
+	Suppose for the sake of contradiction that $f(\alpha)=0$ for some irreducible polynomial $f\in\ZZ[x]$ of degree $d$. To be explicit, write $f(x)=a_0+a_1x+\cdots+a_dx^d$ where $a_d\ne0$. Note that $a_0\ne0$ because this would require $f(x)=x$, but $\alpha\ne0$.
+
+	Now, the main idea is that $p_{kn}/q_n$ should well-approximate $\alpha^k$, so we go ahead and plug this into the ``linear relation'' $f(\alpha)=0$. For any $n\ge0$, we write
+	\[a_0+\sum_{k=1}^da_k\cdot\frac{p_{kn}}{q_n}=a_0+\sum_{k=1}^da_k\cdot\frac{p_{kn}}{q_n}-f(\alpha)=\sum_{k=1}^da_k\left(\frac{p_{kn}}{q_n}-\alpha^k\right).\]
+	Clearing denominators, we find
+	\[q_na_0+\sum_{k=1}^da_kp_{kn}=-\sum_{k=1}^da_k\left(q_n\alpha^k-p_{kn}\right).\]
+	As $n\to\infty$, (a) tells us that the right-hand side goes to $0$, so we must have
+	\[q_na_0=-\sum_{k=1}^da_kp_{kn}\]
+	for $n$ sufficiently large. However, this cannot be: $g_n$ divides the right-hand side for all $n$, so $g_n\mid q_na_0$, so $g_n\mid a_0$, which is a contradiction because $a_0$ is finite while $g_n\to\infty$ as $n\to\infty$.
+\end{proof}
+It remains to construct these miraculous rational approximations $p_{kn}/q_n$ of $e^k$. For this, we must use something about $e$; we will input the fact that $\frac d{dx}e^x=e^x$ into an integration by parts. To set up the relevant integration by parts, we will define
+\[I_f(x)\coloneqq\sum_{k=0}^\infty f^{(k)}(x)\]
+for any polynomial $f$. Notably, this sum is finite because the degree of $f$ is finite. Here is our integration by parts result.
+\begin{lemma} \label{lem:hermite}
+	For any polynomial $f$, we have
+	\[e^x\int_0^xe^{-t}f(t)\,dt=e^xI_f(0)-I_f(x).\]
+\end{lemma}
+\begin{proof}
+	Quickly, note that $I_f(x)$ is actually a finite sum because $f$ is a polynomial. To get a taste of what is going on, we begin by writing the repeated integration by parts
+	\begin{align*}
+		\int_0^xe^{-t}f(t)\,dt &= f(0)-e^{-x}f(x)+\int_0^xe^{-t}f'(t)\,dt \\
+		&= \left(f(0)+f'(0)\right)-e^{-x}\left(f(x)+f'(x)\right)+\int_0^xe^{-t}f''(t)\,dt.
+	\end{align*}
+	This process continues. To make this rigorous, we define $I_f^m(x)\coloneqq\sum_{k=0}^mf^{(k)}(x)$, and we claim that
+	\[\int_0^xe^{-t}f(t)\,dt\stackrel?=I_f^m(0)-e^{-x}I_f^m(x)+\int_0^xe^{-t}f^{(m+1)}(t)\,dt\]
+	for any integer $m\ge-1$; the result will follow upon taking $m>\deg f$ so that $f^{(m)}=0$. We show the claim by induction. At $m=-1$, there is nothing to say. For the inductive step, we note that integration by parts yields
+	\[I_f^m(0)-e^{-x}I_f^m(x)+\int_0^xe^{-t}f^{(m+1)}(t)\,dt=I_f^m(0)+f^{(m+1)}(0)-e^{-x}\left(I_f^m(x)+f^{(m+1)}(x)\right)+\int_0^xe^{-t}f^{(m+2)}(t)\,dt,\]
+	which is what we wanted upon rearranging and plugging into the inductive hypothesis.
+\end{proof}
+We are now ready to prove the main result of this subsection.
+\begin{theorem} \label{thm:e-trans}
+	The real number $e$ is transcendental.
+\end{theorem}
+\begin{proof}
+	Note that $e\ne0$. We will use \Cref{lem:get-trans-simul} show that $e$ is not the root of any irreducible polynomial in $\ZZ[x]$ of degree $d$, for each $d\ge1$. Thus, fixing some $d$, we need to construct the necessary sequences of rational numbers $\{p_{kn}/q_n\}$. For this, we use \Cref{lem:hermite}. We would like to approximate $e^k$, so we plug in $x=k$ to see that
+	\[e^k\int_0^ke^{-t}f(t)\,dt=e^kI_f(0)-I_f(k)\]
+	for any polynomial $f$. We would like the integral to be relatively small for each $k$ between $0$ and $d$, so we will set
+	\[f_n(t)\coloneqq t^{n-1}(t-1)^n(t-2)^n\cdots(t-d)^n\]
+	for $n\ge1$. It is also important that $f_r$ vanishes at $k\in\{1,2,\ldots,d\}$ to a higher order than at $0$. It is now tempting to directly set $p_{kn}/q_n$ to be $I_{f_n}(k)/I_{f_n}(0)$, but we will want to use the high vanishing of $f_n$ in order to factor out from $p_{kn}$ and $q_n$ beforehand.
+
+	Indeed, for each $k\in\{0,1,\ldots,d\}$, we have the Taylor expansion
+	\[f_n(t+k)=\sum_{\ell=0}^\infty\frac{f^{(\ell)}(k)}{\ell!}\cdot t^\ell,\]
+	but these coefficients must all be integers, so we conclude that $\ell!\mid f_n^{(\ell)}(k)$ for all nonnegative integers $\ell$. At $k=0$, we actually have $f_n^{(\ell)}(0)=0$ for $0\le\ell\le n-1$; and for $k\in\{1,2,\ldots,d\}$, we have $f_n^{(\ell)}(k)=0$ for $0\le\ell\le n$. Thus, $I_{f_n}(k)$ is divisible by $(n-1)!$ for each $k$, but it is divisible by $n!$ for each $k>0$ while
+	\begin{equation}
+		I_{f_n}(0)\equiv f^{(n-1)}(0)\equiv(-1)^{nd}d!\pmod{n!} \label{eq:i-fn-mod-n}
+	\end{equation}
+	because the higher-order terms are $0\pmod{n!}$.
+
+	With this in mind, we set $p_{kn}\coloneqq I_{f_n}(k)/(n-1)!$ and $q_n\coloneqq I_{f_n}(0)/(n-1)!$ for each nonnegative integer $n$. We now check (a) and (b) of \Cref{lem:get-trans-simul}, which will complete the proof.
+	\begin{listalph}
+		\item We compute
+		\begin{align*}
+			\left|q_ne^k-p_{nk}\right| &\le \frac{e^k}{(n-1)!}\int_0^ke^{-t}\left|f_n(t)\right|\,dt \\
+			&= \frac{e^k}{(n-1)!}\int_0^ke^{-t}\left|t\right|^{n-1}\left|t-1\right|^n\left|t-2\right|^n\cdots\left|t-d\right|^n\,dt \\
+			&\le \frac{e^k}{(n-1)!}\cdot d^{n-1+dn}\int_0^ke^{-t}\,dt.
+		\end{align*}
+		Now, $\int_0^ke^{-t}\,dt<\int_0^\infty e^{-t}\,dt=1$, so we have the bound
+		\[\left|q_ne^k-p_{nk}\right|<\frac{e^k}d\cdot\frac{\left(d^{d+1}\right)^n}{(n-1)!}.\]
+		The right-hand side goes to $0$ as $n\to\infty$, so the left-hand side must also.
+		\item For this check, we actually want to use a subsequence of the rationals we chose. The common divisor will be $g_n\coloneqq n$, which we know divides each $p_{kn}=I_{f_n}(k)/(n-1)!$ because $I_{f_n}(k)$ is divisible by $n!$. However, we must verify that there are infinitely many $n$ such that $n$ is relatively prime to $q_n$. Well, \eqref{eq:i-fn-mod-n} implies that it is enough for $n$ to be relatively prime to $d!$, so we may take $n(m)\coloneqq1+md!$ and then take our rationals to be $\left\{p_{k,n(m)}/q_{n(m)}\right\}$. This completes the proof.
+		\qedhere 
+	\end{listalph}
+\end{proof}
+
+\subsection{The Continued Fraction of \texorpdfstring{$e$}{e}}
+In this subsection, we compute the continued fraction expansion of $e$ and then use it to show that $\mu(e)=2$. Our exposition in this subsection follows \cite{olds-cf-e}. We are going to prove that
+\[e\stackrel?=[2;1,2,1,1,4,1,1,6,1,\ldots,1,2m,1,\ldots].\]
+This continued fraction naturally comes in threes, so it will actually be easier to show the related continued fraction
+\[\frac{e+1}{e-1}=[2;6,10,14,\ldots,4m+2,\ldots].\]
+Nonetheless, the main part of our story will unsurprisingly be focused on trying to come up with good rational approximations for $e$. Anyway, let's jump into a proof.
+\begin{proposition} \label{prop:almost-e-cf}
+	We have
+	\[\frac{e+1}{e-1}=[2;6,10,14,\ldots,4m+2,\ldots].\]
+\end{proposition}
+\begin{proof}
+	For clarity, we proceed in steps.
+	\begin{enumerate}
+		\item We produce reasonably good rational approximations $p_n/q_n$ (for nonnegative integers $n$) to $e$. By \Cref{lem:hermite}, we have
+		\[e\int_0^1e^{-t}f(t)\,dt=eI_f(0)-I_f(1)\]
+		for any polynomial $f$. We would like to make the integral small in order to produce a good rational approximation of $e$, so we will take our polynomial to be $f_n(t)\coloneqq t^n(t-1)^n$. Arguing as in \Cref{thm:e-trans}, we see that $I_{f_n}(0)$ and $I_{f_n}(1)$ are integers divisible by $n!$. Indeed, the Taylor expansion
+		\[f_n(t+k)=\sum_{\ell=0}^\infty\frac{f^{(\ell)}(k)}{\ell!}\cdot t^\ell\]
+		establishes that $f_n^{(\ell)}(k)$ is an integer divisible by $\ell!$ for any $\ell\ge0$. However, $f_n^{(\ell)}(k)=0$ for $k\in\{0,1\}$ and $0\le\ell\le n$ by construction of $f_n$, so we conclude that $I_{f_n}(k)$ is divisible by $n!$ for $k\in\{0,1\}$ because all nonzero terms of the sum
+		\[I_{f_n}(k)=\sum_{\ell=0}^\infty f_n^{(\ell)}(k)\]
+		are divisible by $n!$.
+	
+		Thus, we define $q_n\coloneqq I_{f_n}(0)/n!$ and $p_n\coloneqq I_{f_n}(1)/n!$. To verify that $p_n/q_n$ is in fact a good rational approximation to $e$, we write
+		\begin{align*}
+			\left|q_ne-p_n\right| &\le \frac e{n!}\int_0^1e^{-t}\left|f_n(t)\right|\,dt \\
+			&= \frac e{n!}\int_0^1e^{-t}\left|t(t-1)\right|^n\,dt \\
+			&< \frac e{n!}\int_0^\infty e^{-t}\,dt \\
+			&= \frac e{n!}.
+		\end{align*}
+
+		\item We produce a recurrence relation for the $\{p_n\}$ and $\{q_n\}$. This will arise purely formally by manipulating the integrals
+		\[J_{a,b}\coloneqq\int_0^1e^{-t}t^a(t-1)^b\,dt.\]
+		We have two ``moves'': on one hand, integration by parts shows
+		\begin{equation}
+			J_{a,b}=\int_0^1e^{-t}t^a(t-1)^b\,dt=a\int_0^1e^{-t}t^{a-1}(t-1)^b\,dt+b\int_0^1e^{-t}t^a(t-1)^{b-1}\,dt=aJ_{a-1,b}+bJ_{a,b-1} \label{eq:j-move-1}
+		\end{equation}
+		for $a,b\ge1$, and the identity $(t-1)^b=t(t-1)^{b-1}-(t-1)^{b-1}$ shows
+		\begin{equation}
+			J_{a,b}=\int_0^1e^{-t}t^a(t-1)^b\,dt=\int_0^1e^{-t}t^{a+1}(t-1)^{b-1}\,dt-\int_0^1e^{-t}t^a(t-1)^{b-1}\,dt=J_{a+1,b-1}-J_{a,b-1} \label{eq:j-move-2}
+		\end{equation}
+		for $a\ge0$ and $b\ge1$. Now, the main claim of this step is that
+		\begin{equation}
+			J_{n,n}\stackrel?=2n(2n-1)J_{n-1,n-1}+n(n-1)J_{n-2,n-2} \label{eq:j-recurrence}
+		\end{equation}
+		for $n\ge2$. We will prove this using \eqref{eq:j-move-1} and \eqref{eq:j-move-2} repeatedly. Getting started, we write
+		\begin{align*}
+			J_{n,n} &= nJ_{n-1,n}+nJ_{n,n-1} \tag{\ref{eq:j-move-1}} \\
+			&= nJ_{n-1,n}+n(J_{n-1,n}+J_{n-1,n-1}) \tag{\ref{eq:j-move-2}} \\
+			&= 2nJ_{n-1,n}+nJ_{n-1,n-1}.
+		\end{align*}
+		The relation
+		\begin{equation}
+			J_{n,n} = 2nJ_{n-1,n}+nJ_{n-1,n-1} \label{eq:j-move-3}
+		\end{equation}
+		will be helpful again in a moment. Anyway, we now continue, writing
+		\begin{align*}
+			J_{n,n} &= nJ_{n-1,n-1}+2n((n-1)J_{n-2,n}+nJ_{n-1,n-1}) \tag{\ref{eq:j-move-1}} \\
+			&= \left(2n^2+n\right)J_{n-1,n-1}+\left(2n^2-2n\right)J_{n-2,n} \\
+			&= \left(2n^2+n\right)J_{n-1,n-1}+\left(2n^2-2n\right)(J_{n-1,n-1}-J_{n-2,n-1}) \tag{\ref{eq:j-move-2}} \\
+			&= \left(4n^2-n\right)J_{n-1,n-1}-2n\left(n-1\right)J_{n-2,n-1} \\
+			&= \left(4n^2-n\right)J_{n-1,n-1}-n(J_{n-1,n-1}-(n-1)J_{n-2,n-2}) \tag{\ref{eq:j-move-3}} \\
+			&= 2n(2n-1)J_{n-1,n-1}+n(n-1)J_{n-2,n-2},
+		\end{align*}
+		which is precisely \eqref{eq:j-recurrence}.
+
+		We now conclude this step. Note that
+		\[q_ne-p_n=\frac e{n!}\int_0^1e^{-t}t^n(t-1)^n\,dt=\frac e{n!}\cdot J_{n,n},\]
+		so the recurrence \eqref{eq:j-recurrence} implies that
+		\[q_ne-p_n=2(2n-1)(q_{n-1}e-p_{n-1})+(q_{n-2}e-p_{n-2})\]
+		for $n\ge2$. Because $e$ is irrational (by \Cref{prop:e-irrat}), collecting terms to put all $e$s on one side and all integers on the other, we produce the system of recurrences
+		\begin{equation}
+			\begin{cases}
+				p_{n+1}=2(2n+1)p_n+p_{n-1}, \\
+				q_{n+1}=2(2n+1)q_n+q_{n-1},
+			\end{cases} \label{eq:p-q-recur}
+		\end{equation}
+		for $n\ge1$. These recurrences essentially explain why the desired continued fraction expansion features $4m+2$.
+
+		\item We take a linear combination of the $\{p_n\}$ and $\{q_n\}$ to produce continued fraction convergents. To see why we must do this, we begin by computing $(p_0,q_0)$ and $(p_1,q_1)$. On one hand, $f_0(t)=1$, so $I_{f_0}(0)=I_{f_0}(1)=1$, so $(p_0,q_0)=(1,1)$. On the other hand, $f_1(t)=t(t-1)=t^2-t$ had $f_1'(t)=2t-1$ and $f''(t)=2$, so $I_{f_1}(0)=1$ and $I_{f_1}(1)=3$, so $(p_1,q_1)=(3,1)$.
+
+		The number $p_0/q_0=1$ is not a continued fraction convergent of $e$, so there is no way of shifting our sequences directly in order to produce the continued fraction for $e$. However, if one sets $(h_{-2},k_{-2})=(0,1)$ and $(h_n,k_n)\coloneqq((p_{n+1}+q_{n+1})/2,(p_{n+1}-q_{n+1})/2)$ for each $n\ge-1$, then we see
+		\[\begin{cases}
+			h_n=2(2n+1)h_{n-1}+h_{n-2}, \\
+			k_n=2(2n+1)k_{n-1}+k_{n-2},
+		\end{cases}\]
+		for $n\ge-2$ by an explicit computation at $n=-2$ and \eqref{eq:p-q-recur} for $n\ge-1$. Thus, by \Cref{prop:magic-box}, we see
+		\[\frac{h_n}{k_n}=[2;6,10,14,\ldots,4n+2]\]
+		for each $n\ge0$.
+
+		\item We complete the proof. It remains to show that $h_n/k_n\to(e+1)/(e-1)$ as $n\to\infty$. The bound
+		\[\left|q_ne-p_n\right|<\frac e{n!}\]
+		now reads
+		\[\left|(h_n-k_n)e-(h_n+k_n)\right|<\frac e{(n+1)!},\]
+		which rearranges to
+		\[\left|\frac{e+1}{e-1}-\frac{h_n}{k_n}\right|<\frac e{(e-1)(n+1)!k_n}.\]
+		Sending $n\to\infty$ completes the proof.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+To produce the continued fraction for $e$, we need to be able to manipulate continued fractions. We will want the following.
+\begin{lemma} \label{lem:twice-simple-cf}
+	Fix any positive real numbers $a,b,c\in\RR$ with $a,b\ge1$. Then $2/[a;b,c]=1/[(a-1)/2,1,1+2/[b-1,a]]$.
+\end{lemma}
+\begin{proof}
+	The lower bounds on $a,b,c\in\RR$ are merely there to ensure we have no division by zero problems. For example, we have ensured $[b-1;a]>0$ currently. Anyway, unwrapping, we are trying to show
+	\[\dfrac2{a+\dfrac1{b+\dfrac1c}}\stackrel?=\dfrac1{\dfrac{a-1}2+\dfrac1{1+\dfrac1{1+\dfrac2{b-1+\dfrac1c}}}}.\]
+	This is purely formal. Taking reciprocals, we are trying to show
+	\[a+\dfrac1{b+\dfrac1c}\stackrel?=(a-1)+\dfrac2{1+\dfrac1{1+\dfrac2{b-1+\dfrac1c}}}.\]
+	Now, the fraction on the right-hand side is
+	\[\dfrac2{1+\dfrac1{1+\dfrac{2c}{bc-c+1}}}=\dfrac2{1+\dfrac{bc-c+1}{bc+c+1}}=\frac{bc+c+1}{bc+1}=1+\frac c{bc+1}=1+\dfrac1{b+\dfrac1c},\]
+	which completes the proof upon plugging in to the previous equation.
+\end{proof}
+\begin{theorem} \label{thm:e-cf}
+	We have
+	\[e=[2;1,2,1,1,4,1,1,6,1,\ldots,1,2m,1,\ldots].\]
+\end{theorem}
+\begin{proof}
+	Subtracting one and taking the reciprocal from \Cref{prop:almost-e-cf}, we find
+	\[\frac{e-1}2=[0;1,6,10,14,\ldots,4m+2,\ldots].\]
+	Rearranging, we find
+	\[e=1+2/[1;6,10,14,\ldots,4m+2,\ldots].\]
+	Beginning our translation, we use \Cref{lem:twice-simple-cf} to see that this is
+	\[e=1+1/[0;1,1+2/[5;10,14,18,\ldots]]=[1;0,1,1+2/[5;10,14,18,\ldots]].\]
+	More generally, we claim that
+	\[e\stackrel?=[1;0,1,1,2,1,\ldots,1,2m,1,1+2/[4m+5;4m+10,4m+14,4m+18,\ldots]]\]
+	for any $m\ge0$. We just showed the $m=0$ case. For the induction, we use \Cref{lem:twice-simple-cf} to find
+	\begin{align*}
+		e &= [1;0,1,1,2,1,\ldots,1,2m,1,1+2/[4m+5;4m+10,4m+14,4m+18,\ldots]] \\
+		&= [1;0,1,1,2,1,\ldots,1,2m,1,1+1/[2m+1;1,1+2/[4m+9,4m+14,4m+18,\ldots]]] \\
+		&= [1;0,1,1,2,1,\ldots,1,2m,1,1,2m+2,1,1+2/[4m+9,4m+14,4m+18,\ldots]].
+	\end{align*}
+	Sending $m\to\infty$ and adjusting the start of the continued fraction completes the proof. Formally, one should justify why sending $m\to\infty$ makes the continued fraction converge, but this holds essentially by the argument of \Cref{prop:basic-cf-bound} because the last coefficient of the continued fraction above is always bigger than one and hence unable to cause problems with convergence.
+\end{proof}
+\begin{corollary}
+	We have $\mu(e)=2$.
+\end{corollary}
+\begin{proof}
+	This follows directly from plugging in \Cref{thm:e-cf} into \Cref{cor:bounded-cf-is-mu-2}. For example, the polynomial $f(n)=n+3$ will do the trick.
+\end{proof}
+
+\subsection{Problems}
+Do ten points worth of the following exercises.
+\begin{prob}[1 points]
+	Compute the first five continued fraction convergents of $e$.
+\end{prob}
+\begin{prob}[2 points]
+	Without appeal to results unproven in these notes, work \Cref{exe:mu-root-2}.
+\end{prob}
+\begin{prob}[3 points]
+	Show that the real number
+	\[\sum_{k=0}^\infty\frac n{10^{n!}}\]
+	is transcendental.
+\end{prob}
+\begin{prob}[3 points]
+	Compute
+	\[\int_0^1e^{-t}t^5(t-1)^4\,dt.\]
+\end{prob}
+\begin{prob}[4 points]
+	Consider the real number
+	\[L=\sum_{k=0}^\infty\frac1{2^{3^r}}.\]
+	Show that $\mu(L)\ge3$.
+\end{prob}
+\begin{prob}[5 points]
+	For $y>100$, show that any integer pair $(x,y)$ such that $x^3-2y^3=-7$ must have $x/y$ be a continued fraction convergent of $\sqrt[3]2$. Using Sage, show that there are no solutions aside $(x,y)=(1,2)$ with $\left|x\right|,\left|y\right|<10^{10}$. Please submit the program.
+\end{prob}
+\begin{prob}[10 points]
+	Adapt the proof of \Cref{prop:almost-e-cf} to show that
+	\[\frac{e^{2/k}+1}{e^{2/k}-1}=[k;3k,5k,\ldots]\]
+	for any integer $k\ge2$. You may find \cite{olds-cf-e} helpful.
+\end{prob}
 
 \end{document}
