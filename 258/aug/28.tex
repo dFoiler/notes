@@ -1,0 +1,87 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 28}
+
+Why am I here?
+
+\subsection{Logistics}
+Here are the usual logistics notes.
+\begin{itemize}
+	\item The professor is \href{mailto:ruixiang@berkeley.edu}{Ruixiang Zhang}.
+	\item There will be three assignments, which determine the grade. They will be rather hard.
+	\item Office hours are on Wednesday, during 10:30AM--11:30AM, 2PM--3PM, and 3PM--4PM.
+\end{itemize}
+
+\subsection{Convergence of Fourier Series}
+The point of the course is to study differentiable functions on a space which has an action by a group. Last class we proved the following result.
+\begin{theorem}[Riemann localization principle] \label{thm:riemann-local}
+	Fix a $1$-periodic function $f\in L^1(\RR/\ZZ)$ which vanishes in a neighborhood of $x\in\RR$. Then
+	\[\lim_{N\to\infty}S_Nf(x)=0.\]
+\end{theorem}
+Here,
+\[S_Nf(x)\coloneqq\sum_{k=-N}^N\hat f(k)e^{2\pi ikx},\]
+where
+\[\hat f(k)\coloneqq\int_0^1f(x)e^{-2\pi ikx}\,dx.\]
+Anyway, here is a quick sketch.
+\begin{proof}[Sketch of \Cref{thm:riemann-local}]
+	One can show that $\hat f(n)\to0$ as $\left|n\right|\to\infty$ by approximating $f\in L^1(\RR/\ZZ)$ by simple integrable functions. Then one uses a geometric series style argument to get cancellation, writing
+	\[S_Nf(x)=\int_0^1\frac{\sin(N+1)\pi t}{\sin\pi t}\cdot f(x-t)\,dt\]
+	and then expressing the integral as a sum of Fourier coefficients of functions in $L^1(\RR/\ZZ)$.
+\end{proof}
+We are now ready to show Dini's criterion.
+\begin{theorem}[Dini's criterion] \label{thm:dini}
+	Fix a function $f\in L^1(\RR/\ZZ)$ and $x\in\RR$. Then suppose that
+	\[\int_{\left|t\right|<\delta}\left|\frac{f(x+t)-f(x)}t\right|\,dt<\infty\]
+	for all $\delta>0$. Then $S_Nf(x)\to f(x)$ as $N\to\infty$.
+\end{theorem}
+\begin{proof}
+	We take $\delta<1/2$. Using the Dirichlet kernel
+	\[D_N(x)\coloneqq\sum_{\left|k\right|\le N}e^{2\pi ikx}=\frac{\sin(2N+1)\pi x}{\sin\pi x},\]
+	one has
+	\begin{align*}
+		S_Nf(x)-f(x) &= \int_{-1/2}^{1/2}f(x-t)D_N(t)\,dt-f(x) \\
+		&= \int_{-1/2}^{1/2}(f(x-t)-f(x))D_N(t)\,dt \\
+		&= \underbrace{\int_{\left|t\right|<\delta}(f(x-t)-f(x))D_N(t)\,dt}_{I_1}+\underbrace{\int_{\delta\le\left|t\right|\le1/2}(f(x-t)-f(x))D_N(t)\,dt}_{I_2}.
+	\end{align*}
+	The argument of \Cref{thm:riemann-local} establishes that $I_2\to0$ as $N\to\infty$, so it is safe, or one can directly see that we have essentially constructed a function which vanishes on an interval around $x$ and took its Fourier transform. For $I_1$, we bound by absolute value, we see
+	\[\left|I_1\right|\le\int_{\left|t\right|<\delta}\left|\frac{f(x-t)-f(x)}{\sin\pi t}\right|\,dt\ll\int_{\left|t\right|<\delta}\left|\frac{f(x-t)-f(x)}{t}\right|\,dt,\]
+	which disappears as we take $\delta$ small. Namely, taking $\delta'\le\delta$, the hypothesis tells us that
+	\[\int_{\left|t\right|<\delta'}\left|\frac{f(x-t)-f(x)}{t}\right|\,dt<\infty,\]
+	so finiteness of the integral at $\delta=\delta'$ enforces it to go to $0$ as $\delta'\to0^+$.
+\end{proof}
+It is not clear what the hypothesis in \Cref{thm:dini} is good for, but we will use it shortly; as an example application, H\"older continuous functions satisfy the condition. But notably, continuity is not good enough to give us convergence. Anyway, here is another criterion.
+\begin{theorem}[Jordan's criterion] \label{thm:jordan}
+	Fix a function $f\in L^1(\RR/\ZZ)$ and $x\in\RR$. Further, suppose that $f$ is of bounded variation in $(x-\delta,x+\delta)$ for some $\delta>0$. Then
+	\[\lim_{N\to\infty}S_nf(x)=\frac{f(x_-)+f(x_+)}2,\]
+	where $f(x_\pm)$ denotes the value of $f(a)$ as $a\to x^\pm$.
+\end{theorem}
+\begin{proof}
+	Being bounded variation here roughly means that it is the difference of two monotonic functions. Again, we take $\delta<1/2$. Then \Cref{thm:riemann-local}, we may also assume that $f$ vanishes outside $(x-\delta,x+\delta)$. (Namely, the convergence is local to $x$, so we can subtract out $g(t)\coloneqq f(t)1_{\left|t-x\right|>\delta}(t)$.) Now,
+	\begin{align*}
+		S_Nf(x) &= \int_{-1/2}^{1/2}f(x-t)D_N(t)\,dt \\
+		&= \int_0^{1/2}(f(x+t)+f(x-t))D_N(t)\,dt.
+	\end{align*}
+	We now set $g(t)\coloneqq f(x+t)+f(x-t)$, essentially fixing $x$, so we want to show
+	\[\lim_{N\to\infty}\int_0^{1/2}g(t)D_N(t)\,dt=\frac12g(0_+).\]
+	Subtracting $f$ by $\frac12g(0_+)$, we may assume that $g(0_+)=0$. Also, $f$ is the difference of two monotonic functions, and the above condition is linear, so we may as well assume that $g$ is monotonic.
+
+	As before, take $\delta'<\delta$, and we split the integral into two parts, writing
+	\[\int_0^{1/2}g(t)D_N(t)\,dt=\underbrace{\int_{0}^{\delta'}g(t)D_N(t)\,dt}_{I_1\coloneqq}+\underbrace{\int_{\delta'}^\delta g(t)D_N(t)\,dt}_{I_2\coloneqq}.\]
+	\Cref{thm:riemann-local} tells us that $I_2\to0$ as $N\to\infty$ because we are away from $0$. Using a Mean value theorem argument, one finds
+	\[\int_0^{\delta'}g(t)D_N9t)\,dt=g(\delta'_-)\int_v^{\delta'}D_N(t)\,dt\]
+	for some $v\in[0,\delta']$. To get convergence as $N\to\infty$, one needs to use cancellation within $D_N$. Well, we find
+	\[\int_v^{\delta'}D_N(t)\,dt=\int_v^{\delta'}\frac{\sin(2N+1)\pi t}{\sin\pi t}\,dt.\]
+	One would like to replace $\sin\pi t$ with $t$ so that $dt/t$ is the multiplicative Haar measure on $\RR^\times$. Explicitly,
+	\begin{align*}
+		\left|\int_v^{\delta'}D_N(t)\,dt\right| &= \left|\int_v^{\delta'}\sin(2N+1)\pi t\cdot\left(\frac1{\sin\pi t}-\frac1{\pi t}\right)\,dt\right|+\left|\int_v^{\delta'}\frac{\sin(2N+1)\pi t}t\,dt\right|.
+	\end{align*}
+	We now see $\frac1{\sin\pi t}-\frac1{\pi t}$ is bounded by a constant in $[v,\delta']$, so the entire integral is also bounded by a constant; notably, this constant vanishes as $\delta'\to0^+$. Applying a change of variables to the second term, we see that it is bounded by
+	\[\sup_{0<c_1<c_2<\delta'}\left|\int_{c_1}^{c_2}\frac{\sin\pi t}t\,dt\right|,\]
+	which also vanishes as $\delta'\to0^+$, completing the proof.
+\end{proof}
+
+\end{document}
