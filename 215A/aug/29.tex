@@ -1,0 +1,112 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 29}
+
+Last time we discussed homotopies, homotopy equivalence, and CW complexes. To review, the goal of algebraic topology is to define (algebraic) invariants of topological spaces and then perhaps figure out when two spaces are equivalent (for suitable definition of equivalent). In theory, our invariants would be able to entirely classify some subset of spaces we are looking at, but it is rather rare. To execute this plan, we need a source of spaces (mostly CW complexes and ways to combine them) and then methods to tell if spaces are equivalent.
+
+\subsection{Operations on Spaces}
+Let's discuss how to make new spaces from old ones. Thankfully, our operations will send CW complexes to CW complexes, though there is something to check.
+\begin{definition}[product]
+	Fix CW complexes $X$ and $Y$. Then we form the \textit{product} $X\times Y$ (at the level of CW complexes) using as $(n+m)$-cells $e^m_\alpha\times f^n_\beta$ where $e^m_\alpha$ is an $m$-cell of $X$ and $f^m_\beta$ is an $n$-cell of $Y$. Notably, the $n$-skeleton is
+	\[(X\times Y)^n=\bigcup_{k+\ell=n}X^k\times Y^\ell,\]
+	and one can attach in the obvious way. This produces a CW structure.
+\end{definition}
+\begin{remark}
+	It is possible that $X\times Y$ with its CW structure need not be the same as the product topology. There is an example in the appendix of \cite{hatcher}, but we won't care so much for this course.
+\end{remark}
+\begin{definition}[subcomplex]
+	Fix a CW complex $X$. Then a \textit{subcomplex} is a closed subspace $A\subseteq X$ which is a union of cells of $X$ and also a CW complex.
+\end{definition}
+\begin{definition}[quotient]
+	Fix a subcomplex $A$ of a CW complex $X$. Then $X/A$ is also a CW complex. Here, the definition of $X/A$ is somewhat technical: its cells are the cells of $X\setminus A$ and then a $1$-cell from $A$, and one attaches in the obvious way (inductively) via the quotient map $X^{n-1}\to X^{n-1}/A^{n-1}$.
+\end{definition}
+\begin{definition}[suspension]
+	Fix a CW complex $X$. Then the \textit{suspension} is the quotient
+	\[SX\coloneqq\frac{X\times I}{\{(0,x)\sim(0,x')\text{ and }(1,x)\sim(1,x')\}}.\]
+\end{definition}
+\begin{example}
+	Take $X=S^0$, which is two points. Then $X\times I$ is two lines, and we then identify the endpoints of the two lines accordingly to produce a circle $S^1$. More generally, $SS^n=S^{n+1}$ essentially by just gluing two $S^n$s onto the equator of $S^{n+1}$.
+\end{example}
+\begin{definition}[join]
+	Fix CW complexes $X$ and $Y$. Then the \textit{join} $X*Y$ is the product $X\times Y\times I$ (as CW complexes) modded out by the equivalence relation identifying $(x,y,0)\sim(x,y',0)$ and $(x,y,1)\sim(x',y,1)$.
+\end{definition}
+\begin{example}[simplex]
+	Consider $X=Y=I=\Delta^1$. Then $X*Y$ is the cube modded out by crushing $Y$ on one end and crushing $X$ on the other end, forming a tetrahedron, which is $\Delta^3$. More generally, $\Delta^n*\Delta^m=\Delta^{n+m+1}$.
+\end{example}
+\begin{example}
+	One has $S^0*S^0=S^1$, and more generally $S^n*X=SX$. Essentially, we are gluing two copies of $X$ onto an equator, which is the suspension.
+\end{example}
+\begin{definition}[wedge product]
+	Fix CW complexes $X$ and $Y$ and points $x_0\in X^0$ and $y_0\in Y^0$. Then we form the \textit{wedge product} $X\lor Y$ as $X\sqcup Y$ identifying $x_0\sim y_0$.
+\end{definition}
+\begin{definition}[smash product]
+	Fix CW complexes $X$ and $Y$ and points $x_0\in X^0$ and $y_0\in Y^0$. Then the \textit{smash product} is $(X\times Y)/(X\lor Y)$, where $X\lor Y$ is embedded into $X\times Y$ as $x\mapsto(x,y_0)$ and $y\mapsto(y,x_0)$.
+\end{definition}
+\begin{example}
+	One can check that $S^1\times S^1$ is a torus. To form the smash product, we are crushing the boundary of the square as follows.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			draw((0,0)--(1,0), EndArrow);
+			draw((1,0)--(2,0));
+			draw((0,2)--(1,2), EndArrow);
+			draw((1,2)--(2,2));
+			draw((0,0)--(0,1), EndArrow);
+			draw((0,1)--(0,2));
+			draw((2,0)--(2,1), EndArrow);
+			draw((2,1)--(2,2));
+		\end{asy}
+	\end{center}
+	More generally, $S^m\land S^n=S^{m+n}$.
+\end{example}
+\begin{definition}[attach]
+	Fix a subcomplex $A$ of a CW complex $X_1$ and a map $f\colon A\to X_0$ to another CW complex $X_0$. Then $X_0\sqcup_f X_1$ is the space $X_0\sqcup X_1$ modded out by the equivalence relation $a\sim f(a)$ for all $a\in A$.
+\end{definition}
+\begin{example}
+	An attaching map $\varphi_\alpha\colon\del D^n\to X^{n-1}$ of a CW complex are attachments $X^{n-1}\sqcup_{\varphi_\alpha}D^n$ in the above sense.
+\end{example}
+
+\subsection{Homotopy Extension}
+We are going to, over time, prove the following results. To begin, quotients preserve homotopy type.
+\begin{proposition}
+	Fix a subcomplex $A$ of a CW complex $X$. If $A$ is contractible, then the quotient map $X\to X/A$ is a homotopy equivalence.
+\end{proposition}
+\begin{example}
+	Fix a connected graph $X$, which is a one-dimensional CW complex. Fix a spanning tree $T\subseteq X$, which is contractible (any tree can be contracted one edge at a time), so $X\to X/T$ is a homotopy equivalence. Then $X/T$ becomes a wedge of loops corresponding (roughly) to the number of ``independent'' cycles. Notably, this collapsing is far from canonical, essentially unique up to choosing the spanning tree and then an order of edges. In some sense, because the homotopy group of a wedge of loops is a free group, we are able to study automorphisms of the free group in this way.
+\end{example}
+\begin{proposition}
+	Fix a subcomplex $A$ of a CW complex $X_1$. Given homotopic maps $f,g\colon A\to X_0$, then $X_0\sqcup_f X_1=X_0\sqcup_g X_1$.
+\end{proposition}
+The idea of the above result is that if we can move the attaching maps $f$ and $g$ around, we should not really be adjusting the homotopy type.
+
+To prove these results, we want access to the homotopy extension property.
+\begin{definition}[homotopy extension property]
+	Fix a subspace $A$ of a topological space $X$. Then the pair $(X,A)$ has the \textit{homotopy extension property} if and only if all $F_0\colon X\to Y$ and small homotopy $f_\bullet\colon A\times I\to Y$ with $F_0|_A=f_0$, then there is an extended homotopy $F_\bullet\colon X\times I\to Y$ where $F_t|_A=f_t$ for all $t\in I$.
+\end{definition}
+It will turn out that a subcomplex $A$ of a CW complex $A$ makes $(X,A)$ have the homotopy extension property, but this will take some work to prove.
+
+By way of example, make $Y$ the following ``theta graph,'' and the left edge is $X$, and $A$ is the middle interval.
+\begin{center}
+	\begin{asy}
+		unitsize(0.7cm);
+		draw(circle((0,0),2));
+		draw((0,-2)--(0,2));
+		label("$X$", (-2,0), W);
+		label("$A$", (0,0), E);
+	\end{asy}
+\end{center}
+Here, $A\subseteq X$ is going to have the homotopy extension property. For example, one can contract $A$ to a point and imagine dragging neighborhoods of $A\cap X$ in $X$ (and in fact all of $Y$) along for the ride.
+
+One way to think about the homotopy extension property is that we have a map $X\cup(A\times I)\to Y$ (by taking the union $F_0$ and $f_\bullet$), and we and to extend it to a full map $X\times I\to Y$. With this in mind, we would thus like to have to retract $r\colon(X\times I)\to(X\cup(A\times I))$ and then composing. By taking $Y=X\times I$, one sees that having such a retraction $r$ is in fact equivalent to the homotopy extension property.
+
+So we want to find the retraction $r\colon(X\times I)\to(X\cup(A\times I))$.
+\begin{lemma}
+	Fix a subspace $A$ of a topological space $X$. Then $(X,A)$ has the homotopy extension property if and only if $A$ has a ``mapping cylinder neighborhood.'' In other words, there is a space $B$ and map $f\colon B\to A$ such that $M_f$ is homeomorphic to a neighborhood of $A$.
+\end{lemma}
+Approximately speaking, what's going on here is that the mapping cylinder allows us some squishing region through which to extend homotopies. Then the above criteria can be checked for CW pairs $(X,A)$ by tracking through attachments. Namely, a reparameterization of the attaching map has mapping cylinder which has the property needed above.\todo{Read Hatcher} Rigorously, one inducts on the $n$-skeleton of a CW complex $X$, using the homotopy extension property for cells of $X$ not in $A$ (and not caring about cells already in $A$).
+
+\end{document}
