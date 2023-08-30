@@ -4,7 +4,148 @@
 
 \begin{document}
 
-\section{Pell's Equation}
+\section{Pell Equations}
+The goal of the present section is to discuss equations of the form
+\[ax^2+bxy+cy^2=d\]
+where $a,b,c,d\in\ZZ$. Completing the square and completing the denominator, we might as well solve
+\[ax^2+by^2=c\]
+where $a,b,c\in\ZZ$. Multiplying through by $a$, we are trying to solve
+\[(ax)^2+(ab)y^2=ac,\]
+so we may as well try to find integer solutions to the equation
+\[x^2-dy^2=c\]
+where $d,c\in\ZZ$. If $d<0$, then $x^2-dy^2=c$ must have $\left|x\right|\le\sqrt c$ and $\left|y\right|<\sqrt{c/d}$, so solving this equation can be done via a finite computation. Otherwise, $d>0$. From here, it turns out that we can produce much of the internal structure of the solutions by limiting our view to $\left|c\right|=1$, which we will call ``Pell equations'' for now (though we will want to expand our definition). This will remain our focus for the majority of this section.
+
+\subsection{Pell Equations via Elementary Methods}
+Shortly we are going to begin discussing real quadratic fields and their connections to Pell equations, but it is worthwhile to be aware that one can make purely elementary arguments to solve these equations. Let's see a few examples and feel the wonder.
+\begin{remark}
+	The following examples, suitably transformed, can also be seen as a form of ``Vieta jumping.'' We will not bother to explain what Vieta jumping is, but those who do may find \Cref{prob:pell-5-norm} compelling.
+\end{remark}
+\begin{example} \label{ex:pell-3}
+	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_0,y_0)\coloneqq(1,0)$ and
+	\[(x_{n+1},y_{n+1})\coloneqq(2x_n+3y_n,x_n+2y_n)\]
+	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2-3y^2=1$, we have $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$, and $(x_n,y_n)$ is a solution for each $n$.
+\end{example}
+\begin{proof}[Solution]
+	We have two claims to show, so we will show them separately. The main characters of this solution are the linear transformation $f_\pm\colon\ZZ^2\to\ZZ^2$ given by $f_\pm(x,y)\coloneqq(2x\pm3y,\pm x+2y)$ where $\pm$ is some sign; in particular, $f_+(x_n,y_n)=(x_{n+1},y_{n+1})$.
+	\begin{enumerate}
+		\item We show that $x_n^2-3y_n^2=1$ for all nonnegative integers $n$. We induct on $n$. At $n=0$, we are saying $1^2-3\cdot0^2=1$, which is true. For the inductive step, we show that $f_\pm(x,y)$ is a solution of $(x,y)$ is for any sign $+$ or $-$. Well, if $x^2-3y^2=1$, then we compute
+		\[(2x\pm3y)^2-3(\pm x+2y)^2=\left(4x^2\pm12xy+9y^2\right)-3\left(x^2\pm4xy+4y^2\right)=x^2-3y^2=1,\]
+		so $f(x,y)$ is also a solution.
+		\item As an intermediate step, we check that $f_+$ and $f_-$ are inverse functions. Well, we compute
+		\[f_{\pm}(f_{\mp}(x,y))=f(2x\mp3y,\mp x+2y)=(2(2x\mp3y)\pm3(\mp x+2y),\pm(2x\mp3y)+2(\mp x+2y))=(x,y)\]
+		for any arrangement of signs.
+		\item Lastly, fix a solution $(x,y)$ of $x^2-3y^2=1$. We would like to show that $(x,y)=(x_n,y_n)$ for some $n$, which is equivalent to $(x,y)=f_+^n(1,0)$, or $f_-^n(x,y)=(1,0)$ for some $n$. Well, let $n$ be the largest nonnegative integer such that both entries of $(x',y')\coloneqq f_-^n(x,y)$ are both nonnegative integers; we claim that $(x',y')=(1,0)$, which will complete the proof. The first step establishes that $(x')^2-3(y')^2=1$, and we know that one of the coordinates of $f_-(x',y')$ must fail to be a nonnegative integer. Thus, we either have $2x'-3y'<0$ or $-x'+2y'<0$, so $2x'<3y'$ or $2y'<x'$.
+
+		If $2x'<3y'$, then
+		\[1=(x')^2-3(y')^2<\left(\frac32\cdot y'\right)^2-3(y')^2<0,\]
+		so this cannot be. Thus, we must instead have $x'>2y'$, from which we find
+		\[1=(x')^2-3(y')^2>(2y')^3-3(y')^2=(y')^2,\]
+		so $y'=0$, so $(x',y')=(1,0)$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{example} \label{ex:pell-2}
+	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_n,y_n)\coloneqq(1,0)$ and
+	\[(x_{n+1},y_{n+1})\coloneqq(x_n+2y_n,x_n+y_n)\]
+	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2-2y^2=\pm1$, we have $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$, and $(x_n,y_n)$ is a solution for each $n$. In fact, $x_n^2-2y_n^2=(-1)^n$ for each $n$.
+\end{example}
+\begin{proof}[Solution]
+	Again, we have two claims to show, and we will show them separately. As before, the main characters of this solution are the linear transformations $f_\pm\colon\ZZ^2\to\ZZ^2$ given by $f_\pm(x,y)\coloneqq(\pm x+2y,x\pm y)$where $\pm$ is some sign; in particular, $f_+(x_n,y_n)=(x_{n+1},y_{n+1})$.
+	\begin{enumerate}
+		\item We show that $x_n^2-2y_n^2=(\pm1)^n$ for each nonnegative integer $n$. We proceed by induction. At $n=0$, we are saying that $1^2-2\cdot0^2=1$. For the inductive step, we suppose $x^2-2y^2=(-1)^n$ and show that $(x',y')\coloneqq f_\pm(x,y)$ has $(x')^2-2(y')^2=-(-1)^{n+1}$. Indeed, we compute
+		\[(\pm x+2y)^2-2(x\pm y)^2=\left(x^2\pm4xy+4y^2\right)-2\left(x^2\pm2xy+y^2\right)=-\left(x^2-2y^2\right)=(-1)^{n+1}.\]
+		\item We check that $f_+$ and $f_-$ are inverse functions. Well, we compute
+		\[f_\pm(f_\mp(x,y))=f_\pm(\mp x+2y,x\mp y)=(\pm(\mp x+2y)+2(x\mp y),(\mp x+2y)\pm(x\mp y))=(x,y)\]
+		for any arrangement of signs.
+		\item Lastly, fix a solution $(x,y)$ of $x^2-2y^2=\pm1$. We would like to show that $(x,y)=(x_n,y_n)$ for some $n\ge0$, which is equivalent to $(x,y)=f_+^n(1,0)$, or $f^n_-(x,y)=(1,0)$ for some $n$. Well, let $n$ be the largest nonnegative integer such that both entries of $(x',y')\coloneqq f_-^n(x,y)$ are both nonnegative integers; we claim that $(x',y')=(1,0)$, which will complete the proof.
+
+		The first step gives $(x')^2-2(y')^2=\pm1$ still, and because a coordinate of $f_-(x',y')$ must be a negative integer, we have either $2y'<x'$ or $x'<y'$. On one hand, if $x'<y'$, then
+		\[\pm1=(x')^2-2(y')^2<(y')^2-2(y')^2=-(y')^2,\]
+		so we must have $(y')^2<\mp1\le1$, so $y'=0$, which forces $x'<0$, which makes no sense. On the other hand, if $2y'<x'$, then
+		\[\pm1=(x')^2-2(y')^2>(2y')^2-2(y')^2=2(y')^2,\]
+		so $y'=0$ is still forced, from which we must have $x'=1$, so $(x',y')=(1,0)$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{exe}
+	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_n,y_n)\coloneqq(1,0)$ and
+	\[(x_{n+1},y_{n+1})\coloneqq(3x_n+4y_n,2x_n+3y_n)\]
+	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2-2y^2=1$, show that $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$. Describe the solutions to $x^2-2y^2=-1$ similarly.
+\end{exe}
+One might look at \Cref{ex:pell-2} and wonder what all the fuss with $(-1)^n$ is, for it is a perfectly reasonable question to look for solutions to $x^2-2y^2=1$ on its own, as shown by the above exercise. However, the recursion $(x,y)\mapsto(3x+4y,2x+3y)$ is in some sense ``more complicated than it has to be'' both in the sense that the coefficients are larger than the recursion in \Cref{ex:pell-2} and also in the sense that this recursion is simply the recursion in \Cref{ex:pell-2} applied twice:
+\[(x,y)\mapsto(x+2y,x+y)\mapsto(3x+4y,2x+3y).\]
+As such, it turns out that the ``correct'' thing to do is in fact to look at solutions to $x^2-2y^2=\pm1$ and then correct at the end to look at solutions to $x^2-2y^2=1$. The reason why is explained somewhat but not completely in \cref{subsec:intro-real-quad-for-pell}. A complete explanation will have to wait for the next section.
+
+The following example provides the extreme end of trying to make our recursions as simple as possible.
+\begin{example} \label{ex:pell-5}
+	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_0,y_0)\coloneqq(2,0)$ and
+	\[(x_{n+1},y_{n+1})\coloneqq\left(\frac{x_n+5y_n}2,\frac{x_{n+1}+y_{n+1}}2\right)\]
+	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2-5y^2=\pm4$, we have $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$, and $(x_n,y_n)$ is a solution for each $n$. In fact, $x_n^2+x_ny_n-y_n^2=(-1)^n\cdot4$ for each $n$.
+\end{example}
+\begin{solution}
+	The proof is similar to the previous two ones. We define the linear transformations $f_\pm\colon\ZZ^2\to\ZZ^2$ by $f_\pm(x,y)\coloneqq\frac12(\pm x+5y,x\pm y)$ so that $f_+(x_n,y_n)=(x_{n+1},y_{n+1})$.
+	\begin{enumerate}
+		\item We show that $f_\pm(x,y)$ is a pair of integers of the same parity whenever $(x,y)$ is a pair of integers of the same parity. This verifies that $\{(x_n,y_n)\}_{n=0}^\infty$ is in fact a sequence of integers (by induction) because $(x_0,y_0)=(2,0)$ is a pair of integers of the same parity. Well, if $x$ and $y$ are both the same parity, then $\pm x+5y$ and $x\pm y$ are both even, so $f_\pm(x,y)$ is a pair of integers. To see that $\frac12(\pm x+5y)$ and $\frac12(x\pm y)$ are both the same parity, we note that
+		\[\frac{\pm x+5y}2\mp\frac{x\pm y}2=2y\equiv0\pmod2.\]
+		\item We show that $x_n^2-5y_n^2=(-1)^n\cdot4$ for each $n\ge0$. For $n=0$, we are saying that $2^2-5\cdot0^2=4$, which is true. For the inductive step, we more generally show that $(x')^2-5(y')^2=\mp4$ when $(x',y')=f_\pm(x,y)$ for $x^2-5y^2=\pm4$. Well, suppose $x^2-5y^2=\pm4$, and we compute
+		\[\left(\frac{\pm x+5y}2\right)^2-5\left(\frac{x\pm y}2\right)^2=\frac{x^2\pm10xy+25y^2}4-5\cdot\frac{x^2\pm2xy+y^2}4=-\left(x^2-5y^2\right)=\mp4.\]
+		\item We check that $f_+$ and $f_-$ are inverse functions. Well, we compute
+		\begin{align*}
+			f_\pm(f_\mp(x,y)) &= f_\pm\left(\frac{\mp x+5y}2,\frac{x\mp y}2\right) \\
+			&= \frac14(\pm(\mp x+5y)+5(x\mp y),(\mp x+5y)\pm(\mp x+y)) \\
+			&= (x,y).
+		\end{align*}
+		\item Lastly, fix a solution $(x,y)$ of $x^2-5y^2=\pm1$. We would like to show that $(x,y)=f_+^n(2,0)$ for some nonnegative integer $n$, which is equivalent to $(2,0)=f_-^n(x,y)$. As usual, let $n$ be the largest nonnegative integer such that $(x',y')\coloneqq f_-^n(x,y)$ has coordinates which are nonnegative integers. The second step establishes that $(x')^2-5(y')^2=\pm4$.
+
+		Now, not both coordinates of $f_-(x',y')$ are nonnegative integers, so either $5y'<x'$ or $x'<y'$. On one hand, if $x'<y'$, then
+		\[1=(x')^2-5(y')^2<-4(y')^2\le0,\]
+		which makes no sense. On the other hand, if $5y'<x'$, then
+		\[1=(x')^2-5(y')^2>25(y')^2-5(y')^2=20(y')^2,\]
+		so $y'=0$, so $(x',y')=(2,0)$, which completes the proof.
+		\qedhere
+	\end{enumerate}
+\end{solution}
+One can now compute solutions to $x^2-5y^2=\pm1$ from \Cref{ex:pell-5} by checking which pairs $(x_n,y_n)$ have both coordinates even.
+\begin{example}
+	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_0,y_0)\coloneqq(1,0)$ and
+	\[(x_{n+1},y_{n+1})\coloneqq(2x_n+5y_n,x_n+2y_n)\]
+	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2-5y^2=\pm1$, we have $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$, and $(x_n,y_n)$ is a solution for each $n$. In fact, $x_n^2+x_ny_n-y_n^2=(-1)^n$ for each $n$.
+\end{example}
+\begin{solution}
+	Define $(x'_n,y'_n)$ to be the recursion of \Cref{ex:pell-5}; recall that $x'_n\equiv y'_n\pmod2$ always. We claim that $(x'_n,y'_n)$ has both terms even if and only if $n$ is divisible by $3$. Indeed, applying the recursion three times, we see
+	\begin{equation}
+		(x,y)\mapsto\left(\frac{x+5y}2,\frac{x+y}2\right)\mapsto\left(\frac{3x+5y}2,\frac{x+3y}2\right)\mapsto(2x+5y,x+2y), \label{eq:pell-5-three-times}
+	\end{equation}
+	and $x\equiv y\equiv 2x+5y\equiv x+2y\pmod2$. Thus, the first three terms are $(2,0)$, $(1,1)$, and $(3,1)$, so an induction shows that $(x_n,y_n)$ has both terms even if and only if $n$ is divisible by $3$, as needed.
+
+	It follows that having $x^2-5y^2=\pm1$ must have $(x,y)=(x_{3n}'/2,y_{3n}'/2)$ for some nonnegative integer $n$, and we have $(x'_{3n}/2)^2-5(y_{3n}'/2)^2=(-1)^n$ for each $n$. To complete the proof, we note that the sequence $\{(x'_{3n}/2,y_{3n}')\}_{n=0}^\infty$ has $(x'_0/2,y'_0/2)=(1,0)$ and recursion given by
+	\[\left(x'_{3(n+1)}/2,y'_{3(n+1)}/2\right)=\left(2x_{3n}'/2+5y_{3n}'/2,x'_{3n}/2+2y'_{3n}/2\right)\]
+	by the computation in \eqref{eq:pell-5-three-times}. The result follows.
+\end{solution}
+
+\subsection{Pell Equations with Sophistication} \label{subsec:intro-real-quad-for-pell}
+Let's explain what's going on in the previous two examples. \Cref{ex:pell-3} is quite mysterious because we have removed the context from which
+\[f_{\pm}(x,y)=(2x\pm3y,\pm x+2y)\]
+came from. To explain this, the key is to factor our equation $x^2-3y^2=1$ into
+\[\left(x-y\sqrt3\right)\left(x+y\sqrt3\right)=1.\]
+Even though we are now working with $\sqrt3$s, this is good because now the problem is completely multiplicative! By a little brute force, one finds the solution $(x,y)=(2,1)$, so for example $\left(2-\sqrt3\right)\left(2+\sqrt3\right)=1$. But now the solution $2+\sqrt3$ allows us to find more solutions because $x^2-3y^2=1$ implies
+\begin{align*}
+	1 &= \left(x+y\sqrt3\right)\left(x-y\sqrt3\right) \\
+	&= \left(x+y\sqrt3\right)\left(2+\sqrt3\right)\left(x-y\sqrt3\right)\left(2-\sqrt3\right) \\
+	&= \left((2x+3y)+(x+2y)\sqrt3\right)\left((2x+3y)-(x+2y)\sqrt3\right).
+\end{align*}
+We now see where $f_+$ came from, and $f_-$ comes from multiplying out $\left(x+y\sqrt3\right)\left(2-\sqrt3\right)$ to produce another solution. Note that this also immediately explains why $f_+$ and $f_-$ are inverse operations with no work: $f_+$ takes $x+y\sqrt3$ and multiplies by $2+\sqrt3$, but then $f_-$ multiplies by $2-\sqrt3$, for a total multiplication by $\left(2+\sqrt3\right)\left(2-\sqrt3\right)=1$.
+
+\subsection{Using Continued Fractions}
 % https://math.stackexchange.com/questions/1383345/how-to-prove-there-are-no-solutions-to-a2-223-b2-3?noredirect=1&lq=1
+
+\subsection{A Harder Example}
+
+\subsection{Problems}
+\begin{prob}[4 points] \label{prob:pell-5-norm}
+	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_0,y_0)\coloneqq(1,0)$ and
+	\[(x_{n+1},y_{n+1})\coloneqq(y_n,x_n+y_n)\]
+	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2+xy-y^2=\pm1$, show that $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$.
+\end{prob}
 
 \end{document}
