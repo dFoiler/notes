@@ -1,0 +1,116 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 29}
+
+We continue with the speed run of first-order logic. The goal for today is to state the Compactness theorem.
+
+\subsection{Theories}
+Now that we have a notion of truth, it will be helpful to keep track of which sentences exactly we want to be true.
+\begin{definition}[theory]
+	Fix an $\mathcal L$-structure $\mathcal M$. Then the \textit{theory} $\mathrm{Th}(\mathcal M)$ of $\mathcal M$ is the set of all sentences $\varphi$ such that $\mathcal M\models\varphi$.
+\end{definition}
+The theory is essentially all that first-order logic can see.
+\begin{definition}[elementary equivalence]
+	Fix $\mathcal L$-structures $\mathcal M$ and $\mathcal N$. Then we say that $\mathcal M$ and $\mathcal N$, written $\mathcal M\equiv\mathcal N$, are \textit{elementarily equivalent} if and only if $\op{Th}(\mathcal M)=\op{Th}(\mathcal N)$.
+\end{definition}
+\begin{example}
+	It happens that $(\QQ,+)\equiv(\RR,+)$ but are not isomorphic because they have different cardinalities.
+\end{example}
+\begin{example}
+	Let $s$ denote the successor function. It happens that $(\ZZ,s)\equiv(\QQ,s)$, but one can show that they are not isomorphic.
+\end{example}
+This notion is different from isomorphism, but it is related.
+\begin{lemma}
+	Fix $\mathcal L$-structures $\mathcal M$ and $\mathcal N$. If $\mathcal M\cong\mathcal N$, then $\mathcal M\equiv\mathcal N$.
+\end{lemma}
+\begin{proof}
+	This is the content of \Cref{prop:isos-have-same-theory} upon unraveling the definitions.
+\end{proof}
+Going in the other direction, we might start with some sentences we want to be true and then look for the corresponding models.
+\begin{definition}[theory]
+	Fix a language $\mathcal L$. Then an \textit{$\mathcal L$-theory} $T$ is a set of $\mathcal L$-sentences. For an $\mathcal L$-structure $\mathcal M$, we say that $\mathcal M$ \textit{models} $T$, written $\mathcal M\models T$, if and only if $\mathcal M\models\varphi$ for all $\varphi\in\mathcal M$. We let $\op{Mod}(T)$ denote the class of all models $\mathcal M$ of $T$, and we call it an \textit{elementary class}.
+\end{definition}
+\begin{example}
+	The class of all groups arises from the language $\{e,\cdot\}$ with some sentences to make a theory. However, the class of torsion groups is not an elementary class.
+\end{example}
+We want might want to understand what sentences follow from a given theory.
+\begin{definition}
+	Fix a language $\mathcal L$ and theory $T$. Then we say that $T$ logically implies a sentence $\varphi$, written $T\models\varphi$, if and only if any $\mathcal L$-structure $\mathcal M$ modelling $T$ has $\mathcal M\models\varphi$.
+\end{definition}
+\begin{remark}
+	G\"odel's completeness theorem shows that $T\models\varphi$ if and only if there is a ``proof'' of $\varphi$ from $T$. We will not use the notion of proof so much, though its proof is similar to the proof of compactness, which we will show.
+\end{remark}
+
+\subsection{Definable Sets}
+We will want the following notion.
+\begin{definition}[definable]
+	Fix an $\mathcal L$-structure $\mathcal M$ and subset $B\subseteq M$. Then a subset $X\subseteq M^n$ is \textit{$B$-definable} if and only if there is a formula $\varphi(v_1,\ldots,v_n,w_1,\ldots,w_k)$ and tuple $\overline b\in B^k$ such that $\overline a\in X$ if and only if $\mathcal M\models\varphi(\overline a,\overline b)$. The tuple $\overline b$ might be called the \textit{parameters}. We may abbreviate $M$-definable to simply \textit{definable}.
+\end{definition}
+\begin{example}
+	Any finite set is definable by using the parameters to list out the elements.
+\end{example}
+\begin{example} \label{ex:n-definable-in-z}
+	Work with $\mathcal M\coloneqq(\ZZ,\le)$. Then $X=\NN$ is $\{0\}$-definable by $\varphi(x,0)$ where $\varphi(x,y)$ is given by $y\le x$. However, $\NN$ is not $\emp$-definable, as shown by the following proposition.
+\end{example}
+\begin{proposition}
+	Fix an $\mathcal L$-structure $\mathcal M$ and subset $A\subseteq M$. Further, suppose $X\subseteq M^n$ is $A$-definable. For any automorphism $\sigma\colon\mathcal M\to\mathcal M$ fixing $A$ pointwise must fix $X$ (not necessarily pointwise).
+\end{proposition}
+\begin{proof}
+	Suppose $\varphi(\overline v,\overline w)$ defines $X$ with the parameters $\overline a\in A^\bullet$. Then $\overline x\in X$ if and only if $\mathcal M\models\varphi(\overline x,\overline a)$, but then $\mathcal M\models\varphi(\sigma(\overline x),\sigma(\overline a))$, so $\mathcal M\models\varphi(\sigma(\overline x),\overline a)$ so $\sigma(\overline x)\in X$. For the converse, use the inverse automorphism $\sigma^{-1}$.
+\end{proof}
+To further explain \Cref{ex:n-definable-in-z}, we see that there are automorphisms of $\ZZ$ (namely, by shifting) which do not fix $\NN$, so $\NN$ cannot be $\emp$-definable.
+\begin{example}
+	Work with $\mathcal M\coloneqq(\{1A,1B,2A,2B\},\le)$ with partial ordering given by the number. The set $X\coloneqq\{1A,1B\}$ is $\emp$-definable by $\varphi(x)$ given by $\exists y((x\ne y)\land(x\le y))$. However, there is an automorphism of our model swapping $1A$ with $1B$ and $2A$ with $2B$, but this automorphism does not fix $X$ pointwise.
+\end{example}
+
+\subsection{The Compactness Theorem}
+To state compactness, we want a few definitions.
+\begin{definition}[satisfiable]
+	Fix a language $\mathcal L$ and theory $T$. Then $T$ is \textit{satisfiable} if and only if it has a model $\mathcal M$.
+\end{definition}
+With a notion of proof, one can show that being satisfiable means that there is no proof of $\perp$, but we will avoid a discussion of proofs in this course.
+\begin{definition}[finitely satisfiable]
+	Fix a language $\mathcal L$ and theory $T$. Then $T$ is \textit{finitely satisfiable} if and only if any finite subset of $T$ is satisfiable.
+\end{definition}
+Of course, being satisfiable implies being finitely satisfiable; the converse will be true but is far from obvious. The following example explains why this is strange.
+\begin{example} \label{ex:non-standard-n}
+	Consider the natural numbers $\mathcal N=(\NN,0,1,+,\times,\le)$ and $\mathcal N_c\coloneqq(\NN,0,1,+,\times,\le,c)$, where $c$ is some constant symbol, and set
+	\[T\coloneqq\op{Th}(\mathcal N)\cup\left\{c\ge\underbrace{1+1+\cdots+1}_n:n\in\NN\right\}.\]
+	Then $T$ is finitely satisfiable by $\mathcal N$ because, for any finite subset of $T$, the sentences $c\ge1+1+\cdots+1$ will have to be bounded in length in our finite subset, so we simply find some $c$ large enough in $\mathcal N$. However, $\mathcal N$ does not model $T$!
+\end{example}
+Anyway, here is our statement.
+\begin{theorem}[compactness] \label{thm:compactness}
+	Fix a language $\mathcal L$ and theory $T$. If $T$ is finitely satisfiable, then $T$ is satisfiable. Furthermore, $T$ has a model $\mathcal M$ with cardinality at most $\left|\mathcal L\right|+\aleph_0$.
+\end{theorem}
+\begin{remark}
+	In particular, the theory $T$ of \Cref{ex:non-standard-n} has a model $\mathcal N'$, which is going to look very strange. To begin, there is a segment
+	\[0<1<2<\cdots.\]
+	But there is now an element $c$ larger than any natural, which produces $c+1,c+2,c+3,\ldots$. But also any nonzero element has a predecessor, so we have elements $c-1,c-2,c-3,\ldots$. Further, any natural number is either odd or even, so there is also either $(c-1)/2$ or $c/2$ sitting between the initial piece of $\NN$ and the $c$ piece with $\ZZ$ added everywhere. In fact, a similar argument holds to produce an element approximately equal to $qc$ for any rational $q\in\QQ$.
+\end{remark}
+\begin{remark}
+	One can of course always make our model larger. For example, suppose we have a theory $T$ with an infinite model. If we want a model with cardinality at least $\RR$, we add constants $\{c_r:r\in\RR\}$ to our language and add in the sentences
+	\[\{c_r\ne c_s:\text{distinct }r,s\in\RR\}.\]
+	This remains finitely satisfiable: these constants merely ask for our model to be larger than any finite set. One can even require the new model to be elementarily equivalent to the previous one.
+\end{remark}
+Here are some applications of compactness.
+\begin{corollary} \label{cor:tors-not-elem}
+	The class of torsion groups is not elementarily definable in the language $\mathcal L=\{e,*\}$ of groups.
+\end{corollary}
+Notably, it is not okay to write something like
+\[\biglor_{n\in\NN}\left(\forall g\,g^n=e\right)\]
+to encode any torsion because this statement is infinitely long.
+\begin{proof}
+	Suppose the class is elementarily definable. Then we have a theory $T$ such that $\op{Mod}(T)$ consists exactly of all torsion groups. Now the trick is to build a model of $T$ which is not actually a torsion group. For this, we expand our language to $\mathcal L=\{e,*,c\}$, and let
+	\[S\coloneqq T\cup\left\{\underbrace{c*c*\cdots*c}_n\ne e:n\ge2\right\}.\]
+	For any finite subset of $S$, we can satisfy $S$ by a torsion group containing an element which is not $n$-torsion for sufficiently large $n$; for example, $\ZZ/n\ZZ$ will do.
+
+	Thus, by \Cref{thm:compactness}, there is a model $\mathcal G$ of $S$, so in particular, $\mathcal G$ has an element $g\in G$ with
+	\[\underbrace{g*g*\cdots*g}_n\ne e\]
+	for all $n\ge 2$ (namely, $g$ is the interpretation of the constant symbol $c$), so it follows that $G$ is not torsion. However, $\mathcal G$ is also a model of $T$ and thus is supposed to be torsion, so we have a contradiction! This completes the proof.
+\end{proof}
+
+\end{document}
