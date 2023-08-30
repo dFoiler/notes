@@ -1,0 +1,65 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 30}
+
+I continue to not know why I am here.
+
+\subsection{Non-Convergence of Fourier Series}
+For sufficiently strong continuity, the Fourier series will converge pointwise to the function, say by \Cref{thm:dini}. For general continuous functions, we are not so lucky.
+\begin{theorem} \label{thm:non-conv-for-cont}
+	There exists a continuous function $f$ on $\RR/\ZZ$ whose Fourier series diverges at $0$.
+\end{theorem}
+To show the above theorem, we want the following lemma.
+\begin{lemma}[uniform boundedness principle] \label{lem:uni-boundedness}
+	Let $X$ and $Y$ be Banach spaces, and let $\{T_\alpha\}_{\alpha\in\lambda}$ be a family of bounded linear operators $T_\alpha\colon X\to Y$. If
+	\[\sup_{\alpha\in\lambda}\norm{T_\alpha}=+\infty,\]
+	then there is a point $x\in X$ such that $\sup_{\alpha\in\lambda}\norm{T_\alpha x}=+\infty$.
+\end{lemma}
+\begin{proof}
+	This is a standard result in functional analysis.
+\end{proof}
+We are now ready to prove \Cref{thm:non-conv-for-cont}.
+\begin{proof}[Proof of \Cref{thm:non-conv-for-cont}]
+	We work with $X\coloneqq C(\RR/\ZZ)$ and $Y\coloneqq\CC$; we take $\norm\cdot_X$ to be $\norm\cdot_\infty$. Now, take the partial sum operators $T_N\colon f\mapsto S_Nf(0)$, but the operator norms can be become arbitrarily large, so it follows that there is a continuous function $f\in C(\RR/\ZZ)$ with $\sup_{N\in\NN}\norm{S_Nf}=+\infty$, meaning that the Fourier series diverges. Explicitly, it turns out that
+	\[\norm{T_N}=\norm{D_N},\]
+	which is left as an exercise; roughly speaking, one chooses a continuous function $f$ with $\norm f_\infty=1$ and tries to make $f(x)=1$ whenever $D_N(x)\ge0$ and $f(x)=-1$ whenever $D_N(x)<0$. Rigorizing this is somewhat annoying, so we won't bother.
+
+	Continuing, one can actually compute
+	\[L_N\stackrel?=\frac4{\pi^2}\log N+O(1),\]
+	so sending $N\to\infty$ will complete the proof by \Cref{lem:uni-boundedness} as discussed above. To show the above equality, we integrate. Attempting to break up our integral into periods,
+	\begin{align*}
+		L_N &= 2\int_0^{1/2}\left|\frac{\sin(2N+1)\pi t}{\sin\pi t}\right|\,dt \\
+		&= \frac2\pi\int_0^{1/2}\left|\frac{\sin(2N+1)\pi t}{\pi t}\right|\,dt+O(1) \\
+		&= \frac2\pi\int_0^{N+1/2}\left|\frac{\sin\pi t}t\right|\,dt+O(1) \\
+		&= \frac2\pi\sum_{k=0}^{N-1}\int_k^{k+1}\left|\frac{\sin\pi t}t\right|\,dt+O(1),
+	\end{align*}
+	where we have been pretty fast and loose with our $O(1)$ term. The point now is that the internal integral is approximately a $1/k$, so we are going to pick up a $\log N$ from some harmonic series argument; this intuition is good enough to produce divergence. TO be more precise, we note that we can adjust to
+	\[L_N=\frac2\pi\sum_{k=0}^{N-1}\int_k^{k+1}\frac{\left|\sin\pi t\right|}{k+1}\,dt+O(1),\]
+	where this movement is okay because the difference between $\frac1t$ and $\frac1{k+1}$ is on the order of $\frac1{k^2}$, which sums to $O(1)$. We now compute
+	\[L_N=\frac2\pi\sum_{k=0}^{N-1}\frac1{k+1}\int_k^{k+1}\left|\sin\pi t\right|\,dt+O(1)=\frac4{\pi^2}\log N+O(1),\]
+	which is what we wanted.
+\end{proof}
+
+\subsection{Convergence in Norm}
+To set us up, fix $p\in[1,\infty)$. For now, there are two questions of interest.
+\begin{enumerate}
+	\item Convergence in norm: given $f\in L^p(\RR/\ZZ)$, do we have
+	\[\lim_{N\to\infty}\norm{S_Nf-f}_p=0?\]
+	\item Convergence almost everywhere: given $f\in L^p(\RR/\ZZ)$, do we have $S_Nf\to f$ almost everywhere?
+\end{enumerate}
+For the first question, we get the following lemma, which converts convergence problems to boundedness problems.
+\begin{lemma} \label{lem:p-conv-is-p-bounded}
+	Fix $p\in[1,\infty)$. Then we have $S_Nf\to f$ in $p$-norm for all $f$ if and only if there is some constant $C_p$ such that $\norm{S_Nf}_p\le C_p\norm f_p$ for all $f$.
+\end{lemma}
+\begin{proof}
+	Necessity is from \Cref{lem:uni-boundedness} because otherwise we can get some $f$ with arbitrarily large values of $\norm{S_Nf-f}_p$ (say). Sufficiency arises because trigonometric functions are then dense in $L^p(\RR/\ZZ)$, so we get the result essentially by continuity. (We will show this more carefully later.) To be explicit, one can use the inequality $\norm{S_Nf}_p\le C_p\norm f_p$ in order to show that all $\varepsilon>0$ has some trigonometric polynomial $g$ such that $\norm{f-g}_p<\varepsilon$. Then for $N$ large enough, we know $S_Ng=g$ on the nose, so
+	\[\norm{S_Nf-f}_p\le\norm{S_N(f-g)}_p+\underbrace{\norm{S_Ng-g}_p}_0+\norm{g-f}_p\le (C_p+1)\norm{f-g}_p=(C_p+1)\varepsilon,\]
+	so sending $\varepsilon\to0^+$ (or replace $\varepsilon$ with $\varepsilon/(C_p+1)$, which notably does not depend on $N$) completes the proof.
+\end{proof}
+For \Cref{lem:p-conv-is-p-bounded}, we will want to tell when $\norm{S_Nf}_p\le C_p\norm f_p$. It turns out that this is okay for $p>1$, but it will be some time before we get there. One can check that the condition does fail for $p=1$; as a hint, try something like a Dirac function.
+
+\end{document}
