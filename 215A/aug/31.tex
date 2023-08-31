@@ -1,0 +1,112 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 31}
+
+We now shift gears and talk about our first algebraic invariant: the fundamental group.
+
+\subsection{The Fundamental Group}
+Let's start with an example.
+\begin{example}
+	Fix a loop $\gamma\colon S^1\to(\CC\setminus\{0\})$ which is continuously differentiable. Then complex analysis tells us that
+	\[\frac1{2\pi i}\int_\gamma\frac1z\,dz\]
+	counts the number of times that $\gamma$ ``winds'' around the integer. We might call this the ``linking number'' of $\gamma$. Notably, one can check that continuously varying $\gamma$ does not adjust the linking number, so this linking number is homotopy invariant.
+\end{example}
+The fundamental group is a generalization of this notion.
+\begin{definition}[fundamental group]
+	Let $X$ be a topological space, and fix a basepoint $x_0\in X$. Then the \textit{fundamental group} $\pi_1(X,x_0)$ is the set of homotopy equivalence classes
+	\[\pi_1(X,x_0)\coloneqq\{[f]\text{ such that }f\colon I\to X\text{ has }f(0)=f(1)=x_0\}.\]
+	We will give $\pi_1(X,x_0)$ a group structure below.
+\end{definition}
+\begin{remark}
+	There is also a $\pi_0(X)$, which consists of homotopy classes of points $[x]$ for $x\in X$, where $[x]$ denotes the path-connected component of $X$. If we let $\Omega(X,x_0)$ denote the topological space of loops $f\colon I\to X$ such that $f(0)=f(1)=x_0$, then we find $\pi_1(X,x_0)=\pi_0(\Omega(X,x_0))$.
+\end{remark}
+\begin{remark}
+	If we don't want to care about basepoints, one can look at $C\left(S^1,X\right)$, which is the set of maps $S^1\to X$. This can be given a topology via the compact-open topology. Approximately speaking, these will correspond to conjugacy classes in $\pi_1(X,x_0)$ provided that $X$ is path-connected. For example, the homotopy class of a constant loop $S^1\to X$ consists of the contractible loops in $X$; note there is something to check here in that one wants to know that a contractible loop (not relative to the basepoints) is in fact contractible relative to the basepoint.
+\end{remark}
+\begin{example}
+	Let $X=\{x_0\}$ be a point. Then $\pi_1(X,x_0)=1$ because there is only path $I\to X$.
+\end{example}
+\begin{example}
+	Let $X$ be a convex subset of $\RR^n$ for some $n>0$. Then for any $x_0\in X$ has $\pi_1(X,x_0)=1$. Indeed, use the convex hypothesis to shrink any path down to the constant path.
+\end{example}
+We can give $\pi_1(X,x_0)$ a product via composition.
+\begin{definition}[composition]
+	Let $X$ be a topological space, and fix a basepoint $x_0\in X$. Given paths $f,g\colon I\to X$ such that $f(1)=g(0)$, we define the path $(f\cdot g)\colon I\to X$ via
+	\[(f\cdot g)(t)\coloneqq\begin{cases}
+		f(2t) & \text{if }0\le t\le 1/2, \\
+		g(2t-1) & \text{if }1/2\le t\le 1.
+	\end{cases}\]
+	Note that $f\cdot g$ is well-defined at $t=1/2$ because $f(1)=g(0)$.
+\end{definition}
+The point of the above definition is to ``squish'' a path to do both $f$ and $g$ in the interval $I$, but at twice the speed. One has the following checks.
+\begin{itemize}
+	\item The class $[f\cdot g]$ does not depend on the choice of representatives $f$ and $g$. Essentially, if $f_1\sim f_2$ and $g_1\sim g_2$, then one can use these two homotopies to glue together to make a new homotopy $(f_1\cdot g_1)\sim(f_2\sim g_2)$.
+	\item We have $[(f\cdot g)\cdot h]=[f\cdot(g\cdot h)]$, so composition associates. The point is that these are basically reparameterizations of each other.
+	\item There is an identity path given by $e_{x_0}(t)\coloneqq x_0$. The identity check is done again by some idea of reparameterization.
+	\item For a given path $f\colon I\to X$, we can define $\overline f\colon I\to X$ by $\overline f(t)\coloneqq f(1-t)$ and then check that
+	\[f\cdot\overline f\sim e_{f(0)},\]
+	so $\left[\overline f\right]$ provides the inverse path for $[f]$ in $\pi_1(X,x_0)$. The point is that $f\cdot\overline f$ is
+	\[\left(f\cdot\overline f\right)(t)=\begin{cases}
+		f(2t) & \text{if }0\le t\le1/2, \\
+		f(2-2t) & \text{if }0\le t\le 1/2.
+	\end{cases}\]
+	One can then provide a homotopy by
+	\[h_s(t)\coloneqq\begin{cases}
+		f(2t) & \text{if }0\le t\le s/2, \\
+		f(s) & \text{if }s/2\le t\le 1-s/2, \\
+		f(2-2t) & \text{if }1-s/2\le t\le 1,
+	\end{cases}\]
+	so $h_0=e_{f(0)}$ and $h_1=f\cdot\overline f$.
+\end{itemize}
+For these checks, it is helpful to have lemmas establishing continuity of piecewise functions and establishing that reparameterization does not affect homotopy class.
+\begin{remark}
+	Staring hard at our definition of composition, one sees that our reparameterization business is really just choosing various piecewise affine maps $I\to I$ with slopes in $2^\ZZ$ and breaks at the dyadic rationals $2^\ZZ\ZZ\subseteq\QQ$. These maps form a group called the Thompson group.
+\end{remark}
+\begin{remark}[fundamental groupoid] \label{rem:fund-groupoid} \nirindex{fundamental groupoid}
+	Fix a topological space $X$, and define a category where the objects are points $x\in X$, and the morphisms $x\to y$ are paths (up to homotopy fixing endpoints). The above checks now show that this is in fact a category, where each morphism has an inverse. This category is called the \textit{fundamental groupoid}. Modding out by isomorphism, our objects are now path components in $X$, and choosing a particular component produces the fundamental group in its endomorphisms.
+\end{remark}
+\begin{remark}
+	Verifying that $\pi_1(X,x_0)$ only required reparameterization. So as in \Cref{rem:fund-groupoid}, we could also look at the category where paths are only considered up to reparameterization, and the above checks still go through. This is related to the notion of ``thin homotopy.''
+\end{remark}
+\begin{lemma}
+	Fix a topological space $X$. Further, fix a path $p\colon I\to X$. Then $f\mapsto(\overline p\cdot f\cdot p)$ provides an isomorphism $\pi_1(X,p(1))\to\pi_1(X,p(0))$.
+\end{lemma}
+\begin{proof}
+	This is well-defined because $f_1\sim f_2$ implies $\overline p\cdot f_1\sim\overline p\cdot f_2$ implies $\overline p\cdot f_1\cdot p\sim\overline p\cdot f_2\cdot p$. This is a group homomorphism because
+	\[\overline p\cdot f\cdot g\cdot p\sim\overline p\cdot f\cdot p\cdot\overline p\cdot g\cdot p.\]
+	Lastly, this is an isomorphism because $\overline p$ provides the inverse map.
+\end{proof}
+\begin{remark}
+	The above result roughly says that we can indeed look at the fundamental groupoid only in terms of the path-connected components.
+\end{remark}
+Thus, we see that $\pi_1(X,x_0)$ is well-defined up to base-point provided that $X$ is path-connected. However, the isomorphism between base-points is only defined up to path between those basepoints! Roughly speaking, the problem is that elements of $\pi_1(X,x_0)$ should really only be thought of up to inner automorphism because we can pre- and post-compose by some loop at $x_0$.
+\begin{lemma}
+	If $X$ is homeomorphic to $Y$ by $\varphi\colon X\to Y$, then $\pi_1(X,x_0)\cong\pi_1(Y,f(x_0))$ for any $x_0\in X$.
+\end{lemma}
+\begin{proof}
+	Use $\varphi$.
+\end{proof}
+
+\subsection{The Fundamental Group of \texorpdfstring{$S^1$}{S1}}
+Here is our result.
+\begin{theorem}
+	Fix any $x\in S^1$. Then $\pi_1\left(S^1,x\right)\cong\ZZ$. In fact, there is an isomorphism $\Phi\colon\ZZ\to\pi_1\left(S^1,x\right)$ given by
+	\[n\mapsto\left[t\mapsto\left(\cos2\pi nt,\sin2\pi nt\right)\right].\]
+\end{theorem}
+\begin{proof}[Sketch without covering spaces]
+	We show injectivity and surjectivity independently.
+	\begin{itemize}
+		\item Think of $S^1$ as embedded in $\CC$ as $\left\{z:\left|z\right|=1\right\}$ and take a smooth path $f\colon I\to S^1$, lift it to a map $\widetilde f\colon I\to\RR$ via
+		\[\widetilde f(t)\coloneqq\int_0^td\theta,\]
+		where $d\theta$ is some differential form $S^1$ (say, $x\,dy-y\,dx$). Then $\widetilde f(1)$ is intuitively contained in $2\pi\ZZ$ and is homotopy invariant. Now, $f$ is not smooth, then we can use some small homotopy to make $f$ smooth and then use the above argument. This provides an inverse map to $\Phi$ and thus shows that $\Phi$ is injective.
+		\item For surjectivity, one can use uniform continuity of any path $f\colon I\to S^1$ and the compactness of $S^1$ in order to divide up $I$ into intervals on which $f$ can be written as a composition of well-behaved paths, which eventually allows us to force $f$ to make piecewise linear. Once $f$ is piecewise linear, we go interval-by-interval and fix $f$ to be constant speed. Eventually $f$ becomes one of the $\Phi(n)$ for some $n$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+For the covering space approach, the point is that we understand the fundamental group of $\RR$ well, and we have a fairly well-behaved ``covering map'' $p\colon\RR\to S^1$ given by $p(\theta)\coloneqq(\cos2\pi\theta,\sin2\pi\theta)$. The main claim, then, is that any path $\omega\colon I\to S^1$ has a unique lift $\widetilde\omega\colon I\to\RR$ such that $\widetilde\omega(0)=\omega(0)$ and $p\circ\widetilde\omega=\omega$. The point is that once we lift, we can use a homotopy up in $\RR$ (fixing the endpoints of $\widetilde\omega$), which will then go back down to a homotopy on $S^1$ if we are careful. Anyway, this lifting process can essentially be done as described in the surjectivity check above.
+
+\end{document}
