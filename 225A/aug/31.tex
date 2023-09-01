@@ -1,0 +1,95 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 31}
+
+Professor Scanlon is back. Let's prove the Compactness theorem. We are going to prove $2.5$ times.
+
+\subsection{Proof of Compactness}
+Recall the statement.
+\compact*
+\begin{remark}
+	This result is special to first-order logic: in some sense, \Cref{thm:compactness} combined with a corollary characterizes first-order logic among various logics. Roughly speaking, one wants to formalize what a logic is with its various structures and sentences should do.
+\end{remark}
+\begin{proof}[Proof with completeness]
+	We can prove this result fairly quickly given the Completeness theorem. Recall that the Completeness theorem says that any theory fails to be satisfiable if and only if there is a proof of contradiction $\perp$; one writes that a theory $T$ proves a sentence $\varphi$ by $T\vdash\varphi$. We have not discussed how formal proofs work, and we won't discuss it further because this is not a proofs class. Approximately speaking, a formal proof is a list of steps one can use the sentence sin $T$ to produce $\varphi$ syntactically.
+
+	Now, suppose that $T$ fails to be satisfiable. Then there is a proof of $\perp$. But then one can look at the proof, which is necessarily finite in length, and then we pick up any sentence $\varphi$ occurring in the proof of $\perp$. But then we have a proof of $\perp$ using only finitely many sentences in $T$, so $T$ fails to be finitely satisfiable! This completes the proof.
+\end{proof}
+Anyway, let's present an actual proof.
+\begin{definition}[witness]
+	Fix a theory $T$ of a language $\mathcal L$. Then $T$ has \textit{witnesses} (or \textit{Henkin constants}) if and only if each formula $\varphi(x)$ in one free variable $x$ has a constant symbol $c$ such that $\exists x\varphi(x)\to\varphi(c)$ lives in $T$.
+\end{definition}
+\begin{remark}
+	If $T$ has witnesses, then $T'\supseteq T$ also has witnesses for any theory $T'$ extending $T$.
+\end{remark}
+Let's quickly sketch our proof.
+\begin{enumerate}
+	\item We will show that if $T$ is finitely satisfiable, then there is an expanded language $\mathcal L'\supseteq\mathcal L$ and expanded finitely satisfiable $\mathcal L'$-theory $T'\supseteq T$ of $\mathcal L'$ such that $\left|\mathcal L'\right|\le\left|\mathcal L\right|+\aleph_0$, and $T'$ has witnesses (as does any extended theory $T''$ of $T'$).
+
+	\item Next, suppose $T$ is a maximally finitely satisfiable theory (i.e., $T$ is finitely satisfiable, and any proper extension $T'\supseteq T$ fails to be finitely satisfiable\footnote{Such a thing exists by some sort of Zorn's lemma argument: note that there is a theory containing $T$ which fails to be finitely satisfiable: take the set of all sentences!}). Then we will show $T$ is complete (i.e., each sentence $\varphi$ has either $\varphi\in T$ or $\lnot\varphi\in T$).
+
+	\item From here, we want to extend maintaining being complete: if $T$ is finitely satisfiable, then there is an extended language $\mathcal L'\supseteq\mathcal L$ of size $\left|\mathcal L'\right|=\left|\mathcal L\right|+\aleph_0$ and extended theory $T'$ of $T$ which is complete, finitely satisfiable, and has witnesses.
+
+	We can prove this using the previous two steps. Indeed, the first step provides an extended language $\mathcal L'$ (of cardinality at most $\left|\mathcal L\right|+\aleph_0$) and extended theory $T'$ which is finitely satisfiable and has witnesses. Then we use Zorn's lemma to become maximally finitely satisfiable. Let $\mathcal P$ denote the set of finitely satisfiable $\mathcal L'$-theories $T''$ extending $T'$ which is finitely satisfiable. Containment shows that $\mathcal P$ is a partial order, and it's nonempty because $T'\in\mathcal P$. Next up, we note that any nonempty chain $\{T_\alpha\}_{\alpha\in\lambda}$ is upper-bounded by
+	\[\bigcup_{\alpha\in\lambda}T_\alpha,\]
+	which we can see continues to be finitely satisfiable (any finite set belongs to some fix $T_\beta$ for $\beta$ perhaps large) and thus lives in $\mathcal P$ and succeeds to upper-bound our chain. Thus, Zorn's lemma provides a maximally finitely satisfiable theory $T''$ containing $T'$, which will be complete by the previous step. Because $T''$ contains $T'$, we continue to have witnesses.
+
+	\item We are now ready to do our construction. At this point, we may assume that our theory $T$ is finitely satisfiable, complete, and has witnesses. Then we claim that there is a model $\mathcal M$ such that $\left|M\right|\le\left|\mathcal L\right|$.
+	
+	In fact, the model can be described somewhat explicitly. Take $M\coloneqq\mathcal C/{\sim}$ where $\mathcal C$ is our set of constants, and our equivalence relation $\sim$ is given by $c\sim d$ if and only if $(c=d)\in T$. Notably, constants $c\in\mathcal C$ are interpreted as $c^\mathcal M\coloneqq[c]$. To interpret functions $f$, we have $f^\mathcal M([a_1],\ldots[a_n])=[d]$ if and only if $(f(a_1,\ldots,a_n)=d)\in T$. Lastly, to interpret relations $R$, we have $R^\mathcal M([a_1],\ldots,[a_n])$ if and only if $(R(a_1,\ldots,a_n))\in T$.
+\end{enumerate}
+Let's start implementing the details.
+\begin{remark}
+	In logic, the answer to a question is often the question. For example, in step 4, we see that $T$ has a model because $T$ says that it has a model.
+\end{remark}
+Here is our first step.
+\begin{lemma}
+	Fix a finitely satisfiable theory $T$ of a language $\mathcal L$. Then there is an expanded language $\mathcal L'\supseteq\mathcal L$ and expanded finitely satisfiable $\mathcal L'$-theory $T'\supseteq T$ of $\mathcal L'$ such that $\left|\mathcal L'\right|\le\left|\mathcal L\right|+\aleph_0$, and $T'$ has witnesses.
+\end{lemma}
+\begin{proof}
+	We would like to just set $T'$ to be $T$ together with new constants providing witnesses for all formulae. But these new constants will make new formulae, so we need to do some kind of induction to go upwards.
+
+	With this in mind, we will build an increasing sequence of languages
+	\[\mathcal L_0\coloneqq\mathcal L\subseteq\mathcal L_1\subseteq\mathcal L_2\subseteq\cdots\]
+	and theories
+	\[T_0\coloneqq T\subseteq T_1\subseteq T_2\subseteq\cdots\]
+	such that $T_n$ is always a finitely satisfiable $\mathcal L_n$-theory, and each $\mathcal L_n$-formula $\varphi$ with one free variable has a constant $c\in\mathcal C_{\mathcal L_n}$ such that $\exists x\varphi(x)\to\varphi(c)$ lives in $T_n$. We will then set $\mathcal L'$ to be the union of the $\mathcal L_\bullet$ and $T'$ to be the union of the $T_\bullet$, and this will complete the proof.
+
+	We have already built the $n=0$ stage, as above. Then to build $\mathcal L_{n+1}$ from $\mathcal L_n$, add in new constant symbols $c_{\varphi(x)}$ for each $\mathcal L_n$-formula $\varphi(x)$ with one free variable; all the functions and relations remain the same. Note $\mathcal L_{n+1}$ is now the size of the formulae with one free variable in $\mathcal L_n$, so $\left|\mathcal L_{n+1}\right|=\left|\mathcal L_n\right|+\aleph_0$.
+
+	As for our theory, let $T_{n+1}$ be $T_n$ plus the sentences $\exists x\varphi(x)\to\varphi\left(c_{\varphi(x)}\right)$ for each $\mathcal L_n$-formula $\varphi(x)$ with one free variable. We are now ready to set
+	\[\mathcal L'\coloneqq\bigcup_{n\in\NN}\mathcal L_n\qquad\text{and}\qquad T'\coloneqq\bigcup_{n\in\NN}T_n.\]
+	We see that $\mathcal L'$ then has the right size, and $T'$ has witnesses: for any $\mathcal L'$-formula $\varphi(x)$ with one free variable, note that $\varphi(x)$ has only finitely many symbols, so we can find some fixed level $\mathcal L_n$ containing all the symbols used in $\varphi(x)$. But then $\varphi(x)$ has a witness from $T_{n+1}\subseteq T'$, as needed.
+
+	It remains to show that $T'$ is finitely satisfiable. It suffices to show that $T_n$ is finitely satisfiable for any $n\in\NN$ because any finite set will be contained in some $T_n$. We show this by induction. For $n=0$, there is nothing to say. Now suppose $T_n$ is finitely satisfiable, and we show that $T_{n+1}$ is finitely satisfiable.
+	
+	Fix some finite subset $\Delta\subseteq T_{n+1}$ which we would like to build a model for. Now, $\Delta$ will be built by some sentences in $T_n$ plus some new sentences from $T_{n+1}$. Looking hard at $T_{n+1}\setminus T_n$, we see that we can enumerate $\Delta\setminus T_n$ as some sentences
+	\[\exists x\psi_k(x)\to \psi_k(c_k)\]
+	where $\{\psi_k\}_{k=1}^m$ is some $\mathcal L_n$-formulae in one free variable.
+	
+	We now begin building our model. Note $\Delta\cap T_n$ is a finite subset of $T_n$, so it is satisfiable by some model $\mathcal M$. Now, for each $k$, if there is some $a\in M$ such that $\mathcal M\models\varphi_k(a)$, set $a\coloneqq a_k$; otherwise, set $a_k\coloneqq m$ for any chosen $m\in M$. (Note structures are nonempty.) We now let $\mathcal M'$ be the $\mathcal L_{n+1}$-structure with universe $M$, interpretations of functions and relations the same as in $\mathcal M$, and all old constant symbols are also all still interpreted the same way. Then for each new constant symbol, we interpret $c_k^\mathcal M\coloneqq a_k$, and each other new constant symbol can also go to $m$. Now $\mathcal M'$ is a model for $\Delta$ because it models everything in $\Delta\cap T_n$ for free, and it has satisfied $\Delta\setminus T_{n+1}$ by construction, so we are done.
+\end{proof}
+To show the second step, we begin with the following lemma.
+\begin{lemma} \label{lem:fs-can-extend-complete}
+	Fix a finitely satisfiable theory $T$ of a language $\mathcal L$. For any $\mathcal L$-sentence $\varphi$, then either $T\cup\{\varphi\}$ or $T\cup\{\lnot\varphi\}$ is finitely satisfiable.
+\end{lemma}
+\begin{proof}
+	Suppose that both $T\cup\{\varphi\}$ and $T\cup\{\lnot\varphi\}$ both fail to be finitely satisfiable. We will show that $T$ fails to be finitely satisfiable.
+
+	Well, we are given finite subsets $\Delta_+\subseteq T\cup\{\varphi\}$ and $\Delta_-\subseteq T\cup\{\lnot\varphi\}$ which are not satisfiable. If $\Delta_+$ fails to contain $\varphi$, then $\Delta_+$ is a finite subset of $T$ which is not satisfiable, so $T$ fails to be satisfiable. Thus, we may assume that $\varphi\in\Delta_+$. Analogously, we may assume that $\lnot\varphi\in\Delta_-$. Now, $(\Delta_+\cup\Delta_-)\setminus\{\varphi\}$ and $(\Delta_+\cup\Delta_-)\setminus\{\lnot\varphi\}$ both fail to be satisfiable.
+
+	But now suppose for the sake of contradiction that $T$ is finitely satisfiable. Then $(\Delta_+\cup\Delta_-)\setminus\{\varphi,\lnot\varphi\}$ has a model $\mathcal M$. But $\mathcal M\models\varphi$ or $\mathcal M\models\lnot\varphi$, so we see that $\mathcal M$ will model at least one of $(\Delta_+\cup\Delta_-)\setminus\{\varphi\}$ or $(\Delta_+\cup\Delta_-)\setminus\{\lnot\varphi\}$, which is the desired contradiction.
+\end{proof}
+The second step now follows from a Zorn's lemma argument.
+\begin{lemma}
+	Fix a maximally finitely satisfiable theory $T$ of a language $\mathcal L$. Then $T$ is complete.
+\end{lemma}
+\begin{proof}
+	Let $\varphi$ be any $\mathcal L$-sentence. Then either $T\cup\{\varphi\}$ or $T\cup\{\lnot\varphi\}$ is finitely satisfiable by \Cref{lem:fs-can-extend-complete}, so by maximality, we may conclude that either $T=T\cup\{\varphi\}$ or $T=T\cup\{\lnot\varphi\}$, so either $\varphi\in T$ or $\lnot\varphi\in T$, which is what we wanted.
+\end{proof}
+
+\end{document}
