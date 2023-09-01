@@ -1,0 +1,52 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 1}
+
+I continue to not why I am here.
+
+\subsection{Remarks on Convergence in Norm}
+We are interested in checking \Cref{lem:p-conv-is-p-bounded} for various $p$. For $p=2$, we have that $L^2(\RR/\ZZ)$ becomes a Hilbert space, and the point is that Parseval produces
+\[\norm f_{L^2(\RR/\ZZ}^2=\sum_{k\in\ZZ}\left|\hat f(k)\right|^2,\]
+which is enough for our check.
+\begin{remark}
+	Checking convergence $S_Nf\to f$ almost everywhere is much harder than convergence in norm. However, the answer is known: for $p=1$, the answer is no due to Kolmogov, but we have almost everywhere convergence for $p>1$. The result for $p=2$ was shown by Carleson and then generalized to $p>1$ by Hunt.
+\end{remark}
+
+\subsection{Ces\`aro Summation}
+In order to help our convergence, we will want a different way to sum.
+\begin{definition}[Ces\`aro sum]
+	Fix a function $f$. Then the \textit{$N$th Ces\`aro sum} is the average
+	\[\sigma_Nf(x)\coloneqq\frac1{N+1}\sum_{k=0}^NS_kf(x).\]
+\end{definition}
+This $\sigma_N$ is going to behave much better than $S_N$. Indeed, we see
+\[\sigma_Nf(x) = \int_0^1f(t)\cdot\underbrace{\frac1{N+1}\sum_{k=0}^ND_k(x-t)}_{F_N(x-t)\coloneqq}\,dt.\]
+Here, $F_N$ is the ``Fej\'er kernel,'' which we can compute as
+\begin{align*}
+	F_N(t) &= \frac1{N+1}\sum_{k=0}^ND_k(t) \\
+	&= \frac1{N+1}\cdot\frac1{\sin\pi t}\sum_{k=0}^N\sin(2k+1)\pi t \\
+	&= \frac1{N+1}\cdot\frac1{\sin\pi t}\sum_{k=0}^N\frac{e^{i(2k+1)\pi t}-e^{-i(2k+1)\pi t}}{2i} \\
+	&= \frac1{N+1}\left(\frac{\sin(N+1)\pi t}{\sin\pi t}\right)^2,
+\end{align*}
+where we have summed the geometric series and simplified in the last step. Importantly, $F_N(t)$ is nonnegative. Because $\int_0^1D_K(t)\,dt=1$ always (write out the $\sin$s as exponentials and integrate), we see that $\int_0^1F_N(t)\,dt=1$ as well, so $F_N$ can be thought of as a redistribution of mass. A direct computation is able to show that
+\begin{equation}
+	\lim_{N\to\infty}\int_{\delta<\left|t\right|<1/2}F_N(t)\stackrel?=0 \label{eq:fejer-kernel-small}
+\end{equation}
+for any fixed $\delta>0$. Indeed, we see $F_N(t)\le\frac1{N+1}(\sin\pi t)^{-2}$, but $(\sin\pi t)^{-2}$ is bounded on $[\delta,1/2]$, so we can upper-bound $F_N(t)\le M/(N+1)$ for some $M$, which achieves the result upon sending $N\to\infty$.
+
+The point of introducing $\sigma_N$ is the following result.
+\begin{theorem}
+	Fix a function $f$. Then
+	\[\lim_{N\to\infty}\norm{\sigma_Nf-f}_p=0\]
+	for $f\in L^p(\RR/\ZZ)$ where $1\le p<\infty$ or for $f\in C(\RR/\ZZ)$ where $p=\infty$.
+\end{theorem}
+\begin{proof}
+	We omit the second case because the proof is similar. As for the first case, we write
+	\[\norm{\sigma_Nf-f}_p=\norm{x\mapsto\int_{-1/2}^{1/2}F_N(t)(f(x-t)-f(x))\,dt}_p.\]
+	Approximately speaking, the integral is some kind of continuous weighted average of functions. For $t$ small, the function $f(x-t)-f(x)$ is small, and for $t$ large, one can use \eqref{eq:fejer-kernel-small} to do our bounding.
+\end{proof}
+
+\end{document}
