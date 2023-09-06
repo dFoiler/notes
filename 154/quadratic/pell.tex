@@ -67,7 +67,7 @@ Shortly we are going to begin discussing real quadratic fields and their connect
 		\qedhere
 	\end{enumerate}
 \end{proof}
-\begin{exe}
+\begin{exe} \label{exe:norm-1-pell-2}
 	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_n,y_n)\coloneqq(1,0)$ and
 	\[(x_{n+1},y_{n+1})\coloneqq(3x_n+4y_n,2x_n+3y_n)\]
 	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2-2y^2=1$, show that $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$. Describe the solutions to $x^2-2y^2=-1$ similarly.
@@ -124,7 +124,7 @@ One can now compute solutions to $x^2-5y^2=\pm1$ from \Cref{ex:pell-5} by checki
 \end{solution}
 
 \subsection{Pell Equations with Sophistication} \label{subsec:intro-real-quad-for-pell}
-Let's explain what's going on in the previous two examples. \Cref{ex:pell-3} is quite mysterious because we have removed the context from which
+Let's explain what's going on in the previous examples. \Cref{ex:pell-3} is quite mysterious because we have removed the context from which
 \[f_{\pm}(x,y)=(2x\pm3y,\pm x+2y)\]
 came from. To explain this, the key is to factor our equation $x^2-3y^2=1$ into
 \[\left(x-y\sqrt3\right)\left(x+y\sqrt3\right)=1.\]
@@ -136,16 +136,313 @@ Even though we are now working with $\sqrt3$s, this is good because now the prob
 \end{align*}
 We now see where $f_+$ came from, and $f_-$ comes from multiplying out $\left(x+y\sqrt3\right)\left(2-\sqrt3\right)$ to produce another solution. Note that this also immediately explains why $f_+$ and $f_-$ are inverse operations with no work: $f_+$ takes $x+y\sqrt3$ and multiplies by $2+\sqrt3$, but then $f_-$ multiplies by $2-\sqrt3$, for a total multiplication by $\left(2+\sqrt3\right)\left(2-\sqrt3\right)=1$.
 
+One can now translate \Cref{ex:pell-2} into saying that all solutions $(x,y)$ in the nonnegative integers to $x^2-3y^2=1$ take the form $x+y\sqrt d=\left(2+\sqrt3\right)^n$ for some nonnegative integer $n$. With this in mind, the argument of \Cref{ex:pell-3} directly generalizes into the following result.
+\begin{proposition} \label{prop:solve-pell-norm-one}
+	Let $d$ be a non-square positive integer, and suppose that $x^2-dy^2=1$ has a positive integer solution. Let $(x_1,y_1)$ be the minimal positive integer solution in $y$. Then a pair of integers $(x,y)$ satisfies $x^2-dy^2=1$ if and only if there is a sign $\varepsilon\in\{\pm1\}$ and an integer $n\in\ZZ$ such that
+	\[x+y\sqrt d=\varepsilon\left(x_1+y_1\sqrt d\right)^n.\]
+\end{proposition}
+\begin{proof}
+	Before doing anything, we check that all the given pairs $(x,y)$ are in fact solutions. Well, an induction on $n$ shows that
+	\[x-y\sqrt d=\varepsilon\left(x_1-y_1\sqrt d\right)^n,\]
+	so
+	\[x^2-dy^2=\left(x-y\sqrt d\right)\left(x+y\sqrt d\right)=\varepsilon^2\left(x_1-y_1\sqrt d\right)^n\left(x_1+y_1\sqrt d\right)^n=\left(x_1^2-dy_1^2\right)^n=1.\]
+	It remains to show that any $(x,y)$ satisfying $x^2-dy^2=1$ have the desired form.
+
+	We quickly reduce to the case where $x,y\ge0$. By adjusting $\varepsilon$, we may assume that $x\ge0$; it remains to show that $x+y\sqrt d=\left(x_1+y_1\sqrt d\right)^n$ for some $n\in\ZZ$. Further, if $x^2-dy^2=1$, then $\left(x-y\sqrt d\right)\left(x+y\sqrt d\right)=1$, so $\left(x+y\sqrt d\right)^{-1}=x-y\sqrt d$. Thus, $x+y\sqrt d=\left(x_1+y_1\sqrt d\right)^n$ if and only if $x-y\sqrt d=\left(x_1+y_1\sqrt d\right)^{-n}$, so we may assume that $y\ge0$ as well. It remains to show $x+y\sqrt d=\left(x_1+y_1\sqrt d\right)^n$ for some $n\ge0$.
+
+	Because $(x_1,y_1)$ is a solution in positive integers, we see that $x_1+y_1\sqrt d\ge1+\sqrt d>1$, so $\left(x_1+y_1\sqrt d\right)^n$ is an increasing sequence as $n$ varies over nonnegative integers. Thus, for any $x+y\sqrt d$, we may find some $n\ge0$ such that
+	\[\left(x_1+y_1\sqrt d\right)^n\le x+y\sqrt d<\left(x_1+y_1\sqrt d\right)^{n+1},\]
+	so
+	\[1\le\left(x+y\sqrt d\right)\left(x_1+y_1\sqrt d\right)^{-n}<x_1+y_1\sqrt d.\]
+	We would now like to compare our solutions and use minimality of $(x_1,y_1)$ to conclude. This will require the following result.
+	\begin{lemma} \label{lem:compare-units}
+		Let $d$ be a non-square positive integer. Given nonnegative integer solutions $(a_1,b_1)$ and $(a_2,b_2)$ to $x^2-dy^2=1$, the following are equivalent.
+		\begin{listalph}
+			\item $a_1+b_1\sqrt d\ge a_2+b_2\sqrt d$.
+			\item $a_1\ge a_2$ and $b_1\ge b_2$.
+			\item $a_1\ge a_2$ or $b_1\ge b_2$.
+		\end{listalph}
+		The same statements are equivalent once $\ge$ is replaced with $>$.
+	\end{lemma}
+	\begin{proof}
+		Of course, (b) implies (a) and (c). Additionally, if $a^2-db^2=1$, then $a=\sqrt{1+db^2}$ and $b=\frac1d\sqrt{a^2-1}$, both of which are strictly increasing functions, so (c) implies (b). With this in mind, we note that $a^2-db^2=1$ will imply $a+b\sqrt d=\sqrt{1+db^2}+b\sqrt d$, a function strictly increasing in $b$, so (a) implies (c), completing the proof.
+	\end{proof}
+	\begin{remark}
+		In light of \Cref{lem:compare-units}, a solution $(x,y)$ to $x^2-dy^2=1$ in the positive integers which is minimal in $y$ is equivalently minimal in $x$. (In fact, any reasonable weighting will continue to make $(x,y)$ the smallest solution; see \Cref{prob:fund-unit-is-really-smallest}.) As such, we may sloppily say that such a solution is simply ``minimal'' or ``smallest'' in the future instead of specifying what it is minimal with respect to.
+	\end{remark}
+	Now, we define
+	\[x'+y'\sqrt d\coloneqq\left(x+y\sqrt d\right)\left(x_1-y_1\sqrt d\right)^n=\left(x+y\sqrt d\right)\left(x_1+y_1\sqrt d\right)^{-n}.\]
+	We quickly check that $x',y'\ge0$. The main point is that $x'+y'\sqrt d\ge1$ and $(x')^2-d(y')^2=1$ by construction. For example, $y'=\pm\frac1d\sqrt{(x')^2-1}$, so if $x'<0$, then $x'+y'\sqrt d<x'+\frac1{\sqrt d}(x')<0$. Similarly, note that $(x')^2-d(y')^2=1$, so $\left(x'+y'\sqrt d\right)\left(x'-y'\sqrt d\right)=1$, so $y'<0$ implies that $\sqrt d\le x'-y'\sqrt d=1/\left(x'+y'\sqrt d\right)\le1$, which does not make sense.
+
+	Now, $x',y'\ge0$ and the inequalities
+	\[1\le x'+y'\sqrt d<x_1+y_1\sqrt d\]
+	enforces $1\le x'<x_1$ and $0\le y'<y_1$ by \Cref{lem:compare-units}. Because $y_1$ is minimal among positive integer solutions, we must have $y'=0$, so $x'=1$ is forced. It follows that $x'+y'\sqrt d=1$, so
+	\[x+y\sqrt d=\left(x_1+y_1\sqrt d\right)^n\]
+	follows.
+\end{proof}
+\begin{remark}
+	We will show in \Cref{prop:pell-has-fund-sol} that the hypothesis that $x^2-dy^2=1$ having a solution is always fulfilled.
+\end{remark}
+Continuing with our examples, \Cref{ex:pell-2} is explained by factoring the equation $x^2-2y^2=\pm1$ into
+\[\left(x-y\sqrt2\right)\left(x+y\sqrt2\right)=\pm1.\]
+We can now use the fact that $\left(1+\sqrt2\right)\left(1-\sqrt2\right)=-1$ and thus $\left(1+\sqrt2\right)\left(-1+\sqrt2\right)=1$ to build the relevant $f_\pm$: we compute
+\[\left(x+y\sqrt2\right)\left(\pm1+\sqrt2\right)=\left(\pm x+2y,x\pm y\right),\]
+which explains $f_+$ and $f_-$, and as a bonus, we still explain why $f_+$ and $f_-$ are inverse functions.
+
+What made \Cref{ex:pell-2} more complicated than \Cref{ex:pell-3} is that our ``smallest solution'' $1+\sqrt2$ did not have $\left(1+\sqrt2\right)\left(1-\sqrt2\right)$ equal to $1$ but instead equal to $-1$. We could have worked with $\left(1+\sqrt2\right)^2=3+2\sqrt2$ instead, but this would in some sense be dishonest: $3+2\sqrt2$ is not really the smallest solution to an equation of the type $x^2-dy^2=c$. One can reasonably ask why
+\[x^2-3y^2=-1\]
+has no solution, a question answered by looking$\pmod4$. In contrast, $x^2-2y^2=-1$ has no such local obstruction.
+
+\Cref{ex:pell-5} continues the trend of making the equation more complicated. This time, we want to factor $x^2-5y^2=\pm4$ as
+\[\left(\frac{x+y\sqrt5}2\right)\left(\frac{x-y\sqrt5}2\right)=\pm1,\]
+where the point is that our ``smallest solution'' is given by $\left(\frac{1+\sqrt5}2\right)\left(\frac{1-\sqrt5}2\right)=-1$. The presence of these half-integers might seem disconcerting; for example, the product of two numbers of the form $\frac a2+\frac b2\sqrt5$ need not take that form. However, \Cref{ex:pell-5} finds that we are only interested in numbers of the form $\frac a2+\frac b2\sqrt5$ where $a$ and $b$ have the same parity, and we can check that
+\[\left\{\frac a2+\frac b2\sqrt5:a,b\in\ZZ\text{ have the same parity}\right\}\]
+is closed under addition and multiplication. As such, we can build $f_\pm$ as in \Cref{ex:pell-2}: $\left(\frac{1+\sqrt5}2\right)\left(\frac{-1+\sqrt5}2\right)=1$ means we want to compute
+\[\left(\frac{x+y\sqrt5}2\right)\left(\frac{\pm1+\sqrt5}2\right)=\frac{\frac{\pm x+5y}2+\frac{x\pm y}2\sqrt5}2,\]
+where $\frac{\pm x+5y}2$ and $\frac{x\pm y}2$ are both integers because $x$ and $y$ have the same parity.
+
+There are a number of aspects of the above explanations which are still mysterious, but we will respond to them in time. For example, why did we not consider elements of the form $\frac a2+\frac b2\sqrt3$ in \Cref{ex:pell-3}? For that matter, why not elements of the form $\frac a3+\frac b3\sqrt5$ in \Cref{ex:pell-5}? More fundamentally we keep pulling these small solutions like $2+\sqrt3$ and $1+\sqrt2$ and $\frac{1+\sqrt5}2$ out from nowhere, so where do they come from? This last question is the one we will focus on answering first.
+
 \subsection{Using Continued Fractions}
+In this subsection, we will discuss how to find the smallest solution $(x,y)$ to an equation of the form
+\[x^2-dy^2=c\]
+in some restricted cases. The hope is that one can then use this smallest solution to produce all other solutions as in \Cref{ex:pell-2,ex:pell-3,ex:pell-5}.
+
+Motivated by the previous section, we factor our equation into
+\[\left(x-y\sqrt d\right)\left(x+y\sqrt d\right)=c.\]
+Now, the point is that, if $c$ is small, we need $x-y\sqrt d$ to also be abnormally small. Thus, $x/y$ needs to be a good rational approximation of $\sqrt d$. If $x/y$ is good enough, we can use \Cref{thm:cf-bound} in order to deduce that $x/y$ is a continued fraction convergent of $\sqrt d$. This motivates us to use continued fraction convergents. For example, continued fraction convergents automatically produce small values for $x^2-dy^2$.
+\begin{lemma} \label{lem:convs-give-small-pell}
+	Let $\{h_n/k_n\}_{n=0}^\infty$ be the sequence of continued fraction convergents of $\sqrt d$, where $d$ is a non-square positive integer. Then
+	\[\left|h_n^2-dk^2_n\right|<2\sqrt d+1\]
+	for any $n\ge0$.
+\end{lemma}
+\begin{proof}
+	By \Cref{prop:basic-cf-bound}, we see that
+	\[\left|\sqrt d-\frac{h_n}{k_n}\right|<\frac1{k_n^2},\]
+	so factoring as above yields
+	\[\left|h_n^2-dk_n^2\right|=\left|h_n-k_n\sqrt d\right|\cdot\left|h_n+k_n\sqrt d\right|<\frac{\left|h_n+k_n\sqrt d\right|}{k_n}=\left|\sqrt d+\frac{h_n}{k_n}\right|.\]
+	To complete our bounding, we use the triangle inequality, writing
+	\[\left|\sqrt d+\frac{h_n}{k_n}\right|\le2\sqrt d+\left|\sqrt d-\frac{h_n}{k_n}\right|<2\sqrt d+\frac1{k_n^2}\le2\sqrt d+1,\]
+	so we are done.
+\end{proof}
+\begin{remark}
+	We could alternately recover the above bound by using the bound on $s_\bullet$ given in the proof of \Cref{prop:cf-sqrt-d}. The difference here is rather inconsequential.
+\end{remark}
+A pigeonhole argument can use \Cref{lem:convs-give-small-pell} to show that $x^2-dy^2=1$ at least has solutions.
+\begin{proposition} \label{prop:pell-has-fund-sol}
+	Let $d$ be a positive integer. Then the equation $x^2-dy^2=1$ has a solution in the positive integers.
+\end{proposition}
+\begin{proof}
+	Applying the pigeonhole principle to \Cref{lem:convs-give-small-pell}, there exists some $N\in\ZZ$ with $\left|N\right|<2\sqrt d+1$ such that there are infinitely many positive integer solutions $(x,y)$ to $x^2-dy^2=N$. Note that there are no positive integer solutions to $x^2-dy^2=0$, so $N\ne0$. We would like to pick up two solutions $(x_1,y_1)$ and $(x_2,y_2)$ to $x^2-dy^2=N$ and write
+	\[\frac{x_1+y_1\sqrt d}{x_2+y_2\sqrt d}\]
+	to produce an element with $x^2-dy^2=1$. However, the above element need not take the form $a+b\sqrt d$ where $a$ and $b$ are positive integers. Thus, for technical reasons, we note that there are only finitely many elements in $\left(\ZZ/\left|N\right|\ZZ\right)^2$, so we must be able to find two distinct pairs of positive integers $(x_1,y_1)$ and $(x_2,y_2)$ such that $x_1-dy_1^2=x_2^2-dy_2^2=N$ and $x_1\equiv x_2\pmod N$ and $y_1\equiv y_2\pmod N$. (Roughly speaking, this$\pmod N$ business is necessary because of \Cref{prob:norm-equal-not-unit-ratio}.)
+
+	We will now be able to divide $x_1+y_1\sqrt d$ by $x_2+y_2\sqrt d$. To see this, note there exist integers $a$ and $b_2$ such that
+	\[x_1\pm y_1\sqrt d=x_2\pm y_2\sqrt d+N\left(a\pm b\sqrt d\right).\]
+	Thus,
+	\[\frac{x_1\pm y_1\sqrt d}{x_2\pm y_2\sqrt d}=1+\frac N{x_2\pm y_2\sqrt d}\cdot\left(a\pm b\sqrt d\right)=1+\left(x_2\mp y_2\sqrt d\right)\left(a\pm b\sqrt d\right).\]
+	The right-hand side here can thus be expressed as $x\pm y\sqrt d$ where $x$ and $y$ are some integers, from which we find
+	\[\left(x+y\sqrt d\right)\left(x-y\sqrt d\right)=\left(\frac{x_1+y_1\sqrt d}{x_2-y_2\sqrt d}\right)\left(\frac{x_1+y_1\sqrt d}{x_2-y_2\sqrt d}\right)=\frac NN=1.\]
+	It remains to check that we can coerce $(x,y)$ to live in the positive integers while remaining solutions to $x^2-dy^2=1$. Note that $x=0$ would imply that $0^2-dy^2=1$, which is impossible. Similarly, $y=0$ would imply that $x=\pm1$ and so $(x_2,y_2)=\pm(x_1,y_1)$, which cannot be the case because these are distinct pairs of positive integers. Now, with $x,y\ne0$, we note that we may adjust their signs to assume that $x,y>0$ while remaining a solution to $x^2-dy^2=1$, completing the proof.
+\end{proof}
+Even though the argument of \Cref{prop:pell-has-fund-sol} is somewhat obnoxious, now that we know we have some solution, we can find fairly efficiently using continued fraction convergents, finally executing the approach given at the start of this subsection.
+\begin{proposition} \label{prop:cf-for-fund-unit}
+	Let $d$ be a non-square positive integer, and suppose $(x,y)$ is a pair of positive integers such that $\left|x^2-dy^2\right|<\sqrt d$. Then $x/y$ is a continued fraction convergent of $\sqrt d$. 
+\end{proposition}
+\begin{proof}
+	We have two cases.
+	\begin{itemize}
+		\item Suppose $x^2-dy^2>0$. The main point is the bounding
+		\[\left|\sqrt d-\frac xy\right|=\frac{\left|\frac{x^2}{y^2}-d\right|}{\left|\sqrt d+\frac xy\right|}=\frac{\left|x^2-dy^2\right|}{\left|\sqrt d+\frac xy\right|}\cdot\frac1{y^2}<\frac{\sqrt d}{\left|\sqrt d+\frac xy\right|}\cdot\frac1{y^2}.\]
+		Now, $x^2-dy^2>0$ implies $x/y>\sqrt d$, so we have an upper-bound of $\frac{\sqrt d}{2\sqrt d}\cdot\frac1{y^2}<\frac1{2y^2}$, allowing us to conclude by \Cref{thm:cf-bound}.
+		\item Suppose $x^2-dy^2<0$. In this case, we will actually show that $y/x$ is a continued fraction convergent of $1/\sqrt d$, which will be enough: if $\sqrt d=[a_0;a_1,a_2,\ldots]$, then $1/\sqrt d=[0;a_0,a_1,a_2,\ldots]$, so the reciprocal of a nonzero continued fraction convergent of $1/\sqrt d$ will be a continued convergent of $\sqrt d$. Anyway, we bound
+		\[\left|\frac1{\sqrt d}-\frac yx\right|=\left|\frac{x-y\sqrt d}{x\sqrt d}\right|=\frac{\left|x^2-dy^2\right|}{x\sqrt d\cdot\left|x+y\sqrt d\right|}<\frac1{\left|1+y/x\sqrt d\right|}\cdot\frac1{x^2}.\]
+		Now, $x^2-dy^2<0$ implies $y/x>1/\sqrt d$, so $\left|1+y/x\sqrt d\right|>2$, so our error is at most $\frac1{2x^2}$, allowing us to conclude by \Cref{thm:cf-bound}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	For example, to find solutions to $x^2-dy^2=1$, we see that we must look among continued fraction convergents $\{h_n/k_n\}_{n=0}^\infty$ of $\sqrt d$, and the periodicity of \Cref{rem:better-cf-sqrt-d-periodic} assures us that we might as well check within $0\le n\le 4d$ or so.
+\end{remark}
+Let's use \Cref{prop:cf-for-fund-unit} for fun and profit.
+\begin{example} \label{ex:find-unit-19}
+	A pair of integers $(x,y)$ satisfies $x^2-19y^2=1$ if and only if there is a sign $\varepsilon\in\{\pm1\}$ and an integer $n\in\ZZ$ such that
+	\[x+y\sqrt d=\varepsilon\left(170+39\sqrt{19}\right)^n.\]
+\end{example}
+\begin{solution}
+	In light of \Cref{prop:solve-pell-norm-one}, it suffices to show that the smallest solution $(x,y)$ to $x^2-dy^2=1$ is $170+39\sqrt{19}$. By \Cref{prop:cf-for-fund-unit}, it suffices to examine the continued fraction convergents of $\sqrt{19}$ for solutions to $x^2-dy^2=1$. To compute this continued fraction, we use \Cref{prop:cf-sqrt-d}. This produces the (large) table as follows.
+	\[\begin{array}{c|cc|cccccccc}
+		  n & -2 & -1 &  0 &  1 &  2 &  3 &  4 &  5 &  6 &  7 \\\hline
+		r_n &    &    &  0 &  4 &  2 &  3 &  3 &  2 &  4 &  4 \\
+		s_n &    &    &  1 &  3 &  5 &  2 &  5 &  3 &  1 &  3 \\
+		a_n &    &    &  4 &  2 &  1 &  3 &  1 &  2 &  8 & \cdots \\\hline
+		h_n & 0  & 1  & 4 & 9 & 13& 48& 61&170 & \cdots & \cdots \\
+		k_n & 1  & 0  & 1 & 2 & 3 & 11& 14& 39 & \cdots & \cdots \\
+	\end{array}\]
+	Because $(r_7,s_7)=(r_1,s_1)$, we see that $\sqrt{19}=[4;\overline{2,1,3,1,2,8}]$ by the proof of \Cref{cor:cf-sqrt-d-periodic}. Anyway, we recall from the proof of \Cref{prop:cf-sqrt-d} that $s_n=(-1)^n\left(h_{n-1}^2-dk_{n-1}^2\right)$, so we are looking for $s_n=1$, for which we see the first nontrivial solution happens at $s_6=1$, so $p_5^2-19q_5^2=1$ is our smallest solution. Referencing the table, this is $(x,y)=(170,39)$, as needed.
+\end{solution}
+\begin{example}
+	The equation $x^2-194y^2=-1$ has no integer solutions.
+\end{example}
+\begin{solution}
+	By \Cref{prop:cf-for-fund-unit}, it suffices to check continued fraction convergents $\{h_n/k_n\}_{n=0}^\infty$ of $\sqrt{194}$, so we use \Cref{prop:cf-sqrt-d} to compute the continued fraction of $\sqrt{194}$, producing the following table.
+	\[\begin{array}{c|cccccccccc}
+		  n &  0 &  1 &  2 &  3 &  4 &  5 \\\hline
+		r_n &  0 & 13 & 12 & 12 & 13 & 13 \\
+		s_n &  1 & 25 &  2 & 25 &  1 & 25 \\
+		a_n & 13 &  1 & 12 &  1 & 26 & \cdots \\
+	\end{array}\]
+	Now, $(r_1,s_1)=(r_5,s_5)$ implies that $(r_{n+4},s_{n+4})=(r_n,s_n)$ for any $n\ge1$ by the recurrence in \Cref{prop:cf-sqrt-d}. Because $s_n=(-1)^n\left(h_{n-1}^2-194k_{n-1}^2\right)>0$ by the proof of \Cref{prop:cf-sqrt-d} and \Cref{cor:cf-sqrt-d-periodic}, we see that any solution $h_n^2-194k_n^2=-1$ must have $n$ even while $s_{n+1}=1$. However, the above periodicity shows that $s_n=1$ if and only if $n\equiv0\pmod4$, so $n$ will never be odd. So there are no solutions to $x^2-194y^2=-1$.
+\end{solution}
+\begin{remark}
+	We remark that $13^2-194\cdot1^2=-25$ and $5^2-194\cdot1^2=-169$, so $(13/5,1/5)$ and $(5/13,1/13)$ are both rational solutions to $x^2-194y^2=-1$. We thus claim that $x^2-194y^2\equiv-1\pmod n$ has a solution for each positive integer $n$, thus breaking a strong form of the local-to-global principle. Indeed, using the Chinese remainder theorem, choose integers $(x,y)$ such that
+	\[(x,y)\equiv\begin{cases}
+		(13/5,1/5) \pmod{p^{\nu_p(n)}} & \text{if }p\ne5, \\
+		(5/13,1/13) \pmod{p^{\nu_p(n)}} & \text{if }p=5.
+	\end{cases}\]
+	Note that this is in fact finitely many modular conditions because $p^{\nu_p(n)}=1$ for all primes $p$ except for the $p$ such that $p\mid n$. Anyway, the construction yields $x^2-dy^2\equiv-1\pmod{p^{\nu_p(n)}}$ for all primes $p$, which yields $x^2-dy^2\equiv-1\pmod n$ by the Chinese remainder theorem.
+\end{remark}
+
+\subsection{Generalized Pell Equations}
+\Cref{prop:solve-pell-norm-one} combined with the method of \Cref{prop:cf-for-fund-unit} tells us how to solve equations of the form
+\[x^2-dy^2=1\]
+where $d$ is a non-square positive integer. We now use these solutions to solve
+\[x^2-dy^2=c\]
+in general. When $\left|c\right|<\sqrt d$, we can still use \Cref{prop:cf-for-fund-unit}, but for larger $c$, this method does not work. There is still a method to use continued fractions (not of $\sqrt d$ but of a similar quadratic irrational) in order to look for solutions, but because we have not discussed an efficient algorithm to compute such continued fractions, we will settle for the following effective result. The proof technique we use below will be used again in various levels of generality.
+\begin{proposition} \label{prop:general-pell}
+	Fix a non-square positive integer $d$, and let $(x_0,y_0)$ be a pair of positive integers such that $x_0^2-dy_0^2=1$. Set $u\coloneqq x_0+y_0\sqrt d$. For any nonzero integer $c$, any integral solution $(x,y)$ of $x^2-dy^2=c$ can be written as $x+y\sqrt d=(x'+y'\sqrt d)u^n$ for some integer $n$ where
+	\[\left|x'\right|\le\frac{\sqrt{\left|c\right|}\left(\sqrt u+1\right)}2\qquad\text{and}\qquad\left|y'\right|\le\frac{\sqrt{\left|c\right|}\left(\sqrt u+1\right)}{2\sqrt d}.\]
+\end{proposition}
+\begin{proof}
+	Roughly speaking, we would like to measure the height of a nonzero quadratic irrational of the form $x+y\sqrt d$. Additionally, we would like for multiplication of the quadratic irrationals to add heights together (to make our arithmetic easier), and we would like for our heights to be positive. It would make sense to set our height, then, to be $\log\left|x+y\sqrt d\right|$, but from an algebraic point of view, we would like to put $\sqrt d$ and $-\sqrt d$ on equal footing. As such, we define
+	\[H(x+y\sqrt d)\coloneqq\left(\log\left|x+y\sqrt d\right|,\log\left|x-y\sqrt d\right|\right)\in\RR^2,\]
+	where $x,y\in\QQ$ are not both zero. (Note that the value of $x+y\sqrt d$ determines $x$ and $y$ because $\sqrt d$ is irrational.) Here are some basic properties of $H$.
+	\begin{itemize}
+		\item For any $(x,y),(x',y')\in\QQ^2\setminus\{(0,0)\}$, a direct expansion yields
+		\begin{align*}
+			\left(x+y\sqrt d\right)\left(x'+y'\sqrt d\right) &= (xx'+dyy')+(xy'+yx')\sqrt d \\
+			\left(x-y\sqrt d\right)\left(x'-y'\sqrt d\right) &= (xx'+dyy')-(xy'+yx')\sqrt d.
+		\end{align*}
+		Thus,
+		\begin{align*}
+			H\left((x+y\sqrt d)(x'+y'\sqrt d)\right) &= \left(\log\left|(x+y\sqrt d)(x'+y'\sqrt d)\right|,\log\left|(x-y\sqrt d)(x'-y'\sqrt d)\right|\right) \\
+			&= \left(\log\left|x+y\sqrt d\right|,\log\left|x-y\sqrt d\right|\right)+\left(\log\left|x'+y'\sqrt d\right|,\log\left|x'-y'\sqrt d\right|\right) \\
+			&= H(x+y\sqrt d)+H(x-y\sqrt d).
+		\end{align*}
+		For example, an induction implies that $H\left((x+y\sqrt d)^n\right)=nH(x+y\sqrt d)$ for any $(x,y)\in\QQ^2\setminus\{(0,0)\}$.
+		\item For any $(x,y)$ such that $x^2-dy^2=1$, we see that $(x+y\sqrt d)(x-y\sqrt d)$, so
+		\[\log\left|x+y\sqrt d\right|+\log\left|x-y\sqrt d\right|=0.\]
+		Thus, $H\left(u^k\right)\subseteq\left\{(x,y)\in\RR^2:x+y=0\right\}$. In other words, the vectors $H(u)$ and $(1,1)$ are orthogonal.
+
+		More generally, if $a^2-db^2=c$ for any nonzero integer $c$, then $H(a+b\sqrt d)$ will output to the plane $\left\{(x,y)\in\RR^2:x+y=\log\left|c\right|\right\}$, which is the set of vectors whose dot product with $(1,1)$ is $\log\left|c\right|$.
+	\end{itemize}
+	Now, suppose that $x^2-dy^2=c$, and for brevity let $\alpha\coloneqq x+y\sqrt d$ and $\overline\alpha\coloneqq x-y\sqrt d$ so that $\alpha\overline\alpha=c$. The point is to estimate the needed $n$ in the proposition by pushing everything through $H$. Note $(x,y)\ne(0,0)$ because $c$ is nonzero, so we may place $H(\alpha)\in\RR^2$. The second point above tells us that $H(u)$ and $(1,-1)$ form an orthogonal basis of $\RR^2$, so we write
+	\[H(\alpha)=sH(u)+t(1,1),\]
+	which is
+	\[\left(\log\left|\alpha\right|,\log\left|\overline\alpha\right|\right)=(s\log u+t,-s\log u+t).\]
+	As roughly explained in the second point above, we can quickly solve for $t$: summing coordinates, we see that $2t=\log\left|\alpha\overline\alpha\right|$, so $t=\frac12\log\left|c\right|$.
+
+	We now estimate $n$ as the closest integer to $s$ so that $\left|n-s\right|\le\frac12$. This allows us to define $x'+y'\sqrt d\coloneqq\alpha u^{-n}$, and we see that $x'$ and $y'$ are integers because $\alpha=x+y\sqrt d$ and $u^{-1}=x_0-y_0\sqrt d$ have all coefficients integers. For brevity, define $\alpha'\coloneqq x'+y'\sqrt d$ and $\overline{\alpha'}\coloneqq x'-y'\sqrt d$. Note $x+y\sqrt d=\alpha u^n$ by construction. It remains to prove the inequalities on $x'$ and $y'$. The idea is to bound $\alpha'$ and $\overline{\alpha'}$ first by passing through $H$, we see
+	\[\left(\log\left|\alpha'\right|,\log\left|\overline{\alpha'}\right|\right)=H(\alpha')=H(\alpha)-nH(u)=\left((s-n)\log u+\frac12\log\left|c\right|,-(s-n)\log u+\frac12\log\left|c\right|\right).\]
+	One of $(s-n)$ or $-(s-n)$ is nonnegative. In the case $s-n\ge0$, then we see that $\left|\alpha'\right|=u^{s-n}\left|c\right|^{1/2}\le\sqrt{u\left|c\right|}$, and $\left|\overline{\alpha'}\right|=u^{-s-n}\left|c\right|^{1/2}\le\sqrt{\left|c\right|}$ because $u>1$. A symmetric pair of inequalities hold in the case where $s-n\le0$, so in total we find
+	\begin{equation}
+		\left|\alpha'\right|+\left|\overline{\alpha'}\right|\le\sqrt{\left|c\right|}\left(\sqrt u+1\right). \label{eq:almost-needed-bound-general-pell}
+	\end{equation}
+	We are now ready to bound $x'$ and $y'$. Well, note
+	\[\left|x'\right|=\left|\frac{\alpha'+\overline{\alpha'}}2\right|\le\frac{\left|\alpha'\right|+\left|\overline{\alpha'}\right|}2,\]
+	and
+	\[\left|y'\right|=\left|\frac{\alpha'-\overline{\alpha'}}{2\sqrt d}\right|\le\frac{\left|\alpha'\right|+\left|\overline{\alpha'}\right|}{2\sqrt d},\]
+	from which \eqref{eq:almost-needed-bound-general-pell} completes the argument.
+\end{proof}
+\begin{example} \label{ex:pell-19-norm-5}
+	A pair of integers $(x,y)$ satisfies $x^2-19y^2=5$ if and only if there are signs $\varepsilon_x,\varepsilon_y\in\{\pm1\}$ and an integer $n\in\ZZ$ such that
+	\[x+y\sqrt d=\left(\varepsilon_x9+\varepsilon_y2\sqrt{19}\right)\left(170+39\sqrt{19}\right)^n.\]
+\end{example}
+\begin{proof}[Solution]
+	We feed $u\coloneqq170+39\sqrt{19}$ into \Cref{prop:general-pell}; recall we found $u$ in \Cref{ex:find-unit-19}. By \Cref{prop:general-pell}, we would like to find solutions to $x^2-19y^2=5$ where
+	\[\left|y\right|\le\frac{\sqrt{5}\left(\sqrt{170+39\sqrt{19}}+1\right)}{2\sqrt{19}}.\]
+	We claim that the right-hand side is less than $6$; a more precise calculation could show that it is less than $5$, but this will make little difference to us. Squaring it is equivalent to show that
+	\[\left(\sqrt{170+39\sqrt{19}}+1\right)^2<\frac{4\cdot19\cdot6^2}5.\]
+	Well,
+	\[\left(\sqrt{170+39\sqrt{19}}+1\right)^2<\left(\sqrt{170+40\cdot5}+1\right)^2<\left(\sqrt{400}+1\right)^2=441<456=4\cdot19\cdot6,\]
+	which is good enough. We now deal with $\left|y\right|<6$ via the following table.
+	\[\begin{array}{c|c|c}
+		y & 5+19y^2 & x=\pm\sqrt{5+19y^2} \\\hline
+		0 &       5 & \text{not integer} \\
+		1 &      24 & \text{not integer} \\
+		2 &      81 & \pm9 \\
+		3 &     176 & \text{not integer} \\
+		4 &     309 & \text{not integer} \\
+		5 &     480 & \text{not integer}
+	\end{array}\]
+	Thus, $(x,y)=(\varepsilon_x9,\varepsilon_y2)$ are only solutions with $\left|y\right|<6$. The result follows from \Cref{prop:general-pell}.
+\end{proof}
+\begin{example}
+	There are no integer solutions $(x,y)$ to $x^2-19y^2=-5$.
+\end{example}
+\begin{proof}[Solution]
+	We work as in \Cref{ex:pell-19-norm-5}. Because $\left|5\right|=\left|-5\right|$, the entire argument goes through until the table. Here is our new table.
+	\[\begin{array}{c|c|c}
+		y & -5+19y^2 & x=\pm\sqrt{-5+19y^2} \\\hline
+		0 &      -5 & \text{not integer} \\
+		1 &      14 & \text{not integer} \\
+		2 &      71 & \text{not integer} \\
+		3 &     156 & \text{not integer} \\
+		4 &     299 & \text{not integer} \\
+		5 &     470 & \text{not integer}
+	\end{array}\]
+	Thus, there are no solutions $(x,y)$ to $x^2-19y^2=-5$ in the region $\left|y\right|<6$, which is enough to complete the proof by \Cref{prop:general-pell} and the computations of \Cref{ex:pell-19-norm-5}.
+\end{proof}
 % https://math.stackexchange.com/questions/1383345/how-to-prove-there-are-no-solutions-to-a2-223-b2-3?noredirect=1&lq=1
 
-\subsection{A Harder Example}
+% \subsection{A Harder Example}
 
 \subsection{Problems}
+\begin{prob}[2 points] \label{prob:norm-equal-not-unit-ratio}
+	Show that there exist a positive integer $d$ and pairs of positive integers $(x_1,y_1)$ and $(x_2,y_2)$ such that $x_1^2-dy_1^2=x_2-dy^2$ even though the ratio
+	\[\frac{x_1+y_1\sqrt d}{x_2+y_2\sqrt d}\]
+	does not take the form $a+b\sqrt d$ where $a,b\in\ZZ$.
+\end{prob}
+\begin{prob}[2 points] \label{prob:fund-unit-is-really-smallest}
+	Let $d$ be a non-square positive integer, and fix weights $\alpha,\beta\in\RR_{\ge0}$. Given nonnegative integer solutions $(a_1,b_1)$ and $(a_2,b_2)$ to $x^2-dy^2=1$, show that the following are equivalent.
+	\begin{listalph}
+		\item $\alpha a_1+\beta b_1\ge\alpha a_2+\beta b_2$.
+		\item $a_1\ge a_2$.
+	\end{listalph}
+\end{prob}
 \begin{prob}[4 points] \label{prob:pell-5-norm}
 	Define the sequence of ordered pairs of nonnegative integers $\{(x_n,y_n)\}_{n=0}^\infty$ recursively by $(x_0,y_0)\coloneqq(1,0)$ and
 	\[(x_{n+1},y_{n+1})\coloneqq(y_n,x_n+y_n)\]
 	for any $n\ge0$. Then for any pair of nonnegative integers $(x,y)$ such that $x^2+xy-y^2=\pm1$, show that $(x,y)=(x_n,y_n)$ for some nonnegative integer $n$.
 \end{prob}
+\begin{prob}[4 points] \label{prob:norm-223}
+	We study the equation $x^2-223y^2=-3$.
+	\begin{listalph}
+		\item Show that the equation $x^2-223y^2=-3$ has no integer solutions.
+		\item Show that the equation $x^2-223y^2=-27$ does have integer solutions. Conclude that, for any integer $n$ coprime to $3$, the equation $x^2-223y^2\equiv-3\pmod n$  has solutions.
+	\end{listalph}
+	The quickest way to dispatch of the prime $3$ is via \Cref{prob:223-in-z3}.
+\end{prob}
+\begin{prob}[5 points]
+	We study the equation $x^2-61y^2=15$.
+	\begin{listalph}
+		\item Describe all positive integer solution $(x,y)$ to $x^2-61y^2=15$.
+		\item Using (a), compute the three smallest positive integers $y$ such that $61y^2+15$ is a perfect square. (A little care is required.)
+	\end{listalph}
+	You will almost certainly need to use a computer program; if you use a computer program, please submit it.
+\end{prob}
+\begin{prob}[7 points]
+	Fix a non-square positive integer $d$, and let $\sqrt d=[a_0;a_1,a_2,\ldots]$ be the continued fraction with $\{h_n/k_n\}_{n=0}^\infty$ as the continued fraction convergents. Let $m\ge2$ be the least positive integer such that $h_{m-1}^2-dk_{m-1}^2=1$, which exists by \Cref{prop:cf-for-fund-unit}.
+	\begin{listalph}
+		\item Using the notation of \Cref{prop:cf-sqrt-d}, show that $s_m=1$ and thus $r_{m+1}=a_0$ and $s_{m+1}=d-a_0^2$.
+		\item Show that $(a_{n+m},r_{n+m},s_{n+m})=(a_n,r_n,s_n)$ for all $n\ge1$.
+		\item Show that $(x,y)$ is a positive integer solution to $x^2-dy^2=1$ if and only if $(x,y)=(h_{nm-1},k_{nm-1})$ for some $n\ge1$.
+	\end{listalph}
+\end{prob}
+% \begin{prob}[5 points]
+% 	Let $d$ be a positive integer which is not a square, and let $\{h_n/k_n\}_{n=-2}^\infty$ denote the sequence of continued fraction convergents of $\sqrt d$. (At $n=-2$ and $n=-1$, we write $0/1$ and $1/0$ to be formal pairs of integers.) Show that there exists an integer $m$ such that a pair of nonnegative integers $(x,y)$ satisfies $x^2-dy^2=1$ if and only if
+% 	\[(x,y)=(h_{mn-1},k_{mn-1})\]
+% 	for some integer $n\ge0$.
+% \end{prob}
 
 \end{document}

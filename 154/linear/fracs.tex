@@ -179,6 +179,82 @@ Then we can see that we must have $a_1=\floor{\alpha_1}$, and we go on to define
 	Because $k_{n+1}>k_n$ by the recursion, the conclusion follows.
 \end{proof}
 
+\subsection{Quadratic Irrationals}
+As an intermission, we take a moment to compute the continued fraction of $\sqrt d$ where $d$ is a non-square positive integer. Let's start with an example.
+\begin{example}
+	We show that $\sqrt3=[1;\overline{1,2}]$, where the over line indicates periodicity.
+\end{example}
+\begin{solution}
+	It is possible to solve this by computing $[\overline{1,2}]$ first as in \Cref{ex:phi-contd-frac}, but we will take a more direct approach following \Cref{prop:cf-algo}. Indeed, following the algorithm, we compute
+	\begin{align*}
+		\sqrt3 &= 1+\left(-1+\sqrt3\right) \\
+		&= 1+\dfrac1{\frac{1+\sqrt3}2} \\
+		&= 1+\dfrac1{1+\frac{-1+\sqrt3}2} \\
+		&= 1+\dfrac1{1+\dfrac1{1+\sqrt3}} \\
+		&= 1+\dfrac1{1+\dfrac1{2+\left(-1+\sqrt3\right)}}.
+	\end{align*}
+	At this point, we have seen that
+	\[\frac{1+\sqrt3}2=1+\dfrac1{2+\dfrac1{\frac{1+\sqrt3}2}},\]
+	so $[\overline{1,2}]=\frac{1+\sqrt3}2$ follows, from which the desired result follows by noting $\sqrt3=1+1/\left(\frac{1+\sqrt3}2\right)$ as computed above.
+\end{solution}
+As in the above example, it will turn out that the terms $\alpha_n$ from \Cref{prop:cf-algo} will all take the form
+\[\frac{r_n+\sqrt d}{s_n}\]
+for some positive integers $r_n,s_n$. We are now ready to state our result.
+\begin{proposition} \label{prop:cf-sqrt-d}
+	Fix a non-square positive integer $d$. Define $a_0\coloneqq\floor{\sqrt d}$ and $r_0\coloneqq0$ and $s_0\coloneqq1$ and $\alpha_0\coloneqq\sqrt d$ and
+	\[a_n\coloneqq\floor{\frac{r_n+a_0}{s_n}},\qquad r_{n+1}\coloneqq a_ns_n-r_n,\qquad\text{and}\qquad s_{n+1}\coloneqq\frac{d-r_{n+1}^2}{s_n}\]
+	for each $n\ge0$. Then these are sequences of integers with $0\le r_n<\sqrt d$ and $1\le s_n<2\sqrt d$, and $\sqrt d=[a_0;a_1,a_2,\ldots]$.
+\end{proposition}
+\begin{proof}
+	We forget about the sequences defined in the statement of the proposition, and we will redefine such sequences a different way in the argument which follows. Let $\{a_n\}_{n=0}^\infty$ and $\{\alpha_n\}_{n=0}^\infty$ be as in \Cref{prop:cf-algo}. The main point is to compute the $\alpha_\bullet$s. We proceed in steps.
+	\begin{enumerate}
+		\item We define our sequences. The proof of \Cref{prop:cf-algo} actually shows that $\sqrt d=[a_0;a_1,\ldots,a_n;\alpha_{n+1}]$ for any $n\ge0$, so \Cref{prop:magic-box} shows that any $n\ge0$ has
+		\[\sqrt d=\frac{h_{n-1}\alpha_{n}+h_{n-2}}{k_{n-1}\alpha_{n}+k_{n-2}},\]
+		where $\{h_n/k_n\}_{n=-2}^\infty$ are the continued fraction convergents of $\sqrt d$, and we have taken $(h_{-2},k_{-2})=(0,1)$ and $(h_{-1},k_{-1})=(1,0)$ formally. We can use the above equation to solve $\alpha_{n}$ as
+		\[\alpha_n=-\frac{h_{n-2}-k_{n-2}\sqrt d}{h_{n-1}-k_{n-1}\sqrt d}=-\frac{(h_{n-1}h_{n-2}-dk_{n-1}k_{n-2})+(-1)^{n-1}\sqrt d}{h_{n-1}^2-dk_{n-1}^2},\]
+		where we have used \Cref{cor:magic-box-minor} in the last equality. As such, we define the integer sequences
+		\begin{align*}
+			r_n &\coloneqq (-1)^{n}(h_{n-2}h_{n-1}-dk_{n-1}k_n) \\
+			s_n &\coloneqq (-1)^{n}\left(h_{n-1}^2-dk_{n-1}^2\right)
+		\end{align*}
+		so that
+		\[\alpha_n=\frac{r_n+\sqrt d}{s_n}.\]
+		The reason we have chosen to define $r_\bullet$ and $s_\bullet$ this way is that we know that they are integer sequences ``for free.''
+		\item We show the recursions for $r_\bullet$ and $s_\bullet$. To begin, $\alpha_0=\sqrt d$ forces $(r_0,s_0)=(0,1)$. Further, the remaining recursion comes from the recursion of \Cref{prop:cf-algo}: write
+		\[\frac{r_{n+1}+\sqrt d}{s_{n+1}}=\alpha_{n+1}=\frac1{\alpha_n-a_n}=\dfrac1{\frac{r_n+\sqrt d}{s_n}-a_n}=\frac{s_n}{-(a_ns_n-r_n)+\sqrt d}=\dfrac{(a_ns_n-r_n)+\sqrt d}{\frac{d-(a_ns_n-r_n)^2}{s_n}}.\]
+		Thus, comparing coefficients, we see $r_{n+1}=a_ns_n-r_n$ and $s_{n+1}=\frac1{s_n}\left(d-r_{n+1}^2\right)$, as needed.
+		\item We show the inequalities on $r_\bullet$ and $s_\bullet$. Quickly, note that $h_{n-1}^2-dk_{n-1}^2>0$ if and only if $h_{n-1}/k_{n-1}>\sqrt d$ if and only if $n-1$ is odd by \Cref{lem:convergents-alternate}, which is equivalent to $n$ being even, meaning that $s_n>0$ always. The recursion on $s_\bullet$ then forces $r_{n+1}<\sqrt d$ always, and combined with $r_0=0$, we see that $r_n<\sqrt d$ always. For the other inequalities, we show
+		\[0<\frac{\sqrt d-r_n}{s_n}<1\]
+		for $n\ge1$. For $n=1$, we see $r_1=a_0$ and $s_1=d-a_0^2$, so the given quantity is $1/\left(\sqrt d+a_0\right)<1$. As for the inductive step, by replacing $\sqrt d$ with $-\sqrt d$ in the computation of the previous step, we see
+		\[\frac{r_{n+1}-\sqrt d}{s_{n+1}}=\dfrac1{\frac{r_n-\sqrt d}{s_n}-a_n},\]
+		so
+		\[\frac{\sqrt d-r_{n+1}}{s_{n+1}}=\dfrac1{\frac{\sqrt d-r_n}{s_n}+a_n}\]
+		is positive and less than $1$ because $a_n\ge1$ and the inductive hypothesis.
+
+		Now, $\alpha_n=\frac{r_n+\sqrt d}{s_n}>1$ by the proof of \Cref{prop:cf-algo}, so adding and subtracting yields $\frac{2r_n}{s_n}>0$ and $\frac{2\sqrt d}{s_n}>1$, so $r_n>0$ and $s_n<2\sqrt d$ for $n>0$, thus completing the step.
+		\item We show the recursion on $a_\bullet$. This merely requires writing
+		\[a_n=\floor{\alpha_n}=\floor{\frac{r_n+\sqrt d}{s_n}}=\floor{\frac{r_n+a_0}{s_n}},\]
+		so we are done.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{corollary} \label{cor:cf-sqrt-d-periodic}
+	Fix a non-square positive integer $d$, and write $\sqrt d=[a_0;a_1,a_2,\ldots]$. Then there exists an integer $N\le 2d$ and positive integer $p\le 2d$ such that $a_{n+p}=a_n$ for each $n\ge N$.
+\end{corollary}
+\begin{proof}
+	We use \Cref{prop:cf-sqrt-d}. Among the $d$ pairs $(r_0,s_0),(r_1,s_1),\ldots,(r_{2d},s_{2d})$, we must repeat some ordered pair of integers; say $(r_N,s_N)=(r_{N+p},s_{N+p})$ for some integer $N\le2d$ and positive integer $p<2d$. Then the recursion
+	\[(r_{n+1},s_{n+1})=\left(\floor{\frac{r_n+a_0}{s_n}}s_n-r_n,\frac{d-r_{n+1}^2}{s_n}\right)\]
+	forces $(r_n,s_n)=(r_{n+p},s_{n+p)}$ for each $n\ge N$, so $a_{n+p}=\floor{\frac{r_{n+p}+a_0}{s_{n+p}}}=\floor{\frac{r_{n}+a_0}{s_{n}}}=a_n$ follows.
+\end{proof}
+\begin{remark} \label{rem:better-cf-sqrt-d-periodic}
+	Examining the above proofs, we actually see that
+	\begin{align*}
+		r_n &\coloneqq (-1)^{n}(h_{n-2}h_{n-1}-dk_{n-1}k_n) \\
+		s_n &\coloneqq (-1)^{n}\left(h_{n-1}^2-dk_{n-1}^2\right)
+	\end{align*}
+	enjoys the same periodicity as \Cref{cor:cf-sqrt-d-periodic}.
+\end{remark}
+
 \subsection{Convergents Are Good Rational Approximations}
 As before, let $a_0,a_1,a_2,\ldots$ be integers, where $a_1,a_2,\ldots$ are positive, and let $\{h_n/k_n\}_{n=0}^\infty$ denote the continued fraction convergents $h_n/k_n\coloneqq[a_0;a_1,\ldots,a_n]$ where $k_n\ge1$ and $\gcd(h_n,k_n)=1$. \Cref{prop:basic-cf-bound} immediately implies that
 \[\left|\alpha-\frac{h_n}{k_n}\right|\le\frac1{k_n^2},\]
