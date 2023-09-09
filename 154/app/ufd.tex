@@ -1,0 +1,131 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{Unique Factorization Domains}
+The goal of the present section is to review the notion of a unique factorization domain and basic properties of them. This is a notion we will want later in \cref{sec:upf}, though it is not clear why yet.
+\begin{definition}[integral domain]
+	A ring $A$ is an \textit{integral domain} if and only if $a\cdot b=0$ implies that $a=0$ or $b=0$.
+\end{definition}
+\begin{example}
+	The ring $\ZZ$ is an integral domain. Any field is an integral domain.
+\end{example}
+The best integral domains are unique factorization domains. To recall this definition, we need the notion of prime and irreducible elements.
+\begin{definition}[prime]
+	Fix a ring $A$. Then an element $p\in A$ is \textit{prime} if and only if $p$ is nonzero and the ideal $(p)$ of $A$ is a prime ideal. In other words, $p$ is not zero, not a unit, and whenever $p\mid ab$ for $a,b\in A$, we have $p\mid a$ or $p\mid b$.
+\end{definition}
+\begin{definition}[irreducible]
+	Fix a ring $A$. Then an element $p\in A$ is \textit{irreducible} if and only if any factorization $p=ab$ has exactly one of $a$ or $b$ equal to a unit. Notably, $p$ cannot be zero (for we could set $a=b=0$), and $p$ cannot be a unit (for then both $a$ and $b$ would be a unit).
+\end{definition}
+\begin{definition}[unique factorization domain]
+	Fix an integral domain $A$. Then $A$ is a \textit{unique factorization domain} if and only if any nonzero element $r\in A$ has a unique factorization into irreducibles
+	\[r=\prod_{i=1}^np_i,\]
+	where the sequence $\{p_i\}_{i=1}^n$ of irreducible elements of $A$ is unique up multiplication by a unit and permutation.
+\end{definition}
+An elementary number theory course would show that an integer is prime if and only if it is irreducible and then deduce that $\ZZ$ is a unique factorization domain. An algebra course would show the more general result that a principal ideal domain is a unique factorization domain. We will quickly review these arguments, but we will not dwell on them.
+\begin{proposition}
+	The ring $\ZZ$ is a principal ideal domain.
+\end{proposition}
+\begin{proof}
+	Let $I\subseteq\ZZ$ be an ideal. If $I=\{0\}$, then $I=(0)$. Otherwise, $I$ contains a nonzero element $n\in I$, so $I$ contains a positive element $n^2\in I$. Thus, we may let $g\in I$ denote the least positive element. We claim that $I=(g)$; certainly $(g)\subseteq I$, so we want to show $I\subseteq(g)$. Well, choose any $a\in I$. Then we may use division to find integers $q,r\in\ZZ$ such that
+	\[a=gq+r\]
+	where $0\le r<g$. Thus, $r=a-gq\in I$ is a nonnegative element of $I$ strictly less than $g$, so $r$ cannot be positive, so $r=0$, so $a=gq$, so $a\in(g)$.
+\end{proof}
+We now move towards showing that principal ideal domains are unique factorization domains.
+\begin{lemma} \label{lem:prime-is-irred}
+	Fix an integral domain $A$. If $p$ is prime, then $p$ is irreducible.
+\end{lemma}
+\begin{proof}
+	Note that $p$ is neither zero nor a unit by hypothesis. Suppose we factor $p=ab$ where $a,b\in A$; certainly both $a$ and $b$ cannot both units because then $p$ would be a unit, so it remains to show that one is. Then $p\mid ab$, so $p\mid a$ or $p\mid b$ because $p$ is prime. Without loss of generality, take $p\mid a$, and write $a=pa'$ so that
+	\[p=pa'b.\]
+	Then $1=a'b$, so $b$ is a unit.
+\end{proof}
+\begin{lemma} \label{lem:bezout-for-pid}
+	Let $A$ be a principal ideal domain. If $p\in A$ is irreducible, and if $a\in A$ lives outside $(p)$, then $(a,p)=A$. In other words, $(p)$ is a maximal ideal.
+\end{lemma}
+\begin{proof}
+	Note that the last sentence follows from the previous because $(p)$ would then be proper ideal with no ideal between $(p)$ and $A$, making $(p)$ maximal.
+
+	Now, note $(a,p)$ is a principal ideal, so say $(a,p)=(d)$. However, because $d$ divides $p$, we may write $p=de$ where $e$ is an integer. Thus, one of $d$ or $e$ is a unit. We claim that $d$ is a unit, which will complete the proof. Well, if $e$ is a unit, then $d=pe^{-1}$, so $pe^{-1}$ divides $a$, so $p$ divides $a$ (recall $e$ is a unit), which is a contradiction.
+\end{proof}
+\begin{remark} \label{rem:pid-is-dim-1}
+	One can interpret \Cref{lem:bezout-for-pid} as showing that $A/(p)$ is a field for any irreducible $p$. Indeed, this follows from $(p)$ being a maximal ideal.
+\end{remark}
+\begin{proposition} \label{prop:irred-is-prime}
+	Let $A$ be a principal ideal domain. Then any irreducible element $p\in A$ is prime.
+\end{proposition}
+\begin{proof}
+	Note that $p$ is neither zero nor a unit by hypothesis. Now, suppose we have $p\mid ab$ but $p\nmid a$. We want to show that $p\mid b$. Well, \Cref{lem:bezout-for-pid} tells us that $(a,p)=A$, so we can write
+	\[ar+ps=1\]
+	for some integers $r,s\in A$, so we see that
+	\[abr+psb=b,\]
+	so $p\mid ab$ and $p\mid psb$ implies that $p\mid b$, which is what we wanted.
+\end{proof}
+\begin{theorem} \label{thm:pid-is-ufd}
+	Any principal ideal domain $A$ is a unique factorization domain.
+\end{theorem}
+We will split the proof of \Cref{thm:pid-is-ufd} into a few parts. To begin, we prove existence, which does not require \Cref{prop:irred-is-prime}.
+\begin{lemma} \label{lem:get-exis-factorization}
+	Fix an integral domain $A$. Suppose that any ascending chain of principal ideals
+	\[(a_0)\subseteq(a_1)\subseteq(a_2)\subseteq\cdots\]
+	eventually stabilizes; in other words, there is some nonnegative integer $N$ such that $(a_n)=(a_N)$ for any $n\ge N$. Then every nonzero element of $A$ has a factorization into irreducibles.
+\end{lemma}
+\begin{proof}
+	Units take the ``empty'' factorization consisting of only the unit itself and no irreducibles. Irreducible elements attain the factorization consisting of the irreducible itself.
+
+	Now, suppose for the sake of contradiction that we have a nonzero element $r_0\in A$ with no factorization into irreducibles. The work above shows that $r_0$ is not a unit and not irreducible, so it follows that we can factor $r_0=s_1r_1$ where neither $s_1$ nor $r_1$ is a unit or zero. If $s_1$ and $r_1$ both had factorizations into irreducibles, then we could multiply the factorizations together to produce a factorization for $r_0$. Thus, at least one of $s_1$ or $r_1$ cannot have a factorization into irreducibles; without loss of generality, it is $r_1$.
+
+	Iterating the process of the previous paragraph produces a sequence of elements $\{r_n\}_{n=0}^\infty$ and $\{s_n\}_{n=1}^\infty$ such that $r_n=r_{n+1}s_{n+1}$ for each $n$. But then we have the descending chain of principal ideals
+	\[(r_0)\subseteq(r_1)\subseteq(r_2)\subseteq\cdots,\]
+	which must stabilize eventually. Thus, there is some $n$ for which $(r_n)=(r_{n+1})$, so we may find $s'$ such that $r_{n+1}=s'r_n$ and thus
+	\[r_n=s_nr_{n+1}=s_ns'r_n.\]
+	This implies that $s_ns'=1$ and so $s_n$ is a unit, which is a contradiction to its construction.
+\end{proof}
+\begin{remark}
+	More generally, a ring $A$ will be called ``Noetherian'' if and only if any ascending chain of ideals stabilizes. We will avoid using this notion in these notes when possible, largely because it is not strictly necessary for the story we wish to tell.
+\end{remark}
+\begin{lemma} \label{lem:get-uniq-factorization}
+	Fix an integral domain $A$. Suppose that an element $p\in A$ is prime if and only if it is irreducible. Then for any equal factorizations of irreducibles
+	\[\prod_{i=1}^mp_i=\prod_{j=1}^nq_j,\]
+	we must have $m=n$, and there is a permutation $\sigma$ of $\{1,2,\ldots,n\}$ such that $p_i$ and $q_{\sigma(i)}$ are the same up to multiplication by a unit.
+\end{lemma}
+\begin{proof}
+	Fix a factorization as hypothesized. We will induct on $m$. If $m=0$, then all the $q_\bullet$ multiply out to $1$ and hence by units, which makes no sense if $n>0$. As such, the right-hand side must also be empty, meaning that $n=0$, so there is nothing to prove. Note that a symmetric argument deduces that $n=0$ implies $m=0$, so we may assume that $m,n>0$ in the argument which follows.
+
+	Now, for the induction, the hypothesis tells us that the irreducible $p_m$ is prime and therefore must divide some factor $q_\bullet$ on the right-hand side. Adjusting via a permutation, we may assume that $p_m\mid q_n$. Then we may write $q_n=up_m$ for some $u\in A$, but in fact because $p_m$ fails to be a unit, we see $u$ is a unit because $q_n$ is irreducible. As such, adjusting by a unit, we may assume that $q_n=p_m$, whereupon dividing both of our factorizations out by this redundancy leaves us with
+	\[\prod_{i=1}^{m-1}p_i=\prod_{j=1}^{n-1}q_j,\]
+	and now we may induct downwards.
+\end{proof}
+In fact, one has the following converse to \Cref{lem:get-uniq-factorization}.
+\begin{lemma} \label{lem:prime-is-irred-for-ufd}
+	If $A$ is a unique factorization domain, then an element $p\in A$ is prime if and only if it is irreducible.
+\end{lemma}
+\begin{proof}
+	The forward direction is covered by \Cref{lem:prime-is-irred}. For the converse, suppose $p$ is irreducible. Certainly $p$ is not zero and not a unit. Now, suppose $p\mid ab$ for some $a,b\in A$. If $a=0$, then $p\mid a$; similar holds if $b=0$. Otherwise, we may give $a$ and $b$ factorizations into irreducibles by
+	\[a=\prod_{i=1}^mp_i\qquad\text{and}\qquad b=\prod_{j=1}^nq_j.\]
+	Because $p$ divides the product $ab$, we see that $ab/p\in A$ will also have a factorization
+	\[\prod_{k=1}^sr_k=\frac{ab}{p},\]
+	so
+	\[p\prod_{k=1}^sr_k=ab=\prod_{i=1}^mp_i\cdot\prod_{j=1}^nq_j.\]
+	By the uniqueness of our factorizations, we see that the irreducible $p$ (perhaps times a unit) must appear as one of the $p_\bullet$ or $q_\bullet$, so $p\mid a$ or $p\mid b$.
+\end{proof}
+We are now ready to prove \Cref{thm:pid-is-ufd}.
+\begin{proof}[Proof of \Cref{thm:pid-is-ufd}]
+	By \Cref{lem:get-exis-factorization,lem:get-uniq-factorization}, it suffices to do the following two checks.
+	\begin{itemize}
+		\item Suppose we have an ascending chain of principal ideals
+		\[(a_0)\subseteq(a_1)\subseteq(a_2)\subseteq\cdots,\]
+		and we want to show that it stabilizes. Well, the union
+		\[I\coloneqq\bigcup_{i=0}^\infty(a_i)=(a_0,a_1,a_2,\ldots)\]
+		is an ideal of $A$. But all ideals are principal, so we may write $I=(a)$ for some $a\in A$. But then $a\in(a_N)$ for some $N$, so $I\subseteq(a_N)$, so for any $n\ge N$, we see that
+		\[(a_n)\subseteq I\subseteq(a_N)\subseteq(a_n),\]
+		establishing that our chain of ideals has stabilized.
+
+		\item Note that an element of $A$ is prime if and only if it is irreducible by combining \Cref{lem:prime-is-irred,prop:irred-is-prime}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}

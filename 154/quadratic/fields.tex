@@ -4,6 +4,233 @@
 
 \begin{document}
 
-\section{Quadratic Extensions}
+\section{Number Rings}
+
+In our solutions to Pell equations, we frequently ran into numbers of the form
+\[a+b\sqrt d\]
+where $a,b\in\ZZ$ and $d$ is a positive integer which is not a square. But in our explanation of \Cref{ex:pell-5} we even ran into numbers of the form
+\[\frac{a+b\sqrt 5}2\]
+where $a$ and $b$ had the same parity. The goal of this section is to contextualize what is going on here. Starting in this section, we will assume basic ring theory, on the level of any reasonable abstract algebra text. We refer to \Cref{app:fields} for the necessary field theory.
+
+% Throughout, our focus will be on generalizing our story with $\sqrt d$s to general field extensions of $\QQ$, which are called number fields.
+% \begin{definition}[number field]
+% 	A \textit{number field} $K$ is a finite field extension of $\QQ$. In other words, the degree $[K:\QQ]\coloneqq\dim_\QQ K$ of the field extension is finite.
+% \end{definition}
+
+\subsection{Normal Domains}
+It is a question of classical interest in number theory to take an integral domain and ask if it is a unique factorization domain: in some sense, unique factorization domains are ``the best'' rings (e.g., they are computationally nice to work with because their multiplicative structure can be well-understood). However, it is in general somewhat difficult to do such a check, and one spends a good part of an algebraic number theory learning how to do so.
+
+To start off, a basic hypothesis is that the integral domain be ``normal.'' For motivation, we recall the Rational root theorem.
+\begin{theorem}[rational root for $\ZZ$]
+	Let $f(x)\in\ZZ[x]$ be a monic polynomial with integer coefficients. If $q$ is a rational root of $f(x)$, then $q$ is an integer.
+\end{theorem}
+More generally, we will prove the following more general result.
+\begin{theorem}[rational root] \label{thm:rrt-for-ufd}
+	Let $A$ be a unique factorization domain with fraction field $K$, and let $f(x)\in A[x]$ be a monic polynomial with coefficients in $A$. If $q\in K$ is a root of $f(x)$, then $q\in A$.
+\end{theorem}
+\begin{proof}
+	Quickly, if $q=0$, there is nothing to say. Otherwise, by using unique factorization, we may write $q=a/b$ where $a$ and $b$ have no irreducible factors in common. Explicitly, by unique factorization, we may express $q$ as a quotient of nonzero elements in $A$ by writing
+	\[q=\dfrac{u\prod_{i=1}^np_i^{\alpha_i}}{\prod_{j=1}^np_i^{\beta_i}},\]
+	where $u$ is a unit, $\alpha_\bullet$ and $\beta_\bullet$ are nonnegative integers, and each $p_\bullet$ is a unique irreducible (not equal to the product of any other $p_\bullet$ and a unit). Then we may write
+	\[q=\underbrace{u\prod_{\substack{1\le i\le n\\\alpha_i>\beta_i}}p^{\alpha_i-\beta_i}}_{a\coloneqq}\bigg/\underbrace{\prod_{\substack{1\le i\le n\\\alpha_i<\beta_i}}p^{\beta_i-\alpha_i}}_{b\coloneqq}\]
+	Notably, if $\alpha_i=\beta_i$, then we may remove $p_i$.
+
+	We now proceed with the usual proof of the Rational root theorem. Write
+	\[f(x)=x^d+\sum_{k=0}^{d-1}r_kx^k\]
+	where $d=\deg f$ and $r_0,r_1,\ldots,r_{d-1}\in A$. We are given that $f(a/b)=0$. As such, the main point is that we can manipulate $f(a/b)=0$ into
+	\[0=a^d+\sum_{k=0}^{d-1}r_ka^kb^{d-k}=a^d+b\sum_{k=0}^{d-1}r_ka^kd^{(d-1)-k}.\]
+	To show that $q\in A$, we will show that $b$ is a unit, which indeed implies that $q=ab^{-1}\in A$. Because $A$ is a unique factorization domain, it suffices to show that no irreducible element $p$ divides $b$. Well, if $p\mid b$, then $p$ divides the sum above, so reducing$\pmod p$ requires $p\mid a^d$, and so $p\mid a$ because $p$ is prime by \Cref{lem:prime-is-irred-for-ufd}; however, no irreducible divides both $a$ and $b$ by their construction, so we are done.
+\end{proof}
+Let's see how \Cref{thm:rrt-for-ufd} can detect when a ring is fails to be a unique factorization domain.
+\begin{example} \label{ex:z-root-5-not-normal}
+	Construct the ring $\ZZ[\sqrt 5]\coloneqq\left\{a+b\sqrt 5:a,b\in\ZZ\right\}$ where addition and multiplication are as expected. Then $\ZZ[\sqrt 5]$ is not a unique factorization domain.
+\end{example}
+\begin{solution}
+	Quickly, we check that $\ZZ[\sqrt 5]$ is in fact a subring of (say) $\CC$: we have all the needed identities, and we are closed under the needed operations because
+	\begin{align*}
+		\left(a+b\sqrt 5\right)+\left(a'+b'\sqrt 5\right) &= (a+a')+(b+b')\sqrt 5, \\
+		\left(a+b\sqrt 5\right)\cdot\left(a'+b'\sqrt 5\right) &= (aa'+5bb')+(ab'+ba')\sqrt 5.
+	\end{align*}
+	(We will not check that $\ZZ[\alpha_1,\ldots,\alpha_n]$ is a ring in the future.) Anyway, the main content of this example is to consider the polynomial
+	\[f(x)\coloneqq x^2-x-1,\]
+	which is monic and has integer coefficients (in particular, the coefficients are in $\ZZ[\sqrt 5]$). Using the quadratic formula, we see that $\frac{1+\sqrt5}2$ is a root of $f(x)$ which lives in the quotient field of $\ZZ[\sqrt 5]$ but not in $\ZZ[\sqrt 5]$. Thus, \Cref{thm:rrt-for-ufd} tells us that $\ZZ[\sqrt 5]$ cannot be a unique factorization domain!
+\end{solution}
+\begin{exe}
+	More generally, let $d\equiv1\pmod4$ be an integer which is not a square. Then show that the set
+	\[\ZZ[\sqrt d]\coloneqq\left\{a+b\sqrt d:a,b\in\ZZ\right\}\]
+	is a subring of $\CC$ but fails to be a unique factorization domain because $\frac{1+\sqrt d}2$ is the root of a monic polynomial with integer coefficients.
+\end{exe}
+The test we are applying is worth turning into an adjective.
+\begin{definition}[normal]
+	Fix an integral domain $A$ with fraction field $K$. Then $A$ is said to be \textit{normal} if and only if the following holds: for any monic polynomial $f(x)\in A[x]$, if $q\in K$ is a root of $f(x)$, then $q\in A$.
+\end{definition}
+\begin{example}
+	\Cref{thm:rrt-for-ufd} is equivalent to the statement that unique factorization domains are normal.
+\end{example}
+\begin{nex}
+	The content of \Cref{ex:z-root-5-not-normal} is showing that $\ZZ[\sqrt5]$ is not normal.
+\end{nex}
+It does turn out that the rings $\ZZ[\sqrt2]$ and $\ZZ[\sqrt3]$ are normal, but we will hold off showing this until we have built a little more theory.\footnote{For example, it is possible to show that these rings are unique factorization domains directly. This approach does not generalize to further $\ZZ[\sqrt d]$ because, for example, $\ZZ[\sqrt{15}]$ is normal but not a unique factorization domain.}
+
+\subsection{Number Rings}
+Notably, we showed that $\ZZ[\sqrt5]$ is not normal by only looking at monic polynomials with coefficients in $\ZZ$. This is surprising because the definition of a normal domain allows our coefficients to live in the full ring $\ZZ[\sqrt5]$, but we only used $\ZZ$! It will turn out that using $\ZZ$ is enough, though showing this requires a little effort. Regardless, we are motivated to make the following definitions.
+\begin{definition}[algebraic integer]
+	Fix a field extension $K$ of $\QQ$. An element $\alpha\in K$ is an \textit{algebraic integer} if and only if $\alpha$ is the root of some monic polynomial in $\ZZ[x]$.
+\end{definition}
+\begin{definition}[number ring]
+	Fix a finite field extension $K$ of $\QQ$. Then the \textit{number ring} $\mathcal O_K$ of $K$ consists of all the algebraic integers in $K$.
+\end{definition}
+\begin{example} \label{ex:o-q-is-z}
+	We see that $\OO_\QQ=\ZZ$ by \Cref{thm:rrt-for-ufd}. Explicitly, any element $n\in\ZZ$ is the root of the monic polynomial $x-n\in\ZZ[x]$. On the other hand, if $\alpha\in\QQ$ is an algebraic integer, then $\alpha$ is the root of a monic polynomial in $\ZZ[x]$, so $\alpha\in\ZZ$ by \Cref{thm:rrt-for-ufd}.
+\end{example}
+Though we will not dwell on it too much, it is worth acknowledging that the following generalized (relative) notion is more correct to work with.
+\begin{definition}[integral]
+	Fix an embedding of rings $A\subseteq B$. An element $\alpha\in B$ is \textit{integral over $A$} if and only if $\alpha$ is the root of some monic polynomial in $A[x]$.
+\end{definition}
+\begin{example}
+	Fix a field extension $K$ of $\QQ$. Then $\alpha\in K$ is an algebraic integer if and only if $\alpha$ is integral over $\ZZ$.
+\end{example}
+We do need to check that $\OO_K$ is in fact a ring. Of course, $0$ and $1$ are algebraic integers (they are the roots of the monic polynomials $x$ and $x-1$, respectively), so it remains to show that $\OO_K$ is closed under addition and multiplication. This requires a little work. The following result is known as the ``determinant trick'' in commutative algebra. Note that this result (and its corollaries) is basically \Cref{prop:how-to-algebraic}.
+\begin{proposition} \label{prop:how-to-integral}
+	Fix an embedding of rings $A\subseteq B$ and some $\alpha\in B$. Then the following are equivalent.
+	\begin{listalph}
+		\item $\alpha$ is integral over $A$.
+		\item The ring $A[\alpha]$ is finitely generated as an $A$-module.
+		\item There is a subring $A'\subseteq B$ finitely generated as an $A$-module containing both $A$ and $\alpha$.
+	\end{listalph}
+\end{proposition}
+Here, a ring $A'$ containing $A$ is finitely generated as an $A$-module (or ``finitely generated over $A$'') if and only if there are finitely many elements $r_1',\ldots,r_n'$ such that each $r'\in A'$ can be written as
+\[r'=\sum_{k=1}^na_kr_k'\]
+for some $a_1,\ldots,a_n\in A$. In other words, each element of $A'$ is an $A$-linear combination of some fixed finite set in $A'$.
+\begin{proof}
+	We show the implications separately.
+	\begin{listalph}
+		\item To see that (a) implies (b), we suppose $\alpha$ is the root of the monic polynomial $f(x)\in A[x]$ of degree $d$, written as
+		\[f(x)=x^d+\sum_{k=0}^{d-1}a_kx^k.\]
+		Then, for any $n\ge d$, we can express $\alpha^n$ as a $\ZZ$-linear combination of lower powers because
+		\[\alpha^n=-\sum_{k=0}^{d-1}a_k\alpha^{k+d-n}.\]
+		It follows that $A[\alpha]$ is generated by the elements $1,\alpha,\alpha^2,\ldots,\alpha^{d-1}$.
+		\item Note that (b) implies (c) by setting $A'=A[\alpha]$.
+		\item Checking that (c) implies (a) is harder. If $A'=0$, then $\alpha=0$, so there is nothing to say; otherwise, $A'\ne0$. Suppose $A'$ is generated by the elements $r_1',r_2',\ldots,r_n'$. Note that $\alpha r_i'\in A'$ for each $r_i'$, so we may write
+		\[\alpha r_i'=\sum_{j=1}^na_{ij}r_j'\]
+		for some elements $a_{ij}\in A$. In other words, the matrix $T\coloneqq(a_{ij})_{i,j=1}^n$ has
+		\[\alpha\begin{bmatrix}
+			r_1' \\
+			\vdots \\
+			r_n'
+		\end{bmatrix}=T\begin{bmatrix}
+			r_1' \\
+			\vdots \\
+			r_n'
+		\end{bmatrix}.\]
+		Thus, $T-\alpha I_n$ is an $n\times n$ matrix with entries in $A'$, and it has the nonzero vector $(r_1',\ldots,r_n')$ in its kernel, so $\det(T-\alpha I_n)=0$. Expanding out the polynomial $\det(\alpha I_n-T)=0$ makes $\alpha$ the root of a monic polynomial (of degree $n$) with coefficients in $A$, so $\alpha$ is indeed integral over $A$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+In our application, we will also want the following lemma.
+\begin{lemma} \label{lem:finite-extension-transitive}
+	Let $A\subseteq B\subseteq C$ be embeddings of rings. If $C$ is finitely generated as a $B$-module, and $B$ is finitely generated as an $A$-module, then $C$ is finitely generated as an $A$-module.
+\end{lemma}
+\begin{proof}
+	The point is to concatenate our generating sets together; indeed, this argument is basically the same as \Cref{lem:deg-in-towers}. Say that $B$ is generated over $A$ by the elements $b_1,\ldots,b_m$, and say that $C$ is generated over $B$ by the elements $c_1,\ldots,c_n$. Then any $c\in C$ has some $b_1',\ldots,b_n'\in B$ such that
+	\[c=\sum_{\ell=1}^nb_\ell'c_\ell,\]
+	but now each $b_\ell'$ can be expanded over $A$ as
+	\[c=\sum_{\ell=1}^n\sum_{k=1}^ma_{k\ell}b_kc_\ell\]
+	for some $a_{k\ell}\in A$. Thus, the elements $b_kc_\ell$ for $1\le k\le m$ and $1\le\ell\le n$ generate $C$ over $A$, so we are done.
+\end{proof}
+\begin{corollary}
+	Fix a finite field extension $K$ of $\QQ$. Then $\OO_K$ is a normal ring.
+\end{corollary}
+\begin{proof}
+	We run our checks separately.
+	\begin{itemize}
+		\item We check that $\OO_K$ is a ring. As discussed previously, $0,1\in\OO_K$ because these elements are the roots of the polynomials $x$ and $x-1$, respectively. It remains to show that, for any $\alpha,\beta\in\OO_K$, we have $\alpha+\beta,\alpha\beta\in\OO_K$. The main point is to show that $\ZZ[\alpha,\beta]$ is finitely generated as a $\ZZ$-module, which will complete the proof by \Cref{prop:how-to-integral} because $\alpha+\beta,\alpha\beta\in\ZZ[\alpha,\beta]$.
+	
+		Well, let $\alpha$ and $\beta$ be the roots of the monic polynomials $f(x),g(x)\in\ZZ[x]$ respectively. Then by \Cref{prop:how-to-integral} shows that $\ZZ[\beta]$ is finitely generated as a $\ZZ$-module, and $f(\alpha)=0$ shows that $\alpha$ is integral over $\ZZ[\beta]$, so $\ZZ[\alpha,\beta]$ is finitely generated as a $\ZZ[\beta]$-module. We conclude $\ZZ[\alpha,\beta]$ is finitely generated as a $\ZZ$-module by \Cref{lem:finite-extension-transitive}.
+
+		\item We check that $\OO_K$ is normal. Suppose that $\alpha\in K$ is the root of the monic polynomial $f(x)\in\OO_K[x]$; we show that $\alpha\in\OO_K$ by showing that $\alpha$ is an algebraic integer. Well, expand $f(x)$ as
+		\[f(x)=x^d+\sum_{k=0}^{d-1}a_kx^k\]
+		for some $a_0,\ldots,a_{d-1}\in\OO_K$. Each $a_\bullet$ is integral over $\ZZ$, so \Cref{prop:how-to-integral} tells us that $\ZZ[a_\bullet]$ for each $a_\bullet$. As such, as in the previous check, we may build the tower
+		\[\ZZ\subseteq\ZZ[a_0]\subseteq\ZZ[a_0,a_1]\subseteq\cdots\subseteq\ZZ[a_0,\ldots,a_{d-1}],\]
+		where each ring is finitely generated over the previous one by \Cref{prop:how-to-integral}. Then \Cref{lem:finite-extension-transitive} tells us that $\ZZ[a_0,\ldots,a_{d-1}]$ is finitely generated as a $\ZZ$-module. Lastly, $f(\alpha)=0$ tells us that $\alpha$ is integral over $\ZZ[a_0,\ldots,a_{d-1}]$, so $\ZZ[a_0,\ldots,a_{d-1},\alpha]$ is finitely generated as a $\ZZ[a_0,\ldots,a_{d-1}]$-module and hence finitely generated as a $\ZZ$-module by \Cref{lem:finite-extension-transitive}, meaning that $\alpha$ is integral over $\ZZ$ by \Cref{prop:how-to-integral}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+After doing all that theory, we are owed an example, so we will compute $\OO_K$ for quadratic field extensions $K=\QQ(\sqrt d)$ of $\QQ$. We will want the following lemma, which we have been using in some guise for quite a bit of the previous section.
+\begin{lemma} \label{lem:quadratic-conjugation}
+	Fix $K\coloneqq\QQ(\sqrt d)$ where $d$ is a non-square integer. Then the function $\sigma\colon K\to K$ given by $\sigma\left(a+b\sqrt d\right)\coloneqq a-b\sqrt d$ is a ring homomorphism.
+\end{lemma}
+\begin{proof}
+	To begin, note that $\sigma$ is well-defined because $a+b\sqrt d=a'+b'\sqrt d$ implies that $(a-a')=(b'-b)\sqrt d$ and so $a=a'$ and $b=b'$ because $\sqrt d$ is irrational. To check that $\sigma$ is a homomorphism, we note that $\sigma(0)=0$ and $\sigma(1)=1$ and
+	\begin{align*}
+		\sigma\left((a+b\sqrt d)+(a'+b'\sqrt d)\right) &= (a+a')-(b+b')\sqrt d \\
+		&= \sigma(a+b\sqrt d)+\sigma(a'+b'\sqrt d) \\
+		\sigma\left((a+b\sqrt d)(a'+b'\sqrt d)\right) &= (aa'+dbb')-(ab'+ba')\sqrt d \\
+		&= \sigma\left(a+b\sqrt d\right)\sigma\left(a'+b'\sqrt d\right),
+	\end{align*}
+	completing the proof.
+\end{proof}
+\begin{example}
+	Fix $K\coloneqq\QQ(\sqrt2)$. Then $\ZZ[\sqrt2]=\OO_K$. In particular, $\ZZ[\sqrt2]$ is normal.
+\end{example}
+\begin{proof}
+	Note that $\sqrt2\in\OO_K$ because it is the root of the polynomial $x^2-2=0$. Thus, $\ZZ[\sqrt2]$ is finitely generated as a $\ZZ$-module by \Cref{prop:how-to-integral}, and we see $\ZZ[\sqrt2]\subseteq\OO_K$.
+
+	We now show that $\OO_K\subseteq\ZZ[\sqrt2]$, which is harder. Suppose $a+b\sqrt 2\in\OO_K$, where we allow $a,b\in\QQ$. We want to show that $a,b\in\ZZ$. Well, $a+b\sqrt2$ is the root of some monic polynomial $f(x)\in\ZZ[x]$, so $\sigma\left(a+b\sqrt2\right)=a-b\sqrt2$ is also the root of $f(x)$ by \Cref{lem:quadratic-conjugation}, so $a-b\sqrt2$ is also an algebraic integer. Thus,
+	\begin{align*}
+		(a+b\sqrt2)+(a-b\sqrt2)&=2a, \\
+		\left((a+b\sqrt2)-(a-b\sqrt2)\right)\sqrt2&=4b, \\
+		(a+b\sqrt2)(a-b\sqrt2)&=a^2-2b^2,
+	\end{align*}
+	are also algebraic integers. But they are also rational and hence actually integers by \Cref{ex:o-q-is-z}, so we may write $a=a_0/2$ and $b=b_0/4$ for some integers $a_0$ and $b_0$. Then
+	\[a^2-2b^2=\frac{a_0^2}4-\frac{b_0^2}8=\frac{2a_0^2-b_0^2}8\]
+	needs to be an integer, so $2a_0^2\equiv b_0^2\pmod8$, which can only happen if $a_0\equiv0\pmod2$ and $b_0\equiv0\pmod4$. Thus, $a$ and $b$ are in fact integers, so we conclude.
+\end{proof}
+More generally, we can show the following statement.
+\begin{proposition} \label{prop:quad-o-k}
+	Fix a non-square squarefree integer $d$, and fix $K\coloneqq\QQ(\sqrt d)$. Then we have
+	\[\OO_K=\begin{cases}
+		\ZZ[\sqrt d] & \text{if }d\equiv2,3\pmod4, \\
+		\ZZ\left[\frac{1+\sqrt d}2\right] & \text{if }d\equiv1\pmod4.
+	\end{cases}\]
+\end{proposition}
+\begin{proof}
+	We proceed as in the example. Of course, $\sqrt d\in\OO_K$ because it is the root of $x^2-d=0$, and if $d\equiv1\pmod4$, then $\frac{1+\sqrt d}2\in\OO_K$ because it is the root of
+	\[x^2-x-\frac{d-1}4=0.\]
+	Thus, \Cref{prop:how-to-integral} then assures us that $\ZZ[\sqrt d]\subseteq\OO_K$ and $\ZZ\left[\frac{1+\sqrt d}2\right]\subseteq\OO_K$ when $d\equiv1\pmod4$.
+
+	It remains to show our other inclusion. Well, fix some $a+b\sqrt d\in\OO_K$ where $a,b\in\QQ$. Because $a+b\sqrt d$ is the root of some monic polynomial with integer coefficients, we see that $a-b\sqrt d$ is as well by \Cref{lem:quadratic-conjugation}, so $a-b\sqrt d$. Thus,
+	\begin{align*}
+		(a+b\sqrt d)+(a-b\sqrt d)&=2a, \\
+		\left((a+b\sqrt d)-(a-b\sqrt d)\right)\sqrt d&=2bd, \\
+		(a+b\sqrt d)(a-b\sqrt d)&=a^2-db^2,
+	\end{align*}
+	are also algebraic integers. But they are also rational and hence actually integers by \Cref{ex:o-q-is-z}, so we may write $a=a_0/2$ and $b=b_0/(2d)$ for some integers $a_0$ and $b_0$. For example, we see that
+	\[4\left(a^2-db^2\right)=a_0^2-\frac{b_0^2}{d}\]
+	must be an integer, so because $d$ is squarefree, we conclude that $d\mid b_0$, so we write $b=b_1/2$ for some integer $b_1$. To continue the argument, we split into cases.
+	\begin{itemize}
+		\item Suppose $d\equiv2,3\pmod4$. Then we see
+		\[a^2-db^2=\frac{a_0^2-db_1^2}{4}\]
+		must be an integer. By checking$\pmod4$, we see that both $a_0$ and $b_1$ must be even, so $a$ and $b$ are both integers, so $a+b\sqrt d\in\ZZ[\sqrt d]$.
+		\item Suppose $d\equiv1\pmod4$. Then we see
+		\[a^2-db^2=\frac{a_0^2-db_1^2}{4}\]
+		must be an integer. By checking$\pmod4$, we see that both $a_0$ and $b_0$ must have the same parity, so
+		\[a+b\sqrt d=\frac{a_0-b_0}2+a_0\cdot\frac{1+\sqrt d}2\in\ZZ\left[\frac{1+\sqrt d}2\right],\]
+		establishing the needed inclusion.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Note that \Cref{prop:quad-o-k} fulfills a curiosity of \Cref{ex:pell-5}, namely about where the denominator of $2$ came from and why it was so controlled!
+
+To continue our journey of generalization to compute other rings of integers, we need to generalize aspects of the above proof: where did the $\sigma$ come from? Where did the various $2a$, $2bd$, and $a^2-db^2$ come from? Why were we able to come up with a denominator of $2d$ so quickly, and why was it so annoying to argue beyond that?
+
+\subsection{The Discriminant}
+
+% https://math.stackexchange.com/a/2946828
+
+\subsection{Number Ring Structure}
+
+\subsection{Dirichlet's Unit Theorem: Upper Bound}
+% https://math.stackexchange.com/q/246157
 
 \end{document}
