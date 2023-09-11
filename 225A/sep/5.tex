@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 5}
+
+In this lecture, we will complete our proof of \Cref{thm:compactness}.
+
+\subsection{Completing the proof of \texorpdfstring{\Cref{thm:compactness}}{the Compactness Theorem}}
+Last class, we left off having shown \Cref{lem:extend-for-complete}, which was the third step of our outline. The last step of the proof is the following lemma.
+\begin{lemma} \label{lem:last-compactness-lemma}
+	Fix a language $\mathcal L$ with a theory $T$ which is finitely satisfiable, complete, and has witnesses. Then $T$ has a model $\mathcal M$ with cardinality at most $\left|\mathcal L\right|$.
+\end{lemma}
+\begin{proof}
+	As we did last class, we go ahead and explicitly describe our model and then show that it makes sense. Take $M\coloneqq\mathcal C/{\sim}$ where $\mathcal C$ is our set of constants, and our equivalence relation $\sim$ is given by $c\sim d$ if and only if $(c=d)\in T$. Notably, constants $c\in\mathcal C$ are interpreted as $c^\mathcal M\coloneqq[c]$. To interpret functions $f$, we have $f^\mathcal M([a_1],\ldots[a_n])=[d]$ if and only if $(f(a_1,\ldots,a_n)=d)\in T$. Lastly, to interpret relations $R$, we have $R^\mathcal M([a_1],\ldots,[a_n])$ if and only if $(R(a_1,\ldots,a_n))\in T$.
+
+	We now check that this makes sense. Note that in the following checks, we are a bit sloppy in differentiating between constants and their equivalence classes in $C$ when there is unlikely to be problems from doing so.
+	\begin{enumerate}
+		\item We show that $\sim$ is in fact an equivalence relation on $\mathcal C$. There are the following checks.
+		\begin{itemize}
+			\item Reflexive: we must show $c=c$ is a sentence in $T$. Because $T$ is complete, one of $c=c$ or $\lnot(c=c)$ is in $T$. But $T$ is finitely satisfiable, and the sentence $\lnot(c=c)$ has no model, so it cannot live in $T$. So instead $c=c$ lives in $T$.
+			\item Symmetric: suppose $c\sim c'$ so that $c=c'$ is a sentence in $T$; we want to show that $c'=c$ is a sentence in $T$. Well, by completeness one of $c'=c$ or $\lnot(c'=c)$ lives in $T$. But if we have $\lnot(c'=c)$, then the finite theory $\{\lnot(c'=c),c=c'\}$ will have no model (symmetry of equality will hold in the model), violating that $T$ is finitely satisfiable. So we must have $c'=c$ instead.
+			\item Transitive: suppose $c\sim c'$ and $c'\sim c''$ so that $c=c'$ and $c'=c''$ are sentences in $T$. We want to show that $c\sim c''$, or equivalently that $c=c''$ lives in $T$. Well, by completeness, one of $c=c''$ or $\lnot(c=c'')$ lives in $T$. However, if $\lnot(c=c'')$ lives in $T$, then we note that $\{c=c',c'=c'',\lnot(c=c'')\}$ is a subset of $T$ with no model, which is a contradiction. So instead $c=c''$ lives in $T$.
+		\end{itemize}
+
+		\item We show that our interpretation of functions makes sense. Fix an $n$-ary function $f$. We need to show that $f(a_1,\ldots,a_n)$ has a unique interpretation in $\mathcal M$.
+		\begin{itemize}
+			\item Existence: for constants $a_1,\ldots,a_n$, we show that there is a constant $b$ such that $f(a_1,\ldots,a_n)=b$ in $T$. This holds by having witnesses: let $\varphi(x)$ be the formula $f(a_1,\ldots,a_n)=x$, and having witnesses tells us that $T$ contains the sentence
+			\[\exists x\,\varphi(x)\to\varphi(b)\]
+			for some constant $b$. We show that $T$ contains the sentence $\varphi(b)$. Otherwise, because $T$ is complete, $T$ will have the sentence $\lnot\varphi(b)$, but being finitely satisfiable means that
+			\[\{\exists x\varphi(x)\to\varphi(b),\lnot\varphi(b)\}\]
+			must have a model; this is an issue because all models satisfy $\exists x\,f(a_1,\ldots,a_n)=x$ and therefore must satisfy $\varphi(b)$, which is a contradiction to satisfying $\lnot\varphi(b)$.
+			\item Uniqueness: for constants $a_1,\ldots,a_n$ and $a_1',\ldots,a_n'$ and $b$ and $b'$ such that $a_i\sim a'_i$ for all $i$ and both $f(a_1,\ldots,a_n)=b$ and $f(a_1',\ldots,a'_n)=b'$, we must show that actually $b\sim b'$.
+
+			Well, by completeness, if $b\sim b'$ is not true, then $\lnot(b=b')$ lives in $T$. Then the theory
+			\[\{a_1=a_1',\ldots,a_n=a_n',f(a_1,\ldots,a_n)=b,f(a_1',\ldots,a_n')=b',\lnot(b=b')\}\]
+			is a subset of $T$ but is not satisfiable (because of how functions work in set theory), which is a contradiction. 
+		\end{itemize}
+
+		\item We show that our interpretation of relations makes sense. Fix an $n$-ary relation $R$. Essentially, if we have constants $a_1,\ldots,a_n$ and $a_1',\ldots,a_n'$ such that $a_i\sim a_i'$ for each $i$, then we will have $R(a_1,\ldots,a_n)\in T$ if and only if $R(a_1',\ldots,a_n')\in T$. Because $\sim$ is symmetric as shown above, it suffices to show that $R(a_1,\ldots,a_n)\in T$ implies $R(a_1',\ldots,a_n')\in T$.
+
+		Well, $T$ is complete, so if $T$ fails to contain $R(a_1',\ldots,a_n')$, then it must contain $\lnot R(a_1',\ldots,a_n')$ instead. But then
+		\[\{a_1=a_1',\ldots,a_n=a_n',R(a_1,\ldots,a_n),\lnot R(a_1',\ldots,a_n')\}\]
+		is a finite subset of $T$ with no model because of how relations work in set theory; this is a contradiction.
+
+		\item As an intermediate step, before going on to show that $\mathcal M\models T$, we show that terms behave: suppose $t(x_1,\ldots,x_n)$ is a term. For constants $c_1,\ldots,c_n,c'$, we show that $t(c_1,\ldots,c_n)=d$ is in $T$ if and only if $t^\mathcal M([c_1],\ldots,[c_n])=[d]$.
+
+		Let $T'$ be the subset of $T$ with this property. Note that $T'$ contains constants by our first check above. To show that $T'=T$, we suppose that $t_1,\ldots,t_m\in T'$ and that $f$ is an $m$-ary function, and we want to show that $f(t_1,\ldots,t_m)$ is in $T'$. Fix enough constants $c_1,\ldots,c_n$ (namely, more than the number of free variables of each $t_\bullet$). Then we note $t_i^\mathcal M([c_1],\ldots,[c_n])=[d_i]$ for some $[d]\in\mathcal M$, which then implies that
+		\[t_i(c_1,\ldots,c_n)=d_i\]
+		is a sentence in $T$ for each $t_i$. Now, $f^\mathcal M\left(t_1^\mathcal M,\ldots,t_m^\mathcal M\right)(\overline c)$ is certainly equal to some constant $[d]$, which is now equivalent to having
+		\[f(d_1,\ldots,d_m)=d\]
+		in $T$ by the functions check above. Now, the finite satisfiable and completeness of $T$ imply that having the above sentence in $T$ is equivalent to having the sentence
+		\[f(t_1,\ldots,t_m)(\overline c)=d\]
+		in $T$ because $T$ already contains $t_i(\overline c)=d_i$ for each $i$. For example, if $T$ fails to contain $f(t_1,\ldots,t_m)(\overline c)$, then it will contain $\lnot f(t_1,\ldots,t_m)(\overline c)=d$ by completeness, but this contradicts $f(d_1,\ldots,d_m)=d$ and $t_i(\overline c)=d_i$ for each $i$ and therefore the finite subset with all these sentences is not satisfiable. The reverse implication is similar.
+
+		\item We show that $\mathcal M$ actually satisfies all sentences in $T$; in fact, we will show $T\models\varphi(\overline a)$ for any $\varphi$ and $\overline a$ if and only if $\mathcal M\models\varphi(\overline a)$. We proceed by induction, starting with atomic formulae.
+		\begin{itemize}
+			\item Our most basic cases are sentences of the form $c_1=c_2$ and $R(c_1,\ldots,c_n)$ where $R$ is some $n$-ary relation and $c_1,\ldots,c_n$ are constants. These are satisfied by $\mathcal M$ basically by construction: the definition of $\sim$ establishes from $c_1=c_2$ that $c_1\sim c_2$ and thus $c_1^\mathcal M=[c_1]=[c_2]=c_2^\mathcal M$. And $R^\mathcal M\left(c_1^\mathcal M,\ldots,c_n^\mathcal M\right)$ is equivalent to $R(c_1,\ldots,c_n)\in T$.
+			\item For any terms $t$ and $s$ and enough constants $\overline a$ and $\overline b$, we claim that having $(t=s)(\overline a,\overline b)$ in $T$ implies $\mathcal M\models(t=s)(\overline a,\overline b)$. The previous step promises constants $c$ and $d$ such that $t(\overline a)=c$ and $s(\overline b)=d$ are in $T$ and that this is equivalent to $t^\mathcal M(\overline a)=[c]$ and $s^\mathcal M(\overline b)=[d]$.
+
+			Now, $(t=s)(\overline a,\overline b)$ being in $T$ is thus equivalent to having $c=d$ in $T$ by the usual argument using the completeness and finite satisfiability of $T$. Then having $c=d$ is equivalent to $[c]=[d]$, which is equivalent to $t^\mathcal M(\overline a)=s^\mathcal M(\overline b)$, which is equivalent to $\mathcal M\models(t=s)(\overline a,\overline b)$.
+			\item For any $n$-ary relation $R$ and terms $t_1,\ldots,t_n$ and enough constants $\overline a$, we claim $R(t_1,\ldots,t_n)(\overline a)$ being in $T$ implies $\mathcal M\models R(t_1,\ldots,t_n)(\overline a)$. Well, for each term $t_i$, the previous step promises us a constant $c_i$ such that $t_i(\overline a)=c_i$ is in $T$ and has $t_i^\mathcal M(\overline a)=[c_i]$.
+
+			Now, having the sentences $t_i(\overline a)=c_i$ for each $i$ implies that $R(t_1,\ldots,t_n)(\overline a)$ lives in $T$ if and only if $R(c_1,\ldots,c_n)$ lives in $T$ by the usual argument using the completeness and finite satisfiability of $T$. But by our relations check, we know that $R(c_1,\ldots,c_n)$ lives in $T$ if and only if $R^\mathcal M([c_1],\ldots,[c_n])$ is true, which is equivalent to $R^\mathcal M\left(t_1^\mathcal M(\overline a),\ldots,t_n^\mathcal M(\overline a)\right)$.
+		\end{itemize}
+		We now build up from atomic formulae. Let $F'$ be the subset of formulae such that $\varphi(\overline a)$ being in $T$ for some constants $\overline a$ if and only if $\mathcal M\models\varphi(\overline a)$. The above checks show that $F'$ contains atomic formulae.
+		\begin{itemize}
+			\item Suppose $\varphi\in F'$. We show $\lnot\varphi\in F'$. Well, $\lnot\varphi(\overline a)$ fails to live in $T$ if and only if $\varphi(\overline a)$ lives in $T$ (by completeness), which is equivalent to $\mathcal M\models\varphi(\overline a)$, which is equivalent to $\mathcal M$ not satisfying $\lnot\varphi(\overline a)$.
+			\item Suppose $\varphi,\psi\in F'$. We show that $\varphi\land\psi$. Well, $(\varphi\land\psi)(\overline a)$ lives in $T$ if and only if both $\varphi(\overline a)$ and $\psi(\overline a)$ live in $T$ (using the usual argument with the completeness and finite satisfiability of $T$), which is equivalent to $\mathcal M\models\varphi(\overline a)$ and $\mathcal M\models\psi(\overline a)$, which is equivalent to $\mathcal M\models(\varphi\land\psi)(\overline a)$.
+			\item Suppose $\varphi(x)\in F'$. We show that $\exists x\,\varphi(x)\in F'$. Well, $\mathcal M\models(\exists x\,\varphi(x))(\overline a)$ if and only if there is $[b]\in M$ such that $\mathcal M\models\varphi(\overline a,b)$. By hypothesis, this is equivalent to having some constant $b$ such that $\varphi(\overline a,b)$ is in $T$.
+
+			Now, if $\varphi(\overline a,b)$ is in $T$ for some constant $b$, then the usual argument with completeness and finite satisfiability requires $(\exists x\,\varphi(x))(\overline a)$ to be in $T$. Conversely, if $(\exists x\,\varphi(x))(\overline a)$ is in $T$, then the fact that $T$ has witnesses implies that there is a constant $c$ such that $\varphi(\overline a,b)$ is in $T$ from the usual argument. In particular, the sentence $\exists x\,\varphi(\overline a)(x)\to\varphi(\overline a)(b)$ belongs to $T$ for some constant $b$.
+		\end{itemize}
+		The above checks complete the induction on formulae.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\Cref{thm:compactness} now follows from combining \Cref{lem:extend-for-complete,lem:last-compactness-lemma}.
+
+\end{document}

@@ -1,0 +1,207 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 7}
+
+In this lecture, we will provide another proof of \Cref{thm:compactness}, using ultrafilters.
+
+\subsection{Ultrafilters}
+Unsurprisingly, the main character of our story will be ultrafilters.
+\begin{definition}[filter]
+	Fix a set $I$. Then a \textit{filter} $\mathcal F$ on $I$ is a subset of $\mathcal P(I)$ satisfying the following.
+	\begin{listalph}
+		\item $I\in\mathcal F$.
+		\item Finite intersection: for $X,Y\in\mathcal F$, we have $X\cap Y\in\mathcal F$.
+		\item Containment: if $X\in\mathcal F$ and $Y\subseteq I$ contains $X$, then $Y\in\mathcal F$ also.
+	\end{listalph}
+\end{definition}
+The intuition here is that filters contain ``large'' subsets of $I$.
+\begin{example}
+	Fix a set $I$. Then $\{I\}$ is a filter.
+\end{example}
+\begin{example} \label{ex:trivial-filter}
+	Fix a set $I$ and a filter $\mathcal F$ on $I$. If $\emp\in\mathcal F$, then we see that any subset $X\subseteq I$ contains $\emp$ and thus must live in $\mathcal F$. Thus, $\mathcal F=\mathcal P(I)$, which is in fact a filter. We call $\mathcal P(I)$ the ``trivial filter.''
+\end{example}
+\begin{example} \label{ex:almost-principal-filter}
+	More generally, fix any subset $X\subseteq I$. Then $\mathcal F_X\coloneqq\{Y\subseteq I:X\subseteq Y\}$ is a filter.
+	\begin{listalph}
+		\item Note $X\subseteq I$, so $I\in\mathcal F_X$.
+		\item Intersection: if $Y,Z\in\mathcal F_X$, then $X\subseteq Y$ and $X\subseteq Z$, so $X\subseteq Y\cap Z$, so $Y\cap Z\in\mathcal F_X$.
+		\item Containment: if $Y\in\mathcal F_a$, and $Z\subseteq I$ contains $Y$, then $X\subseteq Y\subseteq Z$, so $Z\in\mathcal F_a$.
+	\end{listalph}
+\end{example}
+\begin{example}
+	Fix a set $I$, and define $\mathcal F\subseteq\mathcal P(I)$ by $X\in\mathcal F$ if and only if $I\setminus X$ is finite. We check that $\mathcal F$ is a filter.
+	\begin{listalph}
+		\item Note $I\in\mathcal F$ because $I\setminus I=\emp$ is finite.
+		\item Intersection: if $X,Y\in\mathcal F$, then $I\setminus(X\cap Y)=(I\setminus X)\cup(I\setminus Y)$ is finite and thus $X\cap Y\in\mathcal F$.
+		\item Containment: if $X\in\mathcal F$ and $Y\subseteq I$ contains $X$, then $I\setminus Y\subseteq I\setminus X$ is finite, so $Y\in\mathcal F$.
+	\end{listalph}
+\end{example}
+Ultrafilters are the largest filters.
+\begin{definition}[ultrafilter]
+	Fix a set $I$. Then an \textit{ultrafilter} $\mathcal F$ on $I$ is a nontrivial filter on $I$ such that each subset $X\subseteq I$ has one of $X\in\mathcal F$ or $I\setminus X\in\mathcal F$.
+\end{definition}
+\begin{example}
+	Fix a set $I$ and element $a\in I$. Define the ``principal ultrafilter''
+	\[\mathcal F_a\coloneqq\left\{X\subseteq I:a\in X\right\}.\]
+	We show that $\mathcal F_a$ is an ultrafilter. Note $\mathcal F_a$ is already a filter by \Cref{ex:almost-principal-filter}. To be ultrafilter, for each $X\subseteq I$, either $a\in X$ or $a\in I\setminus X$, which imply $X\in\mathcal F_a$ or $I\setminus X\in\mathcal F_a$ respectively.
+\end{example}
+The following result rigorizes the notion that ultrafilters are the largest filters.
+\begin{lemma} \label{lem:ultrafilter-is-maximal}
+	Fix a set $I$ and a filter $\mathcal U$ on $I$. The following are equivalent.
+	\begin{listalph}
+		\item $\mathcal U$ is an ultrafilter.
+		\item $\mathcal U$ is maximal among the partially ordered set of nontrivial filters on $I$, ordered by inclusion.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We have two implications to show.
+	\begin{itemize}
+		\item We show (a) implies (b). Suppose $\mathcal U'$ is a filter properly containing $\mathcal U$, and we want to show that $\mathcal U'=\mathcal P(I)$. Well, $\mathcal U'$ properly contains $\mathcal U$, so there is some $X\in\mathcal U'\setminus\mathcal U$. But $X\notin\mathcal U$ requires $I\setminus X\in\mathcal U$, so $I\setminus X\in\mathcal U'$ too, but then
+		\[\emp=X\cap(I\setminus X)\]
+		lives in $\mathcal U'$. It follows that $\mathcal U'=\mathcal P(I)$ by \Cref{ex:trivial-filter}.
+		\item We show (b) implies (a). Certainly $\mathcal U$ is nontrivial. Now, fix any subset $X\subseteq I$. Suppose $I\setminus X\notin\mathcal U$, and we want to show that $X\in\mathcal U$. Indeed, consider the filter
+		\[\mathcal U'\coloneqq\{Y\subseteq I:Y\supseteq X\cap X'\text{ for some }X'\in\mathcal U\}.\]
+		Quickly, we check that $\mathcal U'$ is a nontrivial filter containing $\mathcal U$.
+		\begin{itemize}
+			\item Note $I\supseteq X\cap I$, so $I\in\mathcal U'$.
+			\item Intersection: if $Y_1,Y_2\in\mathcal U'$, then find $X_1,X_2\in\mathcal U$ such that $Y_i\supseteq X\cap X_i$ for each $i$, so $X_1\cap X_2\in\mathcal U$ implies $Y_1\cap Y_2\supseteq X\cap(X_1\cap X_2)$ and so $Y_1\cap Y_2\in\mathcal U'$.
+			\item Containment: if $Y\in\mathcal U'$ and $Z\subseteq I$ contains $Y$, then find $X'\in\mathcal U$ such that $Y\supseteq X\cap X'$, so $Z\supseteq X\cap X'$, so $Z\in\mathcal U'$.
+			\item Contains $\mathcal U$: for each $X'\in\mathcal U$, note $X'\supseteq X\cap X'$, so $X'\in\mathcal U'$.
+			\item Nontrivial: having $\emp\in\mathcal U'$ would imply $\emp\supseteq X\cap X'$ for some $X'\in\mathcal U$, which is equivalent to $X'\subseteq I\setminus X$, so it would follow that $I\setminus X\in\mathcal U$, which is a contradiction.
+		\end{itemize}
+		We conclude that $\mathcal U=\mathcal U'$ by maximality of $\mathcal U$. However, $X\supseteq I\cap X$ forces $X\in\mathcal U'=\mathcal U$, so we are done.
+		\qedhere
+	\end{itemize}
+\end{proof}
+It is important to know that it is relatively easy to build ultrafilters.
+\begin{proposition}
+	Fix a nontrivial filter $\mathcal F$ on a set $I$. Then there exists an ultrafilter $\mathcal U$ containing $\mathcal F$.
+\end{proposition}
+\begin{proof}
+	Let $\mathcal P$ be the set of nontrivial filters containing $\mathcal F$, which we turn into a partially ordered by set by inclusion; note $\mathcal F\in\mathcal P$, so $\mathcal P$ is nonempty. Using \Cref{lem:ultrafilter-is-maximal}, we would like to show that $\mathcal P$ has a maximal element, for which we use Zorn's lemma. Fix a nonempty chain $\mathcal C\subseteq\mathcal P$, which we must upper-bound. We claim that
+	\[\mathcal F_u\coloneqq\bigcup_{\mathcal F'\in\mathcal C}\mathcal F'\]
+	is a filter containing $\mathcal F$ upper-bounding $\mathcal C$, which will complete the proof. Here are our checks.
+	\begin{itemize}
+		\item Upper-bounds: for any $\mathcal F'\in\mathcal C$, we see that $\mathcal F'\subseteq\mathcal F_u$ by construction.
+		\item Any $\mathcal F'\in\mathcal C$ contains $I$, so $I\in\mathcal F_u$.
+		\item Intersection: if $X,Y\in\mathcal F_u$, then we can find $\mathcal F'_X,\mathcal F'_Y\in\mathcal C$ containing $X$ and $Y$, respectively. Because $\mathcal C$ is a chain, we may find $\mathcal F'\in\mathcal C$ containing both $\mathcal F'_X$ and $\mathcal F'_Y$. Then $X,Y\in\mathcal F'$, so $X\cap Y\in\mathcal F'\subseteq\mathcal F_u$ because $\mathcal F'$ is a filter.
+		\item Containment: if $X\in\mathcal F_u$ and we have a subset $Y\subseteq I$ containing $X$, then we find $\mathcal F'\in\mathcal C$ containing $X$ and find that $Y\in\mathcal F'\subseteq\mathcal F_u$ because $\mathcal F'$ is a filter.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Compactness via Ultraproducts}
+For our application, we will want the notion of an ultraproduct.
+\begin{lemma} \label{lem:ultraprod}
+	Fix a language $\mathcal L$ and some $\mathcal L$-structures $\{\mathcal M_\alpha\}_{\alpha\in I}$. Now, define an $\mathcal L$-structure $\mathcal M$ as follows.
+	\begin{itemize}
+		\item The universe $M$ is $\prod_{\alpha\in I}M_\alpha$ modded out by the equivalence relation $\sim$ given by $(a_\alpha)\sim(b_\alpha)$ if and only if
+		\[\{\alpha\in I:a_\alpha=b_\alpha\}\in\mathcal U.\]
+		\item Functions are interpreted component-wise.
+		\item For an $n$-ary relation $R$, $R^\mathcal M((a_{1\alpha}),\ldots,(a_{n\alpha}))$ if and only if the set of $\alpha$ such that $R^{M_\alpha}(a_{1\alpha},\ldots,a_{n\alpha})$ is in $\mathcal U$.
+	\end{itemize}
+	Then $\mathcal M$ is a well-defined $\mathcal L$-structure.
+\end{lemma}
+\begin{proof}
+	Here are our various checks.
+	\begin{itemize}
+		\item We check that $\sim$ is an equivalence relation.
+		\begin{itemize}
+			\item Reflexive: note $(a_\alpha)\sim(a_\alpha)$ because $\{\alpha\in I:a_\alpha=a_\alpha\}=I$ lives in $\mathcal U$.
+			\item Symmetric: if $(a_\alpha)\sim(b_\alpha)$, then
+			\[\{\alpha\in I:b_\alpha=a_\alpha\}=\{\alpha\in I:a_\alpha=b_\alpha\},\]
+			which is in $\mathcal U$ by hypothesis.
+			\item Transitive: if $(a_\alpha)\sim(b_\alpha)$ and $(b_\alpha)\sim(c_\alpha)$, then $\{\alpha\in I:a_\alpha=c_\alpha\}$ contains the set
+			\[\{\alpha\in I:a_\alpha=b_\alpha=c_\alpha\}=\{\alpha\in I:a_\alpha=b_\alpha\}\cap\{\alpha\in I:a_\alpha=c_\alpha\},\]
+			which lives in $\mathcal U$ because $\mathcal U$ is a filter.
+		\end{itemize}
+		\item We check that interpretation of functions makes sense. Fix an $n$-ary function $f$ and some elements $(a_{1\alpha}),\ldots,(a_{n\alpha})$ and $(b_{1\alpha}),\ldots,(b_{n\alpha})$. We must show
+		\[\left(f^\mathcal M(a_{1\alpha},\ldots,a_{n\alpha})\right)\sim\left(f^\mathcal M(b_{1\alpha},\ldots,b_{n\alpha})\right).\]
+		Well, we note $\left\{\alpha\in I:f^\mathcal M(a_{1\alpha},\ldots,a_{n\alpha})=f^\mathcal M(b_{1\alpha},\ldots,b_{n\alpha})\right\}$ contains the set
+		\[\bigcap_{i=1}^n\{\alpha\in I:a_{i\alpha}=b_{i\alpha}\},\]
+		which lives in $\mathcal U$ because $\mathcal U$ is a filter.
+		\item We check that interpretation of relations makes sense. Fix an $n$-ary function $R$ and some elements $(a_{1\alpha}),\ldots,(a_{n\alpha})$ and $(b_{1\alpha}),\ldots,(b_{n\alpha})$. We must show
+		\[R((a_{1\alpha}),\ldots,(a_{n\alpha}))\iff R((b_{1\alpha}),\ldots,(b_{n\alpha})).\]
+		Unwrapping the definition of $R^\mathcal M$, this is equivalent to
+		\[\left\{\alpha\in I:R^{M_\alpha}(a_{1\alpha},\ldots,a_{n\alpha})\right\}\in\mathcal U\iff\left\{\alpha\in I:R^{M_\alpha}(b_{1\alpha},\ldots,b_{n\alpha})\right\}\in\mathcal U.\]
+		By symmetry, it's enough to show the forward direction, for which we note that the right-hand set contains
+		\[\left\{\alpha\in I:R^{M_\alpha}(a_{1\alpha},\ldots,a_{n\alpha})\right\}\cap\bigcap_{i=1}^n\{\alpha\in I:a_{i\alpha}=b_{i\alpha}\},\]
+		which lives in $\mathcal U$ because $\mathcal U$ is a filter.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{definition}[ultraproduct]
+	Fix a language $\mathcal L$ and some $\mathcal L$-structures $\{\mathcal M_\alpha\}_{\alpha\in I}$. The \textit{ultraproduct} is the $\mathcal L$-structure defined in \Cref{lem:ultraprod}, denoted $\prod_{\alpha\in I}M_\alpha/\mathcal U$ or $\prod_{\mathcal U}M_\alpha$.
+\end{definition}
+We are now ready to begin our proof of \Cref{thm:compactness}. We want the following definition.
+\begin{definition}[expansion]
+	Fix a language $\mathcal L$ and structure $\mathcal M$. Given a subset $A\subseteq M$, we define the \textit{expansion} $\mathcal L_A$ as having the same constants in addition to the constants in $A$ but the same functions and relations.
+\end{definition}
+\begin{remark}
+	Fix a language $\mathcal L$ and structure $\mathcal M$ and subset $A\subseteq M$. Then $\mathcal M$ is in fact an $\mathcal L_A$-structure, where we interpret the new constants $a\in A$ by $a^\mathcal M\coloneqq a$.
+\end{remark}
+Compactness will follow from the result.
+\begin{theorem}[\L{}o\'s] \label{thm:los}
+	Fix a language $\mathcal L$ and $\mathcal L$-structures $\{\mathcal M_\alpha\}_{\alpha\in I}$. Expand $\mathcal L$ to the language $\mathcal L'\coloneqq\mathcal L_{\prod_{\alpha\in I}M_\alpha}$. Now, let $\mathcal U$ be an ultrafilter on $I$ so that $\mathcal M\coloneqq\prod_\mathcal UM_\alpha$ is an $\mathcal L'$-structure. Then for any $\mathcal L$-formula $\varphi(x_1,\ldots,x_n)$ has $\mathcal M\models\varphi\left(a_1^\mathcal M,\ldots,a_n^\mathcal M\right)$ if and only if
+	\[\{\alpha\in I:\mathcal M_\alpha\models\varphi(a_1,\ldots,a_n)\}\in\mathcal U.\]
+\end{theorem}
+\begin{proof}
+	To see that $\mathcal M$ is in fact an $\mathcal L'$-structure, note $\mathcal M$ is already an $\mathcal L$-structure, and we may interpret the constant $(a_\alpha)$ of $\mathcal L'$ by the corresponding equivalence class in $\mathcal M$. Anyway, the content of the proof is to induct on $\varphi$.
+	\begin{itemize}
+		\item Let $c_1$ and $c_2$ be constants. Then $\mathcal M\models(c_1=c_2)$ if and only if $c_1^\mathcal M=c_2^\mathcal M$ if and only if the set of $\alpha$ such that $c_1^{M_\alpha}=c_2^{M_\alpha}$ is in $\mathcal U$.
+		\item Let $t(x_1,\ldots,x_n)$ be a term and $c$ be a constant. We claim that $\mathcal M\models(t=c)(a_1,\ldots,a_n)$ if and only if
+		\[\{\alpha\in I:\mathcal M_\alpha\models(t=c)(a_1,\ldots,a_n)\}\in\mathcal U.\]
+		This is done by induction on the term $t$. If $t$ is a constant there is nothing to say. Otherwise, suppose that $f$ is an $m$-ary function, and we have terms $t_1(x_1,\ldots,x_n),\ldots,t_m(x_1,\ldots,x_n)$. Now, $\mathcal M\models(f(t_1,\ldots,t_m)=c)(a_1,\ldots,a_n)$ if and only if $f^\mathcal M\left(t_1^\mathcal M(\overline a),\ldots,t_m^\mathcal M(\overline a)\right)=c^\mathcal M$, which after taking enough intersection is equivalent to having $f^\mathcal M\left(c_1^\mathcal M,\ldots,c_m^\mathcal M\right)=c^\mathcal M$ for suitable constants $c_\bullet$ coming from the inductive hypothesis. One can then continue the argument backwards to complete.
+		\item Let $t_1(x_1,\ldots,x_n)$ and $t_2(x_1,\ldots,x_n)$ be terms. Then $\mathcal M\models(t_1=t_2)\left(a_1^\mathcal M,\ldots,a_n^\mathcal M\right)$ if and only if the set of $\alpha$ such that
+		\[t_1^{\mathcal M_\alpha}\left((a_1^{M_\alpha}),\ldots,(a_2^{M_\alpha})\right)=t_2^{\mathcal M_\alpha}\left((a_1^{M_\alpha}),\ldots,(a_2^{M_\alpha})\right)\]
+		is contained in $\mathcal U$. Choosing constants $c_1$ and $c_2$ suitably as above and using the filter property, this is equivalent to having $c_1^\mathcal M=c_2^\mathcal M$, from which we can go backwards to complete the argument.
+		\item The same argument holds for atomic formulae of the form $R(t_1,\ldots,t_n)$ where $R$ is an $n$-ary relation.
+	\end{itemize}
+	We now begin inducting on formulae. Let $\mathcal F'$ be the set of desired $\mathcal L'$-formulae. The above checks show that $\mathcal F'$ contains atomic formulae.
+	\begin{itemize}
+		\item Suppose $\varphi,\psi\in\mathcal F'$. Then $\mathcal M\models(\varphi\land\psi)(\overline a)$ if and only if $\mathcal M\models\varphi(\overline a)$ and $\mathcal M\models\psi(\overline a)$ if and only if
+		\[\{\alpha\in I:\mathcal M_\alpha\models\varphi(\overline a)\}\cap\{\alpha\in I:\mathcal M_\alpha\models\psi(\overline a)\}\]
+		lives in $\mathcal U$, which is equivalent to
+		\[\{\alpha\in I:\mathcal M_\alpha\models(\varphi\land\psi)(\overline a)\}\]
+		by the intersection property of $\mathcal U$.
+		\item Suppose $\varphi\in\mathcal F'$. Then $\mathcal M\models(\lnot\varphi)(\overline a)$ is false if and only if $\mathcal M\models\varphi(\overline a)$ if and only if
+		\[\{\alpha\in I:\mathcal M_\alpha\models\varphi(\overline a)\}\in\mathcal U,\]
+		which because $\mathcal U$ is an ultrafilter is equivalent to
+		\[I\setminus\{\alpha\in I:\mathcal M_\alpha\models\varphi(\overline a)\}\notin\mathcal U,\]
+		from which we can work backwards to complete the argument. (To see the last equivalence, note that each $X\subseteq I$ has exactly one of $X\in\mathcal U$ or $I\setminus X\in\mathcal U$: at least one is true because $\mathcal U$ is an ultrafilter, and at most one is true because both being true requires $\emp\in\mathcal U$, making $\mathcal U$ the trivial filter.)
+		\item Suppose $\varphi(x,\overline a)\in\mathcal F'$. Then $\mathcal M\models(\exists x\,\varphi(x))(\overline a)$ if and only if there is some $b\in M$ (i.e., $b$ a constant because we expanded our language) such that $\mathcal M\models\varphi(b,\overline a)$, which is equivalent to
+		\[\{\alpha\in I:\mathcal M_a\models\varphi(b,\overline a)\}\in\mathcal U\]
+		for some constant $b$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary}
+	Let $T$ be a finitely satisfiable $\mathcal L$-theory. Then $T$ is satisfiable.
+\end{corollary}
+\begin{proof}
+	We may suppose that $T$ is nonempty. Let $I$ be the set of finite subsets of $T$, and for each $\Delta\in I$, let $\mathcal M_\Delta$ be a model for $\Delta$. We have two steps.
+	\begin{enumerate}
+		\item We define a filter. For each $\varphi\in T$, let $X_\varphi\coloneqq\{\Delta\in I:\mathcal M_\Delta\models\varphi\}$. Then we define
+		\[D\coloneqq\{A\in I:A\supseteq X_\varphi\text{ for some }\varphi\in T\}.\]
+		We show that $D$ is a filter on $I$.
+		\begin{itemize}
+			\item Note any $\varphi\in T$ has $X_\varphi\subseteq I$, so $I\in D$.
+			\item Intersection: if $A,B\in D$, then find $\varphi,\psi\in T$ such that $X_\varphi\subseteq A$ and $X_\psi\subseteq B$. Then $A\cap B$ contains $X_{\varphi}\cap X_\psi$, but $X_\varphi\cap X_\psi$ consists of $\Delta$ such that $\mathcal M_\Delta$ models both $\varphi$ and $\psi$, which is equivalent to $\mathcal M\models\varphi\land\psi$, so $X_\varphi\cap X_\psi=X_{\varphi\land\psi}$.
+			\item Containment: if $A\in D$ is contained in $B\subseteq I$, then find $\varphi\in T$ with $A\supseteq X_\varphi$ so that $B\supseteq X_\varphi$ as well.
+		\end{itemize}
+		\item Let $\mathcal U$ be an ultrafilter containing $D$, and let $\mathcal M$ be $\prod_\mathcal U\mathcal M_\Delta$. Then for each $\varphi\in T$, we see by \Cref{thm:los} that $\mathcal M\models\varphi$ if and only if
+		\[\{\Delta\in I:\mathcal M_\Delta\models\varphi\}\in\mathcal U,\]
+		which is true by construction of $\mathcal U$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	\Cref{thm:compactness} was able to bound the size of the model, but the above proof does not. Indeed, the models $\mathcal M_\Delta$ are potentially large, and $\mathcal M$ is approximately the size of all of them multiplied together.
+\end{remark}
+
+\end{document}
