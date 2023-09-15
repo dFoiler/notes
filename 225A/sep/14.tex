@@ -1,0 +1,91 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 14}
+
+Today we will prove the L\"owenheim--Skolem Theorem.
+
+\subsection{The L\"owenheim--Skolem Theorem}
+We will want the following definition.
+\begin{definition}[elementary substructure]
+	Fix a language $\mathcal L$ and two structures $\mathcal M$ and $\mathcal N$. Then we say that $\mathcal M$ is an \textit{elementary substructure} of $\mathcal N$, written $\mathcal M\le\mathcal N$ if and only if $\mathcal M$ is a substructure of $\mathcal N$ and $\mathcal M_M\equiv\mathcal N_M$.
+\end{definition}
+\begin{remark}
+	It is not enough to have $\mathcal M\subseteq\mathcal N$ and $\mathcal M\equiv\mathcal N$. For example, take the language $\mathcal L=\{<\}$ and let $\mathcal M=(\NN,<)$ and $\mathcal N=(\ZZ^+,<)$. Then $\mathcal M\subseteq\mathcal N$, and $\mathcal M\equiv\mathcal N$. To see that $\mathcal M\equiv\mathcal N$ because $\mathcal M\cong\mathcal N$ (subtracting one is an isomorphism $\ZZ^+\to\NN$), which is enough by \Cref{prop:iso-is-equiv}. However, $\mathcal M\not\le\mathcal N$: the sentence $\forall x\,1\le x$ is true in $\mathcal M$ but not in $\mathcal N$.
+\end{remark}
+Here is the result we are going to show.
+\begin{theorem} \label{thm:down-skolem}
+	Fix a language $\mathcal L$ and infinite structure $\mathcal M$. For all subsets $A\subseteq M$, there exists an elementary substructure $\mathcal N\le\mathcal M$ containing $A$ with $\left|N\right|=\left|A\right|+\left|\mathcal L\right|+\aleph_0$.
+\end{theorem}
+\begin{proof}
+	We essentially do a more careful version of the Henkin construction. Set $T\coloneqq\mathrm{Th}(\mathcal M_A)$. Let $\mathcal L'$ and $T'$ be the language and theory extending $\mathcal L$ and $T$ (respectively) obtained from the construction in \Cref{lem:extend-for-witnesses} by adding witnessing constants. Quickly, we recall that $T'$ and $\mathcal L'$ are constructed inductively as follows.
+	\begin{itemize}
+		\item Set $T_0\coloneqq T$ and $\mathcal L_0\coloneqq\mathcal L$.
+		\item Set $\mathcal L_{n+1}$ to be $\mathcal L_n$ with a constant $c_\varphi$ for each $\mathcal L_n$-formula $\varphi$ with a variable $x$, and then we add $\exists\varphi(x)\to\varphi(c_\varphi)$ to $T'$. The function and relation symbols are the same between $\mathcal L_n$ and $\mathcal L_{n+1}$.
+		\item Lastly, $\mathcal L'$ is the union of the $\mathcal L_n$s, and $T'$ is the union of the $T_n$s.
+	\end{itemize}
+	We now expand $\mathcal M$ to be a model $\mathcal M'$ of $T'$. One only has to deal with the constants added by $\mathcal L'$. We will do this inductively.
+	\begin{itemize}
+		\item Set $\mathcal M_0\coloneqq\mathcal M_A$, and we construct $\mathcal M_n$ to model $T_n$.
+		\item Given $\mathcal M_n\models T_n$, we construct $\mathcal M_{n+1}$ to be an $\mathcal L_{n+1}$-structure as follows. Well, we only need to worry about interpreting the new constants $c_\varphi$ where $\varphi$ is an $\mathcal L_n$-formula with free variable $x$, and we interpret $c_\varphi^{\mathcal M_{n+1}}$ as some $a_\varphi\in\mathcal M_n$ if $\mathcal M_n\models\varphi(a_\varphi)$ if such some $a_\varphi$ exists, and we set $c_\varphi^{\mathcal M_{n+1}}$ to be any element of $\mathcal M_n$ if no such $a_\varphi$ exists.
+
+		Then $\mathcal M_{n+1}$ certainly satisfies everything in $T_n$ (by inductive hypothesis), and it satisfies every one of the new sentences $\exists x\varphi(x)\to\varphi(c_\varphi)$ by construction of $c_\varphi^{\mathcal M_{n+1}}$, so we conclude $\mathcal M_{n+1}\models T_{n+1}$, as needed.
+		\item Lastly, we define $\mathcal M'$ to be the union of the $\mathcal M_n$, and we conclude our construction. One can see that $\mathcal M'\models T'$ directly from the construction of the previous step because any $\varphi\in T'$ belongs to some $T_n$ for finite $n$.
+	\end{itemize}
+	To continue the proof, we want the following result to check that we have built an elementary substructure.
+	\begin{lemma}[Tarski--Vaught test] \label{lem:tarski-vaught}
+		Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$. Call $A$ ``realizable'' if and only if any $\mathcal L$-formula $\varphi(x_1,\ldots,x_n,y)$ and $n$-tuple $\overline a\in A^n$ has $\mathcal M\models(\exists y\varphi(\overline x,y))(\overline a)$ if and only if there is some $b\in A$ such that $\mathcal M\models\varphi(\overline a,b)$. Then $A$ is realizable if and only if there is an elementary substructure $\mathcal A\le\mathcal M$ with universe $A$.
+	\end{lemma}
+	\begin{proof}
+		There is some content here because the assertion $\mathcal M_A\equiv\mathcal A_A$ does not even make sense without having constructed $\mathcal A$. Anyway, we have two implications to show.
+		\begin{itemize}
+			\item Suppose that $A$ is the universe of an elementary substructure $\mathcal A\le\mathcal M$. We want to show that $\mathcal A$ is realizable. Well, let $\varphi(x_1,\ldots,x_n,y)$ be an $\mathcal L$-formula, and choose some $\overline a\in A^n$. Now, $\mathcal M\models(\exists y\varphi(\overline x,y))(\overline a)$ if and only if $\mathcal M_A\models\exists y\varphi(\overline a,y)$. Now, because $\mathcal A\le\mathcal M$, this is equivalent to $\mathcal A_A\models\exists y\varphi(\overline a,y)$, which his equivalent to having some $b\in A$ such that $\mathcal A_A\models\varphi(\overline a,b)$, which is equivalent to $\mathcal M_A\models\varphi(\overline a,b)$, which means there is $b\in A$ such that $\mathcal M\models\varphi(\overline a,b)$.
+			\item Suppose $A$ is realizable. The main content here is to check that $A$ is the universe of an $\mathcal L$-substructure of $\mathcal M$. We have the following checks.
+			\begin{itemize}
+				\item Certainly $A\subseteq M$.
+				\item For each constant symbol $c$, we need $c^\mathcal M\in A$. Well, look at the formula $\varphi(y)$ given by $y=c$. Then $\mathcal M\models\exists y\varphi(y)$ by $c^\mathcal M$, so being realizable grants some $b\in A$ such that $\mathcal M\models\varphi(b)$, which means $c^\mathcal M=b\in A$, as needed.
+				\item For each $n$-ary function symbol $f(x_1,\ldots,x_n)$ and $\overline a\in A$, we need to check $f^\mathcal M(\overline a)\in A$. Well, look at the formula $\varphi(x_1,\ldots,x_n,y)$ which is $y=f(x_1,\ldots,x_n,y)$. Then $\mathcal M\models\exists y\varphi(\overline a)$, so being realizable promises some $b\in A$ such that $\mathcal M\models\varphi(\overline a,b)$, which is asserting $f(a_1,\ldots,a_n)=b$.
+			\end{itemize}
+			We now need to show $\mathcal M_A\equiv\mathcal A_A$. We induct to show that an $\mathcal L_A$-sentence $\psi$ has $\mathcal M_A\models\psi$ if and only if $\mathcal A_A\models\psi$. Let $\mathcal F'$ be the set of such $\mathcal L_A$-sentences.
+			\begin{itemize}
+				\item For atomic formulae, we use \Cref{prop:substructure-for-qf} so that we don't have to do any more work.
+				\item The usual arguments tell us that $\varphi,\psi\in\mathcal F'$ implies that $\lnot\varphi\in\mathcal F'$ and $\varphi\land\psi\in\mathcal F'$. We won't write this out.
+				\item Lastly, suppose $\psi$ is of the form $\exists y\varphi(y)$. Because $\exists y\varphi$ is an $\mathcal L_A$-sentence, we can write $\varphi(y)$ as $\varphi'(\overline a,y)$ where $\varphi'(x_1,\ldots,x_n,y)$ is some $\mathcal L$-formula and $\overline a\in A^n$.
+				
+				Now, in one direction, $\mathcal A_A\models\psi$ if and only if some $b\in A$ such that $\mathcal A_A\models\varphi(a)$, so by induction $\mathcal M_A\models\psi(b)$, which is implies $\mathcal M\models\psi$, as needed.
+
+				To go the other direction, we need to pull a witness down from $\mathcal M$ to $\mathcal A$, which is harder. Suppose $\mathcal M_A\models\psi$. Then $\mathcal M_A\models(\exists y\varphi'(x,y))(\overline a)$, from which being realizable grants $b\in A$ such that $\mathcal M_A\models\varphi'(\overline a,b)$. This sentence is simpler, so by induction we get $\mathcal A\models\varphi'(\overline a,b)$, which is equivalent to $\mathcal A\models\exists y\varphi(y)$, as needed.
+				\qedhere
+			\end{itemize}
+		\end{itemize}
+	\end{proof}
+	\begin{remark}
+		There is not really anything to do when checking the reverse direction of being realizable: having $b\in A$ such that $\mathcal M\models\varphi(\overline a,b)$ of course implies that $\mathcal M\models(\exists y\varphi(\overline x,y))(\overline a)$ by choosing $y$ to be this $b\in A$. The content is the reverse direction where we pull down the witness from $\mathcal M$ to $\mathcal A$.
+	\end{remark}
+	Now, let the set $N$ be the set of interpretations of constant symbols $c^{\mathcal M'}$ for each constant symbol $c$ of $\mathcal L'$. Notably, $A\subseteq\mathcal L'$, and $a^{\mathcal M'}=a$, so $a\in N$, so $A\subseteq N$. We would like to turn $N$ into an elementary substructure, for which we use \Cref{lem:tarski-vaught}.
+	
+	It suffices to check that $N$ is realizable. Let $\varphi(x_1,\ldots,x_n,y)$ be an $\mathcal L$-formula and $(a_1,\ldots,a_n)\in N^n$. Suppose $\mathcal M\models(\exists y\varphi(\overline x,y))(\overline a)$. Then $\mathcal M'\models(\exists y\varphi(\overline x,y))(\overline a)$ by choosing the same $y$, which means $\mathcal M'\models\varphi(\overline a,y)$, but $\mathcal M'\models\exists y\varphi(\overline a,y)\to\varphi(\overline a,c)$ for some constant symbol $c$ of $\mathcal L'$. Combining, we get $\mathcal M'\models\varphi(\overline a,c)$. But then setting $d\coloneqq c^{\mathcal M'}$ (which lives in $N$!), we achieve $\mathcal M'\models\varphi(\overline a,d)$.
+
+	Thus, $N$ is the universe of some elementary substructure $\mathcal N\le\mathcal M$. We saw that $N$ contains $A$, and we see $\left|N\right|$ is at most the size of the constants of $\mathcal L'$, which has size $\left|\mathcal L\right|+\aleph_0+\left|A\right|$. This completes the proof.
+\end{proof}
+One can also go up, which was essentially \Cref{prop:go-up-elementary-substructure}.
+\begin{proposition}
+	Fix an infinite $\mathcal L$-structure $\mathcal M$. For any cardinal $\kappa\ge\left|M\right|+\left|\mathcal L\right|$, there exists an $\mathcal L$-structure $\mathcal N$ with cardinality $\kappa$ and $\mathcal M\le\mathcal N$.
+\end{proposition}
+\begin{proof}
+	As in \Cref{prop:go-up-elementary-substructure}, let $\mathcal L'$ be the language $\mathcal L$ where we add constants $c_\alpha$ for each $\alpha\in\kappa$, and then we let $T'$ be
+	\[\mathrm{Th}(\mathcal M_M)\sqcup\{c_\alpha\ne c_\beta:\alpha\ne\beta\text{ for }\alpha,\beta\in\kappa\}.\]
+	We showed in \Cref{prop:go-up-elementary-substructure} that $T'$ is finitely satisfiable, so we produce a model $\mathcal N_0$ of $T'$. Now, let $A$ be the set of interpretations of constants $c^{\mathcal N_0}$ for each constant $c$ in $\mathcal L'$. Notably, $A$ contains $M$, and the map $\kappa\to A$ given by $a\mapsto c_\alpha^{\mathcal N_0}$ is one-to-one, so $\left|A\right|\ge\kappa$. On the other hand, $\left|A\right|$ has size bounded by the constants of $\mathcal L'$, which has size $\kappa+\left|\mathcal M\right|+\left|\mathcal L\right|$, which is $\kappa$, so $\left|A\right|$ has size exactly $\kappa$.
+
+	Now, by \Cref{thm:down-skolem}, we produce an elementary substructure $\mathcal N\le\mathcal N_0$ containing $A$. Because $\mathcal M\subseteq\mathcal N\le\mathcal N_0$ and $\mathcal M\le\mathcal N_0$ (by construction of $\mathcal N_0$), so we conclude $\mathcal M\le\mathcal N$ by chasing our formulae around.
+\end{proof}
+
+% \subsection{An Example}
+% Fix a language $\mathcal L$ with a single binary relation $E$. For example, we have a countable $\mathcal L$-structure $M_0$ given by $\left\{(n,m)\in\NN^2:n<m\right\}$, and $(n,m)E(n',m')$ if and only if $m=m'$.
+
+% We now use compactness to produce another countable model. 
+
+\end{document}
