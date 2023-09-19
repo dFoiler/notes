@@ -1,0 +1,134 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 19}
+
+Today we continue discussing covering spaces.
+
+\subsection{Using Path-Lifting}
+Last time we showed that covering space maps $(\widetilde X,\widetilde x_0)\to(X,x_0)$ induce subgroups $\pi_1(\overline X,\overline x_0)\to\pi_1(X,x_0)$. Note this subgroup can then communicate information about the covering space.
+\begin{proposition} \label{prop:index-of-covering}
+	Fix a covering space $p\colon(\widetilde X,\widetilde x_0)\to (X,x_0)$ of path-connected spaces. Then the number of sheets covering an evenly covered neighborhood of $x_0$ is the index
+	\[\left[\pi_1(X,x_0):\pi_1(\widetilde X,\widetilde x_0)\right],\]
+	where we have implicitly embedded $\pi_1(\widetilde X,\widetilde x_0)\into\pi_1(X,x_0)$.
+\end{proposition}
+\begin{remark}
+	Because $X$ is connected, the number of sheets of the covering space map is well-defined. Indeed, for any positive integer $n$, the set of $x\in X$ such that there is an $n$-sheeted evenly covered open neighborhood $U_x\subseteq X$ is open. So we produce a continuous map $X\to\NN$ sending $x$ to the number of sheets, so connectedness of $X$ forces the number of sheets to be constant.
+\end{remark}
+\begin{proof}
+	We roughly describe the idea. Let $\Omega(Y,y_1,y_2)$ denote the set of homotopy classes of paths from $y_1$ to $y_2$. The point is that $\Omega(X,x_0,x_0)$ is in bijection with
+	\[\bigsqcup_{\widetilde x\in p^{-1}(\{x_0\})}\Omega(\widetilde X,\widetilde x_0,\widetilde x)\]
+	by lifting paths. Now, $\pi_1(\widetilde X,\widetilde x_0)$ acts on $\Omega(\widetilde X,\widetilde x_0,\widetilde x)$ for each $\widetilde x$, and each orbit will correspond to a coset of our quotient.
+\end{proof}
+\begin{remark}
+	\Cref{prop:index-of-covering} can help us check that the covers of \Cref{ex:two-to-one-s1-wedge-s1} are $2$-to-$1$. For example, the subgroup corresponding to the shown covering space is $\left\langle a,b^2,bab\right\rangle$. Note that we have produced the free group with free generators as a subgroup of the free group with two generators.
+\end{remark}
+We would like to go in the other direction, from subgroups back to covering space maps. This requires some technical hypotheses.
+\begin{definition}[locally path-connected]
+	A topological space $X$ is \textit{locally path-connected} if and only if each open neighborhood $U\subseteq X$ of a point $x\in X$ has some perhaps smaller open neighborhood $U'\subseteq U$ of $x\in X$ which is path-connected.
+\end{definition}
+\begin{example}
+	CW complexes are locally path-connected.
+\end{example}
+\begin{nex}
+	The topologist's $\sin$ curve is not locally path-connected at the origin $(0,0)$.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(2cm);
+			real f(real x)
+			{
+				return sin(1.0/x);
+			}
+			draw(graph(f, 0.01,0.5,200));
+			draw((0.5,f(0.5)) .. (0,1.5) .. (0,0));
+		\end{asy}
+	\end{center}
+\end{nex}
+Being locally path-connected allows us to lift covering spaces.
+\begin{proposition} \label{prop:lift-maps}
+	Fix a path-connected, locally path-connected topological space $Y$ with basepoint $y_0\in Y$. For a covering space $p\colon(\widetilde X,\widetilde x_0)\to(X,x_0)$ and continuous map $f\colon(Y,y_0)\to(X,x_0)$, there is a lift $\widetilde f\colon(Y,y_0)\to(\widetilde X,\widetilde x_0)$ making the following diagram commute if and only if $\pi_1(f)(\pi_1(Y,y_0))\subseteq\pi_1(p)(\pi_1(\widetilde X,\widetilde x_0))$.
+	% https://q.uiver.app/#q=WzAsMyxbMSwwLCIoXFx3aWRldGlsZGUgWCxcXHdpZGV0aWxkZSB4XzApIl0sWzEsMSwiKFgseF8wKSJdLFswLDAsIihZLHlfMCkiXSxbMiwxLCJmIiwyXSxbMCwxLCJwIl0sWzIsMCwiXFx3aWRldGlsZGUgZiJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{(Y,y_0)} & {(\widetilde X,\widetilde x_0)} \\
+		& {(X,x_0)}
+		\arrow["f"', from=1-1, to=2-2]
+		\arrow["p", from=1-2, to=2-2]
+		\arrow["{\widetilde f}", from=1-1, to=1-2]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	The backwards direction follows from functoriality of $\pi_1$ because we are asking for $\pi_1(f)=\pi_1(p)\circ\pi_1(\widetilde f)$. For any $y\in Y$, composition with $f$ defines a composite
+	\[\bigsqcup_{y\in Y}\Omega(Y,y_0,y)\to\bigsqcup_{x\in X}\Omega(X,x_0,x)\to\bigsqcup_{\widetilde x\in\widetilde X}\Omega(\widetilde X,\widetilde x_0,\widetilde x)\]
+	where the last map is by path-lifting $\widetilde\cdot$. Then for any path $\gamma\in\Omega(Y,y_0,y)$, we simply define $\widetilde f(y)\coloneqq\widetilde{f\circ\gamma}(1)$. To see that this is well-defined, the point is that choosing a different path $\gamma'\in\Omega(Y,y_0,y)$ produces is able to lift to basically a loop upstairs in $\widetilde X$, so the value of $\widetilde f(y)$ does not move.
+
+	For continuity, we will need to use that $Y$ is locally path-connected. Fix $y\in Y$, and we will show that $\widetilde f$ is continuous at $y$. Set $x\coloneqq f(y)$, and let $U$ be an evenly covered neighborhood of $x$, and lift it to $\widetilde U\subseteq\widetilde X$ where $p\colon\widetilde U\to U$ is a homeomorphism, and $\widetilde f(y)\in\widetilde U$. We now may choose a path-connected open subset $V\subseteq f^{-1}(U)$ containing $y$ and check continuity using $\widetilde U$, where $\widetilde f(y')$ for any $y'\in V$ can be somewhat easily defined because $V$ is path-connected.
+\end{proof}
+In fact, we have uniqueness of this lifting.
+\begin{proposition}
+	Fix a connected topological space $Y$, and fix a covering space map $p\colon\widetilde X\to X$ and a map $f\colon Y\to X$. Given lifts $\widetilde f_1,\widetilde f_2\colon Y\to\widetilde X$ such that $p\circ\widetilde f_1=f=\circ\widetilde f_2$ and $\widetilde f_1$ and $\widetilde f_2$ agree at a single point, we have $\widetilde f_1=\widetilde f_2$.
+\end{proposition}
+\begin{proof}
+	Define the subsets
+	\[E\coloneqq\left\{y\in Y:\widetilde f_1(y)=\widetilde f_2(y)\right\}\qquad\text{and}\qquad N\coloneqq\left\{y\in Y:\widetilde f_1(y)\ne\widetilde f_2(y)\right\}.\]
+	One can use the covering space decomposition (by looking locally at $f(y)$ for some $y\in Y$) to show that both $E$ and $N$ are open, but they are disjoint with $E$ nonempty, so connectedness of $Y$ forces $Y=E$.
+\end{proof}
+
+\subsection{Classifying Covering Spaces}
+Our goal, roughly speaking, is to construct universal covers.
+\begin{definition}[univesal cover]
+	A covering space map $(\widetilde X,\widetilde x_0)\to(X,x_0)$ is a \textit{universal cover} if and only if $\widetilde X$ is simply-connected (i.e., path-connected and $\pi_1(\widetilde X,\widetilde x_0)=1$).
+\end{definition}
+\begin{remark}
+	\Cref{prop:lift-maps} tells us that a universal cover $\widetilde X$ will cover any covering space of $X$.
+\end{remark}
+We will want yet another definition.
+\begin{definition}[semilocally simply-connected]
+	A space $X$ is \textit{semilocally simply-connected} if and only if each $x\in X$ has an open neighborhood $U$ of $x$ such that the induced inclusion $\pi_1(U,x)\to\pi_1(X,x)$ is the trivial map.
+\end{definition}
+\begin{remark}
+	Let's explain this condition. Suppose $(\widetilde X,\widetilde x_0)\to(X,x)$ is a simply connected and path-connected covering space. Then any evenly covered subset $U\subseteq X$ with lift $\widetilde U$, then the inclusion $\pi_1(U)\to\pi_1(X)$ decomposes as
+	\[\pi_1(U)\to\pi_1(\widetilde U)\to\pi_1(\widetilde X)\to\pi_1(X),\]
+	which must be the trivial map because $\pi_1(\widetilde X)=1$. In other words, we have checked that $X$ is semilocally simply-connected.
+\end{remark}
+\begin{example}
+	The earring space is not semilocally simply-connected at the origin because any neighborhood at the origin will have circles inside.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			for(int i = 1; i <= 10; ++i)
+			{
+				draw(circle((0,1/i),1/i));
+			}
+			draw(circle((0,0),0.2), red);
+		\end{asy}
+	\end{center}
+\end{example}
+Being semilocally simply-connected is basically, then, the right hypothesis to have a universal cover.
+\begin{theorem} \label{thm:univ-covering-space}
+	Let $X$ be a topological space which is path-connected, locally path-connected, and semi-locally simply-connected. Then $X$ has a simply-connected covering space $\widetilde X\to X$ which is unique up to isomorphism of pointed topological spaces over $X$.
+\end{theorem}
+\begin{proof}
+	Uniqueness follows from \Cref{prop:lift-maps} because the corresponding lifts we write down must be local homeomorphisms.
+
+	It remains to show existence. Fix a basepoint $x_0\in X$. We simply define
+	\[\widetilde X\coloneqq\{[\gamma]:\gamma\text{ is a path }I\to X\text{ with }\gamma(0)=x_0\}.\]
+	The point is that paths should lift uniquely up to $\widetilde X$ already, so we might as well define $\widetilde X$ in this way. We may define the function $p\colon\widetilde X\to X$ by sending $[\gamma]\mapsto\gamma(1)$. It remains to show that $\widetilde X$ is a simply-connected topological space and that $p$ is a covering space map.
+
+	Let's produce a topology on $\widetilde X$. Using our hypotheses on $X$, each $x\in X$ has a path-connected open neighborhood $V\subseteq X$ such that $\pi_1(V)\to\pi_1(X)$ is trivial. We then use $V$ to define a subset around $[\gamma]$ with $\gamma(0)=x_0$ and $\gamma(1)=x$ by
+	\[\widetilde V\coloneqq\{[\gamma\cdot\gamma']:\gamma'\text{ is a path }I\to V\text{ such that }\gamma'(0)=x_0\text{ and }\gamma'(1)=y\}.\]
+	Now, $\widetilde V$ is in bijection with $V$ by $p$, so we make the restricted map $p\colon\widetilde V\to V$ a homeomorphism. One can check that the topology is well-defined and that $p$ becomes a covering space map from this.
+\end{proof}
+One can now use the universal cover to produce any covering space.
+\begin{theorem}
+	Let $X$ be a pointed topological space which is path-connected, locally path-connected, and semilocally simply-connected, and let $x_0\in X$ be a basepoint. Then there is a bijection between pointed path-connected covering spaces $(Y,y_0)\to(X,x_0)$ and subgroups of $\pi_1(X,x_0)$. Unpointed covering space maps correspond to conjugacy classes of subgroups.
+\end{theorem}
+To produce the desired covering space given a subgroup, one repeats the proof of \Cref{thm:univ-covering-space} by taking a quotient of the produced $\widetilde X$. Then one shows that this is a bijection with some work.
+\begin{remark}
+	One can also use permutations of the pre-image of a basepoint in order to describe our covering spaces. Namely, if $p\colon(\widetilde X,\widetilde x_0)\to(X,x_0)$ is a covering space, then any loop $[\alpha]\in\pi_1(X,x_0)$ will lift to a permutation of $p^{-1}(\{x_0\})$. Conversely, such automorphisms are able to produce an automorphism of the universal covering space $\widetilde X\to\widetilde X$. (On the level of paths, we send $[\gamma]\in\widetilde X$ to $[\gamma\cdot\alpha]$. One can check that this is continuous with continuous inverse and thus a homeomorphism.) 
+\end{remark}
+
+\end{document}

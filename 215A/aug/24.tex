@@ -57,13 +57,62 @@ A deformation retract is a special case of a homotopy. Here is the definition of
 \begin{example}
 	A subspace $A\subseteq X$ has a deformation retract if and only if $\id_X$ is homotopic to some $r\colon X\to X$ with $\im r=A$ and $r|_A=\id_A$. Indeed, the deformation retract is exactly the needed homotopy.
 \end{example}
+\begin{example} \label{ex:equal-is-homotopic}
+	Suppose $f,g\colon X\to Y$ are equal maps. Then define $h\colon X\times I\to Y$ by $h_t=f=g$ for all $t$. We see that $h$ is continuous ($h^{-1}(V)=f^{-1}(U)\times I$ for any open $V\subseteq Y$), so it provides a homotopy from $f$ and $g$.
+\end{example}
+It should not be surprising that homotopy is an equivalence relation.
+\begin{lemma} \label{lem:homotopy-equiv}
+	Fix topological spaces $X$ and $Y$. Then $\sim$ is an equivalence relation on continuous functions $X\to Y$.
+\end{lemma}
+\begin{proof}
+	We have the following checks.
+	\begin{itemize}
+		\item Reflexive: this is direct from \Cref{ex:equal-is-homotopic}.
+		\item Symmetric: if $f\sim g$, then we have $F_\bullet\colon X\times I\to Y$ with $F_0=f$ and $F_1=g$. We now define $G_\bullet\colon X\times I\to Y$ by $G_t\coloneqq F_{1-t}$. Then $G$ is continuous by the continuity of $t\mapsto1-t$ and $F$, and $G_0=g$ and $G_1=f$, so $G$ witnesses $g\sim f$.
+		\item Transitive: if $f\sim g$ and $g\sim h$, find $F_\bullet\colon X\times I\to Y$ and $G_\bullet\colon X\times I\to Y$ with $F_0=f$ and $F_1=g$ and $G_0=g$ and $G_1=h$. Then we define $H_\bullet\colon X\times I\to Y$ by
+		\[H_t\coloneqq\begin{cases}
+			F_{2t} & \text{if }0\le t\le1/2, \\
+			G_{2t-1} & \text{if }1/2\le t\le1.
+		\end{cases}\]
+		Note that this is well-defined at $t=1/2$ because $F_1=g=G_0$. Note $H$ will witness $f\sim h$ once we show that it is continuous, which is what we do now.
+		
+		By looking locally at $F$ or $G$, we see that $H$ is continuous at any point not of the form $(x,1/2)$. Then for any point of the form $(x,1/2)$ and open subset $V\subseteq Y$ containing $H_{1/2}(x)$, continuity of $F$ gives an open subset $U_F\times(1/2-\varepsilon,1/2]$ mapping to $V$, and continuity of $G$ gives an open subset $U_G\times[1/2,1/2+\varepsilon)$ mapping to $V$, so $(U_F\cap U_G)\times(1/2-\varepsilon,1/2+\varepsilon)$ will suffice.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Homotopy also behaves well with composition.
+\begin{lemma} \label{lem:homotopy-compose}
+	Fix topological spaces $X,Y,Z$, and let $f_0,f_1\colon X\to Y$ and $g_0,g_1\colon Y\to Z$ be homotopic maps. Then $(g_0\circ f_0)\sim(g_1\circ f_1)$.
+\end{lemma}
+\begin{proof}
+	Fix a homotopy $F_\bullet\colon X\times I\to Y$ with $F_0=f_0$ and $F_1=f_1$ and a homotopy $G_\bullet\colon Y\times I\to Z$ with $G_0=g_0$ and $G_1=g_1$. Then we define $H_\bullet\colon X\times I\to Z$ by
+	\[H_t(x)\coloneqq G_t(F_t(x)).\]
+	Then $H_0=g_0\circ f_0$ and $H_1=g_1\circ f_1$, so we will be done if we can show $H$ is continuous. Well, $H_\bullet$ is the composite map
+	\[X\times I\stackrel{(F,\id_I)}\to Y\times I\stackrel G\to Z,\]
+	which we can see is the composite of continuous maps.
+\end{proof}
 Homotopy allows us to define homotopy equivalence.
 \begin{definition}[homotopy equivalence]
 	A continuous map $f\colon X\to Y$ is a \textit{homotopy equivalence} if and only if there is a continuous map $g\colon Y\to X$ such that $(g\circ f)\sim\id_X$ and $(f\circ g)\sim\id_Y$. We then say that $X$ and $Y$ have the same \textit{homotopy type} and write $X\simeq Y$.
 \end{definition}
 \begin{remark}
-	It is not enough to merely require $(g\circ f)\sim\id_X$. For example, let $X\coloneqq\{x\}$ be a point.
+	It is not enough to merely require $(g\circ f)\sim\id_X$. For example, let $X\coloneqq\{x\}$ be a point. Then any map $f\colon\{x\}\to Y$ can use the unique map $g\colon Y\to\{x\}$ so that $(g\circ f)=\id_X$.
 \end{remark}
+Here is a quick sanity check.
+\begin{lemma}
+	Ignoring size issues, homotopy equivalence provides an equivalence relation on topological spaces.
+\end{lemma}
+\begin{proof}
+	We have the following checks. Fix topological spaces $X,Y,Z$. 
+	\begin{itemize}
+		\item Reflexive: we show $X\simeq X$. Indeed, use the maps $\id_X,\id_X\colon X\to X$ so that ${\id_X}\circ{\id_X}=\id_X$ is homotopic to $\id_X$ by \Cref{ex:equal-is-homotopic}.
+		\item Symmetric: we show $X\simeq Y$ implies $Y\simeq X$. Indeed, let $f\colon X\to Y$ and $g\colon Y\to X$ be the promised maps so that $(f\circ g)\sim\id_Y$ and $(g\circ f)\sim\id_X$. Reading these data in reverse tell us that $Y\simeq X$.
+		\item Transitive: suppose $X\simeq Y$ and $Y\simeq Z$, and we show $X\simeq Z$. Thus, we have maps $f\colon X\to Y$ and $g\colon Y\to X$ and $f'\colon Y\to Z$ and $g'\colon Z\to Y$ such that $(f\circ g)\sim\id_Y$ and $(g\circ f)\sim\id_X$ and $(f'\circ g')\sim\id_Z$ and $(g'\circ f')\sim\id_Y$. We now claim that $(f'\circ f)\colon X\to Z$ and $(g\circ g')\colon Z\to X$ are the desired maps to witness $X\simeq Z$. Well, using \Cref{lem:homotopy-compose}, we compute
+		\[(f'\circ f)\circ(g\circ g')=f'\circ(f\circ g)\circ g'\sim f'\circ{\id_Y}\circ g'=f'\circ g'\sim\id_Z,\]
+		and similar for the other direction.
+		\qedhere
+	\end{itemize}
+\end{proof}
 \begin{remark}
 	One can check directly that $\sim$ is an equivalence relation on spaces. The main check here is that one can compose homotopies.
 \end{remark}
@@ -71,9 +120,21 @@ We will often find that our algebraic invariants are only able to detect homotop
 \begin{example}
 	\Cref{ex:mobius-by-cylinder} shows that the M\"obius strip is homotopic to $S^1$.
 \end{example}
-\begin{example}
-	More generally, a deformation retract is a homotopy equivalence. The inverse homotopy equivalence is the inclusion.\todo{}
-\end{example}
+More generally, one can show that a deformation retract is a homotopy equivalence.
+\begin{lemma}
+	Fix a subspace $A$ of a topological space $X$. Then a deformation retract witnesses a homotopy between the inclusion $i\colon A\into X$ and the identity $\id_X\colon X\to X$. In particular, it follows that $i$ is a homotopy equivalence.
+\end{lemma}
+\begin{proof}
+	This is a matter of unraveling the definitions. Fix a deformation retract $f_\bullet\colon X\times I\to X$, and let $r\coloneqq f_1$ so that $\im r=A$. We now claim that $i$ and $r$ are inverse homotopy equivalences.
+	\begin{itemize}
+		\item We show that $(r\circ i)\sim\id_A$. Indeed, $r(i(a))=a$ for any $a\in A$ by hypothesis on $r$, so in fact $r\circ i=\id_A$.
+		\item We show that $(i\circ r)\sim\id_X$. The relevant homotopy is just $f_\bullet$: we have $f_0=\id_X$ and $f_1=(i\circ r)$, so ${\id_X}\sim(i\circ r)$ by \Cref{lem:homotopy-equiv}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+% \begin{example}
+% 	More generally, a deformation retract is a homotopy equivalence. The inverse homotopy equivalence is the inclusion.\todo{}
+% \end{example}
 \begin{example}[dunce cap]
 	Take the disc $D^2$ and glue the edges together as follows: mark three points $A$, $B$, and $C$, and glue $AB$ to $AC$ to $CB$ (in those orientations). Then the resulting space is homotopic to a point.
 \end{example}

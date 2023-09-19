@@ -1,0 +1,196 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 5}
+
+Today we actually prove $\pi_1^(S^1)\cong\ZZ$.
+
+\subsection{Eckmann--Hilton Argument}
+Because it is fun, we begin with some nonsense.
+\begin{proposition}[Eckmann--Hilton] \label{prop:eh}
+	Let $X$ be a set equipped with the binary operations $\circ$ and $*$ such that the following hold.
+	\begin{listalph}
+		\item Identity: there are elements $1_\circ,1_*\in X$ such that $1_\circ\circ a=a\circ1_\circ=a$ and $1_**a=a*1_*=a$ for all $a\in X$.
+		\item Distribution: we have $(a\circ b)*(c\circ d)=(a*c)\circ(b*d)$ for all $a,b,c,d\in X$.
+	\end{listalph}
+	Then $\circ$ and $*$ are the same operation and in fact are both commutative and associative.
+\end{proposition}
+\begin{proof}
+	This is purely formal. We proceed in steps.
+	\begin{enumerate}
+		\item We show that $1_\circ=1_*$. Indeed, note
+		\[1_*=1_**1_*=(1_*\circ1_\circ)*(1_\circ\circ1_*)=(1_**1_\circ)\circ(1_\circ*1_*)=1_\circ\circ1_\circ=1_\circ.\]
+		From now on, we use the symbol $1$ to denote our identity $1_\circ=1_*$.
+		\item We show that $a*b=a\circ b$. Indeed, note
+		\[a*b=(a\circ1)*(1\circ b)=(a*1)\circ(1*b)=a\circ b.\]
+		Thus, our operations are the same, and we will use the symbol $*$ to denote both of them now. Notably, our distribution law is $(a*b)*(c*d)=(a*c)*(b*d)$.
+		\item We show that $*$ is commutative. Indeed, for any $a,b\in X$, we see
+		\[a*b=(1*a)*(b*1)=(1*b)*(a*1)=b*a.\]
+		\item We show that $*$ is associative. Indeed,
+		\[(a*b)*c=(a*b)*(1*c)=(a*1)*(b*c)=a*(b*c),\]
+		for any $a,b,c\in X$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+As an application, we have the following result.
+\begin{corollary}
+	Let $G$ be a topological group with identity $e\in G$. Then $\pi_1(G,e)$ is abelian.
+\end{corollary}
+\begin{proof}
+	Let $\cdot$ denote the usual concatenation operation on $\pi_1(G,e)$. The point is to give another binary operation to $\pi_1(G,e)$ and then apply \Cref{prop:eh}.
+
+	Well, let $*$ denote the group operation on $G$, and for paths $f,g\colon I\to G$ based at $e$, we define the path $(f*g)\colon I\to G$ by $(f*g)(t)\coloneqq f(t)*g(t)$. Here are the necessary checks for our purposes.
+	\begin{itemize}
+		\item Note $f*g$ is a continuous map because it is the composite of the continuous maps
+		\[I\stackrel{(\id_I,\id_I)}\to I\times I\stackrel{(f,g)}\to G\times G\stackrel*\to G.\]
+		\item We show $[f*g]$ does not depend on the choice of homotopy classes $[f]$ and $[g]$, so we may view $*$ as a binary operation on $\pi_1(G,e)$. Suppose $f\sim f'$ and $g\sim g'$ by the homotopies $F_\bullet$ and $G_\bullet$, respectively. We want to show that $f*g\sim f'*g'$. Well, define $H_\bullet\colon G\times I\to G$ by $H_t(x)\coloneqq F_t(x)*G_t(x)$ for all $t\in I$ and $x\in G$. Then we see that $H_0=F_0*G_0=f*g$ and $H_1=F_1*G_1=f'*g'$, and $H_\bullet$ is continuous because it is the composite
+		\[G\times I\stackrel{(F_\bullet,G_\bullet)}\to G\times G\stackrel*\to G.\]
+		\item Note that $*$ has an identity element given by the constant path $c(t)\coloneqq e$ for all $t\in I$. Indeed, for any $[f]\in\pi_1(G,e)$, we see that $(f*c)(t)=f(t)*c(t)=f(t)$ for all $t\in I$, so $[f]*[c]=[f*c]=[f]$.
+		\item Fix $[a],[b],[c],[d]\in\pi_1(G,e)$. We claim that
+		\[([a]\cdot[b])*([c]\cdot[d])\stackrel?=([a]*[c])\cdot([b]*[d]).\]
+		Removing all the homotopy classes, it is enough to show that $(a\cdot b)*(c\cdot d)=(a*c)\cdot(b*d)$. Well, for any $t\in I$, we compute
+		\[((a\cdot b)*(c\cdot d))(t)=(a\cdot b)(t)*(c\cdot d)(t)=\begin{cases}
+			a(t)*c(t) & \text{if }t\le1/2, \\
+			b(t)*d(t) & \text{if }t\ge1/2,
+		\end{cases}\]
+		and
+		\[((a*c)\cdot(b*d))(t)=\begin{cases}
+			(a*c)(t) & \text{if }t\le1/2, \\
+			(b*d)(t) & \text{if }t\ge1/2,
+		\end{cases}\]
+		which is the same path.
+	\end{itemize}
+	Now, \Cref{prop:eh} shows that $*$ and $\cdot$ must be the same operation on $\pi_1(G,e)$ and that $\cdot$ is commutative, which is what we wanted.
+\end{proof}
+
+\subsection{Covering Spaces}
+Our computation is going to use the notion of a covering space.
+\begin{restatable}[covering space]{definition}{coveringspacedef}
+	Fix a topological space $X$. Then a \textit{covering space} is a topological space $\widetilde X$ together with a projection map $p\colon\widetilde X\to X$ such that each $x\in X$ has an open neighborhood $U\subseteq X$ containing $x$ such that $p^{-1}(U)=\bigsqcup_{\alpha\in\lambda}U_\alpha$ where $U_\alpha$ is open and $p\colon U_\alpha\to U$ is a homeomorphism. In this set up, the open set $U\subseteq X$ is said to be \textit{evenly covered}.
+\end{restatable}
+\noindent The fact we will require about covering spaces is the following ``fibration property.''
+\begin{proposition} \label{prop:fibration-prop}
+	Fix a topological space $X$ and covering space $p\colon\widetilde X\to X$. Further, suppose we have maps $F\colon Y\times I\to X$ and $\widetilde F\colon Y\times\{0\}\to\widetilde X$ such that $p\circ\widetilde F|_{Y\times\{0\}}=F|_{Y\times\{0\}}$. Then there is a unique extension $\widetilde F\colon Y\times I\to\widetilde X$ such that $p\circ\widetilde F=F$.
+\end{proposition}
+\begin{proof}
+	We proceed in steps. Say that a subset $U\subseteq X$ is ``evenly covered'' if and only if $p^{-1}(U)=\bigsqcup_{\alpha\in\lambda}U_\alpha$ and $p\colon U_\alpha\to U$ is a homeomorphism. Note that making an evenly covered open subset smaller will retain it being evenly covered using the fact that the maps $p\colon U_\alpha\to U$ is a homeomorphism.
+	\begin{enumerate}
+		\item To set us up, given $y\in Y$, we claim that there we can find an open neighborhood $V$ of $y$ and a finite open cover $\mathcal U$ of $I$ such that $F(V\times U)$ is contained in an evenly covered subset of $X$ for any $U\in\mathcal U$. The point is to use compactness to shrink an evenly covered subset containing $F(V\times I)$ sufficiently. Well, for each $t\in I$, we may find and evenly covered subset $U_t\subseteq X$ containing $F(y,t)$ and then find $\varepsilon_t>0$ and an open neighborhood $V_t$ of $y$ such that $V_t\times(t-\varepsilon_t,t+\varepsilon_t)\subseteq F^{-1}(U_{t_i})$.
+
+		Now, by compactness, we may choose finitely many $t$ labeled $\{t_1,\ldots,t_n\}$ and set $\varepsilon_i\coloneqq\varepsilon_{t_i}$ and $V_i\coloneqq V_{t_i}$ and $U_i\coloneqq U_{t_i}$ such that the intervals $(t_i-\varepsilon_i,t_i+\varepsilon_i)$ covers $I$ and $F(V_i\times(t_i-\varepsilon_i,t_i+\varepsilon_i))\subseteq F^{-1}(U_i)$. Now, set
+		\[V\coloneqq\bigcap_{i=1}^nV_i\]
+		so any $t\in I$ lives in some $(t_i-\varepsilon_i,t_i+\varepsilon_i)$ has $F(V\times(t_i-\varepsilon_i,t_i+\varepsilon_i))\subseteq U_i$.
+
+		\item We prove uniqueness. It is enough to show this in the case where $Y$ is a point. Namely, fix suppose we have two lifts $\widetilde F_1$ and $\widetilde F_2$ of $F$ which agree with $\widetilde F$. Then, fixing some $y\in Y$, we see that $\widetilde F_1(y)$ and $\widetilde F_2(y)$ are maps $I\to\widetilde X$ lifting $F(y)\colon I\to X$ which equal $\widetilde F(y,0)$ at $0$. In this setting, we want to show that $\widetilde F_1(y,t)=\widetilde F_2(y,t)$ for all $t\in I$. As such, we suppress the point $y\in Y$ in the argument which follows.
+
+		The previous step promises us a finite open cover $\mathcal U$ of $I$ such that $F(U)$ is contained in an evenly covered open subset of $X$ for each $U\in\mathcal U$. Ordering the endpoints of $\mathcal U$, we produce a partition $0=t_0<t_1<\cdots<t_n=1$ of $[0,1]$ such that $F([t_i,t_{i+1}])$ is covered in an evenly covered subset of $U_i$ for each $i$.
+
+		We are now ready to show our uniqueness. We show that $\widetilde F_1(t)=\widetilde F_2(t)$ for each $t\in[0,t_i]$ by induction on $i$. At $i=0$, there is nothing to say because $\widetilde F_1(0)=\widetilde F(0)=\widetilde F_2(0)$. Now, for the induction, we are given that $\widetilde F_1(t_i)=\widetilde F_2(t_i)$. The point is that $F([t_i,t_{i+1}])$ is contained in an evenly covered subset $U_i\subseteq X$, so $\widetilde F_1([t_i,t_{i+1}])$ lands in one of the disjoint copies of $U_i$ of $p^{-1}(U_i)$, and it lands in exactly one because $[t_i,t_{i+1}]$ is connected; let $\widetilde U_i$ be the corresponding disjoint copy. The same statement holds for $\widetilde F_2$, and in fact $\widetilde F_2([t_i,t_{i+1}])\subseteq\widetilde U_i$ because $\widetilde F_2([t_i,t_{i+1}])$ needs to land in the same copy of $U_i$ containing $\widetilde F_1(t_i)=\widetilde F_2(t_i)$.
+
+		We are now done. Note $p\colon\widetilde U_i\to U_i$ is injective, so
+		\[p\circ\widetilde F_1=p\circ\widetilde F_2\]
+		for $t\in[t_i,t_{i+1}]$ forces equality after removing $t$.
+
+		\item Fix some $y\in Y$. We will extend locally: we construct some open neighborhood $V$ of $y$ and a lift $\widetilde F\colon V\times I\to\widetilde X$ of $F|_{V\times I}$. The point is to ``spread out'' from $\{y\}\times I$ using the previous step.
+
+		As before, the first step promises us an open neighborhood $V$ of $y$ and a finite open cover $\mathcal U$ of $I$ such that $F(V\times U)$ is contained in an evenly covered subset for each $U\in\mathcal U$. Arranging the endpoints of the open sets in $\mathcal U$, we may say that we have a partition $0=t_0<t_1<\cdots<t_n=1$ such that $F(V\times[t_i,t_{i+1}])$ is contained in an evenly covered open subset $U_i\subseteq X$ for each $i$.
+
+		We now extend $F$ to $\widetilde F$ on $[0,t_i]$ inductively. For $i=0$, there is nothing to do because $\widetilde F|_{Y\times\{0\}}$ is already fixed. Now, suppose we have a definition of $\widetilde F$ on $V\times[0,t_i]$. Say $F(V\times[t_i,t_{i+1}])\subseteq U_i$, and select the copy of $U_i$ named $\widetilde U_i\subseteq p^{-1}(U_i)$ by requiring it to contain $\widetilde F(y,t_i)$. Now, shrink $V$ so that $V\times\{t_i\}$ contains $y$ still but now is contained in $\widetilde U_i$. Now, define $\widetilde F$ on $V\times[t_i,t_{i+1}]$ by pre-composing with the homeomorphism
+		\[p^{-1}\colon U_i\to\widetilde U_i,\]
+		and we produce a continuous map because we have agreed on the seam at $V\times\{t_i\}$.\footnote{To avoid this annoyance at the seam, one can allow the partition to overlap a bit so that we only ever glue continuous maps along open sets, which is legal. I won't write this out.} This completes the lifting to a neighborhood $V$ of $y$.
+
+		\item We can now glue the lifts $\widetilde F$ constructed in the previous step, and the gluing is well-defined because they must agree on intersections by the uniqueness of the second step. This completes the proof.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+And now here is our result.
+\begin{theorem} \label{thm:pi1-s1}
+	For any $x\in S^1$, we have $\pi_1\left(S^1,x\right)\cong\ZZ$.
+\end{theorem}
+\begin{proof}
+	For brevity, embed $S^1$ into $\CC$ as $S^1=\RR/\ZZ$, and let our basepoint be $0\in S^1$. We now abbreviate our fundamental group to $\pi_1\left(S^1\right)$.
+	
+	Now, we note that we have the continuous (in fact, holomorphic) path $\omega_n\colon[0,1]\to S^1$ given by $t\mapsto nt$. A reparameterization argument can show that $[\omega_n]\cdot[\omega_m]=[\omega_{m+n}]$ for any $m,n\in\ZZ$, so we have defined a homomorphism $\varphi\colon\ZZ\to\pi_1(S^1)$. We would like to show that this map is an isomorphism. We will use \Cref{prop:fibration-prop}, for which we note that $p\colon\RR\to S^1$ given by $p(t)\coloneqq t$ is a covering space map. Indeed, for each $t\in S^1$, choose the neighborhood $(t-0.1,t+0.1)$ so that
+	\[p^{-1}((t-0.1,t+0.1))=(t-0.1,t+0.1)+\ZZ=\bigsqcup_{n\in\ZZ}(t+n-0.1,t+n+0.1).\]
+	We now show that $\varphi$ is an isomorphism.
+	\begin{itemize}
+		\item Surjective: let $f\colon I\to S^1$ be a loop, and we want to show that $f\sim\omega_n$ for some $n\in\ZZ$. By \Cref{prop:fibration-prop} applied with $Y$ being a point, we get a path $\widetilde f\colon I\to\RR$ such that $f=p\circ\widetilde f$. Now, set $n\coloneqq\widetilde f(1)$, which is indeed an integer, and we claim $\widetilde f\sim\widetilde\omega_n$, where $\widetilde\omega_n(t)\coloneqq nt$; this will finish after composing with the projection $p$ as it shows that $f\sim\omega_n$ by \Cref{lem:homotopy-compose}.
+
+		To see this, we define the map $h\colon I\times I\to\RR$ by
+		\[h_t(s)\coloneqq(1-t)\widetilde f(s)+t\widetilde\omega_n(s).\]
+		Then $h$ is continuous because it is the composite
+		\[I\stackrel{(\id,1-\id,\widetilde f,\omega_n)}\to I\times I\times\RR\times\RR\to\RR,\]
+		where the last map is taking a linear combination. Now, $h_0=\widetilde f$ and $h_1=\widetilde\omega_n$, so $\widetilde f\sim\widetilde\omega_n$ follows.
+		
+		\item Injective: suppose $\omega_n\sim\omega_0$, and we want to show that $n=0$. Then we have a homotopy $h_\bullet\colon I\times I\to X$ such that $h_0=\omega_n$ and $h_1=\omega_0$. Then \Cref{prop:fibration-prop} produces a unique lift $\widetilde h_\bullet\colon I\times I\to\widetilde X$ of $h$ such that $\widetilde h_t(0)=0$ for each $t\in I$. Now, the map $t\mapsto\widetilde h_t(1)$ is continuous, and $h_t(1)=0$ for each $t\in I$, so the map $t\mapsto\widetilde h_t(1)$ maps to the discrete space $\ZZ$. It follows that $\widetilde h_0(1)=\widetilde h_1(1)$, so $0=n$ because of how $\omega_0$ and $\omega_n$ lift to $\RR$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{The Fundamental Group Functor}
+Let's do some nonsense checks, for fun.
+\begin{definition}[based topological space]
+	A \textit{based topological space} $(X,x_0)$ is a topological space $X$ together with a basepoint $x_0\in X$. A map of based topological spaces $\varphi\colon(X,x_0)\to(Y,y_0)$ is a continuous map $\varphi\colon X\to Y$ such that $\varphi(x_0)=y_0$. The category with these objects and morphisms is $\mathrm{Top}_*$.
+\end{definition}
+We won't bother to check that $\mathrm{Top}_*$ is a category. Here is the main point of this subsection.
+\begin{proposition} \label{prop:pi-1-functor}
+	We have a functor $\pi_1\colon\mathrm{Top}_*\to\mathrm{Grp}$.
+\end{proposition}
+\begin{proof}
+	We already know that $\pi_1(X,x_0)$ is a group for each based topological space $(X,x_0)$, so we really only have to check the functoriality properties.
+
+	Fix a map $\varphi\colon(X,x_0)\to(Y,y_0)$ of based topological spaces. We need to define a group homomorphism $\pi_1(\varphi)\colon\pi_1(X,x_0)\to\pi_1(Y,y_0)$. Well, given a loop $f\colon I\to X$ based at $x_0$, we note that $(\varphi\circ f)\colon I\to Y$ is a loop based at $y_0=\varphi(x_0)$, so we hope that our desired map is $(\varphi\circ-)$. Here are our checks.
+	\begin{itemize}
+		\item Well-defined: if $f\sim f'$, we need to show that $\varphi\circ f\sim\varphi\circ f'$. This is simply \Cref{lem:homotopy-compose}.
+		\item Group homomorphism: we need to show that $(\varphi\circ f)\cdot(\varphi\circ g)\sim\varphi\circ(f\cdot g)$ for loops $f,g\colon I\to X$ based at $x_0$. In fact, these paths are equal: for $t\in I$, we compute
+		\[((\varphi\circ f)\cdot(\varphi\circ g))(t)=\begin{cases}
+			\varphi(f(2t)) & \text{if }t\le1/2, \\
+			\varphi(g(2t-1)) & \text{if }t\ge1/2,
+		\end{cases}=(\varphi\circ(f\dot g))(t).\]
+	\end{itemize}
+	We now prove functoriality of $\pi_1$.
+	\begin{itemize}
+		\item Identity: note that $\id_X\colon(X,x_0)\to(X,x_0)$ has ${\id_X}\circ f=f$ for any path $f\colon I\to X$, so $\pi_1({\id_X})([f])=[f]$ for any $[f]\in\pi_1(X,x_0)$.
+		\item Composition: given maps $\varphi\colon(X,x_0)\to(Y,y_0)$ and $\psi\colon(Y,y_0)\to(Z,z_0)$ and a loop $f\colon I\to X$ based at $x_0$, we see that
+		\[\pi_1(\psi\circ\varphi)([f])=[\psi\circ\varphi\circ f]=\pi_1(\psi)([\varphi\circ f])=(\pi_1(\psi)\circ\pi_1(\varphi))([f]),\]
+		which finishes.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Of course, just being a functor is not terribly interesting. Here is a nice property.
+\begin{proposition} \label{prop:pi1-prods}
+	Fix based topological spaces $(X,x_0)$ and $(Y,y_0)$. Then
+	\[\pi_1(X\times Y,(x_0,y_0))\cong\pi_1(X,x_0)\times\pi_1(Y,y_0).\]
+\end{proposition}
+\begin{proof}
+	Let $p_X\colon(X\times Y,(x_0,y_0))\to(X,x_0)$ and $p_Y\colon(X\times Y,(x_0,y_0))\to(Y,y_0)$ denote the projections. Now, note that we have a map
+	\[(\pi_1(p_X),\pi_2(p_Y))\colon\pi_1(X\times Y,(x_0,y_0))\to\pi_1(X,x_0)\times\pi_1(Y,y_0)\]
+	which we claim is an isomorphism. For brevity, let this morphism be $\varphi$. Of course, $\varphi$ is a homomorphism because $\pi_1$ is a functor (see \Cref{prop:pi-1-functor}).
+	\begin{itemize}
+		\item Surjective: fix loops $f_X\colon I\to X$ and $f_Y\colon I\to Y$ based at $x_0$ and $y_0$ respectively. Then the map $f(t)\coloneqq(f_X(t),f_Y(t))$ defines a loop $I\to X\times Y$ based at $(x_0,y_0)$, and by construction $f_X=p_X\circ f$ and $f_Y=p_Y\circ f$, so
+		\[\varphi(f)=([p_X\circ f],[p_Y\circ f])=([f_X],[f_Y]).\]
+		\item Injective: suppose $\varphi([f])=\varphi([g])$, and we want to show that $[f]=[g]$. Well, we have homotopies $h_{X\bullet}\colon I\times I\to X$ and $h_{Y\bullet}\colon I\times I\to Y$ such that $h_{X0}=p_X\circ f$ and $h_{X1}=p_X\circ g$ and $h_{Y0}=p_Y\circ f$ and $h_{Y1}=p_Y\circ g$. Then we define $h_\bullet\colon I\times I\to X\times Y$ by
+		\[h_t(s)\coloneqq(h_{Xt}(s),h_{Yt}(s)).\]
+		Note $h_t$ is continuous because it is continuous in each coordinate. To finish, we see $h_0=f$ and $h_1=g$ by checking after applying the projections $p_X$ and $p_Y$, so $f\sim g$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	More precisely, the above proof has shown that $\pi_1$ preserves products.
+\end{remark}
+\begin{example}
+	We have $\pi_1\left(S^1\times S^1\right)\cong\ZZ^2$ by \Cref{prop:pi1-prods} and \Cref{thm:pi1-s1}.
+\end{example}
+\begin{example} \label{ex:no-retraction-d2-s1}
+	We show that there is no retraction $r\colon D^2\to S^1$. Let $i\colon S^1\to D^2$ be the inclusion. If there is a retraction $r$, then we see that $r\circ i=\id_{S^1}$, so functoriality of $\pi_1$ means that the composite
+	\[\pi_1\left(S^1\right)\stackrel i\to\pi_1\left(D^2\right)\stackrel r\to\pi_1\left(S^1\right)\]
+	is an isomorphism. In particular, $i$ is injective. However, $\pi_1\left(S^1\right)\cong\ZZ$ by \Cref{thm:pi1-s1}, and $\pi_1\left(D^2\right)=0$ because $D^2$ is convex and hence contractible.
+\end{example}
+\begin{remark}
+	One can use \Cref{ex:no-retraction-d2-s1} to show Brouwer's fixed point theorem: we show that any continuous map $h\colon D^2\to D^2$ has a fixed point. Well, suppose $h$ has no fixed point. Then there is a continuous map sending $x\in D^2$ to the point on $S^1$ which intersects with the raw starting at $h(x)$ and then going through $x$. Then $h\colon D^2\to S^1$ defines a retraction, contradicting \Cref{ex:no-retraction-d2-s1}.
+\end{remark}
+
+\end{document}

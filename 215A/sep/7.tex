@@ -1,0 +1,106 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 7}
+
+Today we prove the van Kampen theorem.
+
+\subsection{Free Products of Groups}
+We will be somewhat brief on this because this is not an algebra class.
+\begin{definition}[free product]
+	Let $\{G_\alpha\}_{\alpha\in\lambda}$ be a collection of groups. Then we form the free product $\Asterisk_{\alpha\in\lambda}G_\alpha$ as having underlying set given by strings of words whose letters are in the $G_\alpha$, modded out by the relations $g_\alpha\cdot h_\alpha=g_\alpha h_\alpha$ whenever $g_\alpha,h_\alpha\in G_\alpha$ for some $\alpha\in\lambda$.
+\end{definition}
+Perhaps one should check that this forms a group, so we will sketch what one should do.
+\begin{enumerate}
+	\item Let $W$ be the set of finite strings (i.e., words) whose letters are $g$ or $g^{-1}$ where $g\in G_\alpha$ for some $\alpha\in\lambda$. Then we build $\overline W$ by allowing combining $g_\alpha\cdot h_\alpha$ into a single character $g_\alpha h_\alpha$ provided that $g_\alpha$ and $h_\alpha$ belong to the same group $G_\alpha$. We will realize our desired group as a subgroup of $\op{Aut}(W)$.
+	\item For each $g\in W$, define the function $L_g\colon W\to W$ by left concatenation. One should show that $L_g$ is in fact a well-defined function, which depends on the equivalence relation defining $W$, but in short, one can show that having two words $w$ and $w'$ with $w\sim w'$ enforces $g\cdot w\sim g\cdot w'$ by using the same concatenation rules on both sides. A rigorous argument would need to use an induction, which we won't bother to write out.
+	\item Note that $L_e$ (where $e$ denotes the empty string) is the identity on $W$, and $L_{g^{-1}}$ is the inverse of $L_g$. Thus, the image of $L_\bullet$ in $W$ is a subgroup of $\op{Aut}(W)$, and we call this subgroup $\Asterisk_{\alpha\in\lambda}G_\alpha$. One realizes this group as the free product described above by identifying $L_g$ with $L_g(e)$. The point of introducing $L_\bullet$ at all is to make the various group law checks easier.
+\end{enumerate}
+One has the following universal property, which we will not prove, again because this is not an algebra class.
+\begin{proposition}
+	Let $\{G_\alpha\}_{\alpha\in\lambda}$ be a collection of groups. Given homomorphisms $\varphi_\alpha\colon G_\alpha\to H$ to a target group $H$, there is a unique homomorphism $\varphi\colon\Asterisk_{\alpha\in\lambda}G_\alpha\to H$ such that the following diagram commutes.
+	% https://q.uiver.app/#q=WzAsMyxbMCwxLCJcXEFzdGVyaXNrX3tcXGFscGhhXFxpblxcbGFtYmRhfUdfXFxhbHBoYSJdLFsxLDEsIkgiXSxbMCwwLCJHX1xcYWxwaGEiXSxbMCwxLCJcXHZhcnBoaSIsMl0sWzIsMCwiXFxpb3RhX1xcYWxwaGEiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFsyLDEsIlxcdmFycGhpX1xcYWxwaGEiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{G_\alpha} \\
+		{\Asterisk_{\alpha\in\lambda}G_\alpha} & H
+		\arrow["\varphi"', from=2-1, to=2-2]
+		\arrow["{\iota_\alpha}"', hook, from=1-1, to=2-1]
+		\arrow["{\varphi_\alpha}", from=1-1, to=2-2]
+	\end{tikzcd}\]
+	Here, $\iota_\alpha\colon G_\alpha\to\Asterisk_{\alpha\in\lambda}G_\alpha$ is the inclusion.
+\end{proposition}
+\begin{proof}
+	Let's sketch the proof. We begin by showing uniqueness of $\varphi$. Given a word $g_{\alpha_1}\cdots g_{\alpha_n}$ in $\Asterisk_{\alpha\in\lambda}$, we see that the commutativity of the diagram enforces
+	\begin{align*}
+		\varphi\left(g_{\alpha_1}\cdots g_{\alpha_n}\right) &= \varphi(g_{\alpha_1})\cdots\varphi(g_{\alpha_n}) \\
+		&= \varphi(\iota_{\alpha_1}(g_{\alpha_1}))\cdots\varphi(\iota_{\alpha_n}(g_{\alpha_n})) \\
+		&= \varphi_{\alpha_1}(g_{\alpha_1})\cdots\varphi_{\alpha_n}(g_{\alpha_n}).
+	\end{align*}
+	Thus, $\varphi$ is uniquely determined by the $\varphi_\alpha$. It remains to show that the above formula in fact defines a group homomorphism, which follows roughly speaking by the minimal construction of $\Asterisk_{\alpha\in\lambda}$. Namely, we have thus far defined a function $\varphi\colon W\to H$ where $W$ is the set of all words, so one needs to check that we are still safe after modding out by the requisite equivalence relation on $W$. We will not do this, but in short, one can use induction on the various generators of the group presentation of $\Asterisk_{\alpha\in\lambda}G_\alpha$.
+\end{proof}
+In the discussion that follows, we will frequently use group presentations, which is an expression of the form
+\[\left\langle a_1,a_2,\ldots,:w_1,w_2,\ldots\right\rangle,\]
+where the $a_\bullet$ are generators for words giving the group and $w_\bullet$ are words intended to produce relations for the group, by default of the form $w_\bullet=1$.
+\begin{example}
+	The group $\langle a\rangle$ gives $\ZZ$. Namely, the group consists of the elements
+	\[\left\{\ldots,a^{-3},a^{-2},a^{-1},a^0,a^1,a^2,a^3,\ldots\right\}.\]
+\end{example}
+\begin{example}
+	The group $\langle a:a^2\rangle$ gives $\ZZ/2\ZZ$. Namely, our isomorphism is by sending $k\in\ZZ/2\ZZ$ to $a^k$. This is well-defined because $2\mapsto a^2$, and $a^2$ is the identity of the group.
+\end{example}
+
+\subsection{van Kampen's Theorem}
+In this subsection, we state and prove the van Kampen theorem. Let's explain the idea. Suppose we can decompose $X$ into path-connected open subsets $\{A_\alpha\}_{\alpha\in\lambda}$. Then the inclusions $i_\alpha\colon A_\alpha\into X$ induce maps $\pi_1(A_\alpha)\to\pi_1(X)$, which by the nature of the free product induces a map
+\[\Asterisk_{\alpha\in\lambda}\pi_1(A_\alpha)\to\pi_1(X).\]
+It is not too hard to see that this map is surjective.
+\begin{lemma} \label{lem:free-group-covers-pi1}
+	Fix a topological space $X$ which is the union of path-connected open subsets $\{A_\alpha\}_{\alpha\in\lambda}$ each containing a basepoint $x_0\in X$. For any loop $\gamma\colon I\to X$ based at $x_0$, there are loops $\gamma_{\alpha_1},\ldots,\gamma_{\alpha_n}$ based at $x_0$ such that
+	\[\gamma\sim\gamma_{\alpha_1}\cdot\ldots\cdot\gamma_{\alpha_n}\]
+	and $\gamma_{\alpha_n}$ is a path connected in $A_{\alpha_n}$ for each $\alpha_n$.
+\end{lemma}
+\begin{proof}
+	For each $\alpha\in\lambda$, decompose $\gamma^{-1}(A_\alpha)\subseteq I$ into a collection of intervals $\mathcal I_\alpha$. Then
+	\[I=\gamma^{-1}(X)=\bigcup_{\alpha\in\lambda}\gamma^{-1}(A_\alpha)=\bigcup_{\alpha\in\lambda}\bigcup_{I'\in\mathcal I_\alpha}I'.\]
+	Now, $I$ is compact, so this open cover can be turned into a finite subcover $\{(a_k,b_k)\}_{k=1}^n$ where $\gamma((a_k,b_k))\subseteq A_{\alpha_k}$ for some $\alpha_k\in\lambda$. Ordering the $(a_k,b_k)$, we produce a partition $0=t_0<t_1<\cdots<t_{n-1}<t_n=1$ such that $\gamma([t_k,t_{k+1}])\subseteq A_{\alpha_k}$ for some perhaps different $n$ and $\alpha_k\in\lambda$.
+
+	We are now ready to finish. For each $1\le k\le n-1$, we recall that $A_{\alpha_k}$ is path-connected, so we can find a path $\eta_k$ from $\gamma(t_k)$ to $x_0$. Then we see that
+	\begin{align*}
+		\gamma &\sim \gamma|_{[t_0,t_1]}\cdot\gamma|_{[t_1,t_2]}\cdot\ldots\cdot\gamma|_{[t_{n-2},t_{n-1}]}\cdot\gamma|_{[t_{n-1},t_n]} \\
+		&\sim \underbrace{\gamma|_{[t_0,t_1]}\cdot\eta_1}_{\gamma_0\coloneqq}\cdot\underbrace{\overline\eta_1\cdot\gamma|_{[t_1,t_2]}\cdot\eta_2}_{\gamma_1\coloneqq}\cdot\overline\eta_2\cdot\ldots\cdot\eta_{n-2}\cdot\underbrace{\overline\eta_{n-2}\cdot\gamma|_{[t_{n-2},t_{n-1}]}\cdot\eta_{n-1}}_{\gamma_{n-2}\coloneqq}\cdot\underbrace{\overline\eta_{n-1}\cdot\gamma|_{[t_{n-1},t_n]}}_{\gamma_{n-1}\coloneqq}.
+	\end{align*}
+	The above expression provides the desired factorization.
+\end{proof}
+\begin{corollary}
+	Fix a topological space $X$ which is the union of path-connected open subsets $\{A_\alpha\}_{\alpha\in\lambda}$ each containing a basepoint $x_0\in X$. Then the map induced map
+	\[\Asterisk_{\alpha\in\lambda}\pi_1(A_\alpha,x_0)\to\pi_1(X,x_0)\]
+	is surjective.
+\end{corollary}
+\begin{proof}
+	This is direct from \Cref{lem:free-group-covers-pi1}.
+\end{proof}
+We would now like to compute its kernel of our induced map. Well, if $A_\alpha\cap A_\beta$ is path-connected, then we let $i_{\alpha\beta}\colon A_\alpha\cap A_\beta\to A_\alpha$ denote the inclusion, and we note that
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBX1xcYWxwaGFcXGNhcCBBX1xcYmV0YSJdLFsxLDEsIlgiXSxbMSwwLCJBX1xcYWxwaGEiXSxbMCwxLCJBX1xcYmV0YSJdLFswLDIsImlfe1xcYWxwaGFcXGJldGF9Il0sWzAsMywiaV97XFxiZXRhXFxhbHBoYX0iLDJdLFsyLDEsImlfXFxhbHBoYSJdLFszLDEsImlfXFxiZXRhIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{A_\alpha\cap A_\beta} & {A_\alpha} \\
+	{A_\beta} & X
+	\arrow["{i_{\alpha\beta}}", from=1-1, to=1-2]
+	\arrow["{i_{\beta\alpha}}"', from=1-1, to=2-1]
+	\arrow["{i_\alpha}", from=1-2, to=2-2]
+	\arrow["{i_\beta}", from=2-1, to=2-2]
+\end{tikzcd}\]
+commutes, so
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHBpXzEoQV9cXGFscGhhXFxjYXAgQV9cXGJldGEpIl0sWzEsMSwiXFxwaV8xKFgpIl0sWzEsMCwiXFxwaV8xKEFfXFxhbHBoYSkiXSxbMCwxLCJcXHBpXzEoQV9cXGJldGEpIl0sWzAsMiwiXFxwaV8xKGlfe1xcYWxwaGFcXGJldGF9KSJdLFswLDMsIlxccGlfMShpX3tcXGJldGFcXGFscGhhfSkiLDJdLFsyLDEsIlxccGlfMShpX1xcYWxwaGEpIl0sWzMsMSwiXFxwaV8xKGlfXFxiZXRhKSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{\pi_1(A_\alpha\cap A_\beta)} & {\pi_1(A_\alpha)} \\
+	{\pi_1(A_\beta)} & {\pi_1(X)}
+	\arrow["{\pi_1(i_{\alpha\beta})}", from=1-1, to=1-2]
+	\arrow["{\pi_1(i_{\beta\alpha})}"', from=1-1, to=2-1]
+	\arrow["{\pi_1(i_\alpha)}", from=1-2, to=2-2]
+	\arrow["{\pi_1(i_\beta)}", from=2-1, to=2-2]
+\end{tikzcd}\]
+also commutes. Thus, for any $\gamma\in\pi_1(A_\alpha\cap A_\beta)$, we see that $\pi_1(i_\alpha)(\pi_1(i_{\alpha\beta})([\gamma]))=\pi_1(i_\beta)(\pi_1(i_{\beta\alpha})([\gamma]))$, which produces a relation belonging to the kernel of our surjection $\Asterisk_{\alpha\in\lambda}\pi_1(A_\alpha)\to\pi_1(X)$. Under favorable circumstances, van Kampen's theorem tells us that this is the entire kernel.
+
+\end{document}
