@@ -8,7 +8,256 @@
 
 Having spent a long time building the theory of number rings, we will take a break to discuss some geometry of numbers. We will then return and prove Dirichlet's unit theorem, \Cref{thm:dirichlet-unit}.
 
+\subsection{Lattices}
+The goal of the present subsection is to state and prove some basic facts about lattices in order to set us up for Minkowski's theorem. The moral of the present subsection is that lattices provide a language which allows algebra and geometry to communicate with each other.
+\begin{definition}[lattice]
+	Fix a nonnegative integer $n$. Then a \textit{lattice of rank $m$} $\Lambda$ is a subset of $\RR^n$ such that there exist linearly independent vectors $v_1,\ldots,v_m$ with
+	\[\Lambda=\{a_1v_1+\cdots+a_mv_m:a_1,\ldots,a_m\in\ZZ\}.\]
+	Note that $\Lambda\subseteq\RR^n$ is a subgroup.
+\end{definition}
+\begin{example} \label{ex:z2-in-r2-lattice}
+	The subset $\ZZ^2\subseteq\RR^2$ is a lattice. Namely, choose the linearly independent vectors $(1,0)$ and $(0,1)$, and we see that
+	\[\ZZ^2=\{(a,b):a,b\in\ZZ\}=\{a(1,0)+b(0,1):a,b\in\ZZ\}.\]
+	More generally, $\ZZ^n\subseteq\RR^n$ is a lattice for any positive integer $n$.
+\end{example}
+\begin{example}
+	The subset $\{0\}\subseteq\RR^n$ is a lattice of rank $0$ spanned by the empty set of vectors.
+\end{example}
+\begin{remark}
+	We take a second to remark that a lattice $\Lambda\subseteq\RR^n$ spanned by the linearly independent vectors $v_1,\ldots,v_m$ is a free abelian group of rank $m$. Indeed, we claim that $\varphi\colon\ZZ^m\to\Lambda$ by
+	\[\varphi\colon(a_1,\ldots,a_m)\mapsto a_1v_1+\cdots+a_mv_m\]
+	is a group isomorphism. It is certainly a group homomorphism, and it is surjective by construction of the $v_\bullet$, so it remains to show injectivity. Well, if $\varphi(a_1,\ldots,a_m)=0$, then $a_1v_1+\cdots+a_mv_m=0$, so $(a_1,\ldots,a_m)=(0,\ldots,0)$ by linear independence of the $v_\bullet$.
+\end{remark}
+In the sequel, we will be interested in the quotient $\RR^n/\Lambda$, where $\Lambda\subseteq\RR^n$ is a lattice of rank $n$. A convenient way to represent this is via the ``fundamental parallelepiped.''
+\begin{definition}[fundamental parallelepiped]
+	Fix a positive integer $n$ and a lattice $\Lambda$ of rank $n$ in $\RR^n$. Given a spanning set $v_1,\ldots,v_n$ of $\Lambda$, the \textit{fundamental parallelepiped} $P$ is the set
+	\[\{a_1v_1+\cdots+a_mv_m:a_1,\ldots,a_n\in[0,1)\}.\]
+\end{definition}
+\begin{example}
+	Continue in the context of \Cref{ex:z2-in-r2-lattice}. Then the basis $(1,0)$ and $(0,1)$ of $\ZZ^2$ shows that
+	\[\{(x,y):x,y\in[0,1)\}\]
+	is a fundamental parallelepiped of $\ZZ^2\subseteq\RR^2$.
+\end{example}
+A fundamental parallelepiped is not an invariant of the lattice $\Lambda$, but the volume is.
+\begin{lemma}
+	Fix a positive integer $n$ and a lattice $\Lambda$ of rank $n$ in $\RR^n$. For any two fundamental parallelepipeds $P$ and $P'$ of $\Lambda$, we have $\op{vol}(P)=\op{vol}(P')$.
+\end{lemma}
+\begin{proof}
+	Suppose $P$ and $P'$ arise from the bases $v_1,\ldots,v_n$ and $v_1',\ldots,v_n'$, respectively, of $\Lambda$. Both of these are bases of $\RR^n$, so there is a change of basis matrix $M$ such that $Mv_i=v_i'$ for each $i$. In fact, because $v_i'\in\Lambda$, we see that the coefficients of $M$ must be integers because all elements of $\Lambda$ are $\ZZ$-linear combinations of the $v_\bullet$s. A symmetric argument provides a matrix $M'$ with integer coefficients such that $M'v_i'=Mv_i$ for each $i$.
+
+	Now, the geometric interpretation of the determinant is that
+	\[\op{vol}(P)=\left|\det\begin{bmatrix}
+		| & & | \\
+		v_1 & \cdots & v_n \\
+		| & & |
+	\end{bmatrix}\right|\qquad\text{and}\qquad\op{vol}(P')=\left|\det\begin{bmatrix}
+		| & & | \\
+		v_1' & \cdots & v_n' \\
+		| & & |
+	\end{bmatrix}\right|\]
+	However, $\det M,\det M'\in\ZZ$ and $MM'=1$, so $(\det M)(\det M')=1$, so $\left|\det M\right|=1$, so
+	\[\op{vol}(P')=\left|\det\begin{bmatrix}
+		| & & | \\
+		v_1' & \cdots & v_n' \\
+		| & & |
+	\end{bmatrix}\right|=\left|\det\left(M\begin{bmatrix}
+		| & & | \\
+		v_1 & \cdots & v_n \\
+		| & & |
+	\end{bmatrix}\right)\right|=\left|\det\begin{bmatrix}
+		| & & | \\
+		v_1 & \cdots & v_n \\
+		| & & |
+	\end{bmatrix}\right|=\op{vol}(P),\]
+	as desired.
+\end{proof}
+\begin{remark} \label{rem:p-plus-lambda-is-space}
+	Intuitively, the fundamental parallelepiped $P$ corresponding to a basis $v_1,\ldots,v_n$ of a lattice $\Lambda\subseteq\RR^n$ of rank $n$ is the ``space'' taken up outside $\Lambda$. For example, any $v\in\RR^n$ can be written uniquely as $\ell+p$ where $\ell\in\Lambda$ and $p\in P$. To see this, expand any $v$ as
+	\[v=a_1v_1+\cdots+a_nv_n\]
+	where $a_1,\ldots,a_n\in\RR^n$. Then we set $\ell_i\coloneqq\floor{a_i}$ and $p_i\coloneqq\{a_i\}$ for each $i$ so that
+	\[v=a_1v_1+\cdots+a_nv_n=\underbrace{\ell_1v_1+\ldots+\ell_nv_n}_{\in\Lambda}+\underbrace{p_1v_1+\cdots+p_nv_n}_{\in P}.\]
+	To see that this expression is unique, suppose that $\ell+p=\ell'+p'$ for any $\ell,\ell'\in\Lambda$ and $p,p'\in P$. Then $p-p'=\ell'-\ell\in\Lambda$, but any vector in $p-p'$ takes the form $a_1v_1+\cdots+a_nv_n$ for $a_1,\ldots,a_n\in(-1,1)$ and therefore cannot be in $\Lambda$.
+\end{remark}
+Anyway, the above lemma allows us to define the covolume.
+\begin{definition}[covolume]
+	Fix a positive integer $n$ and a lattice $\Lambda$ of rank $n$ in $\RR^n$. Then the \textit{covolume} $\op{vol}\left(\RR^n/\Lambda\right)$ is the volume of a fundamental parallelepiped of $\Lambda$.
+\end{definition}
+\begin{example}
+	Continue in the context of \Cref{ex:z2-in-r2-lattice}. Then the volume of the fundamental parallelepiped
+	\[\{(x,y):x,y\in[0,1)\}\]
+	is the area of the square $[0,1]^2$, which is $\op{vol}\left(\RR^2/\ZZ^2\right)=1$. More generally, $\op{vol}\left(\RR^n/\ZZ^n\right)$ is the volume of $[0,1)^n$, which is $1$.
+\end{example}
+Intuitively, the covolume measures how ``sparse'' a lattice is. For example, in contrast to the above example, the sparser lattice $2\ZZ^2\subseteq\RR^2$ spanned by $\{(2,0),(0,2)\}$ has fundamental parallelepiped
+\[\{(x,y):x,y\in[0,2)\}\]
+with area $4>1$. More generally, we are able to prove the following result.
+\begin{lemma} \label{lem:move-lattice-covol}
+	Fix a positive integer $n$ and a lattice $\Lambda$ of rank $n$ in $\RR^n$. For any invertible matrix $M\in\RR^{n\times n}$, then
+	\[M\Lambda\coloneqq\{Mv:v\in\Lambda\}\]
+	is a lattice of rank $n$ in $\RR^n$ with covolume $\left|\det M\right|\op{vol}\left(\RR^n/\Lambda\right)$.
+\end{lemma}
+\begin{proof}
+	Let $\Lambda$ have basis $v_1,\ldots,v_n$. To check that $M\Lambda$ is a lattice of rank $n$, note that the vectors $Mv_1,\ldots,Mv_n$ continue to be linearly independent because $M$ is invertible, and these vectors span $M\Lambda$ because
+	\begin{align*}
+		M\Lambda &= \{Mv:v\in\Lambda\} \\
+		&= \{M(a_1v_1+\cdots+a_nv_n):a_1,\ldots,a_n\in\ZZ\} \\
+		&= \{a_1Mv+\cdots+a_nMv_n:a_1,\ldots,a_n\in\ZZ\}.
+	\end{align*}
+	It remains to compute the covolume. Well, the basis $Mv_1,\ldots,Mv_n$ allows us to compute the volume of the corresponding parallelepiped, which is
+	\[\left|\det\begin{bmatrix}
+		| & & | \\
+		Mv_1 & \cdots & Mv_n \\
+		| & & |
+	\end{bmatrix}\right|=\left|\det M\cdot\det\begin{bmatrix}
+		| & & | \\
+		v_1 & \cdots & v_n \\
+		| & & |
+	\end{bmatrix}\right|=\left|\det M\right|\op{vol}\left(\RR^n/\Lambda\right),\]
+	as desired.
+\end{proof}
+\begin{remark}
+	\Cref{lem:move-lattice-covol} actually tells us that $\op{vol}\left(\RR^n/\Lambda\right)>0$. Indeed, let $v_1,\ldots,v_n$ be a basis for $\Lambda$, and let $M$ be the matrix whose columns are the $v_\bullet$; note $\det M\ne0$ because the $v_\bullet$ are linearly independent. Now, $\Lambda=M\ZZ^n$, so $\op{vol}\left(\RR^n/\Lambda\right)=\left|\det M\right|\op{vol}\left(\RR^n/\ZZ^n\right)=\left|\det M\right|$.
+\end{remark}
+Note the definition of a lattice provided above is quite algebraic, but we are going to get quite a bit of mileage using the geometry of lattices. To mirror this, it will be helpful to have a more geometric definition of a lattice.
+\begin{proposition} \label{prop:how-to-lattice}
+	Fix a positive integer $n$, and let $\Lambda\subseteq\RR^n$ be a subgroup. The following are equivalent.
+	\begin{listalph}
+		\item $\Lambda$ is a lattice.
+		\item There is some $R>0$ such that $\Lambda\cap[-R,R]^n=\{0\}$.
+		\item There is some $R>0$ such that $\Lambda\cap[-R,R]^n<\infty$.
+		\item For all $R>0$, we have $\Lambda\cap[-R,R]^n<\infty$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We show our implications in sequence.
+	\begin{itemize}
+		\item We show (a) implies (b). Roughly speaking, the idea is that an element in $\Lambda$ with ``large coefficients'' must actually be ``large'' in $\RR^n$. By adding linearly independent vectors to a basis of $\Lambda$, we may assume that $\Lambda$ is of rank $n$; note that this cannot make $\Lambda\cap[-R,R]^n$ smaller for any $R$, so this move is safe. Now, let $v_1,\ldots,v_n$ be basis for $\Lambda$, which is also a basis for $\RR^n$, and we quickly claim that the function sending
+		\[a_1v_1+\ldots+a_nv_n\mapsto(a_1,\ldots,a_n)\]
+		is continuous. Indeed, letting $M$ be the matrix whose columns are the $v_\bullet$, we note that the function $(a_1,\ldots,a_n)\mapsto a_1v_1+\cdots+a_nv_n$ is $a\mapsto Ma$, so the inverse function is $v\mapsto M^{-1}v$, which is continuous because it is linear. (Note $M^{-1}$ exists because $\det M\ne0$ because the $v_\bullet$ are linearly independent.)
+		
+		To continue, define the function $\norm\cdot_\infty\colon\RR^n\to\RR$ by $\norm{(x_1,\ldots,x_n)}_\infty\coloneqq\max\{\left|x_1\right|,\ldots,\left|x_n\right|\}$, and we consider the function $f\colon\RR^n\to\RR$ given by
+		\[f(v)\coloneqq\norm{M^{-1}v}_\infty.\]
+		Note that $f$ is a continuous function (it's the $\max$ of the absolute value of some linear functions), so for $\varepsilon\coloneqq1$, there exists some $\delta>0$ such that $\norm v<\delta$ implies $\norm{M^{-1}v}_\infty<1$. Now, for any $v\in\RR^n$ with $\norm v_\infty<\delta/\sqrt n$, we see
+		\[\norm v<\sqrt{\frac{\delta^2}n+\cdots+\frac{\delta^2}n}=\delta,\]
+		so $\left|M^{-1}v\right|<1$, so writing $v=a_1v_1+\ldots+a_nv_n$ must have $a_1,\ldots,a_n\in(-1,1)^n$, meaning that either $v=0$ or $v\notin\Lambda$. In total, we see that
+		\[\Lambda\cap\left[-\frac\delta{2\sqrt n},\frac\delta{2\sqrt n}\right]^n=\{0\},\]
+		which completes the proof.
+
+		\item Note that (b) implies (c) easily because $\{0\}$ is a finite set.
+
+		\item We show (c) implies (d). We proceed by contraposition: suppose that there is some $R>0$ such that $\Lambda\cap[-R,R]^n$ is infinite, and we will show the corresponding statement for any $r>0$. Choose some positive integer $N$ such that $Nr/2>R$. Then note that
+		\[\bigcup_{x\in\ZZ^n\cap[-N,N]^n}\big(x+[-r/2,r/2]^n\big)\]
+		fully covers $[-R,R]^n$, so there must be some $x\in\ZZ^n\cap[-N,N]$ such that
+		\[\Lambda\cap\big(x+[-r/2,r/2]^n\big)=\infty\]
+		by the pigeonhole principle. Let $S\subseteq\Lambda$ denote the above infinite subset. We now translate $S$ to the origin. Chose any fixed $v_0\in S$, and write $v_0=x+w_0$ where $w_0\in[-r/2,r/2]^n$. Then for any $v\in S$, we see $v-v_0\in\Lambda$, and writing $v=x+w$ where $w\in[-r/2,r/2]^n$ reveals that $v-v_0=w-w_0\in[-r,r]^n$. Thus, $S-v_0$ is an infinite subset of $\Lambda$ contained in $[-r,r]^n$.
+
+		\item We show (d) implies (a). Suppose that $\Lambda\subseteq\RR^n$ is a subgroup such that $\Lambda\cap[-R,R]^n<\infty$ for all $R$. The main point it to find a lattice sitting inside $\Lambda$ to ``approximate'' $\Lambda$. Let $\{v_1',\ldots,v_m'\}$ be a maximal set of linearly independent vectors in $\Lambda$, and let $\Lambda'$ be the lattice they span. The main claim is that $\Lambda'\subseteq\Lambda$ is a finite-index subgroup.
+
+		To see this, let $P$ be the fundamental parallelepiped corresponding to the basis $v_1',\ldots,v_m'$. Now, \Cref{rem:p-plus-lambda-is-space} tells us that any $v\in\RR^n$ can be written uniquely as $\ell+p$ where $\ell\in\Lambda'$ and $p\in P$, so there is a function $\pi\colon\RR^n\to P$ by sending $v=\ell+p$ to $p$. As such, we examine the set
+		\[\pi(\Lambda)\subseteq P.\]
+		For each $v\in\Lambda$, we see that $v-\pi(v)\in\Lambda'$ by construction of $\pi$, so $\pi(\Lambda)$ contains a set of representatives of $\Lambda/\Lambda'$. On the other hand, $\pi(\Lambda)\subseteq\Lambda$ and is contained in the bounded set $P$, so by hypothesis on $\Lambda$, we see that $\pi(\Lambda)$ and hence $\Lambda/\Lambda'$ is finite.
+
+		We now complete the proof. Let $d\coloneqq[\Lambda:\Lambda']$. Then any $x\in\Lambda$ has $dx\in\Lambda'$ because $\Lambda/\Lambda'$ is a group of order $d$, so $\Lambda'\subseteq\Lambda\subseteq\frac1d\Lambda'$. However, $\Lambda'$ is a free abelian group of rank $m$, so $\Lambda$ must be a free abelian group of rank $m$ by \Cref{cor:get-free-rank-n}. Let $\{v_1,\ldots,v_m\}$ be a basis of $\Lambda$. These vectors span the same space that $\Lambda'$ spans, which is dimension $m$, so we conclude that the vectors $\{v_1,\ldots,v_m\}$ are linearly independent, verifying that $\Lambda$ is a lattice.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	It might be frustrating that we had to appeal to \Cref{cor:get-free-rank-n} to prove the above result. However, this is in some sense necessary because \Cref{prop:how-to-lattice} implies \Cref{lem:subgroup-of-free}: if $G\subseteq\ZZ^n$ is a subgroup, then $G\subseteq\RR^n$ is a subgroup such that $G\cap[-1/2,1/2]^n=\{0\}$, implying that $G$ is a lattice in $\RR^n$ and hence a free abelian group of rank $n$.
+\end{remark}
+
 \subsection{Minkowski's Theorem}
+In this subsection, we state and prove Minkowski's theorem. Our motivation comes from the following question.
+\begin{ques} \label{ques:mink-unrefined}
+	Let $\Lambda\subseteq\RR^n$ be a lattice of rank $n$. How large must a subset $S\subseteq\RR^n$ be to contain a lattice point in $\Lambda$?
+\end{ques}
+For the time being, we will focus on the lattice $\ZZ^2\subseteq\RR^2$. Intuitively, if we throw a piece of Play-Doh or similar onto $\RR^2$, we expect to hit a lattice point in $\ZZ^2$ as long as the piece of Play-Doh is large enough. We would like to rigorize this intuition.
+
+Of course, we can find subsets $S\subseteq\RR^2$ which are very large but contain no lattice point. For example, $[0.1,0.9]\times[-100,100]$ has large area but no lattice point.
+\begin{center}
+	\begin{asy}
+		unitsize(0.7cm);
+		fill((-3,0.1)--(-3,0.9)--(3,0.9)--(3,0.1)--cycle, lightblue);
+		for(int i = -2; i <= 2; ++i)
+		{
+			draw((-3,i)--(3,i));
+			draw((i,-3)--(i,3));
+		}
+		for(int i = -2; i <= 2; ++i)
+			for(int j = -2; j <= 2; ++j)
+				dot((i,j));
+	\end{asy}
+\end{center}
+In order to prevent the above problem, we will require our subsets to be symmetric about the origin.
+\begin{definition}[symmetric about the origin]
+	A subset $S\subseteq\RR^n$ is \textit{symmetric about the origin} if and only if $x\in S$ implies $-x\in S$.
+\end{definition}
+Approximately speaking, being symmetric about the origin tells us that the Play-Doh we're throwing is focused at the origin. However, we can still find subsets $S\subseteq\RR^2$ which are very large and symmetric about the origin but contain no lattice point, as the following example shows.
+\begin{center}
+	\begin{asy}
+		unitsize(0.7cm);
+		fill((-3,0.1)--(-3,0.9)--(3,0.9)--(3,0.1)--cycle, lightblue);
+		fill((-3,-0.1)--(-3,-0.9)--(3,-0.9)--(3,-0.1)--cycle, lightblue);
+		fill((-0.9,0.2)--(-0.1,0.2)--(-0.1,-0.2)--(-0.9,-0.2)--cycle, lightblue);
+		fill((0.9,0.2)--(0.1,0.2)--(0.1,-0.2)--(0.9,-0.2)--cycle, lightblue);
+		for(int i = -2; i <= 2; ++i)
+		{
+			draw((-3,i)--(3,i));
+			draw((i,-3)--(i,3));
+		}
+		for(int i = -2; i <= 2; ++i)
+			for(int j = -2; j <= 2; ++j)
+				dot((i,j));
+	\end{asy}
+\end{center}
+The problem with the above set is that it really looks like it should contain $(0,0)$ (as well as $(\pm1,0)$ and $(\pm2,0)$ for that matter), but we have managed to go ``around'' this lattice point. To remedy this, we will require our subsets to be convex.
+\begin{definition}[convex]
+	A subset $S\subseteq\RR^n$ is convex if and only if, for any $v,w\in S$ and $t\in[0,1]$, we have $tv+(1-t)w\in S$. Intuitively, we are asking for the line segment connecting $v$ and $w$ to live in $S$.
+\end{definition}
+We can now declare victory because being symmetric about the origin and convex does guarantee a lattice point.
+\begin{proposition} \label{prop:easy-minkowski}
+	Let $\Lambda\subseteq\RR^n$ be a lattice of rank $n$. Any nonempty subset $S\subseteq\RR^n$ which is convex and symmetric about the origin contains a point of $\Lambda$.
+\end{proposition}
+\begin{proof}
+	We claim that $0\in S$. Indeed, $S$ is nonempty, so there is some $v\in S$. But then $S$ is symmetric about the origin, so $-v\in S$. To finish, we see that $0=\frac12v+\frac12(-v)$ lives in $S$ by convexity.
+\end{proof}
+Notably, \Cref{prop:easy-minkowski} is not Minkowski's theorem because this statement is quite unsatisfying: it is not fulfilling our intuition that only ``large'' balls of Play-Doh must hit a lattice point. Indeed, \Cref{prop:easy-minkowski} only works because we required our Play-Doh to be focused at the origin in our symmetry condition.
+
+As such, we have refined \Cref{ques:mink-unrefined} into the following question.
+\begin{ques}
+	Let $\Lambda\subseteq\RR^n$ be a lattice of rank $n$. How large must be a convex and symmetric about the origin subset $S\subseteq\RR^n$ be in order to contain a nonzero lattice point of $\Lambda$?
+\end{ques}
+Let's continue with the example $\ZZ^2\subseteq\RR^2$. Let $S\subseteq\RR^2$ be convex and symmetric about the origin. The following example shows that $\op{vol}(S)\approx4$ is permissible while still avoiding a nonzero lattice point.
+\begin{center}
+	\begin{asy}
+		unitsize(0.7cm);
+		fill((0.9,0.9)--(0.9,-0.9)--(-0.9,-0.9)--(-0.9,0.9)--cycle, lightblue);
+		for(int i = -2; i <= 2; ++i)
+		{
+			draw((-3,i)--(3,i));
+			draw((i,-3)--(i,3));
+		}
+		for(int i = -2; i <= 2; ++i)
+			for(int j = -2; j <= 2; ++j)
+				dot((i,j));
+	\end{asy}
+\end{center}
+The reader is welcome to try, but there isn't really a way to expand $S$ past having $\op{vol}(S)>4$ while avoiding a lattice point. Indeed, in some sense, the above example of $(-1,1)^2$ is a ``maximal'' subset of $\RR^2$ avoiding a lattice point. Getting our constants right in arbitrary dimension, we achieve the following result.
+\begin{theorem}[Minkowski] \label{thm:mink}
+	Let $\Lambda\subseteq\RR^n$ be a lattice of rank $n$. Further, let $S\subseteq\RR^n$ be convex and symmetric about the origin with
+	\[\op{vol}(S)>2^n\op{vol}\left(\RR^n/\Lambda\right).\]
+	Then $S$ contains a nonzero lattice point in $\Lambda$.
+\end{theorem}
+\begin{proof}
+	Let $P\subseteq\RR^n$ be some fundamental parallelepiped of $\Lambda$. The idea is to double the lattice $\Lambda$ to $2\Lambda$ and consider the quotient map $\RR^n\to\RR^n/2\Lambda$. Concretely, one can build a basis of $2\Lambda$ by doubling a basis of $\Lambda$, so $2P$ is a fundamental parallelepiped for $2\Lambda$. Then \Cref{rem:p-plus-lambda-is-space} grants us a function $\pi\colon\RR^n\to2P$ by mapping $v\in\RR^n$ to the unique $2p\in2P$ such that $v=2p+2\ell$ for some $2\ell\in2\Lambda$.
+
+	We now use the pigeonhole principle: $\op{vol}(2P)=2^n\op{vol}(P)=2^n\op{vol}\left(\RR^n/\Lambda\right)$, but $\pi(S)\subseteq2^n\op{vol}\left(\RR^n/\Lambda\right)$ is compressing $\op{vol}(S)$ into a smaller volume.\footnote{It is important that $\pi$ only translates subsets by elements of $2\Lambda$, so if $\pi\colon S\to2P$ were injective, then we would have $\op{vol}(S)\le\op{vol}(2P)$.} Thus, there must be distinct $v,w\in S$ such that $\pi(v)=\pi(w)$. This is the key step of the proof. It remains to convert these vectors $v$ and $w$ into the desired result.
+
+	Well, $\pi(v)=\pi(w)$ implies that $v-w\in2\Lambda$ by construction of $\pi$. Thus, there is $\ell\in\Lambda\setminus\{0\}$ such that $\ell=\frac12v-\frac12w$. We claim that $\ell\in S$, which will finish the proof. Well, $w\in W$ implies $-w\in S$ by being symmetric about the origin, and then $v,-w\in S$ implies
+	\[\ell=\frac12v+\frac12(-w)\]
+	lives in $S$ as well by being convex.
+\end{proof}
+\begin{remark}
+	\Cref{thm:mink} is a really wonderful result about finding ``short'' vectors in a lattice, and we have seen that the result is essentially sharp. However, the result fails to actually explain how to find the nonzero vector promised. In general, one uses lattice reduction (which we will discuss a special case of in \cref{subsec:compute-primes-of-form}) to find short vectors, but such algorithms are frequently unable to achieve the bound of \Cref{thm:mink}.
+\end{remark}
 
 \subsection{Sample Applications of Minkowski's Theorem}
 
@@ -38,8 +287,38 @@ Note that $\OO$ is a free abelian group of rank $n$, so $j(\OO)$ becomes a free 
 	Notably, linear independence implies that $\ZZ^m\cong\Lambda$ by the isomorphism $(a_1,\ldots,a_m)\mapsto a_1v_1+\cdots+a_mv_m$.
 \end{remark}
 % https://math.stackexchange.com/q/246157
+% nevermind I think that's too complicated ...
 
 \subsection{Dirichlet's Unit Theorem: Lower Bound}
 
+\subsection{Problems}
+Do ten points worth of the following exercises.
+\begin{prob}[1 point]
+	Find a basis $\{(x_1,y_1),(x_2,y_2)\}$ of the lattice $\ZZ^2\subseteq\RR^2$ such that $x_1,y_1,x_2,y_2>10$.
+\end{prob}
+\begin{prob}[2 points]
+	Let $\Lambda\subseteq\RR^n$ be a lattice. Show that there is a vector $v\in\Lambda\setminus\{0\}$ such that $\norm v$ is minimized among all values in $\Lambda\setminus\{0\}$.
+\end{prob}
+\begin{prob}[3 points]
+	Let $\Lambda'$ and $\Lambda$ be lattices in $\RR^n$ of rank $n$. Suppose $\Lambda'\subseteq\Lambda$.
+	\begin{listalph}
+		\item Show that there is a positive integer $m$ such that $m\op{vol}\left(\RR^n/\Lambda\right)=\op{vol}\left(\RR^n/\Lambda'\right)$.
+		\item If $\op{vol}\left(\RR^n/\Lambda\right)=\op{vol}\left(\RR^n/\Lambda'\right)$, show that $\Lambda=\Lambda'$.
+	\end{listalph}
+\end{prob}
+\begin{prob}[4 points]
+	Classify the integer solutions to
+	\[x^3+3y^3+9z^3-9xyz=1\]
+	in a way akin to \Cref{prop:pell-cbrt-2}.
+\end{prob}
+\begin{prob}[5 points]
+	The following problem requires the notion of a closed set: a subset $S\subseteq\RR^n$ is said to be ``closed'' if and only if any convergent sequence $\{a_n\}_{n=0}^\infty$ contained in $S$ has limit in $S$.
+	\begin{listalph}
+		\item (0 points) For experience, show that $[-1,1]^n\subseteq\RR^n$ is a closed set for any positive integer $n$.
+		\item (5 points) Let $\Lambda\subseteq\RR^n$ be a lattice of rank $n$. For any closed, convex, symmetric about the origin subset $S\subseteq\RR^n$ such that
+		\[\op{vol}(S)\ge2^n\op{vol}\left(\RR^n/\Lambda\right),\]
+		show that $S$ contains a nonzero lattice point of $\Lambda$.
+	\end{listalph}
+\end{prob}
 
 \end{document}
