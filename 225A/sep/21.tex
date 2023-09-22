@@ -1,0 +1,106 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 21}
+
+Today, we will go on to some more nontrivial examples.
+
+\subsection{Algebraically Closed Fields}
+Consider the language $\mathcal L$ with binary operations $+$ and $\cdot$, a unary operation $-$, and constants $0$ and $1$. The theory of fields has the sentences given by the ones in a standard algebra class.
+\begin{itemize}
+	\item $\forall x\forall y((x+y=y+x)\land(x\cdot y=y\cdot x))$.
+	\item $\forall x\forall y\forall z(((x+y)+z=x+(y+z))\land((x\cdot y)\cdot z=x\cdot(y\cdot z)))$.
+	\item $\forall x((x+(-x)=0)\land((-x)+x=0))$.
+	\item $\forall x\exists y(x\cdot y=1)$.
+	\item $\forall x\forall y\forall z(x\cdot(y+z)=x\cdot y+x\cdot z)$.
+	\item $\forall x((x+0=x)\land(x\cdot1=x))$.
+	\item $\lnot(0=1)$.
+\end{itemize}
+To make this algebraically closed, we want every monic polynomial to have a root. For this, we should go degree-by-degree. For example, for degree $d$ which is a positive integer, we write the sentence $\varphi_d$ to be
+\[\forall a_1\cdots\forall a_{d-1}\exists x\left(x^d+a_{d-1}x^{d-1}+\cdots+a_1x+a_0=0\right).\]
+Call this theory $\mathrm{ACF}$. Notably, we then have used infinitely many axioms.
+
+As an aside, we note there is no finite set of sentences characterizing algebraically closed fields. Let's show this.
+\begin{lemma}
+	Suppose a satisfiable theory $T$ is finitely axiomatizable: there is a finite set of sentences $\varphi_1,\ldots,\varphi_n$ such that $\mathcal M\models T$ for a structure $\mathcal M$ if and only if $\mathcal M\models\varphi_\bullet$ for each $\varphi_\bullet$. Then there is a finite subset $T_0\subseteq T$ such that $\mathcal M\models T$ if and only if $\mathcal M\models T_0$.
+\end{lemma}
+\begin{proof}
+	The reverse direction is clear by just taking $T_0$ to be our finite set of axioms.
+	
+	In the other direction, suppose that $\varphi\coloneqq\varphi_1\land\cdots\land\varphi_n$ axiomatizes $T$. We now apply compactness $\Sigma\coloneqq T\cup\{\lnot\varphi\}$. Note $\Sigma$ is not satisfiable because $\mathcal M\models T$ if and only if $\mathcal M\models\varphi$. Thus, by \Cref{thm:compactness}, we see that $\Sigma$ cannot be finitely satisfiable. But $T$ is finitely satisfiable, so there is some finite subset of the form $T_0\cup\{\lnot\varphi\}$ which is not satisfiable.
+	
+	We now check that $T_0$ does the trick. However, this means that any structure $\mathcal M$ such that $\mathcal M\models T_0$ requires $\mathcal M\models\varphi$, and conversely, $\mathcal M\models\varphi$ implies $\mathcal M\models T$ implies $\mathcal M\models T_0$. Thus, $T_0$ is the needed subset.
+\end{proof}
+Let's apply this lemma to $\mathrm{ACF}$. Let $T_0$ be some finite subset of $\mathrm{ACF}$, and we show that $T_0$ is not equivalent to $\mathrm{ACF}$. Add in any of the field axioms necessary, and we know there is some upper bound $N$ such that $T_0$ is then contained in the field axioms plus $\{\varphi_1,\ldots,\varphi_d\}$. To show that $T_0$ is not equivalent to $\mathrm{ACF}$, we construct a field $K/\QQ$ which models $T_0$ but not $\mathrm{ACF}$. Well, construct $K$ by a tower
+\[\QQ=K_0\subseteq K_1\subseteq\cdots,\]
+where $K_{n+1}$ consists of all numbers which are roots of polynomials in $K_n$ of degree at most $N$. Then set $K\coloneqq\bigcup_{n=0}^\infty K_n$, and we see $K\models T_0$.
+
+Well, for a piece of algebra, we note that the polynomial $f_p(x)\coloneqq x^p-2\in\QQ[x]$ is irreducible for any prime $p$. Choosing $p>N$, we then claim that $f_p(x)\in K[x]$ has no root. Indeed, any root would need to live in some $K_{n+1}[x]$, which means that $x^p-2$ has some root shared with a polynomial of degree at most $N$ whose coefficients live in $K_n$. However, extracting out the necessary coefficients into a field $L$, we see that $L/\QQ$ has degree coprime to $p$ (it's constructed using roots of polynomials of degrees at most $N$, and $p>N$ is prime), but then $\QQ[x]/\left(x^p-2\right)\subseteq L$ has degree $p$, so it cannot possibly be a subfield.\todo{}
+\begin{remark}
+	The same argument shows that one can finitely axiomatize fields of characteristic $0$. We produce the theory of characteristic-$0$ fields by adding in the sentences
+	\[\underbrace{1+\cdots+1}_p=0\]
+	for each positive prime $p$. But then no finite subset of these axioms will do because there are fields of arbitrarily large (but still finite) characteristic.
+\end{remark}
+Anyway, here is our theorem.
+\begin{theorem} \label{thm:complete-acf}
+	The completion of $\mathrm{ACF}$ are the theories $\mathrm{ACF}_p$ where $p$ is a prime or zero, where $\mathrm{ACF}_p$ adds in the condition of being characteristic $p$ (via the sentence $1+\cdots+1=0$ for nonzero $p$ and $1+\cdots+1\ne0$ for all lengths when $p=0$).
+\end{theorem}
+In fact, we will show the following stronger result.
+\begin{theorem} \label{thm:acf-p-categorical}
+	Fix $p$ to be prime or zero. Then $\mathrm{ACF}_p$ is $\kappa$-categorical for any $\kappa>\aleph_0$.
+\end{theorem}
+This will be enough to prove \Cref{thm:complete-acf} by \Cref{prop:kappa-categorical-is-complete} because $\mathrm{ACF}_p$ certainly has models of size $\kappa>\aleph_0$ by taking $\overline{k(\kappa)}$ where $\kappa$ is being used as a transcendence basis. Notably, $\overline{k(\kappa)}$ has size $\kappa+\aleph_0=\kappa$.
+
+Anyway, let's prove \Cref{thm:acf-p-categorical}.
+\begin{proof}[Proof with algebra]
+	Let $k$ be the smallest field of that characteristic (the finite field when $p>0$ and $\QQ$ when $p=0$).
+	
+	Now, suppose we have two fields $K_1$ and $K_2$ which satisfy $\mathrm{ACF}_p$ of cardinality $\kappa$. Now, let $X_i\subseteq K_i$ be a transcendence basis for each $i$, meaning that $X_i$ is a maximal algebraically independent set of elements. As such, $K_i$ is algebraic over $\FF_p(X_i)$. Now, $\left|k(X_i)\right|=\left|X_i\right|+\aleph_0$, so taking algebraic closure has $\kappa=\left|K_i\right|=\left|k(X_i)\right|+\aleph_0=\left|X_i\right|+\aleph_0$, so $\kappa=\left|X_i\right|$. Thus, $k(X_1)\cong k(X_2)$, so taking algebraic closure enforces $K_1\cong K_2$ by taking algebraic closure.
+\end{proof}
+\begin{corollary}
+	Let $\mathcal U$ be a non-principal ultrafilter on $\mathcal P$. Then we have a field isomorphism
+	\[\CC\cong\prod_{\mathcal U}\overline{\FF_p}.\]
+\end{corollary}
+\begin{proof}
+	By \Cref{thm:los}, we see that $\prod_{\mathcal U}\overline{\FF_p}$ is algebraically closed because being algebraically closed field is held in each factor of the ultraproduct. It remains to compute the characteristic. Well, the sentence $1+\cdots+1=0$ for any length $p$ fails to hold in all but finitely many of these factors, so we see that the sentence
+	\[\underbrace{1+\cdots+1}_p\ne 0\]
+	holds in all but finitely many of the factors of our ultrafilter. Thus, the ultraproduct has characteristic $0$ by \Cref{thm:los} again, and we see that $\CC$ has the same cardinality as our ultrafilter, so the result follows by \Cref{thm:acf-p-categorical}. To compute this cardinality, we note that
+	\[\left|\prod_\mathcal U\overline{\FF_p}\right|\le\aleph_0^{\aleph_0}=2^{\aleph_0}.\]
+	One can then embed this ultraproduct into a tree; one uses \Cref{thm:los}. More generally, one we will be able to show that $\left|X_i\right|\ge2^i$ for some collection $\{X_i\}_{i\in\NN}$ has $\prod_\mathcal UX_i$ of cardinality $2^{\aleph_0}$.
+\end{proof}
+Let's improve our proof of \Cref{thm:acf-p-categorical}. We will show the following stronger result.
+\begin{theorem}
+	The theory $\mathrm{ACF}$ eliminates quantifiers. In other words, for any formula $\varphi(x_1,\ldots,x_n)$, there is a quantifier-free formula $\psi(x_1,\ldots,x_n)$ such that $\mathrm{ACF}\models\forall\overline x(\varphi(\overline x)\leftrightarrow\psi(\overline x))$.
+\end{theorem}
+\begin{remark}
+	The theory of Peano arithmetic does not eliminate quantifiers: there are very complicated sets that one can define.
+\end{remark}
+There is a proof in Tarski's RAND paper. We are not going to follow it. We are going to do a back-and-forth argument. To begin, we have the following step.
+\begin{proposition}
+	Fix two algebraically closed fields $K_1$ and $K_2$ of cardinality $\kappa>\aleph_0$. Suppose, we have an isomorphism $f\colon L_1\to L_2$ of subfields $L_1\subseteq K_1$ and $L_2\subseteq K_2$ where $L_1$ and $L_2$ are subfields of cardinality less than $\kappa$. Then $f$ extends to an isomorphism $K_1\to K_2$.
+\end{proposition}
+\begin{proof}
+	We construct this isomorphism using a back-and-forth argument. Treat $\kappa$ as an ordinal, and enumerate $K_1=\{a_\alpha:\alpha\in\kappa\}$ and $K_2=\{b_\alpha:\alpha\in\kappa\}$. We will build a sequence of isomorphisms $g_\alpha\colon L^1_\alpha\to L^2_\alpha$ for each $\alpha\in\kappa$ so that $g_\beta$ extends $g_\alpha$ whenever $\alpha\le\beta$. We will also arrange so that $g_0\coloneqq f$ and $a_\beta\in L^1_\alpha$ and $b_\beta\in L^2_\alpha$ for each $\beta\in\alpha$; it will also help to have $L^\bullet_\alpha$ always have cardinality less than $\kappa$. If we can do this, we simply define $g\colon K_1\to K_2$ by taking the union of all these isomorphisms.
+
+	For $g_0$, there is nothing to do. If $\alpha$ is a limit ordinal, then take $g_\alpha$ to be the union of the $g_\beta$ for $\beta<\alpha$. Notably, the domain and codomain are the unions of the domains and codomains; of course, this is still an isomorphism, and it satisfies our necessary property because any $\beta<\alpha$ has $a_\beta$ and $b_\beta$ in the domain and codomain of $g_{\beta+1}$, respectively. Lastly, the domain and codomain is an ascending union of sets of cardinality less than $\kappa$, which is typically less than $\kappa$.\footnote{One needs to do something here in the case that $\kappa$ is a singular.}
+
+	In our last case, take $\alpha\coloneqq\beta+1$. Then we need to tell $g_\beta$ where to send $a_\beta$. If $a_\beta$ is already in the domain, do nothing. Otherwise, there are two cases.
+	\begin{itemize}
+		\item Suppose that $a_\beta$ is algebraic over $L^1_\beta$ with monic irreducible polynomial $P(x)$. Passing through $g_\beta$, we see that $g_\beta(P(x))\in L^2_\beta[x]$ will fully factor in $K_2$, and one of the roots cannot have been hit by $g_\beta$ because then their pre-images in $L^1_\beta$ includes $a_\beta$ already. So send $a_\beta$ to a root not hit yet.
+		\item Suppose that $a_\beta$ is transcendental over $L^1_\beta$. Now, $\left|\overline{L^2_\beta}\right|=\left|L^2_\beta\right|+\aleph_0<\kappa$, so there is a transcendental element of $K_2$ not in $L^2_\beta$. Send $a_\beta$ to such a transcendental element.
+	\end{itemize}
+	For $b_\beta$ to go backwards, do the same argument in reverse.
+\end{proof}
+\begin{corollary}
+	Fix algebraically closed fields $K_1$ and $K_2$, and fix tuples $\overline a\in K_1^n$ and $\overline b\in K_2^n$. Then the following are equivalent.
+	\begin{listalph}
+		\item The structures $(K_1,\overline a)$ and $(K_2,\overline b)$ are equivalent in an expanded language.
+		\item $k_1(\overline a)=k_2(\overline\beta)$ where $k_1\subseteq K_1$ and $k_2\subseteq K_2$ are the prime subfields.
+		\item For any quantifier-free formulae $\theta$, we have $K_1\models\theta(\overline a)$ if and only if $K_2\models\theta(\overline b)$.
+	\end{listalph}
+\end{corollary}
+
+\end{document}
