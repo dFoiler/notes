@@ -28,6 +28,9 @@ The goal of the present subsection is to state and prove some basic facts about 
 	\[\varphi\colon(a_1,\ldots,a_m)\mapsto a_1v_1+\cdots+a_mv_m\]
 	is a group isomorphism. It is certainly a group homomorphism, and it is surjective by construction of the $v_\bullet$, so it remains to show injectivity. Well, if $\varphi(a_1,\ldots,a_m)=0$, then $a_1v_1+\cdots+a_mv_m=0$, so $(a_1,\ldots,a_m)=(0,\ldots,0)$ by linear independence of the $v_\bullet$.
 \end{remark}
+\begin{remark}
+	In light of the previous remark, we will sometimes write $\Lambda=M\ZZ^n$ where $M\in\RR^{n\times n}$ is of nonzero determinant when $\Lambda$ is a lattice of rank $n$ in $\RR^n$.
+\end{remark}
 In the sequel, we will be interested in the quotient $\RR^n/\Lambda$, where $\Lambda\subseteq\RR^n$ is a lattice of rank $n$. A convenient way to represent this is via the ``fundamental parallelepiped.''
 \begin{definition}[fundamental parallelepiped]
 	Fix a positive integer $n$ and a lattice $\Lambda$ of rank $n$ in $\RR^n$. Given a spanning set $v_1,\ldots,v_n$ of $\Lambda$, the \textit{fundamental parallelepiped} $P$ is the set
@@ -54,7 +57,7 @@ A fundamental parallelepiped is not an invariant of the lattice $\Lambda$, but t
 		| & & | \\
 		v_1' & \cdots & v_n' \\
 		| & & |
-	\end{bmatrix}\right|\]
+	\end{bmatrix}\right|.\]
 	However, $\det M,\det M'\in\ZZ$ and $MM'=1$, so $(\det M)(\det M')=1$, so $\left|\det M\right|=1$, so
 	\[\op{vol}(P')=\left|\det\begin{bmatrix}
 		| & & | \\
@@ -114,9 +117,27 @@ with area $4>1$. More generally, we are able to prove the following result.
 	\end{bmatrix}\right|=\left|\det M\right|\op{vol}\left(\RR^n/\Lambda\right),\]
 	as desired.
 \end{proof}
-\begin{remark}
+\begin{remark} \label{rem:compute-covol}
 	\Cref{lem:move-lattice-covol} actually tells us that $\op{vol}\left(\RR^n/\Lambda\right)>0$. Indeed, let $v_1,\ldots,v_n$ be a basis for $\Lambda$, and let $M$ be the matrix whose columns are the $v_\bullet$; note $\det M\ne0$ because the $v_\bullet$ are linearly independent. Now, $\Lambda=M\ZZ^n$, so $\op{vol}\left(\RR^n/\Lambda\right)=\left|\det M\right|\op{vol}\left(\RR^n/\ZZ^n\right)=\left|\det M\right|$.
 \end{remark}
+It is occasionally helpful to have the following more algebraic computation of the covolume.
+\begin{lemma} \label{lem:lattice-index-is-covol}
+	Fix a positive integer $n$, and let $\Lambda'\subseteq\Lambda$ be free abelian groups of rank $n$ so that $\Lambda'=M\Lambda$ for some $M\in\ZZ^{n\times n}$ of nonzero determinant. Then $\left|\det M\right|=[\Lambda:\Lambda']$.
+\end{lemma}
+\begin{proof}
+	% For simplicity, we note that it suffices to take $\Lambda=\ZZ^n$. Note that $\Lambda=M_0\ZZ^n$ for some $M_0\in\ZZ^{n\times n}$ of nonzero determinant, so $\Lambda'=MM_0\ZZ^n$ as well. Thus, if we can show the result where the larger lattice is $\ZZ^n$, then we see
+	% \[[\Lambda:\Lambda']=\frac{[\ZZ^n:\Lambda']}{[\ZZ^n:\Lambda]}=\left|\det M\right|.\]
+	% So we may assume that $\Lambda=\ZZ^n$.
+	% Thus, it suffices to show that $[\ZZ^n:\Lambda]=\left|\det M\right|$ where $\Lambda=M\ZZ^n$.
+	As a starting case, we note that there is not much to say when $M$ is diagonal. For example, if $M$ is the diagonal matrix $(d_1,\ldots,d_n)$, then
+	\[[\Lambda:\Lambda']=\#\left(\frac{\ZZ^n}{d_1\ZZ\oplus\cdots\oplus d_n\ZZ}\right)=\#\left(\bigoplus_{i=1}^n\frac{\ZZ}{d_i\ZZ}\right)=\left|d_1\cdots d_n\right|=\left|\det M\right|.\]
+	We now argue that applying row and column operations to $M$ will adjust $[\Lambda:\Lambda']$ accordingly. We begin with column operations; let $v_1,\ldots,v_n$ be a basis for $\Lambda$, and let $m_1,\ldots,m_n$ be the columns of $M$ so that $m_1v_1,\ldots,m_nv_n$ are a basis for $\Lambda$.
+	\begin{itemize}
+		\item Multiplying a column $m_i$ of $M$ by an integer $c$ to create the matrix $M'$ yields $\left|\det M'\right|=\left|c\right|\cdot\left|\det M\right|$. On the other hand, we see that $[M\Lambda':M'\Lambda']=\left|c\right|$, so the index is adjusted by the same factor.
+		\item Adding a column $v_i$ to a distinct column $v_j$ will not change $\det M$, and it will not change $\Lambda$, so nothing happens here.
+	\end{itemize}
+	The arguments for row operations are exactly identical to the above ones, except that applying a row operation in $M$ adjusts $\Lambda$ instead of $\Lambda'$. Anyway, the point is that these row and column operations allow us to reduce to the case where $M$ is diagonal by Gaussian elimination of matrices, which we already took care of.
+\end{proof}
 Note the definition of a lattice provided above is quite algebraic, but we are going to get quite a bit of mileage using the geometry of lattices. To mirror this, it will be helpful to have a more geometric definition of a lattice.
 \begin{proposition} \label{prop:how-to-lattice}
 	Fix a positive integer $n$, and let $\Lambda\subseteq\RR^n$ be a subgroup. The following are equivalent.
@@ -258,38 +279,377 @@ The reader is welcome to try, but there isn't really a way to expand $S$ past ha
 \begin{remark}
 	\Cref{thm:mink} is a really wonderful result about finding ``short'' vectors in a lattice, and we have seen that the result is essentially sharp. However, the result fails to actually explain how to find the nonzero vector promised. In general, one uses lattice reduction (which we will discuss a special case of in \cref{subsec:compute-primes-of-form}) to find short vectors, but such algorithms are frequently unable to achieve the bound of \Cref{thm:mink}.
 \end{remark}
+\begin{remark}
+	The above proof of \Cref{thm:mink} technically only needs that $S$ is ``dyadic convex,'' meaning that $x,y\in S$ implies that $\frac{x+y}2\in S$. In practice, most sets we work with which are dyadic convex will also be convex, but in applications, it might be easier to check that $S$ is merely dyadic convex.
+\end{remark}
 
 \subsection{Sample Applications of Minkowski's Theorem}
+In order to convince us that \Cref{thm:mink} actually has a nontrivial use, we will provide a few sample applications before using it to show \Cref{thm:dirichlet-unit}. All applications have essentially the same structure: embed a problem of interest into a lattice and then use \Cref{thm:mink} to find a small enough solution.
 
-\subsection{Dirichlet's Unit Theorem: Upper Bound}
-In this subsection, we prove what we can from \Cref{thm:dirichlet-unit} without using any Minkowski theory. The goal, roughly speaking, is to explain what the $r_1+r_2-1$ is doing there. In the discussion which follows, let $K$ be a number field of degree $n$ and signature $(r_1,r_2)$, and we let $\rho_1,\ldots,\rho_{r_1}\colon K\into\CC$ denote the real embeddings, and we let $\sigma_1,\ldots,\sigma_{r_2}$ be a subset of complex embeddings so that $\sigma_1,\ldots,\sigma_{r_2},\overline{\sigma_1},\ldots,\overline{\sigma_{r_2}}$ provides all complex embeddings. (See \Cref{rem:complex-conjugate-complex-embed}.)
+Our first application is from Diophantine approximation.
+\begin{proposition}[Dirichlet approximation] \label{prop:dirichlet-approx}
+	Let $\alpha\in\RR\setminus\QQ$ be an irrational number. Then for any positive integer $N>1$, there exists a rational $h/k$ with $0<k\le N$ such that
+	\[\left|\alpha-\frac hk\right|<\frac1{Nk}.\]
+\end{proposition}
+\begin{proof}[Proof using \Cref{thm:mink}]
+	We are looking for a pair of integers $(h,k)$, so we might as well work with the lattice $\ZZ^2\subseteq\RR^2$ of rank $2$. It remains to encode the needed bound to find a small solution. For technical reasons, fix some $\varepsilon>0$ so that $N+\varepsilon<N+1$.
+	
+	Clearing fractions, we are being asked to look in the region
+	\[S\coloneqq\left\{(x,y)\in\RR\times[-N-\varepsilon,N+\varepsilon]:\left|y\alpha-x\right|<\frac1N\right\}.\]
+	To apply \Cref{thm:mink}, we have the following checks.
+	\begin{itemize}
+		\item Note that $S$ is symmetric: if $(x,y)\in S$, then $(-x,-y)\in\RR\times[-N-\varepsilon,N+\varepsilon]$ and $\left|(-y)\alpha-(-x)\right|=\left|y\alpha-x\right|<\frac1N$ verifies that $-(x,y)\in S$.
+		\item We check that $S$ is convex. If $(x_1,y_1)\in S$ and $(x_2,y_2)\in S$, then choose any $t\in[0,1]$, and we use the triangle inequality to check that $y_1,y_2\in[-N-\varepsilon,N+\varepsilon]$ implies $\left|ty_1+(1-t)y_2\right|\le tN+(1-t)N=N$ and
+		\[\left|(ty_1+(1-t)y_2)\alpha-(tx_1+(1-t)x_2)\right|\le t\left|y_1\alpha-x_1\right|+(1-t)\left|y_2\alpha-x_2\right|<\frac1N.\]
+		\item We compute $\op{vol}S$. Note that $S$ is a parallelogram bounded by the line segments $y=-N-\varepsilon$ and $y=N+\varepsilon$ and $y\alpha-x=\frac1N$ and $y\alpha-x=-\frac1N$. Thus, the height (along the $y$-axis) is $2N+2\varepsilon$, and the width of a parallel side is $2/N$, which multiplies to a volume of
+		\[(2N+2\varepsilon)\cdot\frac2N>4.\]
+	\end{itemize}
+	Combining the above checks, we see that \Cref{thm:mink} is able to provide a nonzero lattice point $(h,k)\in S\cap\ZZ^2$. In fact, note that $k\ne0$: if $k=0$, then $\left|-h\right|<1/N$, forcing $h=0$ too, which is not permitted. Now, by replacing $(h,k)$ with $-(h,k)$ as necessary, we thus may assume that $k>0$; additionally, $k\le N+\varepsilon<N+1$, so $k\le N$ because $k$ is an integer. Lastly, we see that
+	\[\left|\alpha-\frac hk\right|<\frac1{Nk}\]
+	by construction of $(h,k)$. This completes the proof.
+\end{proof}
+\begin{remark} \label{rem:dirichlet-approx-by-cf}
+	Note that \Cref{prop:dirichlet-approx} follows from \Cref{prop:basic-cf-bound}: let $\{h_n/k_n\}_{n=0}^\infty$ be the continued fraction convergents of $\alpha$, and then we see $\{k_n\}_{n=0}^\infty$ is a strictly increasing sequence (e.g., by \Cref{prop:magic-box}), so we may find $n$ so that $k_n<N\le k_{n+1}$. Then \Cref{prop:basic-cf-bound} implies
+	\[\left|\alpha-\frac{h_n}{k_n}\right|<\frac1{k_nk_{n+1}}\le\frac1{Nk_n},\]
+	as desired.
+\end{remark}
+\Cref{prop:dirichlet-approx} is a nice application, but we are here to solve quadratic equations, so let's give an application to solving quadratic equations.
+\begin{proposition} \label{prop:1-mod-4-primes}
+	Fix an odd prime number $p$ such that $p\equiv1\pmod4$. Then there are integers $(a,b)$ such that $p=a^2+b^2$.
+\end{proposition}
+We will want the following number-theoretic lemma.
+\begin{lemma} \label{lem:minus-1-is-square}
+	Fix an odd prime number $p$ such that $p\equiv1\pmod4$. Then there is an integer $x$ such that $x^2\equiv-1\pmod p$.
+\end{lemma}
+\begin{proof}
+	We proceed directly: we claim that $x\coloneqq\left(\frac{p-1}2\right)!$ will do the trick. Indeed, directly squaring, we see
+	\begin{align*}
+		x^2 &= 1\cdot2\cdot3\cdot\ldots\cdot\frac{p-1}2\cdot\frac{p-1}2\cdot\ldots\cdot3\cdot2\cdot1 \\
+		&\equiv (-1)^{(p-1)/2}\cdot1\cdot2\cdot3\cdot\ldots\cdot\frac{p-1}2\cdot-\frac{p-1}2\cdot\ldots\cdot-3\cdot-2\cdot-1 \\
+		&\equiv (p-1)!.
+	\end{align*}
+	To compute $(p-1)!\pmod p$, we pair off $x\in\{1,2,\ldots,p-1\}$ off with the multiplicative inverse $x^{-1}\pmod p$; this pairing assigns $x$ to a distinct unique element $x^{-1}$ unless $x\equiv x^{-1}$, which is equivalent to $p\mid x^2-1$, or $x\equiv\pm1\pmod p$. Thus, everything outside $\pm1$ cancels out, so we are left with
+	\[x^2\equiv(p-1)!\equiv1\cdot-1\equiv-1\pmod p,\]
+	as needed.
+\end{proof}
+\begin{exe}
+	Fix an odd prime number $p$ such that $p\equiv3\pmod4$. Show that
+	\[\left(\left(\frac{p-1}2\right)!\right)^2\equiv1\pmod p.\]
+\end{exe}
+We are now ready to prove \Cref{prop:1-mod-4-primes}.
+\begin{proof}[Proof of \Cref{prop:1-mod-4-primes}]
+	The idea is to build a lattice $\Lambda$ such that any $(a,b)\in\Lambda$ has $p\mid a^2+b^2$ and then look for small vectors in $\Lambda$, hoping that we can show $a^2+b^2<2p$. As such, we have the usual two steps.
+	\begin{enumerate}
+		\item We construct the desired lattice. It is here we will use that $p\equiv1\pmod4$. By \Cref{lem:minus-1-is-square}, there is $x\in\ZZ$ such that $x^2\equiv-1\pmod p$. We use this $x$ to construct the lattice
+		\[\Lambda\coloneqq\left\{a\begin{bmatrix}
+			x \\ 1
+		\end{bmatrix}+b\begin{bmatrix}
+			p \\ 0
+		\end{bmatrix}:a,b\in\ZZ\right\}=\left\{a\begin{bmatrix}
+			ax+bp \\ a
+		\end{bmatrix}:a,b\in\ZZ\right\}.\]
+		We now claim that any $(n,m)\in\Lambda$ has $p\mid n^2+m^2$. Indeed, $(n,m)=(ax+bp,a)$ for some integers $a$ and $b$, so
+		\[(ax+bp)^2+a^2\equiv a^2x^2+a^2\equiv a^2\left(x^2+1\right)\equiv0\pmod p.\]
+		To apply \Cref{thm:mink}, we will also want to compute $\op{vol}\left(\RR^2/\Lambda\right)$, which we see by \Cref{rem:compute-covol} is $\left|\det\begin{bsmallmatrix}
+			x & p \\
+			1 & 0
+		\end{bsmallmatrix}\right|=p$.
+		\item As discussed above, we want to set
+		\[S\coloneqq\left\{(x,y):x^2+y^2<2p\right\}.\]
+		Here are our checks on $S$.
+		\begin{itemize}
+			\item Note that $S$ is symmetric: $(x,y)\in S$ implies $x^2+y^2<2p$ and hence $(-x)^2+(-y)^2<2p$, so $-(x,y)\in S$.
+			\item We check that $S$ is convex. If $(x_1,y_1)\in S$ and $(x_2,y_2)\in S$, then choose any $t\in[0,1]$, and we use the triangle inequality to see
+			\[\norm{t(x_1,y_1)+(1-t)(x_2,y_2)}_2\le t\norm{(x_1,y_2)}_2+(1-t)\norm{(x_2,y_2)}_2=2p,\]
+			where $\norm{(x,y)}_2=\sqrt{x^2+y^2}$.
+			\item Note that $\op{vol}(S)$ is the area of our circle of radius $\sqrt{2p}$, which is simply $2p\pi$.
+		\end{itemize}
+		\item We now apply \Cref{thm:mink}, which requires that we check $2p\pi>4p$, which is true because $\pi>2$. Thus, $\Lambda\cap S$ has a nonzero lattice point, which we label $(a,b)$. Then the first step shows that $p\mid a^2+b^2$, but the construction of $S$ requires $a^2+b^2<2p$. Because $(a,b)$ is nonzero, we see $0<a^2+b^2$ also, so we are left with $p=a^2+b^2$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+Let's prove another result of this type.
+\begin{proposition}
+	Fix a prime $p$ such that there exists an integer $x$ such that $x^2\equiv-5\pmod p$. Then there are integers $(a,b)$ such that either $p=a^2+5b^2$ or $2p=a^2+5b^2$.
+\end{proposition}
+\begin{proof}
+	We imitate the proof of \Cref{prop:1-mod-4-primes}.
+	\begin{enumerate}
+		\item We construct the desired lattice. Fix our integer $x$ with $x^2\equiv-5\pmod p$, and then we construct $\Lambda\subseteq\RR^2$ as being spanned by $\begin{bsmallmatrix}
+			x \\ 1
+		\end{bsmallmatrix}$ and $\begin{bsmallmatrix}
+			p \\ 0
+		\end{bsmallmatrix}$. Notably, any point on this lattice takes the form $(ax+bp,a)$ for some integers $a,b\in\ZZ$, so we see
+		\[(ax+bp)^2+5a^2\equiv a^2\left(x^2+5\right)\equiv0\pmod p.\]
+		As a last computation, we note that $\op{vol}\left(\RR^2/\Lambda\right)=\left|\det\begin{bsmallmatrix}
+			x & p \\
+			p & 0
+		\end{bsmallmatrix}=p\right|$.
+		\item As suggested by the statement of the proposition, we set
+		\[S\coloneqq\left\{(x,y):x^2+5y^2<3p\right\}.\]
+		Here are our checks on $S$.
+		\begin{itemize}
+			\item Note that $S$ is symmetric: $(x,y)\in S$ implies $x^2+5y^2<3p$ and hence $(-x)^2+5(-y)^2<3p$, so $-(x,y)\in S$.
+			\item We check that $S$ is convex. Pick up $(x_1,y_1),(x_2,y_2)\in S$ and $t\in[0,1]$, and we use the triangle inequality to see
+			\begin{align*}
+				\sqrt{(tx_1+(1-t)x_2)^2+5(ty_1+(1-t)y_2)^2} &= \norm{t(x_1,\sqrt 5y_1)+(1-t)(x_2,\sqrt5y_2)}_2 \\
+				&\le t\norm{(x_1,\sqrt5y_1)}_2+(1-t)\norm{(x_2,\sqrt5y_2)}_2 \\
+				&< 3p.
+			\end{align*}
+			\item Note that $\op{vol}(S)$ is the volume of an ellipse with one axis of length $\sqrt{3p}$ and the other axis of length $\sqrt{3p/5}$, so the area is
+			\[\frac3{\sqrt5}\cdot p\cdot\pi,\]
+			which is greater than $4p$: indeed, it suffices for $3\pi>4\sqrt5$, which is true because $(3\pi)^2>81>80$.
+		\end{itemize}
+		\item We now apply \Cref{thm:mink}, which from the above checks provides nonzero $(a,b)\in\Lambda\cap S$, meaning that $p\mid a^2+5b^2$ and $0<a^2+5b^2<3p$. This completes the proof.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+The above result is a bit unsatisfying because we have not determined which of $p=a^2+5b^2$ or $2p=a^2+5b^2$ is true. We will explain what is going on in more detail next week.
+
+It is now worth pointing out that the proof of \Cref{thm:mink} was inherently non-explicit: the proof essentially uses a pigeonhole principle, which promises us the nonzero lattice point without really telling us how to find it. As such, our above proof of \Cref{prop:dirichlet-approx} via \Cref{thm:mink} is actually less useful than the argument of \Cref{rem:dirichlet-approx-by-cf} because \Cref{rem:dirichlet-approx-by-cf} explains how to find the required rational promised in the statement.
+
+It is a perfectly reasonable question to take $p\equiv1\pmod4$ and then ask for the pair of integers $(a,b)$ such that $p=a^2+b^2$. This can in fact be efficiently computed (faster than brute-forcing values $a$ where $1\le a\le\sqrt{p/2}$), as we will discuss next week when we discuss quadratic forms.
+
+\subsection{Dirichlet's Unit Theorem: Upper Bound} \label{subsec:dirichlet-upper}
+In this subsection, we prove what we can from \Cref{thm:dirichlet-unit} without using any Minkowski theory. The goal, roughly speaking, is to explain what the $r_1+r_2-1$ is doing in the statement. In the discussion which follows, let $K$ be a number field of degree $n$ and signature $(r_1,r_2)$, and we let $\rho_1,\ldots,\rho_{r_1}\colon K\into\CC$ denote the real embeddings, and we let $\sigma_1,\ldots,\sigma_{r_2}$ be a subset of complex embeddings so that $\sigma_1,\ldots,\sigma_{r_2},\overline{\sigma_1},\ldots,\overline{\sigma_{r_2}}$ provides all complex embeddings. (See \Cref{rem:complex-conjugate-complex-embed}.) Additionally, let $\OO$ be an order.
 
 The conclusion of \Cref{thm:dirichlet-unit} features the additive group $\ZZ$, but $\OO^\times$ is a largely multiplicative object. We would thus like to turn our multiplicative problem and turn it into an additive one, which is done by taking $\log$s. To begin, the multiplicative problem we are interested in solving is essentially trying to ensure the equation
 \[\prod_{i=1}^{r_1}\left|\rho_i(u)\right|\cdot\prod_{i=1}^{r_2}\left|\sigma_i(u)\right|^2=1,\]
 which for $u\in\OO_K$ we know is equivalent to $u\in\OO_K^\times$ by \Cref{lem:unit-by-norm-one} and \Cref{cor:norm-tr-by-embeds}. To make this equation additive, we note that it is equivalent to
-\[\sum_{i=1}^{r_1}\log\left|\rho_i(u)\right|+2\sum_{i=1}^{r_2}\log\left|\sigma_i(u)\right|=0,\]
+\begin{equation}
+	\sum_{i=1}^{r_1}\log\left|\rho_i(u)\right|+\sum_{i=1}^{r_2}\log\left|\sigma_i(u)\right|^2=0, \label{eq:log-of-norm-unit}
+\end{equation}
 provided that $u\in K^\times$. Let's break down what just happened into two steps.
 \begin{enumerate}
 	\item We use the embeddings to map $K$ into some Euclidean space. With our enumeration, the most obvious thing to do is via the map $K\to\RR^{r_1}\times\CC^{r_2}$ given by $\alpha\mapsto(\rho_1(\alpha),\ldots,\rho_{r_1}(\alpha),\sigma_1(\alpha),\ldots,\sigma_{r_2}(\alpha))$. However, we would like to work with real vector spaces, so we use the basis $\{1,i\}$ of $\CC$ as an $\mathbb R$-vector space to define $j\colon K\to\RR^n$ by
-	\[j\colon\alpha\mapsto(\rho_1(\alpha),\ldots,\rho_{r_1}(\alpha),\op{re}\sigma_1(\alpha),\op{Im}\sigma_1(\alpha),\ldots,\op{Re}\sigma_{r_2}(\alpha),\op{Im}\sigma_{r_2}(\alpha)).\]
-	\item After mapping $j\colon K\to\RR^n$, we would like to take logarithms, so we define the map $\op{Log}\colon\RR^n\to\RR^{r_1+r_2}$ by
+	\[j\colon\alpha\mapsto(\rho_1(\alpha),\ldots,\rho_{r_1}(\alpha),\op{Re}\sigma_1(\alpha),\op{Im}\sigma_1(\alpha),\ldots,\op{Re}\sigma_{r_2}(\alpha),\op{Im}\sigma_{r_2}(\alpha)).\]
+	By construction, we see that $j\colon K\to\RR^n$ is a homomorphism of additive groups.
+	\item After mapping $j\colon K\to\RR^n$, we would like to take logarithms, so we define the map $\op{Log}\colon(\RR^\times)^n\to\RR^{r_1+r_2}$ by
 	\[\op{Log}(x_1,\ldots,x_{r_1},a_1,b_1,\ldots,a_{r_2},b_{r_2})\coloneqq\left(\log\left|x_1\right|,\ldots,\log\left|x_{r_2}\right|,\log\left|a_1^2+b_1^2\right|,\ldots,\log\left|a_{r_2}^2+b_{r_2}^2\right|\right).\]
-	Notably, for $\alpha\in K^\times$, we have $\sigma(\alpha)\ne0$ for each embedding $\sigma$, so
-	\[\]
+	Observe that this is the same $\op{Log}$ map that we saw in \Cref{prop:general-pell}, and it will be useful for approximately the same reason: this map does a good job of measuring the ``multiplicative'' height of a nonzero element in $\OO$.
+
+	Anyway, for $\alpha\in K^\times$, we have $\sigma(\alpha)\ne0$ for each embedding $\sigma$, so $\mathrm{Log}(j(\alpha))$ is well-defined. And by construction (and by properties of $\log$), we see that the composite $({\op{Log}}\circ j)\colon K^\times\to\RR^{r_1+r_2}$ is a homomorphism of groups.
+	
+	If in addition $\alpha\in\OO_K^\times$, then \eqref{eq:log-of-norm-unit} tells us that $\op{Log}(j(\alpha))$ lands in
+	\[H\coloneqq\left\{(x_1,\ldots,x_{r_1+r_2}):\sum_{i=1}^{r_1+r_2}x_i=0\right\}\subseteq\RR^{r_1+r_2},\]
+	which we call the ``trace-$0$ hyperplane.'' Note that this is a hyperplane of $\RR^{r_1+r_2}$ cut out by a single equation, so $\dim H=r_1+r_2-1$. This is where the $r_1+r_2-1$ in \Cref{thm:dirichlet-unit} will come from.
 \end{enumerate}
-Note that $\OO$ is a free abelian group of rank $n$, so $j(\OO)$ becomes a free abelian group of rank $n$ sitting inside $\RR^n$. We would like $j(\OO)$ to be a lattice, a term which we now define.
-\begin{definition}[lattice]
-	Fix a finite-dimensional real vector $V$. Then a \textit{lattice} $\Lambda\subseteq V$ is the set of vectors of the form
-	\[\{a_1v_1+\cdots+a_mv_m:a_1,\ldots,a_m\in\ZZ\},\]
-	where $v_1,\ldots,v_m$ are some linearly independent vectors.
-\end{definition}
+In order to justify our use of lattices, we note that $\OO\subseteq K$ should in some sense feel like a ``discrete subgroup'' (compare this with $\ZZ\subseteq\QQ$), so it is reasonable to expect that $j(\OO)\subseteq\RR^n$ and $\op{Log}(j(\OO^\times))\subseteq H$ are discrete subgroups of Euclidean space and thus lattices. We show this now.
+\begin{proposition} \label{prop:order-lattice}
+	Fix a number field $K$, and fix notation as above. Then $j(\OO)\subseteq\RR^n$ is a lattice of rank $n$ with covolume $\op{vol}(\RR^n/j(\OO))=\frac1{2^{r_2}}\sqrt{\left|\disc\OO\right|}$.
+\end{proposition}
+\begin{proof}
+	By definition, $\OO$ is a free abelian group of rank $n$, so produce a basis $\alpha_1,\ldots,\alpha_n$. We claim that $j(\alpha_1),\ldots,j(\alpha_n)$ provides a basis for $j(\OO)\subseteq\RR^n$. Certainly these elements span $j(\OO)$ because $j\colon\OO\to\RR^n$ is a homomorphism of additive groups, implying any $\alpha\in\OO$ can be written as
+	\[j(\alpha)=j(c_1\alpha_1+\cdots+c_n\alpha_n)=c_1j(\alpha_1)+\cdots+c_nj(\alpha_n)\]
+	for some integers $c_1,\ldots,c_n\in\ZZ$. 
+	
+	Now, to compute the covolume, we need to compute the determinant of the (transpose of the) matrix
+	\[\begin{bmatrix}
+		\rho_1(\alpha_1) & \cdots & \rho_{r_1}(\alpha_1) & \op{Re}\sigma_1(\alpha_1) & \op{Im}\sigma_1(\alpha_1) & \cdots & \op{Re}\sigma_{r_2}(\alpha_1) & \op{Im}\sigma_{r_2}(\alpha_1) \\
+		\vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+		\rho_1(\alpha_n) & \cdots & \rho_{r_1}(\alpha_n) & \op{Re}\sigma_1(\alpha_n) & \op{Im}\sigma_1(\alpha_n) & \cdots & \op{Re}\sigma_{r_2}(\alpha_n) & \op{Im}\sigma_{r_2}(\alpha_n) \\
+	\end{bmatrix}.\]
+	We would like to make this matrix look like the matrix for $\disc(\alpha_1,\ldots,\alpha_n)$. Multiply each real part column by $i$ times the imaginary column, which makes our determinant equal
+	\[\det\begin{bmatrix}
+		\rho_1(\alpha_1) & \cdots & \rho_{r_1}(\alpha_1) & \sigma_1(\alpha_1) & \op{Im}\sigma_1(\alpha_1) & \cdots & \sigma_{r_2}(\alpha_1) & \op{Im}\sigma_{r_2}(\alpha_1) \\
+		\vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+		\rho_1(\alpha_n) & \cdots & \rho_{r_1}(\alpha_n) & \sigma_1(\alpha_n) & \op{Im}\sigma_1(\alpha_n) & \cdots & \sigma_{r_2}(\alpha_n) & \op{Im}\sigma_{r_2}(\alpha_n) \\
+	\end{bmatrix}.\]
+	We now multiply each imaginary part column $\op{Im}\sigma_i(\alpha_j)$ by $-2i$ and then add the corresponding $\sigma_i(\alpha_j)$ term to produce $\overline{\sigma_i}(\alpha_j)$, thus making our determinant
+	\[\frac1{(-2i)^{r_2}}\det\begin{bmatrix}
+		\rho_1(\alpha_1) & \cdots & \rho_{r_1}(\alpha_1) & \sigma_1(\alpha_1) & \overline{\sigma_1}(\alpha_1) & \cdots & \sigma_{r_2}(\alpha_1) & \overline{\sigma_{r_2}}(\alpha_1) \\
+		\vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+		\rho_1(\alpha_n) & \cdots & \rho_{r_1}(\alpha_n) & \sigma_1(\alpha_n) & \overline{\sigma_1}(\alpha_n) & \cdots & \sigma_{r_2}(\alpha_n) & \overline{\sigma_{r_2}}(\alpha_n) \\
+	\end{bmatrix}.\]
+	Taking absolute values, we see that this is $\frac1{2^{r_2}}\sqrt{\left|\disc(\alpha_1,\ldots,\alpha_n)\right|}$, as needed.
+\end{proof}
+\begin{proposition} \label{prop:log-j-o-is-lattice}
+	Fix a number field $K$, and fix notation as above. Then $\op{Log}(j(\OO^\times))\subseteq H$ is a lattice.
+\end{proposition}
+\begin{proof}
+	The point is to apply \Cref{prop:how-to-lattice}. Fix any $M>0$, and we show that $\op{Log}(j(\OO^\times))\cap[-M,M]^{r_1+r_2}$ is finite, which will be enough by \Cref{prop:how-to-lattice} because we already know that $\op{Log}(j(\OO^\times))\subseteq H$ from the discussion above.
+
+	Well, we simply pull back to $\RR^n$. Indeed, $\op{Log}(x_1,\ldots,x_{r_1},a_1,b_1,\ldots,a_{r_2},b_{r_2})\in[-M,M]^n$ implies that $\left|x_\bullet\right|\le e^M$ and $\left|a_\bullet\right|,\left|b_\bullet\right|<e^{M/2}$ always. Thus, $\op{Log}(j(\alpha))\in[-M,M]^n$ implies that
+	\[j(\alpha)\in[-\exp(M),\exp(M)]^n,\]
+	but only finitely many $\alpha$ satisfy this by \Cref{prop:how-to-lattice} because $j(\OO)\subseteq\RR^n$ is a lattice by \Cref{prop:order-lattice}.
+\end{proof}
+We know that $\op{Log}(j(\OO^\times))$ is a lattice, so it is a free abelian group of rank at most $\dim H=r_1+r_2-1$. However, the statement of \Cref{thm:dirichlet-unit} includes some roots of unity. Where did they go?
+\begin{lemma} \label{lem:ker-log-is-mu-k}
+	Fix a number field $K$, and fix notation as above. Then $\ker({\op{Log}}\circ j)$ is the set $\mu(\OO)$ of roots of unity in $\OO$, and $\mu(\OO)$ is finite.
+\end{lemma}
+\begin{proof}
+	Quickly, note that some $\alpha\in\OO_K^\times$ lives in $\ker({\op{Log}}\circ j)$ if and only if $\left|\sigma(\alpha)\right|=1$ for all embeddings $\sigma\colon K\into\CC$. Let $S\subseteq\OO^\times$ be the set of such $\alpha$. In one direction, certainly $\mu(\OO)\subseteq S$: for any $\zeta\in\mu(\OO)$, we have $\zeta^n=1$ for some $n$, so $\left|\sigma(\zeta)\right|^n=1$ and thus $\left|\sigma(\zeta)\right|=1$ for all embeddings $\sigma\colon K\into\CC$.
+
+	For the other direction, we will show that $S$ is finite; this will complete the proof because $S\subseteq\OO^\times$ is a subgroup, meaning that any $\alpha\in S$ has $\alpha^{\#S}=1$ and thus $\alpha\in\mu(\OO)$. Anyway, to show that $S$ is finite, we use the proof of \Cref{prop:log-j-o-is-lattice}: note that any $\alpha$ in the kernel must have $\left|\sigma(\alpha)\right|=1$ for all embeddings $\sigma\colon K\into\CC$. But then
+	\[\ker({\op{Log}}\circ j)\subseteq j(\OO)\cap[-1,1]^n\]
+	is finite by \Cref{prop:order-lattice}, so we are done.
+\end{proof}
 \begin{remark}
-	Notably, linear independence implies that $\ZZ^m\cong\Lambda$ by the isomorphism $(a_1,\ldots,a_m)\mapsto a_1v_1+\cdots+a_mv_m$.
+	One can more directly show that any $\alpha\in\OO_K$ such that $\left|\sigma(\alpha)\right|=1$ for all embeddings $\sigma\colon K\into\CC$ must be a root of unity. Here is the argument. Let $S\subseteq\OO_K$ be the set of such $\alpha$. For each $\alpha$, let $f(x)\in\ZZ[x]$ be the corresponding monic irreducible polynomial (see \Cref{lem:monic-irred-of-alg-int}) so that
+	\[f(x)=\prod_{\sigma\colon\QQ(\alpha)\into\CC}(x-\sigma(\alpha)).\]
+	However, a direct expansion reveals that the $x^r$ coefficient of this polynomial is the sum of $\binom d{d-r}$ complex numbers of absolute value $1$, where $d\le n$ is the degree of $f(x)$. Thus, the set of polynomials $f(x)\in\ZZ[x]$ which can correspond to some $\alpha\in S$ is finite, so $S$ is finite. However, we can see that $S\subseteq K^\times$ is a subgroup, so it follows that $\alpha^{\#S}=1$ for any $\alpha\in S$.
 \end{remark}
+We now combine \Cref{lem:ker-log-is-mu-k} with \Cref{prop:log-j-o-is-lattice} to achieve the result, which is quite close to \Cref{thm:dirichlet-unit}.
+\begin{proposition} \label{prop:almost-dirichlet-unit}
+	Fix a number field $K$, and fix notation as above. Let $r$ be the rank of the lattice $\op{Log}(j(\OO^\times))\subseteq H$. Then
+	\[\OO^\times\cong\mu(\OO^\times)\times\ZZ^r.\]
+\end{proposition}
+\begin{proof}
+	Let $v_1,\ldots,v_r\in\op{Log}(j(\OO^\times))$ be a basis, and find any $\alpha_1,\ldots,\alpha_r\in\OO^\times$ so that $\op{Log}(j(\alpha_i))=v_i$ for each $i$. Then we define the function
+	\[\varphi\colon\mu(\OO^\times)\times\ZZ^r\to\OO^\times\]
+	by $\varphi(\zeta,(e_1,\ldots,e_r))\coloneqq\zeta\alpha_1^{e_1}\cdots\alpha_r^{e_r}$. We claim that $\varphi$ is a group isomorphism, which will complete the proof. Here are our checks.
+	\begin{itemize}
+		\item Homomorphism: we check
+		\[\varphi\left(\zeta\zeta',(e_1+e_1',\ldots,e_r+e_r')\right)=\zeta\zeta'\cdot\alpha_1^{e_1+e_1'}\cdots\alpha_r^{e_r+e_r'}=\varphi\left(\zeta,(e_1,\ldots,e_r)\right)\varphi\left(\zeta',(e_1',\ldots,e_r')\right).\]
+		\item Injective: suppose $\varphi(\zeta,(e_1,\ldots,e_r))=1$. Then
+		\[\alpha_1^{e_1}\cdots\alpha_r^{e_r}=\zeta^{-1},\]
+		so passing through ${\op{Log}}\circ j$ tells us that $e_1v_1+\cdots+e_rv_r=0$ by \Cref{lem:ker-log-is-mu-k}, so $(e_1,\ldots,e_r)=(0,\ldots,0)$ because the $v_\bullet$ are linearly independent. But then the above equation implies $\zeta=1$ as well.
+		\item Surjective: fix $u\in\OO^\times$. Then $\op{Log}(j(u))\in\op{Log}(j(\OO^\times))$ has some $(e_1,\ldots,e_r)\in\ZZ^r$ such that
+		\[\op{Log}(j(u))=e_1v_1+\cdots+e_rv_r.\]
+		But then $\op{Log}\left(j(u\alpha_1^{-e_1}\cdots\alpha_r^{-e_r})\right)=0$, so $u\alpha_1^{-e_1}\cdots\alpha_r^{-e_r}\in\mu(\OO)$, so $u=\zeta\alpha_1^{e_1}\cdots\alpha_r^{e_r}$ for some $\zeta\in\mu(\OO)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
 % https://math.stackexchange.com/q/246157
 % nevermind I think that's too complicated ...
 
 \subsection{Dirichlet's Unit Theorem: Lower Bound}
+We continue with the notation of the previous subsection; for example, $K$ is a number field, and $\OO\subseteq\OO_K$ is an order. From \Cref{prop:almost-dirichlet-unit}, it remains to compute the rank of the lattice $\op{Log}(j(\OO^\times))\subseteq H$.
+\begin{proposition} \label{prop:compute-unit-rank}
+	Fix a number field $K$ and an order $\OO\subseteq\OO_K$, and fix notation as in \cref{subsec:dirichlet-upper}. Then $\op{Log}(j(\OO^\times))\subseteq H$ is a lattice of rank $r_1+r_2-1$.
+\end{proposition}
+Note \Cref{thm:dirichlet-unit} would then follow immediately from \Cref{prop:almost-dirichlet-unit,prop:compute-unit-rank}. It remains to prove \Cref{prop:compute-unit-rank}, which is the goal of this subsection. This requires exhibiting many units. For this, our argument will be similar in spirit to \Cref{prop:pell-has-fund-sol}: we will produce lots of elements of small norm, and we will use quotients of these in order to produce the required units.
+
+To begin, we need to know that there are not many elements of small norm.
+\begin{lemma} \label{lem:element-norm-is-ideal-norm}
+	Fix a number field $K$ and an order $\OO\subseteq\OO_K$. For any nonzero $\alpha\in\OO$, we have $[\OO:(\alpha)]=\left|\op N_{K/\QQ}(\alpha)\right|$.
+\end{lemma}
+\begin{proof}
+	By definition, $\op N_{K/\QQ}(\alpha)$ is the determinant of the multiplication-by-$\alpha$ map $\mu_\alpha\colon\OO\to\OO$, whose image is exactly $(\alpha)$. But \Cref{lem:lattice-index-is-covol} then tells us that $\left|\det\mu_\alpha\right|=[\OO:(\alpha)]$, so the result follows.
+\end{proof}
+\begin{lemma} \label{lem:finite-ideals-of-index}
+	Fix a number field $K$ and an order $\OO\subseteq\OO_K$. For any positive integer $N$, there are only finitely many ideals $I\subseteq\OO$ such that $[\OO:I]=N$.
+\end{lemma}
+\begin{proof}
+	In fact, there are only finitely many additive subgroups $I$ of $\OO\cong\ZZ^n$ of index $N$. Well, any subgroup $I\subseteq\ZZ^n$ of index $N$ makes the quotient $\ZZ^n/I$ annihilated by $N$, so $NI\supseteq\ZZ^n$. Thus, $N\ZZ^n\subseteq I\subseteq\ZZ^n$, so $I$ may be recovered by its image $I/N\ZZ^n\subseteq\ZZ^n/N\ZZ^n$, but $\ZZ^n/N\ZZ^n$ is a finite group, so there are only finitely many options for $I$.
+\end{proof}
+\begin{proposition} \label{prop:finite-element-of-norm}
+	Fix a number field $K$ and an order $\OO\subseteq\OO_K$. For any positive integer $N$, there are only finitely many $\alpha\in\OO/\OO^\times$ such that $\left|\op N_{K/\QQ}(\alpha)\right|=N$.
+\end{proposition}
+\begin{proof}
+	Quickly, note $\left|\op N_{K/\QQ}(\alpha)\right|$ is well-defined for $\alpha\in\OO/\OO^\times$ because $\alpha\in\OO_K^\times$ is equivalent to $\left|\op N_{K/\QQ}(\alpha)\right|=1$ by \Cref{lem:unit-by-norm-one}.
+
+	Now, we note that $\alpha\cdot\OO^\times=\alpha'\cdot\OO^\times$ if and only if $(\alpha)=(\alpha')$ by tracking through our principal ideals. Thus, \Cref{lem:element-norm-is-ideal-norm} tells us that we are asking for finitely (principal) ideals $I\subseteq\OO$ such that $[\OO:I]=N$. This finiteness follows from \Cref{lem:finite-ideals-of-index}.
+\end{proof}
+We now use \Cref{prop:finite-element-of-norm} to produce units. To begin, we need many elements of small norm.
+\begin{lemma} \label{lem:decrease-coords-bound-norm}
+	Fix a number field $K$ and an order $\OO\subseteq\OO_K$, and fix notation as in \cref{subsec:dirichlet-upper}. Further, fix an index $1\le i_0\le r_1+r_2$. Then there is an absolute constant $C(\OO)>0$ with the following property: for any nonzero $\alpha\in\OO$, there is a nonzero $\beta\in\OO$ such that $\left|\op N_{K/\QQ}(\alpha')\right|\le C(\OO)$ and writing
+	\[\op{Log}(j(\alpha))=(a_1,\ldots,a_{r_1+r_2})\qquad\text{and}\qquad\op{Log}(j(\alpha'))=(a'_1,\ldots,a'_{r_1+r_2})\]
+	requires $a'_i<a_i$ for each $i\ne i_0$.
+\end{lemma}
+\begin{proof}
+	We use \Cref{thm:mink}. Fix $C(\OO)>0$ to be determined later. Our lattice will be $j(\OO)\subseteq\RR^n$, which we know to be of rank $n$ by \Cref{prop:order-lattice}. To achieve $a'_i<a_i$, we define $S\subseteq\RR^n$ by
+	\[S\coloneqq\left\{(x_1,\ldots,x_n):\left|x_1\right|<e^{c_1},\ldots,\left|x_{r_1}\right|<e^{c_{r_1}},\left|x_{r_1+1}^2+b_{r_1+2}^2\right|<e^{c_{r_1+1}},\ldots,\left|x_{n-1}^2+x_n^2\right|<e^{c_{r_1+r_2}}\right\},\]
+	where we require $c_i=a_i$ for each $i\ne i_0$ and
+	\[e^{c_{i_0}}\coloneqq\frac{C(\OO)}{\prod_{i\ne i_0}e^{c_i}}.\]
+	Notably, $S$ is the product of $r_1$ intervals and $r_2$ circles, so its volume is
+	\[\op{vol}(S)=2^{r_1}e^{c_1+\cdots+c_{r_1}}\cdot\pi^{r_2}e^{c_{r_1+1}\cdots c_{r_1+r_2}}=2^{r_1}\pi^{r_2}C(\OO).\]
+	For $C(\OO)$ big enough, we see $2^{r_1}\pi^{r_2}C(\OO)>\op{vol}(\RR^n/j(\OO))$ (note that $C(\OO)$ only needs to depend on $\OO$), so \Cref{thm:mink} yields a nonzero $j(\alpha')\in j(\OO)$ such that $\alpha'\in S$. Looking at the construction of $S$, we see that the inequalities on $\op{Log}(j(\alpha'))$ hold by construction (look at $c_i=a_i$ for $i\ne i_0$), and $\left|\op N_{K/\QQ}(\alpha')\right|\le C(\OO)$ again hold by construction (look at $c_{i_0}$).
+\end{proof}
+And here are our units.
+\begin{lemma} \label{lem:special-negative-unit}
+	Fix a number field $K$ and an order $\OO\subseteq\OO_K$, and fix notation as in \cref{subsec:dirichlet-upper}. For any index $1\le i_0\le r_1+r_2$, there is a unit $\gamma\in\OO^\times$ such that writing
+	\[\op{Log}(j(\gamma))=(u_1,\ldots,u_{r_1+r_2})\]
+	has $u_i<0$ for $i\ne i_0$. In fact, $u_{i_0}>0$.
+\end{lemma}
+\begin{proof}
+	Quickly, note that having $u_i<0$ for $i\ne i_0$ implies $u_{i_0}>0$ because the coordinates need to sum to $0$ because $\op{Log}(j(u))\subseteq H$.
+
+	Anyway, fix $C(\OO)$ as in \Cref{lem:decrease-coords-bound-norm}. We now inductively use \Cref{lem:decrease-coords-bound-norm} to produce many elements of norm bounded by $C(\OO)$, which will be required to give us units by \Cref{prop:finite-element-of-norm}. To begin, we may assume $C(\OO)>1$, and we set $\alpha_1\coloneqq1$. Then we apply \Cref{lem:decrease-coords-bound-norm} on $\alpha_1$ to produce some $\alpha_2$ with norm at most $C(\OO)$ as well, and then we do this again to produce $\alpha_3$, and so on.
+
+	This produces an infinite list of elements of norm at most $C(\OO)$, but the set of classes in $\OO/\OO^\times$ represented by such elements is finite by \Cref{prop:finite-element-of-norm}, so we may find distinct elements of the sequence $\alpha$ and $\alpha'$ which differ by a unit so that $\alpha\gamma=\alpha'$. We claim that $u$ is the desired unit: by construction of the sequence, we see that writing
+	\begin{align*}
+		\op{Log}(j(\alpha)) &= (a_1,\ldots,a_{r_1+r_2}) \\
+		\op{Log}(j(\alpha')) &= (a'_1,\ldots,a'_{r_1+r_2}) \\
+		\op{Log}(j(\gamma)) &= (u_1,\ldots,u_{r_1+r_2})
+	\end{align*}
+	requires $a'_i<a_i$ for each $i\ne i_0$, so we are done upon noting $u_i=a_i'-a_i$ for each $i$.
+\end{proof}
+Applying \Cref{lem:special-negative-unit} to each unit, we produce units $\gamma_1,\ldots,\gamma_{r_1+r_2}\in\OO^\times$ such that exactly the $i$th component of the $\op{Log}(j(\gamma_i))$ is positive. Now, to prove \Cref{prop:compute-unit-rank}, it is enough to produce $r_1+r_2-1$ linearly independent vectors, meaning we want to show
+\[\op{rank}\begin{bmatrix}
+	| & & | \\
+	\op{Log}(j(\gamma_1)) & \cdots & \op{Log}(j(\gamma_{r_1+r_2-1})) \\
+	| & & |
+\end{bmatrix}=r_1+r_2-1.\]
+It turns out to be easier to consider the transpose matrix, whereupon the result becomes the following piece of linear algebra.
+\begin{lemma}
+	Let $A=(a_{ij})_{1\le i,j,\le n}$ be a matrix such that the rows sum to zero and $a_{ij}<0$ for each $i\ne j$ and $a_{ii}>0$ for each $i$. Then $\op{rank}A=n-1$.
+\end{lemma}
+\begin{proof}
+	Certainly $\op{rank}A<n$ because $(1,\ldots,1)\in\RR^{n\times n}$ is in the kernel. To establish $\op{rank}A\ge n-1$, we will show that the first $n-1$ columns of $A$ are linearly independent. Enumerate the columns of $A$ as $v_1,\ldots,v_n$. Any nontrivial linear relation among the first $n-1$ of these columns
+	\[\sum_{i=1}^{n-1}c_iv_i=0\]
+	may find some $\left|c_{i_0}\right|>0$ as large as possible and then divide the entire equation by $c_{i_0}$ so that the new equation has $c_{i_0}=1$ while $\left|c_i\right|\le1$ for each $i$. However, row $i_0<n$ now has
+	\[0=\sum_{i=1}^{n-1}c_ia_{i_0i}\ge\sum_{i=1}^na_{i_0i}>\sum_{i=1}^na_{i_0i}=0,\]
+	which is a contradiction.
+\end{proof}
+\Cref{prop:compute-unit-rank} now follows from the lemma and the discussion immediately preceding it. This completes the proof of \Cref{thm:dirichlet-unit}.
+
+\subsection{A Harder Problem Revisited}
+We are now equipped to understand and prove \Cref{prop:pell-cbrt-2}. The following lemma will be useful.
+\begin{lemma} \label{lem:cubic-fund-unit}
+	Fix a cubic number field $K$ with exactly one real embedding $\rho\colon K\into\RR$. For any order $\OO\subseteq\OO_K$, we have $\OO^\times\cong\mu(\OO)\times\ZZ$, and any unit $u\in\OO^\times$ with $\rho(u)>1$ will in fact have
+	\[\rho(u)^3+7>\frac14\left|\disc\OO\right|.\]
+\end{lemma}
+\begin{proof}
+	The first claim is a direct consequence of \Cref{thm:dirichlet-unit}: having exactly one real embedding implies that the signature $(r_1,r_2)$ is $(1,r_2)$ where $1+2r_2=[K:\QQ]=3$, meaning the signature is actually $(r_1,r_2)=(1,1)$. Then $r_1+r_2-1=1$, so we are done by \Cref{thm:dirichlet-unit}.
+
+	It remains to show the inequality. The point is that $u\in\OO$ implies that $\left|\disc(1,u,u^2)\right|\ge\left|\disc\OO\right|$ by \Cref{lem:disc-change-of-basis}. To compute $\disc(1,u,u^2)$, let $\sigma\colon K\into\CC$ be a complex embedding so that our embeddings are $\rho,\sigma,\overline\sigma\colon K\into\CC$. Define $r\coloneqq1/\sqrt{\rho(u)}<1$ so that $\left|\sigma(u)\right|^2=\left|\op N_{K/\QQ}(u)\right|/\rho(u)=r^2$ (we are using \Cref{lem:unit-by-norm-one}) and so $\sigma(u)=re^{i\theta}$ for some $\theta$. As such, we compute
+	\begin{align*}
+		\disc\left(1,u,u^2\right) &= \det\begin{bmatrix}
+			1 & \rho(u) & \rho(u)^2 \\
+			1 & \sigma(u) & \sigma(u)^2 \\
+			1 & \overline\sigma(u) & \overline\sigma(u)^2
+		\end{bmatrix}^2 \\
+		&= \left(\left(\sigma(u)\overline\sigma(u)^2-\sigma(u)^2\overline\sigma(u)\right)-\left(\rho(u)\overline\sigma(u)^2-\rho(u)^2\sigma(u)\right)+\left(\rho(u)\sigma(u)^2-\rho(u)^2\sigma(u)\right)\right)^2 \\
+		&= \left((\rho(u)-\sigma(u))(\sigma(u)-\overline\sigma(u))(\overline\sigma(u)-\rho(u))\right)^2 \\
+		&= (\sigma(u)-\overline\sigma(u))^2\left|\rho(u)-\sigma(u)\right|^2 \\
+		&= -4r^2(\sin\theta)^2\left|1/r^2-r\cos\theta-ir\sin\theta\right|^4 \\
+		&= -4r^2(\sin\theta)^2\left((1/r^2-r\cos\theta)^2+(r\sin\theta)^2\right)^2 \\
+		&= -4r^2(\sin\theta)^2\left(1/r^4-2(1/r)\cos\theta+r^2\right)^2 \\
+		&= -4(\sin\theta)^2\left(r^3+1/r^3-2\cos\theta\right)^2.
+	\end{align*}
+	This is negative, so we take absolute values to see
+	\[\frac14\left|\disc\OO\right|<(\sin\theta)^2\left(r^3+\frac1{r^3}-2\cos\theta\right)^2.\]
+	It remains to bound the right-hand side. To manipulate, set $c\coloneqq\cos\theta$ and $s\coloneqq r^3+1/r^3$; note $s\ge2$ because $r^3+1/r^3-2\ge\left(r^3-1/r^3\right)\ge0$. As such,
+	\begin{align*}
+		(\sin\theta)^2\left(r^3+\frac1{r^3}-2\cos\theta\right) &= \left(1-c^2\right)(s-2c)^2 \\
+		&= \left(1-c^2\right)\left(s^2-4sc+4c^2\right) \\
+		&= s^2-4sc+4c^2-s^2c^2+4sc^3-4c^4 \\
+		&= s^2+4-\left(sc+2-2c^2\right)^2.
+	\end{align*}
+	Thus,
+	\[\frac14\left|\disc\OO\right|<\left(r^3+\frac1{r^3}\right)^2+4=r^6+\frac1{r^6}+6<\rho(u)^3+7,\]
+	as needed.
+\end{proof}
+\begin{proposition} \label{prop:units-cbrt-2}
+	The cubic number field $K\coloneqq\QQ(\sqrt[3]2)$ has exactly one real embedding, and $\OO\coloneqq\ZZ[\sqrt[3]2]$ is an order. The element $u\coloneqq1+\sqrt[3]2+\sqrt[3]4$ is a unit, and any element of $\OO^\times$ can be written uniquely in the form $\pm u^n$ for some integer $n$.
+\end{proposition}
+\begin{proof}
+	By the argument of \Cref{prop:embeddings-to-c}, $K\cong\QQ[x]/\left(x^3-2\right)$ has the real embedding $\sqrt[3]2\mapsto\sqrt[3]2$ and two complex embeddings $\sqrt[3]2\mapsto e^{2\pi i/3}\sqrt[3]2$ and $\sqrt[3]2\mapsto e^{4\pi i/3}\sqrt[3]2$. In the argument which follows, we identify $K$ with its embedding in $\RR$. To finish up the claims of the first sentence, we see that $\OO$ has basis given by $\left\{1,\sqrt3[2],\sqrt[3]4\right\}$: these certainly generate $\OO$, and they are a $\QQ$-linearly independent basis of $K$, so they are certainly linearly independent over $\ZZ$.
+
+	Next, we note that $u$ is in fact a unit because $\op N_{K/\QQ}(u)=1+2+4-6=1$ by \Cref{ex:norm-k-cbrt-2}. It remains to show that any other unit in $\OO$ can be written in the form $\pm u^n$. This follows by \Cref{thm:dirichlet-unit} and \Cref{lem:cubic-fund-unit}. Because $\OO\subseteq\RR$, we see that $\mu(\OO)=\{\pm1\}$. (All other roots of unity in $\CC$ do not live in $\RR$.) It remains to find a unit $u_0\in\OO^\times$ such that
+	\[\OO^\times=\{\pm1\}\times u_0^\ZZ,\]
+	which exists by \Cref{thm:dirichlet-unit}. By adjusting the sign of $u_0$, we may assume $u_0>0$. By replacing $u_0$ with $1/u_0$ as needed, we may assume $u_0>1$.
+
+	Now, we see that we have $u=u_0^n$ for some positive integer $n$. We claim that $u=u_0$, which will complete the proof. It is enough to show that $u<u_0^2$, or equivalently, $u^3<u_0^6$. Well, recall $\disc\OO=-108$, so $u_0^3>\frac14\cdot108-7=20$. But now $u^3<(1+2+4)^3=343<400$, so $u^3<u_0^6$, so we are done.
+\end{proof}
+At long last, \Cref{prop:units-cbrt-2} follows from \Cref{prop:pell-cbrt-2}.
+\pellcbrttwo*
+\begin{proof}
+	By \Cref{ex:norm-k-cbrt-2}, any solution to $x^3+2y^3+4z^3-6xyz=1$ is really a norm-$1$ unit of $x+y\sqrt[3]2+z\sqrt[3]4$. Looking at the units provided by \Cref{prop:units-cbrt-2}, we see that the norm-$1$ units are of the form
+	\[x_n+y_n\sqrt[3]2+z_n\sqrt[3]4=(1+\sqrt[3]2+\sqrt[3]4)^n\]
+	for an integer $n\in\ZZ$. Explicitly, the sign $-1$ has norm $-1$, and $\op N_{\QQ(\sqrt[3]2)/\QQ}(1+\sqrt[3]2+\sqrt[3]4)=1$, so the units of the form $(1+\sqrt[3]2+\sqrt[3]4)^n$ have norm $1$, and the units of the form $-(1+\sqrt[3]2+\sqrt[3]4)^n$ have norm $-1$. To finish, and the recursion provided by \Cref{prop:units-cbrt-2} exactly describes the needed triples $(x_n,y_n,z_n)$, so we are done!
+\end{proof}
 
 \subsection{Problems}
 Do ten points worth of the following exercises.
@@ -298,6 +658,14 @@ Do ten points worth of the following exercises.
 \end{prob}
 \begin{prob}[2 points]
 	Let $\Lambda\subseteq\RR^n$ be a lattice. Show that there is a vector $v\in\Lambda\setminus\{0\}$ such that $\norm v$ is minimized among all values in $\Lambda\setminus\{0\}$.
+\end{prob}
+\begin{prob}[3 points]
+	Let $S^1\subseteq\CC^\times$ denote the subgroup of elements all of whose absolute values are $1$, and let $G\subseteq S^1$ be a finite subgroup 
+	\begin{listalph}
+		\item Consider the map $\pi\colon\RR\to S^1$ given by $\pi(t)\coloneqq\exp(2\pi it)$. Show that $\pi^{-1}(G)$ is lattice in $\RR$.
+		\item Use (a) to show that $G$ is cyclic.
+		\item Use (b) to show that $\mu(\OO)$ is cyclic for any order $\OO$ of a number field $K$.
+	\end{listalph}
 \end{prob}
 \begin{prob}[3 points]
 	Let $\Lambda'$ and $\Lambda$ be lattices in $\RR^n$ of rank $n$. Suppose $\Lambda'\subseteq\Lambda$.
@@ -310,6 +678,9 @@ Do ten points worth of the following exercises.
 	Classify the integer solutions to
 	\[x^3+3y^3+9z^3-9xyz=1\]
 	in a way akin to \Cref{prop:pell-cbrt-2}.
+\end{prob}
+\begin{prob}[4 points]
+	Fix a prime $p$ such that there exists an integer $x$ such that $x^2\equiv-2\pmod p$. Show that there is a pair of integers $(a,b)$ such that $p=a^2+2b^2$.
 \end{prob}
 \begin{prob}[5 points]
 	The following problem requires the notion of a closed set: a subset $S\subseteq\RR^n$ is said to be ``closed'' if and only if any convergent sequence $\{a_n\}_{n=0}^\infty$ contained in $S$ has limit in $S$.
