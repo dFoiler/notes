@@ -1,0 +1,109 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 26}
+
+Today, we will give a structural way to look at quantifier elimination.
+
+\subsection{A Taste of Types}
+We split our discussion of quantifier elimination into the following lemmas.
+\begin{lemma} \label{lem:how-to-qf-type}
+	Fix $\mathcal L$-structures $\mathcal A$ and $\mathcal B$. Further, fix $\overline a\in\mathcal A^n$ and $\overline b\in\mathcal B^n$ with $n\ge1$. Then the following are equivalent.
+	\begin{listalph}
+		\item For any quantifier-free $\mathcal L$-formula $\varphi$, we have $\mathcal A\models\varphi(\overline a)$ if and only if $\mathcal B\models\varphi(\overline b)$.
+		\item There is an isomorphism of substructures $\mathcal A'\subseteq\mathcal A$ and $\mathcal B'\subseteq\mathcal B$ containing $\overline a$ and $\overline b$ respectively, and the isomorphism sends $\overline a$ to $\overline b$.
+	\end{listalph}
+\end{lemma}
+We will prove this in a moment, but we quickly note that it motivates the following definition.
+\begin{definition}[quantifier-free type]
+	Fix an $\mathcal L$-structure $\mathcal A$ and some $\overline a\in A^n$. Then the \textit{quantifier-free type of $\overline a$}, denoted $\op{qftp}^\mathcal A(\overline a)$, is the set of quantifier free formulae $\varphi$ such that $\mathcal A\models\varphi(\overline a)$.
+\end{definition}
+Anyway, here is our proof of \Cref{lem:how-to-qf-type}.
+\begin{proof}[Proof of \Cref{lem:how-to-qf-type}]
+	We have two implications to show.
+	\begin{itemize}
+		\item We show (b) implies (a). Suppose we have an isomorphism $f\colon\mathcal A'\to\mathcal B'$ as described. Now, suppose $\varphi(\overline x)$ is a quantifier-free $\mathcal L$-formula with $n$ free variables. Then $\mathcal A'\models\varphi(\overline a)$ if and only if $\mathcal B'\models\varphi(\overline b)$ by the nature of our isomorphism (see \Cref{prop:isos-have-same-theory}). Then this comes down to the substructure because $\varphi$ is quantifier-free by \Cref{prop:substructure-for-qf}.
+		\item We show (a) implies (b). Define $A'\subseteq A$ to be the set of terms $t$ evaluated on $\overline a$ as $t^\mathcal A(\overline a)$, and define $B'\subseteq B$ similarly. We do need to check that $A'$ is the universe of an $\mathcal L$-substructure of $\mathcal A$, and the check for $B'$ will be similar. Well, we interpret constants (which are terms) exactly as they were interpreted in $\mathcal A$. We interpret functions exactly as they were interpreted in $\mathcal A$ because terms are closed under applying functions. Lastly, relations are defined by intersection with $A$, which is what is needed to provide a substructure.
+
+		We now define $\mathcal A'\to\mathcal B'$ by sending the term $t^\mathcal A(a_1,\ldots,a_n)$ to $t^\mathcal B(b_1,\ldots,b_n)$. We have the following checks.
+		\begin{itemize}
+			\item Well-defined and injective: if $s$ and $t$ are terms with $s^\mathcal A(\overline a)=t^\mathcal A(\overline a)$, then this is equivalent to $\mathcal A\models(s(\overline x)=t(\overline x))(\overline a)$, which is equivalent to $\mathcal B\models(s(\overline x)=t(\overline x))(\overline b)$ by hypothesis, which at the end is equivalent to $s^\mathcal B(\overline b)=t^\mathcal B(\overline b)$.
+			\item Surjective: any element of $\mathcal B'$ takes the form $t^\mathcal B(\overline b)$ for some term $t$, which is hit by $t^\mathcal A(\overline a)$.
+			\item Isomorphism: this has many checks in itself. For any constant symbol $c$, we see $f\left(c^{\mathcal A'}\right)=c^{\mathcal B'}$ by viewing $c$ as a term which does not care about the input $\overline a$. Now suppose $F$ is an $m$-ary function symbol, then
+			\begin{align*}
+				f\left(F^{\mathcal A'}(t_1^{\overline A'}(\overline a),\ldots,t_m^{\overline A'}(\overline a))\right) &= f\big(\underbrace{F(t_1(\overline x),\ldots,t_m(\overline x))}_{\text{some term!}}(\overline a)\big) \\
+				&= F^\mathcal B(t_1^\mathcal B(\overline b),\ldots,t_m^\mathcal B(\overline b)) \\
+				&= F^\mathcal B\left(f(t_1^\mathcal A(\overline a),\ldots,t_m^\mathcal A(\overline a))\right).
+			\end{align*}
+			Lastly, let $R$ be an $m$-ary relation symbol. Then $\left(t_1^\mathcal A(\overline a),\ldots,t_m^\mathcal A(\overline a)\right)\in R^{\mathcal A'}$ if and only if $\mathcal A'\models R(t_1,\ldots,t_m)(\overline a)$ if and only if $\mathcal A\models R(t_1,\ldots,t_m)(\overline a)$ by \Cref{prop:substructure-for-qf}, which is now equivalent to $\mathcal B\models R(t_1,\ldots,t_m)(\overline b)$ and then equivalent to $\mathcal B'\models R(t_1,\ldots,t_m)(\overline b)$.
+			\qedhere
+		\end{itemize}
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	The $\mathcal A'$ given in the proof above is the smallest substructure of $\mathcal A$ containing $\overline a$.
+\end{remark}
+More generally, we might be interested in types.
+\begin{definition}[type]
+	Fix an $\mathcal L$-structure $\mathcal A$. Further, fix an $n$-tuple $\overline a\in A^n$. Then the \textit{type}, denoted $\op{tp}^\mathcal A(\overline a)$ is the set of $\mathcal L$-formulae $\varphi(\overline x)$ such that $\mathcal A\models\varphi(\overline a)$.
+\end{definition}
+Here is the corresponding result.
+\begin{lemma} \label{lem:how-to-get-same-type}
+	Fix $\mathcal L$-structures $\mathcal A$ and $\mathcal B$, and further fix $a\in A^n$ and $b\in B^n$. Suppose that there are elementary extensions $\mathcal A'\ge\mathcal A$ and $\mathcal B'\ge\mathcal B$ with an isomorphism $f\colon\mathcal A'\to\mathcal B'$ sending $\overline a$ to $\overline b$. Then $\op{tp}^\mathcal A(\overline a)=\op{tp}^\mathcal B(\overline b)$.
+\end{lemma}
+\begin{proof}
+	Note that we have elementary expansions $\mathcal A_{\overline a}\le\mathcal A'_{\overline a}$ and $\mathcal B_{\overline b}\le\mathcal B'_{\overline b}$.
+	By hypothesis, the isomorphism $\mathcal A'\cong\mathcal B'$ sends $\overline a$ to $\overline b$, so in fact $\mathcal A'_{\overline a}$ is isomorphic to $\mathcal B_{\overline b}$.
+	Tracking everything through, we see $\mathcal A\models\varphi(\overline a)$ if and only if $\mathcal A_{\overline a}\models\varphi(\overline a)$ if and only if $\mathcal A'_{\overline a}\models\varphi(\overline a)$ if and only if $\mathcal B'_{\overline b}\models\varphi(\overline b)$ if and only if $\mathcal B_{\overline b}\models\varphi(\overline b)$ if and only if $\mathcal B\models\varphi(\overline b)$.
+\end{proof}
+\begin{remark}
+	The converse of this result is true, and we will prove it later in this class.
+\end{remark}
+
+\subsection{Back to Algebraically Closed Fields}
+Let's return to our discussion of algebraically closed fields.
+\begin{definition}[eliminates quantifiers]
+	An $\mathcal L$-theory $T$ \textit{eliminates quantifiers} if and only if any formula $\varphi(\overline x)$ has some quantifier-free formula $\overline\psi(\overline x)$ such that $T\models\forall x(\varphi(\overline x)\leftrightarrow\psi(\overline x))$.
+\end{definition}
+\begin{theorem}
+	Say that an $\mathcal L$-theory $T$ is ``isomorphism-extendable'' if and only if it has the following property: for any models $\mathcal A,\mathcal B\models T$ with fixed $n$-tuples $a\in A^n$ and $b\in B^n$ equipped with an isomorphism $f\colon\mathcal A'\to\mathcal B'$ of substructures containing $\overline a$ and $\overline b$ (respectively) which sends $\overline a$ to $\overline b$, then any elementary superstructures $\mathcal A^*\ge\mathcal A$ and $\mathcal B^*\ge\mathcal B$ have an isomorphism extending $f$. Then if $T$ is isomorphism-extendable, then $T$ eliminates quantifiers.
+\end{theorem}
+\begin{proof}
+	Fix a formula $\varphi(\overline x)$. Observe that being isomorphism-extendable implies that $\overline a$ and $\overline b$ having the same quantifier-free type implies that they have the same type by combining \Cref{lem:how-to-qf-type,lem:how-to-get-same-type}.
+
+	For technical reasons, we extend the language to $\mathcal L^*$ to have some new constants $c_1$ and $c_2$ for each of the old constants $c$. Our functions are the same, and we add in one more unary relation $U$. The point of introducing $\mathcal L^*$ is to be able to talk about two $\mathcal L$-structures of the same type.
+	
+	Explicitly, given an $\mathcal L^*$-structure where $U$ contains the $c_1$s and the complement contains the $c_2$s (and these are nonempty), then we can restrict to $U$ and its complement to provide two $\mathcal L$-structures. Conversely, given $\mathcal L$-structures $\mathcal A$ and $\mathcal B$, we build an $\mathcal L^*$-structure with universe $A\sqcup B$ as follows: interpret the constants $c_1$ and $c_2$ as in $\mathcal A$ and $\mathcal B$, respectively. Interpret the values $f(\overline a)$ and $f(\overline b)$ for $\overline a\in A^\bullet$ and $\overline b\in B^\bullet$ as in $\mathcal A$ and $\mathcal B$, respectively, and interpret $f(\overline e)$ for any other $\overline e$ however we wish. One does something similar for the relations. Notably, the $\mathcal L^*$-structure, which we call $\mathcal A$, is not exactly the same data as two $\mathcal L$-structures because one has to say what happens on the function and relation symbols when we have not been told by $\mathcal A$ and $\mathcal B$ alone.
+
+	Anyway, let $\varphi(\overline x)$ be an $\mathcal L$-formula, and we expand $\mathcal L^*$ to add in some new constant symbols $\overline a$ and $\overline b$. We now relative to build a new theory. The observation is that, using the construction of the previous paragraph, there is a function $\widehat\cdot^{\mathcal A}$ such that $\mathcal A\models\varphi(\overline a)$ if and only if $\mathcal C\models\varphi^\mathcal A(\overline a)$. As such, we adjust $T$ to the theory $\Sigma$ be an $\mathcal L^*$-theory by adjusting $c$s to $c_1$s and $c_2$s in the natural way, and we also add in the sentences $U(a_\bullet)$ and $\lnot U(b_\bullet)$. Further, we add in the sentences
+	\[\left\{\varphi^\mathcal A(\overline a)\leftrightarrow\psi^\mathcal B(\overline b)\right\}\]
+	as well as $\widehat\varphi^\mathcal A(\overline a)\leftrightarrow\varphi^\mathcal B(\overline b)$. This theory is inconsistent by the type discussion at the very beginning of this proof: we are being promised that $\overline a$ and $\overline b$ have the same type, but then they disagree on $\varphi$!
+
+	Thus, by compactness, there is a finite set $\Psi$ of quantifier-free formulae with the following property for any models $\mathcal A,\mathcal B\models T$ with $\overline a\in A^n$ and $b\in B^n$: if $\mathcal A\models\psi(\overline a)$ is equivalent to $\mathcal B\models\psi(\overline b)$ for each $\psi\in\Psi$, then we must have $\mathcal A\models\varphi(\overline a)$ is equivalent to $\mathcal B\models\varphi(\overline b)$. We now construct our quantifier-free formula: for each $X\subseteq\Psi$, we define
+	\[\theta_X\coloneqq\bigland_{\psi\in X}\psi\land\bigland_{\psi\in\Psi\setminus X}\lnot\psi,\]
+	and we let $G$ be the set of subsets such that there is a model $\mathcal A\models T$ with $\mathcal A\models\exists\overline x(\varphi(\overline x)\land\theta_X(\overline x))$. Then we set $\eta(\overline x)$ to be the disjunction over all the $\theta_X$ where $X\in G$. Note that $\eta(\overline x)$ is quantifier-free.
+
+	We now claim that $T\models\forall\overline x(\eta(\overline x)\leftrightarrow\varphi(\overline x))$. Suppose $\mathcal A\models T$ and we have some $\overline a\in\mathcal A$ with $\mathcal A\models\varphi(\overline a)$. Then we consider the subset $X$ of $\Psi$ such that $\mathcal A\models\psi(\overline a)$ if and only if $\psi\in X$. Then $\mathcal A$ is in fact modelling $\varphi(\overline a)$ along with the sentences $\psi(\overline a)$ for each $\psi\in X$ and then $\lnot\psi(\overline a)$ for each $\psi\notin X$. Thus, $\mathcal A\models\theta_X(\overline a)\land\varphi(\overline a)$, so $X\in G$, and $T\models\forall\overline x(\varphi(\overline x)\to\eta(\overline x))$ follows.
+
+	We now go in the other direction. Suppose $\mathcal A\models T$ is a model, and suppose we have $\overline a\in A^n$ and $\mathcal A\models\eta(\overline a)$. Then there is some $X\in G$ such that $\mathcal A\models\theta_X(\overline a)$, but being in $G$ promises us a model $\mathcal B\models T$ and $\overline b\in B^n$ with $\mathcal B\models\varphi(\overline b)\land\theta_X(\overline b)$. But then any $\psi\in\Psi$ has $\mathcal A\models\psi(\overline a)$ if and only if $\mathcal B\models\psi(\overline b)$ by definition of $\theta_X$, so $\mathcal A$ and $\mathcal B$ must agree on $\varphi(\overline b)$. In other words, we conclude $\mathcal A\models\varphi(\overline a)$, and we are done.
+\end{proof}
+\begin{corollary}
+	The theory $\mathrm{ACF}$ eliminates quantifiers.
+\end{corollary}
+\begin{proof}
+	Use the theorem.
+\end{proof}
+\begin{corollary}
+	The theory of dense linear order without endpoints eliminates quantifiers.
+\end{corollary}
+\begin{proof}
+	Use the theorem.
+\end{proof}
+\begin{nex}
+	The theory of an equivalence relation with exactly one equivalence class of size each positive integer does not eliminate quantifiers. To see this, consider the sentence which says that a free variable $x$ is in an equivalence class of size $2$.
+\end{nex}
+
+\end{document}
