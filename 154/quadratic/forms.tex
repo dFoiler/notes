@@ -6,21 +6,1006 @@
 
 \section{Binary Quadratic Forms}
 
-\subsection{Basic Definitions}
+At the start of this unit, we were quick to discard equations of the form
+\[ax^2+bxy+cy^2=n\]
+where $b^2-4ac<0$ because these can be checked via a finite computation. However, we will see that there is still interesting structure to uncover here.
+
+\subsection{Geometry of Quadratic Forms}
+Here is our definition of interest.
+\begin{definition}[binary quadratic form]
+	Given three integers numbers $a,b,c\in\ZZ$, we may define the \textit{binary quadratic form} as
+	\[f(x,y)\coloneqq ax^2+bxy+cy^2.\]
+	We may abbreviate this to $[a,b,c]$.
+\end{definition}
+\begin{example}
+	We have the binary quadratic form $[1,0,1]$, which is $x^2+y^2$.
+\end{example}
+Quadratic forms are typically defined via real symmetric matrices: given a binary quadratic form $f=[a,b,c]$, we see that
+\[f(x,y)=ax^2+bxy+cy^2=\begin{bmatrix}
+	x & y
+\end{bmatrix}\begin{bmatrix}
+	a & b/2 \\
+	b/2 & c
+\end{bmatrix}\begin{bmatrix}
+	x \\ y
+\end{bmatrix},\]
+so it will be convenient to define $M_f=M_{[a,b,c]}\coloneqq\begin{bsmallmatrix}
+	a & b/2 \\ b/2 & c
+\end{bsmallmatrix}$. The determinant of this matrix is of interest.
+\begin{definition}[discriminant]
+	Fix a quadratic form $f=[a,b,c]$. Then we define the \textit{discriminant} of $f$ to be $\disc f\coloneqq-4\det M_f=b^2-4ac$. If $\disc f<0$ and $a>0$, we say that $f$ is \textit{positive definite}.
+\end{definition}
+\begin{example}
+	We have $\disc[1,0,1]=-4$.
+\end{example}
+In reality, the adjective ``positive definite'' is one given to inner products, so let's explain this. Given a pos\-itive-definite quadratic form $f=[a,b,c]$, we see that $M_f$ is a real symmetric matrix of positive determinant, so we define
+\begin{equation}
+	\langle(x_1,y_1),(x_2,y_2)\rangle_f\coloneqq\begin{bmatrix}
+		x_1 & y_1
+	\end{bmatrix}\begin{bmatrix}
+		a & b/2 \\ b/2 & c
+	\end{bmatrix}\begin{bmatrix}
+		x_2 \\ y_2
+	\end{bmatrix}=ax_1x_2+\frac b2(x_1y_2+y_1x_2)+cy_1y_2. \label{eq:def-of-inner-prod-f}
+\end{equation}
+In particular, the actual quadratic form $f$ is the squared norm of $\langle\cdot,\cdot\rangle_f$. Let's check that this provides a positive-definite inner product.
+\begin{lemma} \label{lem:get-pos-def-inner-prod}
+	Fix a positive-definite binary quadratic form $f=[a,b,c]$. Then $\langle\cdot,\cdot\rangle_f$ is a positive-definite inner product on $\RR^2$. In particular,
+	\[f(x,y)=a\left(x+\frac b{2a}y\right)^2-\frac{b^2-4ac}{4a}y^2.\]
+\end{lemma}
+\begin{proof}
+	We run our checks one at a time. Fix $(x_1,y_1),(x_2,y_2),(x_3,y_3)\in\RR^2$ and some $r\in\RR$.
+	\begin{itemize}
+		\item Symmetric: we see that $\langle(x_1,y_1),(x_2,y_2)\rangle_f=\langle(x_2,y_2),(x_1,y_1)\rangle_f$ directly from \eqref{eq:def-of-inner-prod-f}.
+		\item Linear: we see that
+		\begin{align*}
+			\langle r(x_1,y_1)+(x_2,y_2),(x_3,y_3)\rangle_f &= a(rx_1+x_2)x_3+\frac b2((rx_1+x_2)y_3+(ry_1+y_2)x_3)+c(ry_1+y_2)y_3 \\
+			&= r\left(ax_1x_3+\frac b2(x_1y_3+y_1x_3)+cy_1y_3\right) \\
+			&\qquad+\left(x_2x_3+\frac b2(x_2y_3+y_2x_3)+cy_2y_3\right) \\
+			&= r\langle(x_1,y_1),(x_3,y_3)\rangle_f+\langle(x_2,y_2),(x_3,y_3)\rangle_f.
+		\end{align*}
+		\item Positive-definite: fix nonzero $(x,y)\in\RR^2$. We took $a>0$, so we complete the square to write
+		\[ax^2+bxy+cy^2=a\left(x^2+\frac baxy+\frac{b^2}{4a^2}y^2\right)-\frac{b^2-4ac}{4a}y^2=a\left(x+\frac b{2a}y\right)^2-\frac{b^2-4ac}{4a}y^2.\]
+		The right-hand side is a linear combination of squares with positive coefficients, so it will be positive as long as one of the squares is nonzero. Well, if both squares vanish, then $y=0$ and $x+\frac b{2a}y=0$ and so $x=0$ too, but $(x,y)\ne(0,0)$ by assumption.
+		\qedhere
+	\end{itemize}
+\end{proof}
+We now appeal to facts about inner products to discuss the geometry given by $f$.
+\begin{lemma}[Cauchy--Schwarz] \label{lem:cs}
+	Fix a positive-definite inner product $\langle\cdot,\cdot\rangle\colon V\to\RR$ on a real vector space $V$. For any $v,w\in\RR^2$, we see
+	\[\left|\langle v,w\rangle\right|^2\le\langle v,v\rangle\langle w,w\rangle.\]
+\end{lemma}
+\begin{proof}
+	If $v=0$, then both sides vanish. Otherwise, we make take $v\ne0$ so that $\norm v\ne0$. For brevity, write $\norm u^2\coloneqq\langle u,u\rangle$.
+	\begin{enumerate}
+		\item We claim that
+		\[\norm{\norm v^2w-\langle v,w\rangle v}^2=\norm v^4\norm w^2-\norm v^2\langle v,w\rangle^2.\]
+		This is a direct expansion. For brevity, write $a\coloneqq\norm v^2$ and $b\coloneqq\langle v,w\rangle$. Then
+		\begin{align*}
+			\norm{aw-bv}^2 &= \langle aw-bv,aw-bv\rangle \\
+			&= a^2\norm w^2-2ab\langle v,w\rangle+b^2\norm v^2
+			&= a^2\norm w^2-2ab^2+ab^2,
+		\end{align*}
+		which is what we wanted upon simplifying and plugging in for $a$ and $b$.
+		\item To complete the proof, we see that
+		\[\norm v^2\norm w^2-\langle v,w\rangle^2\ge\frac1{\norm v^2}\norm{\norm v^2w-\langle v,w\rangle v}^2\ge0,\]
+		so we are done.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{proposition}[triangle inequality] \label{prop:triangle-ineq}
+	Fix a positive-definite inner product $\langle\cdot,\cdot\rangle\colon V\to\RR$ on a real vector space $V$. For any $v,w\in\RR^2$, we see
+	\[\sqrt{\langle v+w,v+w\rangle}\le\sqrt{\langle v,v\rangle}+\sqrt{\langle w,w\rangle}.\]
+\end{proposition}
+\begin{proof}
+	Note that these square roots are defined by \Cref{lem:get-pos-def-inner-prod}, which tells us that $f(v)=\langle v,v\rangle_f\ge0$ for any $v\in\RR^2$.
+
+	Anyway, we may directly expand
+	\[\langle v+w,v+w\rangle=\langle v,v\rangle+\langle w,w\rangle+2\langle v,w\rangle.\]
+	By \Cref{lem:cs}, $\langle v,w\rangle^2\le\langle v,v\rangle\langle w,w\rangle$, so the right-hand side is bounded above by $\left(\sqrt{\langle v,v\rangle}+\sqrt{\langle w,w\rangle}\right)^2$, so we are done upon taking square roots everywhere.
+\end{proof}
+\begin{corollary} \label{cor:inner-prod-circle}
+	Fix a positive-definite inner product $\langle\cdot,\cdot\rangle\colon V\to\RR$ on a real vector space $V$. For any $C>0$, the set
+	\[\left\{v\in\RR^2:\langle v,v\rangle<C\right\}\]
+	is convex and symmetric about the origin.
+\end{corollary}
+\begin{proof}
+	Let the given set be $S$. Anyway, we do our checks separately.
+	\begin{itemize}
+		\item Convex: we use \Cref{prop:triangle-ineq}. Indeed, fix any $v,w\in S$ and $t\in[0,1]$. Then
+		\[\sqrt{\langle tv+(1-t)w,tv+(1-t)w\rangle}\le\sqrt{\langle tv,tv\rangle}+\sqrt{\langle(1-t)w,(1-t)w\rangle}<tC+(1-t)C=C.\]
+		\item Symmetric about the origin: if $v\in S$, then $\langle-v,-v\rangle=\langle v,v\rangle<C$, so $-v\in C$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Let's see some applications. We begin by generalizing \Cref{prop:primes-of-form-5}.
+\begin{proposition} \label{prop:almost-primes-of-the-form}
+	Fix a positive-define quadratic form $f=[a,b,c]$ of discriminant $d$. Let $n$ be an odd integer coprime to $a$ such that there exists an integer $x_0$ such that $x_0^2\equiv d\pmod n$. Then there are integers $(x,y)$ such that $mn=f(x,y)$ for some positive integer $n\le2\sqrt{-d}/\pi$.
+\end{proposition}
+\begin{proof}
+	We follow the proof of \Cref{prop:primes-of-form-5}.
+	\begin{enumerate}
+		\item We construct the desired lattice. Quickly, we claim that there is $x_1$ such that $ax_1^2+bx_1+c\equiv0\pmod n$. By the quadratic formula, we want
+		\[x_1\equiv\frac{-b\pm\sqrt{b^2-4ac}}{2a}\equiv\frac{-b\pm x_0}{2a}\pmod n,\]
+		which is solvable. Note that these fractions with denominator $2a$ are legal because $\gcd(n,2a)=1$.
+		
+		Using our given $x_1$, we choose $\Lambda\subseteq\RR^2$ as being spanned by $\begin{bsmallmatrix}
+			x_1 \\ 1
+		\end{bsmallmatrix}$ and $\begin{bsmallmatrix}
+			n \\ 0
+		\end{bsmallmatrix}$. Any point on this lattice takes the form $(a_0x_1+b_0n,a_0)$, so we see
+		\[f(a_0x_1+b_0n,a_0)\equiv aa_0^2x_1^2+ba_0^2x+c\equiv0\pmod n.\]
+
+		\item We construct the desired set as
+		\[S\coloneqq\left\{(x,y):f(x,y)<Nn\right\},\]
+		for $N$ to be set later. Note that $S$ is convex and symmetric about the origin by \Cref{cor:inner-prod-circle}. It remains to compute the volume. Expanding out with \Cref{lem:get-pos-def-inner-prod}, we see
+		\[S=\left\{(x,y):\left(\sqrt ax+\frac b{2\sqrt a}y\right)^2+\left(\frac{\sqrt{-d}}{2\sqrt a}y\right)^2<Nn\right\},\]
+		which becomes the circle of radius $\sqrt{Nn}$ upon applying
+		\[\begin{bmatrix}
+			\sqrt a & 0 \\
+			b/(2\sqrt a) & \sqrt{-d}/(2\sqrt a)
+		\end{bmatrix}.\]
+		Thus, the area is $Nn\pi$ upon applying the above linear transformation of determinant $d/2$, so the volume of $S$ is $2Nn\pi/\sqrt{-d}$.
+
+		\item We now apply \Cref{thm:mink}, which requires us to check that $2Nn\pi/\sqrt{-d}>4n$, which is equivalent to $N>2\sqrt{-d}/\pi$, so we set $N\coloneqq2\sqrt{-d}/\pi+\varepsilon$ for small $\varepsilon>0$. Thus, we get a nonzero pair $(x_\varepsilon,y_\varepsilon)\in\Lambda\cap S$, so $f(x_\varepsilon,y_\varepsilon)$ is divisible by $p$ and $0<f(x_\varepsilon,y_\varepsilon)<Nn+\varepsilon$, where the left inequality holds because $f$ is positive-definite (by \Cref{lem:get-pos-def-inner-prod}).
+
+		We now claim that we have some nonzero $(x,y)\in\Lambda\cap S$ with $0<f(x,y)<Nn$, which will complete the proof. Indeed, suppose not. Then sending $\varepsilon\to0^+$ in the previous paragraph produces an infinite sequence $\{(x_\varepsilon,y_\varepsilon)\}_{\varepsilon=1/n,n\in\ZZ^+}$ of points with $f(x_\varepsilon,y_\varepsilon)$ descending to $\varepsilon$. But $\Lambda$ can only have finite intersection with any given $S$, so we have a contradiction.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{example} \label{ex:primes-of-form-7}
+	Consider $f=[1,1,2]$, which has discriminant $-7$, and we see $2>2\sqrt7/\pi$ because $\pi^2>9>7$. Thus, using \Cref{prop:almost-primes-of-the-form} with $n=2$, for any odd prime $p$ such that there exists an integer $x_0$ such that $x_0^2\equiv-7\pmod p$, we get an integer pair $(x,y)$ such that $p=f(x,y)=x^2+xy+2y^2$.
+\end{example}
+\begin{example} \label{ex:primes-of-form-19}
+	Consider $f=[1,1,5]$, which has discriminant $-19$, and we see $3>2\sqrt{19}/\pi$ because $\pi^2>9>19\cdot4/9$. Thus, using \Cref{prop:almost-primes-of-the-form} with $n=3$, for any odd prime $p$ such that there exists an integer $x_0$ such that $x_0^2\equiv-19\pmod p$, we get an integer pair $(x,y)$ such that $p=f(x,y)=x^2+xy+5y^2$.
+\end{example}
+
+\subsection{Lattice Reduction} \label{subsec:lattice-reduction}
+With the geometry of quadratic forms in place, we are able to contextualize the algorithm to make \Cref{thm:mink} constructive in the two-dimensional case for certain $S$. This is best seen by example.
+\begin{example}
+	Let $p=10037$ be prime. Given that $3271^2\equiv-1\pmod{10037}$, we find integers $(x,y)$ such that $x^2+y^2=10037$.
+\end{example}
+\begin{proof}
+	By the proof of \Cref{prop:1-mod-4-primes}, the shortest nonzero vector $\begin{bsmallmatrix}
+		x \\ y
+	\end{bsmallmatrix}$ (with respect to $\norm{(x,y)}^2\coloneqq x^2+y^2$) in the lattice $\Lambda$ spanned by $\begin{bsmallmatrix}
+		3271 \\ 1
+	\end{bsmallmatrix}$ and $\begin{bsmallmatrix}
+		10037 \\ 0
+	\end{bsmallmatrix}$ has magnitude less than $2p$ and will thus have $p=x^2+y^2$. So we want to find short vectors in $\Lambda$. The idea is to imitate the Euclidean algorithm. We do this in steps.
+	\begin{enumerate}
+		\item We replace the longer vector $\begin{bsmallmatrix}
+			10037 \\ 0
+		\end{bsmallmatrix}$ with a shorter vector of the form $\begin{bsmallmatrix}
+			10037 \\ 0
+		\end{bsmallmatrix}-q\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix}$. As long as $q$ is an integer, the new pair of vectors will both in $\Lambda$ and in fact span $\Lambda$. The Gram--Schmidt process would tell us to set $q=\left\langle\begin{bsmallmatrix}
+			10037 \\ 0
+		\end{bsmallmatrix},\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix}\right\rangle/\norm{\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix}}^2=3271/1066\approx3.1$ to project onto the line orthogonal to $\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix}$, but as $q$ must be an integer, we choose the closest integers as $q=3$, yielding
+		\[\begin{bmatrix}
+			10037 \\ 0
+		\end{bmatrix}-3\begin{bmatrix}
+			3271 \\ 1
+		\end{bmatrix}=\begin{bmatrix}
+			224 \\ -3
+		\end{bmatrix}.\]
+
+		\item We replace the longer vector $\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix}$ with a shorter vector of the form $\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix}-q\begin{bsmallmatrix}
+			224 \\ -3
+		\end{bsmallmatrix}$. Any integer $q$ will suffice to continue to span $\Lambda$. Well, Gram--Schmidt suggests $q=\left\langle\begin{bsmallmatrix}
+			3271 \\ 1
+		\end{bsmallmatrix},\begin{bsmallmatrix}
+			224 \\ -3
+		\end{bsmallmatrix}\right\rangle/\norm{\begin{bsmallmatrix}
+			224 \\ -3
+		\end{bsmallmatrix}}^2=73/5=14.6$, so we select the closest integer $q=15$, yielding
+		\[\begin{bmatrix}
+			3271 \\ 1
+		\end{bmatrix}-15\begin{bmatrix}
+			224 \\ -3
+		\end{bmatrix}=\begin{bmatrix}
+			-89 \\ 46
+		\end{bmatrix}.\]
+	\end{enumerate}
+	At this point, the pair $(-89,46)$ has small enough coordinates that it is worth checking $89^2+46^2=10037$, so we are done.
+\end{proof}
+The above example might look needlessly complicated (the divisions involved are somewhat tedious), but it requires fewer total computations than the brute-force search, especially as $p$ grows large. To work this out, try out \Cref{prob:sum-of-squares}.
+
+Let's generalize the process described above. It is worth comparing the result to \Cref{prop:ea}.
+\begin{proposition}[Gaussian reduction] \label{prop:gauss-reduce}
+	Let $\langle\cdot,\cdot\rangle\colon\RR^2\to\RR$ be a positive-definite inner product, and define $\norm\cdot\colon\RR^2\to\RR$ by $\norm v^2\coloneqq\langle v,v\rangle$. Fix a lattice $\Lambda\subseteq\RR$ of rank $2$ spanned by $v_0$ with $v_1$ such that $\norm{v_0}\ge\norm{v_1}$, and define the sequence $v_2,v_3,\ldots$ of vectors and the sequence $q_2,q_3,\ldots$ of integers by
+	\[v_n=q_nv_{n+1}+v_{n+2},\]
+	where $q_n$ is the closest integer to $p_n\coloneqq\langle v_n,v_{n+1}\rangle/\norm{v_{n+1}}^2$, breaking ties by using the integer closer to $0$. Then there is some $N$ such that $q_n=0$ for $n\ge N$, and then a shortest vector in $\{v_N,v_{N+1}\}$ is a nonzero vector in $\Lambda$ minimizing $\norm\cdot$.
+\end{proposition}
+\begin{proof}
+	Quickly, note that, if $\Lambda$ is spanned by the vectors $v$ and $w$, then $\Lambda$ is spanned by the vectors $v$ and $w-cv$ for any integer $c$, so by induction, we see that $\Lambda$ is spanned by the vectors $v_n$ and $v_{n+1}$ for any $n\ge0$. In particular, $v_n\ne0$ for all $n$.
+
+	We now proceed in steps.
+	\begin{enumerate}
+		\item We claim that $\norm{v_{n+2}}\le\norm{v_n}$ for any $n$, with equality only when $q_n=0$. This is a direct computation. We see that
+		\begin{align*}
+			\norm{v_{n+2}}^2 &= \langle v_n-q_nv_{n+1},v_n-q_nv_{n+1}\rangle \\
+			&= \norm{v_n}^2+q_n^2\norm{v_{n+1}}^2-2q_n\langle v_n,v_{n+1}\rangle,
+		\end{align*}
+		so it suffices to show that $q_n^2\norm{v_{n+1}}^2\le2q_n\langle v_n,v_{n+1}\rangle$. If $q_n=0$, there is nothing to say, so we take $\left|p_n\right|>1/2$ in the following discussion.
+		
+		Now, if $\langle v_n,v_{n+1}\rangle>0$, then $q_n>0$, so it is enough to show that
+		\[q_n\stackrel?<2\cdot\frac{\langle v_n,v_{n+1}\rangle}{\norm{v_{n+1}}^2}.\]
+		Well, $q_n$ is a closest integer to $p_n$, and $p_n>1/2$, so $q_n\le p_n+1/2<2p_n$, as desired. The argument in the case $\langle v_n,v_{n+1}\rangle<0$ is essentially identical but merely adjusting signs.
+
+		\item We show that $q_n\ne0$ only finitely often, establishing that there is some $N$ for which $q_n=0$ for $n\ge N$. Indeed, suppose there is an infinite set $S$ in which $q_n\ne0$ for each $n\in S$. Then $\{\norm{v_{n+2}}\}_{n\in S}$ is an infinite strictly decreasing sequence by the previous step, so $\{v_{n+2}\}_{n\in S}$ is an infinite subset of $\Lambda$ which should be bounded, which should contradict \Cref{prop:how-to-lattice}.
+
+		To finish this step, we will show that there is some $R>0$ such that $\left\{v\in\RR^2:\norm v\le\norm{v_0}\right\}$ is contained in $[-R,R]^2$, which will complete the argument by \Cref{prop:how-to-lattice} because $\norm{v_{n+2}}\le\norm{v_0}$ for each $n\in S$. Let $\{e_1,e_2\}$ be an orthonormal basis for $\langle\cdot,\cdot\rangle$ constructed using (say) the Gram--Schmidt process, and let $M$ be the matrix with $e_1$ and $e_2$ as columns. The point is that, letting $\norm\cdot_2$ denote the Euclidean norm, we have
+		\[\norm v=\norm{M^{-1}v}_2.\]
+		It will suffice to find $R$ such that $\norm{M^{-1}v}_2\le\norm{v_0}$ implies $\norm v_2\le R$, or equivalently, $\norm v_2\le\norm{v_0}$ implies $\norm{Mv}_2\le R$. Well, by continuity of $M$, there is some $\delta>0$ such that $\norm v_2\le\delta$ implies $\norm{Mv}_2\le1$, so $\norm v_2\le\norm{v_0}$ implies that $\norm{\frac{\delta}{\norm{v_0}}v}_2\le\delta$ and so
+		\[\norm{Mv}_2=\frac{\norm{v_0}}{\delta}\cdot\norm{M\left(\frac{\delta}{\norm{v_0}}v\right)}_2\le\frac{\norm{v_0}}{\delta},\]
+		so $R\coloneqq\norm{v_0}/\delta$ will do.
+
+		\item We show that a shortest vector $v_M$ in $\{v_N,v_{N+1}\}$ minimizes $\norm\cdot$ among nonzero vectors in $\Lambda$. Namely, $M\in\{N,N+1\}$, and $v_N=v_{N+2}$ ensures $\norm{v_M}\le\norm{v_{M+1}}$ in either case. The point is that $q_{M+1}=0$ forces
+		\[\left|\frac{\langle v_M,v_{M+1}\rangle}{\norm{v_{M+1}}^2}\right|\le\frac12.\]
+		Now, let $v\in\Lambda$ be a nonzero vector so that $v=av_M+bv_{M+1}$ for some integers $a,b\in\ZZ$ not both zero. Then we compute
+		\begin{align*}
+			\norm v^2 &= \langle av_M+bv_{M+1},av_N+bv_{M+1}\rangle \\
+			&= a^2\norm{v_M}^2+2ab\langle v_M,v_{M+1}\rangle+b^2\norm{v_{M+1}}^2 \\
+			&\ge a^2\norm{v_M}^2-ab\norm{v_M}^2+b^2\norm{v_M}^2.
+		\end{align*}
+		Now, $[1,1,1]$ has discriminant $-3$, so it is a positive-definite quadratic form, so $a^2-ab+b^2>0$ by \Cref{lem:get-pos-def-inner-prod}. And because $a,b\in\ZZ$, we actually have $a^2-ab+b^2\ge1$; we conclude $\norm v^2\ge\norm{v_M}^2$, as desired.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+The benefit of working with a general inner product $\langle\cdot,\cdot\rangle$ is that we can now we can use \Cref{prop:gauss-reduce} to reduce the value of our quadratic forms. As an example, we do a computation with \Cref{ex:primes-of-form-7}.
+\begin{example}
+	Let $p=10039$ be prime. Given that $4691^2\equiv-7\pmod p$, we find integers $(x,y)$ such that $x^2+xy+2y^2=10039$.
+\end{example}
+\begin{proof}
+	We track through the proof of \cref{ex:primes-of-form-7}. Setting $x_0\coloneqq4691$, we see that we want to set $x_1\coloneqq\frac{-1+4691}2=2345$. Then the proof tells us that it suffices to find the ``shortest'' nonzero vector in the lattice $\Lambda$ spanned by $\begin{bsmallmatrix}
+		2345 \\ 1
+	\end{bsmallmatrix}$ and $\begin{bsmallmatrix}
+		10039 \\ 0
+	\end{bsmallmatrix}$. Here, shortest is respect to the inner product $\langle\cdot,\cdot\rangle$ given by $[1,1,2]$; explicitly, $\langle(x_1,y_1),(x_2,y_2)\rangle\coloneqq x_1x_2+\frac12(x_1y_2+x_2y_1)+2y_1y_2$. Anyway, we apply \Cref{prop:gauss-reduce}.
+	\begin{enumerate}
+		\item We compute $\left\langle\begin{bsmallmatrix}
+			10039 \\ 0
+		\end{bsmallmatrix},\begin{bsmallmatrix}
+			2345 \\ 1
+		\end{bsmallmatrix}\right\rangle/\norm{\begin{bsmallmatrix}
+			2345 \\ 1
+		\end{bsmallmatrix}}^2=4691/1096\approx4.3$, so we replace $\begin{bsmallmatrix}
+			10039 \\ 0
+		\end{bsmallmatrix}$ by the vector
+		\[\begin{bmatrix}
+			10039 \\ 0
+		\end{bmatrix}-4\begin{bmatrix}
+			2345 \\ 1
+		\end{bmatrix}=\begin{bmatrix}
+			659 \\ -4
+		\end{bmatrix}.\]
+		\item We compute $\left\langle\begin{bsmallmatrix}
+			2345 \\ 1
+		\end{bsmallmatrix},\begin{bsmallmatrix}
+			659 \\ -4
+		\end{bsmallmatrix}\right\rangle/\norm{\begin{bsmallmatrix}
+			659 \\ -4
+		\end{bsmallmatrix}}^2=307/86\approx3.6$, so we replace $\begin{bsmallmatrix}
+			2345 \\ 1
+		\end{bsmallmatrix}$ by the vector
+		\[\begin{bmatrix}
+			2345 \\ 1
+		\end{bmatrix}-4\begin{bmatrix}
+			659 \\ -4
+		\end{bmatrix}=\begin{bmatrix}
+			-291 \\ 17
+		\end{bmatrix}.\]
+		\item We compute $\left\langle\begin{bsmallmatrix}
+			659 \\ -4
+		\end{bsmallmatrix},\begin{bsmallmatrix}
+			-291 \\ 17
+		\end{bsmallmatrix}\right\rangle/\norm{\begin{bsmallmatrix}
+			-291 \\ 17
+		\end{bsmallmatrix}}^2=-37/16\approx-2.3$, so we replace $\begin{bsmallmatrix}
+			659 \\ -4
+		\end{bsmallmatrix}$ by the vector
+		\[\begin{bmatrix}
+			659 \\ -4
+		\end{bmatrix}+2\begin{bmatrix}
+			-291 \\ 17
+		\end{bmatrix}=\begin{bmatrix}
+			77 \\ 30
+		\end{bmatrix}.\]
+	\end{enumerate}
+	From here, one could complete the lattice reduction (replacing $\begin{bsmallmatrix}
+		-291 \\ 17
+	\end{bsmallmatrix}$ by $\begin{bsmallmatrix}
+		-137 \\ 77
+	\end{bsmallmatrix}$ and then checking that we have finished our lattice reduction), but we are also able to see that $77$ and $30$ are reasonably small, so we can check $77^2 + 77\cdot30 + 2\cdot30^2 = 10039$, as desired.
+\end{proof}
+% \begin{proposition}[Gaussian reduction]
+% 	Let $\langle\cdot,\cdot\rangle\colon\RR^2\to\RR$ be a positive-definite inner product, and define $\norm\cdot\colon\RR^2\to\RR$ by $\norm v^2\coloneqq\langle v,v\rangle$. Fix a lattice $\Lambda\subseteq\RR$ spanned by $v_0$ with $v_1$ such that $\norm{v_0}\ge\norm{v_1}$, and consider the following algorithm.
+% 	\begin{itemize}
+% 		\item Compute $p\coloneqq\langle v_0,v_1\rangle/\norm{v_1}^2$ and let $q$ be the closest integer, breaking ties with the integer closest to $0$. If $q=0$, terminate.
+% 		\item Otherwise, replace $v_0$ and $v_1$ with $v_1$ and $v_0-qv_1$, ordered so that $\norm{v_0}\le\norm{v_1}$. Then return to the first step.
+% 	\end{itemize}
+% 	Then the above algorithm terminates, and $v_1$ is a nonzero vector in $\Lambda$ minimizing $\norm\cdot$.
+% \end{proposition}
+% \begin{proof}
+% 	Quickly, note that, if $\Lambda$ is spanned by the vectors $v$ and $w$, then $\Lambda$ is spanned by the vectors $v$ and $w-cv$ for any integer $c$, so by induction, we see that $\Lambda$ is spanned by the vectors $v_0$ and $v_1$ at any iteration of the above algorithm.
+
+% 	We now proceed in steps. For concreteness, suppose we currently have $\{v_0,v_1\}$, and we let $v_0'=v_1$ and $v_1'=v_0-qv_1$ with $p$ and $q$ computed as in the algorithm. We suppose $q\ne0$, for otherwise the algorithm has terminated.
+% 	\begin{enumerate}
+% 		\item We claim that $\norm{v_1'}<\norm{v_0}$ for any $n$. This is a direct computation. We see that
+% 		\begin{align*}
+% 			\norm{v_1'}^2 &= \langle v_0-qv_1,v_0-qv_1\rangle \\
+% 			&= \norm{v_0}^2+q^2\norm{v_1}^2-2q\langle v_0,v_1\rangle,
+% 		\end{align*}
+% 		so it suffices to show that $q^2\norm{v_1}^2\le2q\langle v_0,v_1\rangle$. Because $q\ne0$, we have $\left|p\right|>1/2$ due to the tie-breaking.
+		
+% 		Now, if $\langle v_0,v_1\rangle>0$, then $q>0$, so it is enough to show that
+% 		\[q\stackrel?\le2\cdot\frac{\langle v_0,v_1\rangle}{\norm{v_1}^2}.\]
+% 		Well, $q$ is a closest integer to $p$, and $p\ge1/2$, so $q\le p+1/2\le2p$, as desired. The argument in the case $\langle v_0,v_1\rangle<0$ is essentially identical but merely adjusting signs.
+
+% 		\item We show that
+% 	\end{enumerate}
+% \end{proof}
+
+\subsection{Equivalence of Forms}
+In many cases, \Cref{subsec:lattice-reduction} and the proof of \Cref{prop:almost-primes-of-the-form} tells how to solve an equation of the form $ax^2+bxy+cy^2=n$ provided that there is a solution. It still remains to determine when a solution exists. In order to be able to provide a more robust method than what Minkowski's geometry of numbers provides, we need to study binary quadratic forms on their own terms.
+
+Approximately speaking, we are most interested in the numbers represented by a binary quadratic form $[a,b,c]$, and essentially only this information. We should perhaps give these equations a name.
+\begin{definition}[represents]
+	A binary quadratic form $f$ \textit{represents} an integer $n$ if and only if there are integers $(x,y)\in\ZZ^2$ such that $f(x,y)=n$. If we require in addition that $\gcd(x,y)=1$, then we say that $f$ \textit{properly represents} $n$.
+\end{definition}
+Roughly speaking, we care about properly representing an integer $n$ because they describe what is ``new'' to $f$ representing an integer. Namely, if $\gcd(x,y)>1$, then we could just factor out $d\coloneqq\gcd(x,y)$ to see that $f(x,y)=n$ is really arising from $f(x/d,y/d)=n/d^2$.
+\begin{example}
+	The binary quadratic form $f(x,y)=x^2+y^2$ represents $25$ because $0^2+5^2=25$ but also properly represents $25$ because $3^2+4^2=25$.
+\end{example}
+\begin{example}
+	The binary quadratic form $f(x,y)=x^2+y^2$ represents $49$ because $0^2+7^2=49$, but it does not properly represent $49$. Indeed, if $x^2+y^2=49$ with $\gcd(x,y)=1$, then in particular $7$ cannot divide either $x$ nor $y$, so we see that $x^2+y^2\equiv0\pmod7$ implies
+	\[\left(\frac xy\right)^2\equiv-1\pmod 7,\]
+	which is impossible because then $x/y$ would be an element of order $4$ in the group $(\ZZ/7\ZZ)^\times$, which has order $6$.
+\end{example}
+\begin{example} \label{ex:prime-properly-represents}
+	Suppose that a binary quadratic form $f=[a,b,c]$ represents a prime number $p$. Then $f$ actually properly represents $p$: indeed, if $ax^2+bxy+cy^2=p$, then any common factor $d$ of $x$ and $y$ will have $d^2\mid p$. For example, $d\mid p$, so $d\in\{\pm1,\pm p\}$, but $p^2\nmid p$, so we must have $d\in\{\pm1\}$, meaning that $\gcd(x,y)=1$.
+\end{example}
+In the sequel, we will mostly focus on properly representing integers because representing primes will always be proper by \Cref{ex:prime-properly-represents}.
+
+Akin to not wanting to care about $\gcd(x,y)>1$ in solutions to $f(x,y)=n$ where $f=[a,b,c]$, we will also want to not care about $\gcd(a,b,c)>1$ for the same reason. So here is an adjective to fix that.
+\begin{definition}[primitive]
+	A binary quadratic form $f=[a,b,c]$ is \textit{primitive} if and only if $\gcd(a,b,c)=1$.
+\end{definition}
+\begin{remark} \label{rem:intrinisic-primitive}
+	Note that $f=[a,b,c]$ has $f(1,0)=a$ and $f(1,1)=a+b+c$ and $f(0,1)=c$. Thus, $f$ is primitive if and only if $\gcd(f(1,0),f(1,1),f(0,1))=1$. One can make our definition of primitive even more intrinsic to the function $f$ by not caring about the basis; see \Cref{prob:more-intinsic-primitive}.
+	% To be even more ``intrinsic'' to $f$, we claim that $f$ is primitive if and only if
+	% \[\gcd_{(x,y)\in\ZZ^2}f(x,y)=1.\]
+	% We just showed that $\gcd(f(1,0),f(1,1),f(0,1))=1$ implies primitive, so the forward implication follows. For the reverse implication
+\end{remark}
+% Let's provide some explanation for our fixation.
+% \begin{lemma}
+% 	Fix a binary quadratic form $f=[a,b,c]$ with $a\ne0$ and nonzero discriminant. If $f$ (properly) represents two integers $n$ and $m$, then $f$ (properly) represents $nm$.
+% \end{lemma}
+% \begin{proof}
+% 	Let $f=[a,b,c]$. The point is to factor
+% 	\[f(x,y)=ax^2+bxy+cy^2=y^2\left(a(x/y)^2+b(x/y)+c\right)=ay^2(x/y-\alpha)(x/y-\beta)=a(x-\alpha y)(x-\beta y),\]
+% 	where $\alpha$ and $\beta$ are the two roots of the equation $ax^2+bx+c=0$; note that the roots are distinct because $\disc f=b^2-4ac$ is nonzero.
+% \end{proof}
+Anyway, because we are only interested in determining if a binary quadratic form represents some integer, we may as well allow ourselves some freedom in swapping our binary quadratic forms.
+\begin{definition}[equivalent]
+	Two binary quadratic forms $f=[a,b,c]$ and $g=[a',b',c']$ are \textit{equivalent}, written $f\sim g$, if and only if there is $M\in\op{SL}_2(\ZZ)$ such that
+	\[M_f=M^\intercal M_gM.\]
+\end{definition}
+\begin{remark}
+	An immediate benefit to our matrix view of binary quadratic forms is that we can quickly see that $f\sim g$ implies that $\disc f=\disc g$: with $M\in\op{SL}_2(\ZZ)$ such that $M_f=M^\intercal M_gM$, we see
+	\[\disc f=-4\det M_f=-4(\det M^\intercal\cdot\det M_g\cdot\det M)=-4\det M_g=\disc g.\]
+\end{remark}
+\begin{remark} \label{rem:equiv-primitives}
+	It is a little more tedious to check that any form equivalent to a primitive one remains primitive, but it is true. Suppose that $f=[a,b,c]$ is equivalent to $g=[a',b',c']$, and we show that $\gcd(a,b,c)$ divides $\gcd(a',b',c')$; this is enough because equivalence is symmetric (see \Cref{lem:equiv-is-equiv-relation}). Well, we are promised $M\coloneqq\begin{bsmallmatrix}
+		p & q \\ r & s
+	\end{bsmallmatrix}$ so that $M_f=M^\intercal M_gM$. Thus, for any $x,y\in\ZZ$, we see that
+	\[f(x,y)=\begin{bmatrix}
+		x & y
+	\end{bmatrix}M^\intercal M_gM\begin{bmatrix}
+		x \\ y
+	\end{bmatrix}=g(px+qy,rx+sy)\]
+	is divisible by $\gcd(a',b',c')$. Thus, $\gcd(a,b,c)=\gcd(f(1,0),f(1,1),f(0,1))$ (see \Cref{rem:intrinisic-primitive}) is divisible by $\gcd(a',b',c')$.
+\end{remark}
+We should probably check that this is an equivalence relation.
+\begin{lemma} \label{lem:equiv-is-equiv-relation}
+	Equivalence is an equivalence relation on the set of binary quadratic forms.
+\end{lemma}
+\begin{proof}
+	Here are our checks. Fix binary quadratic forms $f,g,h$.
+	\begin{itemize}
+		\item Reflexive: note that $M_f=I_2^\intercal M_fI_2$, so $f\sim f$ follows.
+		\item Symmetric: if $f\sim g$, then we have $M\in\op{SL}_2(\ZZ)$ such that $M_f=M^\intercal M_gM$, so $M_g=\left(M^{-1}\right)^\intercal M_fM^{-1}$, so $g\sim f$.
+		\item Transitive: if $f\sim g$ and $g\sim h$, then we get $M,N\in\op{SL}_2(\ZZ)$ such that $M_f=M^\intercal M_gM$ and $M_g=N^\intercal M_hN$, so
+		\[M_f=M^\intercal M_gM=M^\intercal N^\intercal M_hNM=(NM)^\intercal M_h(NM),\]
+		so $f\sim h$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Let's check that equivalence does what we want it to do.
+\begin{lemma} \label{lem:equiv-has-same-outputs}
+	Fix two binary quadratic forms $f$ and $g$ such that there is $M\in\ZZ^{2\times2}$ with $\left|\det M\right|=1$ with
+	\[M_f=M^\intercal M_gM.\]
+	Then, for any integer $n$, the $f$ (properly) represents $n$ if and only if $g$ (properly) represents $n$.
+\end{lemma}
+\begin{proof}
+	The hypothesis on $M$ tells us that $M$ is invertible and $M^{-1}\in\ZZ^{2\times2}$. Now, in one direction, if $f$ represents $n$ if and only if there is a vector $v\coloneqq\begin{bsmallmatrix}
+		x \\ y
+	\end{bsmallmatrix}\in\ZZ^2$ such that $v^\intercal M_fv=n$, which implies
+	\[v^\intercal M_fv=v^\intercal M^\intercal M_gMv=(Mv)^\intercal M_g(Mv),\]
+	so $Mv$ witnesses $g$ representing $n$. Furthermore, if $f$ properly represents $n$, then we may assume $\gcd(x,y)=1$, then we would like to show that $Mv$ also has coprime coordinates. Well, set $M\coloneqq\begin{bsmallmatrix}
+		p & q \\ r & s
+	\end{bsmallmatrix}$ with $pq-rs=\det M=\pm1$ so that
+	\[Mv=\begin{bmatrix}
+		px+qy \\
+		rx+sy
+	\end{bmatrix}\]
+	where $ps-qr=\pm1$. But then $\gcd(px+qy,rx+sy)$ divides $\gcd(prx+qry,prx+psy)=\gcd(prx+qry,psy-qry)=\gcd(prx+qry,y)$ and so divides $y$; furthermore, $\gcd(px+qy,rx+sy)$ will divide $\gcd(pdx+qsy,qrx+qsy)=\gcd(psx-qrx,qrx+qsy)=\gcd(x,qrx+qsy)$ and so divides $x$ also. So $\gcd(px+qy,rx+sy)=1$.
+	
+	Finishing up, we note that the reverse direction is similar, merely replacing $M$ with $M^{-1}\in\ZZ^{2\times2}$ because $M_g=\left(M^{-1}\right)^\intercal M_fM^{-1}$.
+\end{proof}
+\begin{remark}
+	\Cref{lem:equiv-has-same-outputs} suspiciously allows for $M$ of determinant $-1$ when checking for our binary quadratic forms to (properly) represent the same integers. As such, one might reasonably want to adjust our definition of equivalence to allow for $M$ with $\det M=-1$. It turns out that this makes the theory a bit harder to handle for reasons not immediately apparent.
+\end{remark}
+Let's reap some quick benefit from our only caring about binary quadratic forms up to equivalence.
+\begin{proposition} \label{prop:proper-rep-by-equiv}
+	Fix a binary quadratic form $f$. Then $f$ properly represents an integer $n\in\ZZ$ if and only if $f\sim[n,b',c']$ for some integers $b',c'\in\ZZ$.
+\end{proposition}
+\begin{proof}
+	If $f\sim[n,b',c']$, then we are done by \Cref{lem:equiv-has-same-outputs}: $[n,b',c']$ properly represents $n$ because $n\cdot1^2+b'\cdot1\cdot0+c'\cdot0^2=n$.
+
+	In the reverse direction, suppose that $f=[a,b,c]$ is equivalent to $[n,b',c']$. Then there is a matrix $M\coloneqq\begin{bsmallmatrix}
+		p & q \\ r & s
+	\end{bsmallmatrix}$ such that
+	\[\begin{bmatrix}
+		p & r \\
+		q & s
+	\end{bmatrix}\begin{bmatrix}
+		a & b/2 \\
+		b/2 & c
+	\end{bmatrix}\begin{bmatrix}
+		p & q \\
+		r & s
+	\end{bmatrix}=\begin{bmatrix}
+		n & b'/2 \\
+		b'/2 & c
+	\end{bmatrix}.\]
+	Computing just the top-left corner of the left-hand side reveals that $f(p,r)=n$, and further $\gcd(p,r)=1$ because $pq-rs=1$.
+\end{proof}
+\begin{remark}
+	Note that \Cref{prop:proper-rep-by-equiv} is non-constructive: even if we are told $b'$ and $c'$ so that $f\sim[n,b',c']$, it is not obvious how to go back and construct the matrix $M$ witnessing this equivalence. Nonetheless, we ought to be able to go and back solve $f(x,y)=n$ using the methods of \cref{subsec:compute-primes-of-form}.
+\end{remark}
+\begin{corollary} \label{cor:some-form-by-qr}
+	Let $D$ be an integer which is either $0$ or $1\pmod4$. Then an odd integer $n$ is properly represented by a primitive binary quadratic form $f$ of discriminant $D$ if and only if there is an integer $b$ such that $b^2\equiv D\pmod n$.
+\end{corollary}
+\begin{proof}
+	If $n$ is properly represented by a primitive binary quadratic form $f$ of discriminant $D$, then \Cref{prop:proper-rep-by-equiv} combined with \Cref{lem:equiv-has-same-outputs} allows us to assume that $f=[n,b,c]$ for some integers $b,c\in\ZZ$. But then $D=b^2-4nc$, so $b^2\equiv D\pmod n$.
+
+	Conversely, suppose that $b^2\equiv D\pmod n$ for some integer $b$; by replacing $b$ with $n-b$ as needed, we may assume that $b$ and $n$ have the same parity because $n$ is odd. Then we may write $D=b^2-nc_0$ for some integer $c_0$, but taking$\pmod4$ reveals that $D\equiv b^2\pmod4$, so in fact $4\mid c_0$, so $D=b^2-4nc$ for some integer $c$. But then $[n,b,c]$ is a binary quadratic form of discriminant $D$ which of course properly represents $n$ (by, say, \Cref{prop:proper-rep-by-equiv}). Note that $[n,b,c]$ is primitive because $\gcd(n,b,c)$ divides $\gcd\left(n,b^2-4nc\right)$ but $\gcd(n,D)=1$.
+\end{proof}
+\begin{example}
+	Let $p$ be an odd prime, and let $D$ be an integer which is either $0$ or $1\pmod4$. By \Cref{ex:prime-properly-represents}, $p$ is properly represented by a binary quadratic form of discriminant $D$ if and only if $p$ is merely represented by a binary quadratic form of discriminant $D$, which by \Cref{cor:some-form-by-qr} is equivalent to having some $b\in\ZZ$ with $b^2\equiv D\pmod p$.
+\end{example}
+\Cref{cor:some-form-by-qr} now motivates us to show that there are relatively few binary quadratic forms of given discriminant, up to equivalence. In fact, we will shortly show that there are finitely many, but it is possible to have more than one. To see this, we want to be able to put binary quadratic forms into a reasonably canonical ``reduced'' form.
 
 \subsection{Reduced Forms}
+As promised at the end of the previous subsection, we take the following notion of reduced.
+\begin{definition}[reduced]
+	A binary quadratic form $f=[a,b,c]$ with negative discriminant is \textit{semi-reduced} if and only if $\left|b\right|\le a\le c$. If in addition we have $b\ge0$ if $\left|b\right|=a$ or $a=c$, then we say that $f$ is \textit{reduced}.
+\end{definition}
+\begin{example}
+	The binary quadratic form $[1,0,n]$, or $x^2+ny^2$, is reduced for any positive integer $n$. Similarly, for any positive integer $n\equiv3\pmod4$, the binary quadratic form
+	\[x^2+xy+\frac{n+1}4y^2\]
+	is reduced.
+\end{example}
+Here is the relevant theorem.
+\begin{theorem} \label{thm:reduce-form}
+	Every binary quadratic form of negative discriminant is equivalent to a unique reduced form.
+\end{theorem}
+\begin{proof}
+	This proof has two parts: we show that any binary quadratic form $f=[a,b,c]$ with $\disc f<0$ is equivalent to some reduced form, and then we show that no two distinct reduced forms are equivalent. For the first part, we note that we have the two moves
+	\begin{align}
+		\begin{bmatrix}
+			0 & -1 \\
+			1 & 0
+		\end{bmatrix}\begin{bmatrix}
+			a & b/2 \\
+			b/2 & c
+		\end{bmatrix}\begin{bmatrix}
+			0 & 1 \\
+			-1 & 0
+		\end{bmatrix}&=\begin{bmatrix}
+			c & -b/2 \\
+			-b/2 & a
+		\end{bmatrix} \label{eq:s-move-bin-form} \\
+		\begin{bmatrix}
+			1 & 0 \\
+			m & 1
+		\end{bmatrix}\begin{bmatrix}
+			a & b/2 \\
+			b/2 & c
+		\end{bmatrix}\begin{bmatrix}
+			1 & m \\
+			0 & 1
+		\end{bmatrix}&=\begin{bmatrix}
+			a & ma+b/2 \\
+			ma+b/2 & c(a,b,c,m)
+		\end{bmatrix}, \label{eq:t-move-bin-form}
+	\end{align}
+	where $c(a,b,c,m)=m(ma+b)+c$ is some integer. These moves will allow us to transform $f$ into a reduced form.
+	
+	Quickly, we note that we may adjust by $\begin{bsmallmatrix}
+		-1 & 0 \\ 0 & -1
+	\end{bsmallmatrix}$ to enforce $a\ge0$, but because $b^2-4ac<0$, we now need to have $c\ge0$ as well. Now, we may apply \eqref{eq:s-move-bin-form} to update $f=[a,b,c]$ to have $a\le c$. After, we may apply \eqref{eq:t-move-bin-form} to update $f=[a,b,c]$ via the Euclidean algorithm to enforce $-a/2\le b/2\le a/2$, or $\left|b\right|\le a$. It is possible that applying \eqref{eq:s-move-bin-form} will make it so that $a>c$ (because $c$ changed), but then we can apply \eqref{eq:s-move-bin-form} again to get back to $a\le c$. Of course, we might now no longer have $\left|b\right|\le a$, but then we reapply \eqref{eq:t-move-bin-form}, and repeat the process. Note that this will terminate eventually because the value of $a\ge0$ is strictly decreasing on each application of \eqref{eq:s-move-bin-form}.
+	
+	In total, we have gotten $f$ to be equivalent to a semi-reduced form. To get $f$ to be reduced, we have to deal with the sign of $b$.
+	\begin{itemize}
+		\item If $a=c$, then \eqref{eq:s-move-bin-form} does not adjust $a$ or $c$, but it will replace $b$ with $-b$, allowing us to assume that $b\ge0$.
+		\item If $b=-a$, then \eqref{eq:t-move-bin-form} with $m=1$ does not adjust $a$ or $c$ at all, but it will replace $b=-a$ with $b=a$.
+	\end{itemize}
+	The above points have transformed $f$ into a reduced form, completing the first part of the argument.
 
-\subsection{Many Examples} \label{subsec:compute-primes-of-form}
-% cox cor 2.27 and discussion following it
-% use lattice reduction to actually find (x,y); this "has" to work when it does
+	For the second part of the argument, suppose that $f=[a,b,c]$ and $f'=[a',b',c']$ are equivalent primitive binary quadratic forms of the same discriminant. Our goal is to show $a=a'$ and $b=b'$ and $c=c'$; without loss of generality, take $a\ge a'$. Now, we are given integers $p,q,r,s\in\ZZ$ such that
+	\[\begin{bmatrix}
+		p & r \\
+		q & s
+	\end{bmatrix}\begin{bmatrix}
+		a & b/2 \\
+		b/2 & c
+	\end{bmatrix}\begin{bmatrix}
+		p & q \\
+		r & s
+	\end{bmatrix}=\begin{bmatrix}
+		a' & b'/2 \\
+		b'/2 & d'
+	\end{bmatrix}.\]
+	For example, $a'=ap^2+bpr+cr^2$. Now, the main point is the bound
+	\begin{equation}
+		a\ge a'=ap^2+bpr+cr^2\ge ap^2-a\left|pr\right|+ar^2\ge a\left|pr\right|, \label{eq:main-reduced-form-bound}
+	\end{equation}
+	where the rightmost inequality holds because it is equivalent to $a\left(\left|p\right|-\left|r\right|\right)^2\ge0$. Thus, $\left|pr\right|\le1$, so $p,r\in\{-1,0,1\}$. We have the following cases.
+	\begin{itemize}
+		\item Note $(p,r)=(0,0)$ would imply that $\disc f'=0$, which is false.
+		\item Suppose $(p,r)=(\pm1,0)$. Adjusting the sign of $(p,q,r,s)$, we may assume that $(p,r)=(1,0)$. Then to be in $\op{SL}_2(\ZZ)$, we must have $s=1$ also, so by replacing $r$ with $m$, we are merely looking at \eqref{eq:t-move-bin-form}.
+		
+		As such, $a'=a$, and we claim that $b=b'$, which will be enough because $\disc f=\disc f'$. Well, $b'=b+2ma$, so $\left|b'\right|\le 2a$ forces $b'$ except if $b\in\{\pm a\}$. But then $\left|b\right|=\left|b'\right|=a$, so being reduced forces $b=b'=a$.
 
-\subsection{Ideal Classes}
+		\item Suppose $(p,r)=(0,\pm1)$. Again, we may adjust signs so that $(p,r)=(0,1)$; this then forces $q=-1$. Setting $s\coloneqq m$, we are now looking at
+		\[\begin{bmatrix}
+			a' & b'/2 \\
+			b'/2 & c'
+		\end{bmatrix}=\begin{bmatrix}
+			0 & 1 \\
+			-1 & m
+		\end{bmatrix}\begin{bmatrix}
+			a & b/2 \\
+			b/2 & c
+		\end{bmatrix}\begin{bmatrix}
+			0 & -1 \\
+			1 & m
+		\end{bmatrix}=\begin{bmatrix}
+			c & mc-b/2 \\
+			mc-b/2 & a-mb+m^2c
+		\end{bmatrix}.\]
+		Now, the right-hand side needs to be a reduced form, so $\left|b-2mc\right|\le c$, which forces $m\in\{-1,0,1\}$ because $\left|b\right|\le c$ already. If $m=0$, then we are looking at $[a,b,c]\sim[c,-b,a]$, but then $a\le c\le a$ for both of these forms to be semi-reduced, meaning $a=c$, so $b,-b\ge0$ for both of these forms to be reduced, meaning $b=0$, so $[a,b,c]=[a,0,a]=[c,-b,a]$.
+
+		Otherwise, $m=\pm1$. Note $c\ge\left|b\pm2c\right|\ge2c-\left|b\right|$, so $\left|b\right|\ge c\ge a\ge\left|b\right|$, so in fact $a=b=c$. But $a=c$ requires $b\ge0$ in $[a,b,c]$ to be reduced, and similarly requires $-b\ge0$ in $[c,-b,a]$ to be reduced, so again we conclude $[a,b,c]=[a,0,a]=[c,-b,a]$.
+
+		\item Suppose $\left|p\right|=\left|q\right|=1$. Then \eqref{eq:main-reduced-form-bound} actually forces $a=a'$, but $a'=ap^2+bpr+cr^2=a\pm b+c$ then requires $b=\pm c$, so $c=\left|b\right|\le a\le c$ again. So equalities follow everywhere, but then $b\ge0$ to be reduced, so $[a,b,c]=[a,a,a]$.
+
+		Now, we may adjust signs so that $p=1$. Take $r=1$ for the moment. We then set $q\coloneqq m$ so that $s\coloneqq m+1$, from which we compute
+		\[\begin{bmatrix}
+			a' & b'/2 \\
+			b'/2 & c'
+		\end{bmatrix}=\begin{bmatrix}
+			1 & 1 \\
+			m & m+1
+		\end{bmatrix}\begin{bmatrix}
+			a & b/2 \\
+			b/2 & c
+		\end{bmatrix}\begin{bmatrix}
+			1 & m \\
+			1 & m+1
+		\end{bmatrix}=\begin{bmatrix}
+			3a & 3ma+3a/2 \\
+			3ma+a/2 & \left(3m^2+3m+1\right)a
+		\end{bmatrix}.\]
+		Now, to be reduced, we need $\left|6ma+3a\right|\le3a$, which requires $m\in\{0,-1\}$, but in either case we fail to have $3a\le\left(3m^2+3m+1\right)a$. On the other hand, if $r=-1$, we set $q\coloneqq-m$ so that $s\coloneqq m+1$, from which we compute
+		\[\begin{bmatrix}
+			a' & b'/2 \\
+			b'/2 & c'
+		\end{bmatrix}=\begin{bmatrix}
+			1 & 1 \\
+			m & m+1
+		\end{bmatrix}\begin{bmatrix}
+			a & b/2 \\
+			b/2 & c
+		\end{bmatrix}\begin{bmatrix}
+			1 & m \\
+			1 & m+1
+		\end{bmatrix}=\begin{bmatrix}
+			a & -ma-a/2 \\
+			-ma-a/2 & \left(m^2+m+1\right)a
+		\end{bmatrix}.\]
+		Once again, we need $\left|-2ma-a\right|\le a$, which requires $m\in\{0,1\}$, but both cases then give $c'=\left(m^2+m+1\right)=a=a'$, so we are forced to have $b'=-2ma-a\ge0$ to be reduced, meaning $b'=a$. So $[a,b,c]=[a,a,a]=[a',b',c']$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Observe that the proof of \Cref{thm:reduce-form} is constructive: one can actually take a binary quadratic form $[a,b,c]$ and reduce it.
+\begin{example}
+	We find a reduced binary quadratic form equivalent to $[4,5,2]$.
+\end{example}
+\begin{solution}
+	We use the moves \eqref{eq:s-move-bin-form} and \eqref{eq:t-move-bin-form} in succession, as described in the proof of \Cref{thm:reduce-form}. For brevity, let $[a,b,c]=[4,5,2]$.
+	\begin{enumerate}
+		\item Currently, $c<a$, so we use \eqref{eq:s-move-bin-form} and compute
+		\[\begin{bmatrix}
+			0 & -1 \\
+			1 & 0
+		\end{bmatrix}\begin{bmatrix}
+			4 & 5/2 \\
+			5/2 & 2
+		\end{bmatrix}\begin{bmatrix}
+			0 & 1 \\
+			-1 & 0
+		\end{bmatrix}=\begin{bmatrix}
+			2 & -5/2 \\
+			-5/2 & 4
+		\end{bmatrix}.\]
+		\item Currently, $\left|b\right|>a$, so we use \eqref{eq:s-move-bin-form} with $m=1$ and compute
+		\[\begin{bmatrix}
+			1 & 0 \\
+			1 & 1
+		\end{bmatrix}\begin{bmatrix}
+			2 & -5/2 \\
+			-5/2 & 4
+		\end{bmatrix}\begin{bmatrix}
+			1 & 3 \\
+			0 & 1
+		\end{bmatrix}=\begin{bmatrix}
+			2 & -1/2 \\
+			-1/2 & 1
+		\end{bmatrix}.\]
+		\item Currently, $c<a$, so we use \eqref{eq:s-move-bin-form} and compute
+		\[\begin{bmatrix}
+			0 & -1 \\
+			1 & 0
+		\end{bmatrix}\begin{bmatrix}
+			2 & -1/2 \\
+			-1/2 & 1
+		\end{bmatrix}\begin{bmatrix}
+			0 & 1 \\
+			-1 & 0
+		\end{bmatrix}=\begin{bmatrix}
+			1 & 1/2 \\
+			1/2 & 2
+		\end{bmatrix}.\]
+	\end{enumerate}
+	Our last step gives us the form $[1,1,2]$, which is indeed reduced.
+\end{solution}
+
+\subsection{Some Examples} \label{subsec:compute-primes-of-form}
+Let's use \Cref{thm:reduce-form} for fun and profit. For example, we can quickly reprove \Cref{ex:primes-of-form-7}.
+\begin{lemma} \label{lem:of-the-form-reduced}
+	Let $D$ be a negative integer which is either $0$ or $1\pmod4$. Then an odd integer $n$ is properly represented by a reduced primitive binary quadratic form of discriminant $D$ if and only if there is an integer $b$ such that $b^2\equiv D\pmod n$.
+\end{lemma}
+\begin{proof}
+	\Cref{cor:some-form-by-qr} implies that the conclusion is equivalent to being properly represented by some primitive binary quadratic form, and \Cref{prop:proper-rep-by-equiv} allows us to replace any given primitive binary quad\-ratic form by any equivalent one (which remains primitive by \Cref{rem:equiv-primitives}), from which \Cref{thm:reduce-form} allows us to assume that the form is reduced.
+\end{proof}
+Thus, we are interested in computing reduced forms of a given discriminant. The following lemma will be helpful.
+\begin{lemma} \label{lem:bounds-on-reduced-form}
+	Let $D$ be a negative integer which is either $0$ or $1\pmod4$. If $[a,b,c]$ is a reduced form of discriminant $D$, then $a\le\sqrt{-D/3}$, and $b\equiv D\pmod2$.
+\end{lemma}
+\begin{proof}
+	For the bound on $a$, we note
+	\[-D=-b^2+4ac\ge-a^2+4a^2=3a^2,\]
+	so the inequality follows upon taking square roots. For the condition on $b$, note $D=b^2-4ac$ reduces$\pmod2$ to $D\equiv b\pmod2$.
+\end{proof}
+\begin{remark}
+	\Cref{lem:bounds-on-reduced-form} has the amazing consequence of telling us that the number of equivalence classes of binary quadratic forms of any given negative discriminant $D$ (which is $0$ or $1\pmod4$) will be finite. Indeed, \Cref{thm:reduce-form} tells us to count reduced forms, so we are solving
+	\[-D=4ac-b^2.\]
+	Now, \Cref{lem:bounds-on-reduced-form} upper-bounds $a\le\sqrt{-D/3}$, but then $\left|b\right|\le a\le\sqrt{-D/3}$ has only finitely many options too, and once $a$ and $b$ are given $c=(b^2-D)/(4a)$ is forced.
+\end{remark}
+And here is another proof of \Cref{ex:primes-of-form-7}, entirely avoiding \Cref{thm:mink}.
+\begin{example}
+	The form $[1,1,2]$ is the only reduced binary quadratic form of discriminant $-7$. Thus, for an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+xy+2y^2$ if and only if there is an integer $b$ such that $b^2\equiv-7\pmod p$.
+\end{example}
+\begin{proof}
+	The second sentence follows from the first sentence via \Cref{lem:of-the-form-reduced}. So it remains to classify reduced binary quadratic forms $[a,b,c]$ of discriminant $-7$, for which we use \Cref{lem:bounds-on-reduced-form} by doing casework on $a$: we want
+	\[a\le\sqrt{7/3}<2,\]
+	where the second inequality is because $7<12=(2\sqrt3)^2$. Note $a=0$ is impossible because we are looking for forms of negative discriminant, so we really only have $a=1$ now. Then $\left|b\right|\le a=1$ to be reduced, and \Cref{lem:of-the-form-reduced} requires $b\equiv-7\pmod2$, so we have $b\in\{\pm1\}$, but then $\left|b\right|=a$, so we must have $b\ge0$, meaning $b=1$. But we can now check that $(a,b)=1$ enforces $c=\left(-7-1^2\right)/4=2$, so we are left with the reduced form $[1,1,2]$.
+\end{proof}
+\begin{exercise}
+	Use the above method to give a new proof of \Cref{prop:1-mod-4-primes}.
+\end{exercise}
+\begin{exercise} \label{exe:primes-of-form-2}
+	Use the above method to show that, for an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+2y^2$ if and only if there is an integer $b$ such that $b^2\equiv-2\pmod p$.
+\end{exercise}
+For our troubles, we even get to improve \Cref{ex:primes-of-form-19}.
+\begin{example}
+	The form $[1,1,5]$ is the only reduced binary quadratic form of discriminant $-19$. Thus, for an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+xy+5y^2$ if and only if there is an integer $b$ such that $b^2\equiv-19\pmod p$.
+\end{example}
+\begin{proof}[Solution]
+	Again, the second sentence follows from the first via \Cref{lem:of-the-form-reduced}. It remains to classify binary quadratic forms $[a,b,c]$ of discriminant $-19$, for which we use \Cref{lem:bounds-on-reduced-form} by doing casework on $a$; we want
+	\[a\le\sqrt{19/3}<3,\]
+	where the second inequality is because $19<27$. Note $a=0$ is impossible because we are looking forms of negative discriminant, so we have two cases to deal with. Note $b\equiv D\equiv1\pmod2$ in all cases.
+	\begin{enumerate}
+		\item If $a=1$, then $\left|b\right|\le1$, but $b$ is odd, so $\left|b\right|=1=a$, but to be reduced we then require $b\ge0$, so $b=1$. We can now check that $(a,b)=(1,1)$ yields $c=\left(b^2-D\right)/(4a)=(19+1)/4=5$, so we have $[1,1,5]$ in this case.
+		\item If $a=2$, then $\left|b\right|\le2$, but $b$ is odd, so $b\in\{\pm1\}$. In either case, $b^2=1$, so we must have $c=\left(b^2-D\right)/(4a)=(19+1)/(4\cdot2)$, which is not an integer, so we get no reduced forms in this case.
+	\end{enumerate}
+	Totaling our work, we see that $[1,1,5]$ is our only reduced form.
+\end{proof}
+However, we are still unable to resolve \Cref{prop:primes-of-form-5} completely.
+\begin{example} \label{ex:almost-full-primes-of-form-5}
+	There are two binary quadratic forms $[1,0,5]$ and $[2,2,3]$ of discriminant $-20$. Thus, for an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+5y^2$ or $p=2x^2+2xy+3y^2$ if and only if there is an integer $b$ such that $b^2\equiv-20\pmod p$.
+\end{example}
+\begin{proof}[Solution]
+	As usual, the second sentence follows from the first via \Cref{lem:of-the-form-reduced}, so we classify binary quad\-ratic forms of discriminant $-20$ using \Cref{lem:bounds-on-reduced-form}. Our bound is
+	\[a\le\sqrt{20/3}<3,\]
+	where the second inequality is because $20<27$. This time we want $b\equiv D\equiv0\pmod2$ in all cases. As usual, we remove $a=0$ because we want our discriminant to be negative.
+	\begin{enumerate}
+		\item If $a=1$, then $\left|b\right|\le1$, but $b$ is even, so $b=0$. Then $c=\left(b^2-D\right)/(4a)=20/4=5$, so we have the reduced form $[1,0,5]$ in this case.
+		\item If $a=2$, then $\left|b\right|\le2$, but $b$ is even, so $b\in\{-2,0,2\}$. If $b=0$, then $c=\left(b^2-D\right)/(4a)=20/8$ is not an integer, so we have no reduced form. Otherwise, $\left|b\right|=2=a$, so $b\ge0$ to be reduced, so we have $b=2$. This gives $c=\left(b^2-D\right)/(4a)=24/8=3$, so we have the reduced form $[2,2,3]$ in this case.
+	\end{enumerate}
+	Totaling our work, we see that $[1,0,5]$ and $[2,2,3]$ are the only reduced forms in this case.
+\end{proof}
+
+\subsection{Quadratic Residues}
+Thus far we have been dealing with conditions like ``for a prime $p$, there exists an integer $b$ such that $b^2\equiv-5\pmod p$,'' but in practice, this appears to be a somewhat difficult condition to check, especially if $p$ is large. For example, to check that it's false, it appears one would have to at least check all $b\in\{0,1,\ldots,(p-1)/2\}$ to make sure nothing squares to $-5\pmod p$. The goal of this subsection is to make it easier to check this result.
+
+To begin, we will want to give language to equations of the type $b^2\equiv-5\pmod p$.
+\begin{definition}[quadratic residue]
+	Fix an odd prime $p$. Then an element $a\in(\ZZ/p\ZZ)^\times$ is a \textit{quadratic residue} if and only if there exists $b\in(\ZZ/p\ZZ)^\times$ such that $a=b^2$; otherwise, we say that $a$ is a \textit{nonquadratic residue}. By convention, $0$ is neither a quadratic residue nor a nonquadratic residue.
+\end{definition}
+\begin{example} \label{eq:qrs-of-7}
+	Fix $p=7$. Computing $(\pm1)^2\equiv1$ and $(\pm2)^2\equiv4$ and $(\pm3)^2\equiv2\pmod2$, we see that the quadratic residues$\pmod7$ are $\{1,2,4\}$, and the nonquadratic residues are $\{3,5,6\}$.
+\end{example}
+It appears that we are partitioning $(\ZZ/p\ZZ)^\times$ into two pieces: squares and non-squares. Let's check that these classes are in fact the same size.
+\begin{lemma} \label{lem:half-qrs}
+	Fix an odd prime $p$. Then there are exactly $(p-1)/2$ quadratic residues and $(p-1)/2$ nonquadratic residues. In fact, if $a\in(\ZZ/p\ZZ)^\times$, then
+	\[a^{(p-1)/2}\equiv\begin{cases}
+		+1 & \text{if }a\text{ is a quadratic residue}, \\
+		-1 & \text{if }a\text{ is a nonquadratic residue}.
+	\end{cases}\]
+\end{lemma}
+\begin{proof}
+	The map $(\ZZ/p\ZZ)^\times\to(\ZZ/p\ZZ)^\times$ by $b\mapsto b^2$ is a surjection onto the set $Q$ of quadratic residues. And for each $b^2\in Q$, we note that the pre-image of $b^2$ consists of the $c\in(\ZZ/p\ZZ)^\times$ such that $c^2-b^2\equiv0\pmod p$, which is equivalent to $(c+b)(c-b)\equiv0\pmod p$ or $c\equiv\pm b\pmod p$. Thus, the pre-image of each $b^2\in Q$ has exactly two elements. Thus, $2\cdot\#Q=p-1$, so $\#Q=(p-1)/2$, so there are $(p-1)/2$ quadratic residues, leaving $(p-1)/2$ nonquadratic residues.
+\end{proof}
+It will be useful to have an indicator of quadratic residues. For various reasons, the following indicator is best.
+\begin{definition}[Legendre symbol]
+	Fix a prime $p$. For $a\in\ZZ/p\ZZ$, we define the \textit{Legendre symbol}
+	\[\left(\frac ap\right)\coloneqq\begin{cases}
+		+1 & \text{if }a\text{ is a quadratic residue}, \\
+		0 & \text{if }a=0, \\
+		-1 & \text{if }a\text{ is a nonquadratic residue}.
+	\end{cases}\]
+\end{definition}
+Approximately speaking, the following is why the Legendre symbol is a good indicator.
+\begin{proposition}[Euler's criterion] \label{prop:euler-criterion}
+	Fix an odd prime $p$. For $a\in\ZZ/p\ZZ$, we have
+	\[\left(\frac ap\right)\equiv a^{(p-1)/2}\pmod p.\]
+\end{proposition}
+\begin{proof}
+	If $a=0$, there is nothing to say, so we take $a\in(\ZZ/p\ZZ)^\times$ in the argument which follows. Now, the main point is that
+	\[0=a^{p-1}-1=\left(a^{(p-1)/2}-1\right)\left(a^{(p-1)/2}+1\right),\]
+	so at least $a^{(p-1)/2}\equiv\pm1\pmod p$. For example, if $a$ is a quadratic residue so that $a\equiv b^2$, then $a^{(p-1)/2}\equiv b^{p-1}\equiv1$, so it remains to show that $a^{(p-1)/2}\equiv-1\pmod p$ if $a$ is a nonquadratic residue.
+
+	In fact, we will show the contrapositive: suppose $a^{(p-1)/2}\equiv1\pmod p$, and we show that $a$ is a quadratic residue. Considering the unique prime factorization of $x^{(p-1)/2}-1$ in $\FF_p[x]$, we see that this polynomial has at most $(p-1)/2$ linear factors in its prime factorization, and only linear factors are able to produce roots, so $x^{(p-1)/2}-1$ has at most $(p-1)/2$ roots. But in light of \Cref{lem:half-qrs}, we have already given $(p-1)/2$ roots, so it follows that $a^{(p-1)/2}\equiv1$ if and only if $a$ is a quadratic residue.
+\end{proof}
+\begin{example} \label{ex:leg-minus-one}
+	We re-prove \Cref{lem:minus-1-is-square}. Fix an odd prime $p$. By \Cref{prop:euler-criterion}, $-1\pmod p$ is a square implies
+	\[(-1)^{(p-1)/2}\equiv\left(\frac{-1}p\right)\equiv1\pmod p,\]
+	and in fact the reverse implication holds too because $-1$ not being a square would imply $(-1)^{(p-1)/2}\equiv-1\pmod p$. But this is now equivalent to $p\equiv1\pmod4$.
+\end{example}
+\begin{example}
+	We show that $5$ is not a quadratic residue of $p=43$.
+\end{example}
+\begin{solution}
+	By \Cref{prop:euler-criterion} and the fact that $p\ge3$, it is enough to check $5^{(p-1)/2}\equiv-1\pmod p$. Thus, we are computing $5^{21}\pmod{43}$, for which we approximately do modular exponentiation by repeated squarings.
+	\begin{itemize}
+		\item Note $5^3=125\equiv-4\pmod{43}$.
+		\item Note $5^9\equiv(-4)^3\equiv-64\equiv-21\pmod{43}$.
+		\item Note $5^{18}\equiv(-21)^2\cdot441\equiv11\pmod{43}$.
+		\item Lastly, $5^{21}\equiv-4\cdot11\equiv-44\equiv-1\pmod{43}$.
+	\end{itemize}
+	Our work has showed that $5^{21}\equiv-1\pmod{43}$, so we are done.
+\end{solution}
+\begin{exe}
+	Show that $5$ is a quadratic residue of $p=43$.
+\end{exe}
+At the very least, we have now reduced to the problem of checking that some $a\in(\ZZ/p\ZZ)^\times$ is a square to taking exponents modulo primes, for which one can do by exponentiation by repeated squarings. However, we will be able to do better.
+\begin{remark}
+	It is around this point that computing quadratic residues has become non-constructive: if Euler's criterion tells us that $a^{(p-1)/2}\equiv1\pmod p$, it is an entirely separate problem of actually finding a square root for $a$. (Recall that this is necessary to apply the algorithms suggested by \cref{subsec:compute-primes-of-form}!) For some special cases, we refer to \Cref{prob:3-mod-4-square-root} and \Cref{prob:sum-of-squares}.
+\end{remark}
+As an aside, we note that \Cref{prop:euler-criterion} has the corollary of showing that $\left(\frac\cdot p\right)\colon(\ZZ/p\ZZ)^\times\to\{\pm1\}$ is a group homomorphism. Note that this is consistent with \Cref{lem:half-qrs}.
+\begin{corollary} \label{cor:leg-symbol-is-char}
+	Fix an odd prime $p$. For any integers $a,b\in\ZZ$, we have
+	\[\left(\frac ap\right)\left(\frac bp\right)=\left(\frac{ab}p\right).\]
+\end{corollary}
+\begin{proof}
+	We have
+	\[\left(\frac{ab}p\right)\equiv(ab)^{p-1}/2\equiv a^{(p-1)/2}\cdot b^{(p-1)/2}\equiv\left(\frac ap\right)\left(\frac bp\right)\pmod p.\]
+	But $p\ge3$, so $\{-1,0,1\}$ are distinct$\pmod p$, so equality follows.
+\end{proof}
+
+\subsection{Quadratic Reciprocity}
+Quadratic reciprocity will be an efficient tool for determining when some $a\in(\ZZ/p\ZZ)^\times$ is a quadratic residue modulo an odd prime $p$. Because $\left(\frac ap\right)$ is multiplicative in $a$, it suffices to work when $a$ is prime. Indeed, by unique prime factorization in $\ZZ$, one can factor $a$ into
+\[a=\varepsilon\prod_{i=1}^nq_i^{\nu_i}\]
+where $\varepsilon\in\{\pm1\}$, the $q_\bullet$ are distinct primes, and the $\nu_i$ are some positive integers. Then we may compute $\left(\frac ap\right)$, we see
+\[\left(\frac ap\right)=\left(\frac\varepsilon p\right)\prod_{i=1}^n\left(\frac{q_i}p\right)^{\nu_i}.\]
+We can compute $\left(\frac\varepsilon p\right)$ via \Cref{ex:leg-minus-one}, so it remains to compute $\left(\frac qp\right)$ where $q$ is some prime. This is the content of quadratic reciprocity.
+
+We will deal with the prime $q=2$ separately. In some sense, this will be warm-up to our full proof of quadratic reciprocity.
+\begin{proposition} \label{prop:qr-second-supplement}
+	Fix an odd prime $p$. Then
+	\[\left(\frac2p\right)=\begin{cases}
+		+1 & \text{if }p\equiv\pm1\pmod8, \\
+		-1 & \text{if }p\equiv\pm3\pmod8.
+	\end{cases}\]
+\end{proposition}
+\begin{proof}
+	Consider $g_2\coloneqq\zeta_8+\zeta_8^{-1}$, where $\zeta_8=\exp(2\pi i/8)=\frac{\sqrt2}2+\frac{\sqrt2}2i$ is an eighth root of unity. The trick is to attempt to compute $g_2^p\pmod p$, where we are placing $g_2$ in the quotient ring $\ZZ[\zeta_8]/(p)$. We do this with two approaches.
+	\begin{enumerate}
+		\item The binomial theorem implies $(a+b)^p\equiv a^p+b^p$ in this ring, so we may write
+		\[g_2^p=\left(\zeta_8+\zeta_8^{-1}\right)^p\equiv\zeta_8^p+\zeta_8^{-p}.\]
+		So if $p\equiv\pm1\pmod8$, then $g_2^p\equiv g_2$; if $p\equiv\pm3\pmod8$, then we have $\zeta_8^3+\zeta_8^{-3}=-\zeta_8^{-1}-\zeta_8=-g_2$.
+		\item We note that $\zeta_8+\zeta_8^{-1}=\sqrt2$, so
+		\[\left(\zeta_8+\zeta_8^{-1}\right)^{p-1}=2^{(p-1)/2}\equiv\left(\frac2p\right)\pmod p,\]
+		so $g_2^p\equiv\left(\frac2p\right)g_2\pmod p$.
+	\end{enumerate}
+	Combining the above cases, we see that
+	\[\left(\frac2p\right)g_2\equiv g_2^p\equiv\begin{cases}
+		+g_2 & \text{if }p\equiv\pm1\pmod8, \\
+		-g_2 & \text{if }p\equiv\pm3\pmod8.
+	\end{cases}.\]
+	So we will be done as long as $g_2\not\equiv0\pmod p$. Well, this would imply that $\zeta_8^4\equiv1\pmod p$, so $-1\equiv1\pmod p$, so $2\equiv0\pmod p$, which is false because $p$ is an odd prime.
+\end{proof}
+\begin{remark} \label{rem:2-not-0-mod-p}
+	There is actually some content to $2\not\equiv0\pmod p$ because we are working in the ring $\ZZ[\zeta_8]/(p)$. Essentially, we are trying to show that $2\notin p\ZZ[\zeta_8]$, which is equivalent to $2/p\notin\ZZ[\zeta_8]$. Well, $2/p\in\ZZ[\zeta_8]$ would imply that $2/p$ is an algebraic integer because $\zeta_8$ is an algebraic integer because $\zeta_8^8-1=0$. (We are using \Cref{prop:how-to-integral} repeatedly.) But if $2/p$ is an algebraic integer, then \Cref{ex:o-q-is-z} requires $2/p\in\ZZ$, which is false because $p$ is an odd prime.
+\end{remark}
+\begin{example}
+	Combining \Cref{exe:primes-of-form-2} with \Cref{prop:qr-second-supplement}, we see that, for an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+2y^2$ if and only if $p\equiv\pm1\pmod8$.
+\end{example}
+Let's now handle odd primes $q$.
+\begin{theorem}[quadratic reciprocity] \label{thm:qr}
+	Fix distinct odd positive primes $p$ and $q$. Then
+	\[\left(\frac pq\right)\left(\frac qp\right)=(-1)^{\frac{p-1}2\cdot\frac{q-1}2}.\]
+\end{theorem}
+\Cref{thm:qr} is a truly amazing result: it tells us that determining when $x^2\equiv p\pmod q$ somehow has to do with when $x^2\equiv q\pmod p$, and the ability to switch like this makes the computation of these Legendre symbols quite efficient, akin to our computations in \Cref{prop:linear-recip}.
+
+Before proving \Cref{thm:qr}, let's see a quick example.
+\begin{example}
+	Using \Cref{thm:qr} with \Cref{ex:leg-minus-one}, any odd prime $p$ has
+	\[\left(\frac{-7}p\right)=\left(\frac{-1}p\right)\left(\frac7p\right)=(-1)^{\frac{p-1}2}\cdot(-1)^{\frac{p-1}2}\left(\frac p7\right)=\left(\frac p7\right).\]
+	Thus, plugging \Cref{eq:qrs-of-7} into the above computation, \Cref{ex:primes-of-form-7} tells us that, for odd primes $p$, there are integers $(x,y)$ such that $p=x^2+xy+2y^2$ if and only if $p\pmod7\in\{1,2,4\}$.
+\end{example}
+Thus, we no longer need to do a long and tedious check to see if $-7\pmod p$ is a square: we simply check $p\pmod7$ instead! This is an amazing improvement!
+
+Anyway, let's prove \Cref{thm:qr}.
+\begin{proof}[Proof of \Cref{thm:qr}]
+	The proof is in the same general spirit as \Cref{prop:qr-second-supplement}. Our main character will be the element
+	\[g_q\coloneqq\sum_{k=1}^{q-1}\left(\frac kq\right)\zeta_q^k,\]
+	where $\zeta_q\coloneqq\exp(2\pi i/q)$ is a $q$th root of unity. We will evaluate $g_q^p\pmod p$ two ways.
+	\begin{enumerate}
+		\item The binomial theorem still implies $(a+b)^p\equiv a^p+b^p$ in our ring $\ZZ[\zeta_q]/(p)$, so
+		\[g_q^p\equiv\sum_{k=1}^{q-1}\left(\frac kq\right)\zeta_q^{kp}.\]
+		Sending $k\in(\ZZ/q\ZZ)^\times$ to $kp^{-1}$, we reparametrize the sum into
+		\[g_q^p\equiv\sum_{k=1}^{q-1}\left(\frac kq\right)\left(\frac pq\right)^{-1}\zeta_q^k=\left(\frac pq\right)g_q,\]
+		where we have used \Cref{cor:leg-symbol-is-char} and the fact that $\left(\frac pq\right)=\left(\frac pq\right)^{-1}$ in our simplification.
+		\item We show that $\left|g_q\right|^2=q$. This is more or less a direct computation. We see
+		\[\left|g_q\right|^2 = g_q\cdot\overline{g_q} = \sum_{k,\ell=1}^{q-1}\left(\frac kq\right)\left(\frac\ell q\right)\zeta_q^{k-\ell}.\]
+		Now, the key to the computation is to replace $\ell$ with $ak$, letting $a$ vary over $(\ZZ/q\ZZ)^\times$. Then we have
+		\[\left|g_q\right|^2=\sum_{a,k=1}^{q-1}\left(\frac aq\right)\underbrace{\left(\frac kq\right)^2}_1\zeta_q^{k(a-1)}=\sum_{a=1}^{q-1}\Bigg(\left(\frac aq\right)\sum_{k=1}^{q-1}\zeta_q^{k(a-1)}\Bigg).\]
+		To compute the inner sum, if $a=1$, then we all terms are $1$, so we have $q-1$. Otherwise, $\zeta_q^{a-1}\ne1$, so the inner sum is a geometric sum with common ratio $\zeta_q^{a-1}$, so we may evaluate it as
+		\[\sum_{k=1}^{q-1}\zeta_q^{k(a-1)}=-1+\sum_{k=0}^{q-1}\zeta_q^{k(a-1)}=-1+\frac{\zeta_q^{q(a-1)}-1}{\zeta_q^{a-1}-1}=-1.\]
+		Totaling, we see
+		\[\left|g_q\right|^2=(q-1)-\sum_{a=2}^{q-1}\left(\frac aq\right)=q-\sum_{a=1}^{q-1}\left(\frac aq\right).\]
+		Now, \Cref{lem:half-qrs} tells us that half of $(\ZZ/q\ZZ)^\times$ is a quadratic residue, and the other half is a nonquadratic residue, so the current summation evaluates to $\frac{q-1}2-\frac{q-1}2=0$, finishing.
+	\end{enumerate}
+	We now complete the proof. For the second computation, we note
+	\[\overline{g_q}=\sum_{k=1}^{q-1}\left(\frac kq\right)\zeta_q^{-k}=\sum_{k=1}^{q-1}\left(\frac{-k}q\right)\zeta_q^{k}=\left(\frac{-1}q\right)g_q,\]
+	so
+	\[q=\left|g_q\right|^2=g_q\cdot\overline{g_q}=\left(\frac{-1}q\right)g_q^2,\]
+	so synthesizing our casework reveals
+	\[\left(\frac pq\right)g_q\equiv g_q^p=\left(g_q^2\right)^{(p-1)/2}g_q=\left(\left(\frac{-1}q\right)q\right)^{(p-1)/2}g_q\equiv(-1)^{\frac{p-1}2\cdot\frac{q-1}2}\left(\frac qp\right)g_q,\]
+	where we have used \Cref{prop:euler-criterion} in the last step, so
+	\[\left(\frac pq\right)\left(\frac qp\right)g_q\equiv(-1)^{\frac{p-1}2\cdot\frac{q-1}2}g_q\pmod p.\]
+	Now, $\left|g_q\right|^2=q$ is nonzero$\pmod p$, so we may cancel it on both sides, completing the proof. If we wish to be as rigorous as in \Cref{rem:2-not-0-mod-p}, we can multiply both sides above by $\overline{g_q}$ to see that
+	\[\left(\frac pq\right)\left(\frac qp\right)q\equiv(-1)^{\frac{p-1}2\cdot\frac{q-1}2}q\pmod p,\]
+	but then $q$ has an inverse$\pmod p$ (in $\ZZ$), so we may multiply both sides by this to see that
+	\[\left(\frac pq\right)\left(\frac qp\right)\equiv(-1)^{\frac{p-1}2\cdot\frac{q-1}2}\pmod p.\]
+	At this point, everything is a sign, so to show that we must have the same sign on both sides, it is enough to show that $1\not\equiv-1\pmod p$, or $2\not\equiv0\pmod p$, which is exactly \Cref{rem:2-not-0-mod-p}.
+\end{proof}
+Let's see another example to wrap ourselves up, finally resolving \Cref{prop:primes-of-form-5}.
+\begin{example} \label{ex:full-primes-of-form-5}
+	Fix an odd prime $p$. Then there are integers $(x,y)$ such that $p=x^2+5y^2$ if and only if $p\pmod{20}\in\{1,9\}$.
+\end{example}
+\begin{proof}
+	Looking at \Cref{ex:almost-full-primes-of-form-5}, we first want to determine when $\left(\frac{-20}p\right)=1$. By \Cref{cor:leg-symbol-is-char}, it is equivalent to compute $\left(\frac{-5}p\right)$, for which we use \Cref{thm:qr} with \Cref{ex:leg-minus-one} to see
+	\[\left(\frac{-5}p\right)=\left(\frac{-1}p\right)\left(\frac5p\right)=(-1)^{(p-1)/2}\left(\frac p5\right).\]
+	Now, the quadratic residues$\pmod5$ are $\left\{(\pm1)^2,(\pm2)^2\right\}=\{1,4\}$, so we see
+	\[\left(\frac{-5}p\right)=\begin{cases}
+		+1 & \text{if }p\pmod{20}\in\{1,3,7,9\}, \\
+		-1 & \text{if }p\pmod{20}\in\{11,13,17,19\}.
+	\end{cases}\]
+	Thus, \Cref{ex:almost-full-primes-of-form-5} tells us that $p\pmod{20}\in\{1,3,7,9\}$ is equivalent to having integers $(x,y)$ such that $p=x^2+5y^2$ or $p=2x^2+2xy+3y^2$.
+	
+	However, from the available options, a direct computation shows that $x^2+5y^2$ is only ever in $1\pmod{20}$ or $9\pmod{20}$ or $7\pmod{20}$ by a direct computation; similarly, one checks $2x^2+2xy+3y^2\pmod{20}$ is only ever in $3\pmod{20}$. Thus, for $p\pmod{20}\in\{1,9\}$, we must have $p=x^2+5y^2$; and conversely, the other cases $p\pmod{20}\in\{3,7\}$ cannot have $p=x^2+5y^2$.
+\end{proof}
+\begin{remark}
+	The last paragraph about to distinguish $x^2+5y^2$ from $2x^2+2xy+3y^2$ is the beginning of ``genus theory,'' a topic which is sadly just barely beyond the scope of this course.
+\end{remark}
 
 \subsection{Problems}
+Do ten points worth of the following exercises.
+\begin{prob}[1 point]
+	Find the unique reduced binary quadratic form which is equivalent to $[10,15,6]$.
+\end{prob}
+\begin{prob}[1 point]
+	Compute the Legendre symbol
+	\[\left(\frac{107}{61}\right).\]
+\end{prob}
+\begin{prob}[2 points] \label{prob:more-intinsic-primitive}
+	Show that a binary quadratic form $f$ is primitive if and only if
+	\[\gcd_{(x,y)\in\ZZ^2}f(x,y)=1.\]
+\end{prob}
+\begin{prob}[2 points] \label{prob:3-mod-4-square-root}
+	Let $p\equiv3\pmod4$ be a prime. For any $x\in(\ZZ/p\ZZ)^\times$ which is a quadratic residue, show that $y\coloneqq x^{(p+1)/4}$ has $y^2\equiv x\pmod p$. In general, it is a little difficult to compute square roots modulo primes.
+\end{prob}
+\begin{prob}[3 points]
+	For a prime $p$, there are integers $(x,y)$ such that $p=x^2+xy+3y^2$ if and only if there is an integer $b$ such that $b^2\equiv-11\pmod p$. Describe all such $p$ via congruence conditions$\pmod{11}$.
+\end{prob}
+\begin{prob}[4 points]
+	Given a negative integer $D$ which is either $0$ or $1\pmod4$, write a computer program outputting all reduced binary quadratic forms of discriminant $D$ in the form $[a,b,c]$.
+\end{prob}
+\begin{prob}[5 points]
+	Let $\langle\cdot,\cdot\rangle\colon\RR^2\to\RR$ be the standard inner product, and let $\Lambda\subseteq\RR$ be a lattice of rank $2$. Fixing $v_0,v_1\in\Lambda$ as in the hypotheses of \Cref{prop:gauss-reduce}, define the sequence $v_2,v_3,\ldots$ of vectors and positive integer $N$ as in \Cref{prop:gauss-reduce}.
+	\begin{listalph}
+		\item (2 points) Show that the (smaller) angle $\theta$ between the vectors $v_N$ and $v_{N+1}$ is at most $\pi/3$ (radians).
+		\item (2 points) Show that the area of the parallelogram $\{av_N+bv_{N+1}:a,b\in[0,1]\}$ with sides $v_N$ and $v_{N+1}$ is $\norm{v_N}\cdot\norm{v_{N+1}}\cdot\left|\sin\theta\right|$. Conclude that
+		\[\op{vol}\left(\RR^2/\Lambda\right)\le\frac{\sqrt3}2\norm{v_N}\cdot\norm{v_{N+1}}.\]
+		\item (1 point) Find a lattice $\Lambda$ where equalities are achieved in (a) and (b).
+	\end{listalph}
+\end{prob}
 % \begin{prob}[6 points]
 % 	Write a computer program which takes an odd prime number $p\equiv3\pmod{20}$ and then finds integers $(x,y)$ such that $p=x^2+5y^2$ or $2p=x^2+5y^2$. In addition to the computer program, please submit a list of primes $10^7<p<10^7+10^5$ such that there exist integers $(x,y)$ such that $p=x^2+5y^2$.
 
 % 	You may find the command \texttt{sage.rings.finite_rings.integer_mod.square_root_mod_prime(Zmod(p)(a))} helpful.
 % \end{prob}
+\begin{prob}[7 points] \label{prob:sum-of-squares}
+	Fix a prime $p\equiv1\pmod4$.
+	\begin{listalph}
+		\item (1 point) If $x\in(\ZZ/p\ZZ)^\times$ is not a quadratic residue, show that $y\coloneqq x^{(p-1)/4}$ has $y^2\equiv-1\pmod p$.
+		\item (2 points) Use (a) to write a computer program with probabilistically good running time which takes in a prime $p\equiv1\pmod4$ and outputs some integer $x$ such that $x^2\equiv-1\pmod p$.
+		\item (4 points) Use (b) to write a computer program with probabilistically good running time which takes in a prime $p\equiv1\pmod4$ and outputs a pair of integers $(a,b)$ such that $p=a^2+b^2$. Use the program to write the prime number $p=10^{30}+57$ as the sum of two squares.
+	\end{listalph}
+\end{prob}
+% p = 10**30+57
+% x = 1
+% while (x*x+1) % p != 0:
+%     x = pow(randint(1,p-1),(p-1)//4,p)
+% v = [int(x),1]
+% u = [p,0]
+% while v[0]^2+v[1]^2 < u[0]^2+u[1]^2:
+%     v_mag = v[0]^2+v[1]^2
+%     q = (u[0]*v[0]+u[1]*v[1])/v_mag
+%     if q-int(q) < 0.5:
+%         q = int(q)
+%     else:
+%         q = int(q)+1
+%     u,v = v,[u[0]-q*v[0],u[1]-q*v[1]]
+% a, b = u
+% print("{0:1d}^2 + {1:1d}^2 = {2:1d}".format(abs(a),abs(b),a^2+b^2))
 
 \end{document}
