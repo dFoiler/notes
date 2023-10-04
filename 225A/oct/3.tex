@@ -1,0 +1,93 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 3}
+
+Let's play the game to start off the class.
+\begin{example}
+	We work with ordinals in the language $\mathcal L=\{<\}$.
+	\begin{itemize}
+		\item We play with $\varepsilon_0=\sup\left\{\omega,\omega^\omega,\ldots\right\}$ and $2$. Then Player II loses after, say, 2 moves: Player I selects anything, Player II selects (say) $0$, and then Player I chooses something smaller than what they chose in $\varepsilon_0$.
+		\item We play with $\varepsilon_0$ and $\omega_1$. Then Player II can always win. The point is that there is some kind of finite-length back-and-forth argument
+	\end{itemize}
+\end{example}
+
+\subsection{Real Closed Fields}
+Let's discuss real closed fields because they, in some sense, will tell us that Euclidean geometry is decidable (approximately speaking). Our language will be the language $\mathcal L=\{+,-,\cdot,<,0,1\}$ of ordered rings. The theory of ordered fields $\mathrm{OrdFld}$ is axiomatized by writing the axioms for fields, for a total order, and requiring that addition and multiplication respect this ordering. We won't bother writing down the first two lists of axioms, but the third list is given as follows.
+\begin{itemize}
+	\item $\forall a\forall b\forall c((a<b)\to (a+c<b+c))$.
+	\item $\forall a\forall b\forall c(((a<b)\land(c>0))\to (a\cdot c<b\cdot c))$.
+\end{itemize}
+So we have a finitely axiomatized our theory $\mathrm{OrdFld}$.
+\begin{example}
+	Any subfield of $\RR$ will do is a model.
+\end{example}
+\begin{example}
+	We can use compactness to provide a model of $\RR$ with an element larger than any other element but the same cardinality.
+\end{example}
+We will be actually be interested in the theory $\mathrm{RCF}$ of real closed fields, which is the theory $\mathrm{OrdFld}$ plus the intermediate value theorem for polynomials. This is an infinite list of axioms, approximately saying that, for any model $\mathcal R$ with universe $R$, and polynomial $f\in R[x]$ with inputs $a,b\in R$ such that $f(a)<0<f(b)$ has some $c\in R$ such that $f(c)=0$.
+
+To write this out, we choose a degree of $n$ and write down the sentence
+\begin{align*}
+	\forall a_0\cdots\forall a_n\forall a\forall b&\big(\left((a<b)\land \left(a_0a^0+\cdots+a_na^n<0<a_0b^0+\cdots+a_nb^n\right)\right) \\
+	&\to\exists c\left(a<c<b\land a_0c^0+\cdots+a_nc^n=0\right)\big).
+\end{align*}
+We cannot finitely axiomatize these sentences using an argument like \Cref{lem:try-to-finitely-axiom}.
+\begin{remark}
+	Any ordered field $(\mathcal R,+,-,0,1,<)$ has $(\mathcal R,<)$ satisfying $\mathrm{DLO}$. We know that we are a linear order, we have no endpoints because $x+-1<x<x+1$ for ant $x\in R$, and we are dense because $x<\frac{x+y}2<y$ for any $x,t\in R$. Note that checking $x<x+1$ (for example) requires knowing that $0<1$, which is a nontrivial fact on its own (one should use trichotomy and rule our $0=1$ by fields and rule our $0>1$ because this would imply $-1>0$ and then $1>0$ by squaring). There are lots of these nontrivial facts (e.g., we also want to know $0<1/2<1$), but we won't bother to show this.
+\end{remark}
+For ordered fields, there is an order topology, and one can show that various functions like $+$ and $\cdot$ and polynomials are all continuous.
+
+We will define the function $\left|\cdot\right|\colon R\to R$ given by
+\[\left|x\right|\coloneqq\begin{cases}
+	+x & \text{if }x\ge0, \\
+	-x & \text{if }x\le0.
+\end{cases}\]
+Now, if $x<0$, then $-x>0$ by subtraction, so we see that $\left|x\right|>0$ for all $x\ne0$. The standard casework is also able to prove the triangle inequality $\left|x+y\right|\le\left|x\right|+\left|y\right|$ by some casework. If both nonpositive or nonnegative, then we have equality, and if they have different signs (say, $x>0>y$ without loss of generality and $\left|x\right|\ge\left|y\right|$), then we are looking at $x+y\le x-y$, which is true.
+
+For notation, we will also want the function $\op{sgn}$ given by
+\[\op{sgn}(x)\coloneqq\begin{cases}
+	+1 & \text{if }x>0, \\
+	0 & \text{if }x=0, \\
+	-1 & \text{if }x<0.
+\end{cases}\]
+Now, one is able to check the following, which tells us that polynomials ``go off to infinity.''
+\begin{proposition} \label{prop:off-to-infinity}
+	Fix an ordered field $\mathcal R$ and a polynomial $f(x)\in R[x]$ of positive degree $d$, written
+	\[f(x)=\sum_{i=0}^dc_dx^d\]
+	where $c_d\ne0$. If
+	\[x>1+\frac1{\left|c_d\right|}\sum_{i=0}^{d-1}\left|c_i\right|,\]
+	then $\op{sgn}f(x)=\op{sgn}c_d$.
+\end{proposition}
+\begin{proof}
+	Boring bounding. Note
+	\[\op{sgn}f(x)=\op{sgn}c_d\cdot\op{sgn}\Bigg(x^d+\sum_{i=0}^{d-1}\frac{c_i}{c_d}x^d\Bigg),\]
+	so by scaling down, it is enough to consider the case where $c_d=1$.
+
+	As an aside, we note that any $x\ge1$ and nonnegative integer $n$ will have $x^n\ge x$, which is true by induction because $x^{n+1}\ge x^n$, where our base case is $x^1=x\ge 1=x^0$. With this in mind, we see that $x$ satisfying the desired inequality will have
+	\[x^d=x\cdot x^{d-1}>\sum_{i=0}^{d-1}\left|c_i\right|x^{d-1}\ge\sum_{i=0}^{d-1}\left|c_i\right|x^i\ge\sum_{i=0}^{d-1}-c_ix^i,\]
+	so $f(x)>0$ follows.
+\end{proof}
+\begin{corollary}
+	If $\mathcal R$ is a real closed field and $a\ge0$, then there exists $b\ge0$ such that $b^2=a$.
+\end{corollary}
+\begin{proof}
+	If $a=0$, set $b=0$. Otherwise, consider the polynomial $f(x)\coloneqq x^2-a$. Note $f(0)<0$, and \Cref{prop:off-to-infinity} tells us that $f(1+a)>0$, so the intermediate value theorem for polynomials tells us that there is some $b$ such that $f(b)=0$, so $b^2=a$.
+\end{proof}
+\begin{corollary}
+	If $\mathcal R$ is a real closed field, then any polynomial $f(x)$ of odd degree has a root.
+\end{corollary}
+\begin{proof}
+	Write
+	\[f(x)=\sum_{i=0}^dc_ix^i\]
+	where $d$ is odd and $c_d\ne0$, and let $N\coloneqq2+\frac1{\left|c_d\right|}\sum_{i=0}^{d-1}\left|c_i\right|$. By \Cref{prop:off-to-infinity}, we have $N$ such that $\op{sgn}f(N)=\op{sgn}c_d$, and we see similarly that the polynomial $f(-x)$ will now have $\op{sgn}f(-N)=\op{sgn}(-c_d)$. Thus, $f(N)$ and $f(-N)$ have different signs, so the intermediate value theorem for polynomials grants $f$ a root.
+\end{proof}
+The above two corollaries turn out to characterize real closed fields.
+\begin{remark}
+	We can now remove the ordering from our real closed fields by declaring that squares are exactly the nonnegative elements. It is in general an interesting question when we can give a field an order; for example, $-1$ cannot be a sum of squares because $-1<0$. This turns out to be good enough to make a field orderable!
+\end{remark}
+
+\end{document}
