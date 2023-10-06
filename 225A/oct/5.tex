@@ -1,0 +1,110 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 5}
+
+Here we go.
+
+\subsection{Quantifier Elimination via Back-and-Forth}
+Our goal is to show that $\mathrm{RCF}$ eliminates quantifiers and is thus complete. Here will be our test.
+\begin{proposition} \label{prop:worse-get-quant-elim}
+	Fix an $\mathcal L$-theory $T$. Then $T$ is complete and has quantifier elimination if the following two properties hold.
+	\begin{listroman}
+		\item There is a ``prime'' structure: there is an $\mathcal L$-structure $\mathcal A$ such that any model $\mathcal M\models T$ has an embedding $\mathcal A\subseteq\mathcal M$.
+		\item Extension: for any two models $\mathcal M$ and $\mathcal N$ with an isomorphism $\varphi\colon\mathcal M_0\to\mathcal N_0$ between substructures $\mathcal M_0\subseteq\mathcal M$ and $\mathcal N_0\subseteq\mathcal N$, then any chosen element $a\in\mathcal M$ has an extension $g\colon\mathcal M'\to\mathcal N'$ extending $f$ where $a\in\mathcal M'\subseteq\mathcal M$ and $\mathcal N'$ is a substructure of an elementary extension $\mathcal N^*$ of $\mathcal N$.
+	\end{listroman}
+\end{proposition}
+\begin{proof}
+	We will show that (ii) implies that there are elementary extensions $\mathcal M\le\widetilde{\mathcal M}$ and $\mathcal N\le\widetilde{\mathcal N}$ with an isomorphism $\widetilde f\colon\widetilde{\mathcal M}\to\widetilde{\mathcal N}$ extending $f$. This is a back-and-forth argument, using (ii) to extend our isomorphism one element at a time.
+
+	We build a chain of models $\mathcal M\coloneqq\mathcal M^0\le\mathcal M^1\le\mathcal M^2\le\cdots$ and $\mathcal N\coloneqq\mathcal N^0\le\mathcal N^1\le\mathcal N^2\le\cdots$, and $\widetilde{\mathcal M}$ and $\widetilde{\mathcal N}$ will be the union of the chains. Roughly speaking, the idea is to construct our models with $\widetilde f_1,\widetilde f_2,\ldots$ into the following diagram.
+	% https://q.uiver.app/#q=WzAsOCxbMCwzLCJcXG1hdGhjYWwgTV4wIl0sWzAsMiwiXFxtYXRoY2FsIE1eMSJdLFswLDEsIlxcbWF0aGNhbCBNXjIiXSxbMCwwLCJcXHZkb3RzIl0sWzEsMCwiXFx2ZG90cyJdLFsxLDMsIlxcbWF0aGNhbCBOXjAiXSxbMSwyLCJcXG1hdGhjYWwgTl4xIl0sWzEsMSwiXFxtYXRoY2FsIE5eMiJdLFswLDYsIlxcd2lkZXRpbGRlIGZfMSIsMl0sWzYsMSwiXFx3aWRldGlsZGUgZl8yIl0sWzEsNywiXFx3aWRldGlsZGUgZl8zIiwyXSxbNywyLCJcXHdpZGV0aWxkZSBmXzQiLDJdLFswLDFdLFsxLDJdLFsyLDNdLFs1LDZdLFs2LDddLFs3LDRdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			\vdots & \vdots \\
+			{\mathcal M^2} & {\mathcal N^2} \\
+			{\mathcal M^1} & {\mathcal N^1} \\
+			{\mathcal M^0} & {\mathcal N^0}
+			\arrow["{\widetilde f_1}"', from=4-1, to=3-2]
+			\arrow["{\widetilde f_2}", from=3-2, to=3-1]
+			\arrow["{\widetilde f_3}"', from=3-1, to=2-2]
+			\arrow["{\widetilde f_4}"', from=2-2, to=2-1]
+			\arrow[from=4-1, to=3-1]
+			\arrow[from=3-1, to=2-1]
+			\arrow[from=2-1, to=1-1]
+			\arrow[from=4-2, to=3-2]
+			\arrow[from=3-2, to=2-2]
+			\arrow[from=2-2, to=1-2]
+		\end{tikzcd} \label{eq:go-up-chains}
+	\end{equation}
+	Let's begin by exhibiting $\widetilde f_1$. Enumerate $M=\{m_\alpha:\alpha\in\kappa\}$ where $\kappa=\left|\mathcal M\right|$. Now, we write down our maps.
+	\begin{listalph}
+		\item Set $g_0=f$.
+		\item We will have a map $g_\alpha\colon\mathcal A_\alpha\to\mathcal N^0_{\alpha}$, where $m_\beta\in A_\alpha$ for any $\beta<\alpha$.
+		\item If $\alpha\le\beta$ are in $\kappa$, then we require $\mathcal A_\alpha\subseteq\mathcal A_\beta\subseteq\mathcal M$ and $\mathcal N^0\le\mathcal N^0_{\alpha}\le\mathcal N^0_\beta$.
+	\end{listalph}
+	Then taking the union of the $g_\alpha$ will produce the needed map $\mathcal M^0\to\mathcal N^1$, and reversing the picture produces $\mathcal N^1\to\mathcal M^1$, and we can keep going up the chains.
+
+	Anyway, let's construct our $g_\alpha$. We have already defined $g_0$.
+	\begin{itemize}
+		\item Suppose we have defined $g_\alpha\colon\mathcal A_\alpha\to\mathcal N^0_\alpha$, and we want to get to a successor ordinal $g_{\alpha+1}$. Then (ii) using the single element $m_{\alpha+1}\in\mathcal M^0$ on the morphism $g_\alpha$ provides us with an extension $g_{\alpha+1}\colon\mathcal A_{\alpha+1}\to\mathcal N^0_{\alpha+1}$ where $a\in\mathcal A_{\alpha+1}\subseteq\mathcal M$ and $\mathcal N^0_\alpha\le\mathcal N^0_\alpha$. So we are done.
+		\item On limit ordinals, we just take a union. If $\alpha$ is a limit ordinal, then we get to suppose that we have defined $g_\beta$ for all $\beta<\alpha$, and we define
+		\[\mathcal A_\alpha\coloneqq\bigcup_{\beta<\alpha}\mathcal A_\beta\qquad\text{and}\qquad\mathcal N^0_\alpha\coloneqq\bigcup_{\beta<\alpha}\mathcal N^0_\beta,\]
+		and we satisfy all the needed hypotheses by how chains work.
+	\end{itemize}
+	Alright, so we have constructed our map $\widetilde f_1\colon\mathcal M^0\to\mathcal N^1$ by taking unions of the above $g_\bullet$s. We can repeat this process to produce the maps $\widetilde f_\bullet$ and then go up the chain \eqref{eq:go-up-chains} to complete the argument. Namely, going up the chain tells us that we get embeddings in both directions whose compositions are the identity, so we do have an isomorphism. Thus, \Cref{thm:get-elim-quant} tells us that $T$ eliminates quantifiers.
+
+	It remains to check that $T$ is complete, which is where (i) will appear. Fix models $\mathcal M$ and $\mathcal N$ of $T$. Now, our prime structure $\mathcal A$ embeds into both $\mathcal M$ and $\mathcal N$, whose images we will call $\mathcal A_1$ and $\mathcal A_2$. Now, the above result tells us that we can extend this isomorphism of substructures to an isomorphism of elementary superstructures $\widetilde{\mathcal M}\to\widetilde{\mathcal N}$. Thus, $\mathcal M\equiv\widetilde{\mathcal M}\equiv\widetilde{\mathcal N}\equiv\mathcal N$, so $\op{Th}\mathcal M=\op{Th}\mathcal N$, which produces completeness.
+\end{proof}
+\begin{remark}
+	Professor Scanlon is lightly considering putting the following weak form of Keisler--Shelah on the exam: if $\mathcal A\equiv\mathcal B$, then there is a direct limit of ultrapowers of $\mathcal A$ and $\mathcal B$ which are 
+\end{remark}
+\begin{remark}
+	More generally, the above proof shows that we can complete a theory $T$ which eliminates quantifiers by adding in the diagram of any particular substructure of a model $T$.
+\end{remark}
+
+\subsection{Back to Real Closed Fields}
+Let's use \Cref{prop:worse-get-quant-elim}.
+\begin{theorem}
+	The theory $\mathrm{RCF}$ eliminates quantifiers and is complete.
+\end{theorem}
+\begin{proof}
+	Let's start with the prime structure.
+	\begin{lemma}
+		The theory $\mathrm{RCF}$ has a prime structure.
+	\end{lemma}
+	\begin{proof}
+		The integers $\ZZ$ as an ordered integral domain is contained in any ordered field, so it works as our prime substructure.
+	\end{proof}
+	Now for the hard part. Fix real closed fields $\mathcal R_1$ and $\mathcal R_2$ with an isomorphism of substructures $f\colon\mathcal A_1\to\mathcal A_2$, and choose some $a\in R_1$. We would like to extend $f$ up to $a$. Note that there is some content in deciding how to extend $\mathcal A_1$ to a domain of $f$.
+	
+	For example, note that $\mathcal A_1$ and $\mathcal A_2$ as substructures of a field must be an integral domain, and so of course we note that $f$ can be extended to $\op{Frac}A_1\to\op{Frac}A_2$ as a field homomorphism. Additionally, note that this extension also to the fraction field also respects the order: it suffices to note that $f$ will respect positivity, so we note $\op{sgn}f(a)=\op{sgn}a$ for any $a\in A_1$, so $a/b\in\op{Frac}A_1$ being positive implies $\op{sgn}a=\op{sgn}b$ and so $\op{sgn}f(a)=\op{sgn}f(b)$ and so $f(a)/f(b)$ is positive. In total, we may assume that $\mathcal A_1$ and $\mathcal A_2$ are ordered fields.
+
+	Next up, we may assume that the degree of the field extension $[A_1(a):A_1]$ is minimal among the degrees $[A_1(a'):A_1]$ for $a'\in R_1\setminus A_1$ and $[A_2(b'):A_2]$ for $b'\in R_2\setminus A_2$. The point is that we can deal with the elements $a'$ and $b'$ one at a time, starting with the smallest possible degree, and this is okay because we can take a countable union, and the total number of elements to deal with are countable over $A_1$, and the number of degrees is also countable.
+
+	Now, if $a$ is algebraic over $A_1$, then let $p$ be its minimal monic polynomial over $A_1$; if $\alpha$ is transcendental, take $p=0$. Now, define
+	\[\mathrm{Cut}^-(a/A_1)=\{\alpha\in A_1:\alpha<a\}\qquad\text{and}\qquad\mathrm{Cut}^+(a/A_1)=\{\beta\in A_1:\alpha<\beta\}.\]
+	If $a$ is algebraic, then both of these sets are nonempty: \Cref{prop:off-to-infinity} grants us a number $N_p\in A_1$ such that $\left|x\right|>N_p$ will have $p(x)\ne0$ in any ordered field, so $\left|x\right|>\alpha$.\footnote{If $a$ is transcendental, one can in fact have $a$ bigger than anything in $A_1$. For example, compactness provides a model of $\mathrm{RCF}$ which is just $\RR$, and then we add in an element bigger than anything in $\RR$.} Now, we note that we have the chain of isomorphisms
+	\[A_1[a]\cong\frac{A_1[x]}{p(x)}\cong\frac{A_2[x]}{f(p)(x)}.\]
+	To continue, we need to place $a$ inside $A_2$.
+	\begin{proposition} \label{prop:poly-increases-locally}
+		Fix an ordered field $R$. Given a polynomial $F(x)\in R[x]$ and $d\in R$, if $F'(d)>0$, then there exists $b<d<c$ such that $b<x<d<y<c$ implies $F(x)<F(d)<F(y)$.
+	\end{proposition}
+	\begin{proof}
+		We are basically trying to show that $F$ is locally increasing. Now, we acknowledge that any polynomial $F(x)\in S[x]$ will have
+		\[F(X+Y)=\sum_{i=0}^{\deg f}\frac1{i!}F^{(i)}(X)Y^i.\]
+		Then
+		\[F(y)-F(d)=F'(d)(y-d)+\sum_{i=2}^{\deg f}\frac1{i!}F^{(i)}(d)(y-d)^i=F'(d)(y-d)\Bigg(1+\sum_{i=2}^{\deg f}\frac{F^{(i)}(d)}{i!F'(d)}(y-d)^{i-1}\Bigg).\]
+		Repeating the computation \Cref{prop:off-to-infinity}, one sees that $\left|y-d\right|$ being sufficiently small makes the sign of the bit in parentheses positive, so $\op{sgn}(F(y)-F(d))=\op{sgn}(y-d)$, and we complete the argument.
+	\end{proof}
+	Thus, if $a$ is algebraic, we claim that there is $\alpha\in\mathrm{Cut}^-(a/A_1)$ and $\beta\in\op{Cut}^+(a/A_1)$ with $\op{sgn}(P(\alpha))\ne\op{sgn}(P(\beta))$, which is a sign change that we will be able to push over to $\mathcal R_2$ in order to produce a root over there. Well, note $P'(a)=0$ because we are in characteristic $0$, so everything is separable. We take $P'(a)>0$; otherwise simply reverse all signs. Then \Cref{prop:poly-increases-locally} grants $x<a<y$ with $P(x)<0<P(y)$, but technically the argument only gives $x,y\in R_1$, and the same holds for everything between. Certainly we can find $\alpha<x<a<y<\beta$ where $\alpha,\beta\in A_1$ by the cut arguments before.
+
+	It remains to bring these down to $A_1$. Well, set
+	\[L\coloneqq\{\gamma\in R_1:\gamma<\alpha\text{ and }\gamma\ge\alpha\text{ and }P(\gamma)\ge0\}.\]
+	If $L$ is empty, there is nothing to say. Otherwise, if $\gamma\in L$, then we claim that $\delta$ with $\gamma\le\delta<a$ with $P(\delta)=0$. If $P(\gamma)=0$, simply take $\delta=\gamma$. If $P(\gamma)>0$, then we have a sign change from $\gamma$ to $x$, so there is a root somewhere there. So we can repeat this process, replacing $a$ by the least root in this interval (dealing with the other roots after we've placed $a$, via an inductive process), we can move $a$ to the left until we're okay.
+\end{proof}
+
+\end{document}
