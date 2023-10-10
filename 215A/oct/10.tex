@@ -1,0 +1,210 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 10}
+
+We would like to compute homology groups. The main tool for $\pi_1$ was van Kampen's theorem, which essentially allowed us to compute $\pi_1(A\cup B)$ from $\pi_1(A)$ and $\pi_1(B)$. Our goal is to build a similar computation for homology. To do this, we will require a little more homological algebra.
+
+\subsection{The Mayer--Vietoris Sequence}
+Let's discuss chain complexes on their own terms.
+\begin{definition}[chain complex]
+	Fix a ring $R$, and fix a sequence of maps of $R$-modules
+	\[\cdots\to A_{n+1}\xrightarrow{\alpha_{n+1}}A_n\xrightarrow{\alpha_n}A_{n_1}\to\cdots.\]
+	This is a \textit{chain complex} if and only if $\im\alpha_{n+1}\subseteq\ker\alpha_n$ for each $n$; it is \textit{exact} or \textit{acyclic} if equality holds. We may write this chain complex as $(A_\bullet,\alpha_\bullet)$. A \textit{morphism} of chain complexes $(\varphi_\bullet)\colon(A_\bullet,\alpha_\bullet)\to(B_\bullet,\beta_\bullet)$ is a sequence of maps $\varphi_\bullet\colon A_\bullet\to B_\bullet$ commuting with the boundaries.
+\end{definition}
+\begin{definition}[homology group]
+	Given a chain complex $(A_\bullet,\alpha_\bullet)$ of $R$-modules, we define the \textit{$n$th homology group} to be
+	\[H_n(A_\bullet)\coloneqq\frac{\ker\alpha_n}{\im\alpha_{n+1}}.\]
+\end{definition}
+\begin{example}
+	Given a topological space $X$, we have shown that
+	\[\cdots\to C_{n+1}(X)\to C_n(X)\to C_{n-1}(X)\to\cdots\to C_1(X)\to C_0(X)\to0\]
+	is a chain complex.
+\end{example}
+\begin{example}
+	The sequence $0\to A\to B$ is exact if and only if $A\to B$ is injective.
+\end{example}
+\begin{example}
+	The sequence $A\to B\to0$ is exact if and only if $A\to B$ is surjective.
+\end{example}
+\begin{example}
+	The sequence $0\to A\to B\to 0$ if and only if $A\to B$ is an isomorphism.
+\end{example}
+\begin{example}
+	The sequence
+	\[0\to\ZZ\stackrel n\to\ZZ\to\ZZ/n\ZZ\to0\]
+	is a short exact sequence.
+\end{example}
+To compute our homology groups, it will help to have the following terminology.
+\begin{definition}
+	A \textit{good pair} of spaces $(X,A)$ is a topological space $X$ along with a closed subspace $A\subseteq X$ such that $A$ is a deformation retract of some open subset $U\subseteq X$ containing $A$.
+\end{definition}
+\begin{example}
+	If $A$ is a CW-subcomplex of a CW-complex $X$, then $(X,A)$ is a good pair by very slightly expanding the CW cells around $A\subseteq X$.
+\end{example}
+And now here is our result.
+\begin{theorem}[Mayer--Vietoris] \label{thm:mv}
+	Fix a good pair $(X,A)$. Then there is a long exact sequence as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiXFx3aWRldGlsZGUgSF9uKEEpIl0sWzIsMCwiXFx3aWRldGlsZGUgSF9uKFgpIl0sWzMsMCwiXFx3aWRldGlsZGUgSF9uKFgvQSkiXSxbMSwxLCJcXHdpZGV0aWxkZSBIX3tuLTF9KEEpIl0sWzIsMSwiXFx3aWRldGlsZGUgSF97bi0xfShYKSJdLFszLDEsIlxcd2lkZXRpbGRlIEhfe24tMX0oWC9BKSJdLFs0LDEsIlxcY2RvdHMiXSxbMCwxXSxbMSwyXSxbMiwzXSxbMyw0LCJcXGRlbCIsMV0sWzQsNV0sWzUsNl0sWzYsN11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {\widetilde H_n(A)} & {\widetilde H_n(X)} & {\widetilde H_n(X/A)} \\
+		& {\widetilde H_{n-1}(A)} & {\widetilde H_{n-1}(X)} & {\widetilde H_{n-1}(X/A)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["\del"{description}, from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	Here, the maps $\widetilde H_n(A)\to\widetilde H_n(X)$ are given by inclusion $A\subseteq X$, and the maps $\widetilde H_n(X)\to\widetilde H_n(X/A)$ are given by the quotient map $X\onto X/A$. Note that we have not currently defined the boundary map $\del$.
+\end{theorem}
+It will take us a while to prove \Cref{thm:mv}. Here is an application.
+\begin{example} \label{ex:homology-sn}
+	We show that
+	\[\widetilde H_i\left(S^n\right)\cong\begin{cases}
+		\ZZ & \text{if }i=n, \\
+		0 & \text{if }i\ne n.
+	\end{cases}\]
+\end{example}
+\begin{proof}
+	Note that $S^{n-1}\subseteq D^n$ makes a good pair, and $D^n$ is contractible, so $\widetilde H^\bullet\left(D^n\right)=0$ always. Thus, for each $i$, we find
+	\[\underbrace{\widetilde H_i\left(D^n\right)}_0\to\widetilde H_i\left(S^n\right)\to\widetilde H_{i-1}\left(S^{n-1}\right)\to\underbrace{\widetilde H_i\left(D^n\right)}_0,\]
+	so the result follows by induction, where the base case is given by $\widetilde H_0\left(S^0\right)\cong\ZZ$ and $\widetilde H_i\left(S^0\right)\cong0$ for $i>0$, which can be checked directly because $S^0$ is just two points.
+\end{proof}
+
+\subsection{Building Long Exact Sequences}
+The proof of \Cref{thm:mv} will make use of ``relative homology groups.''
+\begin{definition}[relative homology]
+	Fix a subspace $A\subseteq X$. We define the \textit{relative chains} by $C_\bullet(X,A)\coloneqq C_\bullet(X)/C_\bullet(A)$. Then the boundary maps $\del^X\colon C_\bullet(X)\to C_\bullet(X)$ and $\del^A\colon C_\bullet(A)\to C_\bullet(A)$ induce a boundary map $\del\colon C_\bullet(X,A)\to C_\bullet(X,A)$, granting us a chain complex
+	\[\cdots\to C_{n+1}(X,A)\to C_n(X,A)\to C_{n-1}(X,A)\to\cdots.\]
+	From here, the \textit{relative homology groups} are the homology groups of the above chain complex.
+\end{definition}
+In particular, we see that some $[\alpha]\in H_n(X,A)$ has $\alpha\in C_n(X)$, where $[\alpha]$ will vanish only when $\alpha=\del\beta+\gamma$ where $\beta\in C_{n+1}(X)$ and $\gamma\in C_n(A)$. Namely, $H_n(X,A)$ is $\subseteq\del^X_n\subseteq C_n(X)$ upon taking a quotient by $\im\del_{n+1}^X$ and by $C_n(A)$.
+
+We are now equipped to show a long exact sequence close to \Cref{thm:mv}.
+\begin{proposition} \label{prop:relative-les}
+	Fix a subspace $A\subseteq X$. Then there is a long exact sequence as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiXFx3aWRldGlsZGUgSF9uKEEpIl0sWzIsMCwiXFx3aWRldGlsZGUgSF9uKFgpIl0sWzMsMCwiXFx3aWRldGlsZGUgSF9uKFgvQSkiXSxbMSwxLCJcXHdpZGV0aWxkZSBIX3tuLTF9KEEpIl0sWzIsMSwiXFx3aWRldGlsZGUgSF97bi0xfShYKSJdLFszLDEsIlxcd2lkZXRpbGRlIEhfe24tMX0oWC9BKSJdLFs0LDEsIlxcY2RvdHMiXSxbMCwxXSxbMSwyXSxbMiwzXSxbMyw0LCJcXGRlbCIsMV0sWzQsNV0sWzUsNl0sWzYsN11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {\widetilde H_n(A)} & {\widetilde H_n(X)} & {\widetilde H_n(X/A)} \\
+		& {\widetilde H_{n-1}(A)} & {\widetilde H_{n-1}(X)} & {\widetilde H_{n-1}(X/A)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["\del"{description}, from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	By construction, we have a short exact sequence of chain complexes
+	\[0\to C_\bullet(A)\to C_\bullet(X)\to C_\bullet(X,A)\to0.\]
+	Explicitly, for each $n\ge1$, the following diagram commutes.
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIkNfbihBKSJdLFsyLDAsIkNfbihYKSJdLFszLDAsIkNfbihYLEEpIl0sWzQsMCwiMCJdLFswLDEsIjAiXSxbMSwxLCJDX3tuLTF9KEEpIl0sWzIsMSwiQ197bi0xfShYKSJdLFszLDEsIkNfe24tMX0oWCxBKSJdLFs0LDEsIjAiXSxbMCwxXSxbMSwyXSxbMiwzXSxbMyw0XSxbNSw2XSxbNiw3XSxbNyw4XSxbOCw5XSxbMSw2LCJcXGRlbCJdLFsyLDcsIlxcZGVsIl0sWzMsOCwiXFxkZWwiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {C_n(A)} & {C_n(X)} & {C_n(X,A)} & 0 \\
+		0 & {C_{n-1}(A)} & {C_{n-1}(X)} & {C_{n-1}(X,A)} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow["\del", from=1-2, to=2-2]
+		\arrow["\del", from=1-3, to=2-3]
+		\arrow["\del", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	As such, the result follows directly from the following proposition.
+\end{proof}
+\begin{proposition} \label{prop:get-les}
+	Fix a short exact sequence
+	\[0\to(A_\bullet,\alpha_\bullet)\xrightarrow{\varphi_\bullet}(B_\bullet,\beta_\bullet)\xrightarrow{\psi_\bullet}(C_\bullet,\gamma_\bullet)\to0\]
+	of chain complexes of $R$-modules; i.e., this is a short exact sequence at each fixed index. Then there is a long exact sequence in homology as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiSF9uKEEpIl0sWzIsMCwiSF9uKEIpIl0sWzMsMCwiSF9uKEMpIl0sWzEsMSwiSF97bi0xfShBKSJdLFsyLDEsIkhfe24tMX0oQikiXSxbMywxLCJIX3tuLTF9KEMpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDQsIlxcZGVsIiwxXSxbNCw1XSxbNSw2XSxbNiw3XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {H_n(A)} & {H_n(B)} & {H_n(C)} \\
+		& {H_{n-1}(A)} & {H_{n-1}(B)} & {H_{n-1}(C)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["\del"{description}, from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	Let's describe the boundary map $\del\colon H_n(C)\to H_{n-1}(A)$, which is really the only interesting thing. Well, given $[z]\in H_n(C)$ with $z\in\ker\gamma_n$, we can lift it up to some $y\in B_n$ such that $\varphi_n(y)=z$. Then take $\beta_n(y)$, which we see lives in the kernel of $\varphi_n$, so exactness finds some $x\in A_{n-1}$ such that $\psi_{n-1}(x)=\beta_n(y)$. We can check that $\alpha_{n-1}(x)=0$ by construction, so it follows that $x$ represents some class in $H_{n-1}(A)$, which is the desired class.
+
+	For completeness, we describe why this is well-defined. The content is in explaining why the choice of lift $y$ does not affect our element in $H_{n-1}(A)$. Well, choosing a separate element $y'$ in $B_n$ will have $y-y'$ in the image of $A_n$ by exactness, say equal to $\alpha_n(x_0)$. Then choosing $x,x'\in A_{n-1}$ such that $\varphi_{n-1}(x)=\beta_n(y)$ and $\varphi_{n-1}(x')=\beta_n(y')$, we claim that $x-x'=\alpha_n(x_0)$. For this, it is enough to check after applying the injective map $\varphi_{n-1}$, which is true by construction of $x_0$.
+
+	Let's quickly sketch some exactness arguments.
+	\begin{itemize}
+		\item Exact at $H_n(A)$: on one hand, we note that any $[z]\in H_{n+1}(C)$ will have $\varphi_n(\del([z]))=0$ by construction of the boundary map. Explicitly, $\varphi_n(\del(z))$ (suitably defined) will live in the image of $\beta_{n+1}$, which is what vanishing means.
+		
+		On the other hand, given $[x]\in H_n(A)$ which vanishes under $\varphi_n$, meaning that $\varphi_n(x)=\beta_{n+1}(y')$ for some $y'$, allowing us to set $z'\coloneqq\psi_{n+1}(y')$. The construction of the boundary maps shows $\del([z'])=[x]$, as needed.
+
+		\item Exact at $H_n(B)$: on one hand, we note that any $[x]\in H_n(A)$ has $\psi_n(\varphi_n([x]))=0$ because $\psi_n\circ\varphi_n=0$.
+		
+		On the other hand, given $[y]\in H_n(A)$ which vanishes under $\psi_n$, we see that $\psi_n(y)$ must be in $\im\gamma_{n+1}$, so write $\psi_n(y)=\gamma_{n+1}(z')$, but then $\psi_{n+1}$ is surjective, so $\psi_n(y)=\gamma_{n+1}(\psi_{n+1}(y'))=\psi_n(\beta_{n+1}(y'))$, so replacing $y$ with $y-\beta_{n+1}(y')$ (which is in the same class) provides $\psi_n(y)=0$. Thus, exactness grants $y\in\im\varphi_n$, as needed.
+
+		\item Exact at $H_n(C)$: on one hand, we note that any $[y]\in H_n(B)$ has $\del(\psi_n([y]))=0$ by construction of the boundary map: $\psi_n([y])$ has a lift in $B_n$ given by $y$ itself, which by definition of $H_n(B)$ will vanish upon applying $\beta_n$.
+		
+		On the other hand, given $[z]\in H_n(C)$, going down to $0$ in $H_{n-1}(A)$ implies that means that there is a lift $y\in C_n(B)$ of $z$ such that $\beta_n(y)=0$. But then $[y]$ is a class in $H_n(B)$ mapping to $[z]$, exhibiting our exactness.
+	\end{itemize}
+	That's enough for me.
+\end{proof}
+\begin{remark}
+	One can define the boundary map $H_n(X,A)\to H_{n-1}(A)$ more explicitly by taking some class $[z]\in H_n(X,A)$ and then viewing $z$ as a class of objects in $C_n(X)$, we can literally take its boundary as a chain in $X$ and note that $\del z$ must then vanish in $C_{n-1}(X)/C_{n-1}(A)$ by construction of the reduced homology, so we produce a chain in $C_{n-1}(A)$. This is essentially the above construction where we have described our objects topologically.
+\end{remark}
+More generally, the above arguments are able to prove the following result.
+\begin{lemma}[Snake] \label{lem:snake}
+	Fix a ``snake'' (commutative) diagram as follows.
+	% https://q.uiver.app/?q=WzAsOCxbMSwwLCJBIl0sWzIsMCwiQiJdLFszLDAsIkMiXSxbMSwxLCJBJyJdLFsyLDEsIkInIl0sWzMsMSwiQyciXSxbNCwwLCIwIl0sWzAsMSwiMCJdLFsxLDIsImciXSxbMiw2XSxbNywzXSxbMyw0LCJmJyJdLFs0LDUsImcnIl0sWzAsMSwiZiJdLFswLDMsImEiXSxbMSw0LCJiIl0sWzIsNSwiYyJdXQ==
+	\[\begin{tikzcd}
+		& A & B & C & 0 \\
+		0 & {A'} & {B'} & {C'}
+		\arrow["g", from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{f'}", from=2-2, to=2-3]
+		\arrow["{g'}", from=2-3, to=2-4]
+		\arrow["f", from=1-2, to=1-3]
+		\arrow["a", from=1-2, to=2-2]
+		\arrow["b", from=1-3, to=2-3]
+		\arrow["c", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	The following are true.
+	\begin{listalph}
+		\item There is an exact sequence
+		\[\ker a\stackrel f\to\ker b\stackrel g\to\ker c\stackrel\delta\to\coker a\stackrel{f'}\to\coker b\stackrel{g'}\to\coker c,\]
+		where $\ker x\stackrel h\to\ker y$ is restriction, $\delta$ is the connecting morphism, and $\coker x\stackrel{h'}\to\coker y$ is induced by $h'$ by modding out.
+		\item If $f$ is injective, then $\ker a\stackrel f\to\ker b$ is injective.
+		\item If $g'$ is surjective, then $\coker b\stackrel{g'}\to\coker c$ is surjective.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Analogous to the last half of the proof of \Cref{prop:get-les}. Namely, the construction of the boundary map $\delta$ is exactly what we constructed: pull back along $g$, push through $b$, and then pull back along $f'$.
+\end{proof}
+Anyway, let's see an example.
+\begin{example}
+	Analogous to \Cref{ex:homology-sn}, we see that \Cref{prop:relative-les} produces in the long exact sequence the exact sequence
+	\[\underbrace{\widetilde H_i\left(D^n\right)}_0\to\widetilde H_i\left(D^n,S^{n-1}\right)\to\widetilde H_{i-1}\left(S^{n-1}\right)\to\underbrace{\widetilde H_{i-1}\left(D^n\right)}_0.\]
+	Thus, the middle map is an isomorphism.
+\end{example}
+
+\subsection{Excision}
+We close class by stating excision, which is a primary tool to compute homology groups.
+\begin{theorem}[excision]
+	Fix subspaces $Z\subseteq A\subseteq X$ such that $\overline Z\subseteq A$. Then the inclusion $(X\setminus Z,A\setminus Z)\subseteq (X,A)$ induces isomorphisms $H_n(X\setminus Z,A\setminus Z)\to H_n(X,A)$.
+\end{theorem}
+Of course, we see that there is a map $C_n(X\setminus Z,A\setminus Z)\to C_n(X,A)$ given by the inclusions $C_n(X\setminus Z)\subseteq C_n(X)$ and $C_n(A\setminus Z)\subseteq C_n(A)$. The main content, then, is in going the other way. Approximately speaking, the idea is to take some $\alpha\in C_n(X,A)$ and then attempt to throw out the parts of $\alpha$ that live in $Z$. But for this to make sense, we must subdivide $X\setminus Z$ in order to make sure that we are going to get a chain at the end of this process.
+
+\end{document}
