@@ -40,6 +40,57 @@ In particular, we would like projection maps $\ZZ_p\to\ZZ/p^\nu\ZZ$ for each $p^
 	\[\ZZ_p\coloneqq\Bigg\{(a_\nu)_{\nu=0}^\infty\in\prod_{\nu=0}^\infty\ZZ/p^\nu\ZZ:a_{\nu+1}\equiv a_\nu\pmod{p^\nu}\Bigg\}.\]
 	In practice, it is helpful to view $(a_\nu)_\nu$ as a sequence of integers, but it is important to remember that we only care about $a_\nu\pmod{p^\nu}$.
 \end{defihelper}
+\begin{remark} \label{rem:upgrade-zp-equiv}
+	Quickly, note that $a_{\nu+1}\equiv a_\nu\pmod{p^\nu}$ implies (by induction) that
+	\[a_{\nu+N}\equiv a_\nu\pmod{p^\nu}\]
+	for any nonnegative integer $N\ge0$. Indeed, there is nothing to say for $N=0$, and then the inductive step recognizes that $a_{\nu+N+1}\equiv a_{\nu+N}\pmod{p^{\nu+N}}$ and hence $a_{\nu+N+1}\equiv a_{\nu+N}\equiv a_\nu\pmod{p^\nu}$.
+\end{remark}
+\begin{example} \label{ex:power-series-z2}
+	Fix $p=2$ and define $a_\nu\coloneqq1+2+2^2+\cdots+2^{\nu-1}$. Then $(a_\nu)_\nu\in\ZZ_p$.
+\end{example}
+\begin{proof}
+	Certainly we have defined a sequence of elements $a_\nu\in\ZZ/2^\nu\ZZ$. It remains to check that
+	\[a_{\nu+1}=\sum_{k=0}^\nu2^k\equiv\sum_{k=0}^{\nu-1}2^k=a_\nu\pmod{2^\nu},\]
+	so we are done.
+\end{proof}
+Of course, we can write elements of $\ZZ_p$ as sequences in $\prod_\nu\ZZ/p^\nu\ZZ$, but \Cref{ex:power-series-z2} suggests a more intuitive way to look at our elements: any element of $\ZZ_p$ can be thought of as a power series
+\[c_0+c_1p+c_2p^2+\cdots\]
+where $c_0,c_1,c_,\ldots\in\{0,1,\ldots,p-1\}$. Let's explain this bijection.
+\begin{proposition}
+	Fix a prime $p$. Then there is a unique bijection $\{0,1,\ldots,p-1\}^\NN\to\ZZ_p$ given by sending $(c_\nu)_{\nu=0}^\infty$ to the sequence
+	\[\Bigg(\sum_{k=0}^{\nu-1}c_kp^k\Bigg)_{\nu=0}^\infty\in\ZZ_p.\]
+\end{proposition}
+\begin{proof}
+	Let the function $\{0,1,\ldots,p-1\}^\NN\to\ZZ_p$ be called $\varphi$. Here are our checks.
+	\begin{itemize}
+		\item Well-defined: given $(c_\nu)_{\nu=0}^\infty$, we must show that $\varphi\left((c_\nu)_{\nu=0}^\infty\right)\in\ZZ_p$. Well, expanding out, it is enough to note that
+		\[\sum_{k=0}^{\nu}c_kp^k\equiv\sum_{k=0}^{\nu-1}c_kp^k\pmod{p^\nu},\]
+		completing the argument.
+		\item Injective: suppose we have two sequences $(c_\nu)_{\nu=0}^\infty$ and $(d_\nu)_{\nu=0}^\infty$ going to the same element in $\ZZ_p$. Then checking in $\ZZ_p$ tells us that
+		\[\sum_{k=0}^{\nu-1}c_kp^k\equiv\sum_{k=0}^{\nu-1}d_kp^k\pmod{p^\nu}\]
+		for any $\nu$. We now claim that $c_\nu=d_\nu$ for each $\nu\ge0$ by induction on $k$. If $\nu=0$, then we note $c_0\equiv d_0\pmod p$ enforces $c_0=d_0$ because $c_0,d_0\in\{0,1,\ldots,p-1\}$. Now, for the inductive step, suppose $c_k=d_k$ for $k<\nu$, then we see that
+		\[\sum_{k=0}^{\nu}c_kp^k\equiv\sum_{k=0}^{\nu}d_kp^k\pmod{p^{\nu+1}},\]
+		but we already know that
+		\[\sum_{k=0}^{\nu-1}c_kp^k=\sum_{k=0}^{\nu-1}d_kp^k\]
+		by the inductive hypothesis, so we conclude $c_\nu p^\nu\equiv d_\nu p^\nu\pmod{p^{\nu+1}}$, so $c_\nu\equiv d_\nu\pmod p$, so $c_\nu=d_\nu$.
+		\item Surjective: fix any $(a_\nu)_{\nu=0}^\infty\in\ZZ_p$. Now, we would like to have
+		\begin{equation}
+			a_\nu\stackrel?\equiv\sum_{k=0}^{\nu-1}c_kp^k\pmod{p^\nu} \label{eq:desired-power-series}
+		\end{equation}
+		for each $\nu\ge0$. We will define $(c_\nu)_{\nu=0}^\infty$ inductively to satisfy these. We begin by choosing $c_0\equiv a_1\pmod p$, which is possible because we may choose $c_0\in\{0,1,\ldots,p-1\}$.
+
+		For the inductive step, suppose we are given $c_0,\ldots,c_{\nu-1}$ so that \eqref{eq:desired-power-series} holds. Observe that this also implies
+		\[a_{\nu+1}\equiv\sum_{k=0}^{\nu-1}c_kp^k\pmod{p^\nu},\]
+		so we define $c_\nu\in\{0,1,\ldots,p-1\}$ by
+		\[c_\nu\equiv\frac1{p^\nu}\Bigg(a_{\nu+1}-\sum_{k=0}^{\nu-1}c_kp^k\Bigg)\pmod p.\]
+		Rearranging yields
+		\[a_{\nu+1}\equiv\sum_{k=0}^\nu c_kp^k\pmod{p^{\nu+1}},\]
+		completing the inductive step.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Ring Theory of \texorpdfstring{$\ZZ_p$}{ Zp}}
 Here are some basic checks on $\ZZ_p$.
 \begin{lemma}
 	Fix a prime $p$. Then $\ZZ_p$ is a subring of $R_p$.
@@ -68,14 +119,48 @@ We complained that $R_p$ is not an integral domain, but $\ZZ_p$ is.
 	\[a_{m+n}b_{m+n}\not\equiv0\pmod{p^{m+n}},\]
 	so $(a_\nu)_\nu\cdot(b_\nu)_\nu\ne0$.
 \end{proof}
-It is notable that there is a copy of $\ZZ$ in $\ZZ_p$, and $\ZZ$ is ``dense'' in $\ZZ_p$ in some sense. This tells us that $\ZZ_p$ is indeed a fairly good approximation of $\ZZ$, but do remember that $\ZZ_p$ only cares about$\pmod{p^\nu}$ information.\todo{}
+It is notable that there is a copy of $\ZZ$ in $\ZZ_p$, and $\ZZ$ is ``dense'' in $\ZZ_p$ in some sense. This tells us that $\ZZ_p$ is indeed a fairly good approximation of $\ZZ$, but do remember that $\ZZ_p$ only cares about$\pmod{p^\nu}$ information.
+\begin{lemma}
+	Fix a prime $p$. For any $(a_\nu)_\nu\in\ZZ_p$ and positive integer $N$, there exists an integer $a\in\ZZ$ such that
+	\[a\equiv a_\nu\pmod{p^\nu}\]
+	for all $\nu\le N$.
+\end{lemma}
+\begin{proof}
+	Choose $a\coloneqq a_N$. Then any $\nu\le N$ has
+	\[a_N\equiv a_\nu\pmod{p^\nu}\]
+	by construction of $\ZZ_p$, so we are done.
+\end{proof}
+\begin{lemma} \label{lem:z-into-zp}
+	Fix a prime $p$. The map $i_p\colon\ZZ\to\ZZ_p$ given by $i_p(a)\coloneqq(a)_{\nu=0}^\infty$ is an injective ring homomorphism.
+\end{lemma}
+\begin{proof}
+	Note that the maps $\ZZ\to\ZZ/p^\nu\ZZ$ for each $p^\nu$ are all (surjective) ring homomorphisms, so we have a ring map
+	\[\ZZ\to\prod_{\nu=0}^\infty\ZZ/p^\nu\ZZ\]
+	given by $a\mapsto(a)_{\nu=0}^\infty$. So to check that $i_p$ is a ring homomorphism, we merely need to check that the above map lands in $\ZZ_p$. Well, we see that
+	\[a\equiv a\pmod{p^\nu}\]
+	for any $p^\nu$, so indeed $i_p(a)\in\ZZ_p$.
+
+	Lastly, we check that $i_p$ is injective. It suffices to check that $i_p$ has trivial kernel. Well, suppose we have some nonzero integer $n\in\ZZ$. By unique prime factorization in $\ZZ$, there is a some largest nonnegative integer $\nu$ such that $p^\nu\mid n$. But then
+	\[n\not\equiv0\pmod{p^{\nu+1}},\]
+	so it follows that $i_p(n)\ne0$.
+\end{proof}
+\begin{remark}
+	\Cref{lem:z-into-zp} is somewhat remarkable in that each individual map $\ZZ\to\ZZ/p^\nu\ZZ$ has lost information (it has nontrivial kernel), but gluing them all together does not lose any information about $\ZZ$! Typically, we think about taking modding out as forgetting some information, but we can technically recover $\ZZ$ from within $\ZZ_p$.
+\end{remark}
+We now make a few remarks on the ring structure of $\ZZ_p$, simply because it is so nice. To emphasize that $\ZZ_p$ only cares about the prime $p$, we note that all other primes are invertible in $\ZZ_p$.
+
+\todo{}
 
 \subsection{Hensel's Lemma}
 
-\subsection{Ostrowski's Theorem}
+\subsection{Newton's Method}
 
 \subsection{Problems}
-\begin{prob} \label{prob:223-in-z3}
+\begin{prob}[3 points]
+	Fix a prime $p$, and choose a subset $S\subseteq\ZZ$ containing exactly one representative of each class in $\ZZ/p\ZZ$. For any $a\in\ZZ_p$, show that there is a unique sequence $(c_\nu)_{\nu=0}^\infty\in S^\NN$ such that
+	\[a=\Bigg(\sum_{k=0}^{\nu-1}c_kp^k\Bigg)_{\nu=0}^\infty.\]
+\end{prob}
+\begin{prob}[4 points] \label{prob:223-in-z3}
 	Show that $x^2-223y^2=-3$ has a solution in $\ZZ_3$ by showing that there exists $y\in\ZZ_3$ such that $y^2=4/223$. Use \Cref{prob:norm-223} to conclude that the equation
 	\[x^2-223y^2\equiv-3\pmod n\]
 	has a solution for any positive integer $n$.
