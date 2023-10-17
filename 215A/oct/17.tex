@@ -1,0 +1,93 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 17}
+
+I am stressed. We're talking about excision today.
+
+\subsection{Excision}
+We close class by stating excision, which is a primary tool to compute homology groups.
+\begin{theorem}[excision]
+	Fix subspaces $Z\subseteq A\subseteq X$ such that $\overline Z\subseteq A$. Then the inclusion $(X\setminus Z,A\setminus Z)\subseteq (X,A)$ induces isomorphisms $H_n(X\setminus Z,A\setminus Z)\to H_n(X,A)$.
+\end{theorem}
+Of course, we see that there is a map $C_n(X\setminus Z,A\setminus Z)\to C_n(X,A)$ given by the inclusions $C_n(X\setminus Z)\subseteq C_n(X)$ and $C_n(A\setminus Z)\subseteq C_n(A)$. The main content, then, is in going the other way. Approximately speaking, the idea is to take some $\alpha\in C_n(X,A)$ and then attempt to throw out the parts of $\alpha$ that live in $Z$. But for this to make sense, we must subdivide $X\setminus Z$ in order to make sure that we are going to get a chain at the end of this process.
+
+Let's restate this result into something without differences.
+\begin{theorem}[excision] \label{thm:ex}
+	Fix a topological space $X=A\cup B$ where $A,B\subseteq X$ are open. Then the map of open pairs $(B,A\cap B)\to(X,A)$ induces a family of isomorphisms on relative cohomology $H_n(B,A\cap B)\to H_n(X,A)$.
+\end{theorem}
+The following tool will be useful.
+\begin{definition}
+	Fix a topological space $X$, and let $\mathcal U$ be an open cover of $X$. We then let $C_n^{\mathcal U}(X)$ denote the subgroup of $C_n(X)$ consisting of chains which output to some open set in $\mathcal U$. Notably, $\del\colon C(X)\to C(X)$ restricts to $\del\colon C^{\mathcal U}(X)\to C^{\mathcal U}(X)$.
+\end{definition}
+The main technical result is the following.
+\begin{proposition} \label{prop:homology-is-local}
+	Fix a topological space $X$ with open cover $\mathcal U$. Then the inclusion of chain complex $C^{\mathcal U}(X)\to C(X)$ is an isomorphism on homology.
+\end{proposition}
+\begin{remark}
+	It turns out that there is an inverse map so that composites are chain homotopic to identities, but we will not show this.
+\end{remark}
+Let's see how \Cref{thm:ex} follows from \Cref{prop:homology-is-local}.
+\begin{proof}[Proof of \Cref{thm:ex}]
+	Let $\mathcal U$ be the open cover $\{A,B\}$. Then \Cref{prop:homology-is-local} grants $\rho\colon C^{\mathcal U}(X)\to C(X)$ which is a section of the inclusion $i$ and a chain homotopy $D\colon C_n(X)\to C_{n+1}(X)$ so that $\del D+D\del={\id}-i\rho$. It will be a property of the construction that $\rho$ sends $C_n(A)\to C_n(A)$ and $D$ sends $C_n(A)$ to $C_{n+1}(A)$, so the quotient maps
+	\[\frac{C_n^{\mathcal U}(X)}{C_n(A)}\to\frac{C_n(X)}{C_n(A)}\]
+	is an isomorphism on homology. Continuing, we note that
+	\[\frac{C_n(B)}{C_n(A\cap B)}\to\frac{C_n^{\mathcal U}(X)}{C_n(A)}\]
+	is an isomorphism because these are both free groups whose generators are given by chains landing in $B$ but not in $A$. So we have a composite map
+	\[\frac{C_n(B)}{C_n(A\cap B)}\to\frac{C_n(X)}{C_n(A)},\]
+	which is an isomorphism on homology, so we are done.
+\end{proof}
+So we now turn to the proof of \Cref{prop:homology-is-local}. The main point is to use barycentric subdivision to replace a chain with smaller chains which will hopefully land in $\mathcal U$. We proceed in stages.
+\begin{enumerate}
+	\item For a simplex $[v_0,\ldots,v_n]$, the barycenter is the average of all the coordinates; we denote this point by $\widehat{[v_0,\ldots,v_n]}$.
+
+	Now, for $\Delta^n=[v_0,\ldots,v_n]$, we mark all the barycenters of all the various simplices arising as substrings. Now, given a permutation $\tau$ of $\{0,\ldots,n\}$, we have the simplex
+	\[\Delta(\tau)\coloneqq\left[v_{\tau(0)},\widehat{[v_{\tau(0)},v_{\sigma(1)}]},\ldots,\widehat{[v_{\tau(0)},\ldots,v_{\tau(n)}]}\right]\]
+	One can see that these turn $\Delta^n$ into a $\Delta$-complex, and we are able to define
+	\[S\left(\Delta^n\right)=\sum_{\tau\in\op{Sym}(\{0,\ldots,n\})}(-1)^{\op{sgn}\tau}\Delta(\tau),\]
+	This can then be extended to chains: we send a chain $\sigma\colon\Delta^n\to X$ to the chain given by passing the terms of $S(\Delta^n)$ through $\sigma$.
+
+	As an aside, note that each $\Delta(\sigma)$ has the diameter go down by a factor of $\frac n{n+1}$ by the nature of how we chose our simplices, so this subdivision will exponentially decrease our diameters. As such, for any chain $\sigma\colon\Delta^n\to X$, we can find $i$ such that $S^i\sigma\in C_n^{\mathcal U}(X)$. The point is that we can pull back the open cover $\mathcal U$ to $\Delta^n$, reduce to a finite subcover, and then we note that any point in $\Delta^n$ has an open neighborhood fully contained in one of the $\mathcal U$, so we can merely keep shrinking our diameters via $S$ until we full live in $\mathcal U$.
+
+	\item Next up, we remark that $S\colon C_n(X)\to C_n(X)$ is chain homotopic to the identity, and the chain homotopy restricts to a map $C_n^{\mathcal U}(X)\to C_n^{\mathcal U}(X)$. The idea is to work with $\Delta^n\times I$ imagining $\Delta^n$ on one end and $S(\Delta^n)$ on the other end. In particular, choose an increasing subsequence $i_0<i_1<\cdots<i_n$ of vertices of $\Delta^n$, and we can produce an $(n+1)$-simplex
+	\[\left[v_{i_0},\ldots,v_{i_k},\widehat{[v_{i_0},\ldots,v_{i_k}]},\ldots,\widehat{[v_{i_0},\ldots,v_{i_k}]}\right].\]
+	This will subdivide $\Delta^n\times I$, and we can sum over all these simplices to produce the desired element of $C_{n+1}(\Delta^n)$, and then this becomes a map on $C_n(X)$ by the usual pushing around. Then one can check that $\del D+D\del=S-{\id}$ be a direct computation.
+	
+	We now argue that we have an isomorphism on homology even though we needed a little stronger for our proof of \Cref{thm:ex}. The point is that we can take any chain $\alpha\in C_n(X)$ such that $\del\alpha\in C_{n-1}(U)$ and find $j$ so that $S^j\alpha\in C_n^{\mathcal U}(X)$. Because $S$ is chain homotopic to the identity, so $S^j$, so $\left[S^j\alpha\right]=[\alpha]$ in $H_n(X,U)$. Then one needs to argue that this is a bijection.
+\end{enumerate}
+
+\subsection{Fixing Relative Homology}
+We have the following coherence check.
+\begin{proposition}
+	Fix a good pair $(X,A)$. Then the quotient map $q\colon(X,A)\to (X/A,A/A)$ induces an isomorphism on homology $H_n(X,A)\to\widetilde H_n(X/A,A/A)$.
+\end{proposition}
+\begin{proof}
+	Being a good pair promises us some open neighborhood $V$ of $A$ with a deformation retract to $A$. Now, $(A,V)$ and $(V,X)$ are also good pairs, so the usual argument is able to produce a long exact sequence
+	\[H_n(V,A)\to H_n(X,A)\to H_n(X,V)\to H_{n-1}(V,A),\]
+	but the end terms vanish, so we see $H_n(X,A)=H_n(X,V)$. Similarly, we get isomorphisms $H_n(X/A,A/A)\cong H_n(X/A,V/A)$, so we put everything together into the following picture.
+	% https://q.uiver.app/#q=WzAsNixbMCwwLCJIX24oWCxBKSJdLFswLDEsIkhfbihYL0EsQS9BKSJdLFsxLDEsIkhfbihYL0EsVi9BKSJdLFsxLDAsIkhfbihYLFYpIl0sWzIsMCwiSF9uKFhcXHNldG1pbnVzIEEsVlxcc2V0bWludXMgQSkiXSxbMiwxLCJIX24oKFgvQSlcXHNldG1pbnVzIChBL0EpLFYvQVxcc2V0bWludXMgKEEvQSkpIl0sWzAsMywiXFxzaW0iXSxbMSwyLCJcXHNpbSJdLFs0LDMsIlxcc2ltIiwyXSxbNSwyLCJcXHNpbSIsMl0sWzAsMSwicSIsMl0sWzMsMl0sWzQsNSwicSIsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{H_n(X,A)} & {H_n(X,V)} & {H_n(X\setminus A,V\setminus A)} \\
+		{H_n(X/A,A/A)} & {H_n(X/A,V/A)} & {H_n((X/A)\setminus (A/A),V/A\setminus (A/A))}
+		\arrow["\sim", from=1-1, to=1-2]
+		\arrow["\sim", from=2-1, to=2-2]
+		\arrow["\sim"', from=1-3, to=1-2]
+		\arrow["\sim"', from=2-3, to=2-2]
+		\arrow["q"', from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow["q"', from=1-3, to=2-3]
+	\end{tikzcd}\]
+	We have argued that the horizontal arrows are isomorphisms, and we note that $(X\setminus A,V\setminus A)$ is homeomorphic to $((X/A)\setminus (A/A),(V/A)\setminus(A/A))$, so the right arrow is an isomorphism, so we conclude that the left arrow is also an isomorphism.
+\end{proof}
+\begin{remark}
+	Fix an arbitrary pair $(X,A)$. Then we claim that $H_n(X,A)\cong\widetilde H_n(X\cup_ACA)$, where $CA$ is a cone over $A$ (effectively contracting it to a point). Because $CA$ is contractible, we note that the long exact sequence of the pair $(X\cup_ACA,CA)$ produces isomorphisms
+	\[\widetilde H_n(X\cup_ACA)\cong H_n(X\cup_ACA,CA).\]
+	Now, we apply excision, puncturing $CA$ at the point of the cone, and then $CA\setminus\{0\}$ has a deformation retract to $A$, so we get an isomorphism
+	\[H_n(X\cup_ACA,CA)\cong H_n(X,A).\]
+	This sort of remark turns into an ``exact sequence of spaces'' where the point is that the composite $A\into X\into X\cup_ACA$ trivializes $A$, and $A$ is somehow exactly what gets trivialized.
+\end{remark}
+
+\end{document}
