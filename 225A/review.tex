@@ -1,0 +1,327 @@
+% LTeX: enabled=false
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\newcommand{\nirpdftitle}{Midterm Review}
+\usepackage{import}
+\inputfrom{..}{nir}
+
+\pagestyle{contentpage}
+
+\title{Review for Midterm 1}
+\author{Nir Elber}
+\date{Fall 2023}
+\rhead{\textit{225A: MIDTERM REVIEW}}
+\lhead{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	\noindent This document condenses the major definitions and results from class and a couple extra things covered in the exercises.
+\end{abstract}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\tableofcontents
+
+\newpage
+
+\section{Definitions}
+
+\subsection{Basic Notions}
+\begin{definition}[language]
+	A \textit{language} $\mathcal L$ consists of the sets $\mathcal F$, $\mathcal R$, and $\mathcal C$ of symbols. Here, $\mathcal F$ are functions, $\mathcal R$ are relations, and $\mathcal C$ are constants. Notably, there is an arity function $n\colon(\mathcal F\cup\mathcal R)\to\NN$.
+\end{definition}
+\begin{definition}[structure]
+	Fix a language $\mathcal L$. Then an \textit{$\mathcal L$-structure} $\mathcal M$ consists of the following data.
+	\begin{itemize}
+		\item Domain: a nonempty set $M$.
+		\item Functions: for each $f\in\mathcal F$, there is a function $f^{\mathcal M}\colon M^{n(f)}\to M$.
+		\item Relations: for each $R\in\mathcal R$, there is a relation $R^\mathcal M\subseteq M^{n(r)}$.
+		\item Constants: for each $c\in\mathcal C$, there is a constant $c^\mathcal M\in M$.
+	\end{itemize}
+	The various $(-)^\mathcal M$ data are called \textit{interpretations}.
+\end{definition}
+\begin{defihelper}[homomorphism, embedding, isomorphism] \nirindex{embedding} \nirindex{isomorphism} \nirindex{homomorphism}
+	Fix a language $\mathcal L$. Then an \textit{$\mathcal L$-homomorphism} $\eta\colon\mathcal M\to\mathcal N$ of $\mathcal L$-structures $\mathcal M$ and $\mathcal N$ is a one-to-one map $\eta\colon M\to N$ preserving the interpretations, as follows.
+	\begin{itemize}
+		\item Functions: for each $f\in\mathcal F$, we have $\eta\circ f^\mathcal M=f^\mathcal N\circ\eta^{n(f)}$.
+		\item Relations: for each $R\in\mathcal R$, if $\overline m\in R^\mathcal M$, then $\eta^{n(R)}(m)\in R^\mathcal N$.
+		\item Constants: for each $c\in\mathcal C$, we have $\eta\left(c^\mathcal M\right)=c^\mathcal N$.
+	\end{itemize}
+	If $\eta\colon M\to N$ is one-to-one and the relations condition is an equivalence, then $\eta$ is an \textit{$\mathcal L$-embedding}. If $\eta\colon M\to N$ is the identity $M\subseteq N$, then we say that $\mathcal M$ is an $\mathcal L$-substructure. In addition, if $\eta$ is onto, then $\eta$ is an \textit{$\mathcal L$-isomorphism}.
+\end{defihelper}
+\begin{definition}[term]
+	Let $\mathcal L$ be a language. The set of \textit{$\mathcal L$-terms} is the smallest set $\mathcal T$ satisfying the following.
+	\begin{itemize}
+		\item Constants: for each $c\in\mathcal C$, we have $c\in\mathcal T$.
+		\item Variables: $x_i\in\mathcal T$ for each $i\in\NN$. Notably, we have only countably many variables.
+		\item Functions: if $t_1,\ldots,t_n\in\mathcal T$ where $n=n(f)$ for some $f\in\mathcal F$, then $f(t_1,\ldots,t_n)\in\mathcal T$.
+	\end{itemize}
+	Given an $\mathcal L$-structure $\mathcal M$ and term $t\in\mathcal T$ with variables $x_1,\ldots,x_n$ and elements $a_1,\ldots,a_n\in M$, we define $t^\mathcal M(\overline a)$ in the obvious way.
+\end{definition}
+\begin{definition}[formula]
+	The set of \textit{$\mathcal L$-formulae} is the smallest set satisfying the following.
+	\begin{itemize}
+		\item Any atomic $\mathcal L$-formula $\varphi$ is an $\mathcal L$-formula.
+		\item For any $\mathcal L$-formulae $\varphi$ and $\psi$, then $\lnot\varphi$ and $\varphi\land\psi$ and $\varphi\lor\psi$ are $\mathcal L$-formulae.
+		\item For any variable $v_i$ for $i\in\NN$, then $\exists v_i\varphi$ is an $\mathcal L$-formula.
+	\end{itemize}
+\end{definition}
+\begin{definition}[sentence]
+	Fix a language $\mathcal L$. An $\mathcal L$-formula with no free variables is a \textit{sentence}.
+\end{definition}
+\begin{definition}[truth]
+	Fix an $\mathcal L$-structure $\mathcal M$. Further, fix an $\mathcal L$-formula $\varphi(x_1,\ldots,x_n)$ and a tuple $\overline a\in M^n$. Then we define \textit{truth} as $\mathcal M\models\varphi(\overline a)$ to mean that $\varphi$ is true upon plugging in $\overline a$, where our definition is inductive on atomic formulae as follows.
+	\begin{itemize}
+		\item $\mathcal M\models(t_1=t_2)(\overline a)$ if and only if $t_1^\mathcal M(\overline a)=t_2^\mathcal M(\overline a)$.
+		\item $\mathcal M\models R(t_1,\ldots,t_n)$ if and only if $\left(t_1^\mathcal M(\overline a),\ldots,t_2^\mathcal M(\overline a)\right)\in R^\mathcal M$.
+	\end{itemize}
+	We define truth inductively on formulae now as follows.
+	\begin{itemize}
+		\item $\mathcal M\models(\varphi\land\psi)(\overline a)$ if and only if $\mathcal M\models\varphi(\overline a)$ and $\mathcal M\models\psi(\overline a)$.
+		\item $\mathcal M\models(\varphi\lor\psi)(\overline a)$ if and only if $\mathcal M\models\varphi(\overline a)$ or $\mathcal M\models\psi(\overline a)$.
+		\item $\mathcal M\models\lnot\varphi(\overline a)$ if and only if we do not have $\mathcal M\models\varphi(\overline a)$.
+		\item $\mathcal M\models\exists v\varphi(\overline a,v)$ if and only if there exists $b\in M$ such that $\mathcal M\models\varphi(\overline a,b)$.
+	\end{itemize}
+	In this case, we say that $\mathcal M$ \textit{satisfies, models, etc.} $\varphi(\overline a)$ and so on.
+\end{definition}
+\begin{definition}[definable]
+	Fix an $\mathcal L$-structure $\mathcal M$ and subset $B\subseteq M$. Then a subset $X\subseteq M^n$ is \textit{$B$-definable} if and only if there is a formula $\varphi(v_1,\ldots,v_n,w_1,\ldots,w_k)$ and tuple $\overline b\in B^k$ such that $\overline a\in X$ if and only if $\mathcal M\models\varphi(\overline a,\overline b)$. The tuple $\overline b$ might be called the \textit{parameters}. We may abbreviate $M$-definable to simply \textit{definable}.
+\end{definition}
+\begin{definition}[algebraic closure, definable closure]
+	Fix an $\mathcal L$-structure $\mathcal M$ and subset $A\subseteq M$.
+	\begin{itemize}
+		\item The \textit{definable closure} $\op{dcl}(A)$ of $A$ is the set of all $b\in M$ such that there is a formula $\varphi(\overline x,y)$ and $\overline a\in A$ such that
+		\[\{b'\in M:\mathcal M\models\varphi(\overline a,b')\}\]
+		is the set $\{b\}$.
+		\item The \textit{algebraic closure} $\op{dcl}(A)$ of $A$ is the set of all $b\in M$ such that there is a formula $\varphi(\overline x,y)$ and $\overline a\in A$ such that
+		\[\{b'\in M:\mathcal M\models\varphi(\overline a,b')\}\]
+		is a finite set containing $\{b\}$.
+	\end{itemize}
+\end{definition}
+
+\subsection{Theories}
+\begin{definition}[theory]
+	Fix an $\mathcal L$-structure $\mathcal M$. Then the \textit{theory} $\mathrm{Th}_{\mathcal L}(\mathcal M)$ of $\mathcal M$ is the set of all sentences $\varphi$ such that $\mathcal M\models\varphi$.
+\end{definition}
+\begin{definition}[elementary equivalence]
+	Fix $\mathcal L$-structures $\mathcal M$ and $\mathcal N$. Then we say that $\mathcal M$ and $\mathcal N$, written $\mathcal M\equiv\mathcal N$, are \textit{elementarily equivalent} if and only if $\op{Th}(\mathcal M)=\op{Th}(\mathcal N)$.
+\end{definition}
+\begin{definition}[elementary substructure]
+	Fix a language $\mathcal L$ and two structures $\mathcal M$ and $\mathcal N$. Then we say that $\mathcal M$ is an \textit{elementary substructure} of $\mathcal N$, written $\mathcal M\le\mathcal N$ if and only if $\mathcal M$ is a substructure of $\mathcal N$ and $\mathcal M_M\equiv\mathcal N_M$.
+\end{definition}
+\begin{definition}[theory]
+	Fix a language $\mathcal L$. Then an \textit{$\mathcal L$-theory} $T$ is a set of $\mathcal L$-sentences. For an $\mathcal L$-structure $\mathcal M$, we say that $\mathcal M$ \textit{models} $T$, written $\mathcal M\models T$, if and only if $\mathcal M\models\varphi$ for all $\varphi\in\mathcal M$. We let $\op{Mod}(T)$ denote the class of all models $\mathcal M$ of $T$, and we call it an \textit{elementary class}.
+\end{definition}
+\begin{definition}[logically implies]
+	Fix a language $\mathcal L$ and theory $T$. Then we say that $T$ \textit{logically implies} a sentence $\varphi$, written $T\models\varphi$, if and only if any $\mathcal L$-structure $\mathcal M$ modelling $T$ has $\mathcal M\models\varphi$.
+\end{definition}
+\begin{definition}[diagram]
+	Fix a language $\mathcal L$ and an $\mathcal L$-structure $\mathcal M$. The \textit{diagram} $\mathrm{Diag}(\mathcal M)$ is the set $\varphi$ of atomic $\mathcal L_M$-sentences (in the expanded language $\mathcal L_M$) or negations of atomic sentences such that $\mathcal M\models\varphi$. The \textit{elementary diagram} $\op{elDiag}\mathcal M$ is the theory $\mathrm{Th}_{\mathcal L_M}(\mathcal M_M)$.
+\end{definition}
+
+\subsection{Adjectives for Theories}
+\begin{definition}[satisfiable]
+	Fix a language $\mathcal L$ and theory $T$. Then $T$ is \textit{satisfiable} if and only if it has a model $\mathcal M$.
+\end{definition}
+\begin{definition}[finitely satisfiable]
+	Fix a language $\mathcal L$ and theory $T$. Then $T$ is \textit{finitely satisfiable} if and only if any finite subset of $T$ is satisfiable.
+\end{definition}
+\begin{definition}[witness]
+	Fix a theory $T$ of a language $\mathcal L$. Then $T$ has \textit{witnesses} (or \textit{Henkin constants}) if and only if each formula $\varphi(x)$ in one free variable $x$ has a constant symbol $c$ such that $\exists x\varphi(x)\to\varphi(c)$ lives in $T$.
+\end{definition}
+\begin{definition}[Skolem functions]
+	An $\mathcal L$-theory $T$ has \textit{built-in Skolem functions} if and only if any $\mathcal L$-formula $\varphi(\overline x,y)$ has a function symbol $f_\varphi$ such that
+	\[\forall\overline x((\exists y\,\varphi(\overline x,y))\to\varphi(\overline x,f_\varphi(\overline x))).\]
+	The theory $T$ has \textit{definable Skolem functions} if and only if any $\mathcal L$-formula $\varphi(\overline x,y)$ has a function $f$ with definable graph satisfying the above property.
+\end{definition}
+\begin{defihelper}[$\kappa$-categorical] \nirindex{kappa-categorical@$\kappa$-categorical}
+	A theory $T$ of a language $\mathcal L$ is \textit{$\kappa$-categorical} if and only if $T$ has exactly one isomorphism class of models of cardinality $\kappa$.
+\end{defihelper}
+\begin{definition}[complete]
+	An $\mathcal L$-theory $T$ is \textit{complete} if and only if $T\models\varphi$ or $T\models\lnot\varphi$ for any $\mathcal L$-sentence $\varphi$.
+\end{definition}
+\begin{definition}[model-complete]
+	A theory $T$ is \textit{model-complete} if and only if any chain of models $\mathcal M\subseteq\mathcal N$ of models of $T$ is in fact an elementary embedding.
+\end{definition}
+\begin{definition}[strongly minimal]
+	A theory $T$ is \textit{strongly minimal} if and only if any definable subset of any model of $T$ is either finite or cofinite.
+\end{definition}
+\begin{definition}[$o$-minimal]
+	A theory $T$ of ordered sets is \textit{$o$-minimal} if and only if $T$, restricted to the language $\{<\}$, is $\op{DLO}$, and all definable subsets of any model of $T$ is a finite union of points and intervals.
+\end{definition}
+
+\subsection{Ultraproducts}
+\begin{definition}[filter]
+	Fix a set $I$. Then a \textit{filter} $\mathcal F$ on $I$ is a subset of $\mathcal P(I)$ satisfying the following.
+	\begin{listalph}
+		\item $I\in\mathcal F$.
+		\item Finite intersection: for $X,Y\in\mathcal F$, we have $X\cap Y\in\mathcal F$.
+		\item Containment: if $X\in\mathcal F$ and $Y\subseteq I$ contains $X$, then $Y\in\mathcal F$ also.
+	\end{listalph}
+\end{definition}
+\begin{definition}[ultrafilter]
+	Fix a set $I$. Then an \textit{ultrafilter} $\mathcal F$ on $I$ is a nontrivial filter on $I$ such that each subset $X\subseteq I$ has one of $X\in\mathcal F$ or $I\setminus X\in\mathcal F$. Equivalently, $\mathcal U$ is maximal among the partially ordered set of nontrivial filters on $I$, ordered by inclusion.
+\end{definition}
+\begin{remark}
+	For any nontrivial filter $\mathcal F$ on a set $I$, there exists an ultrafilter $\mathcal U$ containing $\mathcal F$.
+\end{remark}
+\begin{definition}[ultraproduct]
+	Fix a language $\mathcal L$ and some $\mathcal L$-structures $\{\mathcal M_\alpha\}_{\alpha\in I}$. The \textit{ultraproduct} is the $\mathcal L$-structure defined as follows.
+	\begin{itemize}
+		\item The universe $M$ is $\prod_{\alpha\in I}M_\alpha$ modded out by the equivalence relation $\sim$ given by $(a_\alpha)\sim(b_\alpha)$ if and only if
+		\[\{\alpha\in I:a_\alpha=b_\alpha\}\in\mathcal U.\]
+		\item Functions are interpreted component-wise.
+		\item For an $n$-ary relation $R$, $R^\mathcal M((a_{1\alpha}),\ldots,(a_{n\alpha}))$ if and only if the set of $\alpha$ such that $R^{M_\alpha}(a_{1\alpha},\ldots,a_{n\alpha})$ is in $\mathcal U$.
+	\end{itemize}
+\end{definition}
+
+\subsection{Ehrenfeucht--Fra\"iss\'e games}
+\begin{definition}[unnested]
+	An atomic $\mathcal L$-formula $\varphi$ is \textit{unnested} if and only if it takes one of the following forms.
+	\begin{itemize}
+		\item Equalities: $t_i=t_j$ or $x_i=c$ where the $t_\bullet$ are variables or constants.
+		\item Relations: $R(t_1,\ldots,t_n)$ where the $t_\bullet$ are variables or constants.
+		\item Functions: $f(t_1,\ldots,t_n)=t_{n+1}$ where the $t_\bullet$ are variables or constants.
+	\end{itemize}
+\end{definition}
+\begin{definition}
+	Fix a language $\mathcal L$ with two $\mathcal L$-structures $\mathcal A$ and $\mathcal B$, and we fix a natural number $n$. The \textit{Ehrenfeucht--Fra\"iss\'e game} $EF_n(\mathcal A,\mathcal B)$ of length $n$ is played as follows.
+	\begin{itemize}
+		\item Player I picks $\mathcal A$ or $\mathcal B$ and chooses some $a_1\in A$ or $b_1\in B$. Then Player II chooses an element $b_1\in B$ or $a_1\in A$ from the opposite universe to the one Player I chose.
+		\item Then the above move is repeated until we have two $n$-tuples $(a_1,\ldots,a_n)$ or $(b_1,\ldots,b_n)$.
+		\item Player II wins if, for any unnested atomic formula $\psi(x_1,\ldots,x_n)$, we have $\mathcal A\models\psi(\overline a)$ is equivalent to $\mathcal B\models\psi(\overline b)$. Otherwise, Player I wins.
+	\end{itemize}
+\end{definition}
+
+\subsection{Cell Decomposition}
+\begin{definition}[cell]
+	Fix a model $\mathcal R$ of an $o$-minimal theory $T$. Then a \textit{cell} is defined as follows.
+	\begin{itemize}
+		\item A $0$-cell is a point.
+		\item A $1$-cell in $\mathcal R$ is a set of the form $(a,b)$ where $-\infty\le a<b\le\infty$.
+		\item From $n$, an $(n+1)$-cell in $\mathcal R^{n+1}$ is a set of one of the following forms.
+		\begin{itemize}
+			\item We can have
+			\[\{(x_1,\ldots,x_n,y):(x_1,\ldots,x_n)\in X\text{ and }y=f(x_1,\ldots,x_n)\}\]
+			where $X\subseteq\mathcal R^n$ is an $n$-cell and $f\colon X\to\mathcal R$ is continuous and definable.
+			\item We can have $(-\infty,f)_X$ or $(f,g)_X$ or $(g,\infty)_X$ where
+			\[(f,g)_X\coloneqq\{(x_1,\ldots,x_n,y):f(\overline x)<y<f(\overline y)\}\]
+			where $X$ is an $n$-cell and $f,g\colon X\to\mathcal R$ is continuous and definable with $f(\overline x)<g(\overline x)$ always (where $(-\infty,f)_X$ and $(g,\infty)_X$ are defined analogously).
+			\item Lastly, we can have all of $\mathcal R^n$.
+		\end{itemize}
+	\end{itemize}
+\end{definition}
+
+\newpage
+\section{Examples}
+
+\begin{example}
+	Any finite structure can be aximoatized by a single $\mathcal L$-formula. The point is to write down explicitly what all the interpretations are.
+\end{example}
+\begin{example}
+	Let $T$ be any theory in any language (such that $<$ is definable) with $\NN\models T$. Then $\NN$ has arbitrarily large elements, so compactness produces a model of $T$ which is elementarily superstructure to $\NN$ but with an element larger than any element of $\NN$.
+\end{example}
+\begin{example}
+	The class of torsion groups is not elementarily definable in the language $\mathcal L=\{e,*\}$ of groups. The idea is that torsion groups can have elements of arbitrarily large order, so any theory $T$ containing every torsion group as a model will also have as a model of 
+\end{example}
+\begin{example}
+	The theory $\op{DLO}$ of dense linear orders is complete, $\aleph_0$-categorical, not $\aleph_1$-categorical, and eliminates quantifiers. This theory is $o$-minimal.
+\end{example}
+\begin{example}
+	The theory $\op{DAG}$ of divisible abelian groups eliminates quantifiers, is not $\aleph_0$-categorical, but it is $\kappa$-categorical for any $\kappa\ge\aleph_1$. This theory is strongly minimal.
+\end{example}
+\begin{example}
+	The theory $\op{ACF}$ is not complete (though $\mathrm{ACF}_p$ is), $\kappa$-categorical for any infinite $\kappa$, and eliminates quantifiers.
+\end{example}
+\begin{example}
+	The theory of discrete linear orders without endpoints is complete (by the Ehrenfeucht--Fra\"iss\'e game) but not $\kappa$-categorical for any infinite $\kappa$.
+\end{example}
+\begin{example}
+	The theory $\op{Tor}_2$ of $2$-torsion groups is $\kappa$-categorical for any infinite $\kappa$ (because it has finite models) but not complete. In contrast, the theory of infinite $2$-torsion groups is complete.
+\end{example}
+\begin{example}
+	Let $\mathcal U$ be a non-principal ultrafilter on the set $\mathcal P$ of primes. Then we have a field isomorphism
+	\[\CC\cong\prod_{\mathcal U}\overline{\FF_p}.\]
+\end{example}
+\begin{example}
+	The theory $\op{RCF}$ of real closed fields eliminates quantifiers and is thus $o$-minimal.
+\end{example}
+\begin{example}
+	The theory $\op{ODAG}$ of ordered divisible abelian groups eliminates quantifiers and is thus $o$-minimal.
+\end{example}
+\begin{example}
+	The theory of sets with infinitely many equivalence classes of size $2$ and $3$ (and all classes have this size) does not eliminate quantifiers, but it does eliminate quantifiers after adding predicates corresponding to the size of the equivalence class. This theory $\kappa$-categorical for any infinite $\kappa$ and thus complete.
+\end{example}
+\begin{example}
+	The theory of sets where every equivalence class has infinite size is not $\aleph_0$-categorical, but it is $\kappa$-categorical for any $\kappa\ge\aleph_0$. This theory eliminates quantifiers.
+\end{example}
+
+\newpage
+\section{Theorems}
+
+We begin by listing some quick implications and coherence checks. between our definitins.
+\begin{itemize}
+	\item Finitely satisfiable implies satisfiable by compactness.
+	\item If $T$ is finitely axiomatizable, then there is a finite subset of $T$ axiomatizing $T$.
+	\item A theory $T$ is $\forall$-axiomatizable if and only if it goes down substructures.
+	\item A theory $T$ is $\forall\exists$-axiomatizable if and only if any chain of models $\mathcal M_0\subseteq\mathcal M_1\subseteq\cdots$ has its union a model of $T$.
+	\item If a theory $T$ is $\kappa$-categorical for infininite $\kappa$ and has no finite models, then $T$ is complete.
+	\item If $T$ eliminates quantifiers, and there is a common substructure to any model of $T$, then $T$ is complete.
+	\item If $T$ is model-complete (e.g., $T$ eliminates quantifiers), then $T$ is $\forall\exists$-axiomatizable.
+	\item If $T$ eliminates quantifiers, and $\mathcal L$ has no relation symbols, then $T$ is strongly minimal.
+\end{itemize}
+
+\subsection{Building Models}
+\begin{restatable}[compactness]{theorem}{compact} \label{thm:compactness}
+	Fix a language $\mathcal L$ and theory $T$. If $T$ is finitely satisfiable, then $T$ is satisfiable. Furthermore, $T$ has a model $\mathcal M$ with cardinality at most $\left|\mathcal L\right|+\aleph_0$.
+\end{restatable}
+\begin{theorem}[\L{}o\'s] \label{thm:los}
+	Fix a language $\mathcal L$ and $\mathcal L$-structures $\{\mathcal M_\alpha\}_{\alpha\in I}$, and expand $\mathcal L$ to the language $\mathcal L'\coloneqq\mathcal L_{\prod_{\alpha\in I}M_\alpha}$. Now, let $\mathcal U$ be an ultrafilter on $I$ so that $\mathcal M\coloneqq\prod_\mathcal UM_\alpha$ is an $\mathcal L'$-structure. Then for any $\mathcal L$-formula $\varphi(x_1,\ldots,x_n)$ has $\mathcal M\models\varphi\left(a_1^\mathcal M,\ldots,a_n^\mathcal M\right)$ if and only if
+	\[\{\alpha\in I:\mathcal M_\alpha\models\varphi(a_1,\ldots,a_n)\}\in\mathcal U.\]
+\end{theorem}
+\begin{lemma}[Tarski--Vaught test] \label{lem:tarski-vaught}
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$. The following are equivalent.
+	\begin{itemize}
+		\item There is an elementary substructure $\mathcal A\le\mathcal M$ with universe $A$.
+		\item Any $\mathcal L$-formula $\varphi(x_1,\ldots,x_n,y)$ and $n$-tuple $\overline a\in A^n$ has $\mathcal M\models(\exists y\varphi(\overline x,y))(\overline a)$ if and only if there is some $b\in A$ such that $\mathcal M\models\varphi(\overline a,b)$.
+	\end{itemize}
+\end{lemma}
+\begin{theorem}[L\"owenheim--Skolem] \label{thm:down-skolem}
+	Fix a language $\mathcal L$ and infinite structure $\mathcal M$.
+	\begin{itemize}
+		\item Downward: For all subsets $A\subseteq M$, there exists an elementary substructure $\mathcal N\le\mathcal M$ containing $A$ with $\left|N\right|=\left|A\right|+\left|\mathcal L\right|+\aleph_0$.
+		\item Upward: For any cardinal $\kappa\ge\left|M\right|+\left|\mathcal L\right|$, there exists an $\mathcal L$-structure $\mathcal N$ with cardinality $\kappa$ and $\mathcal M\le\mathcal N$.
+	\end{itemize}
+\end{theorem}
+
+\subsection{Analyzing Structure}
+\begin{proposition} \label{prop:kappa-categorical-is-complete}
+	Fix an $\mathcal L$-theory $T$ which is $\kappa$-categorical for cardinality $\kappa$. If $T$ has only infinite models, then $T$ is complete.
+\end{proposition}
+\begin{proposition} \label{prop:winning-ef-game}
+	Fix a finite language $\mathcal L$. For any structures $\mathcal A$ and $\mathcal B$, Player II has a winning strategy in the $EF_n(\mathcal A,\mathcal B)$ game for all $n>0$ if and only if $\mathcal A\models\psi$ is equivalent to $\mathcal B\models\psi$ for all sentences $\psi$.
+\end{proposition}
+\begin{theorem}[cell decomposition] \label{thm:cell-decomp}
+	Fix a model $\mathcal R$ of an $o$-minimal theory $T$.
+	\begin{listalph}
+		\item Given a finite collection $X_1,\ldots,X_m\subseteq\mathcal R^n$ of definable subsets, then there is a cell decomposition $\mathcal C$ of $\mathcal R^n$ such that each $X_\bullet$ is a union of some of these cells.
+		\item Any definable function $f\colon\mathcal R^n\to\mathcal R$ is piecewise continuous. In other words, there is a cell decomposition $\mathcal C$ of $\mathcal R^n$ such that $f$ is continuous upon restriction to each cell.
+	\end{listalph}
+\end{theorem}
+\begin{theorem}
+	Fix an $\mathcal L$-theory $T$ and an $\mathcal L$-formula $\varphi(\overline x)$. The following are equivalent.\todo{Can I use this?}
+	\begin{itemize}
+		\item There is a quantifier-free formula $\psi(\overline x,y)$ such that $T\models\forall\overline x(\varphi(\overline x)\leftrightarrow\psi(y))$. (This $y$ is only needed when $\mathcal L$ has no constant symbols.)
+		\item If $\mathcal M$ and $\mathcal N$ are models of $T$ with a common substructure $\mathcal A$ of $T$, then for any $\overline a\in\mathcal A$, we have $\mathcal M\models\varphi(\overline a)$ if and only if $\mathcal N\models\varphi(\overline a)$.
+	\end{itemize}
+\end{theorem}
+\begin{corollary}
+	Let $T$ be an $\mathcal L$-theory. Suppose that, for any quantifier-free formula $\varphi(\overline x,y)$, if $\mathcal M$ and $\mathcal N$ are models of $T$ with a common substructure $\mathcal A$ of $T$, then for any $\overline a\in\mathcal A$, we have $\mathcal M\models\exists y\,\varphi(\overline a,b)$ if and only if $\mathcal N\models\exists y\,\varphi(\overline a,y)$. Then $T$ eliminates quantifiers.
+\end{corollary}
+
+\end{document}
