@@ -1,0 +1,115 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 26}
+
+Today we begin discussing types. The final will be a three-day take-home exam during finals week.
+
+\subsection{Introducing Types}
+Let's give some examples to motivate types.
+\begin{example}
+	Note that $(\NN,0,s)\le(\NN\sqcup\ZZ,0,s)$, where $s$ denotes the successor function ($\ZZ$ is placed ``after'' $\NN$). The point is that the theory is the theory of an infinite set with an injective function with no cycles such that only $0$ is not in the image of $s$. This theory eliminates quantifiers, so it is model-complete.
+\end{example}
+\begin{example}
+	Note $(\overline\QQ,0,1,+,\times)\le(\CC,0,1,+,\times)$ because these are algebraically closed fields. This theory eliminates quantifiers, so it is model-complete.
+\end{example}
+However, we would still somehow like to tell these structures apart despite being elementarily equivalent. In the case of $\NN\subseteq\NN\sqcup\ZZ$, we note that any $a\in\NN$ has $a=s^k(0)$ for some $k$; equivalently, $\NN\sqcup\ZZ$ has some $a\in\NN\sqcup\ZZ$ such that
+\[a\ne s(s(\cdots(s(0))\cdots)).\]
+Namely, take anything in the alternate copy of $\ZZ$. Similarly, $\CC$ has some element $t\in\CC$ such that $t$ is not the root of any polynomial with $\ZZ$-coefficients. The point is that we want to look more locally at the formulae satisfied by some particular elements of our models.
+
+This motivates the following definition.
+\begin{definition}[type]
+	Fix an $\mathcal L$-structure $\mathcal M$. Given $\overline a\in M^n$, we define the \textit{type} $\op{tp}_{\mathcal L}^{\mathcal M}(\overline a)$ to be the set of all $\mathcal L$-formulae $\varphi(\overline x)$ with $n$ free variables such that $\mathcal M\models\varphi(\overline a)$. For a subset $A\subseteq M$, we may abbreviate $\op{tp}_{\mathcal L_A}^{\mathcal M}(a)$ to $\op{tp}_A^{\mathcal M}(a)$.
+\end{definition}
+The point is that elements of $\NN\sqcup\ZZ$ achieves types which $\NN$ does not. Similarly, elements of $\CC$ achieves types which $\overline\QQ$ does not.
+
+However, it is important that we are considering all the formulae at once.
+\begin{proposition}
+	Fix $\mathcal L$-structures $\mathcal M\le\mathcal N$, and fix $\overline b\in N^n$. For any finite subset $\Delta\subseteq\op{tp}^{\mathcal N}(\overline b)$, there exists $\overline a\in M^n$ such that $\Delta\subseteq\op{tp}^{\mathcal M}(\overline a)$.
+\end{proposition}
+\begin{proof}
+	Translating, we are asking for
+	\[\mathcal M\models\exists\overline x\Bigg(\bigland_{\varphi(\overline x)\in\Delta}\varphi(\overline x)\Bigg).\]
+	However, the construction of $\overline b$ promises
+	\[\mathcal N\models\exists\overline x\Bigg(\bigland_{\varphi(\overline x)\in\Delta}\varphi(\overline x)\Bigg),\]
+	so we are done because $\mathcal M\le\mathcal N$.
+\end{proof}
+\begin{remark}
+	The proof above tells us that it is enough for the extension $\mathcal M\subseteq\mathcal N$ to merely be ``existentially closed,'' meaning that existential formulae go down.
+\end{remark}
+We can even go the other way.
+\begin{proposition} \label{prop:realize-type-no-param}
+	Fix an $\mathcal L$-structure $\mathcal M$, and let $\Delta$ be a set of $\mathcal L$-formulae with at most one free variable $x$ such that any finite subset $\Delta_0\subseteq\Delta$ has $\mathcal M\models\exists x\bigland_{\varphi\in\Delta_0}\varphi(x)$. Then there is an elementary superstructure $\mathcal N$ of $\mathcal M$ such that there is $a\in\mathcal N$ with $\Delta\subseteq\op{tp}^{\mathcal N}(a)$.
+\end{proposition}
+\begin{proof}
+	Add a new constant symbol $a$ to our language. Let $\Phi$ denote the set of sentences $\varphi(a)$ for any $\varphi\in\Delta$. As usual, we want to know that $\op{elDiag}\mathcal M\cup\Phi$ is satisfiable. Well, by compactness, it is enough to show that $\op{elDiag}\mathcal M\cup\Phi_0$ is satisfiable for any finite subset $\Phi_0\subseteq\Phi$. But $\mathcal M$ will do: certainly $\mathcal M\models\op{elDiag}\mathcal M$, and by hypothesis we have
+	\[\mathcal M\models\exists x\,\bigland_{\varphi\in\Delta_0}\varphi(x)\]
+	for the subset $\Delta_0\subseteq\Delta$ corresponding to $\Phi_0$ by replacing $a$ back with $x$. So we interpret $a$ in $\mathcal M$ to be the element promised by the above satisfaction.
+
+	Thus, $\op{elDiag}\mathcal M\cup\Phi$ is finitely satisfiable and hence satisfiable, so we produce an elementary superstructure $\mathcal N$ of $\mathcal M$ with $\mathcal N\models\Phi$. So $a^{\mathcal N}$ is the desired element with $\Delta\subseteq\op{tp}^{\mathcal N}\left(a^{\mathcal N}\right)$, as desired.
+\end{proof}
+
+\subsection{Types with Parameters}
+Even using types, it is difficult to tell $\NN\sqcup\ZZ$ apart from $\NN\sqcup\ZZ\sqcup\ZZ$, and it is difficult to tell $\CC$ apart from $\overline{\CC(t)}$. Namely, the problem is that the formulae in our languages are not using the full power of the models we gave them. For example, $\NN\sqcup\ZZ\sqcup\ZZ$ has elements which are not reachable from $\NN\sqcup\ZZ$, but one can only say this by using parameters from $\NN\sqcup\ZZ$. So we refine our definition of types.
+\begin{definition}[type]
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$. Then an $n$-type is a set $P$ of $\mathcal L_A$-formulae with $n$ free variables such that $P\cup\op{Th}_A(\mathcal M)$ is satisfiable.
+\end{definition}
+\begin{remark}
+	For $P\cup\op{Th}_A(\mathcal M)$ to be satisfiable, compactness tells us that it is enough for it to be finitely satisfiable: namely, it is enough for any finite subset $P_0\subseteq P$ to have $P_0\cup\op{Th}_A(\mathcal M)$ to be satisfiable. For example, it is enough for $\mathcal M\models\exists\overline x\bigland_{\varphi\in P_0}\varphi(\overline x)$.
+\end{remark}
+We are allowing our $n$-types to be rather small sets. So we add an adjective to fix this.
+\begin{definition}[complete]
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$. Then a type $P$ is \textit{complete} if any $\mathcal L$-formula $\varphi(\overline x)$ with $n$ free variables has either $\varphi(\overline x)\in P$ or $\lnot\varphi(\overline x)\in P$. Otherwise, we say that the type $P$ is \textit{partial}. As notation, we let $S_n^{\mathcal M}(A)$ denote the set of all complete $n$-types.
+\end{definition}
+We would like for our types to be realized by elements of $\mathcal M$, but this need not always be the case (as we have with $\NN\le\NN\sqcup\ZZ$). So we have the following definition.
+\begin{definition}[realizes]
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$. Given an $n$-type $P$, we say that $\overline a\in M^n$ \textit{realizes} $P$ if and only if $\mathcal M\models\varphi(\overline a)$ for all $\varphi\in P$. If no such $\overline a$ exists for an $n$-type $P$, we say that $\mathcal M$ \textit{omits} $P$.
+\end{definition}
+\begin{example}
+	The set
+	\[\{x\ne \underbrace{s(s(\cdots(s}_n(0))):n\in\NN\}\]
+	is a $1$-type for $(\NN,0,s)$ (it's satisfiable by the usual compactness argument), but there is no element of $\NN$ realizing this type, so this type is omitted. However, this type is realized by elements of $\ZZ$ in $\NN\sqcup\ZZ$.
+\end{example}
+We can now immediately generalize \Cref{prop:realize-type-no-param} to $n$-types.
+\begin{proposition}
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$, and let $P$ be an $n$-type. Then there is an elementary superstructure $\mathcal N$ of $\mathcal M$ such that there is $a\in\mathcal N$ realizing $P$.
+\end{proposition}
+\begin{proof}
+	Approximately speaking, one can repeat the proof of \Cref{prop:realize-type-no-param} upon unpacking all the definitions.
+	
+	As before, it is enough to show that $\op{elDiag}\mathcal M\cup P$ is satisfiable, for which it is enough to show that it is finitely satisfiable. Taking conjunctions, we may assume that we are trying to satisfy just two sentences $\varphi(\overline a,\overline b)$ (from $\op{elDiag}\mathcal M$) and $\exists\overline x\,\psi(\overline x,\overline a)$ (from $P$) where $\overline a\in A^\bullet$ and $\overline b\in\mathcal M^\bullet$.
+
+	Well, we are given that there is a model $\mathcal N_0$ satisfying $\op{Th}_A(\mathcal M)\cup P$. By construction, we are reassured that $\mathcal N_0\models\exists\overline x\,\psi(\overline x,\overline a)$, and we note that
+	\[\mathcal N_0\models\exists\overline y\,\varphi(\overline a,\overline y)\]
+	as well because $\exists\overline y\,\varphi(\overline a,\overline y)$ is an $\mathcal L_A$-sentence satisfied by $\mathcal M$. So we interpret the needed constants from $\overline b$ as the tuple promised by $\mathcal N_0\models\exists\overline y\,\varphi(\overline a,\overline y)$ to complete the proof.
+\end{proof}
+\begin{corollary}
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$, and let $P$ be a subset of $\mathcal L$-formulae with $n$ free variables. Then $P$ is a complete $n$-type if and only if there is an elementary superstructure $\mathcal N$ of $\mathcal M$ such that $P=\op{tp}_{A}^{\mathcal N}(\overline a)$ for some $\overline a\in N^n$.
+\end{corollary}
+\begin{proof}
+	Certainly $P=\op{tp}_{A}^{\mathcal N}(\overline a)$ implies that $P$ is a complete $n$-type: certainly it is an $n$-type, and completeness follows because any $\varphi(\overline x)$ has exactly one of $\mathcal N\models\varphi(\overline a)$ or $\mathcal N\models\lnot\varphi(\overline a)$.
+
+	Conversely, suppose that $P$ is a complete $n$-type. Then the previous proposition grants $\mathcal N\ge\mathcal N$ and $\overline a\in\mathcal N^n$ such that $P\subseteq\op{tp}^{\mathcal N}_A(\overline a)$. Because $P$ is complete, equality must follow: if $\varphi(\overline x)\notin P$, we will have $\lnot\varphi(\overline x)\in P$, so $\lnot\varphi(\overline x)\in\op{tp}^{\mathcal N}_A(\overline a)$, so $\varphi(\overline x)\notin\op{tp}^{\mathcal N}_A(\overline a)$.
+\end{proof}
+
+\subsection{Automorphisms}
+Let's take a moment to discuss automorphisms.
+\begin{remark}
+	Suppose $\sigma\colon\mathcal M\to\mathcal M$ is an $\mathcal L$-automorphism which fixes a subset $A\subseteq M$ pointwise. Then for any $\overline a\in M^n$, automorphisms preserving formula satisfaction means that
+	\[\op{tp}^{\mathcal M}_A(\overline a)=\op{tp}^{\mathcal M}_A(\sigma(\overline a)).\]
+	This tells us that automorphisms preserve types.
+\end{remark}
+\begin{example}
+	However, types are not enough to determine the automorphism orbit of an element of $\mathcal M$. For example, let $\mathcal N=(\QQ,<)$ and $A\coloneqq\{1/n:n\ge1\}$. Now, there is no automorphism switching $0$ and $1$ while fixing $A$ (being an automorphism must be a homeomorphism for the order topology and thus fix the limit point $0$).
+	
+	However, $0$ and $1$ have the same type: any $\mathcal L_A$-formula will only use finitely many constants from $A$, so it is enough to show that $\op{tp}^{\mathcal M}_{A_0}(0)=\op{tp}^{\mathcal M}_{A_0}(1)$ for any finite subset $A_0\subseteq A$. But now there is an automorphism switching $0$ and $1$ while fixing $A_0$ fixed because there is some positive distance between $0$ and $A_0$ now.
+\end{example}
+However, our elements are automorphic upon passing to an elementary superstructure.
+\begin{proposition}
+	Fix an $\mathcal L$-structure $\mathcal M$ and a subset $A\subseteq M$. Given $\overline a,\overline b\in M^n$, suppose $\op{tp}^{\mathcal M}_A(\overline a)=\op{tp}^{\mathcal M}_B(\overline b)$. Then there is an elementary extension $\mathcal N\ge\mathcal M$ and an automorphism $\sigma\colon\mathcal N\to\mathcal N$ fixing $A$ and swapping $\sigma(\overline a)=\overline b$.
+\end{proposition}
+
+\end{document}
