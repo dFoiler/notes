@@ -1,0 +1,78 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 31}
+
+Here we go. Today we'll do more examples with CW-complexes.
+
+\subsection{Cellular Homology Examples}
+Here are some examples.
+\begin{example}
+	Let $X$ be a dodecahedron where opposite sides have been identified via a $180^\circ$ rotation. We compute the homology of $X$.
+\end{example}
+\begin{proof}
+	There is some very large diagram which I cannot be bothered to draw. There are thirty edges on the dodecahedron, and each are identified with three edges total, so $X$ has ten $1$-cells. Continuing, there are twenty vertices on the dodecahedron, and each is identified with four edges total, so $X$ has five $0$-cells. There are twelve faces to start, so $X$ has six $2$-cells. Lastly, $X$ has one $3$-cell. In total, our chain complex is
+	\[0\to\ZZ\to\ZZ^6\to\ZZ^{10}\to\ZZ^5\to0.\]
+	One can draw everything out and note that any pair of vertices has exactly one edge connecting them, so $X^1$ is the complete graph of $5$ vertices. From here, one can compute $d_1\colon\ZZ^{10}\to\ZZ^5$ as mapping to $e_i-e_j$ for distinct $i,j\in\{1,2,3,4,5\}$. One can also see that the map $d_3\colon\ZZ\to\ZZ^6$ is the zero map because each face has one copy plus another copy with a reflection afterwards, which sums to zero. It remains to compute $d_2\colon\ZZ^6\to\ZZ^{10}$. One can track the cellular boundary formula to see that we are outputting any path of length $3$.
+
+	This then allows us to see that all homology vanishes except $H_3(X)=\ZZ$. The main point is that $X$ has the same homology as $S^3$ but is not homeomorphic to it; for example, one can compute that $\pi_1(X)$ is a $(\ZZ/2\ZZ)$-extension of $A_5$.
+\end{proof}
+\begin{example}[Moore spaces]
+	Fix an abelian group $G$ and index $n\ge1$. Then there is a space $X=M(G,n)$ with $H_n(X)=G$ while $\widetilde H_i(X)=0$ for $i\ne n$. We write down some $X$.
+\end{example}
+\begin{proof}
+	If $G$ is $\ZZ/m\ZZ$ for $m\ge1$, we can take $X$ to be $S^n$ with a single $e^{n+1}$ attached of degree $m$. Then the cellular boundary formula is able to compute the needed homology. From here, wedges are able to take products of these groups to achieve any finitely generated abelian group. (Note the single point can do $G=\ZZ$.)
+
+	The general case requires some thinking. Find a free abelian group $F$ surjecting onto $G$ via $\pi\colon F\onto G$; say $F=\bigoplus_{\alpha\in\kappa}\ZZ$. Then begin with the space $X^1=\biglor_{\alpha\in\kappa}S^1$. Now, $\ker\varphi$ is a free subgroup of $F$, so write $\ker\varphi=\bigoplus_{\beta\in\lambda}\ZZ y_\beta$ where $y_\beta\in F$. For each $\beta$, let $f_\beta\colon S^1\to X^1$ be the corresponding attaching map with $f_\beta(1)=y_\beta$, so we attach a two-cell to fill in this boundary as $f_\beta$. From here, one finds that our cellular homology chain complex is just going to exactly be
+	\[0\to\bigoplus_{\beta\in\lambda}\ZZ y_\beta\to\bigoplus_{\alpha\in\kappa}\ZZ\to0\]
+	whose quotient is precisely the needed $G$. This achieves the correct $H_1$; from here, one can use suspension to get general $M(G,n)$. Alternatively, we can achieve the same by simply replacing $S^1$ in the construction above with $S^n$ and directly using the cellular boundary formula in the same way.
+\end{proof}
+
+\subsection{Group Homology}
+Let's talk about lens spaces as a way into group homology.
+\begin{example}[lens space]
+	Recall that the lens space $L_m(\ell_1,\ldots,\ell_n)$ is defined by taking $S^{n-1}\subseteq\CC^n$ and modding out by a $\ZZ/m\ZZ$-action given by
+	\[\rho(z_1,\ldots,z_m)=\left(\zeta_m^{\ell_1}z_1,\ldots,\zeta_m^{\ell_n}z_n\right),\]
+	where $\rho$ is a generator of $\ZZ/m\ZZ$. Here, the integers $\ell_1,\ldots,\ell_n$ are all coprime to $n$, so the action of $\ZZ/m\ZZ$ is free. We compute the homology of these spaces.
+\end{example}
+\begin{proof}
+	The main point is to figure out how to put a reasonable CW-structure on the lens space. View $S^{2n-1}$ as $n$-iterate of the join $S^1*\cdots*S^1$: send some $(t_1z_1,\ldots,t_nz_n)$ where $\sum_{i=1}^nt_n=0$ and $x_1,\ldots,x_n\in S^1$ to the point $(\sqrt{t_1}z_1,\ldots,\sqrt{t_n}z_n)\in S^{2n-1}$.
+	
+	We will produce a CW-structure with one cell in each dimension; by induction, we may assume that this exists for $L_{m-1}(\ell_1,\ldots,\ell_{n-1})$. Now, the action on the last coordinate $S^1$ has fundamental domain given by the arc
+	\[I_m\coloneqq\left\{e^{2\pi it/m}:0\le t\le1\right\}\subseteq S^1.\]
+	Now, $I_m*S^{2n-1}$ attaches to $S^{2n-3}$ as a covering map, and our map is degree $m$. What happens is that we produce two new $2$-cells given by $1*S^{2n-3}=CS^{2n-3}\cong B^{2n-2}$ and $I_m*S^{2m-3}\cong B^{2n-1}$. The boundary of $I_m*S^{2n-3}$ then attaches with degree $0$. Totaling everything, we produce a cellular homology chain complex
+	\[\cdots\stackrel m\to\ZZ\stackrel0\to\ZZ\stackrel m\to\ZZ\to0,\]
+	so our homology is $\ZZ$ in degrees $0$ and $2n-1$, it's $\ZZ/m\ZZ$ if $k$ is odd and between $0$ and $2n-1$, and it's zero everywhere else. Notably, looking at our homology, we have produced an essentially minimal cell structure: we have a nontrivial torsion group in every other position, so the cell complex structure must have at least one cell in each entry to produce this kind of behavior.
+\end{proof}
+\begin{remark}
+	It is known that $L_q(1,p)\cong L_{q'}(1,p')$ if and only if $q=q'$ and $p\equiv \pm p^{\pm1}\pmod q$. This is rather hard to show. Notably, some of these spaces are not even homotopic (e.g., $L_5(1,1)$ is not homotopic to $L_5(1,2)$) or can be homotopic but not homeomorphic (e.g., $L_7(1,1)$ and $L_7(1,2)$).
+\end{remark}
+\begin{remark}
+	Even though we have $\mathbb{RP}^n$ for every $n$, we can only have these lens spaces in the odd dimensions $2n-1$. The reason is that the only group acting on spheres $S^{2n}$ of even dimension is $\ZZ/2\ZZ$.
+\end{remark}
+\begin{remark}
+	One can write down the cohomology groups $H_\bullet(G;A)$ as $H_\bullet(K(G,1);A)$, but in practice these $K(G,1)$s might be hard to write down. One can use the ``infinite lens space'' $S^\infty/(\ZZ/m\ZZ)$ as a $K(\ZZ/m\ZZ,1)$, but this is hard to work with in practice. As another difficult example, we note that any finite-dimensional CW-complex $X$ which is a $K(G,1)$ must have $\pi_1(X)$ torsion-free. Indeed, suppose $a\in\pi_1(X)$ has order $m>1$. Now, use the subgroup $\langle a\rangle\subseteq\pi_1(X)$ to produce a covering space $p\colon X'\to X$, meaning that $X'$ is homotopy equivalent to $K(\ZZ/m\ZZ,1)$, which is not possible by cellular homology arguments because $K(\ZZ/m\ZZ,1)$ has homology in arbitrarily large coefficients! (Note $X'$ must also be a finite CW-complex because it is a finite cover of a finite complex.)
+\end{remark}
+
+\subsection{Mayer--Vietoris}
+Let's discuss a more convenient version of excision.
+\begin{theorem}[Mayer--Vietoris]
+	Let $X$ be a topological space which is the union of the interiors of two subspaces $A,B\subseteq X$. Then we have a long exact sequence of homology groups
+	\[\cdots\to H_n(A\cap B)\to H_n(A)\oplus H_n(B)\to H_n(X)\to H_{n-1}(A\cap B)\to\cdots.\]
+\end{theorem}
+The point here is that $C_n(A)+C_n(B)\subseteq C_n(X)$, and we can then write down the following diagram which turns out to be a chain homotopy.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJDX24oQSkrQ19uKEIpIl0sWzEsMCwiQ19uKFgpIl0sWzEsMSwiQ197bi0xfShYKSJdLFswLDEsIkNfe24tMX0oQSkrQ197bi0xfShCKSJdLFswLDFdLFszLDJdLFsxLDIsIlxcZGVsIl0sWzAsMywiXFxkZWwiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{C_n(A)+C_n(B)} & {C_n(X)} \\
+	{C_{n-1}(A)+C_{n-1}(B)} & {C_{n-1}(X)}
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=2-1, to=2-2]
+	\arrow["\del", from=1-2, to=2-2]
+	\arrow["\del", from=1-1, to=2-1]
+\end{tikzcd}\]
+One can then try to take this into the needed long exact sequence. Somehow the main point is to try to use barycentric subdivision to view $C_n(A\cap B)$ as the kernel of the map $C_n(A)\oplus C_n(B)\to C_n(X)$.
+
+\end{document}
