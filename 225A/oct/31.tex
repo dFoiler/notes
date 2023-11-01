@@ -1,0 +1,86 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 31}
+
+Today we discuss partial elementary embeddings.
+
+\subsection{Partial Elementary Embeddings}
+Last class we stated \Cref{prop:type-gives-aut}, which we will show today. The main character of the proof will be the following definition.
+\begin{definition}[partial elementary map]
+	Fix $\mathcal L$-structures $\mathcal M$ and $\mathcal N$ with a subset $A\subseteq M$. Then a map $f\colon A\to N$ is \textit{a partial elementary map} if and only if it preserves types: for all $\mathcal L$-formulae $\varphi(\overline x)$ and $\overline a\in A$, we have $\mathcal M\models\varphi(\overline a)$ if and only if $\mathcal N\models\varphi(\overline a)$.
+\end{definition}
+The point is that we want to extend such maps to full elementary embeddings.
+\begin{example}
+	Such extensions are not possible in general. For example, use the elementary substructure $(\NN,s)\le(\NN\sqcup\ZZ,s)$. However, there is a partial elementary map from $\NN\subseteq\NN\sqcup\ZZ$ back to all of $\NN$, which cannot be extended to a full elementary embedding simply because there is nowhere for $\ZZ$ to go!
+\end{example}
+Somehow the above problem is ``set-theoretic'' in that $(\NN,s)$ is too small to be an elementary superstructure of $(\NN\sqcup\ZZ,s)$. So perhaps we should only hope to have an extension of a partial elementary map after taking an elementary superstructure of $\mathcal N$. In an attempt to do this inductively, we pick up the following lemma.
+\begin{lemma} \label{lem:add-one-element-partial-embed}
+	Fix $\mathcal L$-structures $\mathcal M$ and $\mathcal N$ with a subset $A\subseteq M$. Suppose $f\colon A\to N$ is a partial elementary map. For any $b\in M$, there is an elementary extension $\mathcal N'$ of $\mathcal N$ and a partial elementary map $g\colon(A\cup\{b\})\to N'$ extending $f$.
+\end{lemma}
+\begin{proof}
+	For convenience, identify $A$ with its image in $\mathcal N$ via $f$. Also, we may assume that $b\notin A$, for otherwise we can take $f=g$. Choose a new constant symbol $c$, which is where $b$ is going to go. Now, let $T$ be the theory
+	\[\op{elDiag}\mathcal N\cup\left\{\varphi(c):\varphi\in\op{tp}^{\mathcal M}_A(b)\right\}.\]
+	Here, $\varphi$ is an $\mathcal L_A$-formula. This will complete the proof: namely, let $\mathcal N'$ be a model, which we see is an elementary extension of $\mathcal N$, and we define $g$ extending $f$ by defining $g(b)\coloneqq c^{\mathcal N'}$. And by construction we have $\mathcal M\models\varphi(\overline a)$ if and only if $\mathcal N\models\varphi(\overline a)$ for any $\overline a\in(A\cup\{b\})$.
+	
+	We now check that $T$ is satisfiable by compactness: after taking conjunctions, we may reduce the right-hand side to a single formula $\varphi(c)$ where $\varphi$ is an $\mathcal L_A$-formula, and we note that $\mathcal M\models\exists x\,\varphi(x)$ by hypothesis on $b$ and so $\mathcal N\models\exists x\,\varphi(x)$ because $f$ is a partial elementary map. So $\mathcal N$ is the required model by interpreting $c$ to witness $\mathcal N\models\exists x\,\varphi(x)$.
+\end{proof}
+And now here is our transfinite induction.
+\begin{lemma} \label{lem:extend-partial-embed}
+	Fix $\mathcal L$-structures $\mathcal M$ and $\mathcal N$ with a subset $A\subseteq M$. Suppose $f\colon A\to N$ is a partial elementary map. Then there is an elementary extension $\mathcal N'$ of $\mathcal N$ and an elementary embedding $g\colon\mathcal M\to\mathcal N'$ extending $f$.
+\end{lemma}
+\begin{proof}
+	Find a cardinal $\kappa$ so that we can enumerate $\mathcal M=\{a_\alpha:\alpha\in\kappa\}$. Now, define $A_0\coloneqq A$ and $\mathcal N_0\coloneqq \mathcal N$ and $f_0\coloneqq f$, and we will define a sequence of maps $f_\alpha\colon A_\alpha\to\mathcal N_\alpha$ for $\alpha\le\kappa$ by transfinite recursion, arranged so that the following hold for each $\alpha\le\kappa$.
+	\begin{itemize}
+		\item $A_\alpha=A\cup\{a_\beta:\beta\in\alpha\}$.
+		\item $\mathcal N\le\mathcal N_\alpha$
+		\item $f_\alpha$ is a partial elementary embedding.
+	\end{itemize}
+	These are satisfied by construction at $\alpha=0$. Well, by the induction, there are two checks we have to do.
+	\begin{itemize}
+		\item Suppose $\alpha=\beta+1$ is a successor ordinal. Then \Cref{lem:add-one-element-partial-embed} allows us to extend $f_\beta$ up to a partial elementary embedding $f_\alpha\colon A_\alpha\to\mathcal N_\alpha$ where $\mathcal N_\beta\le\mathcal N_\alpha$. Because $\mathcal N\le\mathcal N_\beta$ also, we see $\mathcal N\le\mathcal N_\alpha$.
+		\item Suppose $\alpha$ is a limit ordinal. Then we note $A_\alpha$ is the union of the $A_\beta$ for $\beta\in\alpha$, and so we define $\mathcal N_\alpha$ as the union of the $\mathcal N_\beta$ for $\beta\in\alpha$. Because we have an ascending chain $\{\mathcal N_\beta\}_{\beta\in\alpha}$, it follows that $\mathcal N_0\le\mathcal N_\alpha$. Lastly, we define $f_\alpha$ by extending all the $f_\beta$, and $f_\alpha$ is a partial elementary embedding because such a thing can be checked on the level of points of $A_\beta$ for each $\beta$.
+	\end{itemize}
+	So at all stages of our recursion, we know how to keep going. This completes the transfinite induction.
+\end{proof}
+
+\subsection{Back to Automorphisms}
+We are now ready to show \Cref{prop:type-gives-aut}.
+\typegivesaut*
+\begin{proof}
+	To begin, note that the function $f\colon(A\cup\{\overline a\})\to M$ defined by $f|_A=\id_A$ and $f(\overline a)=\overline b$ is a partial elementary embedding. This simply holds because $\overline a$ and $\overline b$ satisfy all the same $\mathcal L_A$-formulae. So \Cref{lem:extend-partial-embed} produces an elementary extension $\mathcal N_1$ of $\mathcal M$ with an elementary extension $f_1\colon\mathcal M\to\mathcal N_1$ extending $f$.
+	
+	To continue, $f_1^{-1}\colon f(M)\to M$ is a partial elementary embedding because $f_1$ is an elementary embedding, so using \Cref{lem:extend-partial-embed} produces a full elementary extension $\mathcal M_1$ of $\mathcal M$ and an elementary extension $g_1\colon\mathcal N_1\to\mathcal M_1$ extending $f_1^{-1}$. Repeating this step, we produce an elementary extension $\mathcal N_2$ of $\mathcal N_1$ with an elementary embedding $f_2\colon\mathcal M_1\to\mathcal N_2$ which extends $g_1^{-1}$. Iterating this process, we build the following diagram.
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMSwiXFxtYXRoY2FsIE0iXSxbMCwwLCJBXFxjdXBcXHtcXG92ZXJsaW5lIGFcXH0iXSxbMSwwLCJBXFxjdXBcXHtcXG92ZXJsaW5lIGJcXH0iXSxbMSwxLCJcXG1hdGhjYWwgTSJdLFsxLDIsIlxcbWF0aGNhbCBOXzEiXSxbMCwyLCJcXG1hdGhjYWwgTV8xIl0sWzAsMywiXFxtYXRoY2FsIE1fMiJdLFsxLDMsIlxcbWF0aGNhbCBOXzIiXSxbMSw0LCJcXHZkb3RzIl0sWzAsNCwiXFx2ZG90cyJdLFsxLDMsImYiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCw0LCJmXzEiLDFdLFs0LDUsImdfMSIsMV0sWzAsNV0sWzMsNF0sWzQsN10sWzUsNywiZl8yIiwxXSxbNSw2XSxbNyw2LCJnXzIiLDFdLFsxLDAsIiIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFsyLDMsIiIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs2LDldLFs3LDhdLFs2LDhdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{A\cup\{\overline a\}} & {A\cup\{\overline b\}} \\
+		{\mathcal M} & {\mathcal M} \\
+		{\mathcal M_1} & {\mathcal N_1} \\
+		{\mathcal M_2} & {\mathcal N_2} \\
+		\vdots & \vdots
+		\arrow["f", dashed, from=1-1, to=2-2]
+		\arrow["{f_1}"{description}, from=2-1, to=3-2]
+		\arrow["{g_1}"{description}, from=3-2, to=3-1]
+		\arrow[from=2-1, to=3-1]
+		\arrow[from=2-2, to=3-2]
+		\arrow[from=3-2, to=4-2]
+		\arrow["{f_2}"{description}, from=3-1, to=4-2]
+		\arrow[from=3-1, to=4-1]
+		\arrow["{g_2}"{description}, from=4-2, to=4-1]
+		\arrow[dashed, from=1-1, to=2-1]
+		\arrow[dashed, from=1-2, to=2-2]
+		\arrow[from=4-1, to=5-1]
+		\arrow[from=4-2, to=5-2]
+		\arrow[from=4-1, to=5-2]
+	\end{tikzcd}\]
+	Now, at the end of it all, let $\mathcal N$ be the union of all the $\mathcal N_\bullet$, which is also the union of all the $\mathcal M_\bullet$ (for suitable notion of union). All these vertical arrows are elementary embeddings, so $\mathcal N$ is an elementary extension of $\mathcal M$. Lastly, we realize that the map $\sigma\colon\mathcal N\to\mathcal N$ given by the union of all the $f_\bullet$s sends $\overline a\mapsto\overline b$ because we are extending $f$, and $\sigma$ will be invertible with inverse given by the union of all the $g_\bullet$s.
+\end{proof}
+\begin{remark}
+	A careful examination of the above proof reveals that we have actually proven the following: suppose that we have $\mathcal L$-structures $\mathcal M$ and $\mathcal N$ and a subset $A\subseteq M$ such that there is a partial elementary embedding $f\colon A\to N$. Then there are elementary superstructures $\mathcal M'$ of $\mathcal M$ and $\mathcal N'$ of $\mathcal N$ with an isomorphism $\sigma\colon\mathcal M'\to\mathcal N'$ extending $f$. Indeed, the proof of this result is the above proof minus the first two sentences.
+\end{remark}
+Next class we will put a topology on our types.
+
+\end{document}
