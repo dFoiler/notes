@@ -242,7 +242,7 @@ Let's check that equivalence does what we want it to do.
 	Then, for any integer $n$, the $f$ (properly) represents $n$ if and only if $g$ (properly) represents $n$.
 \end{lemma}
 \begin{proof}
-	The hypothesis on $M$ tells us that $M$ is invertible and $M^{-1}\in\ZZ^{2\times2}$. Now, in one direction, if $f$ represents $n$ if and only if there is a vector $v\coloneqq\begin{bsmallmatrix}
+	The hypothesis on $M$ tells us that $M$ is invertible and $M^{-1}\in\ZZ^{2\times2}$. Now, in one direction, if $f$ represents $n$, then there is a vector $v\coloneqq\begin{bsmallmatrix}
 		x \\ y
 	\end{bsmallmatrix}\in\ZZ^2$ such that $v^\intercal M_fv=n$, which implies
 	\[v^\intercal M_fv=v^\intercal M^\intercal M_gMv=(Mv)^\intercal M_g(Mv),\]
@@ -253,7 +253,7 @@ Let's check that equivalence does what we want it to do.
 		px+qy \\
 		rx+sy
 	\end{bmatrix}\]
-	where $ps-qr=\pm1$. But then $\gcd(px+qy,rx+sy)$ divides $\gcd(prx+qry,prx+psy)=\gcd(prx+qry,psy-qry)=\gcd(prx+qry,y)$ and so divides $y$; furthermore, $\gcd(px+qy,rx+sy)$ will divide $\gcd(pdx+qsy,qrx+qsy)=\gcd(psx-qrx,qrx+qsy)=\gcd(x,qrx+qsy)$ and so divides $x$ also. So $\gcd(px+qy,rx+sy)=1$.
+	where $ps-qr=\pm1$. But then $\gcd(px+qy,rx+sy)$ divides $\gcd(prx+qry,prx+psy)=\gcd(prx+qry,psy-qry)=\gcd(prx+qry,y)$ and so divides $y$; furthermore, $\gcd(px+qy,rx+sy)$ will divide $\gcd(psx+qsy,qrx+qsy)=\gcd(psx-qrx,qrx+qsy)=\gcd(x,qrx+qsy)$ and so divides $x$ also. So $\gcd(px+qy,rx+sy)=1$.
 	
 	Finishing up, we note that the reverse direction is similar, merely replacing $M$ with $M^{-1}\in\ZZ^{2\times2}$ because $M_g=\left(M^{-1}\right)^\intercal M_fM^{-1}$.
 \end{proof}
@@ -267,9 +267,16 @@ Let's reap some quick benefit from our only caring about binary quadratic forms 
 \begin{proof}
 	If $f\sim[n,b',c']$, then we are done by \Cref{lem:equiv-has-same-outputs}: $[n,b',c']$ properly represents $n$ because $n\cdot1^2+b'\cdot1\cdot0+c'\cdot0^2=n$.
 
-	In the reverse direction, suppose that $f=[a,b,c]$ is equivalent to $[n,b',c']$. Then there is a matrix $M\coloneqq\begin{bsmallmatrix}
-		p & q \\ r & s
-	\end{bsmallmatrix}$ such that
+	In the reverse direction, suppose that $f=[a,b,c]$ properly represents $n$. Then there are coprime integers $p$ and $r$ such that
+	\[\begin{bmatrix}
+		p & r
+	\end{bmatrix}\begin{bmatrix}
+		a & b/2 \\
+		b/2 & c
+	\end{bmatrix}\begin{bmatrix}
+		p \\ r
+	\end{bmatrix}=n.\]
+	Now, select any integers $q$ and $s$ such that $ps-qr=1$, which exist because $\gcd(p,r)=1$. Thus, we see that
 	\[\begin{bmatrix}
 		p & r \\
 		q & s
@@ -277,13 +284,12 @@ Let's reap some quick benefit from our only caring about binary quadratic forms 
 		a & b/2 \\
 		b/2 & c
 	\end{bmatrix}\begin{bmatrix}
-		p & q \\
-		r & s
+		p & q \\ r & s
 	\end{bmatrix}=\begin{bmatrix}
 		n & b'/2 \\
-		b'/2 & c
-	\end{bmatrix}.\]
-	Computing just the top-left corner of the left-hand side reveals that $f(p,r)=n$, and further $\gcd(p,r)=1$ because $pq-rs=1$.
+		b'/2 & c'
+	\end{bmatrix}\]
+	for some computable $b'$ and $c'$, which is what we wanted.
 \end{proof}
 \begin{remark}
 	Note that \Cref{prop:proper-rep-by-equiv} is non-constructive: even if we are told $b'$ and $c'$ so that $f\sim[n,b',c']$, it is not obvious how to go back and construct the matrix $M$ witnessing this equivalence. Nonetheless, we ought to be able to go and back solve $f(x,y)=n$ using the methods of \cref{subsec:compute-primes-of-form}.
@@ -294,7 +300,9 @@ Let's reap some quick benefit from our only caring about binary quadratic forms 
 \begin{proof}
 	If $n$ is properly represented by a primitive binary quadratic form $f$ of discriminant $D$, then \Cref{prop:proper-rep-by-equiv} combined with \Cref{lem:equiv-has-same-outputs} allows us to assume that $f=[n,b,c]$ for some integers $b,c\in\ZZ$. But then $D=b^2-4nc$, so $b^2\equiv D\pmod n$.
 
-	Conversely, suppose that $b^2\equiv D\pmod n$ for some integer $b$; by replacing $b$ with $n-b$ as needed, we may assume that $b$ and $n$ have the same parity because $n$ is odd. Then we may write $D=b^2-nc_0$ for some integer $c_0$, but taking$\pmod4$ reveals that $D\equiv b^2\pmod4$, so in fact $4\mid c_0$, so $D=b^2-4nc$ for some integer $c$. But then $[n,b,c]$ is a binary quadratic form of discriminant $D$ which of course properly represents $n$ (by, say, \Cref{prop:proper-rep-by-equiv}). Note that $[n,b,c]$ is primitive because $\gcd(n,b,c)$ divides $\gcd\left(n,b^2-4nc\right)$ but $\gcd(n,D)=1$.
+	Conversely, suppose that $b^2\equiv D\pmod n$ for some integer $b$; by replacing $b$ with $n-b$ as needed, we may assume that $b$ and $D$ have the same parity because $n$ is odd. Then we see $b^2\equiv D\pmod4$ as well, so in fact
+	\[b^2\equiv D\pmod{4n}\]
+	by the Chinese remainder theorem. So we can find some $c$ such that $D=b^2-4nc$, so $[n,b,c]$ is a binary quadratic form of discriminant $D$. Finishing up, we note that this form properly represents $n$ because $(x,y)=(1,0)$ has $nx^2+bxy+cy^2=n$.
 \end{proof}
 \begin{example}
 	Let $p$ be an odd prime, and let $D$ be an integer which is either $0$ or $1\pmod4$. By \Cref{ex:prime-properly-represents}, $p$ is properly represented by a binary quadratic form of discriminant $D$ if and only if $p$ is merely represented by a binary quadratic form of discriminant $D$, which by \Cref{cor:some-form-by-qr} is equivalent to having some $b\in\ZZ$ with $b^2\equiv D\pmod p$.
@@ -304,7 +312,7 @@ Let's reap some quick benefit from our only caring about binary quadratic forms 
 \subsection{Reduced Forms}
 As promised at the end of the previous subsection, we take the following notion of reduced.
 \begin{definition}[reduced]
-	A binary quadratic form $f=[a,b,c]$ with negative discriminant is \textit{semi-reduced} if and only if $\left|b\right|\le a\le c$. If in addition we have $b\ge0$ if $\left|b\right|=a$ or $a=c$, then we say that $f$ is \textit{reduced}.
+	A binary quadratic form $f=[a,b,c]$ with negative discriminant is \textit{semi-re\-duced} if and only if $\left|b\right|\le a\le c$. If in addition we have $b\ge0$ if $\left|b\right|=a$ or $a=c$, then we say that $f$ is \textit{reduced}.
 \end{definition}
 \begin{example}
 	The binary quadratic form $[1,0,n]$, or $x^2+ny^2$, is reduced for any positive integer $n$. Similarly, for any positive integer $n\equiv3\pmod4$, the binary quadratic form
@@ -313,7 +321,7 @@ As promised at the end of the previous subsection, we take the following notion 
 \end{example}
 Here is the relevant theorem.
 \begin{theorem} \label{thm:reduce-form}
-	Every binary quadratic form of negative discriminant is equivalent to a unique reduced form.
+	Every positive-definite binary quadratic form is equivalent to a unique reduced form.
 \end{theorem}
 \begin{proof}
 	This proof has two parts: we show that any binary quadratic form $f=[a,b,c]$ with $\disc f<0$ is equivalent to some reduced form, and then we show that no two distinct reduced forms are equivalent. For the first part, we note that we have the two moves
@@ -769,6 +777,9 @@ Do ten points worth of the following exercises.
 		\item If $D\pmod4\in\{0,1\}$, show that there is a binary quadratic form $f=[a,b,c]$ such that $\disc f=D$.
 	\end{listalph}
 \end{prob}
+\begin{prob}[2 points]
+	Find a set $S\subseteq\{1,2,\ldots,12\}$ such that $\left(\frac3p\right)=1$ if and only if $p\equiv a\pmod{12}$ for some $a\in S$.
+\end{prob}
 \begin{prob}[3 points]
 	Let $n$ be a positive integer, and let $p$ be a prime.
 	\begin{listalph}
@@ -776,8 +787,8 @@ Do ten points worth of the following exercises.
 		\item If $n\mid p-1$, and $a\in(\ZZ/p\ZZ)^\times$ is an $n$th power, show that $a^{(p-1)/n}\equiv1\pmod p$.
 	\end{listalph}
 \end{prob}
-\begin{prob}[4 points]
-	For an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+xy+3y^2$ if and only if there is an integer $b$ such that $b^2\equiv-11\pmod p$. Describe all such $p$ via congruence conditions$\pmod{11}$.
+\begin{prob}[5 points]
+	For an odd prime $p$, there are integers $(x,y)$ such that $p=x^2+xy+3y^2$ if and only if there is an integer $b$ such that $b^2\equiv-11\pmod p$. Using quadratic reciprocity, describe all such $p$ via congruence conditions$\pmod{11}$.
 \end{prob}
 \begin{prob}[5 points]
 	Given a negative integer $D$ which is either $0$ or $1\pmod4$, write a computer program outputting all reduced binary quadratic forms of discriminant $D$ in the form $[a,b,c]$.
@@ -794,6 +805,14 @@ Do ten points worth of the following exercises.
 		\item (2 points) Use (a) to write a computer program with probabilistically good running time which takes in a prime $p\equiv1\pmod4$ and outputs some integer $x$ such that $x^2\equiv-1\pmod p$.
 		\item (4 points) Use (b) to write a computer program with probabilistically good running time which takes in a prime $p\equiv1\pmod4$ and outputs a pair of integers $(a,b)$ such that $p=a^2+b^2$. Use the program to write the prime number $p=10^{30}+57$ as the sum of two squares.
 	\end{listalph}
+\end{prob}
+\begin{prob}[0 points]
+	Please rate the speed of the following lectures, from ``much too slow'' to ``much too fast.''
+	\begin{itemize}
+		\item November 6: The $p$-adics
+		\item November 8: Hensel's Lemma
+	\end{itemize}
+	Please also rate the difficulty of the problems on the homework you solved.
 \end{prob}
 % p = 10**30+57
 % x = 1
