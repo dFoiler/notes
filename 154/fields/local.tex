@@ -8,7 +8,7 @@
 
 In this section, we introduce the main characters of our intermission, which are the characteristic-$0$ local fields.
 
-\subsection{The \texorpdfstring{$p$}{ p}-adics, Algebraically}
+\subsection{The \texorpdfstring{$p$}{ p}-adics}
 Fix a prime $p$ in the following discussion. The goal of the present subsection is to define the ring of $p$-adic integers $\ZZ_p$. Approximately speaking, the point will be that $\ZZ_p$ is able to capture the information of $\ZZ/p\ZZ$ and $\ZZ/p^2\ZZ$ and $\ZZ/p^3\ZZ$ and so on, all at once.
 
 To see why this might be helpful, we recall the idea of ``local obstructions'' we saw much earlier in this course: an equation might have solutions $\ZZ/p\ZZ$ but lose solutions in $\ZZ/p^2\ZZ$, or it might have solutions in $\ZZ/p^3\ZZ$ but lose solutions in $\ZZ/p^4\ZZ$.
@@ -56,7 +56,7 @@ In particular, we would like projection maps $\ZZ_p\to\ZZ/p^\nu\ZZ$ for each $p^
 Of course, we can write elements of $\ZZ_p$ as sequences in $\prod_\nu\ZZ/p^\nu\ZZ$, but \Cref{ex:power-series-z2} suggests a more intuitive way to look at our elements: any element of $\ZZ_p$ can be thought of as a power series
 \[c_0+c_1p+c_2p^2+\cdots\]
 where $c_0,c_1,c_,\ldots\in\{0,1,\ldots,p-1\}$. Let's explain this bijection.
-\begin{proposition}
+\begin{proposition} \label{prop:p-adic-power-series}
 	Fix a prime $p$. Then there is a unique bijection $\{0,1,\ldots,p-1\}^\NN\to\ZZ_p$ given by sending $(c_\nu)_{\nu=0}^\infty$ to the sequence
 	\[\Bigg(\sum_{k=0}^{\nu-1}c_kp^k\Bigg)_{\nu=0}^\infty\in\ZZ_p.\]
 \end{proposition}
@@ -109,7 +109,7 @@ Here are some basic checks on $\ZZ_p$.
 	\end{itemize}
 \end{proof}
 We complained that $R_p$ is not an integral domain, but $\ZZ_p$ is.
-\begin{lemma}
+\begin{lemma} \label{lem:zp-int-domain}
 	Fix a prime $p$. Then $\ZZ_p$ is an integral domain.
 \end{lemma}
 \begin{proof}
@@ -147,13 +147,81 @@ It is notable that there is a copy of $\ZZ$ in $\ZZ_p$, and $\ZZ$ is ``dense'' i
 \begin{remark}
 	\Cref{lem:z-into-zp} is somewhat remarkable in that each individual map $\ZZ\to\ZZ/p^\nu\ZZ$ has lost information (it has nontrivial kernel), but gluing them all together does not lose any information about $\ZZ$! Typically, we think about taking modding out as forgetting some information, but we can technically recover $\ZZ$ from within $\ZZ_p$.
 \end{remark}
-We now make a few remarks on the ring structure of $\ZZ_p$, simply because it is so nice. To emphasize that $\ZZ_p$ only cares about the prime $p$, we note that all other primes are invertible in $\ZZ_p$.
+We now make a few remarks on the ring structure of $\ZZ_p$, simply because it is so nice. To emphasize that $\ZZ_p$ only cares about the prime $p$, we note that all other primes are invertible in $\ZZ_p$. In fact, we have the following stronger statement.
+\begin{proposition} \label{prop:units-in-zp}
+	Fix a prime $p$ and some $(a_\nu)_\nu\in\ZZ_p$. The following are equivalent.
+	\begin{listalph}
+		\item $(a_\nu)_\nu$ is a unit.
+		\item $a_\nu\pmod{p^\nu}$ is a unit for all $\nu\ge1$.
+		\item $a_\nu\pmod{p^\nu}$ is a unit for some $\nu\ge1$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We show our implications in sequence.
+	\begin{itemize}
+		\item We show (a) implies (b). Suppose that $(a_\nu)_\nu$ is a unit so that we have some $(b_\nu)_\nu\in\ZZ_p$ such that $(a_\nu)_\nu\cdot(b_\nu)_\nu=1$. Here, $1$ is the sequence $(1,1,\ldots)$, so we see that
+		\[a_\nu\cdot b_\nu\equiv1\pmod{p^\nu}\]
+		for each $\nu$, which is (b).
+		\item Note that (b) implies (c) with no work.
+		\item We show (c) implies (b). Suppose that $a_N\pmod{p^N}$ is a unit where $N\ge1$. Now, for any $\nu\ge1$, we see that
+		\[a_N\equiv a_\nu\pmod{p^{\min\{N,\nu\}}},\]
+		so $a_N\equiv a_\nu\pmod p$, so $p\nmid a_N$ implies that $p\nmid a_\nu$. But $p\nmid a_\nu$ implies that $a_\nu$ is a unit in $(\ZZ/p^\nu\ZZ)^\times$, which is what we wanted.
+		\item We show that (b) implies (a). By hypothesis, we may define
+		\[b_\nu\equiv\begin{cases}
+			1\pmod1 & \text{if }\nu=0, \\
+			a_\nu^{-1}\pmod{p^\nu} & \text{if }\nu\ge1.
+		\end{cases}\]
+		Quickly, note that $(a_\nu)_\nu\cdot(b_\nu)_\nu=1$, so it only remains to verify that $(b_\nu)_\nu$ lives in $\ZZ_p$. Well, for any $n\ge m$, we note that
+		\[1\equiv b_na_n\equiv b_na_m\pmod{p^m},\]
+		so $b_n\equiv a_m^{-1}\equiv b_m\pmod{p^m}$, as needed.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:principal-ideals-zp}
+	Fix a prime $p$. For any integer $n\ge1$, we have
+	\[p^n\ZZ_p=\left\{(a_\nu)_\nu\in\ZZ_p:a_n\equiv0\pmod{p^n}\right\}.\]
+\end{lemma}
+\begin{proof}
+	There are two inclusions to show. In one direction, for any $(a_\nu)_\nu\in\ZZ_p$, we see that $p^n(a_\nu)_\nu=\left(p^na_\nu\right)_\nu$ has $p^na_\nu\equiv0\pmod{p^n}$. In the other direction, suppose that $(a_\nu)_\nu\in\ZZ_p$ has $a_n\equiv0\pmod{p^n}$. Then we use \Cref{prop:p-adic-power-series} to expand $(a_\nu)_\nu$ as a power series
+	\[\sum_{k=0}^\infty c_kp^k\]
+	where each $c_k$ lives in $\{0,1,\ldots,p-1\}$. The condition on $a_n$ requires that $c_k=0$ for $k<n$. We now define $(b_\nu)_\nu$ as from the power series
+	\[\frac1{p^n}\sum_{k=0}^\infty c_kp^k=\sum_{k=0}^\infty c_{n+k}p^k.\]
+	In particular, for each $\nu\ge1$, we see that
+	\[p^nb_\nu\equiv\sum_{k=0}^{\nu-1}c_{n+k}p^{n+k}\equiv\sum_{k=0}^{\nu+n-1}c_kp^k\equiv a_\nu\pmod{p^\nu},\]
+	so we conclude that $(a_\nu)_\nu\in p^n\ZZ_p$.
+\end{proof}
+\begin{corollary}
+	Fix a prime $p$. Then the ring $\ZZ_p$ has a unique maximal ideal, which is $p\ZZ_p$.
+\end{corollary}
+\begin{proof}
+	We claim that all proper ideals are contained in $p\ZZ_p$, which will imply the claim. In fact, we will show the contraposition of this statement: we claim that any ideal not contained in $p\ZZ_p$ is not a proper ideal. Well, suppose that $I\subseteq\ZZ_p$ is an ideal not contained in $p\ZZ_p$. Then there is some $(a_\nu)_\nu\in I$ which is not in $p\ZZ_p$. Well, \Cref{lem:principal-ideals-zp} tells us that $p\ZZ_p$ exactly consists of the $(b_\nu)_\nu\in\ZZ_p$ such that $p\mid b_\nu$ for each $\nu\ge1$, so \Cref{prop:units-in-zp} tells us that $\ZZ_p\setminus p\ZZ_p=\ZZ_p^\times$. As such $(a_\nu)_\nu\in I$ is a unit, which implies $I=\ZZ_p$.
+\end{proof}
+Having a unique maximal ideal which is principal is incredibly nice, but in fact the ideal structure of $\ZZ_p$ is as nice as it could possibly be.
+% \begin{lemma}
+% 	Fix a prime $p$, and define the function $v\colon\ZZ_p\setminus\{0\}\to\ZZ$ by
+% 	\[v((a_\nu)_\nu)\coloneqq\min\left\{\nu\ge1:a_\nu\not\equiv0\pmod{p^\nu}\right\}.\]
+% \end{lemma}
+\begin{proposition}
+	Fix a prime $p$. Then the ring $\ZZ_p$ is a principal ideal domain. In fact, for any nonzero ideal $I\subseteq\ZZ_p$, there exists a nonnegative integer $n$ such that
+	\[I=p^n\ZZ_p.\]
+\end{proposition}
+\begin{proof}
+	Note that $\ZZ_p$ is already an integral domain by \Cref{lem:zp-int-domain}. Now, let $I\subseteq\ZZ_p$ be a nonzero ideal. The main point of the proof is the construction of $n$. Because $I$ is nonzero, there exists some nonzero $(a_\nu)_\nu\in I$, and being nonzero implies that there is some greatest integer $n((a_\nu)_\nu)$ such that $a_n\not\equiv0\pmod{p^n}$. Define $n$ to be the least such integer over all nonzero $(a_\nu)_\nu\in I$.
+
+	It remains to show that $I=p^n\ZZ_p$. One inclusion is not so bad: for each nonzero $(a_\nu)_\nu\in I$, the construction of $n$ requires that $a_n\equiv0\pmod{p^n}$, so $(a_\nu)_\nu\in p^n\ZZ_p$ by \Cref{lem:principal-ideals-zp}. For the other inclusion, we must show that $p^n\in I$. Well, by the construction of $n$, we are promised some $(a_\nu)_\nu\in I$ such that $a_n\equiv0\pmod{p^n}$ but $a_{n+1}\not\equiv0\pmod{p^{n+1}}$. By \Cref{lem:principal-ideals-zp} again, we are able to write
+	\[(a_\nu)_\nu=p^n(b_\nu)_\nu\]
+	for some $(b_\nu)_\nu\in\ZZ_p$. We would like to cancel out the $(b_\nu)_\nu$ from both sides.
+	
+	Well, if $b_{n+1}\equiv0\pmod p$, then $p^nb_{n+1}\equiv0\pmod{p^{n+1}}$, which contradicts the construction of $(a_\nu)_\nu$. Thus, we must instead have $b_{n+1}\in\left(\ZZ/p^{n+1}\ZZ\right)^\times$, so $(b_\nu)_\nu$ is a unit, and we may find $(c_\nu)_\nu\in\ZZ_p$ such that $(b_\nu)_\nu\cdot(c_\nu)_\nu=1$. Finishing up, we see
+	\[p^n=(a_\nu)_\nu\cdot(c_\nu)_\nu\]
+	lives in $I$, which completes the proof.
+\end{proof}
 
 \todo{}
 
 \subsection{Hensel's Lemma}
 
-\subsection{Newton's Method}
+% \subsection{Newton's Method}
 
 \subsection{Problems}
 \begin{prob}[3 points]
