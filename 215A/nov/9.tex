@@ -1,0 +1,129 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 9}
+
+Today we will start talking about cohomology.
+\begin{remark}
+	Let's begin with some motivational remarks.
+	\begin{itemize}
+		\item Historically, de Rham cohomology came first, arising from the generalized Stokes' theorem.
+		\item Cohomology has a ring structure called the cup product, which will also prove to be a useful invariant for us.
+		\item Cohomology is required to discuss Poincar\'e duality.
+		\item Elements of the cohomology groups $H^2(G,A)=H^2(K(G,1),A)$ represent group extensions of $G$ by $A$.
+	\end{itemize}
+\end{remark}
+
+\subsection{Cochains and Cohomology}
+We go ahead and define cohomology now.
+\begin{definition}[cochain complex]
+	A \textit{cochain complex} $(C^\bullet,\del^\bullet)$ is a sequence of maps
+	\[\cdots\stackrel{\del^{n-1}}\to C^{n-1}\stackrel{\del^n}\to C^n\stackrel{\del^{n+1}}\to C^{n+1}\stackrel{\del^{n+2}}\to\cdots,\]
+	where we require $\del^2=0$. The \textit{cohomology groups} are
+	\[H^i(C^\bullet)\coloneqq\frac{\ker\del^{i+1}}{\im\del^i}.\]
+\end{definition}
+\begin{definition}[dual chain complex]
+	Fix a chain complex $(C,\del)$ of free abelian groups. Then given an abelian group $A$, there is a \textit{dual cochain complex} $(C^*,\del^*)$
+	\[\cdots\to\op{Hom}_\ZZ(C_{n-1},G)\to\op{Hom}_\ZZ(C_n,G)\to\op{Hom}_\ZZ(C_{n+1},G)\to\cdots.\]
+	Here, the boundary map $\op{Hom}_\ZZ(C_n,G)\to\op{Hom}_\ZZ(C_{n+1},G)$ is defined by $f\mapsto(f\circ\del)$. By abuse of notation, we let $H^n(C_\bullet;G)$ denote the cohomology groups of this dual cochain complex.
+\end{definition}
+It turns out that one can recover cohomology from homology, which is what we will focus on today.
+\begin{example}
+	Using $\ZZ$ as our dualizing object, the chain complex $0\to\ZZ\to0$ dualizes to $0\from\ZZ\from0$.
+\end{example}
+\begin{example}
+	Use $\ZZ$ as our dualizing object again, and consider the chain complex $0\to\ZZ\stackrel m\to\ZZ\to0$, where $m\ne0$. Then the dual cochain complex is simply $0\from\ZZ\stackrel m\from\ZZ\from0$, which we find by identifying $\op{Hom}_\ZZ(\ZZ,\ZZ)$ with $\ZZ$ via $f\mapsto f(1)$ and then tracking through what the coboundary map is.
+\end{example}
+\begin{remark}
+	One can show that a finite chain complex of finitely generated free abelian abelian groups will break into a direct sum of chain complexes of the form $0\to\ZZ\to0$ and $0\to\ZZ\stackrel m\to\ZZ\to0$ where $m$ is a nonzero integer. This is an exercise in Hatcher.
+\end{remark}
+
+\subsection{Primer on the Universal Coefficients Theorem}
+We now investigate how cohomology and homology interact.
+\begin{proposition} \label{prop:cohom-to-hom-hom}
+	Fix a chain complex $(C_\bullet,\del_\bullet)$. Then there is a natural map
+	\[H^n(C_\bullet;G)\to\op{Hom}_\ZZ(H_n(C_\bullet),G).\]
+	In fact, this map is surjective if the $C_\bullet$ are free abelian groups.
+\end{proposition}
+\begin{proof}
+	For brevity, define $Z_n\coloneqq\ker\del_n$ to be our cycles for any $n$, and let $B_n=\im\del_{n+1}$ to be our boundaries for any $n$. Now, a class $[\varphi]\in H^n(C_\bullet;G)$ is represented by a $\varphi\colon C_n\to G$ such that $\varphi\circ\del=\del^*(\varphi)=0$, which equivalently means that $\varphi$ vanishes on restriction to $B_n$. Anyway, the point is that we can take $z\in Z_n$ and simply output $\varphi(z_n)$, and we see that this is well-defined up to $z_n$ because $\varphi$ vanishes on $B_n$. Further, this is well-defined up to $\varphi$ because the image of $\del^*$ in $\op{Hom}_\ZZ(C_n,G)$ will vanish on $z_n$ because all such morphisms take the form $\psi\circ\del$, and $\psi(\del z_n)=0$ (because $z_n$ is a cycle).
+
+	It remains to show that our map is surjective provided the $C_\bullet$ are free abelian groups. The point is that we have the short exact sequence
+	\[0\to Z_n\to C_n\to B_{n-1}\to0\]
+	by definition of these objects, and because $B_{n-1}\subseteq C_{n-1}$ is free, this will actually split, so $C_n\cong Z_n\oplus B_{n-1}$ (albeit non-canonically). Thus, given some map $H_n(G)\to G$, we see that this lifts to a map $\varphi\colon Z_n\to G$, which can then be extended via the splitting to a full map $\widetilde\varphi\colon C_n\to G$ vanishing on the image of $B_n$. Namely, $\widetilde\varphi$ has $\del^*(\varphi)=\varphi\circ\del=0$, so $\widetilde\varphi$ represents some class in $H^n(C_\bullet;G)$. By construction, $\widetilde\varphi$ will restrict to $\varphi$ on $Z_n$, so we are in fact hitting the correct map $\varphi\colon H_n(G)\to G$.
+\end{proof}
+\begin{remark}
+	Given a homomorphism $\psi\colon\pi_1(X)\to\ZZ$, we can descend to a map $\psi\colon H_1(X)\to\ZZ$. In light of this, we can view some $[\varphi]\in H^1(X,\ZZ)$ producing an ``integration map'' taking such loops $\psi$.
+\end{remark}
+\begin{remark}
+	The end of the proof constructs a splitting $\varphi\mapsto\widetilde\varphi$ of $H^n(C_\bullet;G)\to\op{Hom}_\ZZ(H_n(C_\bullet),G)$.
+\end{remark}
+It remains to compute the kernel of the map in \Cref{prop:cohom-to-hom-hom}. This needs some work; continue in the context of the proof. We begin by drawing the following short exact sequence of complexes.
+% https://q.uiver.app/#q=WzAsMTYsWzAsMSwiMCJdLFsxLDEsIlpfe24rMX0iXSxbMSwyLCJaX24iXSxbMCwyLCIwIl0sWzIsMSwiQ197bisxfSJdLFsyLDIsIkNfbiJdLFszLDEsIkJfbiJdLFszLDIsIkJfe24tMX0iXSxbNCwxLCIwIl0sWzQsMiwiMCJdLFsxLDAsIlxcdmRvdHMiXSxbMiwwLCJcXHZkb3RzIl0sWzMsMCwiXFx2ZG90cyJdLFsxLDMsIlxcdmRvdHMiXSxbMiwzLCJcXHZkb3RzIl0sWzMsMywiXFx2ZG90cyJdLFswLDFdLFsxLDRdLFs0LDYsIlxcZGVsIl0sWzYsOF0sWzMsMl0sWzIsNV0sWzUsNywiXFxkZWwiXSxbNyw5XSxbMTAsMV0sWzEsMiwiMCJdLFsyLDEzXSxbMTEsNF0sWzQsNSwiXFxkZWwiXSxbNSwxNF0sWzEyLDZdLFs2LDcsIjAiXSxbNywxNV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	& \vdots & \vdots & \vdots \\
+	0 & {Z_{n+1}} & {C_{n+1}} & {B_n} & 0 \\
+	0 & {Z_n} & {C_n} & {B_{n-1}} & 0 \\
+	& \vdots & \vdots & \vdots
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=2-2, to=2-3]
+	\arrow["\del", from=2-3, to=2-4]
+	\arrow[from=2-4, to=2-5]
+	\arrow[from=3-1, to=3-2]
+	\arrow[from=3-2, to=3-3]
+	\arrow["\del", from=3-3, to=3-4]
+	\arrow[from=3-4, to=3-5]
+	\arrow[from=1-2, to=2-2]
+	\arrow["0", from=2-2, to=3-2]
+	\arrow[from=3-2, to=4-2]
+	\arrow[from=1-3, to=2-3]
+	\arrow["\del", from=2-3, to=3-3]
+	\arrow[from=3-3, to=4-3]
+	\arrow[from=1-4, to=2-4]
+	\arrow["0", from=2-4, to=3-4]
+	\arrow[from=3-4, to=4-4]
+\end{tikzcd}\]
+These exact sequences are $\ZZ$-split currently, so dualizing keeps them $\ZZ$-split, so we end up with the following short exact sequence of dual cochain complexes.
+% https://q.uiver.app/#q=WzAsMTYsWzAsMSwiMCJdLFsxLDEsIlpfe24rMX1eKiJdLFsxLDIsIlpfbl4qIl0sWzAsMiwiMCJdLFsyLDEsIkNfe24rMX1eKiJdLFsyLDIsIkNfbl4qIl0sWzMsMSwiQl9uXioiXSxbMywyLCJCX3tuLTF9XioiXSxbNCwxLCIwIl0sWzQsMiwiMCJdLFsxLDAsIlxcdmRvdHMiXSxbMiwwLCJcXHZkb3RzIl0sWzMsMCwiXFx2ZG90cyJdLFsxLDMsIlxcdmRvdHMiXSxbMiwzLCJcXHZkb3RzIl0sWzMsMywiXFx2ZG90cyJdLFsxLDBdLFs0LDFdLFs2LDQsIlxcZGVsXioiLDJdLFs4LDZdLFsyLDNdLFs1LDJdLFs3LDUsIlxcZGVsXioiLDJdLFs5LDddLFsxLDEwXSxbMiwxLCIwIiwyXSxbMTMsMl0sWzQsMTFdLFs1LDQsIlxcZGVsXioiLDJdLFsxNCw1XSxbNiwxMl0sWzcsNiwiMCIsMl0sWzE1LDddXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	& \vdots & \vdots & \vdots \\
+	0 & {Z_{n+1}^*} & {C_{n+1}^*} & {B_n^*} & 0 \\
+	0 & {Z_n^*} & {C_n^*} & {B_{n-1}^*} & 0 \\
+	& \vdots & \vdots & \vdots
+	\arrow[from=2-2, to=2-1]
+	\arrow[from=2-3, to=2-2]
+	\arrow["{\del^*}"', from=2-4, to=2-3]
+	\arrow[from=2-5, to=2-4]
+	\arrow[from=3-2, to=3-1]
+	\arrow[from=3-3, to=3-2]
+	\arrow["{\del^*}"', from=3-4, to=3-3]
+	\arrow[from=3-5, to=3-4]
+	\arrow[from=2-2, to=1-2]
+	\arrow["0"', from=3-2, to=2-2]
+	\arrow[from=4-2, to=3-2]
+	\arrow[from=2-3, to=1-3]
+	\arrow["{\del^*}"', from=3-3, to=2-3]
+	\arrow[from=4-3, to=3-3]
+	\arrow[from=2-4, to=1-4]
+	\arrow["0"', from=3-4, to=2-4]
+	\arrow[from=4-4, to=3-4]
+\end{tikzcd}\]
+Here, the asterisk denotes dualizing. This produces a long exact sequence in cohomology
+\[\cdots\from B_n^*\from Z_n^*\from H^n(C_\bullet;G)\from B_{n-1}^*\from Z_{n-1}^*\from\cdots.\]
+Now, let $i_n\colon B_n\to Z_n$ denote the inclusion, and we see that we get
+\[0\from\ker i_n^*\from H^n(C_\bullet;G)\from\coker i_{n-1}^*\from0.\]
+The short exact sequence
+\[0\to B_n\to Z_n\to H_n(C_\bullet)\to0\]
+dualizes to tell us that $\ker i_n^*=\op{Hom}_\ZZ(H_n(C_\bullet;G),G)$, so it remains to compute whatever $\coker i_{n-1}^*$ is. Well, as with $\ker i_n^*$, we see that
+\[0\to B_{n-1}\to Z_{n-1}\to H_{n-1}(C_\bullet)\to0\]
+dualizes to
+\[0\to\op{Hom}_\ZZ(H_{n-1}(C_\bullet),G)\to Z_{n-1}^*\to B_{n-1}^*.\]
+This can be extended to a full free abelian resolution using some homological algebra nonsense, and then the quotient $\coker i_{n-1}^*$ is simply an $\operatorname{Ext}$-group.
+\begin{remark}
+	Professor Agol tried to provide a full construction of $\operatorname{Ext}$ in like ten minutes. I have not recorded his attempt.
+\end{remark}
+
+\end{document}
