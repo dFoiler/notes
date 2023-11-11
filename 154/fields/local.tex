@@ -19,14 +19,14 @@ To see why this might be helpful, we recall the idea of ``local obstructions'' w
 	The equation $4x^2+4=0$ has solutions in $\ZZ/8\ZZ$ but no solutions in $\ZZ/16\ZZ$.
 \end{example}
 The ring $\ZZ_p$ will be able to keep track of all this modular information at once. For example, thinking about $\ZZ_p$ will allow us to cleanly thing about statements such as the following one.
-\begin{proposition}
-	Let $a$ be an integer. The following are equivalent.
+\begin{restatable}{proposition}{ztwosquares} \label{prop:squares-z2}
+	Let $a$ be an odd integer. The following are equivalent.
 	\begin{listalph}
 		\item The equation $x^2\equiv a\pmod 8$ has solutions.
 		\item The equation $x^2\equiv a\pmod{2^\nu}$ for any power $2^\nu$.
 	\end{listalph}
-\end{proposition}
-With this in mind, a good first guess for $\ZZ_p$ would be the infinite product ring
+\end{restatable}
+\noindent With this in mind, a good first guess for $\ZZ_p$ would be the infinite product ring
 \[R_p\coloneqq\prod_{\nu=0}^\infty\ZZ/p^\nu\ZZ.\]
 However, this ring has many problems. For example, $R_p$ is not an integral domain: $(1,0,0,\ldots)\cdot(0,1,0,\ldots)=(0,0,0,\ldots)$. A worse problem is that it somehow fails to actually care about modular information: a central property of the $\ZZ/p^\nu\ZZ$s is that if an equation has solutions in $\ZZ/p^{\nu+1}\ZZ$, then it will have solutions in $\ZZ/p^\nu\ZZ$ because of the reduction map
 \begin{equation}
@@ -217,21 +217,227 @@ Having a unique maximal ideal which is principal is incredibly nice, but in fact
 	lives in $I$, which completes the proof.
 \end{proof}
 
-\todo{}
-
 \subsection{Hensel's Lemma}
+Hensel's lemma is a tool which allows one to quickly check if a polynomial equation has roots in the $p$-adics. To orient ourselves, we begin with an example.
+\begin{example} \label{ex:sqrt-2-z7}
+	We show that $x^2-2=0$ has a solution in $\ZZ_7$.
+\end{example}
+\begin{proof}
+	We must construct some $a\in\ZZ_7$ such that $a^2-2=0$, so we need to find a sequence $(a_\nu)_{\nu\in\NN}$ such that
+	\[a_\nu^2\equiv2\pmod{7^\nu}\]
+	for each $\nu\ge0$ and such that $a_{\nu+1}\equiv a_\nu\pmod{7^\nu}$. Well, we begin with $a_0\coloneqq0$ and $a_1\coloneqq3$ and then proceed inductively.
+	
+	For example, to solve for $a_2$, we see that we would like to set $a_2=a_1+\varepsilon$ for some $\varepsilon\equiv0\pmod7$. But we want $a_2^2\equiv2\pmod{7^2}$, which requires
+	\[2\equiv a_2^2\equiv a_1^2+2a_1\varepsilon\pmod{7^2},\]
+	so we select $\varepsilon$ by
+	\[\varepsilon\equiv\frac{2-a_1^2}{2a_1}\pmod{7^2}.\]
+	Note we may divide by $a_1\not\equiv0\pmod7$, and this is $0\pmod7$ by the construction of $a_1$.
 
-% \subsection{Newton's Method}
+	In general, suppose for $n\ge1$ we have been handed $a_n\pmod{7^n}$ with $a_n^2\equiv2\pmod{7^n}$ and $a_n\equiv a_1\pmod7$, and we want to construct $a_{n+1}\pmod{7^{n+1}}$. Well, we would like for $a_{n+1}=a_n+\varepsilon$ where $\varepsilon\equiv0\pmod{7^n}$, from which we see we require
+	\[2\equiv a_{n+1}^2\equiv a_n^2+2a_n\varepsilon\pmod{7^{n+1}},\]
+	where we are noting that $\varepsilon\equiv0\pmod{7^{n+1}}$. This rearranges to
+	\[\varepsilon\equiv\frac{2-a_n^2}{2a_n}\pmod{7^{n+1}}.\]
+	To see that this makes sense, we note that $a_n\equiv a_1\not\equiv0\pmod7$, so the denominator here is legal. Also, the numerator is $0\pmod{7^n}$ by hypothesis on $a_n$. So we see that we can construct $\varepsilon$ and hence $a_{n+1}\equiv a_n+\varepsilon$ will do.
+\end{proof}
+This example generalizes almost immediately to the following result.
+\begin{proposition}[Hensel] \label{prop:hensel}
+	Fix a prime $p$ and a polynomial $f\in\ZZ_p[x]$. Suppose we have some $a\in\ZZ_p$ such that $f(a)\equiv0\pmod p$ but $f'(a)\not\equiv0\pmod p$. Then there is a unique $\alpha\in\ZZ_p$ such that $\alpha\equiv a\pmod p$ and $f(\alpha)=0$.
+\end{proposition}
+Here, $f'$ denotes the derivative of a polynomial, which we can formally define via the power rule.
+\begin{proof}
+	We follow the proof of \Cref{ex:sqrt-2-z7}. We show by induction that there is a unique $a_n\pmod{p^n}$ such that $a_n\equiv a\pmod p$ and $f(a_n)\equiv0\pmod{p^n}$. For $n=0$, there is nothing to check. For $n=1$, we take $a_1\equiv a\pmod p$.
+
+	It remains to do the inductive step. We are given $a_n\pmod{p^n}$ for $n\ge1$, and we must show that there is a unique $a_{n+1}\pmod{p^{n+1}}$ such that $a_{n+1}\equiv a\pmod p$ and $f(a_{n+1})\equiv0\pmod{p^{n+1}}$. Well, by the inductive step, we know that we must have $a_{n+1}\equiv a_n\pmod{p^n}$, so we will need to set $a_{n+1}=a_n+\varepsilon$ where $\varepsilon\equiv0\pmod{p^n}$. It remains to show that $a_{n+1}$ can be uniquely constructed from here.
+	
+	We would now like to approximate
+	\[f(a_n+\varepsilon)\stackrel?\equiv0\pmod{p^{n+1}}.\]
+	For example, one approach would be to use a Taylor expansion, writing
+	\[f(a+\varepsilon)=\sum_{d=0}^\infty\frac{f^{(d)}(a)}{d!}\varepsilon^d,\]
+	which makes sense in the fraction field $\QQ_p$ of $\ZZ_p$. One can show that the above equality works purely formally; notably, it is a finite sum because $f^{(d)}(a)=0$ for $d>\deg f$. However, this expansion is a little rough to bound with because of the presence of denominators---we have to move to $\QQ_p$ for it to make sense, after all. Instead, we pick up the following lemma which allows us to use the first-order approximation given by the Taylor expansion but avoiding the denominators.
+	\begin{lemma} \label{lem:first-order-taylor}
+		Fix a ring $R$ and a polynomial $f\in R[x]$. Then there is a polynomial $g\in R[x,\varepsilon]$ such that
+		\[f(x+\varepsilon)=f(x)+f'(x)\varepsilon+\varepsilon^2g(x,\varepsilon).\]
+		Here, $\varepsilon$ is being thought of as a formal variable.
+	\end{lemma}
+	\begin{proof}
+		Write $f(x)=\sum_{d=0}^na_dx^d$ where $a_d\in R$ for each $d$. The main point is to show the result for the monomials $x^d$, where the result follows from using the binomial theorem to expand
+		\begin{align*}
+			(x+\varepsilon)^d &= x^d+dx^{d-1}\varepsilon+\sum_{k=2}^d\binom dkx^{d-k}\varepsilon^k \\
+			&= x^d+dx^{d-1}\varepsilon+\varepsilon^2\underbrace{\sum_{k=2}^d\binom dkx^{d-k}\varepsilon^{k-2}}_{g_d(x,\varepsilon)\coloneqq}.
+		\end{align*}
+		Note this works even for $d=0$ as long as we simply ignore the higher-order terms. From here, we take $R$-linear combinations, writing
+		\begin{align*}
+			f(x+\varepsilon) &= \sum_{d=0}^na_d(x+\varepsilon)^d \\
+			&= \sum_{d=0}^na_d\left(x^d+dx^{d-1}\varepsilon+\varepsilon^2g_d(x,\varepsilon)\right) \\
+			&= \underbrace{\sum_{d=0}^na_dx^d}_{f(x)}+\Bigg(\underbrace{\sum_{d=0}a_ddx^{d-1}}_{f'(x)}\Bigg)\varepsilon+\varepsilon^2\underbrace{\sum_{d=0}^na_dg_d(x,\varepsilon)}_{g(x,\varepsilon)\coloneqq},
+		\end{align*}
+		which is what we wanted.
+	\end{proof}
+	Now, \Cref{lem:first-order-taylor} provides us with $g\in\ZZ_p[x,\varepsilon]$ such that
+	\[f(a_n+\varepsilon)=f(a_n)+f'(a_n)\varepsilon+\varepsilon^2g(x,\varepsilon).\]
+	Reducing$\pmod{p^{n+1}}$, we note that $\varepsilon^2\equiv0\pmod{p^{n+1}}$ because $n\ge1$, so we want
+	\[0\stackrel?\equiv f(a_n)+f'(a_n)\varepsilon\pmod{p^{n+1}},\]
+	which rearranges to
+	\[\varepsilon\equiv-\frac{f(a_n)}{f'(a_n)}\pmod{p^{n+1}}.\]
+	This fraction makes sense because $f'(a_n)\equiv f'(a)\not\equiv0\pmod p$---note that this is the only point in the proof where we have used the hypothesis that $f'(a)\not\equiv0\pmod p$! Additionally, we note that $f(a_n)\equiv0\pmod{p^n}$, so $\varepsilon\equiv0\pmod{p^n}$ as needed. So we have uniquely constructed a working $\varepsilon$, which provides a uniquely constructed $a_{n+1}$, as needed.
+\end{proof}
+Let's give a few applications.
+\begin{corollary}
+	Fix a prime $p$. For each nonzero residue $a\pmod p$, there is a unique $\zeta\in\ZZ_p$ such that $\zeta\equiv a\pmod p$ and $\zeta^{p-1}=1$.
+\end{corollary}
+\begin{proof}
+	We apply \Cref{prop:hensel} to $f(x)\coloneqq x^{p-1}-1$. Indeed, for each nonzero residue $a\pmod p$, we see that $f(a)=a^{p-1}-1\equiv0\pmod p$ but $f'(a)=(p-1)a^{p-2}\not\equiv0\pmod p$.
+\end{proof}
+\begin{corollary} \label{cor:sqrt-zp}
+	Fix an odd prime $p$. For each $\alpha\in\ZZ_p$ such that $\alpha\pmod p$ is a quadratic residue, there is $\beta\in\ZZ_p$ such that $\beta^2=\alpha$.
+\end{corollary}
+\begin{proof}
+	We apply \Cref{prop:hensel} to $f(x)\coloneqq x^2-\alpha$. Indeed, $\alpha\pmod p$ is a quadratic residue, so we can find some nonzero $b\pmod p$ such that $b^2\equiv\alpha\pmod p$ so that $f(b)\equiv0\pmod p$; however, $f'(b)=2b\not\equiv0\pmod p$.
+\end{proof}
+\begin{example}
+	Fix an odd prime $p$. For $a\in\ZZ$, if $a\pmod p$ is a quadratic residue, then we claim
+	\[x^2\equiv a\pmod{p^n}\]
+	has a solution for each nonnegative integer $n$. Indeed, \Cref{cor:sqrt-zp} promises $\beta\in\ZZ_p$ such that $\beta^2=a$, so $\beta\pmod{p^n}$ will do for each $n$.
+\end{example}
+
+\subsection{Newton's Method}
+It will be worth our time to more closely examine the proof of \Cref{prop:hensel}. Approximately speaking, the proof is doing a $p$-adic version of ``Newton's method'' to find roots of a polynomial. Reading the proof over, it suggests taking some $a\in\ZZ_p$ such that $f(a)\approx0$ and then replacing $a$ with
+\[a-\frac{f(a)}{f'(a)}\]
+iteratively to eventually produce a root. Indeed, we approximated $f(a+\varepsilon)\approx f(a)+f'(a)\varepsilon$ and then found that we want to set $\varepsilon=-f(a)/f'(a)$ in order to make this vanish. Geometrically, what is happening is that we are pretending that $f$ locally looks its tangent line at $x=a$ and then finding the root of the tangent line
+\[y-f(a)=f'(a)(x-a)\]
+to produce a better approximate root. Here is the image for this.
+\begin{center}
+	\begin{asy}
+		import graph;
+		unitsize(4cm);
+		real f(real x)
+		{
+			return x*x*x - x + 0.1;
+		}
+		draw((-0.6,0)--(2,0)); draw((0,-0.6)--(0,2));
+		draw(graph(f,-0.6,1.5), blue);
+
+		real a0 = 1.3;
+		real a1 = a0 - (a0*a0*a0 - a0) / (3*a0*a0 - 1);
+
+		pair v = (a0, f(a0)) - (a1, 0);
+		draw((a1, 0) -- (a1, 0) + 1.8*v, red);
+
+		draw((a0,0) -- (a0,f(a0)), dashed);
+		draw((a1,0) -- (a1,f(a1)), dashed);
+
+		dot("$a$", (a0,0), S); dot("$x_1$", (a1, 0), S);
+
+		dot("$(a,f(a))$", (a0, f(a0)), WNW);
+		dot("$(a',f(a'))$", (a1, f(a1)), WNW);
+
+		label("$y-f(a)=f'(a)(x-a)$", (a1,0) + 1.5*v, W, red);
+	\end{asy}
+\end{center}
+Now, a close reading of the proof of \Cref{prop:hensel} is able to show that this $p$-adic version of Newton's method works under only mild hypotheses.
+\begin{lemma} \label{lem:newton-step}
+	Fix a prime $p$ and a polynomial $f\in\ZZ_p[x]$. Suppose that we have some $a\in\ZZ_p$ and integers $N\ge0$ and $k>0$ such that the following hold.
+	\begin{itemize}
+		\item $f(a)\equiv0\pmod{p^{2N+k}}$,
+		\item $f'(a)\equiv0\pmod{p^{N}}$, but
+		\item $f'(a)\not\equiv0\pmod{p^{N+1}}$.
+	\end{itemize}
+	Then $a'\coloneqq a-f(a)/f'(a)$ has $f(a')\equiv0\pmod{p^{2N+2k}}$ and $a'\equiv a\pmod{p^{N+k}}$. In fact, $a'\pmod{p^{N+2k}}$ is uniquely determined by these constraints.
+\end{lemma}
+Intuitively, the conditions are requiring that $f(a)$ vanishes more than ``twice as much'' as $f'(a)$ in order to iterate. For example, at $N=0$, we are merely requiring that $f'(a)\not\equiv0\pmod p$, which is the condition appearing in \Cref{prop:hensel}.
+\begin{proof}
+	We imitate the inductive step of \Cref{prop:hensel}. For the uniqueness, we are required to choose $a'$ so that $a'=a+\varepsilon$ where $\varepsilon\equiv0\pmod{p^{N+k}}$, and we would like for $\varepsilon$ to be unique$\pmod{p^{N+2k}}$. Well, we use \Cref{lem:first-order-taylor} again to find $g$ with coefficients in $\ZZ_p$ such that
+	\[f(a+\varepsilon)=f(a)+f'(a)\varepsilon+\varepsilon^2g(x,\varepsilon),\]
+	meaning that we would like for
+	\[f(a)+f'(a)\varepsilon\equiv0\pmod{p^{2N+2k}}\]
+	because $\varepsilon^2\equiv0\pmod{p^{2N+2k}}$. This is now equivalent to
+	\[\varepsilon\equiv-\frac{f(a)}{f'(a)}\pmod{p^{N+2k}},\]
+	which we note is indeed $0\pmod{p^{N+k}}$ by using the conditions on $f(a)$ and $f'(a)$. So $\varepsilon=-f(a)/f'(a)$ will do, and it is unique$\pmod{p^{N+2k}}$, as required.
+\end{proof}
+\begin{proposition} \label{prop:hensel-by-newton}
+	Fix a prime $p$ and a polynomial $f\in\ZZ_p[x]$. Suppose that we have some $a_0\in\ZZ_p$ and integers $N\ge0$ and $k>0$ such that the following hold.
+	\begin{itemize}
+		\item $f(a_0)\equiv0\pmod{p^{2N+k}}$.
+		\item $f'(a_0)\equiv0\pmod{p^{N}}$.
+		\item $f'(a_0)\not\equiv0\pmod{p^{N+1}}$.
+	\end{itemize}
+	Then the sequence $\{a_n\}_{n\in\NN}$ defined by $a_{n+1}\coloneqq a_n-f(a_n)/f'(a_n)$ has
+	\[f(a_n)\equiv0\pmod{p^{2N+2^nk}}\qquad\text{and}\qquad a_{n+1}\equiv a_n\pmod{p^{N+2^nk}}\]
+	for each $n\ge0$. This sequence then constructs a unique $\alpha\in\ZZ_p$ such that $f(\alpha)=0$ and $\alpha\equiv a_0\pmod{p^{N+1}}$.
+\end{proposition}
+\begin{proof}
+	We inductively apply \Cref{lem:newton-step}. At $n=0$, there is nothing to do. For the induction, we note that we are given $a_n$ for $n\ge0$ satisfying the following.
+	\begin{itemize}
+		\item $f(a_0)\equiv0\pmod{p^{2N+2^nk}}$.
+		\item Note that $a_n\equiv a_0\pmod{p^{N+1}}$ implies $f'(a_n)\equiv0\pmod{p^N}$ while $f'(a_n)\not\equiv0\pmod{p^{N+1}}$.
+	\end{itemize}
+	From here, \Cref{lem:newton-step} promises $a_{n+1}=a_n-f(a_n)/f'(a_n)$ will have $f(a_{n+1})\equiv0\pmod{p^{2N+2^{n+1}k}}$ and $a_{n+1}\equiv a_n\pmod{p^{N+2^nk}}$, and we know that $a_{n+1}\pmod{p^{N+2^{n+1}k}}$ is uniquely determined by these constraints. This has shown the first claim.
+
+	It remains to prove the last sentence. The fact that $a_{n+1}\equiv a_n\pmod{p^{N+2^nk}}$ for each $n\ge0$ promises that there is some $\alpha\in\ZZ_p$ such that $\alpha\equiv a_n\pmod{p^{N+2^nk}}$ for each $n\ge0$. To see that this $\alpha$ is unique, we claim that $f(\alpha)=0$ and $\alpha\equiv a_n\pmod{p^{N+1}}$ requires that $\alpha\equiv a_n\pmod{p^{N+2^n}}$ for each $n\ge0$, which will complete the proof upon sending $n\to\infty$. For this, we use induction; the case of $n=0$ has nothing to check. Then for the induction, we note that \Cref{lem:newton-step} shows that $a_{n+1}\pmod{p^{N+2^{n+1}}}$ is uniquely determined by having
+	\[f(a_{n+1})\equiv0\pmod{p^{2N+2^{n+1}}}\qquad\text{and}\qquad a_{n+1}\equiv a_n\pmod{p^{N+2^n}}.\]
+	Well, $f(\alpha)=0$ and $\alpha\equiv a_n\pmod{p^{N+2^n}}$ already, so the uniqueness requires $\alpha\equiv a_{n+1}\pmod{p^{N+2^{n+1}}}$ too.
+\end{proof}
+\begin{remark}
+	The reason we have stated \Cref{prop:hensel-by-newton} so carefully is to point out that even though the proof of \Cref{prop:hensel} constructs the unique root of $f$ digit-by-digit, the exact same method in fact provides us with a way to converge to the root doubling the amount of precision we have at each step! This is an amazing speed-up!
+\end{remark}
+We now close with a final example, proving \Cref{prop:squares-z2}.
+\ztwosquares*
+\begin{proof}
+	There is nothing to show for (b) implies (a). To show that (a) implies (b), we use \Cref{prop:hensel-by-newton} with the polynomial $f(x)=x^2-a$. Indeed, we see that $f(1)\equiv0\pmod8$ and $f'(1)\not\equiv0\pmod4$, so we are given some $\alpha\in\ZZ_2$ such that $\alpha^2=a$. Thus, $\alpha\pmod{2^\nu}$ for each $\nu\ge0$ will have $\alpha^2\equiv a\pmod{2^\nu}$.
+\end{proof}
 
 \subsection{Problems}
+Do ten points worth of the following exercises and then complete the survey.
+\begin{prob}[2 points]
+	Fix a prime $p$. Show that
+	\[\sum_{n=0}^\infty(n-1)n!=-1\]
+	in $\ZZ_p$ by showing that both sides agree$\pmod{p^n\nu}$ for any $\nu\ge1$.
+\end{prob}
+\begin{prob}[2 points]
+	Compute a sequence of integers $c_1,c_2,c_3,\ldots\in\{0,1,\ldots,10\}$ such that
+	\[-\frac23=\sum_{k=0}^\infty c_k11^k\]
+	in $\ZZ_{11}$.
+\end{prob}
+\begin{prob}[3 points]
+	Find an integer $a$ such that $a^2\equiv-1\pmod{125}$.
+\end{prob}
 \begin{prob}[3 points]
 	Fix a prime $p$, and choose a subset $S\subseteq\ZZ$ containing exactly one representative of each class in $\ZZ/p\ZZ$. For any $a\in\ZZ_p$, show that there is a unique sequence $(c_\nu)_{\nu=0}^\infty\in S^\NN$ such that
 	\[a=\Bigg(\sum_{k=0}^{\nu-1}c_kp^k\Bigg)_{\nu=0}^\infty.\]
+\end{prob}
+\begin{prob}[3 points]
+	Fix some $a\in\ZZ_2$. Show that the following are equivalent.
+	\begin{listalph}
+		\item There is some $b\in\ZZ_2$ such that $a^2=b$.
+		\item There is a positive integer $k$ and integer $a'\equiv1\pmod8$ such that
+		\[a\equiv 4^ka'\pmod{2^{2k+3}}.\]
+	\end{listalph}
+\end{prob}
+\begin{prob}[4 points]
+	Fix distinct primes $p>q$.
+	\begin{listalph}
+		\item Show that $x^p-x$ has at most $q$ roots in $\ZZ/q\ZZ$ and hence at most $q$ roots in $\ZZ_q$.
+		\item Show that $x^p-x$ has at most $p$ roots in $\ZZ/p\ZZ$ and hence exactly $p$ roots in $\ZZ_p$.
+		\item Using (a) and (b), conclude that the rings $\ZZ_p$ and $\ZZ_q$ are not isomorphic.
+	\end{listalph}
+	Similar logic can show that the fraction fields $\QQ_p$ and $\QQ_q$ of $\ZZ_p$ and $\ZZ_q$ are not isomorphic for distinct primes $p>q$.
 \end{prob}
 \begin{prob}[4 points] \label{prob:223-in-z3}
 	Show that $x^2-223y^2=-3$ has a solution in $\ZZ_3$ by showing that there exists $y\in\ZZ_3$ such that $y^2=4/223$. Use \Cref{prob:norm-223} to conclude that the equation
 	\[x^2-223y^2\equiv-3\pmod n\]
 	has a solution for any positive integer $n$.
+\end{prob}
+\begin{prob}[6 points]
+	Write a Python program which takes as input some (small) odd prime $p$, an integer $a\in\ZZ$ such that $a\pmod p$ is a quadratic residue, and a precision level $n$, and then outputs some integer $b_n$ such that $b_n^2\equiv a\pmod{p^n}$. Your program should use Hensel's lemma; as an example, compute a square root of $-1\pmod{5^{100}}$.
+\end{prob}
+\begin{prob}[0 points]
+	Please rate the speed of the following lectures, from ``much too slow'' to ``much too fast.''
+	\begin{itemize}
+		\item November 13: The Group Law
+		\item November 15: Weierstrass Form
+		\item November 17: Explicit Group Laws
+	\end{itemize}
+	Please also rate the difficulty of the problems on the homework you solved.
 \end{prob}
 
 % show Z_p is a PID with a unique maximal ideal
