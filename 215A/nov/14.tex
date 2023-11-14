@@ -1,0 +1,289 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 9}
+
+Today we continue with our proof of the Universal Coefficients Theorem.
+
+\subsection{Homological Algebra taken from Math~250B}
+Last class we discussed the following notions, which I am taking from my notes from Math~250B.
+\begin{definition}[resolution] \label{def:resolution}
+	Given an $R$-module $M$ a \textit{resolution of $M$} is a chain complex $(P,\del)$ such that
+	\[P_i=0\qquad\text{for }i<0.\]
+	Additionally, we require an augmentation map $\varepsilon:P_0\onto M$ so that
+	\[\cdots\stackrel{\del_3}\to P_2\stackrel{\del_2}\to P_1\stackrel{\del_1}\to P_0\stackrel{\varepsilon}\to M\to 0\]
+	is an exact sequence. We call the above complex the \textit{augmented resolution}, and we notate it by $P\to M$.
+\end{definition}
+\begin{defi}[projective resolutions]
+	Fix an $R$-module $M$ with a resolution $(P,\del)$.
+	\begin{itemize}
+		\item The resolution is \textit{projective} if and only if $P_i$ is projective for $i\ge0$.
+		\item The resolution is \textit{free} if any only if $P_i$ is free over $i\ge0$.
+	\end{itemize}
+\end{defi}
+Note that we have the following coherence check.
+\begin{lemma} \label{lem:enoughprojectives}
+	Every $R$-module $M$ has a free resolution and therefore a projective resolution.
+\end{lemma}
+\begin{proof}
+	We build the augmented resolution $P\to M$, which we callously call $P$ (so that $P_{-1}=M$). We produce our injective resolution inductively. To start our resolution $(P,\del)$, we start as required with
+	\[P_i=\begin{cases}
+		M & i=-1, \\
+		0 & i<-1,
+	\end{cases}\]
+	and $\del_i=0$ for $i\le-1$. We now claim that, for any $n\in\NN$, we can construct projective modules $\{P_i\}_{i=0}^n$ with maps $\del_i:P_i\to P_{i-1}$ such that
+	\[P_n\stackrel{\del_n}\to P_{n-1}\stackrel{\del_{n-1}}\to\cdots\stackrel{\del_{2}}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0\]
+	is an exact sequence. This induction will finish the proof.\footnote{Technically, one might want to use something like Zorn's lemma to actually go get the projective resolution with infinitely many terms, but we won't do this here.}
+	
+	For $n=0$, we can find a free module $P_0$ which surjects onto $M$ as $\del_0:P_0\onto M$, for example by taking $P_0\coloneqq\bigoplus_{m\in M}R$. Thus,
+	\[P_0\stackrel{\del_0}\to M\to0\]
+	is exact at $M$ because the kernel of $0:M\to 0$ is all of $M$, which is precisely the image of $\del_0:P_0\onto M$.
+	
+	For the inductive step, we begin with our exact sequence
+	\[P_n\stackrel{\del_n}\to P_{n-1}\stackrel{\del_{n-1}}\to\cdots\stackrel{\del_{2}}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0\]
+	and extend it by $P_{n+1}$. Indeed, as before, we can find a free module $P_{n+1}$ with a surjection $\del_{n+1}:P_{n+1}\onto\ker\del_n$. Tacking this on the front, we have the sequence
+	\[P_{n+1}\stackrel{\del_{n+1}}\to P_n\stackrel{\del_n}\to P_{n-1}\stackrel{\del_{n-1}}\to\cdots\stackrel{\del_{2}}\to P_1\stackrel{\del_1}\to P_0\stackrel{\del_0}\to M\to 0.\]
+	It remains to show that this sequence is exact. Well, by the inductive hypothesis, we already have exactness at everyone in $\{P_{n-1},P_{n-2},\ldots,P_1,P_0,M\}$. It remains to show exactness at $P_n$. Well, by construction of $\del_{n+1}$, we see that
+	\[\im\del_{n+1}=\ker\del_n,\]
+	which is exactly the exactness condition at $P_n$.
+\end{proof}
+We would now like to discuss uniqueness of these resolutions. To begin, we note that we can extend morphisms of objects to morphisms of the resolutions.
+\begin{lemma} \label{lem:inducechainmorphism}
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to N$ are projective resolutions for the $R$-modules $M$ and $N$, respectively. Then an $R$-module homomorphism $\varphi:M\to N$ can be extended to a chain morphism $\varphi:P\to Q$.
+\end{lemma}
+\begin{proof}
+	The point is to use the fact our modules are projective to extend the morphism $\varphi_{-1}:P_{-1}\to Q_{-1}$ backwards. In particular, for $i<-1$, we set $\varphi_i=0$ so that the following diagram commutes for any $i\le-1$.
+	% https://q.uiver.app/?q=WzAsNCxbMCwwLCJQX2kiXSxbMSwwLCJQX3tpLTF9Il0sWzAsMSwiUV9pIl0sWzEsMSwiUV97aS0xfSJdLFswLDIsIlxcdmFycGhpX2kiLDJdLFsxLDMsIlxcdmFycGhpX3tpLTF9Il0sWzAsMSwiXFxkZWxeUF9pIl0sWzIsMywiXFxkZWxfaV5RIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{P_i} & {P_{i-1}} \\
+		{Q_i} & {Q_{i-1}}
+		\arrow["{\varphi_i}"', from=1-1, to=2-1]
+		\arrow["{\varphi_{i-1}}", from=1-2, to=2-2]
+		\arrow["{\del^P_i}", from=1-1, to=1-2]
+		\arrow["{\del_i^Q}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Namely, the top and bottom arrows are both $0$s, so the diagram commutes for free.
+
+	Because we have $\varphi_i$ for $i\le-1$, it suffices exhibit the $\varphi_i$ for $i\ge0$ inductively, assuming that we have $\varphi_{i-1}$; this will finish by muttering something about Zorn's lemma. Namely, we need to induce $\varphi_i$ to make the following diagram commute.
+	% https://q.uiver.app/?q=WzAsNixbMCwwLCJQX2kiXSxbMSwwLCJQX3tpLTF9Il0sWzAsMSwiUV9pIl0sWzEsMSwiUV97aS0xfSJdLFsyLDAsIlBfe2ktMn0iXSxbMiwxLCJRX3tpLTJ9Il0sWzAsMiwiXFx2YXJwaGlfaSIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFsxLDMsIlxcdmFycGhpX3tpLTF9Il0sWzAsMSwiXFxkZWxeUF9pIl0sWzIsMywiXFxkZWxfaV5RIiwyXSxbNCw1LCJcXHZhcnBoaV97aS0yfSJdLFsxLDQsIlxcZGVsX3tpLTF9XlAiXSxbMyw1LCJcXGRlbF97aS0xfV5RIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{P_i} & {P_{i-1}} & {P_{i-2}} \\
+		{Q_i} & {Q_{i-1}} & {Q_{i-2}}
+		\arrow["{\varphi_i}"', dashed, from=1-1, to=2-1]
+		\arrow["{\varphi_{i-1}}", from=1-2, to=2-2]
+		\arrow["{\del^P_i}", from=1-1, to=1-2]
+		\arrow["{\del_i^Q}"', from=2-1, to=2-2]
+		\arrow["{\varphi_{i-2}}", from=1-3, to=2-3]
+		\arrow["{\del_{i-1}^P}", from=1-2, to=1-3]
+		\arrow["{\del_{i-1}^Q}"', from=2-2, to=2-3]
+	\end{tikzcd}\]
+	We would like the fact that $P_i$ is projective in order to induce this arrow, but $\del_i^Q$ is not a surjection. However, $\del_i^Q$ does surject onto $\im\del_i^Q=\ker\del_{i-1}^Q$ (by exactness), so we would like $\varphi_{i-1}\circ\del_i^P$ to map into this kernel. Well, we can use the commutativity of the right square to write
+	\[\del_{i-1}^Q\circ\varphi_{i-1}\circ\del_i^P=\varphi_{i-2}\circ\del_{i-1}^P\circ\del_i^P=\varphi_{i-2}\circ0=0,\]
+	so $\im(\varphi_{i-1}\circ\del_i^P)\subseteq\ker\del_{i-1}^Q=\im\del_i^Q$. Thus, the following diagram is well-defined.
+	% https://q.uiver.app/?q=WzAsMyxbMCwwLCJQX2kiXSxbMCwxLCJRX2kiXSxbMSwxLCJcXGltIFxcZGVsX2leUSJdLFswLDEsIlxcdmFycGhpX2kiLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMSwyLCJcXGRlbF9pXlEiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJlcGkifX19XSxbMCwyLCJcXHZhcnBoaV97aS0xfVxcY2lyY1xcZGVsX2leUCJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{P_i} \\
+		{Q_i} & {\im \del_i^Q}
+		\arrow["{\varphi_i}"', dashed, from=1-1, to=2-1]
+		\arrow["{\del_i^Q}"', two heads, from=2-1, to=2-2]
+		\arrow["{\varphi_{i-1}\circ\del_i^P}", from=1-1, to=2-2]
+	\end{tikzcd}\]
+	So, because $P_i$ is projective, we are promised an induced morphism $\varphi_i:P_i\to Q_i$ such that $\del_i^Q\circ\varphi_i=\varphi_{i-1}\circ\del_i^P$, which is what we wanted.
+\end{proof}
+Then we get uniqueness of these morphisms up to chain homotopy.
+\begin{lemma} \label{lem:uniqchainmorphism}
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to N$ are augmented projective resolutions for the $R$-modules $M$ and $N$, respectively. Further, fix two chain morphisms $\alpha,\beta:P\to Q$ such that $\alpha_{-1}=\beta_{-1}$; i.e., the restrictions of $\alpha$ and $\beta$ to $M\to N$ are equal. Then $\alpha$ and $\beta$ are homotopic.
+\end{lemma}
+\begin{proof}
+	It suffices to show that $\alpha-\beta\sim0$, so set $\varphi:=\alpha-\beta$. In particular, we know that $\varphi_{-1}=\alpha_{-1}-\beta_{-1}=0$, and we would like to extend this to $\varphi\sim0$.
+
+	Unsurprisingly, we construct our chain homotopy $h$ to witness $\varphi\sim0$ inductively; i.e., we want $\varphi_i=h_{i-1}\del_i^P+\del_{i+1}^Qh_i$ for each $i$. To start off, we set $h_i=0$ for $i\le-1$ because this is a morphism $h_i:P_i\to Q_{i+1}$, which must be the zero morphism anyways. Observe that $i\le-1$ will then have
+	\[\varphi_i=0=h_{i-1}\del_i^P+\del_{i+1}^Qh_i\]
+	because everything involved is $0$. For the inductive step, we have $i\ge0$ and are trying to induce the arrow $h_i$ in the following diagram which does not commute.
+	% https://q.uiver.app/?q=WzAsNCxbMSwwLCJQX2kiXSxbMSwxLCJRX2kiXSxbMCwxLCJRX3tpKzF9Il0sWzIsMCwiUF97aS0xfSJdLFswLDIsImhfaSIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDEsImhfe2ktMX0iXSxbMCwzLCJcXGRlbF9pXlAiXSxbMCwxLCJcXHZhcnBoaV9pIiwxXSxbMiwxLCJcXGRlbF97aSsxfV5RIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& {P_i} & {P_{i-1}} \\
+		{Q_{i+1}} & {Q_i}
+		\arrow["{h_i}"', dashed, from=1-2, to=2-1]
+		\arrow["{h_{i-1}}", from=1-3, to=2-2]
+		\arrow["{\del_i^P}", from=1-2, to=1-3]
+		\arrow["{\varphi_i}"{description}, from=1-2, to=2-2]
+		\arrow["{\del_{i+1}^Q}"', from=2-1, to=2-2]
+	\end{tikzcd}\]
+	As usual, we would like to induce $h_i$ using the fact that $P_i$ is projective. The main point is to show that $\varphi_i-h_{i-1}\del_i^P$ maps into $\im\del_{i+1}^Q=\ker\del_i^Q$. Well, because $\varphi_{i-1}=h_{i-2}\del_{i-1}^P+\del_i^Qh_{i-1}$ already, we compute
+	\begin{align*}
+		\del_i^Q\left(\varphi_i-h_{i-1}\del_i^P\right) &= \del_i^Q\varphi_i-\del_i^Qh_{i-1}\del_i^P \\
+		&= \del_i^Q\varphi_i-\left(\varphi_{i-1}-h_{i-2}\del_{i-1}^P\right)\del_i^P \\
+		&= \left(\del_i^Q\varphi_i-\varphi_{i-1}\del_i^P\right)+h_{i-2}\del_{i-1}^P\del_i^P.
+	\end{align*}
+	The left term here is zero because $\varphi$ is a chain morphism; the right term is zero by exactness of $P$. Thus, $\im\left(\varphi_i-h_{i-1}\del_i^P\right)\subseteq\ker\del_i^Q=\im\del_{i+1}^Q$, so the following diagram makes sense.
+	% https://q.uiver.app/?q=WzAsMyxbMCwxLCJRX3tpKzF9Il0sWzEsMCwiUF9pIl0sWzEsMSwiXFxpbVxcZGVsXlFfe2krMX0iXSxbMSwwLCJoX2kiLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwyLCJcXGRlbF97aSsxfV5RIiwyXSxbMSwyLCJcXHZhcnBoaV9pLWhfe2ktMX1cXGRlbF9pXlAiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& {P_i} \\
+		{Q_{i+1}} & {\im\del^Q_{i+1}}
+		\arrow["{h_i}"', dashed, from=1-2, to=2-1]
+		\arrow["{\del_{i+1}^Q}"', two heads, from=2-1, to=2-2]
+		\arrow["{\varphi_i-h_{i-1}\del_i^P}", from=1-2, to=2-2]
+	\end{tikzcd}\]
+	In particular, the fact that $P_i$ is projective grants us a morphism $h_i$ such that
+	\[\del_{i+1}^Qh_i=\varphi_i-h_{i-1}\del_i^P,\]
+	which is what we wanted.
+\end{proof}
+This then gives the uniqueness of the resolutions, in the following sense.
+\begin{lemma} \label{lem:uniqprojresolution}
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to M$ are augmented projective resolutions for an $R$-module $M$. Then there are chain morphisms $\alpha:P\to Q$ and $\beta:Q\to B$ such that $\alpha\beta\sim\id_Q$ and $\beta\alpha\sim\id_P$.
+\end{lemma}
+\begin{proof}
+	To start, we use \Cref{lem:inducechainmorphism} to construct chain morphisms $\alpha:P\to Q$ and $\beta:Q\to P$ such that $\alpha_{-1}=\beta_{-1}=\id_M$.
+
+	By symmetry, it suffices to show that $\alpha\beta\sim\id_Q$. Well, $\alpha\beta:Q\to Q$ is a chain morphism such that
+	\[(\alpha\beta)_{-1}=\alpha_{-1}\beta_{-1}=\id_M\id_M=\id_M,\]
+	and $\id_Q:Q\to Q$ is also a chain morphism such that $(\id_Q)_{-1}=\id_M$. This finishes by \Cref{lem:uniqchainmorphism}.
+\end{proof}
+\begin{corollary}
+	Suppose that $P:=\overline P\to M$ and $Q:=\overline Q\to M$ are augmented projective resolutions for an $R$-module $M$. Then $H^n(\overline P;G)=H^n(\overline Q;G)$ for any abelian group $G$, where this cohomology refers to the cohomology on the complex given by dualizing via $G$.
+\end{corollary}
+\begin{proof}
+	The above results produce maps $\alpha\colon P\to Q$ and $\beta\colon Q\to P$ extending $\id_M\colon M\to M$, and we know that $\alpha\beta$ and $\beta\alpha$ are both homotopic to the identity. This will remain true upon dualizing (by functoriality of dualizing), meaning that the corresponding maps $H^n(\alpha;G)$ and $H^n(\beta;G)$ are inverse morphisms because homotopic maps induce the same map on homology, completing the argument.
+\end{proof}
+This gives the following definition.
+\begin{defihelper}[$\mathrm{Ext}$] \nirindex{ext@$\mathrm{Ext}$}
+	We define the group $\op{Ext}^i(H,G)$ as $H^i(P;G)$ where $P$ is a projective resolution of $H$.
+\end{defihelper}
+
+\subsection{Back to Universal Coefficients}
+We are now ready to provide the following theorem.
+\begin{theorem}[Universal coefficients] \label{thm:univ-coef}
+	Fix a chain complex $(C,\del)$ of free abelian groups, and let $G$ be an abelian group. Then there is a (split) short exact sequence
+	\[0\to\op{Ext}^1(H_{n-1}(C),G)\to H^n(C;G)\to\op{Hom}_\ZZ(H_n(C),G)\to0.\]
+\end{theorem}
+\begin{proof}
+	Surjectivity on the right is \Cref{prop:cohom-to-hom-hom}. The computation of the kernel we saw came from wanting the cokernel from the right of \eqref{eq:almost-ext}, which is exactly the needed $\op{Ext}$-group upon noting that \eqref{eq:almost-ext} is in fact what we get upon dualizing the free resolution $B_{n-1}\to Z_{n-1}\to H_{n-1}(C_\bullet)\to0$.
+\end{proof}
+In light of \Cref{thm:univ-coef}, it will be beneficial for us to be able to compute the $\op{Ext}$-groups.
+\begin{lemma} \label{lem:compute-ext}
+	We have the following.
+	\begin{listalph}
+		\item $\op{Ext}^i(H\oplus H',G)\cong\op{Ext}^i(H,G)\oplus\op{Ext}^i(H',G)$.
+		\item If $H$ is projective, then $\op{Ext}^i(H,G)=0$ for all $i>0$.
+		\item We have $\op{Ext}^1(\ZZ/n\ZZ,G)=G/nG$ and $0$ for higher indices.
+		\item If $H$ is finitely generated, then $\op{Ext}^1(H,\ZZ)=H_{\op{tor}}$ is the torsion subgroup of $H$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item Taking a projective resolution for $H$, and a projective resolution for $H'$, their direct sum produces a projective resolution for $H\oplus H'$, so dualizing preserves the direct sum, and taking homology will still preserve this direct sum.
+		\item Note that $H$ has a projective resolution $0\to H\to H\to0$, which we can then dualize and compute that all the images of the boundary morphisms are zero, so the cohomology is zero.
+		\item Take the free resolution
+		\[0\to\ZZ\stackrel n\to\ZZ\to\ZZ/n\ZZ\to0,\]
+		which dualizes to
+		\[0\to\op{Hom}(\ZZ/n\ZZ,G)\to G\stackrel n\to G,\]
+		so $\op{Ext}^1(\ZZ/n\ZZ,G)=G/nG$. At higher indices, the resolution is simply zero everywhere, so our cohomology vanishes.
+		\item This follows from combining the previous parts plus the fact that any finitely generated abelian group $H$ is the direct sum of $\ZZ$s and $\ZZ/n\ZZ$s.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{corollary}
+	Suppose $(C,\del)$ is a chain complex of free abelian groups. If $H_n(C)$ and $H_{n-1}(C)$ are finitely generated, then
+	\[H^n(C;\ZZ)\cong H_n(C)/H_n(C)_{\mathrm{tor}}\oplus H_{n-1}(C)_{\mathrm{tor}}.\]
+\end{corollary}
+\begin{proof}
+	Apply \Cref{thm:univ-coef}, nothing that the sequence splits and that $\op{Ext}^1(H_{n-1}(C),\ZZ)$ is $H_{n-1}(C)_{\mathrm{tor}}$ by \Cref{lem:compute-ext}, and $H_n(C)/H_n(C)_{\mathrm{tor}}=\op{Hom}_\ZZ(H_n(C),G)$.
+\end{proof}
+We close our discussion by noting that \Cref{thm:univ-coef} is natural.
+\begin{proposition}
+	Fix a morphism $\alpha\colon(C,\del)\to(C',\del')$ of chain complexes of free abelian groups, and let $G$ be an abelian group. Then there is a morphism of short exact sequences as follows.
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIlxcb3B7RXh0fV4xKEhfe24tMX0oQyksRykiXSxbMCwxLCIwIl0sWzEsMSwiXFxvcHtFeHR9XjEoSF97bi0xfShDJyksRykiXSxbMiwwLCJIXm4oQyxHKSJdLFsyLDEsIkhebihDJyxHKSJdLFszLDAsIlxcb3B7SG9tfV9cXFpaKEhfbihDKSxHKSJdLFszLDEsIlxcb3B7SG9tfV9cXFpaKEhfbihDJyksRykiXSxbNCwwLCIwIl0sWzQsMSwiMCJdLFszLDEsIlxcYWxwaGEiXSxbMiwzXSxbMyw1XSxbNSw0LCJcXGFscGhhIl0sWzUsN10sWzcsOV0sWzcsNiwiXFxhbHBoYSJdLFs2LDhdLFs0LDZdLFsxLDRdLFswLDFdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {\op{Ext}^1(H_{n-1}(C),G)} & {H^n(C,G)} & {\op{Hom}_\ZZ(H_n(C),G)} & 0 \\
+		0 & {\op{Ext}^1(H_{n-1}(C'),G)} & {H^n(C',G)} & {\op{Hom}_\ZZ(H_n(C'),G)} & 0
+		\arrow["\alpha", from=2-2, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow["\alpha", from=2-3, to=1-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow["\alpha", from=2-4, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	Everything in sight is functorial, so all the maps are at least well-defined. The main point is that the right square commutes by tracking through the construction of the horizontal maps: indeed, the map simply sends a class in $H^n(C,G)$ to its evaluation on a cycle. This then induces a map on the kernels, which is the left-hand map above.
+\end{proof}
+
+\subsection{Cohomology of Spaces}
+We now apply the abstract machinery we built to topological spaces $X$. In particular, we now build singular cohomology. Let $(C_n(X),\del)$ denote the singular chain complex, which then dualizes to a complex $(C^n(X),\delta)$, where $C^n(X,G)\coloneqq\op{Hom}_\ZZ(C_n(X),G)$, and the boundary $\delta$ sends $\varphi\mapsto(\varphi\circ\del)$. It is worth our time to describe this a little more explicitly. Given a singular simplex $\sigma\colon\Delta^{n+1}\to X$ and some $\varphi\in C^n(X,G)$, we can compute that
+\[(\delta\varphi)(\sigma)=\varphi(\del\sigma)=\sum_{i=0}^{n+1}(-1)^i\varphi([v_0,\ldots,\widehat v_i,\ldots,v_{n+1}]),\]
+where we are notating $\Delta^{n+1}=[v_0,\ldots,v_{n+1}]$.
+
+We now list some properties of our cohomology groups.
+\begin{itemize}
+	\item Negating indices as desired, one sees that short exact sequences of cochain complexes induce long exact sequences of cohomology; the main point is that a cochain complex is essentially a chain complex where one negates the indices, so the arguments of \Cref{prop:get-les} apply.
+	\item Relative cohomology: given a pair $(X,A)$, one has the short exact sequence of chain complexes
+	\[0\to C_\bullet(A)\to C_\bullet(X)\to C_\bullet(X,A)\to0,\]
+	and because these are chains of free abelian groups, this produces a short exact sequence of cochain complexes
+	\[0\to C_\bullet(X,A;G)\to C_\bullet(X;G)\to C_\bullet(A;G)\to0,\]
+	and the cohomology of $C_\bullet(X,A;G)$ will be denoted $H^n(X,A;G)$; one can see that the map of \Cref{prop:cohom-to-hom-hom} will have $H^n(X,A;G)$ output to $H_n(X,A)$. Anyway, this thus fits into the long exact sequence
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiSF5uKFgsQTtHKSJdLFsyLDAsIkhebihYO0cpIl0sWzMsMCwiSF5uKEE7RykiXSxbMSwxLCJIXntuKzF9KFgsQTtHKSJdLFsyLDEsIkhee24rMX0oWDtHKSJdLFszLDEsIkhebihYO0cpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs0LDVdLFs1LDZdLFs2LDddXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {H^n(X,A;G)} & {H^n(X;G)} & {H^n(A;G)} \\
+		& {H^{n+1}(X,A;G)} & {H^{n+1}(X;G)} & {H^n(X;G)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	as before.
+	\item The boundary maps of our long exact sequences commute. Namely, the morphisms of \Cref{prop:cohom-to-hom-hom} fit into the following commuting square.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJIXm4oQTtHKSJdLFsxLDAsIkhee24rMX0oWCxBO0cpIl0sWzAsMSwiXFxvcHtIb219X1xcWlooSF9uKEEpLEcpIl0sWzEsMSwiXFxvcHtIb219X1xcWlooSF97bisxfShYLEEpLEcpIl0sWzAsMV0sWzEsM10sWzIsM10sWzAsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{H^n(A;G)} & {H^{n+1}(X,A;G)} \\
+		{\op{Hom}_\ZZ(H_n(A),G)} & {\op{Hom}_\ZZ(H_{n+1}(X,A),G)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=2-1]
+	\end{tikzcd}\]
+	To prove this, one should track through all the boundary morphisms, which I cannot be bothered to do.
+	\item Functoriality: as usual, we see that a continuous map $f\colon X\to Y$ induces a map $C_n(f)\colon C_n(X)\to C_n(Y)$, which then induces a map $C^n(f)\colon C^n(Y;G)\to C^n(X;G)$, which then will induce a morphism on homology $H^n(f)\colon H^n(Y;G)\to H^n(X;G)$. This is essentially the composite of many functorial constructions, so the total thing is functorial.
+	\item Homotopy invariance: exactly as in the proof of homology, homotopic maps $f,g\colon (X,A)\to (Y,B)$ induce isomorphisms $H^n(Y,B;G)\to H^n(X,A;G)$. The proof is entirely dual, the main point being that one can take the chain homotopy produced in that proof and then take its dual to produce the needed chain homotopy here.
+	\item Excision: there is an excision statement using relative cohomology exactly given as one would expect. Its proof is dual to the case of homology.
+	\item Axioms: one can axiomatize cohomology theories as one would expect. Here are some axioms for CW-complexes. These are functors $\widetilde h^n$ satisfying the following properties.
+	\begin{itemize}
+		\item Homotopic maps produce the same map on cohomology.
+		\item Excision: there is a long exact sequence for CW-pairs $(X,A)$ given by
+		\[\cdots\to\widetilde h^n(X/A)\to\widetilde h^n(X)\to\widetilde h^n(A)\to\widetilde h^n(X/A)\to\cdots.\]
+		\item Wedge sums: given $X=\biglor_\alpha X_\alpha$ with embeddings $i_\alpha\colon X_\alpha\to X$, the induced map
+		\[\widetilde h_n(X)\xrightarrow{\prod_\alpha\widetilde h_n(i_\alpha)}\prod_\alpha\widetilde h_n(X_\alpha)\]
+		is an isomorphism.
+	\end{itemize}
+	\item Simplicial cohomology: $\Delta$-complexes have $H^n_\Delta(X,A;G)$ defined as the cohomology given by dualizing the chain complex $C_n^\Delta(X,A)$. One can show, as in the homology situation, that $H^n_\Delta(X,A;G)\cong H^n(X,A;G)$.
+	\item Cellular cohomology: as in the situation with homology, one has the following complex from a CW-complex $X$, where the diagonal maps are produced by repeatedly applying excision.
+	% https://q.uiver.app/#q=WzAsNSxbMCwxLCJIXmtcXGxlZnQoWF5rLFhee2srMX07R1xccmlnaHQpIl0sWzEsMCwiSF5rXFxsZWZ0KFheaztHXFxyaWdodCkiXSxbMiwxLCJIXntrKzF9XFxsZWZ0KFhee2srMX0sWF5rO0dcXHJpZ2h0KSJdLFszLDIsIkhee2srMX1cXGxlZnQoWF5rXFxyaWdodCkiXSxbNCwxLCJIXntrKzF9XFxsZWZ0KFhee2srMX0sWF5rO0dcXHJpZ2h0KSJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFswLDIsIlxcZGVsXmsiLDJdLFsyLDQsIlxcZGVsXntrKzF9Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[column sep=tiny]
+		& {H^k\left(X^k;G\right)} \\
+		{H^k\left(X^k,X^{k+1};G\right)} && {H^{k+1}\left(X^{k+1},X^k;G\right)} && {H^{k+1}\left(X^{k+1},X^k;G\right)} \\
+		&&& {H^{k+1}\left(X^k\right)}
+		\arrow[from=2-1, to=1-2]
+		\arrow[from=1-2, to=2-3]
+		\arrow[from=2-3, to=3-4]
+		\arrow[from=3-4, to=2-5]
+		\arrow["{\del^k}"', from=2-1, to=2-3]
+		\arrow["{\del^{k+1}}", from=2-3, to=2-5]
+	\end{tikzcd}\]
+	Then the cohomology of this cochain complex is called cellular cohomology and agrees with the usual cohomology. Alternating, one can just appeal to the case with homology: note that \Cref{thm:univ-coef} tells us that
+	\[H^\bullet\left(X^n,X^{n-1};G\right)\cong\op{Hom}_\ZZ\left(H_\bullet\left(X^n,X^{n-1}\right),G\right)\]
+	because $H_k\left(X^n,X^{n-1}\right)$ is always $\ZZ$-free and thus has vanishing $\op{Ext}$. So the cellular homology complex simply dualizes.
+\end{itemize}
+
+\end{document}
