@@ -1,0 +1,83 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 14}
+
+Office hours will be on Tuesdays at 11:30AM.
+\begin{example}
+	Let's build a theory whose isolated types are not dense. Our language $\mathcal L$ will contain countably many unary relations $\{P_0,P_1,\ldots\}$, and let $T$ be the theory consisting of sentences of the form
+	\[\exists x\Bigg(\bigland_{i\in S}P_i(x)\land\bigland_{i\notin S}\lnot P_i(x)\Bigg),\]
+	where $S\subseteq\NN$ is any finite subset. On the other hand, for each subset $S\subseteq\NN$, there is a type $P_S$ consisting of the sentences $P_i(x)$ for $i\in S$ and $\lnot P_i(x)$ for $i\notin S$; note $P_S\cup T$ is consistent by compactness. Further, $P_S$ is a complete type, which one can see by showing that $T$ eliminates quantifiers by the usual syntactic arguments; from here, $P_S(x)$ will imply any formula or its negation because one can replace formula by a quantifier-free one. Now, we note that all the $1$-types take this form again by the quantifier elimination.
+
+	However, $T$ has no isolated types. Indeed, suppose that a type $P_S$ is contained in $[\varphi]$; we will argue that $[\varphi]$ has another $1$-type. We may assume that $\varphi$ is quantifier-free, and we may assume that $\varphi$ has only conjunctions. The problem is that $\varphi$ only mentions finitely many of the $P_i$, so we can find multiple complete $1$-types $P_S$ and $P_Q$ living in $[\varphi]$ which complete $\varphi$.
+\end{example}
+
+\subsection{Homogeneous Models}
+Another useful kind of model for our discussion is homogeneous models.
+\begin{defihelper}[$\kappa$-homogeneous] \nirindex{kappa-homogeneous @$\kappa$-homogeneous}
+	Fix an $\mathcal L$-structure $\mathcal M$. Then $\mathcal M$ is \textit{$\kappa$-homogeneous} if and only if the following holds: for any subset $A,B\subseteq M$ of cardinality less than $\kappa$ equipped with a partial elementary embedding $f\colon A\to M$, and given an element $a\in M$, then there is $b\in M$ and some partial elementary embedding $f^*\colon A\cup\{a\}\to M$ extending $f$ and sending $f^*\colon a\mapsto b$. We then say that $\mathcal M$ is \textit{homogeneous} if and only if $\mathcal M$ is $\left|M\right|$-homogeneous.
+\end{defihelper}
+Intuitively, homogeneity allows us to extend partial elementary embeddings from subsets one element at a time. By an inductive argument, one achieves the following.
+\begin{proposition}
+	Fix a homogeneous $\mathcal L$-structure $\mathcal M$. Given subsets $A,B\subseteq M$ of strictly smaller cardinality than $M$, any partial elementary embedding $f\colon A\to M$ extends to an automorphism of $\mathcal M$.
+\end{proposition}
+\begin{proof}
+	We do transfinite induction, applying a back-and-forth argument. Enumerate the elements of $M$ by $\{m_\alpha:\alpha\in\kappa\}$, where $\kappa=\left|M\right|$. We now build a sequence of partial elementary embeddings $f_\alpha:M_\alpha\to M$ of partial elementary embeddings satisfying the following.
+	\begin{itemize}
+		\item $f_0=f$.
+		\item $f_\beta$ extends $f_\alpha$ whenever $\beta\ge\alpha$.
+		\item $\left|\im f_\alpha\right|\le\left|A\right|+2\alpha$.
+		\item $m_\alpha$ is in the domain and range of $f_{\alpha+1}$.
+	\end{itemize}
+	Taking the union of the $f_\alpha$ will complete the proof. Indeed, the union of partial elementary maps is a partial elementary map, but the union now contains all of $M$ in the domain and codomain.
+
+	We quickly deal with limit stages in our induction first. Namely, if $\alpha$ is a limit ordinal, we define $f_\alpha$ as the union of all the previous $f_\beta$s. This is a union of partial elementary embeddings $f_\beta$, so $f_\alpha$ is a partial elementary embedding too. The $\alpha+1$ check has no content, and the extensions are satisfied by construction. Lastly, the size of the image of the $\im f_\alpha$s is the supremum of all the $\im f_\beta$s, which is upper-bounded by the supremum of all the $\left|A\right|+2\beta$, which is $\left|A\right|+2\alpha$.
+
+	We now must argue the successor stage. Suppose we are given $f_\alpha$, and we must construct $g_{\alpha}$. To add $m_{\alpha+1}$ to the domain, we use the homogeneity of $\mathcal M$. On the other hand, applying the same argument to the inverse $g_\alpha^{-1}\colon\im g_\alpha\to\op{dom}g_\alpha$ allows us to extend $g_\alpha^{-1}$ to the new element $m_{\alpha+1}$ in the image, which is exactly the $f_{\alpha+1}$ we needed. Notably, we have only added two elements in total, so the inequality on $\im f_{\alpha+1}$ is still satisfied.
+\end{proof}
+\begin{nex}
+	Consider $A\coloneqq\QQ^{2\ZZ}$ as a subspace of $M\coloneqq\QQ^\ZZ$. But then there is a partial elementary embedding $A\cong M$, and it cannot be extended to an automorphism because it is already surjective! Note that $\mathcal M$ is in fact homogeneous: one may assume that $A$ is a full subspace, and then one extends to a single extra point in $\mathcal M$ arbitrarily as long as the single extra point is away from $A$.
+\end{nex}
+Here's an example.
+\begin{lemma}
+	Fix a countable language $\mathcal L$ and an $\mathcal L$-structure $\mathcal M$. If $\mathcal M$ is atomic, then $\mathcal M$ is $\aleph_0$-homo\-geneous.
+\end{lemma}
+\begin{proof}
+	Fix a finite subset $A\subseteq M$ and a partial elementary embedding $f\colon A\to M$. Given some $c\in M$, we must extend $f$ to $A\cup\{c\}$. Namely, because $A$ is already finite, it will be enough to must find some $d\in M$ such that
+	\[\op{tp}^\mathcal M(a_1,\ldots,a_n,c)=\op{tp}^\mathcal M(f(a_1),\ldots,f(a_n),d),\]
+	where $A=\{a_1,\ldots,a_n\}$. Because $\mathcal M$ is atomic (!), we note that $\op{tp}^\mathcal M(\overline a,c)$, we can find some $\theta(\overline x,y)$ isolating this type. Now, $\exists y\,\theta(\overline x,y)$ lives in $\op{tp}^\mathcal M(\overline a)$ and hence in $\op{tp}^\mathcal M(f(\overline a))$, so we can find some $d$ such that $\mathcal M\models\theta(f(\overline a),d)$. This $d$ is the one required because $\theta$ isolated the type, so $\mathcal M\models\theta(f(\overline a),d)$ requires that
+	\[\op{tp}^\mathcal M(a_1,\ldots,a_n,c)=[\theta]\subseteq\op{tp}^\mathcal M(f(a_1),\ldots,f(a_n),d),\]
+	so the completeness of these types enforces equality.
+\end{proof}
+We can even go in the other direction.
+\begin{theorem}
+	Fix a countable language $\mathcal L$, and let $\mathcal M$ and $\mathcal N$ models of a complete $\mathcal L$-theory $T$ which are countable homogeneous models realizing the same types in $S_n(T)$ for all $n$. Then $\mathcal M\cong\mathcal N$.
+\end{theorem}
+\begin{proof}
+	These models are countable, so we will do a back-and-forth argument. Enumerate $\mathcal M$ by $\{m_i:i\in\NN\}$ and $\mathcal N$ by $\{n_i:i\in\NN\}$. We will build finite partial elementary maps $f_k\colon M_k\to N$ where $\op{dom}f_k$ contains $m_i$ for $i<k$ and $\im f_k$ contains $n_i$ for $i<k$. At $i=0$, we simply take the empty function for $f_0$.
+
+	Now, suppose we are given $f_k$, and we want to build $f_{k+1}$. We will discuss how to add $m_k$ to the domain of $f_k$; taking the inverse will allow us to add $n_k$ to the image of $f_k$, so we will omit writing out the argument. Anyway, fully enumerate the domain of $f_k$ by $\overline a$ and the image of $f_k$ by $\overline b$. We would like to add in $m_k$, so we set $P\coloneqq\op{tp}^\mathcal M(\overline a,m_k)$.
+
+	At this point, we would like to use the homogeneity of $\mathcal N$. Well, $\mathcal M$ realizes $P$, so $\mathcal N$ must realize $P$ too, so we can find some $(\overline c,d)$ realizing $P$. But then $\op{tp}^\mathcal N(\overline c)=\op{tp}^\mathcal M(\overline a)=\tp^\mathcal N(\overline b)$. So we may define a partial elementary embedding by sending $\overline c\mapsto\overline b$, which by homogeneity extends to a map $(\overline c,d)\mapsto(\overline b,n')$ for some $n'\in\mathcal N$. This $n'$ is the needed element where $m_k$ should go because $\tp^\mathcal M(\overline a,m_k)=\tp^\mathcal N(\overline c,d)=\tp^\mathcal N(\overline b,n')$ by construction.
+\end{proof}
+
+\subsection{Saturated Models}
+At the end of class, we are now ready to define saturated models.
+\begin{defihelper}[$\kappa$-saturated] \nirindex{Kappa-saturated@$\kappa$-saturated}
+	An $\mathcal L$-structure $\mathcal M$ is \textit{$\kappa$-saturated} if and only if any $A\subseteq M$ of cardinality less than $\kappa$ has all types $P\in S_n^\mathcal M(A)$ realized in $\mathcal M$.
+\end{defihelper}
+\begin{example}
+	Consider the theory $\mathrm{DLO}$ of dense linear orders.
+	\begin{itemize}
+		\item The model $\QQ$ is $\aleph_0$-saturated. The point is that, by quantifier elimination, any finite set $A\subseteq\QQ$ has only the types saying that
+		\item The model $\QQ$ is not $\aleph_1$-saturated because, for example, there is a $1$-type saying that the given element is bigger than every integer, which is not realized. In fact, no countable model $\mathcal M$ is $\aleph_1$-saturated because one can build a type saying that the given element is not equal to each individual element of $\mathcal M$.
+	\end{itemize}
+\end{example}
+\begin{example}
+	Let's describe a model of $\mathrm{DLO}$ which is $\aleph_1$-saturated. Let $\mathcal M$ consist of functions $f\colon\omega_1\to\ZZ$ with countable support, ordered lexicographically: namely, $f<g$ if and only if the least $i$ with $f(i)\ne g(i)$ has $f(i)<g(i)$. This is a dense linear order by some argument, and it's saturated by a different argument.
+\end{example}
+
+\end{document}
