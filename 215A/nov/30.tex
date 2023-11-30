@@ -1,0 +1,115 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 30}
+
+Today we're going to discuss orientations.
+
+\subsection{Primer on Poincar\'e Duality}
+Poincar\'e duality is a relationship between the homology and cohomology of a manifold. Historically, what happened is that we realized that Betti numbers were symmetric, which were then realized via homology ad cohomology, from which duality was seen. For example, one expects to have $H_n(M;F)\cong H^n(M;F)\cong F$ for any field $F$ (where $M$ is a closed orientable $n$-manifold). From here, one also expects to have a perfect pairing
+\[H^i(M;F)\times H^{n-i}(M;F)\to H^n(M;F)\cong F,\]
+which is a nice statement of Poincar\'e duality. This is in some sense our end goal.
+
+Instead of showing this directly, we will produce a non-degenerate map
+\[H^i(X;R)\to\op{Hom}_R(H_i(X),R),\]
+which we will call the ``cap product.'' In some sense, we are trying to take an $i$-cocycle and a $j$-cycle to produce an $(i-j)$-cocycle.
+
+\subsection{Manifolds}
+Before we begin any rigorous discussion of Poincar\'e duality, we must define manifolds and provide some discussion of their homology.
+\begin{definition}[manifold]
+	Fix a nonnegative integer $n$. Then an \textit{$n$-manifold} is a second-countable Hausdorff topological space which is locally homeomorphic to $\RR^n$. (Here, locally homeomorphic to $\RR^n$ means that any point has an open neighborhood isomorphic to $\RR^n$.)
+\end{definition}
+Let's put the local homeomorphic to good use.
+\begin{notation}
+	Fix an $n$-manifold $M$. For a subset $A\subseteq M$, we define $H_i(M|A)$ to mean $HIi(M,M\setminus A)$.
+\end{notation}
+\begin{lemma} \label{lem:local-homo-manifold}
+	Fix an $n$-manifold $M$. For any $x\in M$, we have
+	\[H_i(M|x;R)\cong\begin{cases}
+		R & \text{if }i=n, \\
+		0 & \text{else}.
+	\end{cases}\]
+\end{lemma}
+\begin{proof}
+	Find an open neighborhood $U\subseteq M$ around $x$ homeomorphic to $\RR^n$. Then excision followed by the long exact sequence in homology assures us that
+	\[H_i(M|x;R)\cong H^i(U|x;R)\cong\widetilde H_{i-1}(\RR^n\setminus\{0\};R)\cong\widetilde H^i(S^{n-1}\times\RR;R)\cong\widetilde H^i\left(S^{n-1};R\right),\]
+	from which the result follows.
+\end{proof}
+\begin{remark}
+	The same argument will show that $H_i(M|A)$ is the same for any open ball $A\subseteq M$ isomorphic to an open ball in a neighborhood of $M$ isomorphic to $\RR^n$.
+\end{remark}
+We would now like to add in compactness.
+\begin{definition}[closed]
+	An $n$-manifold $M$ is \textit{closed} if and only if it is compact.
+\end{definition}
+Note that we are not talking about manifolds with boundary anywhere in our discussion.
+
+\subsection{Orientations of Manifolds}
+With \Cref{lem:local-homo-manifold} in mind, we take the following definition.
+\begin{definition}[orientation]
+	Fix an $n$-manifold $M$. A \textit{local orientation} at $x\in M$ is a choice of generator $\mu_x\in H^n(M|x)$. To make these orientations cohere with each other, we define an \textit{orientation of $M$} to be a choice of local orientations $x\mapsto\mu_x$ for each $x\in X$ which is locally constant in the following sense: any point in $M$ has an open neighborhood $U\subseteq M$ homeomorphic to $\RR^n$ and open neighborhood ball $B\subseteq U$ homeomorphic to a ball of finite radius with a choice of $\mu_B\in H_n(M|B)$ such that $\mu_y$ is the image of $\mu_B$ in $H_n(M|y)$ for each $y\in B$.
+
+	Lastly, $M$ is called \textit{orientable} if and only if an orientation on $M$ exists.
+\end{definition}
+We will write $\widetilde M$ for the collection of local orientations $\mu_x$ as $x\in M$ varies. Note that we have a $2$-to-$1$ map $\widetilde M\to M$ because every $x\in M$ has two choices for generator $\mu_x\in H_n(M|x)$. We can also give $\widetilde M$ a topology to make this map into a covering space: on any $U\subseteq M$ isomorphic to $M$, there are exactly two ways to choose orientations on $U$, so the pre-image up in $\widetilde M$ may as well be two disjoint copies of $U$. Asserting that we have defined a local homeomorphism on these basic open subsets provides us with a topology on $\widetilde M$.
+\begin{remark}
+	From here, one can see that a connected $n$-manifold $M$ is orientable if and only if $\widetilde M$ has two connected components. If we did have an orientation, then $\widetilde M$ separates into the two choices of orientations; conversely, if $\widetilde M$ separates into two components, then each component yields an orientation.
+\end{remark}
+\begin{remark}
+	There is a generalization of $\widetilde M$ up to $M_R$ by choosing generators of $\mu_x\in H_n(M|x;R)$ for each $x\in M$, and we can again produce a covering space $M_R\to M$ via the projection $\mu_x\mapsto x$.
+\end{remark}
+\begin{example}
+	The M\"obius strip fails to be orientable: if we did have orientation, then we could go ``around'' the strip (keeping the same generator locally) to flip the given orientation, which is a contradiction.
+\end{example}
+\begin{example}
+	One can show that $\mathbb{RP}^n$ is orientable only in odd dimensions. For example, $\mathbb{RP}^1$ is basically a circle, which is orientable.
+\end{example}
+We have been taking $\ZZ$ coefficients everywhere in the previous discussion, but we might as well take $R$ coefficients instead.
+\begin{defihelper}[$R$-orientation] \nirindex{R-orientable@$R$-orientable}
+	Fix an $n$-manifold $M$. Then an \textit{$R$-orientation} on $M$ is a choice of generators $\mu_x\in H_n(M|x;R)$ for each $x\in M$ such that the map $x\mapsto\mu_x$ is locally constant.
+\end{defihelper}
+\begin{remark}
+	One can check that every manifold is $\FF_2$-orientable. This essentially follows from the above discussion and a careful tracking through of the definitions.
+\end{remark}
+Here is the main result on $R$-orientability.
+\begin{theorem} \label{thm:orientable-via-homology}
+	Fix a closed connected $n$-manifold.
+	\begin{listalph}
+		\item If $M$ is $R$-orientable, then the map $H_n(M;R)\to H_n(M|x;R)$ is an isomorphism for all $x\in M$.
+		\item If $M$ fails to be $R$-orientable, then the map $H_n(M;R)\to H_n(M|x;R)$ is injective with image exactly $\{r\in R:2r=0\}$. In particular, we recall that $H_n(M|x;R)\cong R$ here.
+		\item We have $H_i(M;R)=0$ for $i>n$ (even if $M$ is not closed).
+	\end{listalph}
+\end{theorem}
+\begin{remark}
+	It is true that $M$ has a CW-structure with cells of dimension at most $n$, which would prove (c) easily. However, showing this is somewhat difficult; for example, one must get around the fact that not every manifold has a simplicial structure.
+\end{remark}
+\begin{remark}
+	Parts (a) and (b) show that one can detect if $M$ is orientable via $H_n(M;\ZZ)$. However, $H_n(M;\FF_2)=\FF_2$ always.
+\end{remark}
+To prove \Cref{thm:orientable-via-homology}, we will instead prove the following more technical lemma, from which the theorem will follow quickly. Approximately, speaking, the lemma is a version of the statement where we allow non-compact manifolds.
+\begin{lemma} \label{lem:general-orientable-via-homology}
+	Fix an $n$-manifold $M$, and let $A\subseteq M$ be a compact subspace.
+	\begin{listalph}
+		\item Given a locally constant section $x\mapsto\alpha_x$ of the projection $M_R\to M$, there exists a unique class $\alpha_R\in H_n(M|A;R)$ whose image in $M_n(M|x;R)$ is simply $\alpha_x$.
+		\item $H_i(M|A;R)=0$ for $i>n$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We proceed in steps. For brevity, we abbreviate the ring $R$ everywhere.
+	\begin{enumerate}
+		\item We remark that an induction via Mayer--Vietoris implies that if the statement is true for $A$ and $B$ and $A\cap B$, then we also get the statement for $A\cup B$. For example, this allows us to divide up the compact set $A$ into pieces contained in open balls locally homeomorphic to $\RR^n$, so we may assume that $A$ is contained in such an open ball.
+		\item We show the result for $\RR^n$ and $A=B$ where $B$ is a compact ball. Here, we know that $H_n\left(\RR^n|B\right)\to H^n(\RR^n|x)$ is always an isomorphism for any $x\in B$, which produces uniqueness of the needed class in (a). For existence, at any point $y\in B$, choose some generator, but then there is an open neighborhood $U$ of $y$ so that we can lift $\mu_y$ to some $\mu_U\in H_n(M|U)$ via excision. Then for any two points $x,y\in M$, a path connecting them will enforce that the orientations cohere into a single class up in $H^n(M|B)$.
+		\item We show the result for $\RR^n$ and $A$ a general compact set. To show that the class exists, just use a very large simplex containing $A$ and then reduce to the previous case. For uniqueness, take a difference and apply excision and the Mayer--Vietoris reduction cleverly in order to produce the result.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+And now here is the proof of the theorem from the lemma.
+\begin{proof}[Proof of \Cref{thm:orientable-via-homology}]
+	Take $A=M$; part (c) is immediate. Note that the set of sections $M_R\to M$ is an $R$-module; call this $R$-module $\Gamma_R(M)$. Then there is a homomorphism $H_n(M;R)\to\Gamma_R(M)$ sending a class $\alpha$ to the corresponding section $x\mapsto\alpha_x$; part (a) of the lemma tells us that this map is an isomorphism, from which parts (a) and (b) of the theorem follow quickly from an understanding of the covering map $M_R\to M$.
+\end{proof}
+
+
+\end{document}
