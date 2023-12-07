@@ -1,0 +1,96 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{December 7}
+
+Today we will discuss Poincar\'e duality.
+
+\subsection{Statement of Poincar\'e Duality}
+\Cref{thm:orientable-via-homology} allows us to make the following definition.
+\begin{definition}[fundamental class]
+	Fix a closed $R$-orientable $n$-manifold. Then there is a class $[M]\in H_n(M;R)$, called the \textit{fundamental $R$-class}, such that the image of $[M]$ under the maps $H_n(M;R)\to H_n(M|x;R)$ goes to a generator.
+\end{definition}
+\begin{remark}
+	If the manifold $M$ is a $\Delta$-complex, then $[M]$ can simply be defined as the sum of the $n$-simplices: each point $x\in M$ will live in (roughly speaking) one of these $n$-simplices, so the image of $[M]$ will indeed go to a generator because the only $n$-simplex in $[M]$ which fails to vanish is the one containing $x$.
+\end{remark}
+\begin{remark}
+	Further, suppose that $M$ has a triangulation, making it piecewise linear. Then one can give $M$ a dual cell structure, from which Poincar\'e duality can be seen. Namely, an $i$-cycle essentially assigns a number to each cell, but then this will simply define an $(n-i)$-cocycle via the dual cell structure.
+\end{remark}
+The above remark can be seen as a concrete construction of the ``cap product.''
+\begin{definition}[cap product]
+	Fix a topological space $X$. We define the \textit{cap product} $\cap\colon C_k(X;R)\times C^\ell(X;R)\to C_{k-\ell}(X;R)$ for $k\ge\ell$ by extending the relation
+	\[(\sigma\cap\varphi)(\sigma)\coloneqq\varphi(\sigma|_{[v_0,\ldots,v_\ell]})\sigma|_{[v_\ell,\ldots,v_k]}\]
+	bilinearly.
+\end{definition}
+One can check that $\del(\sigma\cap\varphi)=(-1)^\ell(\del\sigma\cap\varphi-\sigma\cap\del\varphi)$ by an explicit computation, so the cap product of a cycle and a cocycle will be a cycle. The main point is that $\cap$ descends to
+\[H_k(X;R)\times H^\ell(X;R)\to H_{k-\ell}(X;R).\]
+A direct computation shows that the following diagram commutes for any continuous map $f\colon X\to Y$.
+% https://q.uiver.app/#q=WzAsNixbMCwwLCJIX2soWDtSKSJdLFsyLDAsIkhfe2stXFxlbGx9KFg7UikiXSxbMSwwLCJIXlxcZWxsKFg7UikiXSxbMCwxLCJIX2soWTtSKSJdLFsxLDEsIkheXFxlbGwoWTtSKSJdLFsyLDEsIkhfe2stXFxlbGx9KFk7UikiXSxbMCwyLCJcXHRpbWVzIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsNCwiXFx0aW1lcyIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDMsIkhfayhmKSIsMl0sWzQsMiwiSF5cXGVsbChmKSIsMl0sWzEsNSwiSF97ay1cXGVsbH0oZikiXSxbMiwxLCJcXGNhcCJdLFs0LDUsIlxcY2FwIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{H_k(X;R)} & {H^\ell(X;R)} & {H_{k-\ell}(X;R)} \\
+	{H_k(Y;R)} & {H^\ell(Y;R)} & {H_{k-\ell}(Y;R)}
+	\arrow["\times"{marking, allow upside down}, draw=none, from=1-1, to=1-2]
+	\arrow["\times"{marking, allow upside down}, draw=none, from=2-1, to=2-2]
+	\arrow["{H_k(f)}"', from=1-1, to=2-1]
+	\arrow["{H^\ell(f)}"', from=2-2, to=1-2]
+	\arrow["{H_{k-\ell}(f)}", from=1-3, to=2-3]
+	\arrow["\cap", from=1-2, to=1-3]
+	\arrow["\cap", from=2-2, to=2-3]
+\end{tikzcd}\]
+So our cap product is natural. We are now able to state Poincar\'e duality.
+\begin{theorem}[Poincar\'e duality] \label{thm:pd}
+	Fix a closed $R$-orientable $n$-manifold with fundamental class $[M]\in H_n(M;R)$. Then there is an isomorphism $D\colon H^k(M;R)\to H_{n-k}(M;R)$ given by $[M]\cap-$.
+\end{theorem}
+\begin{remark}
+	If $R$ is a field, then we see that $H^n(M;R)=H_0(M;R)\cong R$ when $M$ is connected. As such, roughly speaking, Poincar\'e duality says that we have a non-degenerate pairing
+	\[H^k(M;R)\times H^{n-k}(M;R)\to H^n(M;R)\cong R.\]
+\end{remark}
+\Cref{thm:pd} is proven by going up to a stronger statement for non-compact manifolds; this will allow us to prove the statement by induction. This will require a new cohomology theory.
+
+\subsection{Cohomology with Supports}
+Here is our new cohomology theory.
+\begin{definition}
+	Fix a topological space $X$. Then we define $C^i_c(X;G)$ to be the subgroup of $C^i(X;G)$ of cochains $\varphi\colon C_i(X)\to G$ such that there is a compact $K$ with $\varphi|_{C_i(X\setminus K)}=0$. In other words,
+	\[C^i_c(X;G)=\colimit_{K\subseteq X}C^i(X,X\setminus K;G).\]
+\end{definition}
+Now, given an $R$-oriented $n$-manifold $M$, we note that we have a unique $[M_K]\in H_n(M|K;R)$ for each compact $K$, and so we can let $\varphi\in C_c^k(M;R)$ be a cochain vanishing on $C_k(M\setminus K;R)$. Then we see that $[M_K]\cap\varphi$ and thus gives a homomorphism
+\[D_M\colon H_c^k(M;R)\to H_{n-k}(M;R)\]
+by taking the colimit of the maps $H^k(M|K;R)\to H_{n-k}(M|K;R)$ over compacts $K$. (One has to check that the cup product coheres with this restriction of compacts defining the direct limit, but this is no issue.) This setting now generalizes our earlier \Cref{thm:pd} into the following theorem.
+\begin{theorem} \label{thm:pd-not-compact}
+	Fix an $R$-orientable $n$-manifold $M$, the map
+	\[D_M\colon H^k_c(M;R)\to H_{n-k}(M;R)\]
+	given as above is an isomorphism.
+\end{theorem}
+We prove the above theorem by induction; note that it generalizes \Cref{thm:pd} by taking $M$ to be compact, where the point is that $M$ being compact forces cohomology with compact support to simply agree with regular cohomology.
+\begin{remark}
+	There are various inductive approaches which ``almost'' work provided we had some extra structure. For example, if $M$ is homeomorphic to a $\Delta$-complex, then one can build the preceding theorem by gluing together a discussion in the compact case, proving the needed isomorphism. For example, this approach will work for $M=\RR^n$ as well as any surface.
+\end{remark}
+We now sketch \Cref{thm:pd-not-compact}. We will use the following technical result.
+\begin{lemma}
+	Suppose that an orientable $n$-manifold $M$ is the union of two open orientable $n$-manifolds $U$ and $V$. Then the following diagram (with rows given by Mayer--Vietoris) commutes.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJIXmtfYyhVXFxjYXAgVikiXSxbMCwxLCJIX3tuLWt9KFVcXGNhcCBWKSJdLFsxLDAsIkhfY15rKFUpXFxvcGx1cyBIXmtfYyhWKSJdLFsxLDEsIkhfe24ta30oVSlcXG9wbHVzIEhfe24ta30oVikiXSxbMiwwLCJIXmtfYyhNKSJdLFsyLDEsIkhfe24ta30oTSkiXSxbMywwLCJIXntrKzF9X2MoVVxcY2FwIFYpIl0sWzMsMSwiSF97bi1rLTF9KFVcXGNhcCBWKSJdLFswLDEsIkRfe1VcXGNhcCBWfSIsMl0sWzIsMywiRF9VXFxvcGx1cy1EX1YiLDJdLFswLDJdLFsxLDNdLFs0LDUsIkRfTSJdLFs2LDcsIkRfe1VcXGNhcCBWfSJdLFsyLDRdLFszLDVdLFs1LDddLFs0LDZdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{H^k_c(U\cap V)} & {H_c^k(U)\oplus H^k_c(V)} & {H^k_c(M)} & {H^{k+1}_c(U\cap V)} \\
+		{H_{n-k}(U\cap V)} & {H_{n-k}(U)\oplus H_{n-k}(V)} & {H_{n-k}(M)} & {H_{n-k-1}(U\cap V)}
+		\arrow["{D_{U\cap V}}"', from=1-1, to=2-1]
+		\arrow["{D_U\oplus-D_V}"', from=1-2, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{D_M}", from=1-3, to=2-3]
+		\arrow["{D_{U\cap V}}", from=1-4, to=2-4]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=1-3, to=1-4]
+	\end{tikzcd}\]
+	One can take coefficients in any ring.
+\end{lemma}
+\begin{proof}
+	One does a long and tedious computation. I cannot be bothered to write out the details today. Essentially, one checks the result by replacing $H_c$ with an explicit compact $K\subseteq U$ and $L\subseteq V$ and then pass to the colimit to produce the result.
+\end{proof}
+From here, one proves \Cref{thm:pd-not-compact} by induction: with $M=U\cap V$, induction will allow us to assume that $D_U$, $D_V$, and $D_{U\cap V}$ are all isomorphisms, from which it follows that $D_M$ is an isomorphism. It is not totally clear what we induct on or what our base case is, which is the remaining content of the proof.
+
+\end{document}
