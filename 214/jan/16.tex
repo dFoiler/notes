@@ -1,0 +1,244 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Let's just get started.
+
+\subsection{Course Structure}
+Here are some quick notes.
+\begin{itemize}
+	\item There is a bCourses page: \href{https://bcourses.berkeley.edu/courses/1533116}{\texttt{https://bcourses.berkeley.edu/courses/1533116}}. For example, it has the syllabus.
+	\item The textbook is Lee's \textit{Introduction to Smooth Manifolds} \cite{lee-manifolds}. We will read most of it.
+	\item Our instructor is Professor Eric Chen, whose email can be reached at \href{mailto:ecc@berkeley.edu}{\texttt{ecc@berkeley.edu}}. Office hours are after class in Evans 707.
+	\item There is a GSI, who is Tahsia Saffat, whose email is \href{mailto:tahsin_saffat@math.berkeley.edu}{\texttt{tahsin\_saffat@math.berkeley.edu}}. He will have some office hours and grade some homeworks.
+	\item Homework will in general be due at 11:59PM on Thursdays via Gradescope.
+	\item There will be an in-class midterm and a final.
+	\item Grading is 30\% homework, 30\% midterm, and 40\% final.
+	\item This is a math class, not so geared towards applied subjects.
+	\item In particular, we will assume a fair amount of topology, for which we use \cite{elber-top} as a reference.
+\end{itemize}
+Let's also give a couple of notes on the course content. This course is on differential topology. The topology of interest will come from manifolds, and the differential part comes from some smoothness properties.
+
+In some sense, our goal is to ``do calculus'' (e.g., differentiation, integration, vector fields, etc.) on spaces which look locally like some Euclidean space, such as a sphere. We also want to understand (smooth) manifolds on their own terms, such as understanding the maps between them and understanding some classical examples and constructions such as Lie groups or quotient manifolds.
+
+\subsection{Topology Review}
+Anyway let's get started. This is a class on manifolds, so perhaps we should begin by defining a manifold. These are going to form a special kind of topological space, so let's review topologies. We will freely use topological facts which we are too lazy to prove from \cite{elber-top}.
+\begin{definition}[topological space]
+	A \textit{topological space} is a pair $(X,\mathcal T)$ where $X$ is a set and $\mathcal T\subseteq\mathcal P(X)$ is a collection of subsets of $X$ satisfying the following.
+	\begin{itemize}
+		\item $\emp\in\mathcal T$ and $X\in\mc T$.
+		\item Finite intersection: given $U,V\in\mathcal T$, we have $U\cap V\in\mathcal T$.
+		\item Union: for any subcollection $\mathcal U\subseteq\mathcal T$, we have the union $\bigcup_{U\in\mathcal U}U\in\mathcal T$.
+	\end{itemize}
+	We say that the collection $\mathcal T$ is the collection of \textit{open sets} of $X$. We will also suppress the collection $\mathcal T$ from the notation as much as possible.
+\end{definition}
+Here is some helpful language.
+\begin{defihelper}[open, closed, neighborhood] \nirindex{open} \nirindex{closed} \nirindex{neighborhood}
+	Fix a topological space $(X,\mathcal T)$.
+	\begin{itemize}
+		\item An \textit{open subset} $U\subseteq X$ is a subset in $\mathcal T$.
+		\item A \textit{closed subset} $V\subseteq X$ is one with $X\setminus V\in\mathcal T$.
+		\item A \textit{neighborhood} of a point $p\in X$ is an open subset $U\subseteq X$ containing $p$.
+	\end{itemize}
+\end{defihelper}
+\begin{example} \label{ex:metric-top}
+	Fix a metric space $(X,d)$. Then there is a topology given by the metric. To be explicit, a set $U\subseteq X$ is open if and only if each $p\in U$ has some $\varepsilon>0$ such that
+	\[\{x\in X:d(x,p)<\varepsilon\}\subseteq U.\]
+	See \cite[Example~2.13]{elber-top} for the details.
+\end{example}
+Sometimes it is easier to generate a topology from some subcollection.
+\begin{definition}[base]
+	Fix a topological space $(X,\mathcal T)$. A subcollection $\mathcal B\subseteq\mathcal T$ is a \textit{base} for $\mathcal T$ if and only if the following holds: for each open $U\subseteq X$ and point $p\in U$, there is some $B\in\mc B$ such that $p\in B$ and $B\subseteq U$.
+\end{definition}
+\begin{example}
+	Fix a metric space $(X,d)$. Then the collection $\mathcal B$ of open balls
+	\[B(p,\varepsilon)\coloneqq,\]
+	over all $p\in X$ and $\varepsilon>0$, forms a base of the topology. This is immediate from the construction of the topology in \Cref{ex:metric-top}. In fact, one can merely take $\varepsilon\in\QQ^+$ because $\QQ$ is dense in $\RR$.
+\end{example}
+With our objects of topological spaces in hand, we should discuss the maps between them.
+\begin{definition}[continuous]
+	Fix topological spaces $X$ and $X'$. A function $\varphi\colon X\to X'$ is \textit{continuous} if and only if $\varphi^{-1}(U')$ is open for each open $U'\subseteq X'$.
+\end{definition}
+\begin{definition}[homeomorphism]
+	Fix topological spaces $X$ and $X'$. A function $\varphi\colon X\to X'$ is a \textit{homeomorphism} if and only if $\varphi$ is a bijection and both $\varphi$ and $\varphi^{-1}$ are continuous. We may write $X\cong X'$.
+\end{definition}
+\begin{remark}
+	There is a continuous bijection $[0,2\pi)\to S^1$ by $\theta\mapsto(\cos\theta,\sin\theta)$, but it is not a homeomorphism. (Here, both sets have the metric topology.) In particular, the inverse map is not continuous at $1$ because the pre-image of $[0,\pi)$ is the subset $\left\{(x,y)\in S^1:y>0\right\}\cup\{(0,0)\}$, which is not open in $S^1$ (because no $\varepsilon>0$ has $B((0,0),\varepsilon)$ lying in $\left\{(x,y)\in S^1:y\ge0\right\}$).
+\end{remark}
+We would also like to be able to build new topologies from old ones.
+\begin{definition}[subspace]
+	Fix a topological space $(X,\mathcal T)$. Given a subset $S\subseteq X$, we form a \textit{subspace topology} by declaring the open subsets to be
+	\[\{U\cap S:U\in\mathcal T\}.\]
+\end{definition}
+\begin{example} \label{ex:basic-homeo}
+	The metric topology on $\RR$ and the subspace topology on $X\coloneqq\RR\times\{0\}\subseteq\RR^2$ are homeomorphic. Namely, the homeomorphism sends $x\mapsto(x,0)$, and the inverse map is $(x,0)\mapsto x$. Here are our continuity checks.
+	\begin{itemize}
+		\item The map $x\mapsto(x,0)$ is continuous: the pre-image $V$ of an open subset $U\subseteq X$ is open. Namely, for any $x\in V$, we see $(x,0)\in V$, so there is $\varepsilon>0$ such that $B((x,0),\varepsilon)\cap X\subseteq U$, so $B(x,\varepsilon)\subseteq V$.
+		\item The map $(x,0)\mapsto x$ is continuous: the pre-image $V$ of an open subset $U\subseteq\RR$ is open. Namely, for each $(x,0)\in V$, we see $x\in U$, so there is $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq V$, so $B((x,0),\varepsilon)\cap X\subseteq U$.
+	\end{itemize}
+\end{example}
+Lastly, we will want some adjectives for our topologies.
+\begin{definition}[compact]
+	Fix a topological space $X$. A subset $K\subseteq X$ is \textit{compact} if and only if any open cover can be reduced to a finite subcover. Explicitly, any collection $\mathcal U$ of open sets of $X$ such that $K\subseteq\bigcup_{U\in\mathcal U}U$ (this is called an \textit{open cover}) has some finite subcollection $\mathcal U'\subseteq\mathcal U$ such that $K\subseteq\bigcup_{U\in\mathcal U'}U$.
+\end{definition}
+\begin{example}
+	The interval $[0,1]\subseteq\RR$ is compact. See \cite[Example~4.4]{elber-top}.
+\end{example}
+\begin{definition}[Hausdorff]
+	Fix a topological space $X$. Then $X$ is \textit{Hausdorff} if and only if any two distinct points $p_1,p_2\in X$ have disjoint open subsets $U_1,U_2\subseteq X$ such that $p_1\in U_1$ and $p_2\in U_2$.
+\end{definition}
+\begin{example}
+	Any metric space $(X,d)$ is Hausdorff. Namely, for distinct points $p,q\in X$, we see $d(p,q)>0$, so set $\varepsilon\coloneqq d(p,q)/2$, and we see that $p\in B(p,\varepsilon)$ and $q\in B(q,\varepsilon)$, but $B(p,\varepsilon)\cap B(q,\varepsilon)=\emp$. For this last claim, we note $r$ living in the intersection would imply
+	\[d(p,q)\le d(p,r)+d(r,q)<2\varepsilon,\]
+	which is a contradiction to the construction of $\varepsilon$.
+\end{example}
+
+\subsection{Topological Manifolds}
+For intuition, we state but not prove the following result.
+\begin{theorem}[Topological invariance of dimension] \label{thm:top-inv-dim}
+	Fix open subsets $U\subseteq\RR^m$ and $V\subseteq\RR^n$. If there is a homeomorphism $U\cong V$, then $m=n$.
+\end{theorem}
+\begin{proof}
+	The usual proofs go through (co)homology, which we may cover later in the class. For the interested, see \cite[Proposition~3.50]{elber-alg-top}.
+\end{proof}
+We will soon define topological manifolds. The main adjective we want is being ``locally Euclidean.''
+\begin{definition}[locally Euclidean]
+	Fix a topological space $X$. Then $X$ is \textit{locally Euclidean of dimension $n$ at $p$} if and only if there is an open neighborhood $U\subseteq X$ and open subset $\widetilde U\subseteq\RR^n$ such that $U\cong\widetilde U$. We say that $X$ is \textit{locally Euclidean of dimension $n$} if and only if it is locally Euclidean of dimension $n$ at each point.
+\end{definition}
+\begin{remark}
+	One can always take $\widetilde U$ to be either $B(0,1)\subseteq\RR^n$ or even all of $\RR^n$.
+\end{remark}
+Let's explain why we want \Cref{thm:top-inv-dim}.
+\begin{lemma}
+	Fix a locally Euclidean space $X$. For each $p\in X$, there is a unique nonnegative integer $n$ such that there exists an open neighborhood $U\subseteq X$ and open subset $\widetilde U\subseteq\RR^n$ such that $U\cong\widetilde U$.
+\end{lemma}
+\begin{proof}
+	Suppose there are two such nonnegative integers $m$ and $n$, so we get open neighborhoods $U,V\subseteq X$ and $\widetilde U\subseteq\RR^m$ and $\widetilde V\subseteq\RR^n$. Let $\varphi\colon U\cong\widetilde U$ and $\psi\colon V\cong\widetilde V$ be the needed homeomorphisms. Then the point is to use the intersection $U\cap V$: there is a composite isomorphism
+	\[\varphi(U\cap V)\cong U\cap V\cong\psi(U\cap V)\]
+	from an open subset in $\RR^m$ to an open subset in $\RR^n$. So \Cref{thm:top-inv-dim} completes the proof.
+\end{proof}
+Anyway, here is our definition of a topological manifold.
+\begin{definition}[topological manifold]
+	An \textit{$n$-dimensional topological manifold} is a topological space $M$ with the following properties.
+	\begin{itemize}
+		\item $M$ is Hausdorff.
+		\item $M$ is locally Euclidean of dimension $n$ at each point.
+		\item $M$ is second countable (i.e., has a countable base).
+	\end{itemize}
+\end{definition}
+Let's give a few quick constructions.
+\begin{lemma} \label{lem:rn-manifold}
+	For each $n\ge0$, the space $\RR^n$ is an $n$-dimensional topological manifold.
+\end{lemma}
+\begin{proof}
+	Let's be quick. Being a metric space yields Hausdorff, locally Euclidean is immediate because it's $\RR^n$, and second-countability follows by using the base
+	\[\left\{B(q,\varepsilon):q\in\QQ^n,\varepsilon\in\QQ^+\right\}.\]
+	This is indeed a base because $\QQ$ is dense in $\RR$. Explicitly, for each $p\in\RR^n$ living in some open subset $U\subseteq\RR^n$, begin by replacing $U$ with a smaller open subset of the form $B(p,\varepsilon)$ where $\varepsilon>0$; by perhaps making $\varepsilon$ smaller, we may assume that $\varepsilon>0$ is rational. Now, choosing coordinates $p=(x_1,\ldots,x_n)$, choose rational numbers $q_1,\ldots,q_n$ so that $\left|x_i-q_i\right|<\varepsilon/(2\sqrt n)$ for each $i$. Then $q\coloneqq(q_1,\ldots,q_n)$ has $d(p,q)<\varepsilon/2$ and so
+	\[p\in B(q,\varepsilon/2)\subseteq B(p,\varepsilon)\subseteq U,\]
+	so $B(q,\varepsilon/2)$ is the needed open subset in our base.
+\end{proof}
+The following lemma will be helpful in the sequel.
+\begin{lemma} \label{lem:get-second-countable}
+	Fix a topological space $M$ and nonnegative integer $n\ge0$. Suppose that there is a countable open cover $\{U_i\}_{i\in\NN}$ of $M$ such that each $i$ has a homeomorphism $U_i\cong\widetilde U_i$ where $\widetilde U_i\subseteq\RR^n$ is open. Then $M$ is locally Euclidean of dimension $n$ at each point, and $M$ is second countable.
+\end{lemma}
+\begin{proof}
+	For locally Euclidean, we note that each $p\in M$ lives in some $U_i$, so we are done. As for second countability, we note that each $\widetilde U_i$ is second countable as a subspace of a second countable space (see \Cref{lem:rn-manifold}), so each $U_i$ is second countable by moving back through the homeomorphism, and so $M$ is second countable by taking the union of the bases of the $U_i$.
+	
+	To make this last step more explicitly, we note that each $U_i$ has a countable base $\mathcal B_i$, so we claim that $\mathcal B\coloneqq\bigcup_{i\in\NN}\mathcal B_i$ becomes a countable base of $M$. Certainly $\mathcal B$ is countable, and every set in $\mathcal B$ is in one of the $\mathcal B_i$ and hence open in $M$. Lastly, to check that we have a base, we note that any open $U\subseteq M$ and $p\in M$ will have $p\in U_i$ for some $i$, so there is some $B\in\mathcal B_i\subseteq\mathcal B$ such that $p\in B\subseteq U\cap U_i$.
+\end{proof}
+
+\subsection{Examples and Non-Examples}
+Here are some non-examples to explain why we want all of these hypotheses.
+\begin{exe}
+	Consider the space $X$ defined as $\RR\times\{0,1\}$ where we identify $(x,0)\sim(x,1)$ whenever $x\ne0$. (The topology on $X$ is the quotient topology \cite[Definition~2.81]{elber-top}.) This space is not Hausdorff, but it is locally Euclidean and second countable.
+\end{exe}
+\begin{proof}
+	We run our checks.
+	\begin{itemize}
+		\item This space is not Hausdorff because the points $(0,0)$ and $(0,1)$ are ``infinitely close together.'' Explicitly, any open neighborhoods $U$ and $V$ of  $(0,0)$ and $(0,1)$, respectively, the induced topology yields some $\varepsilon>0$ such that $B((0,0),\varepsilon)\subseteq U$ and $B((0,1),\varepsilon)\subseteq V$, but then $(-\varepsilon/2,0)=(-\varepsilon/2,1)$ is in both $U$ and $V$.
+		\item This space is locally Euclidean and second countable by \Cref{lem:get-second-countable}. Explicitly, we note that $\RR\cong\RR\times\{0\}\subseteq X$ and $\RR\cong\RR\times\{1\}\subseteq X$ by an argument similar to \Cref{ex:basic-homeo}. So we have a finite cover by open subsets of $\RR^n$, completing the check in \Cref{lem:get-second-countable}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{exe}
+	Consider the space $X$ defined as $\RR\times\{0,1\}$ where we identify $(x,0)\sim(x,1)$ whenever $x\le0$, again where we are using the quotient topology. Then $X$ is Hausdorff and second countable, but it is not Euclidean of dimension $1$ at $0\in X$.
+\end{exe}
+\begin{proof}
+	We run our checks.
+	\begin{itemize}
+		\item This space is Hausdorff. We check this directly by casework.
+		\begin{itemize}
+			\item Suppose we have distinct points $p=(x,a)$ and $q=(y,b)$ with $x\ne y$; for example, this includes the case where we may take $a=b$ and hence includes the case when $x,y\le0$. Then we may set $\varepsilon\coloneqq\frac12\left|x-y\right|$ so that $B(p,\varepsilon)$ and $B(q,\varepsilon)$ are disjoint.
+			\item We now may assume that $x=y$; then $a\ne b$. Thus, we must have $x>0$ or $y>0$. As such, we may as well take $\varepsilon\coloneqq\min\{\left|x\right|,\left|y\right|\}$ so that $B(p,\varepsilon)$ and $B(q,\varepsilon)$ are disjoint.
+		\end{itemize}
+
+		\item This space is not locally Euclidean at $0$. Indeed, suppose that there is open subset $U\subseteq X$ around $0$ which is homeomorphic to an open subset of $\RR$. By shifting, we may as well assume that the homeomorphism sends $0$ to $0$. Additionally, the same statement will be true by any open subset of $U$, so we may as well as assume that $U$ is of the form $(-\varepsilon,\varepsilon)\times\{0,1\}$ (in $X$). In particular, $U$ is connected.
+
+		But then the image $\widehat U$ of $U$ in $\RR$ is a connected open subset of $\RR$, which must be an interval. Now, intervals have the property that deleting any point of an interval makes produces a topological space with two connected components. However, deleting $0$ from $U$ will produce three connected components: $(-\varepsilon,0)\times\{0,1\}$ and $(0,\varepsilon)\times\{0\}$ and $(0,\varepsilon)\times\{1\}$. So $\widehat U$ and $U$ cannot actually be homeomorphic!
+
+		\item This space is second countable by \Cref{lem:get-second-countable}. Again, we note that $\RR\cong\RR\times\{0\}\subseteq X$ and $\RR\cong\RR\times\{1\}\subseteq X$ by an argument similar to \Cref{ex:basic-homeo}. So we have a finite cover by open subsets of $\RR^n$, completing the check in \Cref{lem:get-second-countable}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	Essentially the same argument implies that the above space fails to be locally Euclidean of any dimension at $0\in X$. Namely, a connected open subset of $\RR^n$ for $n\ge2$ will remain connected after removing any point, so it cannot be homeomorphic to $(-\varepsilon,\varepsilon)\times\{0,1\}$ in $X$.
+\end{remark}
+Morally, the second countability is being required as a smallness condition; let's see some pathological examples without second countability. The following lemma approximately explains the problem.
+\begin{lemma} \label{lem:not-second-countable}
+	Fix a topological space $X$. Suppose that there is an uncountable subset $Y\subseteq X$ such that each $y\in Y$ has an open neighborhood $U_y\subseteq X$ where the $U_y$ are pairwise disjoint. Then $X$ fails to be second countable.
+\end{lemma}
+\begin{proof}
+	Suppose we have a base $\mathcal B$; we show $\mathcal B$ is uncountable. Each $y\in U_y$ has some $B_y\in\mathcal B$ with $B_y\subseteq U_y$. However, $y\ne y'$ implies that $B_y\ne B_{y'}$ because $y\in B_y$ while $p_y\notin U_{y'}$ implies $p_y\notin B_{y'}$. So $\{B_y\}_{y\in Y}$ is an uncountable subcollection of $\mathcal B$.
+\end{proof}
+\begin{exe}
+	Consider an uncountable set $S$ with the discrete topology (namely, every subset is open), and then we form the product $X\coloneqq\RR\times S$. Then $X$ is Hausdorff, locally Euclidean of dimension $1$, but it is not second countable.
+\end{exe}
+\begin{proof}
+	Here are our checks.
+	\begin{itemize}
+		\item Note that $X$ is a product of Hausdorff spaces and hence is Hausdorff.
+		\item This space is locally Euclidean of dimension $1$: for each $(x,s)\in X$, we note that $\RR\times\{s\}$ is an open subset of $X$ (because $S$ is discrete) where $\RR\times\{s\}\cong\RR$ by an argument similar to \Cref{ex:basic-homeo}.
+		\item This space is not second countable by \Cref{lem:not-second-countable}. Namely, we have the uncountably many points $p_s\coloneqq(0,s)$ (one for each $s\in S$) contained in the pairwise disjoint open neighborhoods $U_s\coloneqq\RR\times\{s\}$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{exe}
+	Consider the first uncountable ordinal $\omega_1$. Then define $X\coloneqq(S\times[0,1))\setminus\{(0,0)\}$, and we give $X$ the order topology where the ordering is lexicographic. (Namely, the base consists of the ``intervals'' $\{x:x<b\}$ or $\{x:a<x\}$ or $\{x:a<x<b\}$.) This space is Hausdorff, locally Euclidean $1$, but it is not second countable.
+\end{exe}
+\begin{proof}
+	Here are our checks.
+	\begin{itemize}
+		\item This space is Hausdorff because it is a dense linear order. Explicitly, for $(s,a),(t,b)\in X$, we have the following cases.
+		\begin{itemize}
+			\item Suppose $s=t$. In this case, $a\ne b$; suppose $a<b$ without loss of generality. Then $\{x:x<(s,(a+b)/2)\}$ and $\{x:x>(s,(a+b)/2)\}$ are the needed open sets.
+			\item Suppose $s\ne t$; take $s<t$ without loss of generality. If $a>0$, then $\{s\}\times(0,(a+1)/2)$ and $\{s\}\times((a+1)/2,1)\cup\{t\}\times[0,1)$ provide the needed open sets. Otherwise, if $a=0$, then $\{x:x<(s,1/2)\}$ and $\{x:x>(s,1/2)\}$ provide the needed open sets.
+		\end{itemize}
+
+		\item This space is locally Euclidean of dimension $1$: fix any $(s,r)\in X$. Note that $s\in\omega_1$ is countable, so we claim that
+		\[(s+1)\times[0,1)\cong[0,1),\]
+		sending $(0,0)$ to $0$, from which the claim follows by deleting $(0,0)$. Because the relevant orders produce the needed topologies, we are really asking for an order-preserving bijection from $(s+1)\times[0,1)$ to $[0,1)$.
+		
+		Well, for any $t\in\omega_1$, we claim that there is an increasing sequence $\{p_\alpha\}_{\alpha<t}\subseteq[0,1)$ of order type $t$ with $p_0=0$, from which the claim will follow by taking $s=t$ and sending $\alpha\times[0,1)\subseteq(s+1)\times[0,1)$ to $[p_\alpha,p_{\alpha+1})$ (where we define $p_s\coloneqq1$). To see this claim, we argue by induction on $s$. For $s=0$, take $p_0\coloneqq0$. If $s$ is a successor ordinal, divide all the existing $p_\alpha$ by $2$ and then set $p_{s+1}\coloneqq1/2$.
+		
+		Lastly, if $s$ is a limit ordinal, it is still only a countable limit ordinal, so we can find an increasing sequence of countable ordinals $\{s_i\}_{i\in\omega}$ approaching $s$. The sequence corresponding to $s_0$ will fit into $[0,1/2)$ after scaling; then the sequence corresponding to $s_1$ but after $s_0$ will fit into $[1/2,2/3)$ after scaling. We can continue this process inductively to complete the claim for $s$. I won't bother to write out the details.
+
+		\item This space is not second countable by \Cref{lem:not-second-countable}. Namely, we have the uncountably many points $p_s\coloneqq(s,1/2)$ (one for each $s\in S$) contained in the pairwise disjoint open neighborhoods $U_s\coloneqq\{s\}\times(0,1)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	What makes the locally Euclidean check above annoying is that we must show $(\omega,0)\in X$ has a neighborhood isomorphic to an open subset of $\RR$, which is not totally obvious.
+\end{remark}
+Let's return to examples.
+\begin{example}
+	Consider the unit circle $S^1$. We check that $S^1$ is a $1$-dimensional topological manifold.
+	\begin{itemize}
+		\item $S^1$ is a metric space, so it is Hausdorff.
+		\item $S^1$ is second countable: it is a subspace of $\RR^2$, and $\RR^2$ is second countable by \Cref{lem:rn-manifold} again.
+		\item $S^1$ is locally Euclidean: we proceed explicitly. Define $U_1^\pm\coloneqq\left\{(x,y)\in S^1:\pm x>0\right\}$; then $U_1^\pm\cong(-1,1)$ by $(x,y)\mapsto y$. Similarly, define $U_2^\pm\coloneqq\left\{(x,y)\in S^1:\pm y>0\right\}$; then $U_2^\pm\cong(-1,1)$ by $(x,y)\mapsto x$.
+	\end{itemize}
+\end{example}
+
+\end{document}
