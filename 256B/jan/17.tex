@@ -4,6 +4,113 @@
 
 \begin{document}
 
-Let's just get started. The book is \cite{hartshorne}.
+Let's just get started.
+
+\subsection{Course Notes}
+Here are some notes about the course.
+\begin{itemize}
+	\item The professor is Paul Vojta, whose email is \href{mailto:vojta@math.berkeley.edu}{\texttt{vojta@math.berkeley.edu}}.
+	\item The course webpage is \href{https://math.berkeley.edu/~vojta/256b.html}{\texttt{https://math.berkeley.edu/\~vojta/256b.html}}.
+	\item The textbook is \cite{hartshorne}.
+	\item We will assume algebraic geometry on the level of Math 256A, which is a prerequisite for this course.
+	\item This course focuses on (Zariski) cohomology of schemes, so we will spend most of our time going through \cite[Chapter~III]{hartshorne}. We will also discuss smoothness, which lives in \cite[Chapter~III]{hartshorne} as well. Along our way, we will want to discuss some topics in \cite[Chapter~II]{hartshorne} in more detail, such as on divisors.
+	\item Grading will be based on homework. Homework will be weekly or biweekly, due on Wednesdays (in general).
+\end{itemize}
+
+\subsection{Abelian Categories}
+We'll assume some basic category theory (monomorphisms, epimorphisms, equalizers, coequalizers, etc.). Abelian categories are somewhat complex, so we provide their definition. Roughly speaking, our end goal is to do cohomology, which arises from homological algebra, and homological algebra lives in abelian categories.
+\begin{definition}[preadditive]
+	A \textit{preadditive category} is a category $\mathcal C$ where the morphism set $\op{Hom}_\mathcal C(A,B)$ forms an abelian group for any $A,B\in\mathcal C$, and composition distributes over addition. Explicitly, the composition map
+	\[\circ\colon\op{Hom}_\mathcal C(B,C)\times\op{Hom}_\mathcal C(A,B)\to\op{Hom}_\mathcal C(A,C)\]
+	is bilinear.
+\end{definition}
+It follows directly from having the preadditive structure that finite products and finite coproducts are canonically isomorphic. However, these (bi)products need not exist.
+\begin{definition}[additive]
+	An \textit{additive category} is a preadditive category admitting all finite products/coproducts.
+\end{definition}
+\begin{definition}[abelian]
+	An \textit{abelian category} is an additive category $\mathcal C$ in which the following hold.
+	\begin{itemize}
+		\item Every morphism admits a kernel and a cokernel; here, a (co)kernel is a (co)equalizer with the zero map.
+		\item Every monomorphism is the kernel of some morphism.
+		\item Every epimorphism is the cokernel of some morphism.
+	\end{itemize}
+\end{definition}
+Let's give some examples.
+\begin{example}
+	The following are abelian categories; we omit the checks.
+	\begin{itemize}
+		\item The category $\mathrm{Ab}$ of abelian groups is abelian.
+		\item For a ring $A$, the category $\mathrm{Mod}(A)$ of $A$-modules is abelian. In particular, for a field $k$, the category $\mathrm{Vec}(k)$ of $k$-vector spaces is abelian.
+	\end{itemize}
+\end{example}
+\begin{example}
+	Here are more abelian categories, related to sheaves. All of their ``abelian'' hypotheses are done by passing to stalks or a similar local argument.
+	\begin{itemize}
+		\item For a topological space $X$, the category $\mathrm{Ab}(X)$ of sheaves of abelian groups on $X$ is abelian.
+		\item Similarly, for a ringed space $(X,\OO_X)$, the category $\mathrm{Mod}(X)$ of sheaves of $\OO_X$-modules is abelian.
+		\item For a scheme $X$, the category $\mathrm{QCoh}(X)$ of quasicoherent sheaves on $X$ is abelian.
+		\item Similarly, for a scheme $X$, the category $\mathrm{Coh}(X)$ of coherent sheaves on $X$ is also abelian. Notably, we do not have infinite products here, but that's okay.
+	\end{itemize}
+\end{example}
+\begin{example} \label{ex:ab-op}
+	For any abelian category $\mathcal A$, its opposite category $\mathcal A\opp$ is also abelian. One can see this by going through the conditions, all of which dualize.
+\end{example}
+
+\subsection{Exact Functors}
+We will want to discuss exact functors in order to homological algebra in our abelian categories. Let's have at it.
+\begin{definition}[additive]
+	Fix abelian categories $\mathcal C$ and $\mathcal D$. A (covariant) functor $F\colon\mathcal C\to\mathcal D$ is \textit{additive} if and only if the map
+	\[F\colon\op{Hom}_\mathcal C(A,B)\to\op{Hom}_\mathcal D(FA,FB)\]
+	(of $F$ acting on morphisms $A\to B$) is a group homomorphism, for any $A,B\in\mathcal C$. Flipping arrows and using \Cref{ex:ab-op} produces the same definition for contravariant functors.
+\end{definition}
+\begin{example} \label{ex:global-sections-functor}
+	Fix a topological space $X$. Then the functor $\Gamma(X,-)\colon\mathrm{Ab}(X)\to\mathrm{Ab}$ of global sections $\mathcal F\mapsto\Gamma(X,\mathcal F)$ is additive.
+\end{example}
+\begin{remark} \label{rem:additive-preserves-biprod}
+	Being additive implies that the functor preserves biproducts. Roughly speaking, this holds because being a biproduct can be written as a set of equations for the object (and its inclusion/projection morphisms) to satisfy.
+\end{remark}
+To define (left) exact for a functor, we need to define what it means to be exact.
+\begin{definition}[exact]
+	Fix abelian categories $\mathcal C$ and $\mathcal D$. Then a sequence of maps
+	\[A\stackrel f\to B\stackrel g\to C\]
+	is \textit{exact at $B$} if and only if $\ker g=\ker(\coker f)$ (up to some identification). Here, $\ker(\coker f)$ is intended to basically be the image.
+\end{definition}
+\begin{defihelper}[left exact]
+	Fix abelian categories $\mathcal C$ and $\mathcal D$. A (covariant) additive functor $F\colon\mathcal C\to\mathcal D$ is \textit{left-exact} if and only if a left exact sequence
+	\[0\to A'\to A\to A''\]
+	produces a left exact sequence
+	\[0\to FA'\to FA\to FA''.\]
+	Reversing the arrows produces the dual notion of right exactness.
+\end{defihelper}
+\begin{remark}
+	Being left exact equivalently means that $F$ preserves kernels, so by \Cref{rem:additive-preserves-biprod} and a little category theory, $F$ actually preserves all finite limits.
+\end{remark}
+\begin{example}
+	The functor of global sections from \Cref{ex:global-sections-functor} is left exact by \cite[Exercise~II.1.8]{hartshorne}.
+\end{example}
+To get us set up, let's approximately describe what we are trying to do. Basically, fix an exact sequence
+\[0\to\mathcal F'\to\mathcal F\to\mathcal F''\to0\]
+of sheaves of abelian groups on a topological space $X$. Then there is a sequence of ``cohomology'' functors $\left\{H^i(X,-)\right\}_{i\in\NN}$ with $H^0(X,-)=\Gamma(X,-)$ and a ``long'' exact sequence as follows
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCIwIl0sWzEsMCwiSF4wKFgsXFxtYXRoY2FsIEYnKSJdLFsyLDAsIkheMChYLFxcbWF0aGNhbCBGKSJdLFszLDAsIkheMChYLFxcbWF0aGNhbCBGJycpIl0sWzEsMSwiSF4xKFgsXFxtYXRoY2FsIEYnKSJdLFsyLDEsIkheMShYLFxcbWF0aGNhbCBGKSJdLFszLDEsIkheMShYLFxcbWF0aGNhbCBGJycpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs0LDVdLFs1LDZdLFs2LDddXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	0 & {H^0(X,\mathcal F')} & {H^0(X,\mathcal F)} & {H^0(X,\mathcal F'')} \\
+	& {H^1(X,\mathcal F')} & {H^1(X,\mathcal F)} & {H^1(X,\mathcal F'')} & \cdots
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-4, to=2-2]
+	\arrow[from=2-2, to=2-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow[from=2-4, to=2-5]
+\end{tikzcd}\]
+where the maps $H^i(X,\mathcal F'')\to H^{i+1}(X,\mathcal F')$ take some work to describe.
+\begin{remark}
+	These functors will have a number of magical properties, which will amount to the main theorems of this course. Let's give an example. Fix a projective scheme $X$ over a field $k$, where $i\colon X\to\PP^n_k$ is the promised closed embedding; let $\mathcal I$ be the corresponding ideal sheaf of this closed embedding. Then we have an exact sequence
+	\[0\to\mathcal I\to\mathcal O_{\PP^n_k}\to i_*\OO_X\to0,\]
+	which one can do cohomology to. In fact, one can take the tensor product of this exact sequence with the twisting sheaves $\OO_{\PP^n_k}(m)$; for example, we will prove that $H^1(\PP^n_k,\mathcal I(m))=0$ for sufficiently large $m$, which eventually implies that the map
+	\[\Gamma\left(\PP^n_k,\OO_{\PP^n_k}(m)\right)\to\Gamma(X,\OO_X(m))\]
+	is surjective for sufficiently large $m$. In other words, global sections of $\OO_X(m)$ are all restrictions of global sections of $\OO_{\PP^n_k}(m)$!
+\end{remark}
 
 \end{document}
