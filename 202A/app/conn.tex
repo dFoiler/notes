@@ -1,0 +1,443 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{Connectivity}
+
+In this appendix, we collect some results on connectivity.
+\begin{warn}
+	This appendix is taken from my homework, placed here because I have found these results helpful in later courses.
+\end{warn}
+
+\subsection{Being Connected}
+Here is our definition.
+\begin{definition}[connected]
+	Fix a topological space $X$. Then $X$ is \textit{disconnected} if and only if there exist disjoint nonempty open subsets $U,V\subseteq X$ such that $X=U\sqcup V$. Then $X$ is \textit{connected} if and only if $X$ is not disconnected. A subset $A\subseteq X$ is connected if and only if it is connected in the subspace topology.
+\end{definition}
+\begin{remark} \label{rem:conn-by-clopen}
+	Equivalently, we can show that $X$ is connected if and only if $X$ and $\emp$ are the only subsets of $X$ which are both open and closed.
+	\begin{itemize}
+		\item Suppose $X$ is connected, and suppose we have some $U\subseteq X$ is nonempty and both open and closed. Then
+		\[X=U\sqcup X\setminus U.\]
+		Then $X$ being connected implies that one of these sets is empty, but $U\ne\emp$ then forces $X\setminus U=\emp$ and so $U=\emp$.
+		\item Suppose $X$ is disconnected so that we can write $X=U\sqcup V$ for disjoint nonempty open subsets $U$ and $V$. Then we see that $U=X\setminus V$ is also closed and not equal to $X$, so we have a subset $U\subseteq X$ which is open, closed, and not in $\{\emp,X\}$.
+	\end{itemize}
+\end{remark}
+% \begin{example}
+% 	The interval $[0,1]$ is connected. Indeed, suppose for the sake of contradiction that we can write $[0,1]=U\sqcup V$ for disjoint nonempty open subsets $U,V\subseteq[0,1]$. Without loss of generality, say that $0\in U$; we will in fact show that $U=[0,1]$, which is a contradiction to $V$ being nonempty. Indeed, the set
+% 	\[\{x\in I:[0,x)\subseteq U\}\]
+% 	has a least upper bound, which we will call $M$. As an intermediate claim, we show that $M=1$. Well, 
+% \end{example}
+We begin by picking up a few lemmas.
+\begin{lemma} \label{lem:betterconnected}
+	A subset $A\subseteq X$ is connected if and only if $A\subseteq U_1\cup U_2$ and $A\cap U_1\cap U_2\ne\emp$ for open subsets $U_1,U_2\subseteq X$ implies $A\cap U_1=\emp$ or $A\cap U_2=\emp$.
+\end{lemma}
+\begin{proof}
+	The subset $A$ is disconnected implies that there are two nonempty open subsets $V_1,V_2\subseteq A$ (for the relative topology) such that $V_1\cap V_2=\emp$ and $A=V_1\cup V_2$. However, all open subsets of $A$ take the form $U\cap A$ for some open subset $U\subseteq X$, so writing $V_1=A\cap U_1$ and $V_2=A\cap U_2$ tells us that
+	\[A=V_1\cup V_2\subseteq U_1\cup U_2\qquad\text{and}\qquad\emp=V_1\cap V_2=A\cap U_1\cap U_2.\]
+	Additionally, $V_1$ and $V_2$ being nonempty implies $A\cap U_2\ne\emp$ and $A\cap U_2\ne\emp$.
+
+	Conversely, suppose we have open subsets $U_1,U_2\subseteq X$ such that $A\subseteq U_1\cup U_2$ and $A\cap U_1\cap U_2=\emp$ and $A\cap U_1\ne\emp$ and $A\cap U_2\ne\emp$. Then set $V_1\coloneqq A\cap U_1$ and $V_2\coloneqq A\cap U_2$ to be nonempty open subsets so that
+	\[V_q\cup V_2=A\cap(U_1\cup U_2)=A\qquad\text{and}\qquad V_1\cap V_2=A\cap U_1\cap U_2=\emp,\]
+	so $A$ is in fact disconnected.
+\end{proof}
+\begin{lemma} \label{lem:singletonconn}
+	Fix a topological space $X$ and point $x\in X$. Then $\{x\}$ is connected.
+\end{lemma}
+\begin{proof}
+	We use \Cref{lem:betterconnected}: if we have $\{x\}\cap U_1\cap U_2=\emp$ for open subsets $U_1,U_2\subseteq X$, we see that we cannot have both $x\in U_1$ and $x\in U_2$ for else $x\in\{x\}\cap U_1\cap U_2$. So instead $x\notin U_1$ or $x\notin U_2$, so $\{x\}\cap U_1=\emp$ or $\{x\}\cap U_2=\emp$.
+\end{proof}
+\begin{lemma} \label{lem:intervalconn}
+	Fix real numbers $a,b\in\RR$ with $a<b$. Then the closed interval $[a,b]\subseteq\RR$ is connected.
+\end{lemma}
+\begin{proof}
+	For psychological reasons, we use \Cref{lem:betterconnected}. Suppose we have open sets $U_1,U_2\subseteq\RR$ with $[a,b]\subseteq U_1\cup U_2$ and $[a,b]\cap U_1\cap U_2$. Note that $a\in U_1$ or $a\in U_2$, so without loss of generality take $a\in U_1$. We claim that $[a,b]\cap U_2=\emp$.
+
+	Well, consider the set
+	\[S=\{r\in[a,b]:[a,r]\subseteq U_1\}.\]
+	Note $\{a\}\subseteq U_1$, so $a\in S$. Also, $S$ is upper-bounded by $b$, so $S$ has a supremum, so set $s\coloneqq\sup S$. We now proceed in steps.
+	\begin{enumerate}
+		\item Note that, for any $a\le r<s$, the fact that $s$ is the supremum forces some $r'\in S$ to have $r<r'<s$, so $[a,r]\subseteq[a,r']\subseteq U_1$, so $r\in S$. Thus, $[a,s)\subseteq S$.
+		\item If $s\notin S$, then $s\in U_2$, so there is some $\varepsilon>0$ with $(s-\varepsilon,s+\varepsilon)\subseteq S$. In particular, $\max\{a,s-\varepsilon/2\}\in U_2$, so $[a,s)\cap U_2$ is nonempty, so $[a,b]\cap U_1\cap U_2$ is nonempty, which is a contradiction.
+		\item So we instead have $s\in S$. Thus, $s\in U_1$, so there is $\varepsilon>0$ with $(s-\varepsilon,s+\varepsilon)\subseteq U_1$. Thus, for any $0<\delta<\varepsilon$, we see
+		\[[a,\min\{b,s+\delta\}]\subseteq U_1.\]
+		But $s<s+\delta$, so because $s=\sup S$, we must have $s+\delta\notin S$, which in turn forces $b<s+\delta$ for each $\delta>0$ small enough. It follows $b\le s$, but $s\in S\subseteq[a,b]$ enforces $s=b$. Thus, $[a,b]\subseteq U_1$.
+	\end{enumerate}
+	Now that we have $[a,b]\subseteq U_1$, we see $[a,b]\cap U_1\cap U_2=\emp$ forces $[a,b]\cap U_2=\emp$, which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:res-im-cont}
+	Suppose that $f\colon X\to Y$ is a continuous function actually outputting to a subset $S\subseteq Y$; i.e., $\im f\subseteq S$. Then the function $\overline f\colon X\to S$ given by $\overline f(x)\coloneqq f(x)$ for each $x\in X$ is a continuous function, where $S$ has been given the subspace topology.
+\end{lemma}
+\begin{proof}
+	For a given open subset $V\subseteq S$, the subspace topology promises an open subset $U\subseteq Y$ such that $V=S\cap U$. Now, we compute
+	\begin{align*}
+		\overline f^{-1}(V) &= \{x\in X:\overline f(x)\in V\} \\
+		&= \{x\in X:f(x)\in V\} \\
+		&= \{x\in X:f(x)\in S\cap U\} \\
+		&\stackrel*= \{x\in X:f(x)\in U\} \\
+		&= f^{-1}(U),
+	\end{align*}
+	which is an open subset of $X$ by the continuity of $f$; note that we have used the fact that $\im f\subseteq S$ at the $\stackrel*=$.
+\end{proof}
+\begin{lemma} \label{lem:ivt}
+	A continuous function from one topological space into another carries connected subsets onto connected subsets.
+\end{lemma}
+\begin{proof}
+	Fix a continuous function $f\colon X\to Y$ and a subset $A\subseteq X$. Instead of showing that $A$ being connected implies that $f(A)$ is connected, we proceed by contraposition: suppose that $f(A)$ is disconnected, and we show that $A$ is connected.
+
+	Well, $f(A)$ being connected promises by \Cref{lem:betterconnected} open subsets $V_1,V_2\subseteq Y$ such that $V_1\cap f(A),V_2\cap f(A)\ne\emp$ and $f(A)\subseteq V_1\cup V_2$ and $f(A)\cap V_1\cap V_2=\emp$. We now {set $U_1\coloneqq f^{-1}(V_1)$ and $U_2\coloneqq f^{-1}(V_2)$}, which are open in $X$ because $f$ is continuous. Here are our checks.
+	\begin{itemize}
+		\item Note $V_1\cap f(A)\ne\emp$ promises some $a\in A$ with $f(a)\in V_1$, so $a\in A\cap f^{-1}(V_1)$, so $A\cap U_1\ne\emp$. Symmetrically, we have $A\cap U_2\ne\emp$.
+		\item If we had $a\in A\cap U_1\cap U_2$, we see $f(a)\in V_1$ and $f(a)\in V_2$, so $f(a)\in A\cap f^{-1}(V_1)\cap f^{-1}(V_2)$, so $A\cap f^{-1}(V_1)\cap f^{-1}(V_2)$ is nonempty. However, by construction, $f(A)\cap V_1\cap V_2=\emp$, so we must instead have $A\cap U_1\cap U_2=\emp$.
+		\item Note $f(A)\subseteq V_1\cup V_2$ means that each $a\in A$ has $f(a)\in V_1$ or $f(a)\in V_2$, so $a\in f^{-1}(V_1)$ or $a\in f^{-1}(V_2)$, so $a\in U_1\cup U_2$. Thus, $A\subseteq U_1\cup U_2$.
+	\end{itemize}
+	The above points show that $A$ is disconnected by \Cref{lem:betterconnected}.
+\end{proof}
+\begin{lemma} \label{lem:closureisconn}
+	The closure of a connected subset of a topological space is connected.
+\end{lemma}
+\begin{proof}
+	Fix a topological space $X$ and subset $A\subseteq X$. We proceed by contraposition. Suppose that the closure $\overline A$ is disconnected, and we show that $A$ is disconnected.
+
+	Well, $\overline A$ being connected promises by \Cref{lem:betterconnected} open subsets $U_1,U_2\subseteq X$ such that $\overline A\cap U_1,\overline A\cap U_2\ne\emp$ and $\overline A\subseteq U_1\cup U_2$ and $\overline A\cap U_1\cap U_2=\emp$. We show that {$U_1$ and $U_2$ also witness $A$ being disconnected}.
+	\begin{itemize}
+		\item Note
+		\[A\cap U_1\cap U_2\subseteq\overline A\cap U_2\cap U_2=\emp,\]
+		so $A\cap U_1\cap U_2=\emp$.
+		\item Note $A\subseteq\overline A\subseteq U_1\cup U_2$, so $A\subseteq U_1\cup U_2$.
+		\item Lastly, we show $A\cap U_1\ne\emp$, and $A\cap U_2\ne\emp$ will follow by symmetry. Well, supposing for contradiction that {$A\cap U_1=\emp$, we would have $A\subseteq X\setminus U_1$, but $X\setminus U_1$ is closed because $U_1$ is open, so $\overline A\subseteq X\setminus U_1$, so $\overline A\cap U_1=\emp$}. But by construction we have $\overline A\cap U_1\ne\emp$, so we must instead have $A\cap U_1\ne\emp$.
+	\end{itemize}
+	The above points show that $A$ is disconnected by \Cref{lem:betterconnected}.
+\end{proof}
+\begin{lemma} \label{lem:unionconns}
+	Suppose $\mc F$ is a (possibly infinite) collection of connected subsets of a topological space. If there is a point $x_0$ that is contained in every element of $\mc F$, then the union of all the elements of $\mc F$ is a connected subset.
+\end{lemma}
+\begin{proof}
+	We use \Cref{lem:betterconnected}. Let $\mc F$ be a nonempty\footnote{If $\mc F$ is empty, then the union of elements of $\mc F$ is $\emp$, which is vacuously connected by \Cref{lem:betterconnected}: there are no open subsets $U_1,U_2\subseteq X$ with $\emp\cap U_1\cap U_2\ne\emp$.} collection of connected subsets containing some common point $x_0$, and let $C$ denote the union of all the (connected) subsets $A\in\mc F$. We need to show that $C$ is connected. Well, suppose that we have open subsets $U_1,U_2\subseteq X$ such that $C\subseteq U_1\cup U_2$ and $C\cap U_1\cap U_2$, and we need to show $C\cap U_1=\emp$ or $C\cap U_2\emp$.
+
+	Well, for any $A\in\mc F$, we see that
+	\[A\subseteq C\subseteq U_1\cup U_2\qquad\text{and}\qquad A\cap U_1\cap U_2\subseteq C\cap U_2\cap U_2=\emp,\]
+	so the connectivity of $A$ implies by \Cref{lem:betterconnected} that $A\cap U_1=\emp$ or $A\cap U_2=\emp$. Now fixing a particular $A_0\in\mc F$, we see say that without loss of generality $A_0\cap U_2=\emp$, so in fact we see that $x_0\notin U_2$; however, $x_0\in A_0\subseteq U_1\cap U_2$, so {we must instead have $x_0\in U_1$}.
+
+	We now claim that $A\subseteq U_1$ for each $A\in\mc F$. We showed above that $A\cap U_1=\emp$ or $A\cap U_2=\emp$. If we had $A\cap U_1=\emp$, then this would imply $x_0\in A$ has $x_0\notin U_1$, which is false as shown above. So instead we have $A\cap U_2=\emp$, so all $a\in A\subseteq U_1\cup U_2$ cannot have $a\in U_2$ and therefore must have $a\in U_1$, so $A\subseteq U_1$ follows.
+
+	In total, we see
+	\[C=\bigcup_{A\in\mc F}A\subseteq\bigcup_{A\in\mc F}U_1=U_1.\]
+	As such, we claim $C\cap U_2=\emp$: any $c\in C\subseteq U_1\cup U_2$ now has $c\in C=C\cap U_1$, but $C\cap U_1\cap U_2=\emp$ then forces $c\notin U_2$. As such, $C\cap U_2=\emp$. This finishes by \Cref{lem:betterconnected}.
+\end{proof}
+We now discuss connected components.
+\begin{lemma} \label{lem:conncomps}
+	Let $X$ be a topological space. Declare that two points of $X$ are equivalent if there is some connected of subset of $X$ that contains both of them. Then this is an equivalence relation, and the equivalence classes are connected.
+\end{lemma}
+\begin{proof}
+	Define the relation $\sim$ on $X$ by $x\sim x'$ if and only if there is a connected subset $A\subseteq X$ containing both $x$ and $x'$. We need to show that $\sim$ is an equivalence relation.
+	\begin{itemize}
+		\item Reflexive: given $x\in X$, we see that $\{x\}$ is connected by \Cref{lem:singletonconn}. Thus, $\{x\}$ is a connected subset containing $x$ and $x$, so $x\sim x$.
+		\item Symmetric: given $x,x'\in X$ with $x\sim x'$, there is a connected subset $A\subseteq X$ containing $x$ and $x'$. But then $A\subseteq X$ is connected subset containing $x'$ and $x$, so $x'\sim x$ follows.
+		\item Transitive: given $x,x',x''\in X$ with $x\sim x'$ and $x'\sim x''$, there are connected subsets $A$ and $A'$ with $x,x'\in A$ and $x',x''\in A'$. Then we set
+		\[B\coloneqq A\cup A'.\]
+		Thus, we see $B$ by definition is the union of two connected subsets of $X$ both containing $x'$, so $B$ is connected by \Cref{lem:unionconns}. Further, $x\in B$ and $x''\in B$ is telling us that there is a connected subset $B$ containing both $x$ and $x''$, so $x\sim x''$ follows.
+	\end{itemize}
+	Now let $C\subseteq X$ be an equivalence class of the equivalence relation $\sim$; say that $C$ is represented by a particular $x_0\in C$. We proceed in steps.
+	\begin{enumerate}
+		\item We claim that {any connected subset $C'\subseteq X$ containing $x_0$ is a subset of $C$}. Indeed, any $x\in C'$ has that $C'\subseteq X$ is a connected subset containing both $x$ and $x_0$, so $x\sim x_0$, so $x\in C$. Thus, $C'\subseteq C$.
+		\item We show $C$ is connected. For each $x\in C$, by definition $x\sim x_0$, so there is a connected subset $A_x$ containing both $x$ and $x_0$; by the previous point, we see $A_x\subseteq C$. Thus, we may write
+		\[C=\bigcup_{x\in C}\{x\}\subseteq\bigcup_{x\in C}A_x\subseteq\bigcup_{x\in C}C=C,\]
+		so
+		\[C=\bigcup_{x\in C}A_x\]
+		follows. However, each $A_x$ is a connected subset of $X$ containing $x_0$, so \Cref{lem:unionconns} tells us that their union $C$ must be connected.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+And here is our definition.
+\begin{definition}[connected component]
+	Fix a topological space $X$. Then the equivalence classes of \Cref{lem:conncomps} are called the \textit{connected components} of $X$.
+\end{definition}
+\begin{lemma}
+	Fix a connected component $A$ of a topological space $X$. Then $C$ is closed.
+\end{lemma}
+\begin{proof}
+	Note $C$ is connected by construction, so {$\overline C$ is a connected subset (by \Cref{lem:closureisconn}) which contains $x_0$}. Thus, as shown in the first point, we see $\overline C\subseteq C$, but $C\subseteq\overline C$ will imply $C=\overline C$. But $\overline C$ is closed, so it follows $C$ is closed.
+\end{proof}
+
+% \begin{lemma}
+% 	Determine the connected components of the set of rational numbers with its metric topology. (What can you conclude about whether connected components must be open?)
+% \end{lemma}
+% \begin{proof}
+% 	We assume that $\sqrt2$ is irrational. Because $1<\sqrt2<2$, we see that $\alpha\coloneqq\sqrt2-1\in(0,1)$ is also irrational (for otherwise $\alpha+1=\sqrt2$ would also be rational). We proceed in steps.
+% 	\begin{enumerate}
+% 		\item We note that any singleton $\{q\}$ for $q\in\QQ$ is connected by \Cref{lem:singletonconn}.
+
+% 		\item {Suppose $A\subseteq\QQ$ contains two distinct points $p,q\in\QQ$. We show that $A$ is disconnected}, using \Cref{lem:betterconnected}. Indeed, without loss of generality, take $p<q$. Then set $\beta\coloneqq\alpha p+(1-\alpha)q$ so that
+% 		\[p=\alpha p+(1-\alpha)p<\alpha p+(1-\alpha)q=\beta<\alpha q+(1-\alpha)q=q,\]
+% 		so $p<\beta<q$. Also, $\beta=p+\alpha(q-p)$ is irrational for else $\alpha=\frac{\beta-p}{q-p}$ would also be rational. As such, we set
+% 		\[U_1\coloneqq(\beta,\infty)\qquad\text{and}\qquad U_2\coloneqq(-\infty,\beta)\]
+% 		which are open in the metric topology of $\QQ$ as open sets inherited from $\RR$. Here are our checks.
+% 		\begin{itemize}
+% 			\item Notably, because $\beta$ is irrational, all $q\in\QQ$ have $q\ne\beta$, so $q>\beta$ or $q<\beta$, so $q\in U_1$ or $q\in U_2$. Thus, $A\subseteq\QQ\subseteq U_1\cup U_2$.
+% 			\item Note $q\in U_1\cap U_2$ would imply $\beta<q<\beta$, which is false. Thus, $U_1\cap U_2=\emp$, so $A\cap U_1\cap U_2=\emp$ as well.
+% 			\item By construction, $p<\beta$, so $p\in U_2$, so $A\cap U_2\ne\emp$. Similarly, $q>\beta$, so $q\in U_1$, so $A\cap U_1\ne\emp$.
+% 		\end{itemize}
+% 		The above checks show that $A$ is disconnected.
+
+% 		\item We claim that all connected components of $\QQ$ are the singletons $\{q\}$ for $q\in\QQ$. In other words, we claim that the connected component $C_q$ containing a particular $q\in\QQ$ (namely, representing its equivalence class) is $\{q\}$. Certainly $\{q\}\subseteq C_q$.
+
+% 		On the other hand, \Cref{lem:conncomps} tells us that $C_q$ is connected, so the point above tells us that $C_q$ has at most two points. So $C_q=\{q\}$ is forced.
+% 	\end{enumerate}
+% 	The above steps have shown that the connected component represented by any particular $q\in\QQ$ is $\{q\}$. It follows that connected components need not be open because the set $\{q\}$ is not open in $\QQ$ for any $q\in\QQ$.\footnote{Indeed, this would imply that there is some $\varepsilon>0$ with $(q-\varepsilon,q+\varepsilon)\subseteq\{q\}$, which is false.}
+% \end{proof}
+
+\subsection{Being Path-Connected}
+Here is our definition.
+\begin{definition}[path-connected]
+	Fix a topological space $X$. Then $X$ is \textit{path-connected} if and only if any $p,q\in X$ have some continuous function $f\colon[a,b]\to X$ (for $a<b$) such that $f(a)=p$ and $f(b)=q$.
+\end{definition}
+\begin{remark}
+	Because there is a homeomorphism $[0,1]\cong[a,b]$ (for $a<b$) by $x\mapsto a+x(b-a)$, we may as well assume that our continuous functions are $f\colon[0,1]\to X$.
+\end{remark}
+\begin{lemma} \label{lem:path-conn-to-conn}
+	A path-connected topological space is connected.
+\end{lemma}
+\begin{proof}
+	Suppose that $X$ is a path-connected topological space. If $X$ is empty, then $X$ is vacuously connected because $X$ has nonempty open subsets. Otherwise, we may fix a point $x\in X$, and let $C\subseteq X$ be its connected component as found in \Cref{lem:conncomps}; by \Cref{lem:conncomps}, we see $C$ is connected.
+
+	Now, for any point $y\in X$, we are promised a path $p\colon[a,b]\to X$ such that $p(a)=x$ and $p(b)=y$. However, {$[a,b]$ is connected by \Cref{lem:singletonconn}, so $p([a,b])$ is connected by \Cref{lem:ivt}}. Thus, $p([a,b])\subseteq X$ is a connected subset containing both $x=p(a)$ and $y=p(b)$, so $x\sim y$ under the equivalence relation defining $C$, so $y\in C$ follows.
+
+	It follows that $X\subseteq C$, so in fact we have $X=C$. Thus, $X$ is connected because $C$ is connected. (The relative topology on $X$ from $X$ is just the original topology on $X$; alternatively, the test for \Cref{lem:betterconnected} simply says that $X$ is connected directly.)
+\end{proof}
+We would like to define path-connected components. The following lemma will be helpful to ``concatenate'' paths.
+\begin{lemma} \label{lem:concatpath}
+	Fix a topological space $X$. Given real numbers $a<b<c$ and two continuous functions $\varphi\colon[a,b]\to X$ and $\psi\colon[b,c]\to X$ such that $\varphi(b)=\psi(b)$, the function $\gamma\colon[a,c]\to X$ defined by
+	\[\gamma(t)\coloneqq\begin{cases}
+		\varphi(t) & t\in[a,b], \\
+		\psi(t) & t\in[b,c]
+	\end{cases}\]
+	is also continuous.
+\end{lemma}
+\begin{proof}
+	Fix an open subset $U\subseteq X$. We need to show that $\gamma^{-1}(U)$ is an open subset of $[a,c]$. The main claim is that, for each $t\in\gamma^{-1}(U)$, we need to find some $\varepsilon>0$ such that $(t-\varepsilon,t+\varepsilon)\cap[a,c]\subseteq\gamma^{-1}(U)$. We have the following starting remarks.
+	\begin{itemize}
+		\item Suppose that $t\in[a,b]$. We now note that $\varphi^{-1}(U)$ is an open subset of $[a,b]$ and contains $t$. Because $\varphi^{-1}(U)\subseteq[a,b]$ is open, there is an open subset $V'\subseteq\RR$ with $\varphi^{-1}(U)=V'\cap[a,b]$. However, $t\in V$, so there is $\varepsilon>0$ such that $(t-\varepsilon,t+\varepsilon)\subseteq V$ and so
+		\[(t-\varepsilon,t+\varepsilon)\cap[a,b]\subseteq\varphi^{-1}(U)\subseteq\gamma^{-1}(U).\]
+		\item Analogously, for any $t\in[b,c]$, the above argument with $a$ replaced with $b$ and $b$ replaced with $c$ and $\varphi$ replaced with $\psi$ shows that there is some $\varepsilon>0$ such that
+		\[(t-\varepsilon,t+\varepsilon)\cap[b,c]\subseteq\psi^{-1}(U)\subseteq\gamma^{-1}(U).\]
+	\end{itemize}
+	We now have the following three cases.
+	\begin{itemize}
+		\item Take $t\in[a,b)$. We are provided with some $\varepsilon>0$ such that
+		\[(t-\varepsilon,t+\varepsilon)\cap[a,b]\subseteq\gamma^{-1}(U).\]
+		This property doesn't change if we make $\varepsilon$ smaller, so we may assume that $\varepsilon<b-t$; notably, $b-t>0$ by hypothesis. So in fact $z\in(t-\varepsilon,t+\varepsilon)$ implies $z\le b$, so $(t-\varepsilon,t+\varepsilon)\cap[a,b]=(t-\varepsilon,t+\varepsilon)\cap[a,c]$. So we see
+		\[(t-\varepsilon,t+\varepsilon)\cap[a,c]\subseteq\gamma^{-1}(U).\]
+		\item Analogously, take $t\in(b,c]$. We are provided with some $\varepsilon>0$ such that
+		\[(t-\varepsilon,t+\varepsilon)\cap[b,c]\subseteq\gamma^{-1}(U).\]
+		This property doesn't change if we make $\varepsilon$ smaller, so we may assume that $\varepsilon<t-b$; notably, $t-b>0$ by hypothesis. So in fact $z\in(t-\varepsilon,t+\varepsilon)$ implies $z\ge b$, so $(t-\varepsilon,t+\varepsilon)\cap[b,c]=(t-\varepsilon,t+\varepsilon)\cap[a,c]$. So we see
+		\[(t-\varepsilon,t+\varepsilon)\cap[a,c]\subseteq\gamma^{-1}(U).\]
+		\item Lastly, we have $t=b$. We are provided with $\varepsilon^->0$ such that
+		\[(t-\varepsilon^-,t+\varepsilon^-)\cap[a,b]\subseteq\gamma^{-1}(U)\]
+		and $\varepsilon^+>0$ such that
+		\[(t-\varepsilon^+,t+\varepsilon^+)\cap[b,c]\subseteq\gamma^{-1}(U).\]
+		Setting $\varepsilon\coloneqq\min\{\varepsilon^-,\varepsilon^+\}>0$, we see that $(t-\varepsilon,t+\varepsilon)\cap[a,b]$ is contained in $(t-\varepsilon^-,t+\varepsilon^-)\cap[a,b]\subseteq\gamma^{-1}(U)$, and $(t-\varepsilon,t+\varepsilon)\cap[b,c]$ is contained in $(t-\varepsilon^+,t+\varepsilon^+)\cap[b,c]\subseteq\gamma^{-1}(U)$, so taking the union of these we see
+		\[(t-\varepsilon,t+\varepsilon)\cap[a,c]\subseteq\gamma^{-1}(U).\]
+	\end{itemize}
+	We now finish the proof. For each $t\in[a,c]$, we have been promised $\varepsilon_t>0$ such that $(t-\varepsilon_t,t+\varepsilon_t)\cap[a,c]$ is a subset of $\gamma^{-1}(U)$, so we see
+	\[\gamma^{-1}(U)\subseteq[a,c]\cap\bigcup_{t\in\gamma^{-1}(U)}(t-\varepsilon_t,t+\varepsilon_t)\subseteq\gamma^{-1}(U),\]
+	so we have shown that $\gamma^{-1}(U)$ is $[a,c]\cap V$ where $V$ is some arbitrary union of open subsets of $\RR$ and hence open. Thus, $\gamma^{-1}(U)$ is open in $[a,c]$.
+\end{proof}
+\begin{lemma} \label{lem:path-conn-comp}
+	Let $X$ be a topological space. Declare that two points of $X$ are equivalent if there is a path from one to the other. This is an equivalence relation, and the equivalence classes are path-connected.
+\end{lemma}
+\begin{proof}
+	For $x,x'\in X$, define the relation $\sim_p$ by $x\sim_py$ if and only if there is a path $\gamma\colon[a,b]\to\RR$ (for some reals $a>b$) such that $\gamma(a)=x$ and $\gamma(b)=y$. We claim that $\sim_p$ is an equivalence relation.
+	\begin{itemize}
+		\item Reflexive: given any $x\in X$, we define the function $\gamma\colon[0,1]\to X$ by $\gamma(t)=x$ for each $t\in[0,1]$. To see that $\gamma$ is continuous, we pick up some open $U\subseteq X$, for which we have two cases.
+		\begin{itemize}
+			\item If $x\in U$, then $\gamma^{-1}(U)=[0,1]$, which is open.
+			\item If $x\notin U$, then $\gamma^{-1}(U)=\emp$, which is still open.
+		\end{itemize}
+		Thus, $\gamma$ is continuous, so $\gamma(0)=x$ and $\gamma(1)=x$ witnesses $x\sim_px$.
+		\item Symmetric: given $x,y\in X$ with $x\sim_py$, we know there is a continuous function $\gamma\colon[a,b]\to X$ such that $\gamma(a)=x$ and $\gamma(b)=y$. We now {define the function $r\colon\RR\to\RR$ by $r(t)\coloneqq b+a-x$}, which is continuous because it is a polynomial. Restricting, we see that $r\colon[a,b]\to\RR$ is continuous, and we see that $t\in[a,b]$ implies that $a\le t\le b$ and so $a\le b+a-t\le b$, so we may restrict the image to see that $r\colon[a,b]\to[a,b]$ is a continuous function as well.
+
+		Now, composing, we see that $(\gamma\circ r)\colon[a,b]\to X$ is a continuous function such that $\gamma(r(a))=\gamma(b)=y$ and $\gamma(r(b))=\gamma(a)=x$. It follows $y\sim_px$.
+		\item Transitive: fix $x,y,z\in X$ with $x\sim_py$ and $y\sim_pz$ so that we have continuous functions $\alpha\colon[a,b]\to X$ and $\beta\colon[c,d]\to X$ such that $\alpha(a)=x$ and $\alpha(b)=y$ and $\beta(c)=y$ and $\beta(d)=z$.
+
+		Very quickly, we define $r\colon\RR\to\RR$ by $t\mapsto t-b+c$, which is continuous and hence polynomial. Restricting, we see that $r\colon[b,d+b-c]\to\RR$ is also continuous, so restricting the image we note $b\le t\le d+b-c$ if and only if $c\le t-b+c\le d$, so our function $r\colon[b,d+c-b]\to[c,d]$ is still continuous.
+
+		Thus, we {define $\gamma$ by \Cref{lem:concatpath} by concatenating the continuous functions $\alpha\colon[a,b]\to X$ and $(\beta\circ r)\colon[b,d+c-b]\to X$} (note $\alpha(b)=y$ and $(\beta\circ r)(b)=\beta(c)=y$) to give a continuous function
+		\[\gamma\colon[a,d+c-b]\to X\]
+		such that $\gamma(a)=\alpha(a)=x$ and $\gamma(d+c-b)=\beta(d)=z$. It follows that $x\sim_pz$.
+	\end{itemize}
+	Thus, $\sim_p$ is in fact an equivalence relation.
+	
+	Now, given some $x_0$, let $P$ be the path-connected component containing $x_0$. To finish, we need to show that $P$ is path-connected (when given the subspace topology). Well, given $x,y\in P$, we need to show that there is continuous function $\gamma\colon[a,b]\to P$ such that $\gamma(a)=x$ and $\gamma(b)=y$. We have three steps.
+	\begin{enumerate}
+		\item Notably, we see that $x\sim_px_0$ and $x_0\sim_py$, so the transitivity check tells us that
+		\[x\sim_py,\]
+		so there is a continuous function $\gamma\colon[a,b]\to X$ such that $\gamma(a)=x$ and $\gamma(b)=y$. 
+		\item We show that $\im\gamma\subseteq P$. Indeed, fix some $\gamma(t)\in\im\gamma$, and we note that the restricted path
+		\[\gamma|_{[a,t]}\colon[a,t]\to X\]
+		is a continuous function\footnote{The restriction $f|_S$ of a continuous function $f\colon X\to Y$ is still continuous: for any open $U\subseteq U$, we see that $(f|_S)^{-1}(U)=S\cap f^{-1}(U)$ is open in $S$.} with $\gamma|_{[a,t]}(a)=x$ and $\gamma|_{[a,t]}(t)=\gamma(t)$. Thus, $\gamma|_{[a,t]}$ witnesses $a\sim_p\gamma(t)$, so $\gamma(t)\in P$ because $P$ is an equivalence class for $\sim_p$.
+		\item Thus, we can restrict the codomain of $\gamma$ to give a function $\widetilde\gamma\colon[a,b]\to P$ by $\widetilde\gamma(t)\coloneqq\gamma(t)$ for each $t$. Continuing, note that $\widetilde\gamma$ is continuous by \Cref{lem:res-im-cont}.
+	\end{enumerate}
+	Thus, the above proof has taken any two points $x,y\in P$ and exhibited a continuous function $\gamma\colon[a,b]\to P$ such that $\gamma(a)=x$ and $\gamma(b)=y$.
+\end{proof}
+And here is our definition.
+\begin{definition}[path-connected component]
+	Fix a topological space $X$. Then the equivalence classes of \Cref{lem:path-conn-comp} are the \textit{path-connected components}.
+\end{definition}
+It is worthwhile to have an example of a space which is connected but not path-connected, showing that the inclusion of \Cref{lem:path-conn-to-conn} is strict.
+\begin{lemma}
+	Let $A\subseteq\RR^2$ be the union of the $y$-axis and the graph of the function $f(t)=\sin(1/t)$ for $0<t\le1$. (Draw a picture of $A$.) Prove that $A$, with the relative topology, is connected but not path-connected. What are the path-connected components of $A$? What can you conclude about whether path-connected components must be closed?
+\end{lemma}
+\begin{proof}
+	Here is our picture.
+	\begin{center}
+		\begin{asy}
+			import graph;
+			unitsize(2cm);
+			real f(real t)
+			{
+				return sin(1/t);
+			}
+			draw(graph(f, 0.01, 1, n=1000));
+			draw((0,-1.3) -- (0,1.3), arrow=Arrows(10), p=red+linewidth(1.3));
+		\end{asy}
+	\end{center}
+	Namely,
+	\[A=\{(0,y):y\in\RR\}\cup\{(t,\sin(1/t)):0<t\le1\}.\]
+	For brevity, define $Y\coloneqq\{(0,y):y\in\RR\}$ and $G\coloneqq\{(t,\sin(1/t):0<t\le1\}$. We show the requirements of the problem in sequence.
+	\begin{itemize}
+		\item We show that $Y\subseteq A$ is path-connected. Well, note that the function $f\colon\RR\to\RR^2$ by $f(y)\coloneqq(0,y)$ is a polynomial and therefore continuous; notably $f(y)=(0,y)\in Y$ for each $Y$, so we may restrict the image of $f$ to $Y\subseteq A$, and the resulting function will still be continuous by \Cref{lem:res-im-cont}.
+		
+		Now, for any two distinct points $(0,y_1)$ and $(0,y_2)$ of $Y$, we assume without loss of generality that $y_1<y_2$ and consider the restriction
+		\[f|_{[y_1,y_2]}\colon[y_1,y_2]\to Y.\]
+		This function is continuous because $f$ is, and it has $f(y_1)=(0,y_1)$ and $f(y_2)=(0,y_2)$. Thus, we conclude that any two distinct points in $Y$ have a continuous path connecting them, which means that $Y$ is path-connected.
+		\item We show that $G\subseteq A$ is path-connected. Well, note that the function $g\colon(0,1]\to\RR^2$ by $g(t)\coloneqq(t,\sin(1/t))$ is a polynomial in the $x$-coordinate and the composite of two continuous functions in the $y$-coordinate, so $g$ in total is continuous.
+
+		Additionally, we see somewhat directly that the image of $g$ is exactly $G$ by definition, so we may restrict the image of $g$ to a continuous function outputting to $G$. Now, for any two distinct points $(t_1,\sin(1/t_1))$ and $(t_2,\sin(1/t_2))$ in $G$, we would like to find a path between them; without loss of generality, we take $t_1<t_2$. Then we note that the restricted function
+		\[g|_{[t_1,t_2]}\colon[t_1,t_2]\to G\]
+		is a continuous function with $g(t_1)=(t_1,\sin(1/t_1))$ and $g(t_2)=(t_2,\sin(1/t_2))$. Thus, any two distinct points of $G$ have a continuous path between them, so we conclude that $G$ is path-connected.
+
+		\item We show that $A$ is connected. Indeed, it suffices to show that the connected component $C$ containing $(0,0)\in Y\subseteq A$ is all of $A$. We split this in two pieces.
+		\begin{itemize}
+			\item To begin, note that $Y$ is path-connected, so \Cref{lem:path-conn-to-conn} tells us that $Y$ is connected. It follows from what we showed in \Cref{lem:conncomps} that $Y\subseteq C$.
+			\item Quickly {note that $(0,0)\in\overline G$}. Indeed, it suffices to show that any open set $U\subseteq A$ containing $(0,0)$ has nonempty intersection with $G$. Well, $U\subseteq A$ comes from an open set in $\RR^2$, so using the product basis for $\RR^2$, we conclude that there is some $\varepsilon>0$ with
+			\[B((0,0),\varepsilon)\cap A\subseteq U.\]
+			It suffices to show that $B((0,0),\varepsilon)\cap G\ne\emp$ because this will imply that
+			\[B((0,0),\varepsilon)\cap G=B((0,0),\varepsilon)\cap A\cap G\subseteq U\cap G\]
+			is also nonempty.
+
+			Well, find some integer $n>0$ with $2\pi n>1/\varepsilon$, and set $t\coloneqq\frac1{2\pi n}>0$. Then
+			\[(t,\sin(1/t))=\left(\frac1{2\pi n},\sin(2\pi n)\right)=\left(\frac1{2\pi n},0\right),\]
+			which lives in $B((0,0),\varepsilon)$ because $1/(2\pi n)<\varepsilon$. So $(t,\sin(1/t))\in G\cap B((0,0),\varepsilon)$.
+
+			Now, we note that $G$ is path-connected as shown above, so $G$ is connected by \Cref{lem:path-conn-to-conn}, so $\overline G$ is connected by \Cref{lem:closureisconn}. Now, $\overline G$ is a connected set containing $(0,0)$, so $\overline G\subseteq C$ by our discussion in \Cref{lem:conncomps}.
+		\end{itemize}
+		Thus, we see that $A=Y\cup G\subseteq Y\cup\overline G\subseteq C$, so $C=A$. It follows that $A$ is connected because connected components are connected by \Cref{lem:conncomps}.
+		\item We claim that {$Y$ and $G$ are the path-connected components of $A$}. Note we have $A=Y\cup G$ already, and $(x,y)\in G$ implies $x>0$ and so $(x,y)\notin Y$, so $Y\cap G=\emp$; thus, $Y$ and $G$ do partition $A$ and will induce some equivalence relation $\sim$ on $A$ with $Y$ and $G$ as equivalence classes.
+
+		It remains to show that $\sim$ aligns with the correct equivalence relation $\sim_p$ on $A$. Namely, we need to show that $a,a'\in A$ have $a\sim_pa'$ if and only if either $a,a'\in Y$ or $a,a'\in G$. We have already shown that $Y$ and $G$ are path-connected above, so it follows that $a,a'\in Y$ or $a,a'\in G$ both imply $a\sim_pa'$.
+
+		It remains to show the reverse implication. Suppose $a=(0,y)\in Y$ and $a'=(t,\sin(1/t))\in G$, and we need to show that there is no continuous path $\gamma\colon[s,t]\to A$ with $\gamma(s)=a$ and $\gamma(t)=a'$. We proceed by contradiction, in steps.
+		\begin{enumerate}
+			\item Observe that projecting $\gamma$ onto the $x$-axis (by $\pi\colon\RR^2\to\RR$) makes a continuous function $[s,t]\to\RR$. Notably, $\pi(\gamma(s))=\pi(a)=0$, but $\pi(\gamma(t))=\pi(a')>0$, so we let $t_0$ be the supremum of all values $x\in[s,t]$ such that $\pi\gamma([s,x])=\{0\}$, which is really just the supremum of the values of $x$ with
+			\[[s,x]\subseteq(\pi\gamma)^{-1}(\{0\}).\]
+			(In particular, $t_0<t$ because $\pi(\gamma(t))\ne0$.) Notably, $(\pi\gamma)^{-1}(\{0\})$ is closed and therefore contains its limit points, so because $t_0$ is a supremum of some subset of $(\pi\gamma)^{-1}(\{0\})$, we conclude that $t_0\in(\pi\gamma)^{-1}(\{0\})$.
+			\item Now, we have that any sufficiently small $\delta>0$ has $\pi\gamma([t_0,t_0+\delta])\ne\{0\}$; thus, {we have some $x>0$ with $x\in\pi\gamma([t_0,t_0+\delta])$}. However, $\pi\gamma$ is still continuous, and $[t_0,t_0+\delta]$ is connected, so the image must also be connected, so $[0,x]\subseteq\pi\gamma([t_0,t_0+\delta])$.
+			\item To finish, we note that the continuity of $\gamma$ implies that some $\delta>0$ has
+			\[|t_0-t'|<\delta\implies d(\gamma(t_0),\gamma(t'))<\varepsilon,\]
+			for any given $\varepsilon>0$; in particular, any two points $p,p'\in\gamma([t_0,t_0+\delta])$ must have
+			\[d(p,p')\le d(p,\gamma(t_0))+d(\gamma(t_0),p')<2\varepsilon.\]
+			However, this will derive contradiction with $\varepsilon=0.4$: any $\delta>0$ induces some closed subset $[0,x]\subseteq\pi\gamma([s,t_0+\delta/2])$ where $x>0$. Notably, choosing some $n$ large enough so that $1/(2\pi n+\pi/2)<x$, we see the points
+			\begin{align*}
+				\left(\frac1{2\pi n+\pi/2},\sin(2\pi n+\pi/2)\right) &= \left(\frac1{2\pi n+\pi/2},1\right), \\
+				\left(\frac1{2\pi n+3\pi/2},\sin(2\pi n+3\pi/2)\right) &= \left(\frac1{2\pi n+3\pi/2},-1\right)
+			\end{align*}
+			live in $\gamma([t_0,t_0+\delta/2])$, but the distance between these two points is at least $2$ and greater than $2\varepsilon=0.8$.
+		\end{enumerate}
+		The above steps complete the proof. Notably, $A$ is not path-connected, as shown above, because it has two path-connected components. Additionally, we note that $G\subseteq A$ is a path-connected component which is not closed; notably $(0,0)\in\overline G\setminus G$. (We showed $(0,0)\in\overline G$ above.)
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Products}
+We go ahead and show that the product of two connected spaces is connected. This is surprisingly technical.
+\begin{lemma} \label{lem:quotientscompact}
+	Let $X$ and $Y$ be topological spaces, and let $\pi$ be a continuous function from $X$ onto $Y$ such that the topology of $Y$ is the quotient topology from $X$. If $Y$ is connected, and if the pre-image in $X$ of each point of $Y$ for $\pi$ is connected, then $X$ is connected.
+\end{lemma}
+\begin{proof}
+	By definition of the quotient topology, $V\subseteq Y$ is open if and only if $\pi^{-1}(V)\subseteq X$ is open. We are also assuming that $\pi\colon X\to Y$ is surjective because the question specified that $\pi$ is onto.
+
+	We proceed by contraposition. Suppose that $X$ is disconnected but that $\pi^{-1}(\{y\})$ is connected for each $y\in Y$. We show that $Y$ is disconnected. Because $X$ is disconnected, we may disjoint nonempty open subsets $U_1,U_2\subseteq X$ such that $X=U_1\cup U_2$. We now set
+	\[V_1\coloneqq\pi(U_1)\qquad\text{and}\qquad V_2\coloneqq\pi(U_2).\]
+	{The main claim is that $\pi^{-1}(V_1)=U_1$.} We have two inclusions.
+	\begin{itemize}
+		\item Certainly any $x\in U_1$ has $\pi(x)\in V_1$, so $x\in\pi^{-1}(V_1)$, so $U_1\subseteq\pi^{-1}(V_1)$.
+		\item Conversely, suppose that $x\in\pi^{-1}(V_1)$ so that $y\coloneqq\pi(x)$ lives in $V_1$. Now, $\pi^{-1}(\{y\})$ is connected. Thus, {because $\pi^{-1}(\{y\})\subseteq X=U_1\cup U_2$ and $\pi^{-1}(\{y\})\cap U_1\cap U_2\subseteq U_1\cap U_2=\emp$, we conclude by \Cref{lem:betterconnected} that $\pi^{-1}(\{y\})\cap U_1=\emp$ or $\pi^{-1}(\{y\})\cap U_2=\emp$.}
+
+		However, $\pi(x)=y$, so $x\in\pi^{-1}(\{y\})$ while $x\in U_1$, so $\pi^{-1}(\{y\})\cap U_1\ne\emp$, so instead we have $\pi^{-1}(\{y\})\cap U_2=\emp$. Thus, each $x'\in\pi^{-1}(\{y\})\subseteq U_1\cap U_2=X$ must have $x'\notin U_2$, so $x'\in U_1$ instead. It follows $\pi^{-1}(\{y\})\subseteq U_1$.
+	\end{itemize}
+	Because $\pi^{-1}(V_1)=U_1$, we see that $V_1\subseteq Y$ is open by definition of the quotient topology. By symmetry, we can replace all $1$s with $2$s and vice versa in the above argument to show that $\pi^{-1}(V_2)=U_2$, thus making $V_2\subseteq Y$ also open.
+
+	We now run our checks on $V_1$ and $V_2$.
+	\begin{itemize}
+		\item Because $U_1$ is nonempty, we can find some $x\in U_1$, so $\pi(x)\in V_1$, so $V_1$ is nonempty. Symmetrically, $V_2$ is nonempty.
+		\item Because $\pi$ is surjective, every $y\in Y$ has some $x\in X$ with $\pi(x)=y$. However, $X=U_1\cup U_2$ now forces $x\in U_1$ or $x\in U_2$, so $y=\pi(x)\in V_1$ or $y=\pi(x)\in V_2$. Thus, $Y=V_1\cup V_2$.
+		\item We show $V_1$ and $V_2$ are disjoint. Indeed, if we had some $y\in V_1\cap V_2$, then go find some $x\in X$ with $\pi(x)=y$ by the surjectivity of $\pi$. But now $x\in\pi^{-1}(V_1)=U_1$ and $x\in\pi^{-1}(V_2)=U_2$, so $U_1\cap U_2$ is nonempty, which is a contradiction to their construction.
+	\end{itemize}
+	The above checks witness that $Y$ is disconnected.
+\end{proof}
+\begin{proposition}
+	Let $X$ and $Y$ be connected topological spaces. Then $X\times Y$ with the product topology is connected.
+\end{proposition}
+\begin{proof}
+	If $X=\emp$ or $Y=\emp$, then $X\times Y$ is empty, so $X\times Y$ is vacuously connected: $X\times Y$ has no nonempty open subsets, so $X\times Y$ is not the union of two disjoint open subsets.
+	
+	Otherwise, make $X$ and $Y$ both nonempty. {Let $\pi\colon X\times Y\to Y$ be the canonical projection. We use \Cref{lem:quotientscompact}.} For this, we have the following checks.
+	\begin{itemize}
+		\item We check $\pi$ is surjective. Indeed, note that $X$ is nonempty, so find some $x\in X$. Now, for any $y\in Y$, we see $(x,y)\in X\times Y$ has $\pi((x,y))=y$.
+		\item We check that the topology on $Y$ is the quotient topology from $\pi\colon X\times Y\to Y$. Namely, given $V\subseteq Y$, we need to know that $V\subseteq Y$ is open if and only if $\pi^{-1}(V)\subseteq X\times Y$ is open. Before doing any work, we compute
+		\[\pi^{-1}(V)=\{(x,y)\in X\times Y:\pi((x,y))\in V\}=\{(x,y)\in X\times Y:y\in V\}=X\times V.\]
+		As such, if $V=\emp$, then $\pi^{-1}(V)=\emp$, for which there is nothing more to say, so we may assume that $V\ne\emp$. We now show our implications.
+		\begin{itemize}
+			\item Suppose $V\subseteq Y$ is open. Then, by definition of the product topology on $X\times Y$, the open subset $\pi^{-1}(V)=X\times V$ is an open subset (in fact, a sub-basis element) of $X\times Y$. Thus, $\pi^{-1}(V)$ is in fact open.
+			\item Suppose $\pi^{-1}(V)=X\times V$ is open. Recalling that the product topology on $X\times Y$ has basis given by $U_X\times U_Y$ where $U_X\subseteq X$ and $U_Y\subseteq Y$ are both open subsets. Thus, we can find a collection $\{U_{X,\alpha}\times U_{Y,\alpha}\}_{\alpha\in\lambda}$ such that
+			\[X\times V=\bigcup_{\alpha\in\lambda}(U_{X,\alpha}\times U_{Y,\alpha}),\]
+			where the $U_{X,\alpha}\subseteq X$ and $U_{Y,\alpha}\subseteq Y$ are both open; we may assume that $U_{X,\alpha}\ne\emp$ for each $\alpha\in\lambda$, for otherwise we $U_{X,\alpha}\times U_{Y,\alpha}\ne\emp$, and then we could just throw out this term entirely. (Certainly not all the $U_{X,\alpha}$ will be empty because then $X\times V=\emp$, which is false because $X,V\ne\emp$.)
+			
+			Now, we thus claim that
+			\[V=\bigcup_{\alpha\in\lambda}U_{Y,\alpha},\]
+			which will finish because this implies that $V$ is the union of open subsets of $Y$ and therefore open.
+			
+			In one direction, if $y\in V$, fix some $x\in X$ (recall $X\ne\emp$) so that $(x,y)\in X\times V$, so there is some $\alpha\in\lambda$ such that $(x,y)\in(U_{X,\alpha}\times U_{Y,\alpha})$, so $y\in U_{Y,\alpha}$ follows, so $y\in\bigcup_{\beta\in\lambda}U_{Y,\beta}$.
+
+			In the other direction, if $y\in\bigcup_{\beta\in\lambda}U_{Y,\beta}$, then there is some $U_{Y,\alpha}$ containing $y$. Because $U_{X,\alpha}$ is nonempty, find some $x\in U_{X,\alpha}$. Thus, $(x,y)\in U_{X,\alpha}\times U_{Y,\alpha}$, so $(x,y)\in X\times V$, so $y\in V$ follows.
+		\end{itemize}
+		\item For each $y_0\in Y$, we need to show that $\pi^{-1}(\{y_0\})$ is connected when given the subspace topology from $X\times Y$. We proceed in steps.
+		\begin{enumerate}
+			\item Note $\pi^{-1}(\{y_0\})=\{(x,y)\in X\times Y:\pi((x,y))=y_0\}=\{(x,y)\in X\times Y:y=y_0\}=X\times\{y_0\}$.
+			\item {Define the map $\iota\colon X\to X\times Y$ by $x\mapsto(x,y_0)$.} We check that $\iota$ is continuous. It suffices to run this check on an arbitrary basis set $U_X\times U_Y\subseteq X\times Y$, where $U_X\subseteq X$ and $U_Y\subseteq Y$ are open. There are two cases.
+			\begin{itemize}
+				\item If $y_0\notin U_Y$, then we note that all $x\in X$ give $\iota(x)=(x,y_0)\notin U_X\times U_Y$ because $y_0\notin U_Y$. Thus, $\iota^{-1}(U_X\times U_Y)=\emp$, which is open.
+				\item If $y_0\in U_Y$, then we note
+				\begin{align*}
+					\iota^{-1}(U_X\times U_Y) &= \{x\in X:\iota(x)\in U_X\times U_Y\} \\
+					&= \{x\in X:(x,y_0)\in U_X\times U_Y\} \\
+					&= \{x\in X:x\in U_X\text{ and }y_0\in U_Y\} \\
+					&\stackrel*= \{x\in X:x\in U_X\} \\
+					&= U_X,
+				\end{align*}
+				which is indeed an open subset of $X$; note we have used the fact that $y_0\in U_Y$ in $\stackrel*=$.
+			\end{itemize}
+			Thus, $\iota^{-1}(U_X\times U_Y)$ is open in all cases, so we conclude that $\iota$ is in fact continuous.
+			\item However, we note that $\im\iota\subseteq\pi^{-1}(\{y_0\})$: indeed, for any $x\in X$, we have $\pi(\iota(x))=\pi((x,y_0))=y_0$. Thus, we may restrict the codomain of $\iota$ to a function $\overline\iota\colon X\to\pi^{-1}(\{x\})$, which is continuous by \Cref{lem:res-im-cont}.
+			\item In fact, we note that $\overline\iota$ is actually surjective: for any $(x,y_0)\in X\times\{y_0\}=\pi^{-1}(\{y_0\})$, we see that $\overline\iota(x)=(x,y_0)$.
+			\item Combining the above facts, we note that we have a continuous surjection $\overline\iota\colon X\to\pi^{-1}(\{y_0\})$, so because $X$ is connected, we conclude that $\pi^{-1}(\{y_0\})$ is connected by \Cref{lem:ivt}.
+		\end{enumerate}
+		So indeed, we have found that all the fibers in $X\times Y$ at a point in $Y$ are connected.
+	\end{itemize}
+	The above checks make \Cref{lem:quotientscompact} kick in, so we conclude that $X\times Y$ is connected.
+\end{proof}
+
+\end{document}
