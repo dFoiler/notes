@@ -1,0 +1,246 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+The first homework has been posted. It is mostly a review of point-set topology things. It is due on the 25th of January.
+\begin{remark}
+	Please read the section on fundamental groups of manifolds on your own. We will not discuss it in class.
+\end{remark}
+To review, our current goal is to define smooth manifolds. Thus far we have defined a topological space and provided enough adjectives to turn it into a topological manifold. To proceed, we need to add smoothness to our structure. We will do this later.
+
+\subsection{Connectivity}
+For now, we will content ourselves with some extra adjectives for our topological manifolds which will later be helpful. Here are two notions of connectivity.
+\begin{definition}[connected]
+	Fix a topological space $X$. Then $X$ is \textit{disconnected} if and only if there exist disjoint nonempty open subsets $U,V\subseteq X$ such that $X=U\sqcup V$. If $X$ is not disconnected, we say that $X$ is connected.
+\end{definition}
+\begin{example}
+	The interval $[0,1]$ is connected. See \cite[Lemma~A.6]{elber-top}.
+\end{example}
+\begin{remark}
+	Equivalently, we can say that $X$ is connected if and only if $X$ and $\emp$ are the only subsets of $X$ which are both open and closed.
+\end{remark}
+\begin{definition}[path-connected]
+	Fix a topological space $X$. Then $X$ is \textit{path-connected} if and only if any two points $p,q\in X$ has some continuous map $\gamma\colon[0,1]\to X$ such that $\gamma(0)=p$ and $\gamma(1)=q$.
+\end{definition}
+\begin{example} \label{ex:ball-is-path-conn}
+	The space $B(0,1)\subseteq\RR^n$ is path-connected. Indeed, we show that the path-connected component of $0$ is all of $B(0,1)$; see \cite[Definition~A.19]{elber-top}. In other words, we must exhibit a path from $0$ to $v$ for any $v\in B(0,1)$. Well, define $\gamma\colon[0,1]\to B(0,1)$ by $\gamma(t)\coloneqq tv$. This is continuous because it is linear, and it has $\gamma(0)=0$ and $\gamma(1)=v$ as desired.
+\end{example}
+In general, these two notions do not coincide.
+\begin{example}
+	Consider the topological space
+	\[X\coloneqq\left\{(x,\sin(1/x)):x\in(0,1)\right\}\cup\{(0,y):y\in\RR\}.\]
+	Then $X$ is connected, but it is not path-connected. See \cite[Exercise~A.20]{elber-top}.
+\end{example}
+But one does in general apply the other.
+% \begin{lemma}
+% 	Fix a connected topological space $X$. If $f\colon X\to Y$ is a continuous map, then $f(X)$ is connected.
+% \end{lemma}
+% \begin{proof}
+% 	We proceed by contraposition. Suppose that $f(X)\subseteq Y$ is disconnected, so we may find disjoint nonempty open subsets $U,V\subseteq Y$ such that $f(X)=(U\cap Y)\sqcup(V\cap Y)$ and $U\cap f(X),V\cap f(X)\ne\emp$.
+% \end{proof}
+\begin{lemma} \label{lem:path-connected-to-connected}
+	Fix a topological space $X$. If $X$ is path-connected, then $X$ is connected.
+\end{lemma}
+\begin{proof}
+	See \cite[Lemma~A.16]{elber-top}, though we will sketch the proof. We proceed by contraposition. Suppose that $X$ is disconnected, so we may write $X=U\sqcup V$ where $U,V\subseteq X$ are disjoint nonempty open subsets. Now choose some $p\in U$ and $q\in V$, and we claim that there is no path $\gamma\colon[0,1]\to X$. Indeed, $\gamma^{-1}(U)$ and $\gamma^{-1}(V)$ would then be nonempty disjoint open subsets of $[0,1]$ covering $[0,1]$, which is a contradiction.
+\end{proof}
+However, for topological manifolds, these notions do coincide.
+\begin{proposition}
+	Fix a topological $n$-manifold $M$. Then $M$ is path-connected if and only if it is connected.
+\end{proposition}
+\begin{proof}
+	The forward direction is by \Cref{lem:path-connected-to-connected}. Thus, we focus on showing the converse. Fix some $p\in M$, and we define the subset
+	\[U_p\coloneqq\{q\in M:\text{there exists a path from }p\text{ to }q\}.\]
+	This is the path-connected component of $p$ in $M$; see \cite[Definition~A.19]{elber-top}. The main claim is that $U_p$ is open.
+	
+	Suppose $q\in M$, and we need to find an open neighborhood $B_q\subseteq M$ of $q$ living inside $U_p$. Noting then that $U_p=\bigcup_{q\in U_p}B_q$ will complete the proof of this claim. Well, $q$ has some open neighborhood $B\subseteq M$ equipped with a homeomorphism $\varphi\colon B\cong B(0,1)$ by \Cref{rem:better-chart}. Then $B(0,1)$ is path-connected by \Cref{ex:ball-is-path-conn}, so $B$ is path-connected by going back through the homeomorphism. Thus, because $U_p$ is an equivalence class, it is also the path-connected equivalence class of $q$, so $U_p$ must contain $B$.
+
+	Now, let $\mathcal U$ denote the collection of path-connected components of $M$. This is a collection of disjoint open subsets covering $M$. Certainly it is nonempty, so select $U\in\mathcal U$. Then we write
+	\[M=U\cup\bigcup_{U'\in\mc U\setminus\{U\}}U'.\]
+	This is a decomposition of $M$ into disjoint open subsets, so because $M$ is connected, one of these must be empty. But $U$ is empty, so instead the union of the $U'$ must be nonempty. However, everything in $\mc U$ is nonempty, so instead we see that $\mc U\setminus\{U\}$ is empty, so $M=U$ is path-connected.
+\end{proof}
+
+\subsection{Local compactness}
+Here is our definition.
+\begin{definition}[local compactness]
+	Fix a topological space $X$. Then $X$ is \textit{locally compact} if and only if any $x\in X$ has some open neighborhood $U\subseteq X$ such that there exists a compact subset $K\subseteq X$ containing $U$.
+\end{definition}
+\begin{remark} \label{rem:get-precompact}
+	If $X$ is Hausdorff, then compact subsets are closed \cite[Corollary~4.13]{elber-top}, and closed subsets of a compact space are still compact \cite[Lemma~4.10]{elber-top}, so we may as well take $K=\ov U$ in the above definition.
+\end{remark}
+The above remark motivates the following definition.
+\begin{definition}[precompact]
+	Fix a topological space $X$. An open subset $U\subseteq X$ is \textit{precompact} if and only if $\ov U$ is compact.
+\end{definition}
+\begin{remark} \label{rem:smaller-precompact}
+	Here is a quick check which will prove to be useful: if $X$ is Hausdorff and $U\subseteq X$ is precompact, and $V\subseteq U$, then $V$ is still precompact. Indeed, $\ov U$ is compact, and $\ov V\subseteq\ov U$ is a closed subset and hence compact \cite[Lemma~4.10]{elber-top}.
+\end{remark}
+\begin{example}
+	The topological space $\RR$ is locally compact; see \cite[Example~4.71]{elber-top}.
+\end{example}
+\begin{nex}
+	Infinite-dimensional normed vector spaces fail to be locally compact. Namely, open balls fail to be precompact, so local compactness fails.
+\end{nex}
+\begin{nex}
+	The space $\QQ$ is not locally compact. Indeed, suppose for the sake of contradiction that we have a precompact nonempty open neighborhood $U\subseteq\QQ$ of $0\in\QQ$. Now, $\QQ$ is Hausdorff (it's a metric space), so we can find some $\varepsilon>0$ such that $(-\varepsilon,\varepsilon)\subseteq U$ while $\varepsilon\notin\QQ$, so \Cref{rem:smaller-precompact} tells us that $(\varepsilon/2,\varepsilon)$ is precompact so that $[\varepsilon/2,\varepsilon]$ is actually compact.
+
+	However, this is false. Let $\{\alpha_i\}_{i\ge1}$ be an increasing sequence of irrationals in $[\varepsilon/2,\varepsilon]$ with $\alpha_i\to\varepsilon$. Explicitly, we can take $\alpha_i\coloneqq\frac i{i+1}\cdot\varepsilon$. Then we define
+	\[U_i\coloneqq[\alpha_i,\alpha_{i+1}]\]
+	for each $i\ge1$. Note $[\alpha_i,\alpha_{i+1}]=(\alpha_i,\alpha_{i+1})$, so the $U_\bullet$s provide a countable sequence of disjoint open subsets covering $[\varepsilon/2,\varepsilon]$. Thus, $[\varepsilon/2,\varepsilon]$ cannot be compact.
+\end{nex}
+One can check that manifolds are locally compact.
+\begin{proposition} \label{prop:man-is-loc-cmpt}
+	Fix a topological $n$-manifold $M$. Then $M$ is locally compact.
+\end{proposition}
+\begin{proof}
+	This follows from being locally Euclidean. Fix $p\in M$, and then we are promised some open subset $U\subseteq M$ and $\widehat U\subseteq\RR^n$ with a homeomorphism $\varphi\colon U\cong\widehat U$. Then there is an open ball $B(\varphi(p),\varepsilon)\subseteq\widehat U$. Then $\overline{B(\varphi(p),\varepsilon/2)}\subseteq\widehat U$ is closed and bounded in $\RR^n$ and hence compact, so $\varphi^{-1}(B(\varphi(p),\varepsilon/2))$ is a subset of the compact subset $\varphi^{-1}(\overline{B(\varphi(p),\varepsilon/2)})$.
+\end{proof}
+Being locally compact approximately speaking allows one to understand a space by building it up from compact ones. Here is one way to do this.
+\begin{definition}[exhaustion]
+	Fix a topological space $X$. Then an \textit{exhaustion} of $X$ is a sequence $\{K_i\}_{i\in\NN}$ of compact subsets of $X$ satisfying the following.
+	\begin{itemize}
+		\item Ascending: $K_0\subseteq K_1\subseteq\cdots$.
+		\item Covers: $X=\bigcup_{i\in\NN}K_i$.
+		\item Not too close: $K_i\subseteq K_{i+1}^\circ$.
+	\end{itemize}
+\end{definition}
+\begin{example}
+	The space $\RR^n$ has an exhaustion by $K_i\coloneqq B(0,i)$.
+\end{example}
+Here is a way to build an exhaustion.
+\begin{proposition} \label{prop:get-exhaustion}
+	Fix a topological space $X$. If $X$ is second-countable, locally compact, and Hausdorff. Then $X$ has an exhaustion. In particular, topological $n$-manifolds have an exhaustion.
+\end{proposition}
+\begin{proof}
+	The second claim follows from the first by \Cref{prop:man-is-loc-cmpt} and the definition of a manifold. So we will focus on showing the first claim.
+
+	Fix a countable base $\mathcal B$ of $X$, and let $\mathcal B'$ be the subcollection of precompact open base elements. Quickly, we note that $\mathcal B'$ is still a base: certainly everything in $\mathcal B'$ is open, and then for any $p\in X$ and open neighborhood $U\subseteq X$, we need some $B'\in\mathcal B'$ such that $B'$ is precompact.
+	
+	Well, because $X$ is locally compact, there is a precompact open neighborhood $U'$ of $p$ by \Cref{rem:get-precompact}. Then $U\cap U$ is an open neighborhood of $p$, so we can find a base element $B\in\mathcal B$ containing $p$ and inside $U'\cap U$. Then $B\subseteq U'$ is precompact by \Cref{rem:smaller-precompact}.
+
+	We now construct our exhaustion. Enumerate $\mc B=\{B_0,B_1,\ldots\}$, and we proceed as follows.
+	\begin{enumerate}
+		\item Set $K_0\coloneqq\ov{B_0}$, which is compact by construction of $B_0$.
+		\item Now suppose we have a compact subset $K_i\subseteq X$, and we construct $K_{i+1}$. Note that $\mc B$ is an open cover of $K_i$, which can be reduced to a finite subcover, so there is some $M_{i+1}$ such that $K_i$ is covered by $\{B_i:i\le M_{i+1}\}$. We may as well suppose that $M_{i+1}\ge i+1$. Then we define
+		\[K_{i+1}\coloneqq\bigcup_{i=1}^M\ov{B_i}.\]
+		Note that the finite union of compact sets remains compact.
+	\end{enumerate}
+	The above construction produces an exhaustion. Here are our checks, which will complete the proof.
+	\begin{itemize}
+		\item Ascending: by construction, we see that
+		\[K_{i+1}^\circ\supseteq\bigcup_{i=1}^MB_i\supseteq K_i.\]
+		\item Covers: any $x\in X$ lives in some $B_i$, and by construction, we have $B_i\subseteq K_i$, so $x\in K_i$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Paracompactness}
+We will want to talk about covers in some more detail.
+\begin{definition}[cover]
+	Fix a topological space $X$. A \textit{cover} is a collection $\mathcal U\subseteq\mathcal P(X)$ such that
+	\[X=\bigcup_{U\in\mathcal U}U.\]
+\end{definition}
+\begin{definition}[locally finite]
+	Fix a topological space $X$. A cover $\mathcal U$ of $X$ is \textit{locally finite} if and only if any $p\in X$ has some open neighborhood $U\subseteq X$ intersecting at most finitely many elements of $\mathcal U$.
+\end{definition}
+\begin{definition}[refinement]
+	Fix a cover $\mathcal U$ of a topological space $X$. Then a \textit{refinement} of $\mathcal U$ is a cover $\mathcal V$ such that any $V\in\mc U$ is contained in some $U\in\mc U$.
+\end{definition}
+And here is our definition.
+\begin{definition}[paracompact]
+	Fix a topological space $X$. Then $X$ is \textit{paracompact} if and only if every open cover has a locally finite open refinement.
+\end{definition}
+Approximately speaking, the point of desiring paracompactness is that it allows ``reducing to Euclidean'' arguments in the future will not have to deal with intersections which are infinitely bad. Anyway, here is our result.
+\begin{proposition}
+	Fix a topological $n$-manifold $M$. Then $M$ is paracompact.
+\end{proposition}
+\begin{proof}
+	In fact, we are only going to use the fact that $M$ has an exhaustion, proven in \Cref{prop:get-exhaustion}.
+
+	Fix an open cover $\mathcal U$, and we want to produce a locally finite open refinement. To set us up, fix an exhaustion $\{K_i\}_{i\in\NN}$, which exists by \Cref{prop:get-exhaustion}, and define the following sets for each $i\in\NN$.
+	\begin{itemize}
+		\item For $i\ge-1$, define $V_i\coloneqq K_{i+1}\setminus K_i^\circ$, which is a closed subset of the compact set $K_{i+1}$ and hence compact \cite[Lemma~4.10]{elber-top}; take $K_{-1}=\emp$ without concern.
+		\item For $i\ge0$, define $W_i\coloneqq K_{i+2}^\circ\setminus K_{i-1}$, which is open; here, take $K_{-1}=\emp$ without concern.
+	\end{itemize}
+	For intuition, we should think about the $W_\bullet$s as being a locally finite cover from which we will build the locally finite cover refinement of $\mathcal U$.
+
+	For the construction, we fix some $j\ge0$ for the time being. For each $x\in V_j$, find some $U_x\in\mc U$ containing $x$. Note that $\{U_x\}_{x\in V_j}$  is an open cover of $V_j$, and because $V_j\subseteq W_j$, in fact $\{U_x\cap W_j\}_{x\in V_j}$ is an open cover. Because $V_j$ is compact, we can thus reduce this open cover to a finite subcover $\mc A_j$.
+
+	Now letting $j$ vary, we define
+	\[\mc V\coloneqq\bigcup_{j\ge0}\mc A_j.\]
+	Here are our checks.
+	\begin{itemize}
+		\item Open cover: each $x\in X$ lives in some $K_{i+1}$ because we have an exhaustion, so lives in some $V_i$, so it lives in some open subset in $\mc A_j$, so it lives in some open subset in $\mc V$.
+		\item Refinement: by construction, each open set in $\mathcal A_j$ is a subset in $\mathcal U$.
+		\item Locally finite: this is essentially by construction. The main point is that any $x\in X$ lives in some $K_i$, so by choosing the least such $K_i$ places $x$ in some $V_i\subseteq W_i$. We now show that only finitely many open subsets in $\mathcal V$ intersect $W_i$. Note $W_i\subseteq K_{i+2}$, so $W_i\cap W_j=\emp$ for $j\ge i+2$. Thus, if $V\cap W_i\ne\emp$, we must have $V\in\mathcal A_j$ for $j<i+2$. But this is only finitely many indices, and each $\mathcal A_j$ is finite, so this is only finitely many candidates.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Products}
+We now discuss an in-depth example.
+\begin{proposition} \label{prop:product-manifold}
+	Fix finitely many topological manifolds $M_1,\ldots,M_k$. Then the product
+	\[M_1\times\cdots\times M_k\]
+	is also a topological manifold of dimension $\dim M_1+\cdots+\dim M_k$.
+\end{proposition}
+We will do this via a sequence of lemmas.
+\begin{lemma} \label{lem:prod-haus}
+	Fix a collection of Hausdorff topological spaces $\{X_\alpha\}_{\alpha\in\Lambda}$. Then the product
+	\[\prod_{\alpha\in\Lambda}X_\alpha\]
+	is also Hausdorff.
+\end{lemma}
+\begin{proof}
+	Fix distinct points $(x_\alpha)_{\alpha\in\Lambda}$ and $(y_\alpha)_{\alpha\in\Lambda}$ in the product. Then there is an index $\beta\in\Lambda$ such that $x_\beta\ne y_\beta$, so because $X_\beta$ is Hausdorff, there are disjoint open neighborhoods $U_\beta,V_\beta\subseteq X_\beta$ of $x_\beta$ and $y_\beta$, respectively. Then we define $U_\alpha=V_\alpha\coloneqq X_\alpha$ for $\alpha\ne\beta$, and we note that the open subsets
+	\[\prod_{\alpha\in\Lambda}U_\alpha\qquad\text{and}\qquad\prod_{\alpha\in\Lambda}V_\alpha\]
+	are disjoint open neighborhoods of $(x_\alpha)_{\alpha\in\Lambda}$ and $(y_\alpha)_{\alpha\in\Lambda}$, respectively, so we are done. (These are disjoint because any point in the intersection will have the $\beta$ coordinate in $U_\beta\cap V_\beta=\emp$.)
+\end{proof}
+\begin{lemma} \label{lem:prod-sec-cont}
+	Fix finitely many second countable topological spaces $\{X_i\}_{i=1}^n$. Then the product
+	\[\prod_{i=1}^nX_i\]
+	is also second countable.
+\end{lemma}
+\begin{proof}
+	Let the product be $X$. For each $i$, let $\mathcal B_i$ be a countable base for $X_i$. Then define
+	\[\mathcal B\coloneqq\Bigg\{\prod_{i=1}^nB_i:B_i\in\mc B_i\text{ for each }i\Bigg\}.\]
+	We claim that $\mc B$ is a base for the topology on the $X$. Indeed, suppose $(x_1,\ldots,x_n)\in X$ lives in some open subset $U\subseteq X$. From the standard base on $X$, we know that there are open subsets $U_i\subseteq X_i$ for each $i$ such that $(x_1,\ldots,x_n)\in U_1\times\cdots\times U_n$. Now, for each $U_i$, we note that $x_i\in U_i$ must have some $B_i\in\mc B_i$ such that $x_i\in B_i$ and $B_i\subseteq U_i$. But then
+	\[(x_1,\ldots,x_n)\in B_1\times\cdots\times B_n\subseteq U,\]
+	so $B_1\times\cdots\times B_n\in\mc B$ is the desired base element.
+\end{proof}
+We now prove \Cref{prop:product-manifold}.
+\begin{proof}[Proof of \Cref{prop:product-manifold}]
+	We get Hausdorff from \Cref{lem:prod-haus} and second countable from \Cref{lem:prod-sec-cont}. So it remains to check that we are locally Euclidean. For brevity, let $M$ be the product, and set $n_i\coloneqq\dim M_i$ for each $i$, and let $n\coloneqq n_1+\cdots+n_k$.
+
+	Now, fix some point $(x_1,\ldots,x_k)\in M$. For each $i$, we get some open neighborhood $U_i\subseteq M_i$ of $x_i$ and some open $\widehat{U}_i\subseteq\RR^{n_i}$ with a homeomorphism $\varphi_i\colon U_i\cong\widehat U_i$. Now, we see that the product map
+	\[(\varphi_1\times\cdots\times\varphi_k)\colon U_1\times\cdots\times U_k\to\widehat U_1\times\cdots\times\widehat U_k\]
+	is still a homeomorphism, and the target is an open subset of
+	\[\RR^{n_1}\times\cdots\times\RR^{n_k}\cong\RR^n,\]
+	where this last homeomorphism is obtained by simply concatenating the coordinates. So we have constructed a composite homeomorphism from an open neighborhood of $(x_1,\ldots,x_k)$ to an open subset of $\RR^n$, as desired.
+\end{proof}
+
+\subsection{Charts}
+The construction of our smooth structure will arise from more carefully understanding how a manifold is locally Euclidean. This arises from charts.
+\begin{definition}[chart]
+	Fix a topological $n$-manifold $M$. Then a \textit{coordinate chart} or just \textit{chart} is a pair $(U,\varphi)$ where $U\subseteq M$ is open and $\varphi\colon U\cong\widehat U$ is a homeomorphism where $\widehat U\subseteq\RR^n$ is open.
+\end{definition}
+Essentially, the content of $M$ being locally Euclidean is that it has an open cover by open subsets belonging to some chart. The reason we call it a chart is that we are (approximately speaking) providing ``local coordinates'' to an open subset of $M$.
+\begin{definition}[coordinate function]
+	Fix a chart $(U,\varphi)$ if a topological $n$-manifold $M$. Then we may write
+	\[\varphi(p)\coloneqq\left(x^1(p),\ldots,x^n(p)\right)\in\RR^n\]
+	for each $p\in M$. We call these functions $x^\bullet\colon U\to\RR$ the \textit{coordinate functions}.
+\end{definition}
+Note that these coordinate functions are continuous because they are simply the continuous function $\varphi$ composed with the projection $\RR^n\to\RR$.
+\begin{example}
+	Fix an open subset $V\subseteq\RR^m$, and let $F\colon V\to\RR^n$ be a continuous function. Then the graph
+	\[\Gamma\coloneqq\{(x,F(x)):x\in V\}\subseteq\RR^m\times\RR^n\]
+	is a topological $n$-manifold. Because we are already a subspace of $\RR^m\times\RR^n\cong\RR^{m+n}$, we see that $\Gamma$ is also Hausdorff and second countable. (Subspaces inherit being Hausdorff directly, and we inherit being second countable by using the intersection of the given countable base.)
+	
+	The main content comes from being locally Euclidean. Namely, there is a projection map $\pi\colon\Gamma\to V$ by $(x,y)\mapsto x$ which in fact is a homeomorphism (it's continuous inverse is $({\id}\times F)\colon x\mapsto(x,F(x))$). So we have the single chart $(V,\pi)$, which establishes being a topological $n$-manifold.
+\end{example}
+\begin{remark}
+	Please read product manifolds and tori.
+\end{remark}
+
+\end{document}
