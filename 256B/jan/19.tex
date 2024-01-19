@@ -1,0 +1,158 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We'll do some homological algebra today.
+
+\subsection{Homological Algebra on Complexes}
+Homological algebra is something that comes out of understanding complexes, which we will now define.
+\begin{definition}[complex]
+	Fix an abelian category $\mc A$. A \textit{complex $(A^\bullet,d^\bullet)$} is a collection $\left\{A^i\right\}_{i\in\ZZ}$ together with some morphisms $d^i\colon A^i\to A^{i+1}$ such that $d^{i+1}\circ d^i=0$. We may abbreviate the differential $d^\bullet$ from the notation.
+\end{definition}
+\begin{remark}
+	The above definition is usually a ``cocomplex.'' We will have no need for the dual notion of a complex in this course.
+\end{remark}
+\begin{remark}
+	By convention, if we state that we have a complex but only define $A^i$ for a subset of $\ZZ$, then the full bona fide complex simply sets the undefined terms to zero.
+\end{remark}
+Now that we have a complex, we should define a morphism.
+\begin{definition}[complex morphism]
+	Fix an abelian category $\mc A$. Given complexes $(A^\bullet,d_A^\bullet)$ and $(B^\bullet,d_B^\bullet)$, a morphism of complexes $\varphi^\bullet\colon A^\bullet\to B^\bullet$ is a collection of morphisms $\varphi^i\colon A^i\to B^i$ making the following diagram commute for each $i$.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBXmkiXSxbMSwwLCJBXntpKzF9Il0sWzAsMSwiQl5pIl0sWzEsMSwiQl57aSsxfSJdLFswLDIsIlxcdmFycGhpXmkiLDJdLFsxLDMsIlxcdmFycGhpXntpKzF9Il0sWzAsMSwiZF5pIl0sWzIsMywiZF57aSsxfSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{A^i} & {A^{i+1}} \\
+		{B^i} & {B^{i+1}}
+		\arrow["{\varphi^i}"', from=1-1, to=2-1]
+		\arrow["{\varphi^{i+1}}", from=1-2, to=2-2]
+		\arrow["{d^i}", from=1-1, to=1-2]
+		\arrow["{d^{i+1}}", from=2-1, to=2-2]
+	\end{tikzcd}\]
+\end{definition}
+Unsurprisingly, our definition of morphism provides us with a category of complexes, and in fact the category of complexes is an abelian category, where the point is that biproducts, kernels, and cokernels can all be computed pointwise at each term of the complex.
+
+We are now ready to define cohomology.
+\begin{definition}[cohomology]
+	Fix a complex $(A^\bullet,d^\bullet)$ valued in an abelian category $\mc A$. Then we define the \textit{$i$th cohomology} as
+	\[h^i(A^\bullet)\coloneqq\frac{\ker d^i}{\im d^{i-1}}.\]
+	Here, $\im d^{i-1}$ has an induced map to $\ker d^i$ because $d^i\circ d^{i-1}=0$.
+\end{definition}
+\begin{remark}
+	Quickly, recall that the image $\im d^{i-1}$ is in fact $\ker(\coker d^{i-1})$.
+\end{remark}
+\begin{remark}
+	In fact, cohomology is functorial: a morphism $f^\bullet\colon(A^\bullet,d_A^\bullet)\to(B^\bullet,d_B^\bullet)$ of complexes induces a morphism $h^i(f^\bullet)\colon h^i(A^\bullet)\to h^i(B^\bullet)$ on the $i$th cohomology, and one can check that this makes $h^i$ into a functor. To be explicit, this morphism is induced by the following morphism of short exact sequences.
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIlxcaW0gZF9BXntpLTF9Il0sWzIsMCwiXFxrZXIgZF9BXmkiXSxbMywwLCJoXmkoQV5cXGJ1bGxldCkiXSxbNCwwLCIwIl0sWzAsMSwiMCJdLFsxLDEsIlxcaW0gZF9CXntpLTF9Il0sWzIsMSwiXFxrZXIgZF5pX0IiXSxbMywxLCJoXmkoQl5cXGJ1bGxldCkiXSxbNCwxLCIwIl0sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzUsNl0sWzYsN10sWzcsOF0sWzgsOV0sWzEsNiwiZl5pIl0sWzIsNywiZl5pIl0sWzMsOCwiZl5pIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {\im d_A^{i-1}} & {\ker d_A^i} & {h^i(A^\bullet)} & 0 \\
+		0 & {\im d_B^{i-1}} & {\ker d^i_B} & {h^i(B^\bullet)} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow["{f^i}", from=1-2, to=2-2]
+		\arrow["{f^i}", from=1-3, to=2-3]
+		\arrow["{f^i}", dashed, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	Namely, the morphisms on the left are well-defined because $f^\bullet$ is in fact a morphism.
+\end{remark}
+The main result on these cohomology groups is the following.
+\begin{proposition}
+	Fix an abelian category $\mc A$. Given a short exact sequence
+	\[0\to A^\bullet\to B^\bullet\to C^\bullet\to0\]
+	of complexes in $\mc A$, there are natural maps $\delta^i\colon h^i(C^\bullet)\to h^{i+1}(A^\bullet)$ producing a long exact sequence as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGNkb3RzIl0sWzEsMCwiaF5pKEFeXFxidWxsZXQpIl0sWzIsMCwiaF5pKEJeXFxidWxsZXQpIl0sWzMsMCwiaF5pKENeXFxidWxsZXQpIl0sWzEsMSwiaF57aSsxfShBXlxcYnVsbGV0KSJdLFsyLDEsImhee2krMX0oQl5cXGJ1bGxldCkiXSxbMywxLCJoXntpKzF9KENeXFxidWxsZXQpIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDQsIlxcZGVsdGFeaSIsMV0sWzQsNV0sWzUsNl0sWzYsN11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		\cdots & {h^i(A^\bullet)} & {h^i(B^\bullet)} & {h^i(C^\bullet)} \\
+		& {h^{i+1}(A^\bullet)} & {h^{i+1}(B^\bullet)} & {h^{i+1}(C^\bullet)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["{\delta^i}"{description}, from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+\end{proposition}
+\begin{proof}
+	To produce the long exact sequence, use the Snake lemma. The proof is somewhat technical, so I will refer directly to \cite[Theorem~4.82]{elber-ca}, though the proof there is for the dual notion of homology instead of cohomology. (Note that we can replace $\mc A$ with $\mc A\opp$ to recover the result.) The naturality of the $\delta^\bullet$ can be checked directly from its construction.
+\end{proof}
+We would like to measure a morphism of complexes based on what it does to cohomology: namely, two morphisms of complexes may induce the same map on cohomology despite being technically distinct. One way this might happen is by being ``chain'' homotopic.
+\begin{definition}[chain homotopy]
+	Fix morphisms $f^\bullet,g^\bullet\colon(A^\bullet,d_A^\bullet)\to(B^\bullet,d_B^\bullet)$ of the chain complexes $(A^\bullet,d_A^\bullet)$ and $(B^\bullet,d_B^\bullet)$ valued in an abelian category $\mc A$. A \textit{chain homotopy} is a sequence of maps $k^i\colon A^i\to B^{i-1}$ such that
+	\[f^i-g^i=k^{i+1}\circ d_A^i+d_B^{i-1}\circ k^i.\]
+	In this case, we say that $f^\bullet$ and $g^\bullet$ are chain homotopic.
+\end{definition}
+\begin{remark}
+	One can check directly that being chain homotopic is an equivalence relation on chain morphisms.
+\end{remark}
+And here is our result.
+\begin{proposition}
+	Fix morphisms $f^\bullet,g^\bullet\colon(A^\bullet,d_A^\bullet)\to(B^\bullet,d_B^\bullet)$ of chain complexes $(A^\bullet,d_A^\bullet)$ and $(B^\bullet,d_B^\bullet)$ valued in an abelian category $\mc A$. If $f^\bullet\sim g^\bullet$, then $h^i(f^\bullet)=h^i(g^\bullet)$ for all $i$.
+\end{proposition}
+\begin{proof}
+	By some embedding theorem, we may as well work in $\mathrm{Mod}(R)$ for some ring $R$. Now, fix some $\alpha\in\ker d_A^i$, and we want to show that
+	\[\left[f^i(\alpha)-g^i(\alpha)\right]=0\]
+	in $h^i(B^\bullet)$. But now let $k^j\colon A^j\to B^{j-1}$ for $j\in\ZZ$ provide our chain homotopy, so we see
+	\[f^i(\alpha)-g^i(\alpha)=k^{i+1}\big(\underbrace{d_A^i(\alpha)}_0\big)+d_B^{i-1}\left(k^i(\alpha)\right)\]
+	vanishes in $h^i(B^\bullet)$, as desired.
+\end{proof}
+
+\subsection{Injective Resolutions}
+We would now like to use our homological algebra to say something concrete about functors, which requires building injective resolutions. Injective resolutions are built out of injectives, so here is that definition.
+\begin{definition}[injective]
+	Fix an object $I$ in an abelian category $\mc A$. Then $I$ is \textit{injective} if and only if the functor $\op{Hom}_\mc A(-,I)$ is right exact.
+\end{definition}
+\begin{remark} \label{rem:better-inj}
+	The functor $\op{Hom}_\mc A(-,I)$ is already left-exact (and contravariant), so it is equivalent to ask for this functor to be fully exact. Unwinding the definition, we may equivalently ask for short exact sequences
+	\[0\to A'\to A\to A''\to0\]
+	to produce short exact sequences
+	\[0\to\op{Hom}_\mc A(A'',I)\to\op{Hom}_\mc A(A,I)\to\op{Hom}_\mc A(A',I)\to0,\]
+	but this is already left-exact, so we are really only concerned about surjectivity on the right. So we may equivalently ask for injections $A'\into A$ to produce surjections $\op{Hom}_\mc A(A',I)\onto\op{Hom}_\mc A(A,I)$; i.e., any map $A'\to I$ can be extended to a full map $A\to I$.
+\end{remark}
+We also have the following dual notion.
+\begin{definition}[projective]
+	Fix an object $P$ in an abelian category $\mc A$. Then $P$ is \textit{injective} if and only if the functor $\op{Hom}_\mc A(P,-)$ is right exact.
+\end{definition}
+\begin{remark}
+	Exactly the dual arguments to \Cref{rem:better-inj} say that being projective is equivalent to $\op{Hom}_\mc A(P,-)$ being fully exact, or equivalently that any map $P\to A''$ can be pulled back to a map $P\to A$ whenever we have a surjection $A\onto A''$.
+\end{remark}
+And we now define our resolutions.
+\begin{definition}[resolution]
+	Fix an object $A$ in an abelian category $\mc A$. A \textit{coresolution} is an exact sequence
+	\[0\to A\stackrel\varepsilon\to E^0\to E^1\to\cdots\]
+	in $\mc A$; we may write this as $0\to A\to E^\bullet$. A \textit{resolution} is an exact sequence
+	\[\cdots\to E_1\to E_0\stackrel\varepsilon\to A\to0\]
+	in $\mc A$; again, we may write this as $E^\bullet\to A\to0$. For any property $\mc P$ of objects in $\mc A$, we say that the resolution is $\mc P$ if and only if the $E$s are all $\mc P$.
+\end{definition}
+Of interest to us right now are injective and projective resolutions, but we will find use for other kinds of resolutions.
+
+We want to be able to build injective resolutions. The following provides the required adjective.
+\begin{definition}[enough injectives]
+	An abelian category $\mc A$ has \textit{enough injective} if and only if any object $A\in\mc A$ has a monomorphism to an injective object.
+\end{definition}
+And here is the relevant result.
+\begin{proposition}
+	Fix an abelian category $\mc A$ with enough injectives. Then every object $A\in\mc A$ has an injective resolution.
+\end{proposition}
+\begin{proof}
+	By induction, it is enough to show that, for any map $f\colon A\to E$, there exists a map $g\colon E\to I$ where $I$ is injective and the sequence $A\to E\to I$ is exact. Indeed, this will be enough because we can start with the sequence $0\to A$, then extend to $0\to A\to E^0$, then extend to $0\to A\to E^0\to E^1$, and so on.
+
+	Now, to show the claim of the previous paragraph, we note that we may find an injective object $I$ and a monomorphism $\ov g\colon\coker f\to I$ because $\mc A$ has enough injectives. Then we note that the composite
+	\[A\to E\to\coker f\into I\]
+	produces the exact sequence $A\to E\to I$, as desired.
+\end{proof}
+A nice property of injective resolutions is that they are, in some sense, functorial in their object.
+\begin{proposition}
+	Fix a morphism $f\colon A\to B$ of objects in $\mc A$. Given injective resolutions $0\to A\to E^\bullet$ and $0\to B\to F^\bullet$, one can find maps $g^i\colon E^i\to F^i$ for each $i$ inducing a chain morphism of the injective resolutions.
+\end{proposition}
+\begin{proof}
+	This is an exercise is induction and using the injective.
+\end{proof}
+
+\end{document}
