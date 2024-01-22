@@ -1,0 +1,102 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Proof of Tonelli's Theorem}
+Last class we reduced the proof of \Cref{thm:tonelli} to having $f=1_E$ for some measurable set $E$ and having $X$ and $Y$ be finite measure spaces. Anyway, we proceed by a sequence of lemmas.
+\begin{lemma}
+	Fix measure spaces $(X,\mc M,\mu)$ and $(Y,\mc N,\nu)$. If $E\in\mc M\otimes\mc N$ and $x\in X$, then the slice
+	\[E_x\coloneqq\{y\in Y:(x,y)\in E\}\]
+	is in $\mc N$.
+\end{lemma}
+\begin{proof}
+	The problem is that we know very little about $\mc M\otimes\mc N$, so we will have to do something indirect. Continue with $x$ fixed, but we let $E$ vary to define
+	\[\mc D_x\coloneqq\{E\subseteq X\times Y:E_x\in\mc N\}.\]
+	Note $\mc D_x$ is a $\sigma$-algebra, as we now check.
+	\begin{itemize}
+		\item Note $\emp\subseteq X\times Y$ has $\emp=\emp_x$ in $\mc N$. So $\emp\in\mc D_x$.
+		\item Complement: if $E\in\mc D_x$, then $((X\times Y)\setminus E)_x=Y\setminus E_x$ as this set contains exactly the $y\in Y$ such that $(x,y)\notin E$. Thus, $((X\times Y)\setminus E)_x\in\mc N$, so $(X\times Y)\setminus E\in\mc N$.
+		\item Countable unions: fix a countable collection $\{E_i\}_{i=1}^\infty\subseteq\mc D_x$. Then
+		\[\left(\bigcup_{i=1}^\infty E_i\right)_x=\bigcup_{i=1}^\infty(E_i)_x\]
+		because some $y$ lives in this set if and only if $(x,y)$ belongs to one of the $E_i$. The right-hand side lives in $\mc N$ by assumption, so we see $\bigcup_{i=1}^\infty E_i\in\mc D_x$.
+	\end{itemize}
+	Furthermore, we note that $\mc D_x$ contains $\mc A(X,Y)$. Indeed, it suffices to check that $\mc D_x$ contains measurable rectangles because $\mc A(X,Y)$ contains disjoint unions of these. Well, for a measurable rectangle $A\times B$, we see
+	\begin{equation}
+		(A\times B)_x=\begin{cases}
+			B & \text{if }x\in A, \\
+			\emp & \text{if }x\notin A,
+		\end{cases} \label{eq:measure-slice-rectangle}
+	\end{equation}
+	always lives in $\mc N$, so $A\times B\in\mc D_x$. In total, it follows that $\mc D_x$ must contain the smallest $\sigma$-algebra containing $\mc A(X,Y)$, so $\mc M\otimes\mc N\subseteq\mc D_x$. This is what we wanted.
+\end{proof}
+\begin{remark}
+	The above proof exemplifies how we will access $\mc M\otimes\mc N$: we will construct some $\sigma$-algebra characterizing the desirable properties, and then we will show that it contains $\mc A(X,Y)$ in order to contain $\mc M\otimes\mc N$.
+\end{remark}
+We now prove (a) and (b) of \Cref{thm:tonelli}.
+\begin{lemma} \label{lem:slicing-is-measurable}
+	Fix measure spaces $(X,\mc M,\mu)$ and $(Y,\mc N,\nu)$, with $Y$ finite. If $E\in\mc M\otimes\mc N$, then the function $f_E\colon x\mapsto\nu(E_x)$ is $\mc M$-measurable.
+\end{lemma}
+\begin{proof}
+	We consider
+	\[\mc D\coloneqq\{E\subseteq X\times Y:f_E\text{ is }\mc M\text{-measurable and }E_x\text{ is always measurable}\}.\]
+	We would like to show that $\mc D$ contains $\mc M\otimes\mc N$. Let's show some properties of $\mc D$. We won't succeed at showing that $\mc D$ is actually a $\sigma$-algebra, but we will get close enough. Of course, $\mc D$ contains $\emp$ because $f_\emp$ is just the zero function. Additionally, taking complements uses finiteness of the measure spaces: if $\nu(Y)<\infty$, we can write
+	\[f_{(X\times Y)\setminus E}(x)=\nu(Y)-\nu(E_x)=\nu(Y)-f_E(x),\]
+	so we are done because the right-hand side is a measurable function in $x$. (Indeed, constant functions and sums of measurable functions are all measurable.)
+	\begin{remark} \label{rem:attempt-measurable-slice-function}
+		There is an issue with taking unions: given $E,F\in\mc D$, we want to look at $f_{E\cup F}$, but there is no obvious way to access this only in terms of $f_E$ and $f_F$ because there may be some intersection.
+	\end{remark}
+	In light of \Cref{rem:attempt-measurable-slice-function}, we need a trick. Do note that we can show that $\mc D$ is closed under disjoint unions because then $f_{E\sqcup F}=f_E+f_F$, so $f_{E\sqcup F}$ being measurable is recovered from summing $f_E$ and $f_F$. Thus, because $\mc D$ contains measurable rectangles (note that the measure of the output of the function \eqref{eq:measure-slice-rectangle} is measurable as it's basically an indicator), so $\mc A(X,Y)\subseteq\mc D$.
+	
+	For our trick, we proceed in steps.
+	\begin{enumerate}
+		\item We begin by showing that $\mc D$ is closed under countable ascending unions: given an ascending sequence of sets $\{E_i\}_{i=1}^\infty\subseteq\mc D$, then we set $E\coloneqq\bigcup_{i=1}^\infty E_i$ and see
+		\[\lim_{n\to\infty}\nu((E_n)_x)=\nu(E_x)\]
+		because $\left(\bigcup_{i=1}^\infty E_i\right)_x=\bigcup_{i=1}^\infty(E_i)_x$ tells us that the $(E_n)_x$ are measurable sets ascending to $E_x$, so we get the above limit via \cite[Proposition~6.36]{elber-top}. Thus, $f_E$ is the pointwise limit of the $f_{E_n}$s, so $f_E$ is $\mc M$-measurable.
+		\item Additionally, $\mc D$ is closed under countable descending intersections: the same argument of the previous point works, exchanging the word ``ascending'' with ``descending,'' exchanging unions with intersections, and exchanging the citation with \cite[Corollary~6.37]{elber-top}. Note that our sets are of finite measure because $Y$ is finite!
+	\end{enumerate}
+	To proceed with the proof, we pick up the following definition.
+	\begin{definition}[monotone class]
+		Fix a set $\Omega$. Then a \textit{monotone class} is a collection $\mc C\subseteq\mc P(\Omega)$ which contains $\emp$ and is closed under countable ascending unions and countable descending intersections.
+	\end{definition}
+	In particular, we have shown that $\mc D$ is a monotone class. We will want the following fact about monotone classes.
+	\begin{lemma} \label{lem:monotone-class-lemma}
+		Fix a set $\Omega$, and let $\mc A$ be an algebra on $\Omega$. Then the smallest monotone class $\mc C$ containing $\mc A$ is a $\sigma$-algebra.
+	\end{lemma}
+	\begin{proof}
+		Note that the notion of a ``smallest monotone class'' makes sense because the intersection of monotone classes is another monotone class, so we can take $\mc C$ to be the intersection of all monotone classes containing $\mc A$. Anyway, here are our checks.
+		\begin{enumerate}
+			\item Fix $\mc D$ to be the collection of subsets of $\Omega$ whose complement is in $\mc C$. We claim that $\mc D$ is a monotone class; this will imply that $\mc D$ contains $\mc C$ (because $\mc D$ of course contains $\mc A$, which is closed under complements), meaning that $\mc C$ is closed under complements. For countable ascending unions of $E_1\subseteq E_2\subseteq\cdots$, we note that the union $E$ has
+			\[\Omega\setminus E=\bigcap_{i=1}^\infty\Omega\setminus E_i,\]
+			which is in $\mc C$, so $E\in\mc D$. Replacing unions with intersections shows that $\mc D$ is closed under 
+			\item If $A\in\mc A$ and $B\in\mc C$, then we claim $A\cup B\in\mc C$. Well, fix $A$, and we set
+			\[\mc D_A\coloneqq\{E\subseteq\Omega:A\cup E\in\mc C\}.\]
+			We claim that $\mc D_A$ is a monotone class, and it contains $\mc A$ (which is closed under unions), so $\mc D_A$ will contain $\mc C$, proving the claim. For ascending unions $E_1\subseteq E_2\subseteq\cdots$, we note
+			\[\left(\bigcup_{i=1}^\infty E_i\right)\cap A=\bigcup_{i=1}^\infty (E_i\cap A),\]
+			so the union is still in $\mc D_A$. Replacing the big $\bigcup$ with a big $\bigcap$ and working with a descending intersection shows that $\mc D_A$ is a monotone class, as needed.
+			\item If $A\in\mc C$ and $B\in\mc C$, then we claim $A\cup B\in\mc C$. Once again, we fix $A$ and set
+			\[\mc D_A\{E\subseteq\Omega:A\cup E\in\mc C\}.\]
+			The previous check tells us that $\mc D_A$ contains $\mc A$. The same proof as the previous check tells us that $\mc D_A$ is a monotone class, so we once again are allowed to conclude that $\mc D_A$ contains $\mc C$, so the claim follows.
+			\item Lastly, we show $\mc C$ is closed under countable unions. Well, given a countable collection $\{E_i\}_{i=1}^\infty\subseteq\mc C$, we set
+			\[F_j\coloneqq\bigcup_{i\le j}E_i,\]
+			which is in $\mc C$ by the previous check. Then the union of the $E_\bullet$s is the union of the $F_\bullet$s, but $\mc C$ is a monotone class, so it contains the union of the $F_\bullet$s (which are ascending), so we are done.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+	Now, we see that \Cref{lem:monotone-class-lemma} finishes the proof: $\mc D$ must contain the smallest monotone class containing $\mc A(X,Y)$, which is a $\sigma$-algebra by \Cref{lem:monotone-class-lemma}, so $\mc D$ contains the smallest $\sigma$-algebra containing $\mc A(X,Y)$, so $\mc D$ contains $\mc M\otimes\mc N$, as needed.
+\end{proof}
+We now complete the proof of \Cref{thm:tonelli}; the following is the statement of (c) for one of the equalities where $f=1_E$.
+\begin{lemma}
+	Fix $\sigma$-finite measure spaces $(X,\mc M,\mu)$ and $(Y,\mc N,\nu)$. Then
+	\[(\mu\times\nu)(E)=\int_X\nu(E_x)\,d\mu(x).\]
+\end{lemma}
+\begin{proof}
+	Proceed as in \Cref{lem:slicing-is-measurable}. Explicitly, set
+	\[\mc D\coloneqq\left\{E\subseteq X\times Y:x\mapsto\nu(E_x)\text{ is measurable and }(\mu\times\nu)(E)=\int_X\nu(E_x)\,d\mu(x)\right\}.\]
+	The construction of the measure $\mu\times\nu$ implies this equality when $E$ is a measurable rectangle or even when $E$ is a disjoint union of measurable rectangles, so $\mc D$ contains $\mc A(X,Y)$. A direct computation shows that $\mc D$ is closed under complements, and the Dominated convergence theorem \cite[Theorem~9.14]{elber-top} shows that $\mc D$ is closed under ascending unions and descending intersections. So $\mc D$ is a monotone class containing the algebra $\mc A(X,Y)$, which implies that $\mc D$ contains the smallest monotone class containing $\mc A(X,Y)$, which is a $\sigma$-algebra, so $\mc D$ contains the smallest $\sigma$-algebra containing $\mc A$, so $\mc D$ contains $\mc M\otimes\mc N$.
+\end{proof}
+
+\end{document}
