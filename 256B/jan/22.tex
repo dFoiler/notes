@@ -1,0 +1,122 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we will derive functors.
+
+\subsection{More on Injective Resolutions}
+A nice property of injective resolutions is that they are, in some sense, functorial in their object.
+\begin{proposition} \label{prop:inj-res-functorial}
+	Fix a morphism $f\colon A\to B$ of objects in $\mc A$. Given injective resolutions $0\to A\to E^\bullet$ and $0\to B\to F^\bullet$, one can find maps $g^i\colon E^i\to F^i$ for each $i$ inducing a chain morphism of the injective resolutions.
+\end{proposition}
+\begin{proof}
+	This is an exercise is induction and using the injective.
+\end{proof}
+In fact, this morphism is unique.
+\begin{proposition} \label{prop:inj-res-functorial-uniq}
+	Fix a morphism $f\colon A\to B$ of objects in $\mc A$, and fix injective resolutions $0\to A\to E^\bullet$ and $0\to B\to F^\bullet$. Then any two morphisms $f^\bullet$ and $g^\bullet$ of the injective resolutions, which agree on $A\to B$, are chain homotopic.
+\end{proposition}
+\begin{proof}
+	Set $h^\bullet\coloneqq f^\bullet-g^\bullet$. Upon subtracting out $g$ suitably, we see that the diagram
+	% https://q.uiver.app/#q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIkEiXSxbMiwwLCJJXjAiXSxbMywwLCJJXjEiXSxbNCwwLCJJXjIiXSxbNSwwLCJcXGNkb3RzIl0sWzAsMSwiMCJdLFsxLDEsIkIiXSxbMiwxLCJKXjAiXSxbMywxLCJKXjEiXSxbNCwxLCJKXjIiXSxbNSwxLCJcXGNkb3RzIl0sWzAsMV0sWzEsMiwiXFxkZWx0YSJdLFs3LDgsIlxcdmFyZXBzaWxvbiJdLFsyLDMsImReMF9BIl0sWzMsNCwiZF4xX0EiXSxbNCw1LCJkXjJfQSJdLFs4LDksImReMF9CIl0sWzksMTAsImReMV9CIl0sWzEwLDExLCJkXjJfQiJdLFs2LDddLFsxLDcsIjAiLDJdLFsyLDgsImheMCIsMl0sWzMsOSwiaF4xIiwyXSxbNCwxMCwiaF4yIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & A & {I^0} & {I^1} & {I^2} & \cdots \\
+		0 & B & {J^0} & {J^1} & {J^2} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow["\delta", from=1-2, to=1-3]
+		\arrow["\varepsilon", from=2-2, to=2-3]
+		\arrow["{d^0_A}", from=1-3, to=1-4]
+		\arrow["{d^1_A}", from=1-4, to=1-5]
+		\arrow["{d^2_A}", from=1-5, to=1-6]
+		\arrow["{d^0_B}", from=2-3, to=2-4]
+		\arrow["{d^1_B}", from=2-4, to=2-5]
+		\arrow["{d^2_B}", from=2-5, to=2-6]
+		\arrow[from=2-1, to=2-2]
+		\arrow["0"', from=1-2, to=2-2]
+		\arrow["{h^0}"', from=1-3, to=2-3]
+		\arrow["{h^1}"', from=1-4, to=2-4]
+		\arrow["{h^2}"', from=1-5, to=2-5]
+	\end{tikzcd}\]
+	commutes, and we want to show that the morphism $h^\bullet$ of the injective resolutions is chain homotopic to the zero map. 
+	
+	Now, we see $h^0\circ\delta=0$, so we may as well factor $h^0$ through $\coker\delta\subseteq I^{1}$. But $J^0$ is an injective object, so the map $\ov h^0\colon\coker \delta\to J^i$ extends to a map $k^1\colon I^1\to J^0$. For completeness, we also define $k^0\colon I^0\to J^{-1}$ be the zero map. Anyway, we now compute
+	\[d_B^{-1}\circ k^0+k^1\circ d_A^0=h^0\]
+	by construction.
+	
+	Further, we see
+	\[\left(h^1-d_B^0\circ k^1\right)\circ d_A^0=h^1\circ d_A^0-d_B^0\circ h^0=0\]
+	by the commutativity of our diagram. As such, we have a map $\left(h^1-d_B^0\circ k^1\right)\colon\coker d_A^0\to J^1$ which can be extended to a map $k^2\circ I^2\to J^1$ by the injectivity of $J^1$. In particular, we see that $h^1-d_B^0\circ k^1=k^2\circ d_A^1$ by construction. Explicitly, let $\pi^1\colon I^1\to\coker d^0$ and $i^1\colon\coker d^0\to I^2$ be the obvious maps, and we compute
+	\[d_B^0\circ k^1+k^2\circ d^1_A=h^1-\ov h^1\circ\pi^1+k^2\circ d^1=h^1-k^2\circ i^2\circ pi^1+k^2\circ d_A^1=h^1.\]
+	We now iterate the construction of $k^{i+1}$ from $k^i$ provided in this paragraph inductively to complete the proof.
+\end{proof}
+\begin{remark}
+	The proofs of the previous two proposition nowhere require that the resolutions on $A$ be injective. We will have no need to work in this generality though.
+\end{remark}
+
+\subsection{Right-Derived Functors}
+At long last, we can derive functors.
+\begin{definition}[right-derived functor] \label{def:rd-func}
+	Fix a left-exact functor $F\colon\mc A\to\mc B$ of abelian categories. For each $i\in\NN$, we define the \textit{right derived functors}
+	\[R^iF(A,I^\bullet)\coloneqq h^i(FI^\bullet),\]
+	where $0\to A\to I^\bullet$ is an injective resolution of the object $A$. This construction is functorial: given a morphism $\varphi\colon A\to B$ in $\mc A$ equipped with injective resolutions $0\to A\to I^\bullet$ and $0\to B\to J^\bullet$, we define the morphism
+	\[R^iF(\varphi,f^\bullet)\colon h^i(FI^\bullet)\to h^i(FJ^\bullet)\]
+	as $h^i(F(f^\bullet))$ for any extension $f^\bullet\colon I^\bullet\to J^\bullet$ of $\varphi$.
+\end{definition}
+We would like to remove the dependencies on the injective resolutions. This requires a couple checks. To begin, we get rid of the dependency of $R^iF(\varphi)$ on $f^\bullet$.
+\begin{lemma} \label{lem:rd-morphism-uniq}
+	Fix objects $A$ and $B$ in an abelian category $\mc A$, and equip them with injective resolutions $0\to A\to I^\bullet$ and $0\to B\to J^\bullet$. For any two morphisms $f^\bullet,g^\bullet\colon I^\bullet\to J^\bullet$ extending a given morphism $\varphi\colon A\to B$, we have
+	\[R^iF(\varphi,f^\bullet)=R^iF(\varphi,g^\bullet).\]
+\end{lemma}
+\begin{proof}
+	We know that $f^\bullet$ and $g^\bullet$ are chain homotopic by \Cref{prop:inj-res-functorial-uniq}. This chain homotopy is preserved by an additive functor, so $Ff^\bullet$ and $Fg^\bullet$ are still chain homotopic, so \Cref{prop:chain-homotopy-on-cohom} implies the conclusion upon taking cohomology.
+\end{proof}
+\begin{notation}
+	Fix everything as in \Cref{def:rd-func}. We will write $R^iF(\varphi)$ for $R^iF(\varphi,f^\bullet)$ because it is independent of the choice of $f^\bullet$ by \Cref{lem:rd-morphism-uniq} (and an $f^\bullet$ always exists by \Cref{prop:inj-res-functorial}). For now, $R^iF(\varphi)$ still should depend on the choice of injective resolutions, but we will suppress it from the notation anyway.
+\end{notation}
+\begin{remark} \label{rem:rd-almost-well-def}
+	Perhaps we should check functoriality of our construction.
+	\begin{itemize}
+		\item For an object $A$ equipped with an injective resolution $0\to A\to I^\bullet$, we can extend $\id_A\colon A\to A$ by $\id_{I^\bullet}\colon I^\bullet\to I^\bullet$. Passing through $F$ and taking cohomology reveals $R^iF({\id_A})=\id_{R^iF(A,I^\bullet)}$.
+		\item Fix morphisms $\varphi\colon A\to B$ and $\psi\colon B\to C$ extending to maps of injective resolutions $f^\bullet\colon I^\bullet\to J^\bullet$ and $g^\bullet\colon J^\bullet\to K^\bullet$, respectively. Then one want to extend $(\psi\circ\varphi)\colon A\to C$ to a morphism $I^\bullet\to K^\bullet$ is via $g^\bullet\circ f^\bullet$, and doing so establishes that
+		% https://q.uiver.app/#q=WzAsMyxbMCwwLCJSXmlGKEEsSV5cXGJ1bGxldCkiXSxbMSwwLCJSXmlGKEIsSl5cXGJ1bGxldCkiXSxbMSwxLCJSXmkoQyxLXlxcYnVsbGV0KSJdLFswLDEsIlJeaUYoXFx2YXJwaGkpIl0sWzEsMiwiUl5pRihcXHBzaSkiXSxbMCwyLCJSXmlGKFxccHNpXFxjaXJjXFx2YXJwaGkpIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{R^iF(A,I^\bullet)} & {R^iF(B,J^\bullet)} \\
+			& {R^i(C,K^\bullet)}
+			\arrow["{R^iF(\varphi)}", from=1-1, to=1-2]
+			\arrow["{R^iF(\psi)}", from=1-2, to=2-2]
+			\arrow["{R^iF(\psi\circ\varphi)}"', from=1-1, to=2-2]
+		\end{tikzcd}\]
+		commutes, from which we can read off functoriality.
+	\end{itemize}
+\end{remark}
+\begin{remark}
+	We can purchase that $R^iF$ does not depend on the choice of injective resolution from \Cref{rem:rd-almost-well-def}: running the functoriality check on $0\to A\to I^\bullet$ mapping to $0\to A\to J^\bullet$ and then back to $0\to A\to I^\bullet$ reveals that the maps $R^iF(A,I^\bullet)\to R^iF(A,J^\bullet$ and $R^iF(A,J^\bullet)\to R^iF(A,I^\bullet)$ are mutually inverse, so we get the needed isomorphism.
+\end{remark}
+\begin{remark}
+	Note $R^iF$ is additive because all steps in the construction (passing through $F$ and then taking cohomology) are additive.
+\end{remark}
+We can even compute our $0$th right-derived functor without tears.
+\begin{example}
+	Fix an abelian category $\mc A$ with enough injectives. Then $F\simeq R^0F$. Indeed, on objects, fix an injective resolution $0\to A\to I^\bullet$ for a given object $A\in\mc A$, and we see that
+	\[R^0F(A)=h^0(F(I^\bullet))=\ker(FI^0\to FI^1)=FA,\]
+	where the last equality follows from left-exactness of $F$. On morphisms $\varphi\colon A\to B$, we fix injective resolutions $0\to A\to I^\bullet$ and $0\to B\to J^\bullet$, and then we produce a morphism of left exact sequences as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCIwIl0sWzEsMCwiQSJdLFsyLDAsIkleMCJdLFszLDAsIkleMSJdLFswLDEsIjAiXSxbMSwxLCJCIl0sWzIsMSwiSl4wIl0sWzMsMSwiSl4xIl0sWzAsMV0sWzEsMl0sWzIsM10sWzQsNV0sWzUsNl0sWzYsN10sWzEsNSwiXFx2YXJwaGkiXSxbMiw2LCJmXjAiXSxbMyw3LCJmXjEiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & A & {I^0} & {I^1} \\
+		0 & B & {J^0} & {J^1}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow["\varphi", from=1-2, to=2-2]
+		\arrow["{f^0}", from=1-3, to=2-3]
+		\arrow["{f^1}", from=1-4, to=2-4]
+	\end{tikzcd}\]
+	Passing through $F$ retains left exactness (and commutativity), allowing us to conclude $R^0F(\varphi)=F\varphi$.
+\end{example}
+
+\end{document}
