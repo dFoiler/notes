@@ -11,8 +11,46 @@ We begin by picking up a piece of language.
 \begin{definition}[isogenous]
 	Fix abelian $k$-varieties $A$ and $B$. We say that $A$ and $B$ are \textit{isogenous}, written $A\sim B$, if and only if there is an isogeny $A\to B$.
 \end{definition}
+It turns out that having an isogeny is an equivalence relation, so we will not care about the direction of being ``isogenous.'' Here are the checks over $\CC$.
+\begin{lemma} \label{lem:isog-equiv}
+	Fix abelian $k$-varieties $A$ and $B$.
+	\begin{listalph}
+		\item Reflexive: $\id_A\colon A\to A$ is an isogeny.
+		\item Symmetric: if $\varphi\colon A\to B$ is an isogeny, there is a nonzero integer $n$ and another isogeny $\psi\colon B\to A$ such that
+		\[\varphi\circ\psi=[n]_B\qquad\text{and}\qquad\psi\circ\varphi=[n]_A.\]
+		\item Transitive: if $\varphi\colon A\to B$ and $\psi\colon B\to C$ are isogenies, then $(\psi\circ\varphi)\colon A\to C$ is an isogeny. 
+	\end{listalph}
+\end{lemma}
+\begin{proof}[Proof over $\CC$]
+	We dispose of the easier claims first. Note (a) has little content: $\id_A$ is a surjective homomorphism with trivial kernel and hence an isogeny. Similarly, (c) follows because being surjective, being a homomorphism, and having finite kernel are all properties preserved by composition. Perhaps it is notably that finite kernel is preserved by composition, but this is equivalent to all fibers being finite, and the fiber of $(\psi\circ\varphi)$ over some $c\in C$ will simply be the (finite!) union of the fibers of $\varphi$ over points $b\in\psi^{-1}(\{c\})$.
+
+	It remains to show (b), which is perhaps the most interesting. We will show this by working with complex tori and appealing to \Cref{prop:map-of-complex-torus}. Fix isomorphisms of compact complex Lie groups $A\cong V/\Lambda$ and $B\cong V'/\Lambda'$. Then the isogeny $\varphi\colon V/\Lambda\to V'/\Lambda'$ arises from a linear map $\widetilde\varphi\colon V\to V'$ sending $\Lambda\to\Lambda'$. We are thus looking at the following commutative diagram.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJWIl0sWzAsMSwiVi9cXExhbWJkYSJdLFsxLDEsIlYnL1xcTGFtYmRhJyJdLFsxLDAsIlYnIl0sWzAsMywiXFx3aWRldGlsZGVcXHZhcnBoaSJdLFsxLDIsIlxcdmFycGhpIl0sWzAsMSwiXFxwaSIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFszLDIsIlxccGknIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		V & {V'} \\
+		{V/\Lambda} & {V'/\Lambda'}
+		\arrow["\widetilde\varphi", from=1-1, to=1-2]
+		\arrow["\varphi", from=2-1, to=2-2]
+		\arrow["\pi"', two heads, from=1-1, to=2-1]
+		\arrow["{\pi'}", two heads, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	We claim that $\widetilde\varphi$ is an isomorphism of $\CC$-vector spaces.
+	\begin{itemize}
+		\item Injective: because $\ker\widetilde\varphi\subseteq V$ is a $\CC$-subspace, it suffices to show that $\ker\widetilde\varphi$ is discrete. Well, tracking around the diagram, $\ker\widetilde\varphi$ is contained in $\ker(\pi\circ\widetilde\varphi)=\ker(\varphi\circ\pi)$, which is
+		\[\bigcup_{[x]\in\ker\varphi}(x+\Lambda).\]
+		Because $\ker\varphi$ is finite, the above set is discrete in $V$, so we are done.
+		\item Surjective: let $\alpha\in(0,1)$ be transcendental. Fix a $\ZZ$-basis $\lambda_1',\ldots,\lambda_{2n}'$ of $\Lambda'$. Then for any $\lambda_1'',\ldots,\lambda_{2n}''\in\Lambda'$, we see that the set
+		\[\{\alpha\lambda_1'+\lambda_1'',\ldots,\alpha\lambda_{2n}'+\lambda_{2n}''\}\]
+		is still a $\RR$-basis of $V'$: the transition matrix from the basis $\{\lambda_1',\ldots,\lambda_{2n}'\}$ to the above basis is $\alpha I_{2n}$ plus some matrix in $\ZZ^{2n}$, which will surely have nonzero determinant because $\alpha$ is transcendental. Anyway, $\varphi$ hits all $\alpha\lambda_\bullet'$ in its image (modulo $\Lambda'$), so $\widetilde\varphi$ will hit some vector in $\alpha\lambda_i'+\Lambda'$ for each $i$. However, these vectors will form a basis, as needed.
+	\end{itemize}
+	Now, to continue, fix isomorphisms $\alpha\colon\Lambda\cong\ZZ^{2n}$ and $\alpha'\colon\Lambda'\cong\ZZ^{2n}$. Up to these isomorphisms, $\widetilde\varphi\colon\Lambda\to\Lambda'$ (which is an isomorphism upon $-\otimes_\ZZ\RR$) becomes a map $\widetilde\varphi_0'\colon\ZZ^{2n}\to\ZZ^{2n}$ (which is still an isomorphism upon $-\otimes_\ZZ\RR$). In particular, $\det\widetilde\varphi_0'$ is some nonzero integer $n$, and the adjugate matrix $\widetilde\psi_0'\coloneqq\op{adj}\widetilde\varphi_0'$ provides a map such that $\widetilde\psi_0'\circ\widetilde\varphi_0'=\widetilde\varphi_0'\circ\widetilde\psi_0'$ are multiplication by $n$.
+	
+	Passing back through $\alpha$ and $\alpha'$, we have produced some map $\widetilde\psi\colon\Lambda'\to\Lambda$ such that $\widetilde\varphi\circ\widetilde\psi$ and $\widetilde\psi\circ\widetilde\varphi$ are both multiplication by $n$. Tensoring by $\RR$ extends $\widetilde\psi$ to an $\mathbb R$-linear map $V'\to V$ satisfying the same conditions; note that because multiplication by $n$ is an isomorphism of $\CC$-vector spaces, it follows that $\widetilde\psi$ is in fact $\CC$-linear.
+
+	Now, modding out $\Lambda$ and $\Lambda'$, \Cref{prop:map-of-complex-torus} provides us with a map $\psi\colon V'/\Lambda'\to V/\Lambda$ of complex tori such that $\varphi\circ\psi$ and $\psi\circ\varphi$ are both multiplication by $n$. Note $\psi$ is surjective with finite kernel because $\widetilde\psi$ is an isomorphism of vector spaces. (In particular, surjectivity is automatic, and finite kernel follows because the kernel of $\psi$ is contained in the kernel of $\varphi\circ\psi=[n]_B$, which is finite.)
+\end{proof}
 \begin{remark}
-	It turns out that having an isogeny is an equivalence relation (in particular, it is symmetric!), so we will not care about the direction of being ``isogenous.''
+	Being an equivalence relation, and in particular part (b) in \Cref{lem:isog-equiv}, provides more evidence that we should think about isogenies as ``squishy'' isomorphisms. Indeed, up to multiplication by an integer, we are a bona fide isomorphism.
 \end{remark}
 We can decompose abelian varieties based on their isogeny class.
 \begin{theorem}[Poincar\'e reducibility] \label{thm:poincare-red}
@@ -21,41 +59,82 @@ We can decompose abelian varieties based on their isogeny class.
 	is equal to $A$. In other words, the canonical map $B\times_k B'\to A$ given by summing is an isogeny.
 \end{theorem}
 \begin{proof}
-	This is \cite[p.~160]{mumford} or \cite[Theorem~2.12]{milne-cm}. Read the proof for homework, and on the homework, we are asked for an example of $B\subseteq A$ such that $B\cap B'$ is nontrivial for any $B'\subseteq A$ satisfying the conclusion.
+	This is \cite[p.~160]{mumford} or \cite[Theorem~2.12]{milne-cm}. Read the proof for homework, and on the homework, we are asked for an example of $B\subseteq A$ such that $B\cap B'$ is nontrivial for any $B'\subseteq A$ satisfying the conclusion.\todo{}
 \end{proof}
+% I think that an abelian surface with CM by a quartic field cannot be written as the product of two elliptic curves (for End reasons), which might provide the needed example? actually know this thing is just simple ...
 In light of this decomposition, we can take the following definition.
 \begin{definition}[simple]
-	An abelian $k$-variety $A$ is \textit{$k$-simple} if and only if all abelian subvarieties of $A$ are either $\{e\}$ or $A$.
+	An abelian $k$-variety $A$ is \textit{$k$-simple} if and only if all abelian subvarieties of $A$ are either $\{0_A\}$ or $A$.
 \end{definition}
 \begin{remark}
 	It is possible to have an abelian variety be simple over $k$ but not over $\ov k$.
 \end{remark}
-\begin{corollary}
+\begin{corollary} \label{cor:factor-ab-var}
 	Fix an abelian $k$-variety $A$. Then there are simple abelian $k$-varieties $A_1,\ldots,A_n$ such that
 	\[A\sim\prod_{i=1}^nA_i.\]
 \end{corollary}
 \begin{proof}
-	Apply \Cref{thm:poincare-red} inductively. The process ends because we need to have
-	\[\dim A=\sum_{i=1}^n\dim A_i,\]
-	and all dimensions are required to be finite positive integers.
+	Apply \Cref{thm:poincare-red}, inducting on $\dim A$. Being explicit, note $\dim A=0$ implies that $A$ is simple because $A=\{e\}$. For the induction, note that if $A$ is simple, there is nothing to do. Otherwise, there is an abelian subvariety $B\subseteq A$ of dimension strictly between $0$ and $\dim A$. Then \Cref{thm:poincare-red} provides us with $B'\subseteq A$ and an isogeny $B\times_k B'\to A$. Now, being surjective with finite kernel implies that $\dim$ is an isogney invariant, so
+	\[\dim A=\dim(B\times_kB')=\dim B+\dim B',\]
+	so $\dim B,\dim B'<\dim A$. So the induction applies to $B$ and $B'$, and we are done.
 \end{proof}
 For uniqueness of this decomposition, we will want to talk about morphisms between simple abelian varieties. It will be helpful to have some language for this.
 \begin{definition}
 	Fix abelian $k$-varieties $A$ and $B$. Then $\op{Hom}_k(A,B)$ is the abelian group of homomorphisms $A\to B$, and $\op{Hom}_k^0(A,B)\coloneqq\op{Hom}_k(A,B)\otimes_\ZZ\QQ$. Similarly, we define
 	\[\op{End}_k(A)\coloneqq\op{Hom}_k(A,A)\qquad\text{and}\qquad\op{End}^0_k(A)\coloneqq\op{Hom}_k^0(A,A).\]
 \end{definition}
-\begin{remark}
-	One can show that $\op{Hom}^0_k(A,B)$ and $\op{End}^0_k(A)$ only depend on the isogeny class of $A$ and $B$.
-\end{remark}
+One can show that $\op{Hom}^0_k(A,B)$ and $\op{End}^0_k(A)$ only depend on the isogeny class of $A$ and $B$. In fact, we will be able to use \Cref{cor:factor-ab-var} to compute it.
 \begin{corollary} \label{cor:end-a}
-	Fix an abelian $k$-variety $A$. Then $\op{End}^0_k(A)$ is a division $\QQ$-algebra.
+	Fix a simple abelian $k$-variety $A$. Then $\op{End}^0_k(A)$ is a division $\QQ$-algebra.
 \end{corollary}
 \begin{proof}
-	The main point is the existence of inverses. Fix a nonzero endomorphism $\varphi\colon A\to A$. Then $\varphi\ne0$ means that $\im\varphi$ is nontrivial abelian subvariety of $A$, so $\im\varphi=A$. Similarly, the connected component of $\ker\varphi$ is an abelian variety, but it cannot be all of $A$, so it must be $\{e\}$. So $\varphi$ has finite kernel, killed by say $[n]$, allowing us to build an ``inverse'' endomorphism.
+	Fix a nonzero element in $\op{End}^0_k(A)$, and we will try to find an inverse for it. Because we only did a tensor product with $\QQ$, we can create a common denominator to be able to write a generic element as $\frac1d\varphi$ for some positive integer $d$ and nonzero $k$-endomorphism $\varphi\colon A\to A$. The inverse of $\frac1d$ is $d$, so it suffices to find an inverse to $\varphi\colon A\to A$.
+
+	The main point is the existence of ``inverses'' provided in \Cref{lem:isog-equiv}. Namely, we are promised some $\psi\colon A\to A$ and a nonzero integer $n$ such that $\varphi\circ\psi=\psi\circ\varphi=[n]_A$. Thus,
+	\[\varphi\circ\frac1n\psi=\frac1n\psi\circ\varphi=\id_A,\]
+	which is our inverse in $A$.
+\end{proof}
+\begin{corollary} \label{cor:simple-homs}
+	Fix non-isogenous simple abelian $k$-varieties $A$ and $B$. Then the only $k$-homomorphism $\varphi\colon A\to B$ is the zero map.
+\end{corollary}
+\begin{proof}
+	Suppose $A$ and $B$ are simple abelian $k$-varieties, and suppose that we have a nonzero homomorphism $\varphi\colon A\to B$. We then claim that $\varphi$ is actually an isogeny.
+	\begin{itemize}
+		\item Surjective: the image of $\varphi$ (which is closed because $A$ is proper) will be an abelian subvariety of $B$, and it cannot be $\{0_B\}$ because $\varphi$ is nonzero, so $\im\varphi=B$.
+		\item Finite kernel: the connected component of $\ker\varphi\subseteq A$ is an abelian subvariety of $A$, and it cannot be all of $A$ because $\varphi$ is nonzero, so $\ker\varphi=\{0_A\}$. Because $\ker\varphi$ is a group scheme, its connected components all have the same dimension, so $\ker\varphi$ must be zero-dimensional and hence finite.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary} \label{cor:hom-isog-inv}
+	Fix a field $k$ and isogenous abelian $k$-varieties $A\sim A'$ and $B\sim B'$. Then $\op{Hom}_k^0(A,B)\cong\op{Hom}_k^0(A',B')$.
+\end{corollary}
+\begin{proof}
+	We use \Cref{lem:isog-equiv}. Let $\varphi_A\colon A\to A'$ and $\varphi_B\colon B\to B'$ be the promised isogenies, and pick up $\psi_A\colon A'\to A$ and $\psi_B\colon B'\to B$ such that $\varphi_A\circ\psi_A$ and $\psi_A\circ\varphi_A$ is multiplication by $n_A$, and $\varphi_B\circ\psi_B$ and $\psi_B\circ\varphi_B$ is multiplication by $n_B$. Replacing $\psi_A$ with $n_B\psi_A$ and replacing $\psi_B$ with $n_A\psi_B$, we may assume that $n_A=n_B$. Anyway, we now can compute that the maps
+	\[\arraycolsep=1.4pt\begin{array}{rcl}
+		\op{Hom}_k^0(A,B) &\cong& \op{Hom}_k(A',B') \\
+		\alpha &\mapsto& \frac1n\varphi_B\circ\alpha\circ\psi_A \\
+		\frac1n\psi_B\circ\alpha'\circ\varphi_A &\mapsfrom& \alpha'
+	\end{array}\]
+	are inverse homomorphisms, so we are done.
+\end{proof}
+\begin{corollary} \label{cor:general-hom-of-ab-var}
+	Fix sequences of pairwise non-isogenous simple abelian $k$-varieties denoted $\{A_i\}_{i=1}^m$ and $\{B_j\}_{j=1}^n$. Then for positive integers $\{r_i\}_{i=1}^m$ and $\{s_j\}_{j=1}^n$, we have
+	\[\op{Hom}_k\Bigg(\prod_{i=1}^mA_i^{r_i},\prod_{j=1}^nB_j^{s_j}\Bigg)\cong\prod_{\substack{i,j\\A_i\sim B_j}}\op{End}^0_k(A_i)^{r_i\times s_j}.\]
+\end{corollary}
+\begin{proof}
+	Moving out the products (which is legal because are living in an abelian category), we are looking at
+	\[\prod_{i,j}\op{Hom}_k(A_i,B_j)^{r_i\times s_j},\]
+	but this term is zero unless $A_i\sim B_j$ by \Cref{cor:simple-homs}. In the event $A_i\sim B_j$, we can replace $B_j$ by $A_i$ by \Cref{cor:hom-isog-inv}.
 \end{proof}
 \begin{remark}
-	Using a decomposition of $A$ into simple abelian varieties, one can add in \Cref{cor:end-a} as an ingredient to show that $\op{End}^0_k(A)$ is a product of matrix algebras of division algebras. In particular, $\op{End}^0_k(A)$ is semisimple.
+	Taking $A_i=B_j$ and $r_i=s_j$ in \Cref{cor:general-hom-of-ab-var} shows that $\op{End}^0_k(A)$ is a product of matrix division $\QQ$-algebras. In particular, $\op{End}^0(A)$ is a semisimple $\QQ$-algebra.
 \end{remark}
+\begin{remark}
+	If $\prod_{i=1}^mA_i^{r_i}$ and $\prod_{j=1}^nB_j^{s_j}$ are known to be isogenous already (to, say, an abelian variety $A$), then \Cref{cor:general-hom-of-ab-var} forces $m=n$ and each $i$ has some $j$ such that $A_i\sim B_j$ (and vice versa). Up to permutation, we may as well force $A_i\sim B_i$ for each $i$. Now, having an invertible element in $\op{End}^0_k(A)$ then forces having an invertible element in each $\op{End}^0_k(A_i)$, so the relevant matrix algebra must have $r_i=s_i$ for each $i$. Thus, the decomposition of \Cref{cor:factor-ab-var} is unique up to permutation and isogeny.
+\end{remark}
+% \begin{remark}
+% 	Using a decomposition of $A$ into simple abelian varieties, one can add in \Cref{cor:end-a} as an ingredient to show that $\op{End}^0_k(A)$ is a product of matrix algebras of division algebras. In particular, $\op{End}^0_k(A)$ is semisimple.
+% \end{remark}
 
 \subsection{Complex Multiplication}
 We are now ready to define complex multiplication for abelian varieties.
@@ -69,7 +148,7 @@ Namely, $A$ has ``multiplication'' by some CM fields.
 \begin{remark}
 	Suppose $A$ is a simple abelian $k$-variety. Then $A$ being CM is equivalent to $\op{End}^0_k(A)$ being isomorphic to a CM field of degree $2\dim A$. Certainly this condition is implied by being CM. In the other direction, over $\CC$, one sees that $\op{End}^0(A)$ acts faithfully on $H_1(A(\CC),\QQ)$ by \Cref{prop:map-of-complex-torus}. Thus, $\op{End}^0_k(A)$ is a division algebra of degree dividing $2\dim A$.
 	
-	Now, letting the center of $D\coloneqq\op{End}^0_k(A)$ by $F$, it turns out that the largest field contained in $D$ has degree (over $\QQ$) is $[D:F]^{1/2}[F:\QQ]$. To get this to be at most $2\dim A$, we must have $F=D$ by a degree argument. (See \cite[Section~I.1]{milne-cm} for the required facts on semisimple algebras.)
+	Now, denoting the center of $D\coloneqq\op{End}^0_k(A)$ by $F$, it turns out that the largest field contained in $D$ has degree (over $\QQ$) is $[D:F]^{1/2}[F:\QQ]$. To get this to be at most $2\dim A$, we must have $F=D$ by a degree argument. (See \cite[Section~I.1]{milne-cm} for the required facts on semisimple algebras.)
 \end{remark}
 \begin{remark}
 	One can remove the requirement of being over $\CC$ in the above argument by working with the ``Tate module'' $H^1_{\text{\'et}}(A,\QQ_\ell)$ for $\ell\ne\op{char}k$ instead of $H^1(A(\CC),\QQ)$. Concretely, the Tate module is
@@ -97,7 +176,7 @@ Let's now specialize more directly to $\CC$. We pick up the following definition
 \begin{definition}[CM type]
 	Fix a CM field $E$, and let $(A,i)$ be an abelian variety with complex multiplication by $E$. Then $E$ acts faithfully on $H_1(A(\CC),\QQ)$. Hodge theory tells us that we can decompose
 	\[H^1(A(\CC),\CC)=H^{01}\oplus H^{10},\]
-	where $H^{10}=\ov{H^{01}}$; here $H^{01}=H^0(A(\CC),\Omega^1)$ is the space of global sections $1$-forms on $A(\CC)$. Dualizing, Poincar\'e duality tells us
+	where $H^{10}=\ov{H^{01}}$; here $H^{01}=H^0(A(\CC),\Omega^1)$ is the space of global sections $1$-forms on $A(\CC)$. Dualizing, we see
 	\[H_1(A(\CC),\CC)=\op{Lie}A(\CC)\oplus\ov{\op{Lie}A(\CC)},\]
 	and in fact $E$ acts on $\op{Lie}A(\CC)$. Decomposing $\op{Lie}A(\CC)$ as an $E$-representation as $\bigoplus_{\varphi\in\Phi}\CC_\varphi$ where $\Phi\subseteq\op{Hom}(E,\CC)$. Then $\Phi$ is the CM type.
 \end{definition}
