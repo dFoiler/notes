@@ -52,6 +52,9 @@ It turns out that having an isogeny is an equivalence relation, so we will not c
 \begin{remark}
 	Being an equivalence relation, and in particular part (b) in \Cref{lem:isog-equiv}, provides more evidence that we should think about isogenies as ``squishy'' isomorphisms. Indeed, up to multiplication by an integer, we are a bona fide isomorphism.
 \end{remark}
+\begin{remark} \label{rem:iso-to-isog}
+	The end of the above proof has shown that an isomorphism of vector spaces $\widetilde\varphi\colon V\to V'$ carrying $\Lambda\to\Lambda'$ will have the needed map $\widetilde\psi\colon V'\to V$ carrying $\Lambda'\to\Lambda$ such that the composites are multiplication by some nonzero integer $n$. In particular, merely being an isomorphism of vector spaces implies that the quotient map $\varphi\colon(V/\Lambda)\to(V'/\Lambda')$ is an isogeny: surjectivity is clear, and finite kernel follows because the composite with the quotient map $\psi\colon(V'/\Lambda')\to(V/\Lambda)$ is multiplication by a nonzero integer, which has finite kernel.
+\end{remark}
 We can decompose abelian varieties based on their isogeny class.
 \begin{theorem}[Poincar\'e reducibility] \label{thm:poincare-red}
 	Fix an abelian $k$-variety $A$, and let $B\subseteq A$ be an abelian subvariety. Then there exists another abelian subvariety $B'\subseteq A$ such that $B\cap B'$ is a finite scheme, and
@@ -59,8 +62,43 @@ We can decompose abelian varieties based on their isogeny class.
 	is equal to $A$. In other words, the canonical map $B\times_k B'\to A$ given by summing is an isogeny.
 \end{theorem}
 \begin{proof}
-	This is \cite[p.~160]{mumford} or \cite[Theorem~2.12]{milne-cm}. Read the proof for homework, and on the homework, we are asked for an example of $B\subseteq A$ such that $B\cap B'$ is nontrivial for any $B'\subseteq A$ satisfying the conclusion.\todo{}
+	This is \cite[p.~160]{mumford} or \cite[Theorem~2.12]{milne-cm}. In the complex analytic situation, the proof idea is not so complicated: the point is to take an ``orthogonal complement'' to $B$.
+
+	Explicitly, set $V\coloneqq\op{Lie}A$ and $W\coloneqq\op{Lie}B$. Functoriality of the tangent space tells us that $W\subseteq V$, and functoriality of the exponential map implies that the diagram
+	% https://q.uiver.app/#q=WzAsMTAsWzIsMCwiViJdLFszLDAsIkEiXSxbMiwxLCJXIl0sWzMsMSwiQiJdLFsxLDAsIlxcTGFtYmRhIl0sWzEsMSwiXFxMYW1iZGFcXGNhcCBXIl0sWzQsMCwiMCJdLFs0LDEsIjAiXSxbMCwwLCIwIl0sWzAsMSwiMCJdLFswLDEsIlxcZXhwIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzIsMCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNSw0LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFsyLDMsIlxcZXhwIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzgsNF0sWzQsMF0sWzEsNl0sWzMsMSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMyw3XSxbOSw1XSxbNSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & \Lambda & V & A & 0 \\
+		0 & {\Lambda\cap W} & W & B & 0
+		\arrow["\exp", two heads, from=1-3, to=1-4]
+		\arrow[hook, from=2-3, to=1-3]
+		\arrow[hook, from=2-2, to=1-2]
+		\arrow["\exp", two heads, from=2-3, to=2-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-4, to=1-5]
+		\arrow[hook, from=2-4, to=1-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+	\end{tikzcd}\]
+	commutes. Here, $\Lambda$ is the kernel of $\exp\colon V\onto A$, so the diagram tells us that $\Lambda\cap W$ must be the kernel of $\exp\colon W\onto B$. (Namely, the kernel of $\exp\colon W\onto A$ is $W$ intersected with the kernel of $V\onto A$.) So $A=V/\Lambda$ and $B=W/(W\cap\Lambda)$.
+
+	Now, let $H$ be the required Hermitian form on $V$, taking integral values on $\Lambda$, and set $\psi_\RR\coloneqq\Re H$ so that $\psi_\RR$ is a positive-definite symmetric form on the underlying $\RR$-vector space of $V$. Quickly, note that $H$ continues to be positive-definite and Hermitian on $W$, so $H$ is also a Hermitian form on $W$ by restriction (and still taking integer values on $\Lambda\cap W$).
+
+	As promised, we now define $W'\coloneqq W^\perp$, where we take the orthogonal complement with respect to $\psi_\RR$. We have the following checks.
+	\begin{itemize}
+		\item Subspace: we claim $W'$ is a $\CC$-subspace of $V$. By construction, it is an $\mathbb R$-subspace. Now, if $w\in W'$, we would like for $iw\in W'$; namely, if $\psi_\RR(w,v)=0$ for all $v\in W$, then we want $\psi_\RR(iw,v)=0$ for all $v\in W$. Well, we compute
+		\[\psi_\RR(iw,v)=\Re H(iw,v)=\Re H(w,-iv)=\psi_\RR(w,-iv),\]
+		and $-iv\in W$ still.
+		\item Lattice: we claim that $W'\cap\Lambda$ is a lattice of $W'$. Certainly we have a $\ZZ$-subgroup, so it remains to compute the rank. We do this by an explicit construction of the basis. Let $\{w_1,\ldots,w_{2\dim W}\}$ be a basis for $W\cap\Lambda$, and extend it by $\{v_1,\ldots,v_{2\dim W'}\}$ to a basis of $\Lambda$. Now, for each $v_i$, we can subtract out something in $W$ in order to land in $W'$; this factor is a rational number because it comes from dividing out by values of $\psi$ on $\Lambda$, so we can then scale this element in order to land in $W'\cap\Lambda$. This process slowly produces a linearly independent subset of $W'\cap\Lambda$ of size $2\dim W'$, which shows that $W'\cap\Lambda$ is a lattice of full rank in $W'$.
+		\item Form: as before, we note that $H$ restricts to a positive-definite Hermitian form on $W'$ taking integral values on $W'\cap\Lambda$.
+	\end{itemize}
+	In total, we are able to conclude that $B'\coloneqq W'/(W'\cap\Lambda)$ is an abelian variety, and it is an abelian subvariety of $A=V/\Lambda$ via the inclusion. It remains to show that the induced map $B\times_\CC B'\to A$ is an isogeny. Well, this map is given by taking the quotient of the isomorphism $W\oplus W'\onto V$ of $\CC$-vector spaces (by $(\Lambda\cap W)\oplus(\Lambda\cap W')$), which is an isogeny by \Cref{rem:iso-to-isog}.
+	%Read the proof for homework, and on the homework, \todo{}
 \end{proof}
+\begin{remark}
+	On the homework, we are asked for an example of $B\subseteq A$ such that $B\cap B'$ is nontrivial for any $B'\subseteq A$ satisfying the conclusion.
+\end{remark}
 % I think that an abelian surface with CM by a quartic field cannot be written as the product of two elliptic curves (for End reasons), which might provide the needed example? actually know this thing is just simple ...
 In light of this decomposition, we can take the following definition.
 \begin{definition}[simple]
