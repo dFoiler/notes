@@ -1,0 +1,112 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we will finish our discussion of right-derived functors.
+
+\subsection{Initial \texorpdfstring{$\delta$}{ Delta}-Functors}
+We will want to make some use of our discussion of $\delta$-functors.
+\begin{definition}[effaceable]
+	Fix an additive functor $F\colon\mc A\to\mc B$ of abelian categories. Then $F$ is \textit{effaceable} if and only if each $A\in\mc A$ has a monomorphism $u\colon A\to M$ such that $Fu=0$.
+\end{definition}
+We have the following result which will help us check that right-derived functors are initial.
+\begin{theorem} \label{thm:eff-to-init}
+	Fix $\delta$-functor $(T^\bullet,\delta^\bullet)\colon\mc A\to\mc B$. If $T^\bullet$ is \textit{effaceable} for all $i>0$, then $(T^\bullet,\delta^\bullet)$ is initial.
+\end{theorem}
+\begin{proof}
+	Omitted. The proof is somewhat long and technical. We refer to \cite[Theorem~2.4.7]{weibel} for most of the needed details.
+\end{proof}
+\begin{corollary} \label{cor:right-derived-is-initial}
+	Fix abelian categories $\mc A$ and $\mc B$ such that $\mc A$ has enough injectives. If $F\colon\mc A\to\mc B$ is left exact, the right-derived functors $(R^\bullet F,\delta^\bullet)$ is effaceable and thus initial.
+\end{corollary}
+\begin{proof}
+	By \Cref{thm:eff-to-init}, it remains to show being effaceable. Well, for any object $A\in\mc A$, we can find a map $u\colon A\to I$ where $I$ is injective, so the map $R^iu\colon R^iU\to R^iI$ is the zero map for $i>1$ because $R^iI=0$ by \Cref{prop:inj-is-acyclic}.
+\end{proof}
+\begin{corollary}
+	Fix abelian categories $\mc A$ and $\mc B$ such that $\mc A$ has enough injectives. If $(T^\bullet,\delta^\bullet)$ is an initial $\delta$-functor, then $T^0$ is left exact, and $T^\bullet\simeq R^iT^0$ for all $i\ge0$.
+\end{corollary}
+\begin{proof}
+	For any short exact sequence
+	\[0\to A'\to A\to A''\to0,\]
+	being a $\delta$-fucntor implies the left exact sequence
+	\[0\to T^0A'\to T^0A\to T^0A''.\]
+	Thus, $T^0$ is left exact. Now, the usual category theory arguments show that initial $\delta$-functors (when they exist) are unique up to unique isomorphism, so \Cref{cor:right-derived-is-initial} completes the proof.
+\end{proof}
+
+\subsection{Having Enough Injectives}
+Let's show that some abelian categories have enough injectives. We begin with $\mathrm{Ab}$.
+\begin{definition}[divisible]
+	An abelian group $A$ is \textit{divisible} if and only if the multiplication-by-$n$ map $n\colon A\to A$ is surjective for all nonzero integers $n$.
+\end{definition}
+\begin{example}
+	The groups $\QQ$, $\QQ/\ZZ$, $\RR$, and $0$ are divisible.
+\end{example}
+Here is the point of this definition.
+\begin{proposition} \label{prop:div-to-inj}
+	An abelian group $A$ is injective in $\mathrm{Ab}$ if and only if $A$ is divisible.
+\end{proposition}
+\begin{proof}
+	We show our implications separately.
+	\begin{itemize}
+		\item Suppose $A$ is injective, and fix some $a\in A$ and nonzero integer $n\in\ZZ$ so that we want to find $a'\in A$ with $a=na'$. Well, we have the morphism $n\ZZ\to A$ given by $n\mapsto a$, but $n\ZZ\subseteq\ZZ$ means that the injectivity of $A$ forces $n\ZZ\to A$ to extend to $\ZZ\to A$, as follows.
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCIwIl0sWzEsMCwiblxcWloiXSxbMiwwLCJcXFpaIl0sWzIsMSwiQSJdLFsxLDMsIm5cXG1hcHN0byBhIiwyXSxbMCwxXSxbMSwyXSxbMiwzLCIiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			0 & n\ZZ & \ZZ \\
+			&& A
+			\arrow["{n\mapsto a}"', from=1-2, to=2-3]
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[dashed, from=1-3, to=2-3]
+		\end{tikzcd}\]
+		Now, the image of $1$ along $\ZZ\to A$ can be called $a'$ and has $na'=a$ by construction.
+
+		\item Suppose $A$ is divisible. We will use Zorn's lemma. Well, for our setup, suppose that we have an inclusion $M'\subseteq M$ and a map $\varphi\colon M'\to A$ which we would like to extend up to $M$.
+		
+		Let $\Phi$ be the collection of extensions of $\varphi\colon M'\to A$ to some subgroup $N\subseteq M$ containing $M'$, and order $\Phi$ by extension: we have $(N_1,\varphi_1)\preceq(N_2,\varphi_2)$ if and only if $N_1\subseteq N_2$ and $\varphi_2|_{N_1}=\varphi_1$. Now, $\Phi$ is nonempty (it has $(M',\varphi)$), and its ascending chains are upper-bounded (the union of an extension of group homomorphisms will continue to be a group homomorphism), so Zorn's lemma provides $\Phi$ with a maximal element $(M'',\varphi'')$.
+
+		We claim that $M''=M$, which will complete the proof. Well, we will show a contrapositive: suppose $(N,\psi)\in\Phi$ has $N\ne M$; then we claim that $(N,\psi)$ is not maximal. Well, given any $x\in M\setminus N$, we will extend $\psi$ to $N+\ZZ x$. Set $H\coloneqq\{n\in\ZZ:nx\in N\}$. We have two cases.
+		\begin{itemize}
+			\item Suppose $H=0$. Then $N+\ZZ x=N\oplus\ZZ x$, so we can extend $\psi$ by just setting $\psi(x)\coloneqq0$.
+			\item Suppose $H=n\ZZ$ for some positive integer $n>0$. Divisibility promises us some $a\in A$ such that $\psi(nx)=na$, so we would like to extend $\psi$ by $\psi(x)=a$. Namely, we would like to define $\widetilde\psi\colon(N+\ZZ x)\to A$ by
+			\[\widetilde\psi(m+kx)\coloneqq\psi(m)+ka.\]
+			Of course, this will be a group homomorphism extending $\widetilde\psi$ provided that it is well-defined. Well, suppose $m+kx=m'+k'x$, and we want to show that $\psi(m)+ka=\psi(m')+k'a$, or equivalently, $\psi(m-m')=(k'-k)a$. We now note that $(k'-k)x=m-m'\in N$, so $k'-k=n\ell$ for some integer $\ell$ by construction of $n$, so we computed
+			\[(k'-k)a=n\ell a=\psi(n\ell x)=\psi((k'-k)x)=\psi(m-m'),\]
+			as needed.
+			\qedhere
+		\end{itemize}
+	\end{itemize}
+\end{proof}
+\begin{theorem}
+	Fix a ring $R$. The category $\mathrm{Mod}(R)$ has functorial injectives.
+\end{theorem}
+\begin{proof}
+	We proceed in steps. Given an $R$-module $A$, define $A^\lor\coloneqq\op{Hom}_\ZZ(A,\QQ/\ZZ)$ to be the dual, which we note is another $R$-module.
+	\begin{enumerate}
+		\item So we will want to show that the map
+		\[\op{ev}_\bullet\colon A\to A^{\lor\lor}\]
+		given by $\op{ev}_a\colon\varphi\mapsto\varphi(a)$ is injective. This will be enough because the above map is functorial in $A$. We now show that this map is injective, so suppose $a\in A$ is nonzero, and we want to show that $a$ is not in the kernel of $\op{ev}_\bullet$. Well, define $\varphi\colon\ZZ a\to\QQ/\ZZ$ by
+		\[\varphi(a)\coloneqq\begin{cases}
+			1/2 & \text{if }a\text{ has infinite order}, \\
+			1/m & \text{if }a\text{ has order }m.
+		\end{cases}\]
+		Note $\varphi$ does define a group homomorphism $\ZZ a\to\QQ/\ZZ$, so the injectivity of $\QQ/\ZZ$ tells us that $\varphi$ extends to a homomorphism $\widetilde\varphi\colon A\to\QQ/\ZZ$, and we see that $\op{ev}_a(\widetilde\varphi)=\varphi(a)\ne0$ by construction.
+
+		\item We actually construct the needed injection. Note we have a surjection
+		\[\bigoplus_{x\in A^\lor}\ZZ\onto A^\lor,\]
+		so we have an injection
+		\[A\into A^{\lor\lor}\into\op{Hom}_\ZZ\Bigg(\bigoplus_{x\in A^\lor}\ZZ,\QQ/\ZZ\Bigg)=\prod_{x\in A^\lor}\QQ/\ZZ.\]
+		The right-hand side is injective, so we are essentially done; notably, our construction is functorial in $A$. Explicitly, given a map $A\to B$, we induce a map $B^\lor\to A^\lor$, and taking fibers of this map induces a map $(\QQ/\ZZ)^{A^\lor}\to(\QQ/\ZZ)^{B^\lor}$. (Any coordinate in $A^\lor$ not in the image of $B^\lor$ can just get sent to $0$.)
+		\qedhere
+	\end{enumerate}
+\end{proof}
+% And we leave with the following theorem.
+% \begin{theorem}
+% 	Fix a ring $A$. Then the category $\mathrm{Mod}(A)$ has functorial injectives.
+% \end{theorem}
+% \begin{proof}
+% 	The proof is similar, so we omit it.
+% \end{proof}
+
+\end{document}
