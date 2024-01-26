@@ -1,0 +1,90 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Complete Measures}
+Recall the following definition.
+\begin{definition}[complete]
+	Fix a measure space $(X,\mc M,\mu)$. Then $\mu$ is \textit{complete} if and only if it has all null sets: if $E\in\mc M$ has $\mu(E)=0$, then any subset $F\subseteq R$ has $F\in\mc M$.
+\end{definition}
+\begin{nex}
+	Let $\mu$ be the Lebesgue measure on the Borel algebra $\mc M$ of $\RR$. Then $\mu$ is not complete: there are subsets of null sets which are not Borel. In fact, there are only $\left|\RR\right|$ many Borel sets by a counting construction, but there are more null sets.
+\end{nex}
+We now recall the following construction.
+\begin{proposition}
+	Fix a measure space $(X,\mc M,\mu)$. Then there is a measure space $(X,\widetilde{\mc M},\widetilde\mu)$ such that $\widetilde{\mc M}\supseteq\mc M$, $\widetilde\mu$ extends $\mu$, and $\widetilde\mu$ is complete.
+\end{proposition}
+\begin{proof}
+	We showed this in Math~202A. To sketch the idea, simply set $\widetilde{\mc M}$ as the union of elements in $\mc M$ with subsets of null sets, and define
+	\[\widetilde\mu(A\cup E)=\mu(A)\]
+	where $A\in\mc M$ and $E$ is a subset of a null set. Checking that this is actually a measure space is annoying and hence omitted; checking that $\widetilde\mu$ is complete simply follows because $\widetilde\mu(A\cup E)=0$ and $F\subseteq A\cup E$ implies that $\mu(A)=0$ actually, so $A\cup E$ is a subset of a null set for $\mu$ still, so $F$ is a subset of a null set for $\mu$, so $F\in\widetilde{\mc M}$.
+\end{proof}
+\begin{remark}
+	One can see that the above constructions the ``minimal'' completion in the sense that any other completion $(X,\widetilde{\mc M}',\widetilde\mu')$ has $\widetilde{\mc M}\subseteq\widetilde{\mc M}'$ and $\widetilde\mu'|_{\widetilde{\mc M}}=\widetilde\mu$.
+\end{remark}
+We would like to examine completeness for our product measures. Sadly, in most cases, having complete metric spaces does not make the product measure complete.
+\begin{example}
+	Let $(\RR,\mc L,\mu)$ be the completion of the Borel Lebesgue measure. Then the product measure $\left(\RR^2,\mc L\otimes\mc L,\mu\times\mu\right)$ fails to be complete. To see this, let $A\subseteq\RR$ be a subset not in $\mc L$, and let $B\in\mc L$ be a nonempty null set. Then $E\coloneqq A\times B$ is the desired set.
+	\begin{itemize}
+		\item Note $E\subseteq\RR\times B$, and $\RR\times B$ is a null set: note $\mu([-r,r]\times B)=2r\mu(B)=0$, so sending $r\to\infty$ shows $\mu(\RR\times B)=0$. Alternatively, we simply recall that it is convention that $\infty\times0=0$ here.
+		\item On the other hand, $E\notin\mc L\otimes\mc L$. Indeed, \Cref{thm:tonelli} would tell us that $E\in\mc L\otimes\mc L$ implies that $A=E_y$ is measurable for all $y\in B$, which is false.
+	\end{itemize}
+\end{example}
+To remedy our situation, we have the following result to recover \Cref{thm:tonelli}.
+\begin{theorem} \label{thm:complete-tonelli}
+	Fix $\sigma$-finite complete measure spaces $(X,\mc M,\mu)$ and $(Y,\mc N,\nu)$, and let $(X\times Y,\mc L,\lambda)$ denote the completion of $(X\times Y,\mc M\otimes\mc N,\mu\times\nu)$. Let $f\colon X\times Y\to[0,\infty]$ be $\mc L$-measurable.
+	\begin{listalph}
+		\item For $\mu$-almost every $x$, the function $y\mapsto f(x,y)$ is $\mc N$-measurable.
+		\item The function $x\mapsto\int_Yf(x,y)\,d\nu(y)$ is defined $\mu$-almost everywhere, and it is $\mc M$-measurable.
+		\item We have
+		\[\int_{X\times Y}f\,d(\mu\times\nu)=\int_X\int_Yf(x,y)\,d\nu(y)\,d\mu(x).\]
+	\end{listalph}
+\end{theorem}
+One can recover \Cref{thm:fubini} in the analogous way.
+
+We will not prove \Cref{thm:complete-tonelli} in detail. The main point is to show the following.
+\begin{lemma}
+	Fix everything as in \Cref{thm:complete-tonelli}. For $E\in\mc L$ with $\lambda(E)=0$, we have $E_x\in\mc N$ for $\mu$-almost every $x\in X$.
+\end{lemma}
+Indeed, as before, we can restrict to the case where $f=1_E$, so this recovers (a), and then the arguments of \Cref{thm:tonelli} port over to prove (b) and (c) cleanly.
+\begin{proof}
+	The main point is that we can find $A\supseteq E$ such that $A\in\mc M\otimes\mc N$. But then \Cref{thm:tonelli} reassures us that
+	\[(\mu\times\nu)(A)=\int_X\nu(A_x)\,d\mu(x)=0,\]
+	so $\nu(A_x)=0$ for $\mu$-almost every $x\in X$.
+\end{proof}
+
+\subsection{Measuring Euclidean Spaces}
+For our discussion, we will want two pieces of notation.
+\begin{notation}
+	Fix a nonnegative integer $d\ge0$.
+	\begin{itemize}
+		\item For a topological space $X$, we define $\op{Borel}(X)$ to be the $\sigma$-algebra of Borel subsets in $X$.
+		\item We define $\mc B^d\coloneqq\op{Borel}(\RR)^d$.
+	\end{itemize}
+\end{notation}
+There is some care one must take in our notation here, but not much care.
+\begin{proposition} \label{prop:check-borel-product}
+	For all nonnegative integers $d\ge0$, we have $\mc B^d=\op{Borel}\left(\RR^d\right)$.
+\end{proposition}
+We will require the following lemma.
+\begin{lemma} \label{lem:divide-open-to-cubes}
+	Fix a positive integer $d\ge1$, and let $U\subseteq\RR^d$ be open. Then $U$ is a disjoint union of countably many half-open cubes. Here, a ``cube'' is a product of intervals of the form
+	\[\prod_{i=1}^d[a_i,b_i).\]
+\end{lemma}
+\begin{proof}
+	For $n\ge0$, let $\mc D_n$ denote the collection of ``dyadic cubes'' of the form
+	\[\prod_{i=1}^d[a_i,b_i)\]
+	where $b_i-a_i=2^{-n}$ and $a_i\in2^{-n}\ZZ$ for each $i$. We now let $\mc C$ denote the collection of cubes in some $\mc D_n$ contained in $U$. Because any point $x\in U$ is contained in some open ball $B(x,r)$ such that $B(x,2r)\subseteq U$, we can find a cube in $\mc D_n$ for $n$ large enough living inside $B(x,2r)$ containing $x$.
+
+	The issue is now to make the cubes $\mc C$ disjoint. Well, define $\mc C'$ to be the subcollection of ``maximal'' cubes in the sense that $\prod_{i=1}^d[a_i,b_i)$ will be in $\mc C'$ if and only if $\prod_{i=1}^d[a_i,b_i+(b_i-a_i))$ is not in $\mc C$. Certainly $\mc C'$ still covers $U$, and its cubes are disjoint: certainly no two cubes in $\mc C'$ contain each other by construction, and dyadic cubes either contain each other or are disjoint.
+\end{proof}
+We are now ready to show \Cref{prop:check-borel-product}.
+\begin{proof}[Proof of \Cref{prop:check-borel-product}]
+	The case of $d=0$ and $d=1$ have no content. Now, in one direction, we see that $\op{Borel}\left(\RR^d\right)\subseteq\mc B^d$: note $\mc B^d$ is a $\sigma$-algebra containing the cubes of the form in \Cref{lem:divide-open-to-cubes}, so it also contains open subsets of $\RR^d$ by \Cref{lem:divide-open-to-cubes}, so we conclude. We will show the reverse inclusion next class.
+\end{proof}
+
+\end{document}
