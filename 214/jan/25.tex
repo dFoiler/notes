@@ -8,7 +8,7 @@ The first homework is due later today.
 
 \subsection{A Couple Lemmas on Atlases}
 Here are some basic properties of smooth manifolds which one can check.
-\begin{lemma}
+\begin{lemma} \label{lem:res-chart}
 	Fix a smooth $n$-manifold $(M,\mc A)$. Given a chart $(U,\varphi)\in\mc A$, then for any open subset $U'\subseteq U$, we have $(U',\varphi|_{U'})\in\mc A$.
 \end{lemma}
 \begin{proof}
@@ -32,7 +32,11 @@ Here are some basic properties of smooth manifolds which one can check.
 	Fix a smooth $n$-manifold $(M,\mc A)$. If $\varphi\colon U\to\RR^n$ is an injective map with $U\subseteq M$ is such that each $p\in U$ has some open neighborhood $U_p\subseteq U$ such that $(U_p,\varphi|_{U_p})\in\mc A$, then actually $(U,\varphi)\in\mc A$.
 \end{lemma}
 \begin{proof}
-	Proceed as above via gluing.
+	By the definition of being a maximal smooth atlas, it suffices to show that $(U,\varphi)$ is smoothly compatible with all charts in $\mc A$. Well, pick up some chart $(V,\psi)$, and we would like to show that the transition map
+	\[\varphi|_{U\cap V}\circ\psi|_{U\cap V}^{-1}\]
+	is a diffeomorphism. Well, we can being a diffeomorphism locally by checking it at all point $\psi(p)\in\psi(U\cap V)$ where $p\in U\cap V$. But for some fixed $p$, we are promised some open subset $U_p\subseteq U$ such that $(U_p,\varphi|_{U_p})\in\mc A$, so the map
+	\[\varphi|_{U_p\cap V}\circ\psi|_{U_p\cap V}^{-1}=\left(\varphi|_{U\cap V}\circ\psi|_{U\cap V}^{-1}\right)|_{\psi(U_p\cap V)}\]
+	is a diffeomorphism. So we produce smoothness at the images of $p$ of the function and its inverse.
 \end{proof}
 
 \subsection{Examples of Smooth Manifolds}
@@ -42,26 +46,53 @@ We go through some examples of smooth manifolds.
 \end{example}
 More generally, we have the following.
 \begin{proposition} \label{prop:open-sm-manifold}
-	Fix a smooth $n$-manifold $(M,\mc A)$. For any open subset $M'\subseteq M$, we have that $M'$ is a topological $n$-manifold, and
+	Fix a smooth $n$-manifold $(M,\mc A)$. For any nonempty open subset $M'\subseteq M$, we have that $M'$ is a topological $n$-manifold, and
 	\[\mc A'\coloneqq\{(U,\varphi)\in\mc A:U\subseteq M'\}\]
 	is a smooth structure on $M$.
 \end{proposition}
 \begin{proof}
-	Omitted.
+	By \Cref{prop:sub-top-man}, we see that $M'$ is a topological $n$-manifold. It remains to show that $\mc A'$ is a smooth structure. Here are our checks.
+	\begin{itemize}
+		\item Chart: for any $x\in M'$, we know $\mc A$ is a chart on $M$, so there is a chart $(U,\varphi)\in\mc A$ with $x\in U$. Now, $U\subseteq M$ is open, so \Cref{lem:res-chart} tells us that $(U\cap M',\varphi|_{U\cap M'})$ is a chart in $\mc A$. But now $U\cap M'\subseteq M'$, so $(U\cap M',\varphi|_{U\cap M'})\in\mc A'$ by construction, so we conclude because $x\in U\cap M'$.
+		\item Smooth: for any two charts $(U,\varphi),(V,\psi)\in\mc A'$, we note that these charts belong to the smooth atlas $\mc A$ already, so they are already smoothly compatible.
+		\item Maximal: by definition of being a maximal smooth atlas, it suffices to show that if $(U,\varphi)$ is a chart of $M'$ smoothly compatible with $\mc A'$, then it must be in $\mc A'$. Well, $U\subseteq M'$ already, so it suffices to show that $(U,\varphi)\in\mc A$. Because $\mc A$ is already a maximal smooth atlas, it suffices to show that $(U,\varphi)$ is compatible with all the charts in $\mc A$. Well, for any chart $(V,\psi)\in\mc A$, we need the composite
+		\[\varphi|_{U\cap V}\circ\psi|_{U\cap V}^{-1}\]
+		to be a diffeomorphism. But we simply note that $(U\cap V,\psi|_{U\cap V})\in\mc A$ by \Cref{lem:res-chart} will live in $\mc A'$, so the above is a diffeomorphism because the hypothesis on $(U,\varphi)$ implies that it would be smoothly compatible with $(U\cap V,\psi|_{U\cap V})\in\mc A'$.
+		\qedhere
+	\end{itemize}
 \end{proof}
 \begin{example}
-	Any open subset of $\RR^n$ is a smooth $n$-manifold by combining \Cref{ex:rn-sm-manifold} and \Cref{prop:open-sm-manifold}.
+	Any nonempty open subset of $\RR^n$ is a smooth $n$-manifold by combining \Cref{ex:rn-sm-manifold} and \Cref{prop:open-sm-manifold}. For example,
+	\[\op{GL}_n(\RR)\coloneqq\left\{M\in\RR^{n\times n}:\det M\ne0\right\}\]
+	is an open subset of $\RR^{n\times n}$, so $\op{GL}_n(\RR)$ is a smooth manifold. (Notably, $\det\colon\RR^{n\times n}\to\RR$ is a polynomial and hence continuous, so the pre-image of $\RR\setminus\{0\}$ is open.)
 \end{example}
 \begin{example}
-	The charts on $S^n$ provided in \Cref{exe:sphere-top-man} provide a smooth atlas on $S^n$ and hence a smooth structure by \Cref{prop:get-max-smooth-atlas}. On the homework, we will see how to use stereographic projection to provide a smooth structure (in fact, the same smooth structure) on $S^n$.
+	From \Cref{ex:graph-top-man}, we know that the graph $\Gamma$ of a smooth function $f\colon V\to\RR^n$, where $V\subseteq\RR^m$ is open, is a topological $n$-manifold, where we have a chart given by the projection $\pi\colon\Gamma\to V$. Using this chart alone produces a smooth atlas and makes $\Gamma$ into a smooth $n$-manifold as well.
 \end{example}
 \begin{example}
-	Fix an $n$-dimensional $\RR$-vector space $V$. Then
+	We claim that the charts on $S^n$ provided in \Cref{exe:sphere-top-man} provide a smooth atlas on $S^n$ and hence a smooth structure by \Cref{prop:get-max-smooth-atlas}. Indeed, we must show that the transition maps
+	\[\varphi_i^\pm|_{U_i^\pm\cap U_j^\pm}\circ\varphi_j^\pm|_{U_i^\pm\cap U_j^\pm}^{-1}(x_1,\ldots,x_n)=\left(x_1,\ldots,\widehat x_j,\ldots,x_{i-1},\pm\sqrt{1-\left(x_1^2+\cdots+x_n^2\right)},x_i,\ldots,x_n\right)\]
+	is a diffeomorphism (for any choice of signs). The above equation shows that our map is smooth for $i>j$, and the computation for $i<j$ simply switches the $i$th and $j$th coordinates. On the homework, we will see how to use stereographic projection to provide a smooth structure (in fact, the same smooth structure) on $S^n$.
+\end{example}
+\begin{example}
+	Fix an $n$-dimensional $\RR$-vector space $V$. Then we claim
 	\[\mc A\coloneqq\left\{(V,\varphi):\varphi\text{ is an isomorphism to }\RR^n\right\}\]
-	is a smooth atlas on $V$ and hence provides a smooth structure. These are smoothly compatible because the transition maps turn into linear isomorphisms $\RR^n\to\RR^n$, which are automatically smooth.
+	is a smooth atlas on $V$ and hence provides a smooth structure. Indeed, certainly this is an atlas: there is some isomorphism $\varphi\colon V\to\RR^n$, and this chart will cover $V$. Further, these are smoothly compatible because the transition map between the two arbitrary charts $(V,\varphi)$ and $(V,\psi)$ is the linear isomorphism $\left(\varphi\circ\psi^{-1}\right)\colon\RR^n\to\RR^n$, which is linear and hence smooth.
 \end{example}
 \begin{example}
 	Fix the topological $1$-manifold $\RR$ of \Cref{lem:rn-manifold}. \Cref{ex:rn-sm-manifold} tells us $\mc A\coloneqq\{(\RR,{\id_\RR})\}$ provides a smooth atlas, and $\mc A'\coloneqq\{(\RR,\varphi)\}$ given by $\varphi\colon x\mapsto x^3$ is also a smooth atlas (again, smoothness is vacuous). However, $\mc A$ and $\mc A'$ provide smooth structures: otherwise, they would be contained in the same maximal smooth atlas, so $(\RR,{\id_\RR})$ and $(\RR,\varphi)$ would be smoothly compatible, but then the composite $\left({\id_\RR}\circ\varphi^{-1}\right)\colon x\mapsto\sqrt[3]x$ is not a smooth function $\RR\to\RR$.
+\end{example}
+\begin{example}
+	Recall that $\RP^n$ is a topological $n$-manifold by \Cref{exe:rpn-top-man}. We claim that the charts $(U_i,\varphi_i)$ actually form a smooth atlas on $\RP^n$, thus making $\RP^n$ into a smooth atlas. We already checked that these charts cover $\RP^n$, and they are smoothly compatible because we can compute the transition between $(U_i,\varphi_i)$ and $(U_j,\varphi_j)$ is
+	\[\varphi_i|_{U_i\cap U_j}\circ\varphi_j|_{U_i\cap U_j}^{-1}(x_0,\ldots,\widehat x_j,\ldots,x_n)=\left(\frac{x_0}{x_i},\ldots,\frac{x_{j-1}}{x_i},\frac1{x_i},\frac{x_{j+1}}{x_i},\ldots,\frac{x_n}{x_i}\right),\]
+	which we can see is a rational and hence smooth function.
+\end{example}
+\begin{example}
+	Fix smooth manifolds $(M_1,\mc A_1),\ldots,(M_k,\mc A_k)$, where $M_i$ is a smooth $n_i$-manifold. The product $M\coloneqq M_1\times\cdots\times M_k$ is a smooth manifold by \Cref{prop:product-manifold}, and the proof implies that
+	\[\mc A\coloneqq\left\{(U_1\times\cdots\times U_k,\varphi_1\times\cdots\times\varphi_k):(U_i,\varphi_i)\in\mc A_i\text{ for each }i\right\}\]
+	is an atlas on $M$. In fact, this is a smooth atlas, thus providing $M$ with a smooth structure by \Cref{prop:get-max-smooth-atlas}. Well, the transition map between the charts $(U,\varphi)\coloneqq(U_1\times\cdots\times U_k,\varphi_1\times\cdots\times\varphi_k)$ and $(V,\psi)\coloneqq(V_1\times\cdots\times V_k,\psi_1\times\cdots\times\psi_k)$ is
+	\[\varphi|_{U\cap V}\circ\psi|_{U\cap V}^{-1}=\left(\varphi_1|_{U_1\cap V_1}\circ\psi_1|_{U_1\cap V_1}^{-1}\right)^{-1}\times\cdots\times\left(\varphi_k|_{U_k\cap V_k}\circ\psi_k|_{U_k\cap V_k}^{-1}\right),\]
+	which we can see is smooth as it is the product of smooth functions.
 \end{example}
 \begin{remark}
 	In fact, if a topological $n$-manifold has some smooth structure, there are uncountably many distinct smooth structures on $M$. On the other hand, for $n$-manifolds of small dimensions (e.g., $n\le3$), it turns out that these are diffeomorphic.
@@ -69,9 +100,9 @@ More generally, we have the following.
 \begin{remark}
 	However, there do exist topological $n$-manifolds with no smooth structure, in dimensions $n\ge4$. Even worse, there are topological $n$-manifolds with distinct smooth structures up to diffeomorphism, again in dimensions $n\ge4$. Even for $S^n$, the story is complicated: there is only one smooth structure for $n\le3$, we don't understand $n=4$, and the story is complicated but somewhat understood for $n\ge5$.
 \end{remark}
-\begin{remark}
-	Please read the examples on $\op{GL}_n(\RR)$, product manifolds, and some others.
-\end{remark}
+% \begin{remark}
+% 	Please read the examples on $\op{GL}_n(\RR)$, product manifolds, and some others.
+% \end{remark}
 
 \subsection{Grassmannians}
 The construction of smooth manifolds is rather long: we build a topological space, define some charts, and then check that the charts are smoothly compatible. Here's a lemma to do all of this at once.
@@ -100,7 +131,7 @@ Let's see an example of this.
 \begin{exe}
 	Fix nonnegative integers $k\le n$. Then let $M\coloneqq\op{Gr}_k\left(\RR^n\right)$ denote the set of $k$-dimensional linear subspaces $V$ of $\RR^n$. We show that $M$ is a smooth $k(n-k)$-manifold.
 \end{exe}
-\begin{proof}
+\begin{proof}[Sketch]
 	We use \Cref{lem:build-manifold-from-set}. For concreteness, let we choose our index set $I$ to consist of pairs $(P,Q)$ of subspaces of $\RR^n$ such that $\RR^n=P\oplus Q$ and $\dim P=k$ and $\dim Q=n-k$. The point is that we are choosing a complement for our $k$-dimensional subspaces in order to help count them. In particular, we may define the subset
 	\[U_\alpha\coloneqq\left\{V\in\op{Gr}_k\left(\RR^n\right):V\cap Q=\{0\}\right\}.\]
 	Notably, for any $V\in U_\alpha$, there is a unique linear map $M_{P,Q,V}\colon P\to Q$ such that
