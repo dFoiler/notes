@@ -1,0 +1,96 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we continue to show that categories have enough injectives.
+
+\subsection{Exactness in Abelian Categories}
+Let's say a few more things about abelian categories.
+\begin{example}
+	Fix an abelian category $\mc A$. Then $\mc A$ has an empty biproduct $0$, which is both initial and final by its definition. We will not bother to write out the identification of biproducts in additive categories.
+\end{example}
+\begin{remark}
+	Fix an abelian category $\mc A$. Any morphism $\varphi\colon A\to B$ can be factored as $\nu\circ\eta$ where $\eta\colon A\to X$ is epic and $\nu\colon X\to B$ is monic. To see that this factorization exists, we can set $\eta=\coker(\ker\varphi)$ and $\nu=\ker(\coker\varphi)$. Additionally, the factorization $\nu\circ\eta$ is unique in the following sense: if $\eta'\colon A\to X'$ and $\nu'\colon X'\to B$ is another such factorization, there is a unique isomorphism $\psi\colon X\to X'$ making the following diagram commute.
+	% https://q.uiver.app/#q=WzAsNCxbMCwxLCJBIl0sWzIsMSwiQiJdLFsxLDAsIlgiXSxbMSwyLCJYJyJdLFswLDMsIlxcZXRhJyIsMl0sWzAsMiwiXFxldGEiXSxbMiwxLCJcXG51Il0sWzMsMSwiXFxudSciLDJdLFsyLDMsIlxcdmFycGhpIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& X \\
+		A && B \\
+		& {X'}
+		\arrow["{\eta'}"', from=2-1, to=3-2]
+		\arrow["\eta", from=2-1, to=1-2]
+		\arrow["\nu", from=1-2, to=2-3]
+		\arrow["{\nu'}"', from=3-2, to=2-3]
+		\arrow["\psi", from=1-2, to=3-2]
+	\end{tikzcd}\]
+\end{remark}
+\begin{remark}
+	The previous remark implies that being an isomorphism is equivalent to being both monic and epic. Namely, one just factors the given morphism $\varphi\colon A\to B$ in the two ways ${\id_B}\circ\varphi=\varphi\circ\id_A$ to conclude that $\varphi$ has an inverse.
+\end{remark}
+The prior two remarks allow us to make sense of exactness in a meaningful way.
+\begin{definition}[exact]
+	Fix morphisms $\varphi\colon A\to B$ and $\psi\colon B\to C$, and factor these as $\varphi=\nu\circ\eta$ and $\psi=\mu\circ\varepsilon$ where $\nu$ and $\mu$ are epic and $\eta$ and $\varepsilon$ are monic. Here is the diagram.
+	% https://q.uiver.app/#q=WzAsNSxbMCwxLCJBIl0sWzIsMSwiQiJdLFs0LDEsIkMiXSxbMSwwLCJYIl0sWzMsMCwiWSJdLFswLDMsIlxcZXRhIl0sWzMsMSwiXFxudSJdLFswLDEsIlxcdmFycGhpIiwyXSxbMSwyLCJcXHBzaSIsMl0sWzEsNCwiXFxtdSJdLFs0LDIsIlxcdmFyZXBzaWxvbiJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& X && Y \\
+		A && B && C
+		\arrow["\eta", from=2-1, to=1-2]
+		\arrow["\nu", from=1-2, to=2-3]
+		\arrow["\varphi"', from=2-1, to=2-3]
+		\arrow["\psi"', from=2-3, to=2-5]
+		\arrow["\mu", from=2-3, to=1-4]
+		\arrow["\varepsilon", from=1-4, to=2-5]
+	\end{tikzcd}\]
+	Then the sequence
+	\[A\to B\to C\]
+	is \textit{exact} if and only if $\nu=\ker\varepsilon$; this is equivalent to asking for $\varepsilon=\coker\nu$.
+\end{definition}
+The equivalence of these two notions follows by the uniqueness of the factorization. Note that this is approximately the correct notion because we really want to say that $\varphi$ surjects onto the kernel of $\psi$. But then we note $\nu$ basically acts as the image of $\varphi$, and $\varepsilon$ basically acts as the kernel of $\psi$.
+
+\subsection{Sheaves Have Enough Injectives}
+We now move up to sheaves.
+\begin{theorem} \label{thm:mod-ox-inj}
+	Fix a ringed space $(X,\OO_X)$. Then the category $\mathrm{Mod}(\OO_X)$ of $\OO_X$-modules has functorial injectives.
+\end{theorem}
+\begin{proof}
+	Fix a sheaf $\mc F\in\mathrm{Mod}(\OO_X)$. For each $x\in X$, recall that $\mathrm{Mod}(\OO_{X,x})$ has functorial injectives by \Cref{thm:mod-r-inj}, so we let $I_x(\mc F_x)$ be an injective module into which $\mc F_x$ injects. Letting $j_x\colon\{x\}\to X$ denote the inclusion map, we then define
+	\[\mc I\coloneqq\prod_{x\in X}(j_x)_*I_x(\mc F_x).\]
+	Note that this is an $\mathcal O_X$-module because it is the product of $\OO_X$-modules. Note that there is a naturally defined map $i\colon\mc F\to(j_x)_*I_x(\mc F_x)$ defined by the composite
+	\[\mc F(U)\to\mc F_x\to I_x(\mc F_x)\]
+	for each $x\in U$ (and we get the zero map for $x\notin U$). This map $i$ is injective on stalks: we can see that $\mc F_x$ will embed into the coordinate $(j_x)_*I_x(\mc F_x)$. Additionally, this construction of $i$ is functorial.
+
+	As such, it just remains to show that $\mc I$ is injective. Suppose that $\mc G\in\mathrm{Mod}(\OO_X)$, and we compute
+	\[\op{Hom}_{\OO_X}(\mc G,\mc I)\simeq\prod_{x\in X}\op{Hom}_{\OO_X}(\mc G,(j_x)_*I_x(\mc F_x))\simeq\prod_{x\in X}\op{Hom}_{\OO_{X,x}}(\mc G_x,I_x(\mc F_x)).\]
+	Now, each $I_x(\mc F_x)$ is an injective object, so the functors $\op{Hom}_{\OO_{X,x}}(-,I_x(\mc F_x))$ is an exact functor for each $x\in X$, so the total functor above is exact, as needed.
+\end{proof}
+\begin{remark}
+	If one tracks through all the constructions, we see that the local rings of the injective sheaf $\mc I\in\mathrm{Mod}(\OO_X)$ are all divisible abelian groups, so $\mc I$ is in fact also an injective sheaf in $\mathrm{Ab}(X)$. Thus, for example, the constructed injective resolutions in $\mathrm{Mod}(\OO_X)$ are also injective resolutions in the larger category $\mathrm{Ab}(X)$.
+\end{remark}
+\begin{corollary} \label{cor:ab-x-enough-inj}
+	Fix a topological space $X$. Then the category $\mathrm{Ab}(X)$ of category of sheaves of abelian groups on $X$ has functorial injectives.
+\end{corollary}
+\begin{proof}
+	Set $\OO_X$ to be the constant sheaf $\underline{\ZZ}$ on $X$. Then $\OO_X$ is a sheaf of rings, and $\OO_X$-modules are exactly sheaves of abelian groups, so the result follows from \Cref{thm:mod-ox-inj}.
+\end{proof}
+
+\subsection{Sheaf Cohomology}
+We can finally define sheaf cohomology.
+\begin{definition}[sheaf cohomology]
+	Fix a topological space $X$. Because $\mathrm{Ab}(X)$ has enough injectives (by \Cref{cor:ab-x-enough-inj}) and $\Gamma(X,-)\colon\mathrm{Ab}(X)\to\mathrm{Ab}$ is left exact, we define the \textit{sheaf cohomology functors} as
+	\[H^\bullet(X,-)\coloneqq R^\bullet\Gamma(X,-).\]
+\end{definition}
+\begin{remark}
+	It is rather hard to compute $H^\bullet(X,-)$ directly from the definition. For example, it will be helpful to build a large class of acyclic objects and then use \Cref{prop:acyclic-res}.
+\end{remark}
+To realize the above remark, we have the following definition.
+\begin{definition}[flasque]
+	Fix a sheaf $\mc F$ on a topological space $X$. Then $\mc F$ is \textit{flasque} if and only if its restriction maps are surjective.
+\end{definition}
+We have ``already'' seen many examples of flasque sheaves, as explained in the following lemma.
+\begin{lemma}
+	Fix a ringed space $(X,\OO_X)$. Then any injective $\OO_X$-module is flasque.
+\end{lemma}
+We will prove this lemma next class.
+
+\end{document}
