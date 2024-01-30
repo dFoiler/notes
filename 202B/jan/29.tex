@@ -1,0 +1,58 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{More on Measuring Euclidean Spaces}
+We now prove the following statement from last class.
+\rdalgebra*
+\begin{proof}
+	The case of $d=0$ and $d=1$ have no content. Now, in one direction, we see that $\op{Borel}\left(\RR^d\right)\subseteq\mc B^d$: note $\mc B^d$ is a $\sigma$-algebra containing the cubes of the form in \Cref{lem:divide-open-to-cubes}, so it also contains open subsets of $\RR^d$ by \Cref{lem:divide-open-to-cubes}, so we conclude.
+
+	We now show that $\mc B^d\subseteq\mathrm{Borel}\left(\RR^d\right)$. By the definition of $\mc B^d$, it is enough to show that $\mathrm{Borel}\left(\RR^d\right)$ contains all measurable rectangles $A_1\times\cdots\times A_d$ where $A_1\in\op{Borel}(\RR)$. We proceed inductively, claiming that if $A_i,A_{i+1},\ldots,A_d$ are all open, then the entire product is Borel. For $i=1$, there is nothing to do. Now, for the induction, suppose we have the claim for $i$, and we want the claim for $i+1$. Well, fix everything except $A_i$, and we define
+	\[\mc D\coloneqq\{B\subseteq\RR:A_1\times\cdots\times A_{i-1}\times B\times A_{i+1}\times\cdots\times A_d\text{ is Borel}\}.\]
+	Certainly if $B$ is open, then $B\in\mc D$ by the induction. Additionally, arbitrary unions and intersections distribute over $\times$, so $\mc D$ is closed arbitrary unions and intersections. Lastly, if $B\in\mc D$, we see that
+	\begin{align*}
+		(A_1\times\cdots\times A_{i-1}\times (\RR\setminus B)\times A_{i+1}\times\cdots\times A_d) &= (A_1\times\cdots\times A_{i-1}\times \RR\times A_{i+1}\times\cdots\times A_d) \\
+		&\qquad\setminus(A_1\times\cdots\times A_{i-1}\times B\times A_{i+1}\times\cdots\times A_d),
+	\end{align*}
+	and the right-hand side is the subtraction of two Borel sets, so $(\RR\setminus B)\in\mc D$. Thus, $\mc D$ is a $\sigma$-algebra containing opens, so $\mc D$ contains $\op{Borel}(\RR)$.
+\end{proof}
+We now move towards some regularity conditions on our measures.
+\begin{definition}[regular]
+	Fix a topological space $X$ and a measure $\mu$ on a $\sigma$-algebra $\mc M$ containing the Borel sets.
+	\begin{itemize}
+		\item $\mu$ is \textit{outer regular} if and only if any $E\in\mc M$ has
+		\[\mu(E)=\inf_{\text{open }U\supseteq E}\mu(U).\]
+		\item $\mu$ is \textit{inner regular} if and only if any $E\in\mc M$ has
+		\[\mu(E)=\sup_{\text{compact }K\subseteq E}\mu(K).\]
+	\end{itemize}
+\end{definition}
+Here is our result.
+\begin{theorem}
+	Fix a nonnegative integer $d\ge0$. Then the measures $\mu$ and $\widetilde\mu$ on $\RR^d$ is outer regular.
+\end{theorem}
+\begin{proof}
+	The statement for $d=0$ has no content. The outer regularity at $d=1$ follows by its construction \cite[Lemma~6.15]{elber-top}; we will prove inner regularity from outer regularity momentarily. We proceed in steps.
+	\begin{enumerate}
+		\item We now show outer regularity for $d\ge2$, using the $d=1$ case. Take $E\in\mc B^d$, permissible by \Cref{prop:check-borel-product}. If $E$ has infinite measure, we can take $\RR^d$ as the needed open set. Otherwise, we take $\varepsilon>0$. By construction of $\mu$, we get $\{A_i^j\}_{1\le i\le d,1\le j\le n}\in\mc B^1$ of positive measure such that
+		\[\sum_{j=1}^n\mu(A_1^j)\cdots\mu(A_d^j)<\mu(E)+\varepsilon.\]
+		We now use outer regularity in dimension $1$. For each $A_i^j$, we get some $U_i^j\supseteq A_i^j$ whose measure is within $\varepsilon\min\{A_i^j\}>0$ of $\mu(A_i^j)$. Then we set $U$ as the union of the $U_1^j\times\cdots\times U_d^j$ and find
+		\[\mu(U)\le\sum_{j=1}^n\left(\mu(A_1^j)+\min\{A_k^\ell:k,\ell\}\varepsilon\right)\cdots\left(\mu(A_d^j)+\min\{A_k^\ell:k,\ell\}\varepsilon\right),\]
+		which we see is upper-bounded by
+		\[\underbrace{\sum_{j=1}^n\mu(A^j_1)\cdots\mu(A^j_d)}_{<\mu(E)+\varepsilon}{}+2^nn\varepsilon\sum_{j=1}^n\mu(A^j_1)\cdots\mu(A^j_d)\]
+		when the $\varepsilon_{ij}$ are chosen to be sufficiently small, and we are flagrantly collecting terms without explanation. Regardless, sending $\varepsilon\to0^+$ recovers the result.
+
+		\item As an intermediate step, we note that we have the following form of outer regularity: for any $E\in\mc B^d$ of finite measure and $\varepsilon>0$, we can find an open $U\supseteq E$ such that $\mu(U\setminus E)<\varepsilon$. In fact, we can even allow $E$ to be of infinite measure: our measure is $\sigma$-finite, so we can write $E=\bigcup_{n=1}^\infty E_n$ where $E_n\in\mc B^d$ for each $n$ and has finite measure. Then for any $\varepsilon>0$, we find $U_n\supseteq E_n$ with $\mu(U_n)<\mu(E_n)+2^{-n}\varepsilon$, and we see
+		\[\bigcup_{n=1}^\infty(U_n\setminus E_n)\supseteq U\setminus E,\]
+		where $U\coloneqq\bigcup_{n=1}^\infty U_n$. Now, the left-hand side has measure bounded by $\sum_{n=1}^\infty2^{-n}\varepsilon=\varepsilon$, as desired.
+
+		\item We now show inner regularity from outer regularity, for any $d\ge1$. Fix $E\in\mc B^d$ and some $\varepsilon>0$. We use $(-)^c$ to denote complement. Now, we are given some $U\supseteq E^c$ such that $\mu(U\setminus E^c)<\varepsilon$, but $U\setminus E^c=U\cap E=E\setminus U^c$. We will complete the proof next class.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\end{document}
