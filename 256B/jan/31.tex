@@ -1,0 +1,80 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Flasque Resolutions}
+We have ``already'' seen many examples of flasque sheaves, as explained in the following lemma.
+\begin{lemma} \label{lem:inj-to-flasque}
+	Fix a ringed space $(X,\OO_X)$. Then any injective $\OO_X$-module is flasque.
+\end{lemma}
+\begin{proof}
+	Fix an open subset $U\subseteq X$, and let $j\colon U\into X$ be the inclusion so that we may set $\OO_U\coloneqq j_!(\OO_X|_U)$. Notably, we are realizing $\OO_X$ as an $\mathcal O_U$-module.
+	
+	Let's quickly review $j_!$. Explicitly, for a sheaf $\mc F$ on $U$, we defined $j_!\mc F$ as ``extension by zero'': it is the sheafification of the presheaf
+	\[\OO_U^{\mathrm{pre}}(W)\coloneqq\mapsto\begin{cases}
+		\mc F(W) & \text{if }W\subseteq U, \\
+		0 & \text{otherwise}.
+	\end{cases}\]
+	Notably, the stalks of $j_!\mc F$ are $\mc F_x$ if $x\in U$ and $0$ otherwise, which we can see by working with the above sheaf. Notably, there is a canonical map $\mc F\to (j_!\mc F)|_U$, which we can see is an isomorphism by checking on stalks.
+
+	We now proceed with the proof. For each open $V\subseteq U$, there is an injection $\OO_V\into\OO_U$ (we can see that this is an injection by checking on stalks). As such, for our injective sheaf $\mc I$, we get the following commutative diagram.% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9we0hvbX1fe1xcT09fWH0oXFxPT19VLFxcbWMgSSkiXSxbMSwwLCJcXG9we0hvbX1fe1xcT09fWH0oXFxPT19WLFxcbWMgSSkiXSxbMCwxLCJcXG1jIEkoVSkiXSxbMSwxLCJcXG1jIEkoVikiXSxbMCwyXSxbMSwzXSxbMiwzXSxbMCwxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\op{Hom}_{\OO_X}(\OO_U,\mc I)} & {\op{Hom}_{\OO_X}(\OO_V,\mc I)} \\
+		{\mc I(U)} & {\mc I(V)}
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}\]
+	We claim that we can place vertical isomorphisms, which will complete the proof because the top row is surjective because $\mc I$ is an injective $\OO_X$-module.
+
+	Well, for the vertical morphisms, we write
+	\begin{align*}
+		\op{Hom}_{\OO_X}(\OO_U,\mc I) &= \op{Hom}_{\OO_X}\left(\OO_U^{\mathrm{pre}},\mc I\right) \\
+		&\stackrel*= \op{Hom}_{\OO_X|_U}\left(\OO_U^{\mathrm{pre}}|_U,\mc I|_U\right) \\
+		&= \op{Hom}_{\OO_X|_U}\left(\OO_X|_U,\mc I|_U\right) \\
+		&= \op{Hom}_{\OO_X(U)}(\OO_X(U),\mc I(U)) \\
+		&= \mc I(U).
+	\end{align*}
+	Here, $\stackrel*=$ is just given by restricting an $\mathcal O_X$-morphism; it is injective because the map $\OO_U\to\mc I$ can be determined by how it behaves on stalks, which are only seen on $U$, and it is surjective because one can extend a map $\OO_U^{\mathrm{pre}}|_U\to\mc I|_U$ to a full map $\OO_U^{\mathrm{pre}}\to\mc I$ by having the map $\OO_U^{\mathrm{pre}}(W)\to\mc I(W)$ just be zero (which of course is the only option!).
+\end{proof}
+Anyway, let's put our flasque sheaves to good use.
+\begin{lemma} \label{lem:flasque-is-acyclic}
+	Fix a topological space $X$. Any flasque sheaf $\mc F\in\mathrm{Ab}(X)$ is acyclic for $H^\bullet(X,-)$.
+\end{lemma}
+\begin{proof}
+	This is a matter of dimension-shifting. We claim that $H^i(X,\mc F)=0$ for all $i\ge1$ and flasque sheaves $\mc F$. We proceed by induction on $i$, so we may assume the result for indices less than $i$. Now, find an injective sheaf with an embedding $\mc F\into\mc I$. Letting $\mc G$ be the quotient, we produce the exact sequence
+	\[0\to\mc F\to\mc I\to\mc G\to0.\]
+	The two middle terms are flasque (see \Cref{lem:inj-to-flasque}), so the right term is flasque. Now, \cite[Exercise~1.16]{hartshorne} tells us that $\mc G$ is flasque, and the sequence
+	\[0\to\Gamma(X,\mc F)\to\Gamma(X,\mc I)\to\Gamma(X,\mc G)\to0\]
+	is exact. Now, the long exact sequence produces the exact sequence
+	\[H^{i-1}(X,\mc I)\to H^{i-1}(X,\mc G)\to H^i(X,\mc F)\to \underbrace{H^i(X,\mc I)}_0.\]
+	The previous exact sequence shows that the map $H^{i-1}(X,\mc I)\to H^{i-1}(X,\mc G)$ is surjective map for $i=1$, and it continues to be surjective for other $i$ by the induction (namely, both terms will be zero). Thus, the map $H^{i-1}(X,\mc G)\to H^i(X,\mc F)$ is the zero map, so we conclude that $H^i(X,\mc F)=0$.
+\end{proof}
+And here is the promised sanity check.
+\begin{proposition} \label{prop:ox-cohomology}
+	Fix a ringed space $(X,\OO_X)$. Then $H^\bullet(X,-)=R^\bullet\Gamma(X,-)$, where now $\Gamma(X,-)$ is a functor $\mathrm{Mod}(\OO_X)\to\mathrm{Ab}$.
+\end{proposition}
+\begin{proof}
+	An injective resolution in $\mathrm{Mod}(\OO_X)$ is a flasque resolution by \Cref{lem:inj-to-flasque} and hence an acyclic resolution in $\mathrm{Ab}(X)$ by \Cref{lem:flasque-is-acyclic}. So \Cref{prop:acyclic-res} completes the proof.
+\end{proof}
+\begin{remark}
+	A priori, the objects $H^\bullet(X,-)$ were just abelian groups, but \Cref{prop:ox-cohomology} assures us that we can usually give this more structure. In particular, if $X$ is an $A$-scheme for a ring $A$, then actually $\Gamma(X,-)$ is a functor $\mathrm{Mod}(\OO_X)\to\mathrm{Mod}(A)$, and the right-derived functors for this $\Gamma(X,-)$ agree with $H^\bullet(X,-)$ upon passing through the forgetful functor because the forgetful functor is exact (namely sending cohomology to cohomology).
+\end{remark}
+
+\subsection{Grothendieck Vanishing}
+We would like for our cohomology to vanish at high dimensions when $X$ is a finite-dimensional scheme. The following lemma will be useful.
+\begin{lemma}
+	Fix a Noetherian topological space $X$ and a directed system $\{\mc F_\alpha\}_{\alpha\in\Lambda}$ of flasque sheaves. Then the directed limit $\colimit\mc F_\alpha$ is flasque.
+\end{lemma}
+\begin{proof}
+	Quickly, because colimits commute with colimits, we see that
+	\[\left(\colimit\mc F_\alpha\right)(U)=\colimit\mc F_\alpha(U).\]
+	(In particular, this is a sheaf, and then it satisfies the needed universal property by construction.) Now, fix open subsets $V\subseteq U$. Then $\colimit\mc F_\alpha(U)\to\colimit\mc F_\alpha(V)$ is surjective because it is surjective on the components (and colimits commute with colimits), so the above description of our sections completes the proof.
+\end{proof}
+
+\end{document}
