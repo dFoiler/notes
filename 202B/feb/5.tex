@@ -1,0 +1,80 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We began class by finishing a proof from last class, into which I have edited directly.
+
+\subsection{Change of Variables}
+Before doing anything, here are some lemmas.
+\begin{lemma} \label{lem:compact-convex-to-lip}
+	Fix a compact convex subset $K\subseteq\RR^d$. Suppose $U\subseteq\RR^d$ is an open subset containing $K$, and suppose $f\colon U\to\RR^n$ is continuously differentiable. Then $f|_K$ is Lipschitz.
+\end{lemma}
+\begin{proof}
+	Fix $x,y\in K$. We would like to approximate $f(x)-f(y)$ by $Df(x)(y-x)$, for which we use the Mean value theorem.
+	
+	To bring our target down to one dimension, we note
+	\[\left|f(y)-f(x)\right|=w\cdot(f(y)-f(x)),\]
+	where $w$ is the unit vector in the direction of $f(y)-f(x)$. In order to bring our source down to one dimension, we define
+	\[g(t)\coloneqq w\cdot f(x+t(y-x)),\]
+	which is well-defined because $K$ is convex. Note $g$ is continuously differentiable because it is the composition of continuously differentiable functions; in particular, we find $g'(t)=w\cdot Df(x+t(y-x))(y-x)$. Everything is now in one dimension, so the Mean value theorem provides $c\in(0,1)$ such that
+	\[\frac{g(1)-g(0)}{1-0}=g'(c)=w\cdot Df(x+c(y-x))(y-x).\]
+	Thus, we may have the sequence of bounds
+	\begin{align*}
+		\left|f(y)-f(x)\right| &= \left|g(1)-g(0)\right| \\
+		&= \left|w\cdot Df(x+c(y-x))(y-x)\right| \\
+		&\le \left|w\right|\cdot\left|Df(x+c(y-x))(y-x)\right| \\
+		&\le \left|y-x\right|\cdot\max_{z\in K}\norm{Df(z)}.
+	\end{align*}
+	Now, $f$ is continuously differentiable, and $K$ is compact, so $Df$ is bounded on $K$. So we say that $f$ is Lipschitz with Lipschitz constant bounded above by $\max_{z\in K}\norm{Df(z)}$.
+\end{proof}
+Now, the main content of \Cref{thm:change-vars} is in the following result.
+\begin{lemma} \label{lem:bound-change-vars}
+	Fix a $C^1$-diffeomorphism $\Phi\colon U\to V$ where $U,V\subseteq\RR^d$ is open. Further, let $U'\subseteq U$ be an open subset with compact closure such that there is $\delta>0$ such that any $x\in U'$ has $d(x,U^c)\ge2\delta_0$. Then
+	\[\mu(\varphi(U'))\le\int_{U'}\left|J_\Phi\right|\,d\mu.\]
+\end{lemma}
+\begin{remark}
+	Here, $d(x,U^c)$ denotes the (infimum of the) distance from $x$ to the set $U^c$. Because $\ov{U'}$ is compact, we note that we also get $d(x,U^c)\ge2\delta_0$ for each $x\in\ov{U'}$ because $x\mapsto d(x,U^c)$ is a continuous function.
+\end{remark}
+To prove the above lemma, we will want the following lemma.
+\begin{lemma} \label{lem:uniform-c1}
+	Fix a $C^1$-diffeomorphism $\Phi\colon U\to V$ where $U,V\subseteq\RR^d$ is open. Further, let $U'\subseteq U$ be an open subset with compact closure such that there is $\delta>0$ such that any $x\in U'$ has $d(x,U^c)\ge2\delta_0$. Then there is a decreasing ``remainder'' function $R$ such that $R(t)\to0$ as $t\to0^+$ while the ``Taylor remainder''
+	\[\mc R(x,u)\coloneqq\Phi(x+u)-\Phi(x)-D\Phi(x)(u)\]
+	satisfies $\left|\mc R(x,u)\right|\le\left|u\right|R(\left|u\right|)$ for all $x\in U$ and $\left|u\right|\le\delta_0$.
+\end{lemma}
+The content here is that the remainder function $\mc R$ (which ought to go to zero as $u\to0$) is bounded in a way that does not depend on $x$.
+\begin{proof}[Proof of \Cref{lem:uniform-c1}]
+	For $u$ such that $\left|u\right|\le\delta_0$, the construction of $\delta_0$ implies that any $x\in U'$ has $x+u\in U$; in fact, we have $d(y,U^c)\ge\delta_0$ for all $y$ of the form $x+u$. Notably,
+	\[\{y\in U:d(y,U^c)\ge\delta_0\}\]
+	is compact: it is closed because $y\mapsto d(y,U^c)$ is continuous, and it is bounded because it is a fixed distance away from the compact set $\ov{U'}$.
+
+	We now use the Mean value theorem to conclude. The proof is similar to \Cref{lem:compact-convex-to-lip}. Fix $x$ and $u$ as in the statement. Then there is a unit vector $w$ such that
+	\[w\cdot\mc R(x,u)=\left|\mc R(x,u)\right|.\]
+	This allows us to define
+	\[g(t)\coloneqq w\cdot\mc R(x,u),\]
+	which is now a function $g\colon[0,1]\to\RR$ which is continuously differentiable because everything in sight is continuously differentiable. As such, the Mean value theorem provides $c\in(0,1)$ such that
+	\[g(1)-g(0)=g'(c)=w\cdot(D\Phi(x+cu)(u)-D\Phi(x)(u)).\]
+	Thus,
+	\begin{align*}
+		\left|\mc R(x,u)\right| &= \left|g(1)-g(0)\right| \\
+		&\le \left|w\right|\cdot\left|D\Phi(x+cu)(u)-D\Phi(x)(u)\right| \\
+		&\le \max_{c\in[0,1]}\left|D\Phi(x+cu)(u)-D\Phi(x)(u)\right| \\
+		&\le \left|u\right|\cdot\max_{\substack{x'\in\ov{U'}\\\left|u'\right|\le\left|u\right|}}\norm{D\Phi(x'+u')-D\Phi(x')}.
+	\end{align*}
+	The right-hand factor is our function $R$ in terms of $\left|u\right|$, which is finite because we are taking the maximum of a continuous function on a compact set.
+\end{proof}
+We are now ready to show \Cref{lem:bound-change-vars}.
+\begin{proof}[Proof of \Cref{lem:bound-change-vars}]
+	The point is to make everything as linear as possible. Fix $\delta>0$ less than $\delta_0$, which we will eventually send to $0^+$. Now, by \Cref{lem:divide-open-to-cubes}, we may divide $U$ into countably many dyadic cubes $\{Q_j\}_{j\in\NN}$, where $Q_j$ has side-length $\ell_j$; by possibly decomposing cubes finitely, we may assume that $\ell_j\le\delta$ for each $j\in\NN$. For our combinatorics, we let $c_j\in Q_j$ be the center of the cube so that any point in $Q_j$ can be written as $c_j+u$ where $u=(u_1,\ldots,u_d)$ has $\left|u_i\right|\le\frac12\ell_j$ for each $i$.
+	
+	Now, by \Cref{lem:uniform-c1}, we may upper-bound
+	\[\Phi(c_j+u)=\Phi(c_j)+D\Phi(c_j)(u)+\left|u\right|R(\left|u\right|)\]
+	where $R$ is conjured from \Cref{lem:uniform-c1}. For our bounding, it will help to recognize that
+	\[\left|u\right|R(\left|u\right|)\le\ell_j\sqrt dR(\ell_j\sqrt d)\le\sqrt dR(\delta\sqrt d)\ell_j.\]
+	To chart our progress, we note
+	\[\mu(\Phi(U'))\le\sum_{j\in\NN}\mu(\Phi(Q_j)),\]
+	and now $\Phi$ on $Q_j$ is basically linear.
+\end{proof}
+
+\end{document}
