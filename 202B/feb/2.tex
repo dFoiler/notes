@@ -1,0 +1,66 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We began class by finishing a proof from last class, into which I have edited directly.
+
+\subsection{Measuring Lipschitz Functions}
+We would like to understand functions with more curves than affine maps.
+\begin{definition}[Lipschitz]
+	Fix an open subset $U\subseteq\RR^d$, and let $f\colon U\to\RR^k$ be a map. Then $f$ is \textit{Lipschitz} if and only if there is a finite positive real number $A$ such that
+	\[\left|f(x)-f(y)\right|\le A\left|x-y\right|\]
+	for all $x,y\in U$. We define the \textit{Lipschitz constant} $\norm f_{\mathrm{Lip}}$ to be the infimum of all such possible $A$.
+\end{definition}
+We need to know that Lipschitz functions send Borel sets to Borel sets.
+\begin{lemma}
+	Fix a Lipschitz function $f\colon U\to\RR^d$ where $U\subseteq\RR^d$. Then for any Lebesgue measurable $E\subseteq U$, we have that $f(E)$ is Lebesgue measurable. In fact, null sets map to null sets.
+\end{lemma}
+\begin{proof}
+	Certainly if $K\subseteq U$ is compact, then $f(K)$ is compact (and in particular closed) and hence Borel and hence Lebesgue measurable. %Continuing, any closed $F\subseteq\RR^d$ can be written as a countable union
+	%\[\bigcup_{n=1}^\infty(F\cap B(0,n))\]
+	%of compact sets $K_n\coloneqq F\cap B(0,n)$, so hitting this with $f$ shows that $f(F)$ is the countable union of closed sets and hence Borel.
+
+	Lastly, let $E$ be an arbitrary Lebesgue set. By \Cref{thm:leb-reg}, we get a sequence of ascending compact sets $\{K_n\}_{n=1}^\infty$ such that $S\cup\bigcup_{n=1}^\infty K_n=E$ where $S$ is a null set (and $S=\emp$ if $E$ is actually Borel). Now, hitting this with $f$, we see that $f\left(\bigcup_{n=1}^\infty K_n\right)=\bigcup_{n=1}^\infty f(K_n)$ is the countable union of Borel sets, which is Borel and hence Lebesgue. Note that we have so far shown that $E$ being Borel makes $f(E)$ measurable.
+
+	Lastly, we must show that $f(S)$ is a null set. As an intermediate step, we claim that there is a constant $C_f>0$ such that
+	\[\mu(f(V))\stackrel?\le C_f\mu(V)\]
+	for any open $V\subseteq U$. To see why this is enough, note by \Cref{thm:leb-reg}, for any $\varepsilon>0$, we can find an open $V\supseteq S$ such that $\mu(V)<\varepsilon$, so $\mu(f(S))\le\mu(f(V))\le C_f\varepsilon$. Sending $\varepsilon\to0^+$ then shows $\mu(f(S))=0$.
+	
+	It remains to show the claim. Well, use \Cref{lem:divide-open-to-cubes} to write $V$ as the disjoint union of a countable collection of cubes $\{Q_n\}_{n\in\NN}$, where $Q_n$ has side length $\ell_n$. Then
+	\[\mu(f(V))\le\sum_{n\in\NN}\mu(f(Q_n)).\]
+	Now, the diameter of $Q_n$ is $\ell_n\sqrt d$, so it is contained in a ball of radius equal to half that, so $f$ will send this ball to a ball of radius $\frac12\norm f_{\mathrm{Lip}}\ell_n\sqrt d$, which is contained in a cube of side length $\norm f_{\mathrm{Lip}}\ell_n\sqrt d$, which has measure $\left(\norm f_{\mathrm{Lip}}\ell_n\sqrt d\right)^d$. In total, we see
+	\[\mu(f(Q_n))\le\underbrace{\left(\norm f_{\mathrm{Lip}}\sqrt d\right)^d}_{C_f\coloneqq}\ell_n^d,\]
+	so by summing we have found our needed constant $C_f$. Importantly, $C_f$ does not depend on $V$ at all, so we are okay.
+\end{proof}
+Anyway, here is our main result to change variables.
+\begin{defihelper}[$C^1$-diffeomorphism]
+	Fix open subsets $U,V\subseteq\RR^d$. A map $f\colon U\to V$ is a \textit{$C^1$-diffeo\-morphism} if and only if $f$ is bijective, and $f$ and $f^{-1}$ are both $C^1$; i.e., $f$ and $f^{-1}$ are both continuously differentiable everywhere.
+\end{defihelper}
+\begin{remark}
+	If $f$ is a $C^1$-diffeomorphism, then $Df\circ Df^{-1}=\id$, so $Df$ is actually invertible. In particular, the Jacobian is nonzero.
+\end{remark}
+\begin{remark}
+	For example, the Inverse function theorem approximately says that a function $f$ having invertible derivative at a point $x$ implies that $f$ becomes a $C^1$-diffeomorphism in a neighborhood of $x$.
+\end{remark}
+\begin{theorem}
+	Fix open subsets $U,V\subseteq\RR^d$, and fix a $C^1$-diffeomorphism $\Phi\colon U\to V$. Then the following hold.
+	\begin{listalph}
+		\item For each Lebesgue measurable $U\subseteq E$, the set $\Phi(E)$ is still Lebesgue measurable.
+		\item For each Lebesgue measurable $U\subseteq E$, we have
+		\[\mu(\Phi(E))=\int_U\left|J_\Phi(x)\right|\,d\mu(x),\]
+		where $J_\Phi$ is the Jacobian $\det D_\Phi$.
+		\item For a Lebesgue measurable function $f\colon V\to\CC$, we have
+		\[\int_Vf\,d\mu=\int_U(f\circ\Phi)\left|J_\Phi\right|\,d\mu,\]
+		under hypotheses establishing the integrals make sense: either $f$ is nonnegative, or $f$ is in integrable, or $(f\circ\Phi)\left|J_\Phi\right|$ is integrable.
+	\end{listalph}
+\end{theorem}
+We will prove this result next class, but we'll at least state a lemma.
+\begin{lemma}
+	Fix an open subset $U'\subseteq U$ with compact closure, and fix a $C^1$-diffeomorphism $\Phi\colon U\to V$. Then there is a ``remainder'' function $R$ and $\delta>0$ such that $R(t)\to0$ as $t\to0^+$ while the ``Taylor remainder''
+	\[\mc R(x,u)\coloneqq\Phi(x+u)-\Phi(x)-D\Phi(x)(u)\]
+	satisfies $\left|\mc R(x,u)\right|\le\left|u\right|R(\left|u\right|)$ for all $x\in U$ and $\left|u\right|<\delta$.
+\end{lemma}
+
+\end{document}
