@@ -1,0 +1,105 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+I did not do much over the weekend. Such is life.
+
+\subsection{The Rigidity Lemma}
+For this chapter, we will work over general fields, so we recall the following definition.
+\begin{definition}[abelian variety]
+	Fix a field $k$. Then an \textit{abelian $k$-variety} is a group $k$-variety which is smooth, geometrically integral, and proper.
+\end{definition}
+For example, we would like to show that the group law on $A$ is abelian. We will want the following result.
+\begin{theorem}[Rigidity lemma] \label{thm:rigidity}
+	Fix $k$-varieties $X$, $Y$, and $Z$. Suppose $X$ and $Y$ are geometrically integral, that $X$ is proper, and that there is a point $x_0\in X(k)$. Suppose a $k$-morphism $f\colon X\times_k Y\to Z$ has a point $y_0\in Y(k)$ such that $f|_{X\times\{y\}}$ is constant, mapping to a point $z_0\in Z(k)$. Then there is a morphism $g\colon Y\to Z$ such that $f=g\circ\op{pr}_Y$ in the following diagram.
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCJYXFx0aW1lcyBZIl0sWzAsMSwiWSJdLFsxLDAsIloiXSxbMSwyLCJnIiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzAsMSwiXFxvcHtwcn1fWSIsMl0sWzAsMiwiZiJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{X\times Y} & Z \\
+		Y
+		\arrow["g"', dashed, from=2-1, to=1-2]
+		\arrow["{\op{pr}_Y}"', from=1-1, to=2-1]
+		\arrow["f", from=1-1, to=1-2]
+	\end{tikzcd}\]
+\end{theorem}
+\begin{proof}
+	Plugging in $x=x_0$, we see that we must construct $g\colon Y\to Z$ by $g(y)\coloneqq f(x_0,y)$. More precisely, $g$ is the composite
+	\[Y\stackrel{x_0}\to X\times_k Y\stackrel f\to Z.\]
+	We would like to show that $f=g\circ\op{pr}_Y$. Now, the source is reduced, and the target is separated (everything is a variety), so it is enough to show that these maps agree on an open dense subset because then the equalizer of the two morphisms must be all of $X\times_k Y$. Well, because $X\times Y$ is irreducible (because $X$ and $Y$ are both geometrically integral), any nonempty open subset is dense.
+
+	Anyway, let $U\subseteq Z$ be any affine open subscheme containing $x_0$ so that $Z\setminus U$ is closed. Thus, $f^{-1}(Z\setminus U)\subseteq X\times Y$ continues to be closed, and because $X$ is proper, the projection of this set to $Y$ must still be closed. So define
+	\[V\coloneqq Y\setminus\op{pr}_Y\left(f^{-1}(Z\setminus U)\right).\]
+	Quickly, note $V$ is nonempty because $f(x_0,y_0)\in U$, implying that $y_0\in V$. (Note we are abusing notation by identifying a geometric point with the point in its image.) So it is enough to show that
+	\[f|_{X\times_k V}\stackrel?=g\times{\op{pr}_Y}|_{X\times_k V}.\]
+	It is enough to check this on $\ov k$-points because everything in sight is a variety: $\ov k$-points are dense because these schemes are finite type over $k$, so the equalizer scheme of these two morphisms would then be dense in $X\times Y$, as required.
+
+	Well, fix some $y\in V(\ov k)$. Then $f$ maps $X\times_k\{y\}$ to $U$, but $X\times_k\{y\}$ is proper, and $U$ is affine, so $f$ must be constant.\footnote{We can realize $U$ is a closed subscheme of some affine space, so we get a morphism $X\times_k\{y\}\to\AA^n_k$ for some $n>0$. But then the projections of this map are all constant because maps $X\times_k\{y\}\to\AA^1_k$ correspond to global sections of a proper integral $k$-scheme, which are just constants in $k$.} In particular, for any $x\in X(\ov k)$, we see that
+	\[f(x,y)=f(x_0,y)=g(x,y),\]
+	as required.
+\end{proof}
+Let's see some applications.
+\begin{corollary} \label{cor:trans-hom}
+	Fix abelian $k$-varieties $A$ and $B$. Given a morphism $f\colon A\to B$, there exists a homomorphism $h\in\op{Hom}_k(A,B)$ and a point $b\in B(k)$ such that $f=\tau_b\circ h$, where $\tau_b\colon B\to B$ is the translation map $b\mapsto m_B(x,b)$. In fact, if $f(e_A)=e_B$, then $f$ is a homomorphism.
+\end{corollary}
+\begin{proof}
+	Define $b\coloneqq f(e_A)$ where $e_A\in A(k)$ is the identity. Then we see that $h\coloneqq\tau_b^{-1}\circ f$ sends $e_A\mapsto e_B$. We want to show that $h$ is actually a group homomorphism. Well, define the map $\alpha\colon A\times A\to B$ by
+	\[\alpha(x_1,x_2)\coloneqq h(x_1x_2)h(x_2)^{-1}h(x_1)^{-1}.\]
+	To verify that $h$ is a homomorphism, it is enough to check that $\alpha$ is constantly $e_B$. For this, we use \Cref{thm:rigidity} on $\alpha$. For example, we see that $e_A\in A(k)$ satisfies
+	\[\alpha(x,e_A)=h(xe_A)h(e_A)^{-1}h(x)^{-1}=h(x)e_Bh(x)^{-1}=h(x)h(x)^{-1}=e_B,\]
+	so $\alpha(x,y)=\alpha(e_A,y)$ for all $x,y\in A(\ov k)$ by \Cref{thm:rigidity}. A symmetric argument shows that $\alpha(x,y)=\alpha(x,e_A)$ for all $x,y\in A(\ov k)$, so we conclude that $\alpha$ must actually be constant.
+\end{proof}
+\begin{corollary} \label{cor:ab-var-comm}
+	Fix an abelian $k$-variety $A$. Then the group law on $A$ is abelian.
+\end{corollary}
+\begin{proof}
+	The inverse map $i\colon A\to A$ maps $i(e_A)=e_A$, so $i$ must be a homomorphism by \Cref{cor:trans-hom}, so
+	\[i(x_1x_2)=i(x_1)i(x_2)\]
+	for all $x_1,x_2\in A(\ov k)$, so $x_1x_2=x_2x_1$ for all $x_1,x_2\in A(\ov k)$, as required.
+\end{proof}
+\begin{remark}
+	Note that we know that the group law on $A$ is abelian, so the multiplication-by-$n$ map $[n]\colon A\to A$ makes sense and is an endomorphism. In particular, we see $(x_1x_2)^n=x_1^nx_2^n$.
+\end{remark}
+\begin{notation}
+	In light of \Cref{cor:ab-var-comm}, for the remainder of the course, we will denote the group law on an abelian variety additively.
+\end{notation}
+
+\subsection{Using The Theorem of the Cube}
+Here is our result. Again, the actual statement is in terms of varieties.
+\begin{theorem} \label{thm:cube}
+	Fix geometrically integral $k$-varieties $X$, $Y$, and $Z$. Further, assume $X$ and $Y$ are proper. Given three $k$-points $x_0\in X(k)$ and $y_0\in Y(k)$ and $z_0\in Z(k)$, suppose a line bundle $\mc L$ on $X\times Y\times Z$ has
+	\[\mc L|_{\{x_0\}\times Y\times Z}\qquad\text{and}\qquad\mc L|_{X\times\{y_0\}\times Z}\qquad\text{and}\qquad\mc L|_{X\times Y\times\{z_0\}}\]
+	all trivial. Then $\mc L$ is trivial.
+\end{theorem}
+We will prove \Cref{thm:cube} next lecture. For now, let's see how this is used.
+\begin{corollary} \label{cor:cube-av}
+	Fix an abelian $k$-variety $A$ and a $k$-variety $X$. Given three morphisms $f,g,h\colon X\to A$ and a line bundle $\mc L$ on $A$, we have
+	\[(f+g+h)^*\mc L\otimes f^*\mc L\otimes g^*\mc L\otimes h^*\mc L=(f+g)^*\mc L\otimes(g+h)^*\mc L\otimes(h+f)^*\mc L.\]
+	For example, if $X=A\times A\times A$, where $f$, $g$, and $h$ are the projections, then
+	\[m_{123}^*\mc L\otimes\op{pr}_1^*\mc L\otimes\op{pr}_2^*\mc L\otimes\op{pr}_3^*\mc L=m_{12}^*\mc L\otimes m_{23}^*\mc L\otimes m_{31}^*\mc L.\]
+	Here, $m_\bullet$ denotes summing the relevant coordinates.
+\end{corollary}
+\begin{proof}
+	Pulling back the second equality along the map $(f,g,h)\colon X\to A\times A\times A$ produces the first equality, so it suffices to focus on the second equality. Well, define
+	\[\mc K\coloneqq m_{123}^*\mc L\otimes\op{pr}_1^*\mc L\otimes\op{pr}_2^*\mc L\otimes\op{pr}_3^*\mc L\otimes m_{12}^*\mc L^{-1}\otimes m_{23}^*\mc L^{-1}\otimes m_{31}^*\mc L^{-1}.\]
+	It suffices to show that $\mc K$ is trivial. For this, we use \Cref{thm:cube}. By symmetry, we will just show that $\mc K|_{\{e_A\}\times A\times A}$ is trivial, which will complete the proof. Well, upon doing this restriction, we find
+	\[\mc K|_{\{e_A\}\times A\times A}\cong m_{23}^*\mc L\otimes\op{pr}_1^*\mc L\otimes\op{pr}_2^*\mc L\otimes\op{pr}_3^*\mc L\otimes \op{pr}_2^*\mc L^{-1}\otimes m_{23}^*\mc L^{-1}\otimes\op{pr}_{3}^*\mc L^{-1}\]
+	is manifestly trivial. Notably, restriction commutes with taking tensor products by construction of the tensor product.
+\end{proof}
+\begin{remark}
+	Of course, an induction can extend past three projections.
+\end{remark}
+In particular, we will use \Cref{cor:cube-av} in order to compute $[n]^*\mc L$.
+\begin{corollary}
+	Fix a line bundle $\mc L$ on an abelian $k$-variety $A$. Then, for any $n\in\ZZ$,
+	\[[n]^*\mc L=\mc L^{\otimes n(n+1)/2}\otimes[-1]^*\mc L^{\otimes n(n-1)/2}.\]
+	In particular, if $\mc L=[-1]^*\mc L$, then $[n]^*\mc L=\mc L^{\otimes n^2}$.
+\end{corollary}
+\begin{proof}
+	Induct on $n$ using \Cref{cor:cube-av} for the inductive step. Namely, $n=0$ and $n=-1$ have no content, and then one can induct upwards and downwards from there.
+\end{proof}
+\begin{remark}
+	The quadratic relation here is what is used in the construction of the N\'eron--Tate height.
+\end{remark}
+
+\end{document}
