@@ -1,0 +1,160 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we continue talking about tangent vectors.
+
+\subsection{Derivations}
+Let's provide some basic properties of derivations.
+\begin{lemma} \label{lem:deriv-const}
+	Fix a smooth $n$-manifold $M$ and a derivation $v\colon C^\infty(M)\to\RR$ at a point $p\in M$. If $f\colon M\to\RR$ is constant, then $v(p)=0$.
+\end{lemma}
+\begin{proof}
+	By scaling, it suffices to do the case where $f\equiv1$. Then we see that $f^2=f$, so
+	\[v(f)=v\left(f^2\right)=2f(p)v(f)=2v(f),\]
+	so $v(f)=1$ is forced.
+\end{proof}
+\begin{lemma} \label{lem:deriv-given-locally}
+	Fix a smooth $n$-manifold $M$ and a derivation $v\colon C^\infty(M)\to\RR$ at a point $p\in M$. Given $f,g\in C^\infty(M)$ such that $f|_U=g|_U$ for some open $U\subseteq M$ containing $p$, we have $v(f)=v(g)$.
+\end{lemma}
+\begin{proof}
+	Set $h\coloneqq f-g$ so that we want to show $v(h)=0$ by linearity. The moral of the story is to extend being zero on $U$ to all of $M$; in other words, we will want some bump functions. Because $M$ is locally Euclidean, we can find a precompact open neighborhood $V$ of $p$ such that $\ov V\subseteq U$. Thus, \Cref{cor:bump} provides a smooth bump function $\psi\colon M\to\RR$ such that $\psi|_{\ov V}\equiv1$, and $\op{supp}\psi\subseteq U$. Notably, $\psi\cdot h$ has support contained in $U$, but $h$ vanishes on $U$, so $\psi\cdot h=0$, so
+	\[0=v(\psi\cdot h)=\psi(p)v(h)+h(p)v(\psi)=v(h),\]
+	as desired.
+\end{proof}
+Manifolds are understood by passing to local charts, and the above lemma somewhat allows us to do this. As such, we are now motivated to understand local charts.
+\begin{lemma} \label{lem:tangent-euclid}
+	Fix a point $(a_1,\ldots,a_n)\in\RR^n$. For each $v\in\RR^n$, define $D_v|_a\colon C^\infty\left(\RR^n\right)\to\RR$ by
+	\[D_v|_a(f)\coloneqq\sum_{i=1}^nv_i\frac{\del f}{\del x_i}\bigg|_a.\]
+	Then $D_v|_a$ is a derivation at $a$. In fact, the map $D\colon\RR^n\to T_a\RR^n$ given by $v\mapsto D_v|_a$ is an isomorphism of vector spaces.
+\end{lemma}
+\begin{proof}
+	To check that $D_v|_a$ is a derivation, one proceeds via the product rule in multivariable calculus. We omit this check. It remains to check that we have an isomorphism.
+	\begin{itemize}
+		\item Linear: given $c,d\in\RR$ and $v,w\in\RR^n$, we compute
+		\[D_{cv+dw}|_af=\sum_{i=1}^n(cv_i+dw_i)\frac{\del f}{\del x_i}\bigg|_a=c\sum_{i=1}^nv_i\frac{\del f}{\del x_i}\bigg|_a+d\sum_{i=1}^nw_i\frac{\del f}{\del x_i}\bigg|_a=(cD_v|_a+dD_v|_a)f,\]
+		as desired.
+		\item Injective: by linearity, it is enough to show that having $D_v|_a=0$ implies $v=0$. Well, it is enough to check that $v_j=0$ for each $j$. For this, we let $p_j\colon\RR^n\to\RR$ denote the $j$th projection so that
+		\[\frac{\del p_j}{\del x_i}=\begin{cases}
+			1 & \text{if }i=j, \\
+			0 & \text{else},
+		\end{cases}\]
+		so we see that
+		\[D_v|_a(p_j)=\sum_{i=1}^nv_i\frac{\del p_j}{\del x_i}\bigg|_a=v_j\]
+		must vanish for each $j$, as desired.
+		\item Surjective: this is the heart of the matter. Fix a derivation $v\in T_a\RR^n$. We need a candidate vector, so we define $u_i\coloneqq v(p_i)$, where $p_i\colon\RR^n\to\RR$ is the $i$th projection. We claim that
+		\[v=\sum_{i=1}^nu_i\frac{\del}{\del x_i}\bigg|_a,\]
+		which will complete the proof. This requires a quick digression into a Taylor expansion. Given a smooth function $f\colon M\to\RR$ and points $x,a\in\RR^n$, we see
+		\begin{align*}
+			f(x) &= f(a)+\int_0^1\frac d{dt}f(x+t(x-a))\,dt, \\
+			&= f(a)+\sum_{i=1}^n\bigg((x_i-a_i)\underbrace{\int_0^1\frac{\del f}{\del x_i}(a+t(x-a))\,dt}_{h_i(x)\coloneqq}\bigg),
+		\end{align*}
+		where in the last equality we have used the multivariable chain rule. Applying the derivation, we see
+		\[v(f) = \underbrace{v(f(a))}_0+\sum_{i=1}^nv(x_i-a_i)h_i(a)+\sum_{i=1}^n\underbrace{(a_i-a_i)}_0v(h_i),\]
+		where $v(f(a))=0$ by \Cref{lem:deriv-const}. Additionally, $v(x_i-a_i)=v(x_i)=u_i$ using \Cref{lem:deriv-const} again. Notably, $h_i(a)=\frac{\del f}{\del x_i}|_a$, so
+		\[v(f)=\sum_{i=1}^nu_i\frac{\del f}{\del x_i}\bigg|_a,\]
+		as desired.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\subsection{Differentials of Smooth Maps}
+Derivations explain how to take derivatives of functions in $M\to\RR$. We now upgrade to taking derivatives of functions between manifolds.
+\begin{definition}[differential]
+	Fix smooth manifolds $M$ and $N$. Given a smooth map $F\colon M\to N$, the \textit{differential of $F$ at $p\in M$} is the map $dF_p\colon T_pM\to T_{F(p)}N$ defined by
+	\[dF_p(v)(f)\coloneqq v(f\circ F)\]
+	for any $f\in C^\infty(N)$.
+\end{definition}
+\begin{remark}
+	The composition of smooth functions is smooth, so $f\circ F$ is smooth, so the definition of $dF_p$ at least makes sense. Notably, $f\mapsto(f\circ F)$ is a map $C^\infty(N)\to C^\infty(M)$ of $\RR$-algebras, so $f\mapsto v(f\circ F)$ remains a derivation. Explicitly, it is surely $\RR$-linear (as the composition of $\RR$-linear maps), and we satisfy the Leibniz rule because
+	\begin{align*}
+		dF_pv(fg) &= v((fg)\circ F) \\
+		&= v((f\circ F)(g\circ F)) \\
+		&= (f\circ F)(p)v(g\circ F)+(g\circ F)(p)v(f\circ F) \\
+		&= f(F(p))dF_pv(g)+g(F(p))dF_pv(f).
+	\end{align*}
+\end{remark}
+\begin{remark} \label{rem:diff-linear}
+	The map $dF_p\colon T_pM\to T_{F(p)}N$ is linear, essentially by definition. Namely, for $a,b\in\RR$ and $v,w\in T_pM$ and $f\in C^\infty(N)$, we compute
+	\[dF_p(av+bw)(f)=(av+bw)(f\circ F)=av(f\circ F)+bw(f\circ G)=(adF_p(v)+bdF_p(w))(f).\]
+\end{remark}
+\begin{example}
+	Take $M\coloneqq\RR^m$ and $N\coloneqq\RR^n$, and let $F\colon M\to N$ be a smooth map, which we may as well write as $F=(F_1,\ldots,F_n)$. Now, fix some $p\in M$, and identify $\RR^m\cong T_pM$ and $\RR^n\cong T_{F(p)}N$ as in \Cref{lem:tangent-euclid}. Well, given some smooth $f\colon N\to\RR$, we see
+	\[dF_p\left(\frac{\del}{\del x_i}\bigg|_p\right)(f)=\frac{\del}{\del x_i}(f\circ F)\stackrel*=\sum_{j=1}^n\frac{\del f}{\del y_j}\bigg|_{F(p)}\frac{\del F_j}{\del x_i}\bigg|_p=\Bigg(\sum_{j=1}^n\frac{\del F_j}{\del x_i}\bigg|_p\cdot\frac{\del}{\del y_j}\bigg|_{F(p)}\Bigg)(f),\]
+	where the main point is the application of the Chain rule in $\stackrel*=$.
+\end{example}
+\begin{remark} \label{rem:diff-comp}
+	Differentials behave under composition. Explicitly, let $F_1\colon M_1\to M_2$ and $F_2\colon M_2\to M_3$ be smooth maps. Given $p\in M_1$, we claim that
+	\[d(F_2\circ F_1)_p\stackrel?=(dF_2)_{F_1(p)}\circ (dF_1)_p.\]
+	This can be checked directly.
+	%\todo{}
+\end{remark}
+\begin{example} \label{ex:diff-id}
+	Fix a point $p$ on a smooth $n$-manifold $M$. Then we claim ${d({\id_M})_p}=\id_{T_pM}$. Indeed, we simply compute
+	\[d({\id_M})_p(v)(f)=v(f\circ{\id_M})=v(f).\]
+\end{example}
+
+\subsection{Back to Tangent Spaces}
+Now that we understand how to take differentials of maps, we may realize the remark that derivations ought to be understood locally, as alluded to in \Cref{lem:deriv-given-locally}.
+\begin{proposition} \label{prop:open-embed-tangent}
+	Fix a smooth $n$-manifold $M$. Given an open neighborhood $U$ of a point $p\in M$, the inclusion $i\colon U\into M$ is smooth, and $di_p\colon T_pU\to T_pM$ is an isomorphism of vector spaces.
+\end{proposition}
+\begin{proof}
+	\Cref{rem:diff-linear} tells us that this map is linear. It remains to check injectivity and surjectivity, which we do by hand.
+	\begin{itemize}
+		\item Injective: if $di_p(v)=0$, then $v(f\circ i)=0$ for all $f\in C^\infty(M)$, or equivalently, $v(f|_U)=0$ for all $f\in C^\infty(M)$. We would now like to show that $v$ is actually zero. Well, pick up some $g\in C^\infty(U)$, and we want to show that $v(g)=0$. 
+
+		Well, choose some open precompact open neighborhood $B$ around $p$ such that $\ov B\subseteq U$. Then \Cref{cor:bump} provides us with a smooth bump function $\psi\colon M\to\RR$ which is $1$ on $\ov B$ and vanishes outside $U$. Then $g\psi$ is actually smooth (it is smooth on $U$ because $g$ and $\psi$ are both smooth there, and it is smooth outside $U$ because the function is zero there), so $v(g\psi|_U)=0$. But $g\psi$ and $g$ agree on $B$, so $v(g)=v(g\psi|_U)$ by \Cref{lem:deriv-given-locally}, as needed.
+
+		\item Surjective: fix some derivation $\widetilde v\in T_pM$, and we want some $v\in T_pU$ such that $\widetilde v(f)=v(f|_U)$ for all $f\in C^\infty(M)$. The main point is the construction of $U$.
+		
+		Given a smooth function $f\in C^\infty(U)$, we want to define $\widetilde v(f)$. Well, as in the previous step, we may define $\widetilde f\colon M\to\RR$ such that there is an open neighborhood $B\subseteq U$ of $p$ with $f|_B=\widetilde f|_B$. Then we define $v(f)\coloneqq\widetilde v(\widetilde f)$. Note that $v(\widetilde f)$ does not depend on the choice of $\widetilde f$ and $B$: well, given another pair of $\widetilde f'$ and $B'$, we see that $\widetilde f|_{B\cap B'}=\widetilde f|_{B\cap B'}$, so they have the same value of $\widetilde v$ under \Cref{lem:deriv-given-locally}.
+
+		Additionally, we note that $v$ is in fact a derivation: given $f,g\in C^\infty(U)$ and smooth extensions $\widetilde f,\widetilde g\in C^\infty(M)$ agreeing on $B_f,B_g\subseteq M$, respectively, we see
+		\[\widetilde v(\widetilde f\widetilde g)=\widetilde f(p)\widetilde v(\widetilde g)+\widetilde g(p)\widetilde v(\widetilde f)\]
+		because $\widetilde v$ is a derivation, but then this immediately produces $v(fg)=f(p)v(g)+g(p)v(f)$ by checking the definitions. Similarly, we have
+		\[\widetilde v(a\widetilde f+b\widetilde g)=a\widetilde v(\widetilde g)+b\widetilde v(\widetilde g),\]
+		so $v(af+bg)=av(f)+bv(g)$, so $v$ is linear.
+
+		Lastly, we note that $\widetilde v(f)=v(f|_U)$ for any $f\in C^\infty(M)$ by construction. Namely, $f$ is a perfectly fine extension of $f|_U$ agreeing on some open neighborhood of $p$ contained in $U$ (for example, taking $U$ to be the needed open neighborhood itself will work), so we conclude.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary} \label{cor:tangent-on-manifold}
+	Fix a smooth $n$-manifold $M$. For any $p\in M$, we have $\dim_\RR T_pM=n$.
+\end{corollary}
+\begin{proof}
+	Fix a smooth chart $(U,\varphi)$ around $p\in M$. Then we have the sequence of isomorphisms
+	\[T_pM\cong T_pU\cong T_{\varphi(p)}\varphi(U)\cong T_p\RR^n\cong\RR^n.\]
+	The first and third isomorphisms are by \Cref{prop:open-embed-tangent}. The second isomorphism is by functoriality of the tangent space from \Cref{rem:diff-comp} and \Cref{ex:diff-id}; namely, the differential of a diffeomorphism must be an isomorphism by functoriality. And the last isomorphism is by \Cref{lem:tangent-euclid}.
+\end{proof}
+While we're here, we take a moment to understand how these derivations behave under coordinates.
+\begin{remark}
+	Please read about how to provide the differential of a smooth map on coordinates.
+\end{remark}
+So here are some coordinate computations.
+\begin{itemize}
+	\item Fix a smooth $n$-manifold $M$ and a point $p\in M$. Given a smooth chart $(U,\varphi)$ around $p$, we give $\varphi$ its coordinates $\varphi\coloneqq(x_1,\ldots,x_n)$. For example, given $f\in C^\infty(U)$, we are able to define
+	\[\frac{\del}{\del x_i}\bigg|_pf\coloneqq\frac{\del f}{\del\widetilde x_i}\bigg|_{\varphi(p)}\left(f\circ\varphi^{-1}\right),\]
+	where $(\widetilde x_1,\ldots,\widetilde x_n)$ are the coordinates of $M$. By tracking the isomorphisms of \Cref{cor:tangent-on-manifold} through, we can see that the above derivations form a basis for $T_pM$. Indeed, it suffices to show that they are a basis for the derivations on $T_pU$, and by passing through $\varphi$, it is enough to see that $\del f/\del\widetilde x_i|_{\varphi(p)}$ form a basis of derivations on $T_{\varphi(p)}U$. But it's now enough to see that we have a basis on $T_p\RR^n$, which is simply \Cref{lem:tangent-euclid}.
+
+	\item We examine change of coordinates. Fix a smooth $n$-manifold $M$ and a point $p\in M$ covered by the charts $(U,\varphi)$ and $(V,\psi)$. As above, we give coordinates as $\varphi\coloneqq(x_1,\ldots,x_n)$ and $\psi\coloneqq(y_1,\ldots,y_n)$, and we give the target spaces the coordinates $(\widetilde x_1,\ldots,\widetilde x_n)$ and $(\widetilde y_1,\ldots,\widetilde y_n)$, respectively.
+
+	Well, on the restrictions, we will choose coordinate representations by
+	\[(\psi\circ\varphi^{-1})(\widetilde x)\coloneqq(\ov y_1(\widetilde x),\ldots,\ov y_n(\widetilde x)),\]
+	and we in particular see that
+	\begin{align*}
+		\frac{\del}{\del y_j}\bigg|_py_k &= \left(\left(d\psi^{-1}\right)_{\psi(p)}\frac{\del}{\del\widetilde y_j}\bigg|_{\psi(p)}\right)y_k \\
+		&= \frac{\del}{\del\widetilde y_j}\bigg|_{\psi(p)}\left(y_k\circ\psi^{-1}\right) \\
+		&= \frac{\del}{\del\widetilde y^j}\bigg|_{\psi(p)}\widetilde y_k \\
+		&= 1_{j=k}.
+	\end{align*}
+	The moral of the story is that some $v=\sum_{k=1}^mv_k\del/\del y_k|_p$ will have
+	\begin{align*}
+		\frac{\del}{\del x_i}\bigg|_p=\sum_{k=1}^n\frac{\del\ov y_k}{\del\widetilde x_i}\bigg|_{\varphi(p)}\frac{\del}{\del y_j}\bigg|_p.
+	\end{align*}
+\end{itemize}
+
+\end{document}
