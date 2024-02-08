@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+I have moved a proof to today's notes for continuity reasons.
+
+\subsection{More on Change of Variables}
+We are now ready to show \Cref{lem:bound-change-vars}.
+\boundchangevarslem*
+\begin{proof}
+	The point is to make everything as linear as possible. Fix $\delta>0$ less than $\delta_0$, which we will eventually send to $0^+$. Now, by \Cref{lem:divide-open-to-cubes}, we may divide $U$ into countably many dyadic cubes $\{Q_j\}_{j\in\NN}$, where $Q_j$ has side-length $\ell_j$; by possibly decomposing cubes finitely, we may assume that $\ell_j\le\delta$ for each $j\in\NN$. For our combinatorics, we let $c_j\in Q_j$ be the center of the cube so that any point in $Q_j$ can be written as $c_j+u$ where $u=(u_1,\ldots,u_d)$ has $\left|u_i\right|\le\frac12\ell_j$ for each $i$.
+	
+	Now, by \Cref{lem:uniform-c1}, we may upper-bound
+	\[\Phi(c_j+u)=\Phi(c_j)+D\Phi(c_j)(u)+\left|u\right|R(\left|u\right|)\]
+	where $R$ is conjured from \Cref{lem:uniform-c1}. For our bounding, it will help to recognize that
+	\[\left|u\right|R(\left|u\right|)\le\ell_j\sqrt dR(\ell_j\sqrt d)\le\sqrt dR(\delta\sqrt d)\ell_j.\]
+	To chart our progress, we note
+	\[\mu(\Phi(U'))\le\sum_{j\in\NN}\mu(\Phi(Q_j)),\]
+	and now $\Phi$ on $Q_j$ is basically linear.
+
+	Indeed, set $T_j\coloneqq D\Phi(c_j)$, and for $x=c_j+u$ in $Q_j$, we see
+	\[\lvert\underbrace{\Phi(x)-\Phi(c_j)-T_j(u)}_{\mc R(c_j,u)\coloneqq}\rvert\le\left|u\right|R(\left|u\right|)\]
+	for some remainder function $R$ provided by \Cref{lem:uniform-c1}. Now, to bound $\mu(\Phi(Q_j))$, we see that $\Phi(Q_j)\approx\Phi(c_j)+T_j(Q_j(0,\ell_j))$, where $Q$ denotes the cube. Notably, we have some identity like $\Phi(c_j+u)=\Phi(c_j)+T_j\left(u+T_j^{-1}\mc R(c_j,u)\right)$, so we would like to bound $T_j^{-1}\mc R(c_j,u)$, which we do as
+	\[\left|T_j^{-1}\mc R(c_j,u)\right|\le\norm{T_j}^{-1}\cdot\left|u\right|\cdot R(\left|u\right|)\le\norm{D\Phi(c_j)}^{-1}\cdot\ell_j\sqrt d\cdot R(\delta\sqrt d).\]
+	Quickly, note that the function $x\mapsto D\Phi(x)^{-1}$ is continuous (on $U$) because $\Phi$ is continuously differentiable, so with $\ov{U'}\subseteq U$ is compact, we see that the function $x\mapsto D\Phi(x)^{-1}$ is upper-bounded on $U$ by some $C$ (which does not depend on $\delta$!). So our bound becomes
+	\[\left|T_j^{-1}\mc R(c_j,u)\right|\le C\ell_j\sqrt dR(\delta\sqrt d).\]
+	For brevity, set $\varepsilon_\delta\coloneqq C\sqrt dR(\delta\sqrt d)$. The point is that
+	\[u+T_j^{-1}\mc R(c_j,u)\in Q\left(0,\ell_j(1+\varepsilon_\delta)\right),\]
+	so
+	\[\Phi(Q_j)\subseteq\Phi(c_j)+D\Phi(c_j)\left(Q\left(0,\ell_j(1+\varepsilon_\delta)\right)\right),\]
+	so
+	\[\mu(\Phi(Q_j))\le\left|J_\Phi(c_j)\right|\underbrace{\ell_j^d}_{\mu(Q_j)}\left(1+\varepsilon_\delta\right)^d\]
+	by taking the measure of a cube under a linear transformation, so by summing over $j$, we achieve
+	\[\mu(\Phi(U'))\le(1+\varepsilon_\delta)^d\sum_{j\in\NN}\left|J_\Phi(c_j)\right|\mu(Q_j).\]
+	It remains to relate the summation to the integral. Well, write
+	\[\left|J_\Phi(c_j)\right|\mu(Q_j)\le\int_{Q_j}\left|J_\Phi(x)\right|d\mu(x)+\int_{Q_j}\left|\left|J_\Phi(x)\right|-\left|J_\Phi(c_j)\right|\right|d\mu(x),\]
+	and we see that we would like for $\left|J_\Phi(x)-J_\Phi(c_j)\right|$ to be small. It will turn out to be small, so we can upper-bound it by the maximum over any pairs $(x,y)$ with distance $\delta\sqrt d$ apart, so we sum over all cubes to achieve
+	\[\mu(\Phi(U'))\le(1+\varepsilon_\delta)^d\Bigg(\int_{U'}\left|J_\Phi\right|d\mu+\sup_{\left|x-y\right|\le\delta\sqrt d}\left|\left|J_\Phi(x)\right|-\left|J_\Phi(c_j)\right|\right|\sum_{j\in\NN}\mu(Q_j)\Bigg).\]
+	Sending $\delta\to0^+$ will send $\varepsilon_\delta\to0^+$ and the supremum to $1$ because that continuous function is uniformly continuous on the compact set $\ov{U'}\subseteq U$.
+\end{proof}
+We now upgrade the lemma in various ways.
+\begin{lemma} \label{lem:bound-change-vars-borel}
+	Fix everything as in \Cref{lem:bound-change-vars}. For any Lebesgue measurable subset $E\subseteq U'$, we have
+	\[\mu(\Phi(E))\le\int_E\left|J_\Phi\right|d\mu.\]
+\end{lemma}
+\begin{proof}
+	Fix $\varepsilon>0$, and regularity in \Cref{thm:leb-reg} promises some open $U''\supseteq E$ contained in $U'$ with $\mu(U''\setminus E)<\varepsilon$. Then we rudely replace $E$ with $U''$ and apply \Cref{lem:bound-change-vars}: note
+	\[\mu(\Phi(E))\le\mu(\Phi(U''))\le\int_{U''}\left|J_\Phi\right|d\mu=\int_E\left|J_\Phi\right|d\mu+\int_{U''\setminus E}\left|J_\Phi\right|d\mu.\]
+	So it remains to bound
+	\[\int_{U''\setminus E}\left|J_\Phi\right|d\mu\le\sup_{x\in\ov{U'}}\left|J_\Phi\right|\underbrace{\mu(U''\setminus E)}_{<\varepsilon},\]
+	which we see goes to $0$ as $\varepsilon\to0^+$. Note that the supremum exists because $\ov{U'}$ is compact.
+\end{proof}
+We now upgrade away the $U'$ entirely, which is mostly point-set topology.
+\begin{lemma} \label{lem:bound-change-vars-borel-general}
+	Fix a $C^1$-diffeomorphism $\Phi\colon U\to V$ where $U,V\subseteq\RR^d$ is open. For any Lebesgue measurable $E\subseteq U$, we have
+	\[\mu(\Phi(E))\le\int_E\left|J_\Phi\right|\,d\mu.\]
+\end{lemma}
+\begin{proof}
+	Fix a nonempty open subset $U\subseteq\RR^d$. For each $n\in\NN$, define $U_n\subseteq U$ to consist of the $x\in U$ such that $\left|x\right|<n$ and $\op{dist}(x,U^c)<1/n$. Then $\ov{U_n}\subseteq U$ and has a distance at most $1/n$ living inside $U$. So we may apply \Cref{lem:bound-change-vars-borel}: set $E_n\coloneqq E\cap U_n$, and we see
+	\[\mu(\Phi(E_n))\le\int_{E_n}\left|J_\Phi\right|\,d\mu\le\int_E\left|J_\Phi\right|\,d\mu\]
+	for each $n$, and then sending $n\to\infty$ has $E=\bigcup_{n\in\NN}E_n$ and so $\mu(\Phi(E_n))\to\mu(\Phi(E))$, so we achieve the result.
+\end{proof}
+We now upgrade from sets to functions.
+\begin{lemma} \label{lem:bound-change-vars-func}
+	Fix a $C^1$-diffeomorphism $\Phi\colon U\to V$ where $U,V\subseteq\RR^d$ is open. Given a measurable function $f\colon V\to[0,\infty]$, we have
+	\[\int_Vf\,d\mu\le\int_U(f\circ\Phi)\left|J_\Phi\right|d\mu.\]
+\end{lemma}
+\begin{proof}
+	In the case where $f=1_E$ for a Lebesgue measurable $E$, this result is just \Cref{lem:bound-change-vars-borel-general}. Taking linear combinations and approximating below achieves the result for general measurable functions $f\colon V\to[0,\infty]$ via the Monotone convergence theorem \cite[Theorem~9.18]{elber-top}.
+\end{proof}
+At long last, we produce equality.
+\begin{lemma}
+	Fix a $C^1$-diffeomorphism $\Phi\colon U\to V$ where $U,V\subseteq\RR^d$ is open. Given a measurable function $f\colon V\to[0,\infty]$, we have
+	\[\int_Vf\,d\mu=\int_U(f\circ\Phi)\left|J_\Phi\right|d\mu.\]
+\end{lemma}
+\begin{proof}
+	Note $\le$ follows immediately from \Cref{lem:bound-change-vars-func}. For the other inequality, we set $\Psi\coloneqq\Phi^{-1}$ and $g\coloneqq (f\circ\Phi)\left|J_\Phi\right|$ so that $f\coloneqq\left|J_\Phi\circ\Phi^{-1}\right|\left(g\circ\Phi^{-1}\right)$ and reapply \Cref{lem:bound-change-vars-func} to $g$.
+\end{proof}
+
+\end{document}
