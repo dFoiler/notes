@@ -1,0 +1,105 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we move on to talk about Banach spaces. Throughout, $\FF\in\{\RR,\CC\}$ will be a field.
+
+\subsection{Banach Spaces}
+We begin with the definition of a normed vector space.
+\begin{definition}[norm]
+	Fix an $\mathbb F$-vector space $V$. Then a \textit{norm} on $V$ is a function $\norm\cdot\colon V\to\RR_{\ge0}$ satisfying the following conditions.
+	\begin{itemize}
+		\item Positive-definite: $\norm x=0$ if and only if $x=0$.
+		\item Homogeneous: for $\lambda\in\FF$, one had $\norm{\lambda x}=\left|\lambda\right|\cdot\norm x$.
+		\item Triangle inequality: $\norm{x+y}\le\norm x+\norm y$.
+	\end{itemize}
+	We might say that the pair $(V,\norm\cdot)$ is a \textit{normed vector space}.
+\end{definition}
+\begin{remark}
+	Given a normed vector space $(V,\norm\cdot)$. Then
+	\[d(x,y)\coloneqq\norm{x-y}\]
+	makes $V$ into a metric space. Namely, $d$ is a metric.
+\end{remark}
+\begin{definition}[Banach space]
+	A normed vector space $(V,\norm\cdot)$ is a \textit{Banach space} if and only if $V$ is complete as a metric space.
+\end{definition}
+\begin{remark}
+	Fix a normed vector space $(V,\norm\cdot)$. Then we claim $\left|\norm x-\norm y\right|\le\norm{x-y}$. Indeed, the triangle inequality implies $\norm x\le\norm{x-y}+\norm y$, so
+	\[\norm x-\norm y\le\norm{x-y}.\]
+	Reversing $x$ and $y$ shows that $\norm y-\norm x\le\norm{x-y}$ as well, so the claim follows.
+\end{remark}
+We will also want a notion of convergence.
+\begin{definition}[absolute convergence]
+	Fix a normed vector space $(V,\norm\cdot)$. Then a sum $\sum_{i=1}^\infty v_i$ for vectors $\{v_i\}_{i=1}^\infty\subseteq V$ is absolutely convergent if and only if
+	\[\sum_{i=1}^\infty\norm{x_i}<\infty.\]
+\end{definition}
+This produces the following test of convergence.
+\begin{lemma}
+	Fix a normed vector space $(V,\norm\cdot)$. Then $X$ is complete if and only if any absolutely convergent series converges (in $V$).
+\end{lemma}
+\begin{proof}
+	In one direction, any absolutely convergent series has partial sums which are Cauchy (by the absolute convergence), so it will converge in $V$.
+
+	In the other direction, suppose absolutely convergent series converge. Then suppose $\{v_n\}_{n\in\NN}$ is a Cauchy sequence in $V$, which we would like to converge.
+	\begin{remark}
+		Here is an attempt which doesn't work: we might want to, define $w_n\coloneqq w_n-w_{n-1}$ (take $w_0=0$), and we see that $\sum_{k=1}^nw_k=v_n$. So by hypothesis, it is enough to check that this series is absolutely convergent
+		\[\sum_{k=1}^\infty\norm{w_k}<\infty,\]
+		but there is no reason to be true.
+	\end{remark}
+	So we need to control how fast our series converges. Construct a strictly increasing sequence $\{N_k\}_{k=1}^\infty$ such that $m,n\ge N_k$ implies that $\norm{v_m-v_n}<2^{-k}$; for this sequence to be strictly increasing, it must be defined recursively. Thus, we define $w_k\coloneqq y_{N_k}$ to be a subsequence of the $y_\bullet$, and it continues to be Cauchy. In fact, $\norm{w_k-w_{k-1}}<2^{-k-1}$ for each $k$, so the series
+	\[v_{N_n}\coloneqq\sum_{k=1}^nw_k-w_{k-1}\]
+	is absolutely convergent. So a subsequence of $\{v_n\}_{n\in\NN}$ converges, so our actual sequence converges by using the Cauchy condition.
+\end{proof}
+\begin{remark}
+	Of course, there are convergent series which are not absolutely convergent: work in $\RR$ with the usual norm, and take $v_n\coloneqq(-1)^n/n$ for each $n\ge1$.
+\end{remark}
+
+\subsection{A Little Linear Algebra}
+We will want the notion of a basis, which we now build.
+\begin{definition}[linearly independent]
+	Fix a subset $S$ of a vector space $V$ if and only if, for any $n\ge1$ and distinct elements $\{v_1,\ldots,v_n\}\subseteq S$ has
+	\[a_1v_1+\cdots+a_nv_n=0\]
+	implies $a_1=\cdots=a_n=0$.
+\end{definition}
+\begin{definition}[finite dimensinoal]
+	A vector space $V$ is \textit{finite-dimensional} if and only if there is a finite subset $S\subseteq V$ such that any element of $V$ can be written as a linear combination of elements of $S$.
+\end{definition}
+\begin{example}
+	Let $\ell^\infty$ denote the set of bounded infinite sequences in $\FF$, and we give it the norm
+	\[\norm x_\infty\coloneqq\sup_{n\in\NN}\left|x_n\right|.\]
+	Then indicators $e_n\in\ell^\infty$ given by $(e_n)_i\coloneqq1_{n=i}$ are linearly independent.
+\end{example}
+It will turn out that subspaces of finite-dimensional normed vector spaces are closed, but this is not the case in general.
+\begin{example}
+	Continue with $\ell^\infty$ with the norm $\norm\cdot_\infty$. Consider $V$ to be the set of finitely supported sequences, which we can see is a subspace. However, $\ov V$ contains the sequence $v$ defined by $v_n\coloneqq1/n$. Indeed, for any $\varepsilon>0$, we can find $N>1/\varepsilon$ and then note that we can define $v'\in V$ by
+	\[v'_n\coloneqq\begin{cases}
+		1/n & \text{if }n\le N, \\
+		0 & \text{if }n>N.
+	\end{cases}\]
+	Then $\norm{v_n-v'_n}<\varepsilon$. So we see $v\in\ov V\setminus V$.
+\end{example}
+But some parts of topology still make sense.
+\begin{remark}
+	Fix a normed vector space $(V,\norm\cdot)$. Then the open ball $B(0,1)$ is still open in $V$ because it is just an open ball in the usual metric topology.
+\end{remark}
+
+\subsection{Linear Maps}
+With our newfound topology, we want to control our linear maps.
+\begin{definition}[bounded]
+	Fix normed vector spaces $(X,\norm\cdot_X)$ and $(Y,\norm\cdot_Y)$. Then a linear map $T\colon X\to Y$ is \textit{bounded} if and only if there is a finite constant $C$ such that
+	\[\norm{Tx}_Y\le C\norm x_X.\]
+	We let $\mc L(X,Y)$ denote the space of bounded linear maps.
+\end{definition}
+Here is the topological reason that we care.
+\begin{lemma}
+	Fix normed vector spaces $(X,\norm\cdot_X)$ and $(Y,\norm\cdot_Y)$. Then $T\colon X\to Y$ is bounded if and only if continuous.
+\end{lemma}
+\begin{proof}
+	For the forward direction, suppose $T$ is bounded with constant $C>0$. Then for any $\varepsilon>0$, choose $\delta\coloneqq\varepsilon/C$: for any $x,y\in X$, we find that $\norm{x-y}_X<\delta$ implies that
+	\[\norm{Tx-Ty}_Y\le C\norm{x-y}_X<C\delta=\varepsilon,\]
+	so in fact $T$ is uniformly continuous. For the reverse direction, lack of boundedness implies that we can find a sequence of vectors going to $0$ whose norm when passed through $T$ is $1$.
+\end{proof}
+
+\end{document}
