@@ -1,0 +1,84 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we will discuss \v Cech cohomology.
+
+\subsection{\v Cech Cohomology to Groups}
+For today, $X$ will be a topological space, $\mc F$ will be a sheaf of abelian groups on $X$, and $\mc U\coloneqq\{U_i\}_{i\in I}$ is an open cover of $X$, and we will fix a well-ordering on $I$. For indices $i_0,\ldots,i_p\in I$, we define the notation
+\[U_{i_0,\ldots,i_p}\coloneqq U_{i_0}\cap\cdots\cap U_{i_p}.\]
+We can now define our complex.
+\begin{defihelper}[\v Cech complex] \nirindex{Cech complex@\v{C}ech complex}
+	Fix notation as above. For each $p\ge0$, define
+	\[C^p(\mc U,\mc F)\coloneqq\prod_{i_0<\cdots<i_p}\mc F(U_{i_0,\ldots,i_p})\]
+	and the map $d\colon C^p(\mc U,\mc F)\to C^{p+1}(\mc U,\mc F)$ by
+	\[(d^p\alpha)_{i_0,\ldots,i_{p+1}}\coloneqq\sum_{j=0}^{p+1}(-1)^j\alpha_{i_0,\ldots,\widehat i_j,\ldots,i_{p+1}},\]
+	where the hat means an omission of the index.
+\end{defihelper}
+\begin{remark}
+	One can check directly that $d^{p+1}\circ d^p=0$, which we will not write out. Thus, $(\mc C^\bullet(\mc U,\mc F),d^\bullet)$ is in fact a complex of abelian groups.
+\end{remark}
+We now define a convention our indices. Given a class $\alpha\in C^p(\mc U,\mc F)$, for arbitrary indices $i_0,\ldots,i_p\in I$ (perhaps not in order), we define
+\[\alpha_{i_0,\ldots,i_p}\coloneqq\begin{cases}
+	0 & \text{if there is a repeated index}, \\
+	(-1)^{\op{sgn}\sigma}\alpha_{\sigma(i_0),\ldots,\sigma(i_p)} & \text{where }\sigma(i_0)<\cdots<\sigma(i_p).
+\end{cases}\]
+Note that even if $\sigma(i_0)<\cdots<\sigma(i_p)$ fails to hold, multiplicativity of the sign means that we still have the equation
+\[\alpha_{i_0,\ldots,i_p}=(-1)^{\op{sgn}\sigma}\alpha_{\sigma(i_0),\ldots,\sigma(i_p)},\]
+so our notation makes sense.
+\begin{remark}
+	Our differential also still makes sense with these indices. By multiplicativity of the sign, it will suffice to prove the result by induction on the length of $\sigma$. Namely, supposing that
+	\[(d^p\alpha)_{i_0,\ldots,i_{p+1}}\coloneqq\sum_{j=0}^{p+1}(-1)^j\alpha_{i_0,\ldots,\widehat i_j,\ldots,i_{p+1}},\]
+	we will show that
+	\[(d^p\alpha)_{\sigma(i_0),\ldots,\sigma(i_{p+1})}\coloneqq\sum_{j=0}^{p+1}(-1)^j\alpha_{\sigma(i_0),\ldots,\widehat{\sigma(i_j)},\ldots,\sigma(i_{p+1})},\]
+	where $\sigma$ is a transposition $(\ell,\ell+1)$. Namely, the left-hand side is multiplied by $-1$, so we need the right-hand side to also be multiplied by $-1$. For the terms $j\notin\{\ell,\ell+1\}$, then we get our sign on each term. Lastly, $j\in\{\ell,\ell+1\}$ swap in the summation, so their signs also suitably swap with each other.
+\end{remark}
+\begin{remark}
+	Even if there are repeated indices, we still achieve
+	\[(d^p\alpha)_{i_0,\ldots,i_{p+1}}\coloneqq\sum_{j=0}^{p+1}(-1)^j\alpha_{i_0,\ldots,\widehat i_j,\ldots,i_{p+1}}.\]
+	The left-hand side is zero, and the right-hand side is zero at almost every term, except perhaps when $j$ is an index repeated exactly twice, but in this case, the two times $j$ is an index repeated exactly twice will have cancelling signs, so the entire thing still vanishes.
+\end{remark}
+Anyway, we can now define our cohomology.
+\begin{defihelper}[\v Cech cohomology] \nirindex{Cech cohomology@\v{C}ech cohomology}
+	Fix notation as above. We define $\check H^p(\mc U,\mc F)\coloneqq h^p(C^\bullet(\mc U,\mc F))$.
+\end{defihelper}
+Let's do so some sample computations.
+\begin{example} \label{ex:cech-trivial-open-cover}
+	If $\mc U=\{X\}$, then we see that
+	\[C^p(\mc U,\mc F)=\begin{cases}
+		\Gamma(X,\mc F) & \text{if }p=0, \\
+		0 & \text{else},
+	\end{cases}\]
+	so $\check H^p(\mc U,\mc F)$ is the same.
+\end{example}
+\begin{remark}
+	\v Cech cohomology frequently does not actually produce a long exact sequence, so perhaps it is not technically a cohomology theory. Indeed, using \Cref{ex:cech-trivial-open-cover}, it is not the case that a short exact sequence $0\to\mc F'\to\mc F\to\mc F''\to0$ of sheaves of abelian groups on $X$ will produce a short exact sequence
+	\[0\to\Gamma(X,\mc F')\to\Gamma(X,\mc F)\to\Gamma(X,\mc F'')\to0.\]
+\end{remark}
+\begin{example}
+	We always have $\check H(\mc U,\mc F)=\Gamma(X,\mc F)$. Indeed, $\Gamma(X,\mc F)$ is by definition the kernel of the map
+	\[\prod_i\mc F(U_i)\stackrel{d^1}\to\prod_{i<j}\mc F(U_i\cap U_j),\]
+	where $(d^1\alpha)_{ij}=\alpha_i-\alpha_j$. But this is exactly $\Gamma(X,\mc F)$ by the sheaf conditions: we can uniquely glue sections on the $U_\bullet$ which agree on the intersections.
+\end{example}
+\begin{exe}
+	Fix a field $k$ and $X\coloneqq\PP^1_k=\op{Proj}k[x,y]$, and let $U\coloneqq D_+(x)$ and $V\coloneqq D_+(y)$ make up the standard affine open cover $\mc U\coloneqq\{U,V\}$ of $X$. We compute the \v Cech cohomology of the sheaf $\mc F=\OO_X(1)$.
+\end{exe}
+\begin{proof}
+	We begin by computing our complex.
+	\begin{itemize}
+		\item We compute $C^0(\mc U,\OO_X(1))=\Gamma(U,\OO_X(1))\times\Gamma(V,\OO_X(1))=xk[y/x]\oplus yk[x/y]$.
+		\item We compute $C^1(\mc U,\OO_X(1))=xk[y/x,x/y]$.
+		\item For $p\ge2$, we have $C^2(\mc U,\OO_X(1))=0$ because our cover has only two elements anyway.
+	\end{itemize}
+	The only nontrivial differential is the map $C^0(\mc U,\OO_X(1))\to C^1(\mc U,\OO_X(1))$, which we see ``restricts'' $x$ and $y$ to their images in $xk[y/x,x/y]=\Gamma(D_+(xy),\OO_X(1))$.
+
+	In total, we may compute
+	\[\check H^0(\mc U,\OO_X(1))=xk[y/x]\cap yk[x/y]=kx\oplus ky,\]
+	which is correctly the global sections. Continuing,
+	\[\check H^1(\mc U,\OO_X(1))=\frac{\ker d^1}{\im d^0}=\coker d^0=0\]
+	because $d^0$ is surjective: any element of $xk[y/x,x/y]$ can be separated into polynomials in $x$ and polynomials in $y$, so it can be realized from $C^0(\mc U,\OO_X(1))$. Lastly, we note $\check H^p(\mc U,\OO_X(1))=0$ for $p\ge2$ because $C^p(\mc U,\OO_X(1))=0$ there.
+\end{proof}
+
+\end{document}
