@@ -1,0 +1,111 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Let's talk about Banach spaces a little more.
+
+\subsection{Linear Maps}
+With our newfound topology, we want to control our linear maps.
+\begin{definition}[bounded]
+	Fix normed vector spaces $(X,\norm\cdot_X)$ and $(Y,\norm\cdot_Y)$. Then a linear map $T\colon X\to Y$ is \textit{bounded} if and only if there is a finite constant $C$ such that
+	\[\norm{Tx}_Y\le C\norm x_X.\]
+	We let $\mc L(X,Y)$ denote the space of bounded linear maps, and we define
+	\[\norm T_{\mc L(X,Y)}\coloneqq\sup_{x\in X\setminus\{0\}}\frac{\norm {Tx}_Y}{\norm x_X}.\]
+\end{definition}
+\begin{remark}
+	We note $\norm{\cdot}_{\mc L(X,Y)}$ is in fact a norm. Homogeneity has little content, and positive-definite\-ness holds because we are looking at a $\sup$: if $\norm T_{\mc L(X,Y)}=0$, then we must have $\norm{Tx}_Y=0$ always, so $Tx=0$ always. Lastly, for the triangle inequality, we note
+	\[\norm{T+S}_{\mc L(X,Y)}=\sup_{x\in X\setminus\{0\}}\frac{\norm {Tx+Sx}_Y}{\norm x_X}\le\sup_{x\in X\setminus\{0\}}\frac{\norm {Tx}_Y}{\norm x_X}+\sup_{x\in X\setminus\{0\}}\frac{\norm {Sx}_Y}{\norm x_X}=\norm T_{\mc L(X,Y)}+\norm S_{\mc L(X,Y)}.\]
+\end{remark}
+Here is the topological reason that we care.
+\begin{lemma} \label{lem:cont-is-bounded}
+	Fix normed vector spaces $(X,\norm\cdot_X)$ and $(Y,\norm\cdot_Y)$. Then $T\colon X\to Y$ is bounded if and only if continuous.
+\end{lemma}
+\begin{proof}
+	For the forward direction, suppose $T$ is bounded with constant $C>0$. Then for any $\varepsilon>0$, choose $\delta\coloneqq\varepsilon/C$: for any $x,y\in X$, we find that $\norm{x-y}_X<\delta$ implies that
+	\[\norm{Tx-Ty}_Y\le C\norm{x-y}_X<C\delta=\varepsilon,\]
+	so in fact $T$ is uniformly continuous.
+	
+	For the reverse direction, we will only use continuity of $T$ at $0$. Then there exists $\delta>0$ such that $\norm x_X<\delta$ implies that $\norm{Tx}_Y<1$, so any nonzero vector $x'\in X$ has
+	\[\frac{\norm{Tx'}_Y}{\norm {x'}_X}=\frac{\norm{T\left(\frac{\delta}{2\norm{x'}_X}x'\right)}_Y}{\norm{\frac{\delta}{2\norm{x'}_X}x'}_X}<\frac1{\delta/2}=\frac2\delta.\]
+	So we have a bound $\norm T_{\mc L(X,Y)}<2/\delta$, so $T$ is bounded.
+\end{proof}
+
+\subsection{Equivalence of Norms}
+Let's try to classify our norms. Multiplying a norm by a scalar ought to be considered the same norm; generalizing this slightly produces the following definition.
+\begin{definition}[equivalent]
+	Fix a vector space $X$. Two norms $\norm\cdot_1$ and $\norm\cdot_2$ are \textit{equivalent} if and only if there is a constant $C>1$ such that
+	\[C^{-1}\le\frac{\norm x_1}{\norm x_2}\le C\]
+	for any nonzero $x\in X$.
+\end{definition}
+\begin{remark}
+	Equivalence as above is in fact an equivalence relation. Reflexivity has no content (take $C=1$), symmetry follows by taking the reciprocal of the given equation, and transitivity follows by multiplying the two constants together.
+\end{remark}
+\begin{example}
+	The two norms $\norm\cdot_2$ and $\norm\cdot_\infty$ are equivalent on any finite-dimensional space $\RR^d$. Namely, we see that
+	\[\norm x_\infty\le\norm x_2=\sqrt{\sum_{k=1}^dx_k^2}\le\sqrt d\norm x_\infty,\]
+	so equivalence follows.
+\end{example}
+Here is our main result on equivalence.
+\begin{proposition} \label{prop:fin-dim-norms}
+	Fix a finite-dimensional vector space $X$. Then any two norms $\norm\cdot_1$ and $\norm\cdot_2$ on $X$ are equivalent.
+\end{proposition}
+\begin{proof}
+	We will show that any norm $\norm\cdot_X$ on $X$ is equivalent to a given one. Fix a basis $\{v_1,\ldots,v_n\}$ for our finite-dimensional vector space $X$. This basis defines an isomorphism $\varphi\colon\FF^n\to X$ given by $(a_1,\ldots,a_n)\mapsto(a_1v_1+\cdots+a_nv_n)$. We now define $\norm\cdot_\varphi$ to be a norm on $\FF^n$ defined by
+	\[\norm x_\varphi\coloneqq\norm{\sum_{i=1}^nx_iv_i}.\]
+	We won't bother to check that $\norm x_\varphi$ is a norm, which hold by passing the norm checks through the isomorphism $\varphi$ of vector spaces.
+
+	We claim that $\norm\cdot_\infty$ is continuous. Well, we compute
+	\[\norm x_\varphi=\norm{\sum_{i=1}^nx_iv_i}\le\sum_{i=1}^n\left|x_i\right|\cdot\norm{v_i}\le\norm x_\infty\underbrace{\sum_{i=1}^n\norm{v_i}}_{A\coloneqq}.\]
+	Thus, we see that $\norm\cdot_\varphi\colon\FF^n\to\RR_{\ge0}$ is continuous: in fact, $\norm\cdot_\varphi$ is Lipschitz continuous, where we compute
+	\[\left|\norm x_\varphi-\norm{x'}_\infty\right|\le\norm{\varphi(x)-\varphi(x')}=F(x-x')\le A\norm{x-x'}_\infty,\]
+	so $\norm\cdot_\varphi$ is in fact continuous.
+
+	Thus, by continuity, upon restricting $\norm\cdot_\varphi$ to the unit sphere $S^{n-1}$, we see that $\norm\cdot_\varphi$ will achieve its minimum. But $0$ is never achieved on $S^{n-1}$, so let $\delta$ be the minimum and find that
+	\[\delta\le\frac{\norm{x}_\varphi}{\norm x_\infty}\le A\]
+	for any $x\in S^{n-1}$, an inequality which extends to any nonzero $x\in X$ by scaling. Setting $C\coloneqq\max\left\{\delta^{-1},A\right\}$ to deduce that $\norm\cdot$ is equivalent to $\norm\cdot_\varphi$. Pushing through the isomorphism $\varphi$, we see that
+	\[C^{-1}\le\frac{\norm x}{\norm{\varphi^{-1}(x)}_\infty}\le C\]
+	for any nonzero $x\in X$. Thus, $\norm\cdot$ is equivalent to the norm $x\mapsto\norm{\varphi^{-1}(x)}_\infty$, but this latter norm is entirely independent of $\norm\cdot$, so we have indeed shown that any norm on $X$ is equivalent to a fixed one.
+\end{proof}
+
+\subsection{Topology on Normed Vector Spaces}
+Let's see some corollaries of \Cref{prop:fin-dim-norms}.
+\begin{corollary} \label{cor:fin-dim-complete}
+	Fix a finite-dimensional normed vector space $(X,\norm\cdot)$. Then $X$ is complete.
+\end{corollary}
+\begin{proof}
+	Choose a basis, so we may let $\varphi\colon\FF^n\to X$ be some isomorphism of vector spaces. Then $\norm\cdot$ is equivalent to the norm $x\mapsto\norm{\varphi^{-1}(x)}_\infty$ by \Cref{prop:fin-dim-norms}, so $\varphi$ upgrades to a homeomorphism. But then completeness of $X$ follows from completeness of $\FF^n$.
+\end{proof}
+\begin{corollary} \label{cor:fin-dim-is-closed}
+	Fix a normed vector space $(X,\norm\cdot)$. Then any finite-dimensional subspace $V\subseteq X$ is closed.
+\end{corollary}
+\begin{proof}
+	We know that $V$ is complete by \Cref{cor:fin-dim-complete}. This is enough to see that $V$ is closed: any convergent sequence $x_n\to x$ where $\{x_n\}_{n\in\NN}\subseteq V$ will be Cauchy, but completeness of $V$ implies that this Cauchy sequence has a limit $x'\in V$, but we must have $x=x'$ by the uniqueness of limits.
+\end{proof}
+Continuing our discussion, we may want our closed balls to be compact, but we are out of luck.
+\begin{proposition} \label{prop:no-compact-ball}
+	Fix a normed vector space $(X,\norm\cdot)$. Then the closed unit ball
+	\[B\coloneqq\{x\in X:\norm x\le1\}\]
+	is compact if and only if $X$ is finite-dimensional.
+\end{proposition}
+To prove this, we will want a lemma.
+\begin{lemma}
+	Fix a normed vector space $(X,\norm\cdot)$. For $x\in X$ and subspace $V\subseteq X$, we define
+	\[d(x,V)\coloneqq\inf_{x\in V}\norm{x-v}.\]
+	Note that this exists and is finite because $V$ is nonempty (for example, $0\in V$).
+\end{lemma}
+One of course has the bound $d(x,V)\le\norm x$ because $0\in V$. One cannot hope to do much better than this without explosion.
+\begin{lemma} \label{lem:dense-subspace}
+	Fix a normed vector space $(X,\norm\cdot)$. Suppose that each $x\in X$ has $d(x,V)\le\frac12\norm x$. Then $\ov V=X$.
+\end{lemma}
+Let's see how this lemma implies \Cref{prop:no-compact-ball}.
+\begin{proof}[Proof of \Cref{prop:no-compact-ball} from \Cref{lem:dense-subspace}]
+	We will show that either $B$ fails to be compact or $X$ is not finite-dimensional.
+
+	We proceed with the following inductive process. Begin with some unit vector $x_1\in X$. We then look for unit vectors $x_2$ such that $d(x_2,\op{span}\{x_1\})\ge\frac12$. We then continue this process inductively to produce a set $B$. If we ever terminate, then we trigger \Cref{lem:dense-subspace}, and we have a set of unit vectors whose closure is all of $X$. But $V$ is finite-dimensional by construction, so $V\subseteq X$ is closed by \Cref{cor:fin-dim-is-closed}, so $V=\ov V=X$, so $X$ is finite-dimensional.
+
+	We will complete the proof next class.
+\end{proof}
+
+\end{document}
