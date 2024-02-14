@@ -1,0 +1,104 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Let's talk about Banach spaces a little more.
+
+\subsection{Closed Unit Balls}
+We may want our closed balls to be compact, but we are out of luck.
+\begin{proposition} \label{prop:no-compact-ball}
+	Fix a normed vector space $(X,\norm\cdot)$. Then the closed unit ball
+	\[B\coloneqq\{x\in X:\norm x\le1\}\]
+	is compact if and only if $X$ is finite-dimensional.
+\end{proposition}
+To prove this, we will want a lemma.
+\begin{definition}
+	Fix a normed vector space $(X,\norm\cdot)$. For $x\in X$ and subspace $V\subseteq X$, we define
+	\[d(x,V)\coloneqq\inf_{x\in V}\norm{x-v}.\]
+	Note that this exists and is finite because $V$ is nonempty (for example, $0\in V$).
+\end{definition}
+One of course has the bound $d(x,V)\le\norm x$ because $0\in V$. One cannot hope to do much better than this without explosion.
+\begin{lemma} \label{lem:dense-subspace}
+	Fix a normed vector space $(X,\norm\cdot)$. Suppose that each $x\in X$ has $d(x,V)\le\frac12\norm x$. Then $\ov V=X$.
+\end{lemma}
+Let's see how this lemma implies \Cref{prop:no-compact-ball}.
+\begin{proof}[Proof of \Cref{prop:no-compact-ball} from \Cref{lem:dense-subspace}]
+	We will show that either $B$ fails to be compact or $X$ is not finite-dimensional. If $X=0$, there is nothing to do; otherwise, for example, there is a nonzero vector, so scaling provides us with a unit vector.
+
+	We proceed with the following inductive process. Begin with some unit vector $x_1\in X$. We then look for unit vectors $x_2$ such that $d(x_2,\op{span}\{x_1\})\ge\frac12$; if no such vector exists, we terminate our process. We then continue this process inductively to produce a set $B$: given the finite set $\{x_1,\ldots,x_n\}$, we look for a unit vector $x_{n+1}$ such that
+	\[d(x_{n+1},\op{span}\{x_1,\ldots,x_n\})\ge\frac12.\]
+	If no such vector exists, then the process terminates; otherwise, we add $x_{n+1}$ to our finite set and continue.
+	
+	We have two cases.
+	\begin{itemize}
+		\item If we ever terminate, then we trigger \Cref{lem:dense-subspace}: we know there is a finite set $\{x_1,\ldots,x_n\}$ of unit vectors such that every unit vector $x$ has $d(x,V)<1/2$ where $V\coloneqq\op{span}\{x_1,\ldots,x_n\}$. Scaling, we actually know that
+		\[d(x,V)<\frac12\norm x\]
+		for any $x\in X$: for nonzero $x$, we simply divide both sides of the above inequality by $\norm x$. So we trigger \Cref{lem:dense-subspace}, so $\ov V=X$. But $V$ is finite-dimensional by construction, so $V\subseteq X$ is closed by \Cref{cor:fin-dim-is-closed}, so $X=\ov V=V$ is finite-dimensional.
+		\item Otherwise, we have an infinite set $\{x_1,x_2,\ldots\}$ of unit vectors such that $\norm{x_i-x_j}\ge\frac12$ for any indices $i<j$.  In particular, $B$ has a sequence with no convergent subsequence, so $B$ fails to be compact.
+		\qedhere
+	\end{itemize}
+\end{proof}
+We now prove \Cref{lem:dense-subspace}.
+\begin{proof}[Proof of \Cref{lem:dense-subspace}]
+	Fix $x\in X$. We want to show that $d(x,V)=0$. In other words, for any $\varepsilon>0$, we want $y\in V$ such that $\norm{x-y}<\varepsilon$.
+
+	Well, suppose for the sake of contradiction that we have $\varepsilon>0$ such that no $y\in V$ achieves $\norm{x-y}<\varepsilon$, and we may assume that $\varepsilon\coloneqq\inf\{\norm{x-y}:y\in V\}$ is as small as possible. In particular, surely there will be some $y_1\in V$ such that $\norm{x-y_1}<\frac32\varepsilon$, but then we can find $y_2\in V$ such that
+	\[\norm{x-y_1-y_2}\le\frac12\norm{x-y_1},\]
+	so
+	\[\norm{x-(y_1+y_2)}\le\frac12\norm{x-y_1}\le\frac34\varepsilon,\]
+	which is a contradiction to the construction of $\varepsilon$.
+\end{proof}
+
+\subsection{Functionals}
+It will be helpful to study linear maps to the ground field.
+\begin{definition}[functional]
+	Fix a normed vector space $(X,\norm\cdot)$. Then a \textit{bounded linear functional} is an element of $X^*\coloneqq\mc L(X,\FF)$.
+\end{definition}
+\begin{example}
+	Certainly $X^*$ is nonempty because it has the zero element.
+\end{example}
+However, it is rather hard to get anything else in $X^*$.
+\begin{example}
+	If $X$ is finite-dimensional, then choose a basis $\{v_1,\ldots,v_n\}$. Then there are functionals
+	\[\sum_{i=1}^na_iv_i\mapsto\sum_{i=1}^nc_ia_i\]
+	for any $(c_1,\ldots,c_n)\in\FF^n$.
+\end{example}
+It will turn out that we can build lots of functionals, but it is not so obvious how to do this. We will have the following results.
+\begin{corollary}
+	Fix a normed vector space $(X,\norm\cdot)$. For any $x\in X$, there is a bounded linear functional $\ell\colon X\to\FF$ such that $\ell(x)=\norm x$ and $\norm\ell_{X^*}=1$.
+\end{corollary}
+\begin{remark}
+	Certainly $\ell(x)=\norm x$ forces $\norm\ell_{X^*}\ge1$, so we are saying that $\ell$ is small away from $x$.
+\end{remark}
+\begin{corollary}
+	Fix a normed vector space $(X,\norm\cdot)$. Given distinct $x,y\in X$, there is a bounded linear functional $\ell\colon X\to\FF$ such that $\ell(x)\ne\ell(y)$.
+\end{corollary}
+These results will arise as corollaries of the following result.
+\begin{theorem}[Hahn--Banach] \label{thm:hb}
+	Fix a normed vector space $(X,\norm\cdot)$, and let $V\subseteq X$ be a subspace. Given a bounded linear functional $\ell\colon V\to\FF$, there is a bounded linear functional $L\colon X\to\FF$ such that $L|_V=\ell$ and $\norm L=\norm\ell_{V^*}$
+\end{theorem}
+One even has the following extension for $\RR$.
+\begin{definition}
+	Fix an $\mathbb R$-vector space $X$. A function $p\colon X\to\RR$ is a \textit{sublinear functional} if and only if $p(x+y)\le p(x)+p(y)$ and $p(tx)=tp(x)$ for $t>0$.
+\end{definition}
+\begin{example}
+	Fix a normed vector space $(X,\norm\cdot)$, and let $K\subseteq X$ be a closed convex subset, and suppose that $K$ contains $B(0,\varepsilon)$ for some $\varepsilon>0$. Then we define
+	\[p(x)\coloneqq\inf\left\{t>0:\frac1tx\in K\right\}.\]
+	It turns out that $p$ is a sublinear functional. Notably, if $K$ is not symmetric, then $p(x)$ need not equal $p(-x)$, so $p$ need not be a norm.
+\end{example}
+\begin{theorem}[Hahn--Banach] \label{thm:hb-sub}
+	Fix an $\mathbb R$-vector space $X$ equipped with sublinear functional $p$, and let $V\subseteq X$ be a subspace. Given a linear functional $\ell\colon V\to\FF$ such that $\ell\le p$ pointwise, there is a bounded linear functional $L\colon X\to\FF$ such that $L|_V=\ell$ and $L\le p$ pointwise.
+\end{theorem}
+Our proofs of \Cref{thm:hb,thm:hb-sub} will be by transfinite induction on $V$. Let's state the successor step.
+\begin{lemma}
+	Fix an $\mathbb R$-vector space $X$ equipped with sublinear functional $p$, and let $V\subseteq X$ be a subspace. Given a linear functional $\ell\colon V\to\FF$ such that $\ell\le p$ pointwise and some $x\notin V$, there exists some linear $\widetilde\ell\colon(V+\RR x)\to\RR$ such that $\widetilde\ell|_V=\ell$ and $\widetilde\ell\le p$ pointwise.
+\end{lemma}
+\begin{proof}
+	Set $\widetilde V\coloneqq V+\RR x$. Note that decomposition of an element of $\widetilde V$ into $v+rx$ where $v\in V$ and $r\in\RR$ is unique: if $v+rx=v'+r'x$, then $(r-r')x=v'-v\in V$, so $r-r'=0$, so $v'-v=0$. So we simply define
+	\[\widetilde\ell(v+rx)\coloneqq\ell(v)+r\alpha\]
+	for some $\alpha$ to be determined later, and one can see that this satisfies all properties.
+\end{proof}
+
+\end{document}
