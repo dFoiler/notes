@@ -1,0 +1,118 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we compare \v Cech and derived cohomology.
+
+\subsection{\v Cech Cohomology to Sheaves}
+For today, $X$ will be a topological space, $\mc F$ will be a sheaf of abelian groups on $X$, and $\mc U\coloneqq\{U_i\}_{i\in I}$ is an open cover of $X$, and we will fix a well-ordering on $I$. We fix notation as previous.
+
+So we get a complex on sheaves as follows, upgrading our previous complex.
+\begin{defihelper}[\v Cech complex] \nirindex{Cech complex@\v{C}ech complex}
+	Fix notation as above. For each $p\ge0$, define
+	\[\mc C^p(\mc U,\mc F)\coloneqq\prod_{i_0<\cdots<i_p}j_*\mc F|_{U_{i_0,\ldots,i_p}},\]
+	where $j$ is the needed inclusion, and the map $d\colon\mc C^p(\mc U,\mc F)\to\mc C^{p+1}(\mc U,\mc F)$ by
+	\[(d^p\alpha)_{i_0,\ldots,i_{p+1}}\coloneqq\sum_{j=0}^{p+1}(-1)^j\alpha_{i_0,\ldots,\widehat i_j,\ldots,i_{p+1}},\]
+	where the hat means an omission of the index.
+\end{defihelper}
+One checks as usual that we do indeed have a complex, which again we will not write out.
+\begin{example}
+	Fix everything as above. Then we can compute
+	\[\Gamma(X,\mc C^p(\mc U,\mc F))=C^p(\mc U,\mc F).\]
+\end{example}
+We now begin doing our comparison.
+\begin{lemma}
+	Fix notation as above. Then there is a natural transformation $\varepsilon\colon\mc F\to\mc C^0(\mc U,\mc F)$ given by $\varepsilon_V(s)\coloneqq(s|_{U_i\cap V})_{U_i\in\mc U}$. In fact,
+	\[0\to\mc F\stackrel\varepsilon\to\mc C^\bullet(\mc U,\mc F)\]
+	is an exact sequence of sheaves.
+\end{lemma}
+\begin{proof}
+	We won't bother to check that $\varepsilon$ is in fact a morphism of sheaves. For the exactness, note the sequence
+	\[0\to\Gamma(V,\mc F)\to\Gamma\left(V,\mc C^0(\mc U,\mc F)\right)\to\Gamma\left(V,\mc C^1(\mc U,\mc F)\right)\]
+	is exact for all $V$ by the sheaf condition on $\mc F$. For exactness elsewhere, we need exactness of
+	\[\mc C^{p-1}(\mc U,\mc F)\to\mc C^{p}(\mc U,\mc F)\to\mc C^{p+1}(\mc U,\mc F).\]
+	This can be checked on stalks, which is done by hand. We won't write out the details.
+\end{proof}
+\begin{proposition} \label{prop:flasque-zero-on-cech}
+	Fix everything as above. If $\mc F$ is flasque, then $\check H^p(\mc U,\mc F)=0$ for $p>0$.
+\end{proposition}
+\begin{proof}
+	Fix some $p\ge0$ for the time being. For $\mc F$ is flasque, the restrictions $\mc F|_{U_{i_0,\ldots,i_p}}$ will also be flasque, so the pushforward $j_*(\mc F|_{U_{i_0,\ldots,i_p}})$ will also continue to be flasque, so the product $\mc C^p(\mc U,\mc F)$ will be flasque. Thus, \Cref{lem:flasque-is-acyclic} and \Cref{prop:acyclic-res} allow us to compute $H^p(X,\mc F)$ via this resolution. To complete the proof, we note
+	\[H^p(X,\mc F)=h^p(\Gamma(X,\mc C^\bullet(\mc U,\mc F)))=h^\bullet(C^\bullet(\mc U,\mc F))=\check H^p(\mc U,\mc F).\]
+	The left-hand side vanishes by \Cref{lem:flasque-is-acyclic}, so the right-hand side also vanishes.
+\end{proof}
+So we have some acyclic objects agreeing. We are now ready to construct the needed natural map.
+\begin{lemma} \label{lem:cech-to-derived}
+	Fix everything as above. Then there is natural map $\check H^p(\mc U,\mc F)\to H^p(X,\mc F)$.
+\end{lemma}
+\begin{proof}
+	Fix an injective resolution $0\to\mc F\to\mc I^\bullet$ of $\mc F$. Because the $\mc I^\bullet$ are injective, an inductive argument produces a morphism of the complexes $\mc C^\bullet(\mc U,\mc F)\to\mc I^\bullet$. Then this morphism of complexes induces a morphism on cohomology, as desired. Choosing the injectives functorially in $\mc F$ promises that this map is natural.
+	
+	Alternatively, one can check that this map does not depend on the choice of $\mc I$ by doing some homotopy computation using the argument of \Cref{prop:inj-res-functorial-uniq}; naturality follows by choosing the injective resolutions to have maps between them a priori. Being explicit, we can produce a commutative diagram
+	% https://q.uiver.app/#q=WzAsOCxbMiwwLCJcXG1jIEMoXFxtYyBVLFxcbWMgRileXFxidWxsZXQiXSxbMywwLCJcXG1jIEleXFxidWxsZXQiXSxbMiwxLCJcXG1jIEMoXFxtYyBVLFxcbWMgRyleXFxidWxsZXQiXSxbMywxLCJcXG1jIEpeXFxidWxsZXQiXSxbMSwwLCJcXG1jIEYiXSxbMSwxLCJcXG1jIEciXSxbMCwwLCIwIl0sWzAsMSwiMCJdLFswLDFdLFsyLDNdLFsxLDNdLFswLDJdLFs0LDUsIlxcdmFycGhpIiwyXSxbNyw1XSxbNiw0XSxbNCwwXSxbNSwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {\mc F} & {\mc C(\mc U,\mc F)^\bullet} & {\mc I^\bullet} \\
+		0 & {\mc G} & {\mc C(\mc U,\mc G)^\bullet} & {\mc J^\bullet}
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=1-3, to=2-3]
+		\arrow["\varphi"', from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=2-2, to=2-3]
+	\end{tikzcd}\]
+	where the rightmost square commutes up to some homotopy. Taking cohomology produces the needed commuting square for our map to be natural.
+\end{proof}
+We now check when this map is an isomorphism.
+\begin{theorem}
+	Fix a Noetherian separated scheme $X$, and let $\mc U$ be an affine open cover of $X$, and let $\mc F$ be a quasicoherent sheaf on $X$. Then for all $p\ge0$, the natural map $\check H^p(\mc U,\mc F)\to H^p(X,\mc F)$ of \Cref{lem:cech-to-derived} are isomorphisms.
+\end{theorem}
+\begin{proof}
+	We induct on $p$. For $p=0$, one uses \Cref{ex:cech-h0}; we won't bother to check that the map is the natural one. Additionally, we remark that if $\mc F$ is flasque, we get the result for $p>0$ by \Cref{prop:flasque-zero-on-cech}.
+
+	Now, fix some quasicoherent sheaf $\mc F$ for which we want to show that $\check H^p(\mc U,\mc F)\to H^p(X,\mc F)$ is an isomorphism. Then \Cref{cor:embed-to-qcoh-flasque} allows us to embed $\mc F$ into a flasque quasicoherent sheaf $\mc F$; letting $\mc Q$ be the quotient, we get the exact sequence
+	\[0\to\mc F\to\mc G\to\mc Q\to0.\]
+	Note that $X$ being separated implies that $U_{i_0,\ldots,i_p}$ is affine, so \Cref{prop:flasque-zero-on-cech} implies $H^1(U_{i_0,\ldots,i_p},\mc F)=0$, so
+	\[0\to\mc F(U_{i_0,\ldots,i_p})\to\mc G(U_{i_0,\ldots,i_p})\to\mc R(U_{i_0,\ldots,i_p})\to0\]
+	is exact. Thus,
+	\[0\to C^\bullet(\mc U,\mc F)\to C^\bullet(\mc U,\mc G)\to C^\bullet(\mc U,\mc Q)\to0\]
+	is an exact sequence of the \v Cech complexes, so we get a long exact sequence of \v Cech cohomology. Notably, we even have a morphism of the exact sequences of the above sequence with injective resolutions of $\mc F$ and $\mc G$ and $\mc Q$. Being explicit, there is going to be a morphism of short exact sequences as follows.
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIkNeXFxidWxsZXQoXFxtYyBVLFxcbWMgRikiXSxbMiwwLCJDXlxcYnVsbGV0KFxcbWMgVSxcXG1jIEcpIl0sWzAsMSwiMCJdLFsxLDEsIlxcR2FtbWEoWCxcXG1jIEleXFxidWxsZXQpIl0sWzIsMSwiXFxHYW1tYShYLFxcbWMgSl5cXGJ1bGxldCkiXSxbMywwLCJDXlxcYnVsbGV0KFxcbWMgVSxcXG1jIFEpIl0sWzQsMCwiMCJdLFszLDEsIlxcR2FtbWEoWCxcXG1jIEteXFxidWxsZXQpIl0sWzQsMSwiMCJdLFswLDFdLFsxLDJdLFsyLDZdLFs2LDddLFszLDRdLFs0LDVdLFs1LDhdLFs4LDldLFsxLDRdLFsyLDVdLFs2LDhdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {C^\bullet(\mc U,\mc F)} & {C^\bullet(\mc U,\mc G)} & {C^\bullet(\mc U,\mc Q)} & 0 \\
+		0 & {\Gamma(X,\mc I^\bullet)} & {\Gamma(X,\mc J^\bullet)} & {\Gamma(X,\mc K^\bullet)} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=2-4]
+	\end{tikzcd}\]
+	Now, if $p\ge1$, then $\check H^p(\mc U,\mc G)=H^p(\mc U,\mc G)=0$ by being flasque (see also \Cref{prop:flasque-zero-on-cech}) so we get the commutative diagram as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGNoZWNrIEhee3AtMX0oXFxtYyBVLFxcbWMgRykiXSxbMSwwLCJcXGNoZWNrIEhee3AtMX0oXFxtYyBVLFxcbWMgUSkiXSxbMiwwLCJcXGNoZWNrIEhecChcXG1jIFUsXFxtYyBGKSJdLFszLDAsIjAiXSxbMCwxLCJIXntwLTF9KFgsXFxtYyBHKSJdLFsxLDEsIkhee3AtMX0oWCxcXG1jIFEpIl0sWzIsMSwiSF5wKFgsXFxtYyBGKSJdLFszLDEsIjAiXSxbMCw0LCJcXHZhcmVwc2lsb24iLDJdLFsxLDUsIlxcdmFyZXBzaWxvbiIsMl0sWzIsNiwiXFx2YXJlcHNpbG9uIiwyXSxbNCw1XSxbNSw2XSxbMCwxXSxbMSwyXSxbMiwzXSxbNiw3XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\check H^{p-1}(\mc U,\mc G)} & {\check H^{p-1}(\mc U,\mc Q)} & {\check H^p(\mc U,\mc F)} & 0 \\
+		{H^{p-1}(X,\mc G)} & {H^{p-1}(X,\mc Q)} & {H^p(X,\mc F)} & 0
+		\arrow["\varepsilon"', from=1-1, to=2-1]
+		\arrow["\varepsilon"', from=1-2, to=2-2]
+		\arrow["\varepsilon"', from=1-3, to=2-3]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=2-3, to=2-4]
+	\end{tikzcd}\]
+	The two maps on the left are isomorphisms by the inductive hypothesis, so the map $\varepsilon$ (on cokernels!) must be an isomorphism as well by a Five lemma.
+\end{proof}
+
+\end{document}
