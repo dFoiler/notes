@@ -1,0 +1,137 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{The Rank Theorem}
+It will turn out that maps of constant rank basically look like projections.
+\begin{example}
+	The projection $F\colon\RR^2\to\RR$ given by $F\colon(x,y)\mapsto x$ is a submersion. Namely, $dF=(1,0)$ for each $p$, so $\op{rank}dF_p=1$ for all $p$.
+\end{example}
+Our result will arise from some change of basis.
+\begin{proposition} \label{prop:change-basis-to-rank}
+	Fix a linear map $L\colon V\to W$ of finite-dimensional $\RR$-vector spaces of rank $r$. Then there is a basis of $V$ and a basis of $W$ such that $L$ has matrix representation given by
+	\[\begin{bmatrix}
+		I_r & 0 \\ 0 & 0
+	\end{bmatrix},\]
+	where $I$ is an $r\times r$ identity matrix.
+\end{proposition}
+\begin{proof}
+	Put any given matrix $L$ in row-reduced Echelon form and then move the columns around as needed. Row and column operations correspond to adjusting bases of $V$ and $W$.
+\end{proof}
+So here is our result.
+\begin{theorem} \label{thm:rank}
+	Fix a smooth $m$-manifold $M$ and a smooth $n$-manifold $N$, and let $F\colon M\to N$ be a smooth map of constant rank $r$. For each $p$, there are smooth coordinate charts $(U,\varphi)$ on $M$ and $(V,\psi)$ such that $p\in U$, $F(U)\subseteq V$, and $F$ has a coordinate representation given by
+	\[F(x_1,\ldots,x_r,x_{r+1},\ldots,x_m)=(x_1,\ldots,x_r,0,\ldots,0).\]
+\end{theorem}
+\begin{proof}
+	Smoothness allows us to choose some coordinate representation, so we may assume that $M=\RR^m$ and $N=\RR^n$. In our choice of coordinate representation, we may also assume that $p=0\in\RR^m$ and $F(p)=0\in\RR^n$. We are basically trying to ``straighten out'' $F$ around $p$.
+
+	The name of the game is to find a diffeomorphism $\varphi$ on an open neighborhood $U\subseteq\RR^m$ of $0$ and a diffeomorphism $\psi$ on an open neighborhood $V\subseteq\RR^n$ of $0$ such that
+	\[\psi\circ F\circ\varphi^{-1}\]
+	is going to look as in the statement. We proceed in steps.
+	\begin{enumerate}
+		\item Using change-of-basis isomorphisms $A\colon\RR^m\to\RR^m$ and $B\colon\RR^n\to\RR^n$ so that $d(B\circ F\circ A)_0=dB_0\circ dF_0\circ dF_0$ now looks like
+		\[\begin{bmatrix}
+			I_r & 0 \\
+			0 & 0
+		\end{bmatrix}.\]
+		(We are using \Cref{prop:change-basis-to-rank} to find $A$ and $B$.) The point is that $F$ looks how we want locally at $0$.
+
+		\item We apply the Inverse function theorem to straighten out the first $r$ coordinates. While we're here, we establish our coordinate as follows: given the domain of $F$ the coordinates $(x_1,\ldots,x_r,y_1,\ldots,y_{m-r})$, and give the codomain of $F$ the coordinates $(x_1',\ldots,x_r',y_1',\ldots,y_{n-r}')$. Under these coordinates, say $F$ is $F(x,y)=(Q(x,y),R(x,y))$.
+
+		To straighten out $Q$, we set $\varphi(x,y)\coloneqq(Q(x,y),y)$. We would like for $\varphi$ to be a diffeomorphism local at $0$, which we can compute as $\id_{\RR^m}$: on the first $r$ coordinates, we are $Q(x,y)$, which is $I_m$ locally, and on the last $n-r$ coordinates, we are $y$, which continues to be the identity. Thus, $\varphi$ is in fact locally a diffeomorphism on some open neighborhood $U$ of $0$. So we may compute
+		\[\left(F\circ\varphi^{-1}\right)(x,y)=\left(x,(R\circ\varphi^{-1})(x,y)\right).\]
+
+		\item We remove the dependence of $F\circ\varphi^{-1}$ on $y$. Computing our current differential, we get
+		\[d(F\circ\varphi^{-1})_{(x,y)}=\begin{bmatrix}
+			I_r & 0 \\
+			\frac{\del (R\circ\varphi^{-1})}{\del x} & \frac{\del (R\circ\varphi^{-1})}{\del y}
+		\end{bmatrix}.\]
+		However, for $F$ to have constant rank $r$, we see that we must have $\frac{\del (R\circ\varphi^{-1})}{\del y}=0$; in other words, this composite does not depend on $y$. (In other words, it is constant with respect to $y$.) So we set $S(x)\coloneqq(R\circ\varphi^{-1})(x,y)$. So we now have
+		\[\left(F\circ\varphi^{-1}\right)(x,y)=(x,S(x)).\]
+
+		\item We straighten out the remaining $n-r$ coefficients using the Inverse function theorem. Namely, define $\psi\colon\RR^n\to\RR^n$ by
+		\[\psi(x',y')\coloneqq(x',S(x')-y').\]
+		Computing the differential at $0$ shows that $\psi$ is locally a diffeomorphism, so we may use it as a chart. We now conclude by computing $\left(\psi\circ F\circ\varphi^{-1}\right)(x,y)=(x,0)$, as required.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	Please read the Global rank theorem.
+\end{remark}
+
+\subsection{Embeddings}
+Here is our definition.
+\begin{definition}
+	Fix smooth manifolds $M$ and $N$. A smooth map $F\colon M\to N$ is an \textit{embedding} if and only if $F$ is an injective immersion and a homeomorphism onto its image.
+\end{definition}
+\begin{remark}
+	The image of a smooth map does not necessarily make sense as a smooth manifold, which is why we are only requiring a homeomorphism onto the image instead of a diffeomorphism onto its image.
+\end{remark}
+Here is how one might check this.
+\begin{lemma} \label{lem:how-to-embed}
+	Fix a smooth map $F\colon M\to N$. Then $F$ is an embedding if and only if $F$ is an injective immersion, and given any sequence $\{x_n\}_{n\in\NN}\subseteq M$ and $x\in M$ such that $Fx_n\to Fx$ as $n\to\infty$, we have $x_n\to x$ as $n\to\infty$.
+\end{lemma}
+\begin{proof}
+	The forward direction is clear because the inverse homeomorphism must take convergent sequences to convergent sequences. The reverse direction amounts to checking the continuity of $F^{-1}$, which is basically what the condition says on sequences.
+\end{proof}
+\begin{example}
+	Fix smooth manifolds $M$ and $N$. For $p\in N$, the inclusion map $M\times\{p\}\to M\times N$ is an embedding.
+\end{example}
+\begin{nex}
+	Any curve $\gamma\colon[0,1]\to\RR^n$ with self-intersection fails to be injective, so $\gamma$ fails to be an embedding.
+\end{nex}
+\begin{nex}
+	Consider the map $\gamma\colon[0,2\pi)\to\RR^2$ by $\gamma(x)\coloneqq(\cos x,\sin x)$. Then as $x\to2\pi$, we have $\gamma(x)\to\gamma(0)$, which contradicts \Cref{lem:how-to-embed}.
+\end{nex}
+\begin{nex}
+	Consider the map $F\colon\RR^+\to\RR^2$ by $F(t)\coloneqq(t,\sin 1/t)$. One can see that $F$ is in fact an embedding, but if we add in some $(-1,1)\to\RR^2$ by $s\mapsto(0,s)$, then $F\colon(\RR^+\sqcup(-1,1))\to\RR^2$ is no longer an embedding. The point is that there are points in $\im F$ converging to $\{0\}\times(-1,1)$, but this is bad news because points in $\RR^+$ are not going to converge to $(-1,1)$.
+\end{nex}
+\begin{nex}
+	Fix $T^2\coloneqq S^1\times S^1$, and realize $S^1$ as $\RR/\ZZ$. Then $F\colon\RR\to T^2$ defined by $t\mapsto(\alpha t,\beta t)$ for $\alpha,\beta\in\RR^\times$ is never an embedding.
+	\begin{itemize}
+		\item If $\alpha/\beta\in\QQ$, then one can see that $F$ is periodic, so it fails to be injective. Namely, if $\beta=(r/s)\alpha$, then $F(st)$.
+		\item When $\alpha/\beta\notin\QQ$, some Diophantine approximation implies that $\im F$ is dense in $T^2$, so it cannot be an embedding.
+	\end{itemize}
+\end{nex}
+\begin{nex}
+	Consider $F\colon\RR\to\RR$ by $F(t)\coloneqq t^3$. Then $F$ does not have constant rank, so $F$ is not an embedding.
+\end{nex}
+Compactness makes many of these pathologies disappear.
+\begin{proposition}
+	Fix an injective immersion $F\colon M\to N$ of smooth manifolds. Then $F$ is an embedding.
+\end{proposition}
+\begin{proof}
+	We need to show that $F$ is a homeomorphism onto its image. Because $F$ is a continuous injection, it suffices to show that the map $F\colon M\to\im F$ is an open map, for which it suffices to show that it is actually a closed map. Well, any closed subset $V\subseteq M$ is compact because $M$ is compact, so $F(V)$ is compact, so $F(V)\subseteq\im F$ is closed because $\im F\subseteq N$ is Hausdorff.
+\end{proof}
+Similarly, looking locally makes many of these pathologies disappear.
+\begin{proposition}
+	Fix an immersion $F\colon M\to N$. Given $p\in M$, there is an open neighborhood $U$ of $p$ such that $F|_U$ is an embedding.
+\end{proposition}
+\begin{proof}
+	This follows somewhat quickly from \Cref{thm:rank}.
+\end{proof}
+\begin{remark}
+	If $\dim M=\dim N$, then the above result follows rather quickly from the Inverse function theorem.
+\end{remark}
+\begin{remark}
+	Please read about submersions and smooth covering maps.
+\end{remark}
+
+\subsection{Submanifolds}
+Our na\"ive definition is simply that we are a subset with inherited smooth structure.
+\begin{definition}[embedded smooth submanifolds]
+	Fix a smooth manifold $M$. Then a subspace $S\subseteq M$ is an \textit{embedded smooth submanifold} if and only if $S$ is a manifold with smooth structure such that the inclusion $S\into M$ is a smooth embedding. In other words, we are asking that $S$ is the image of a smooth embedding $F\colon N\to M$.
+\end{definition}
+\begin{example}
+	Fix an open subset $S\subseteq M$. Then the inclusion $S\into M$ is of course an embedding, so $S$ is a submanifold.
+\end{example}
+\begin{example}
+	Fix a countable discrete set of points $S\subseteq M$. Then the inclusion $S\into M$ is smooth of rank $0$.
+\end{example}
+
+\end{document}
