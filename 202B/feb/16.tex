@@ -1,0 +1,72 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{The Hahn--Banach Theorem}
+Our proofs of \Cref{thm:hb,thm:hb-sub} will be by transfinite induction on $V$. Let's state the successor step.
+\begin{lemma} \label{lem:hb-sub-step}
+	Fix an $\mathbb R$-vector space $X$ equipped with sublinear functional $p$, and let $V\subseteq X$ be a subspace. Given a linear functional $\ell\colon V\to\FF$ such that $\ell\le p$ pointwise and some $x\notin V$, there exists some linear $\widetilde\ell\colon(V+\RR x)\to\RR$ such that $\widetilde\ell|_V=\ell$ and $\widetilde\ell\le p$ pointwise.
+\end{lemma}
+\begin{proof}
+	Set $\widetilde V\coloneqq V+\RR x$. Note that decomposition of an element of $\widetilde V$ into $v+rx$ where $v\in V$ and $r\in\RR$ is unique: if $v+rx=v'+r'x$, then $(r-r')x=v'-v\in V$, so $r-r'=0$, so $v'-v=0$. So we simply define
+	\[\widetilde\ell(v+rx)\coloneqq\ell(v)+r\alpha\]
+	for some $\alpha$ to be determined later. For example, $\widetilde\ell$ is certainly linear by construction, and it restricts down to $\ell$ on $V$. So we are looking for $\alpha$ such that
+	\[t\alpha+\ell(v)\le p(tx+v)\qquad\text{and}\qquad-t\alpha+\ell(v)\le p(-tx+v)\]
+	for any $t\ge0$ and $v\in V$. Certainly we may assume that $t>0$ because $t=0$ reduces down to $\ell$, but then we can divide everything in sight by $t$ so that it suffices for
+	\[\alpha+\ell(v)\le p(x+v)\qquad\text{and}\qquad-\alpha+\ell(v)\le p(-x+v)\]
+	for any $v\in V$. This rearranges to
+	\[\sup_{v\in V}(\ell(v)-p(-x+v))\le\alpha\le\inf_{v\in V}(p(x+v)-\ell(v)).\]
+	So we can find the needed $\alpha$ if and only if
+	\[\sup_{v\in V}(\ell(v)-p(-x+v))\le\inf_{v\in V}(p(x+v)-\ell(v)).\]
+	Fixing some vectors explicitly, it is enough to check that
+	\[\ell(u+v)=\ell(v)+\ell(u)\le p(x+v)+p(-x+u)\]
+	for any $v,u\in V$. In particular, by hypothesis of $\ell$, it is enough for $p(u+v)\le p(x+v)+p(-x+u)$, but this follows from sublinearity of $p$ by writing $u+v=(x+v)+(-x+u)$.
+\end{proof}
+\begin{remark}
+	Replacing $p$ with an actual norm $\norm\cdot$ on $X$ allows us to allow $X$ to even by a $\CC$-vector space, simply by repeating the proof verbatim.
+\end{remark}
+We would now like to use Zorn's lemma to upgrade \Cref{lem:hb-sub-step} to \Cref{thm:hb-sub}. We begin by stating Zorn's lemma in the form that we will use. This requires the notion of a partial order.
+\begin{definition}[partial order]
+	A \textit{partial order} on a set $S$ is a binary relation $\le$ satisfying the following.
+	\begin{itemize}
+		\item Reflexive: $x\le x$ for all $x\in S$.
+		\item Transitive: if $x\le y$ and $y\le z$, then $z\le z$.
+		\item Antisymmetric: if $x\le y$ and $y\le x$, then $x=y$.
+	\end{itemize}
+	We say that $\le$ is \textit{linearly ordered} (or is a \textit{chain}) if and only if we satisfy the additional axiom of totality: $x\le y$ or $y\le x$ for all $x,y\in S$.
+\end{definition}
+\begin{example}
+	Consider a set $X$. Then $\mc P(X)$ is partially ordered by $\subseteq$. It is not linear ordered by $\subseteq$.
+\end{example}
+And now here is Zorn's lemma.
+\begin{theorem} \label{thm:zorn}
+	Suppose that $(S,\le)$ is a nonempty partially ordered set such that any subchain $C\subseteq S$ is ``bounded above'' in the sense that there is some $y\in S$ such that $x\le y$ for any $x\in C$. Then $S$ has a maximal element; i.e., there is some $y\in S$ such that $x\le y$ for any $x\in S$.
+\end{theorem}
+\begin{proof}
+	This is equivalent to the Axiom of choice.
+\end{proof}
+To apply Zorn's lemma, here is the proof of \Cref{lem:hb-sub-step}.
+\hbsubthm*
+\begin{proof}
+	We will use Zorn's lemma. For this, we let our partially ordered set $S$ consisting of all pairs $(W,\ell_W)$ where $W\subseteq X$ is a subspace and $\ell_W$ is a functional on $W$ restricting to $\ell$ and has $\ell_W\le p$ pointwise on $W$. Our partial order is given by $(W_1,\ell_1)\le(W_2,\ell_2)$ if and only if $(W_2,\ell_2)$ ``extends'' $(W_1,\ell_1)$ in the sense that $W_1\subseteq W_2$ and $\ell_1=\ell_2|_{W_1}$.
+
+	Note $S$ is nonempty because it has $(V,\ell)$ by construction. Now, to apply \Cref{thm:zorn}, we need to check that any chain $C\subseteq S$ has an upper bound. Well, define
+	\[W'\coloneqq\bigcup_{(W,\ell_W)\in C}W,\]
+	and then we define $\ell'\colon W'\to\RR$ by defining $\ell'(v)$ to be $\ell_W(v)$ where $v\in W$ for some $(W,\ell_W)\in C$. Notably, the choice of $\ell_W$ does not matter: if $v\in W_1\cap W_2$ where $(W_1,\ell_1),(W_2,\ell_2)\in C$, then without loss of generality we can take $(W_1,\ell_1)\le(W_2,\ell_2)$, implying $\ell_2(v)=\ell_1(v)$. Thus, $\ell'$ is well-defined, and one can check directly that it is linear on $W'$; similarly one can check that $\ell'$ extends $\ell$ and that $\ell'\le p$ pointwise. In conclusion, $(W',\ell')\in S$ and bounds $C$ above.
+
+	Thus, \Cref{thm:zorn} provides a maximal element $(W,\ell)$ of $S$. We claim that $W=X$, which will complete the proof. Well, if $W\subsetneq X$, then we can find $x\in X\setminus W$. But then \Cref{lem:hb-sub-step} tells us that we can extend $(W,\ell)$ to some $(W+\RR x,\widetilde\ell)$ in $S$, and $W\subsetneq W+\RR x$ contradicts the fact that $(W,\ell)$ is maximal. This completes the proof.
+\end{proof}
+\begin{remark}
+	It turns out that \Cref{thm:hb} is not actually equivalent to the Axiom of choice.
+\end{remark}
+\begin{remark}
+	The proof of \Cref{thm:hb} is similar, so we will omit it. Alternatively, one can apply \Cref{thm:hb-sub} to $\Re\ell$, viewing $X$ as an $\mathbb R$-vector space. Then one can recover $\ell$ from $\Re\ell$ via the identity
+	\[\ell(x)=\Re\ell(x)-i\Re\ell(ix),\]
+	so similarly one can upgrade the lifted functional $\Re\widetilde\ell$ provided by \Cref{thm:hb-sub} to $\widetilde\ell$ via the above formula.
+\end{remark}
+
+\end{document}
