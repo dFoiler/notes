@@ -1,0 +1,172 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Upgrading \v Cech Comparison}
+Here is a quick remark.
+\begin{remark}
+	Fix a scheme $X$ over $\Spec A$. Then the \v Cech complex $C^\bullet(\mc U,\mc F)$ is a complex of $A$-modules, so the cohomology $\check H^\bullet(\mc U,\mc F)$ are $A$-modules as well. Analogously, $\mc C^\bullet(\mc U,\mc F)$ is a complex of quasicoherent $A$-modules, so the induced map \Cref{lem:cech-to-derived} can be checked to be a map of $A$-modules by making everything into a morphism of $A$-modules. So \Cref{thm:cech-comparison} explains that $H^\bullet(X,\mc F)$ is an $A$-module when $X$ is a Noetherian separated $A$-scheme.
+\end{remark}
+We will want to upgrade \Cref{thm:cech-comparison} somewhat; notably, \Cref{thm:cech-comparison} has some strong hypotheses on $X$ and $\mc F$, which we will work to remove. We will succeed in removing them for $H^1$.
+
+Our method will be based on allowing the open cover $\mc U$ to get finer. So we should define what is meant by a refinement.
+\begin{definition}[refinement]
+	A \textit{refinement} of an open cover $\mc U$ on $X$ is an open cover $\mc V$ such that there is a mp $\lambda\colon\mc V\to\mc U$ such that $V\subseteq\lambda(V)$ for each $V\in\mc V$. In practice, we may index $\mc U$ and $\mc V$ and view $\lambda$ as a function on indices.
+\end{definition}
+Refinements allow us to improve \v Cech cohomology. To make this precise, we need to get morphisms on \v Cech cohomology.
+\begin{lemma} \label{lem:refine-cech}
+	Fix a sheaf $\mc F$ of abelian groups on $X$. Given a refinement $\lambda\colon\mc V\to\mc U$ where $\mc U\coloneqq\{U_i\}_{i\in I}$ and $\mc V\coloneqq\{V_j\}_{j\in J}$, we get a natural map of complexes $\lambda^\bullet\colon C^\bullet(\mc U,\mc F)\to C^\bullet(\mc V,\mc F)$ and hence a (very) natural map $\lambda^p\colon\check H^\bullet(\mc U,\mc F)\to\check H^\bullet(\mc V,\mc F)$.
+\end{lemma}
+\begin{proof}
+	Define $\lambda^p\colon C^p(\mc U,\mc F)\to C^p(\mc V,\mc F)$ by
+	\[\left(\lambda^p\alpha\right)_{j_0,\ldots,j_p}\coloneqq\alpha_{\lambda(j_0),\ldots,\alpha(j_p)}.\]
+	One can check that $\lambda^p$ upgrades to a morphism of complexes by checking that
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJDXnAoXFxtYyBVLFxcbWMgRikiXSxbMSwwLCJDXntwKzF9KFxcbWMgVSxcXG1jIEYpIl0sWzAsMSwiQ15wKFxcbWMgVixcXG1jIEYpIl0sWzEsMSwiQ157cCsxfShcXG1jIFYsXFxtYyBGKSJdLFswLDIsIlxcbGFtYmRhXnAiLDJdLFsxLDMsIlxcbGFtYmRhXntwKzF9Il0sWzAsMSwiZF5wX1xcbWMgVSJdLFsyLDMsImRecF9cXG1jIFYiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{C^p(\mc U,\mc F)} & {C^{p+1}(\mc U,\mc F)} \\
+		{C^p(\mc V,\mc F)} & {C^{p+1}(\mc V,\mc F)}
+		\arrow["{\lambda^p}"', from=1-1, to=2-1]
+		\arrow["{\lambda^{p+1}}", from=1-2, to=2-2]
+		\arrow["{d^p_\mc U}", from=1-1, to=1-2]
+		\arrow["{d^p_\mc V}", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	commutes, so we upgrade to a morphism on cohomology. While we're here, we do a flurry of naturality checks.
+	\begin{itemize}
+		\item Note that $\lambda^p$ is also natural in $\mc F$ because the diagram
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCJDXnAoXFxtYyBVLFxcbWMgRikiXSxbMCwxLCJDXnAoXFxtYyBWLFxcbWMgRikiXSxbMSwwLCJDXnAoXFxtYyBVLFxcbWMgRykiXSxbMSwxLCJDXnAoXFxtYyBVLFxcbWMgRykiXSxbMCwxLCJcXGxhbWJkYV5wIiwyXSxbMCwyLCJDXnBcXHZhcnBoaSJdLFsxLDMsIkNecFxcdmFycGhpIl0sWzIsMywiXFxsYW1iZGFecCJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{C^p(\mc U,\mc F)} & {C^p(\mc U,\mc G)} \\
+			{C^p(\mc V,\mc F)} & {C^p(\mc U,\mc G)}
+			\arrow["{\lambda^p}"', from=1-1, to=2-1]
+			\arrow["{C^p\varphi}", from=1-1, to=1-2]
+			\arrow["{C^p\varphi}", from=2-1, to=2-2]
+			\arrow["{\lambda^p}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		commutes for any sheaf morphism $\varphi\colon\mc F\to\mc G$.
+		\item Note that $\lambda$ is functorial in the refinement. Indeed, given a refinement $\mu\colon\mc W\to\mc V$ where $\mc W\coloneqq\{W_k\}_{k\in K}$, then we see that
+		% https://q.uiver.app/#q=WzAsMyxbMCwwLCJDXlxcYnVsbGV0KFxcbWMgVSxcXG1jIEYpIl0sWzIsMCwiQ15cXGJ1bGxldChcXG1jIFcsXFxtYyBGKSJdLFsxLDEsIkNeXFxidWxsZXQoXFxtYyBWLFxcbWMgRikiXSxbMCwyLCJcXGxhbWJkYV5cXGJ1bGxldCIsMl0sWzIsMSwiXFxtdV5cXGJ1bGxldCIsMl0sWzAsMSwiKFxcbXVcXGNpcmNcXGxhbWJkYSleXFxidWxsZXQiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			{C^\bullet(\mc U,\mc F)} && {C^\bullet(\mc W,\mc F)} \\
+			& {C^\bullet(\mc V,\mc F)}
+			\arrow["{\lambda^\bullet}"', from=1-1, to=2-2]
+			\arrow["{\mu^\bullet}"', from=2-2, to=1-3]
+			\arrow["{(\mu\circ\lambda)^\bullet}", from=1-1, to=1-3]
+		\end{tikzcd}\]
+		commutes by an explicit computation.
+		\item Note that the morphism $\lambda^\bullet\colon\check H^\bullet(\mc U,\mc F)\to\check H^\bullet(\mc V,\mc F)$ is independent of the choice of refinement $\lambda$, which can be seen by taking a common refinement of two choices $\lambda,\lambda'\colon\mc U\to\mc V$; we won't write out the relevant diagram for this check.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark} \label{rem:direct-refine-cech}
+	Any two refinements of $\mc U$ have a common refinement by taking intersections, so we have a directed system, so we can construct a directed colimit
+	\[\colimit\check H^p(\mc U,\mc F)\]
+	for each $p$.
+\end{remark}
+The following naturality check for \Cref{lem:refine-cech} will be especially important.
+\begin{lemma} \label{lem:refine-cech-to-derived}
+	Fix a sheaf $\mc F$ of abelian groups on $X$. Given a refinement $\lambda\colon\mc V\to\mc U$ where $\mc U\coloneqq\{U_i\}_{i\in I}$ and $\mc V\coloneqq\{V_j\}_{j\in J}$, the following diagram commutes, where the unlabeled arrows are from \Cref{lem:cech-to-derived}.
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXGNoZWNrIEheXFxidWxsZXQoXFxtYyBVLFxcbWMgRikiXSxbMSwxLCJcXGNoZWNrIEheXFxidWxsZXQoXFxtYyBWLFxcbWMgRikiXSxbMiwwLCJIXnAoWCxcXG1jIEYpIl0sWzAsMl0sWzAsMSwiXFxsYW1iZGFeXFxidWxsZXQiLDJdLFsxLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\check H^\bullet(\mc U,\mc F)} && {H^p(X,\mc F)} \\
+		& {\check H^\bullet(\mc V,\mc F)}
+		\arrow[from=1-1, to=1-3]
+		\arrow["{\lambda^\bullet}"', from=1-1, to=2-2]
+		\arrow[from=2-2, to=1-3]
+	\end{tikzcd}\]
+\end{lemma}
+\begin{proof}
+	Fix an injective resolution $0\to\mc F\to\mc I^\bullet$ of $\mc F$. Then one can build a commutative diagram of resolutions
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXG1jIENeXFxidWxsZXQoXFxtYyBVLFxcbWMgRikiXSxbMSwxLCJcXG1jIENeXFxidWxsZXQoXFxtYyBWLFxcbWMgRikiXSxbMiwwLCJcXG1jIEleXFxidWxsZXQiXSxbMCwxXSxbMSwyXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{\mc C^\bullet(\mc U,\mc F)} && {\mc I^\bullet} \\
+		& {\mc C^\bullet(\mc V,\mc F)}
+		\arrow[from=1-1, to=2-2]
+		\arrow[from=2-2, to=1-3]
+		\arrow[from=1-1, to=1-3]
+	\end{tikzcd}\]
+	where the top arrow is induced by a choice of arrow in the bottom right. (Notably, $\lambda^\bullet$ is induced in basically the same way as \Cref{lem:refine-cech}.) So taking global sections and then cohomology produces the needed commutative diagram.
+\end{proof}
+The point of \Cref{lem:refine-cech-to-derived} is that we can combine it with \Cref{rem:direct-refine-cech} to produce a map
+\[\colimit\check H^p(\mc U,\mc F)\to H^p(X,\mc F).\]
+And here is our result.
+\begin{proposition}
+	Fix a sheaf $\mc F$ of abelian groups on $X$. Then the natural map
+	\[\colimit\check H^p(\mc U,\mc F)\to H^p(X,\mc F)\]
+	described above is an isomorphism for $p\in\{0,1\}$.
+\end{proposition}
+\begin{proof}
+	For $p=0$, then \Cref{ex:cech-h0} tells us that everything involved is $\Gamma(X,\mc F)$. So the main content will be with $p=1$.
+
+	So we take $p=1$. We would like to dimension-shift, but we will run into complications. Embed $\mc F$ into a flasque sheaf $\mc I$ and let $\mc Q$ be the quotient so that
+	\[0\to\mc F\to\mc I\to\mc Q\to0\]
+	is an exact sequence. Now, to access \v Cech cohomology, note any open cover $\mc U$ has an injection $C^\bullet(\mc U,\mc F)\to C^\bullet(\mc U,\mc I)$, so we let $D^\bullet(\mc U)$ be the quotient complex so that we have an exact sequence
+	\[0\to C^\bullet(\mc U,\mc F)\to C^\bullet(\mc U,\mc I)\to D^\bullet(\mc U)\to0\]
+	which we have checked in \Cref{lem:refine-cech} is natural in the refinement $\mc U$. (Naturality in $D^\bullet$ is induced.) Thus, for a refinement $\lambda\colon\mc V\to\mc U$, we get a commutative diagram as follows with exact rows.
+	% https://q.uiver.app/#q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIlxcY2hlY2sgSF4wKFxcbWMgVSxcXG1jIEYpIl0sWzIsMCwiXFxjaGVjayBIXjAoXFxtYyBVLFxcbWMgSSkiXSxbMywwLCJoXjAoRChcXG1jIFUpKSJdLFsxLDEsIlxcY2hlY2sgSF4wKFxcbWMgVixcXG1jIEYpIl0sWzIsMSwiXFxjaGVjayBIXjAoXFxtYyBWLFxcbWMgSSkiXSxbMywxLCJoXjAoRChcXG1jIFYpKSJdLFswLDEsIjAiXSxbNCwwLCJcXGNoZWNrIEheMShcXG1jIFUsXFxtYyBGKSJdLFs0LDEsIlxcY2hlY2sgSF4xKFxcbWMgVixcXG1jIEYpIl0sWzUsMCwiXFxjaGVjayBIXjEoXFxtYyBVLFxcbWMgSSkiXSxbNSwxLCJcXGNoZWNrIEheMShcXG1jIFYsXFxtYyBJKSJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDhdLFs4LDEwXSxbNyw0XSxbNCw1XSxbNSw2XSxbNiw5XSxbOSwxMV0sWzEsNF0sWzIsNV0sWzMsNl0sWzgsOV0sWzEwLDExXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\begin{equation}
+		\begin{tikzcd}
+			0 & {\check H^0(\mc U,\mc F)} & {\check H^0(\mc U,\mc I)} & {h^0(D(\mc U))} & {\check H^1(\mc U,\mc F)} & {\check H^1(\mc U,\mc I)} \\
+			0 & {\check H^0(\mc V,\mc F)} & {\check H^0(\mc V,\mc I)} & {h^0(D(\mc V))} & {\check H^1(\mc V,\mc F)} & {\check H^1(\mc V,\mc I)}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-4, to=1-5]
+			\arrow[from=1-5, to=1-6]
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-3, to=2-4]
+			\arrow[from=2-4, to=2-5]
+			\arrow[from=2-5, to=2-6]
+			\arrow[from=1-2, to=2-2]
+			\arrow[from=1-3, to=2-3]
+			\arrow[from=1-4, to=2-4]
+			\arrow[from=1-5, to=2-5]
+			\arrow[from=1-6, to=2-6]
+		\end{tikzcd} \label{eq:dim-shift-refine-cech}
+	\end{equation}
+	Note $\check H^1(\mc U,\mc I)=\check H^1(\mc V,\mc I)=0$ by \Cref{prop:flasque-zero-on-cech}, so the ends are zero. Also, the left two maps are isomorphisms by the $p=0$ case (they are both $\Gamma(X,\mc F)$). Now, the universal property of the cokernel produces the morphism of exact sequences
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCIwIl0sWzEsMCwiaF4wKEReXFxidWxsZXQoXFxtYyBVKSkiXSxbMSwxLCJoXjAoRF5cXGJ1bGxldChcXG1jIFYpKSJdLFsyLDAsIlxcY2hlY2sgSF4wKFxcbWMgVSxcXG1jIFIpIl0sWzMsMCwiXFxHYW1tYShYLFxcbWMgUikiXSxbMywxLCJcXEdhbW1hKFgsXFxtYyBSKSJdLFsyLDEsIlxcY2hlY2sgSF4wKFxcbWMgVixcXG1jIFIpIl0sWzAsMSwiMCJdLFswLDFdLFsxLDNdLFszLDQsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzcsMl0sWzIsNl0sWzYsNSwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwyXSxbMyw2LCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDUsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {h^0(D^\bullet(\mc U))} & {\check H^0(\mc U,\mc Q)} & {\Gamma(X,\mc Q)} \\
+		0 & {h^0(D^\bullet(\mc V))} & {\check H^0(\mc V,\mc Q)} & {\Gamma(X,\mc Q)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[Rightarrow, no head, from=1-3, to=1-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[Rightarrow, no head, from=2-3, to=2-4]
+		\arrow[from=1-2, to=2-2]
+		\arrow[Rightarrow, no head, from=1-3, to=2-3]
+		\arrow[Rightarrow, no head, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	basically because $\Gamma(X,-)$ is already known to be left exact. Thus, we see that the left vertical map above is injective, so the Five lemma in \eqref{eq:dim-shift-refine-cech} tells us that $\check H^1(\mc U,\mc F)\to\check H^1(\mc V,\mc F)$ is injective.
+
+	We now take colimits over everything to draw the following diagram.
+	% https://q.uiver.app/#q=WzAsMTIsWzAsMCwiMCJdLFsxLDAsIlxcR2FtbWEoWCxcXG1jIEYpIl0sWzIsMCwiXFxHYW1tYShYLFxcbWMgSSkiXSxbMywwLCJcXGNvbGltaXQgaF4wKEQoXFxtYyBVKSkiXSxbMSwxLCJcXEdhbW1hKFgsXFxtYyBGKSJdLFsyLDEsIlxcR2FtbWEoWCxcXG1jIEkpIl0sWzMsMSwiXFxHYW1tYShYLFxcbWMgUikiXSxbMCwxLCIwIl0sWzQsMCwiXFxjb2xpbWl0IFxcY2hlY2sgSF4xKFxcbWMgVSxcXG1jIEYpIl0sWzQsMSwiSF4xKFgsXFxtYyBGKSJdLFs1LDAsIlxcY29saW1pdFxcY2hlY2sgSF4xKFxcbWMgVSxcXG1jIEkpIl0sWzUsMSwiSF4xKFgsXFxtYyBJKSJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDhdLFs4LDEwXSxbNyw0XSxbNCw1XSxbNSw2XSxbNiw5XSxbOSwxMV0sWzEsNF0sWzIsNV0sWzgsOV0sWzEwLDExXSxbMyw2LCIiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {\Gamma(X,\mc F)} & {\Gamma(X,\mc I)} & {\colimit h^0(D(\mc U))} & {\colimit \check H^1(\mc U,\mc F)} & {\colimit\check H^1(\mc U,\mc I)} \\
+		0 & {\Gamma(X,\mc F)} & {\Gamma(X,\mc I)} & {\Gamma(X,\mc R)} & {H^1(X,\mc F)} & {H^1(X,\mc I)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+		\arrow[from=2-5, to=2-6]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-5, to=2-5]
+		\arrow[from=1-6, to=2-6]
+		\arrow[dashed, from=1-4, to=2-4]
+	\end{tikzcd}\]
+	As before, the ends vanish, and the middle arrow is induced. One finds that it is actually an isomorphism, so the map for $p=1$ on $\mc F$ is an isomorphism, as desired.
+\end{proof}
+
+\end{document}
