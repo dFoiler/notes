@@ -1,0 +1,105 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Baire's Theorem}
+Compactness is not going to be so helpful for Banach spaces, so we will need a different notion, which we will slowly build up to. To start off our story, we consider the following example.
+\begin{example} \label{ex:open-dense}
+	One can build an open dense subset covering $\QQ$ but with arbitrarily small measure. Indeed, enumerate $\QQ$ as $\{q_n\}_{n\in\NN}$ and then set
+	\[U_\varepsilon\coloneqq\left(q_n-\varepsilon2^{-n},q_n+\varepsilon2^{-n}\right),\]
+	which we can compute has measure upper-bounded by $\sum_{n\in\NN}2\varepsilon2^{-n}=4\varepsilon$. Thus, for example,
+	\[A\coloneqq\bigcap_{k\in\NN}U_{1/k}\]
+	has measure zero but is dense and is the countable intersection of open sets.
+\end{example}
+One might be interested in what $A$ looks like. It will turn out that $A$ is uncountable, but of course it is rather hard to show there is a single element in $A\setminus\QQ$.
+
+Here is our theorem.
+\begin{theorem}[Baire] \label{thm:baire-1}
+	Fix a complete metric space $X$, and let $\{U_n\}_{n\in\NN}$ be a collection of open dense subsets of $X$. Then
+	\[\bigcap_{n\in\NN}U_n\]
+	is nonempty and in fact dense.
+\end{theorem}
+\begin{proof}
+	We will show density directly, so let $V$ be some open subset of $X$ which we would like $\bigcap_{n\in\NN}U_n$ to intersect $V$ nontrivially. Well, we proceed inductively. To begin, choose $x_0\in U_0\cap V$, and select $r_0<1$ such that $B(x_0,3r_0)\subseteq U_1\cap V$. Then given $x_n$ and positive $r_n<r_{n-1}/2$ (where $r_{-1}=2$), we select
+	\[x_{n+1}\in U_n\cap B(x_n,r_n)\]
+	and some positive $r_{n+1}<r_n/2$ such that $B(x_{n+1},3r_{n+1})\subseteq U_n\cap B(x_n,r_n)$.
+
+	We now claim that $\{x_n\}_{n\in\NN}$ is a Cauchy sequence, and its limit will be the desired point. Well, by an induction, we see $r_n<2^{-n}$, so
+	\[d_X(x_n,x_{n+1})<r_n<2^{-n},\]
+	so for $m<n$, we see
+	\[d_X(x_m,x_n)\le\sum_{k=m}^{n-1}d_X(x_k,x_{k+1})<\sum_{k=m}^{n-1}2^{-k}<2^{-m+1},\]
+	which does indeed vanish as $m\to\infty$.
+
+	Thus, by completeness, we get some $x\in X$ with $x_n\to x$ as $n\to\infty$. We claim that $x\in V\cap\bigcap_{n\in\NN}U_n$, which will complete the proof. This will require some understanding of $d(x,x_m)$. Well, for each $m<n$, we know
+	\[d_X(x_m,x_n)<\sum_{k=m}^{n-1}d_X(x_k,x_{k+1})<\sum_{k=m}^\infty r_k<2r_m\]
+	by an argument similar to the above one, so we must have $d_X(x_m,x)\le2r_m<3r_m$, so $x\in B(x_m,3r_m)\subseteq U_{m-1}\cap B(x_{m-1},r_{m-1}$, where $B(x_{-1},r_{-1})$ means $V$. So indeed $x$ lives in every $U_m$ and also in $V$, so we are done.
+\end{proof}
+\begin{remark}
+	Completeness of $X$ is necessary. For example, take $X=\QQ$ with the standard metric and topology. But then we can enumerate $\QQ$ as $\{q_n\}_{n\in\NN}$ and define the open dense subset $U_n\coloneqq X\setminus\{q_n\}$, but
+	\[\bigcap_{n\in\NN}U_n=\emp.\]
+\end{remark}
+At this point, we are able to say that $A$ of \Cref{ex:open-dense} is at least dense.
+
+\subsection{Nowhere Dense Sets}
+To see that $A$ of \Cref{ex:open-dense} is fairly large, we want the following definitions.
+\begin{definition}[nowhere dense]
+	Fix a topological space $X$. Then a subset $E\subseteq X$ is \textit{nowhere dense} if and only if $\ov E$ contains no nonempty subset.
+\end{definition}
+\begin{example}
+	The Cantor set in $\RR$ is nowhere dense.
+\end{example}
+\begin{definition}[category]
+	Fix a topological space $X$. Then a subset $E\subseteq X$ is \textit{of the first category} if and only if $E$ is a countable union of nowhere dense sets.
+\end{definition}
+\begin{example} \label{ex:countable-first-cat}
+	If $X$ is countable, then singletons are certainly nowhere dense, so $X$ is of the first category.
+\end{example}
+We are now allowed to extend \Cref{thm:baire-1} as follows.
+\begin{theorem}[Baire] \label{thm:baire-2}
+	Fix a complete metric space $X$, and let $\{U_n\}_{n\in\NN}$ be a collection of open dense subsets of $X$. Then
+	\[\bigcap_{n\in\NN}U_n\]
+	is not of the first category.
+\end{theorem}
+\begin{proof}
+	Suppose for contradiction that we can find countably many nowhere dense subsets $\{E_k\}_{k\in\NN}$ such that
+	\[\bigcap_{n\in\NN}U_n\subseteq\bigcup_{k\in\NN}E_k.\]
+	Rearranging, we see that
+	\[\Bigg(\bigcap_{n\in\NN}U_n\bigg)\cap\Bigg(\bigcap_{k\in\NN}X\setminus\ov{E_k}\Bigg)\]
+	being empty. However, $E_k$ being nowhere dense means that $X\setminus X\setminus\ov{E_k}$ is open and dense, so we have exhibited a countable union of open dense subsets of $X$ with empty intersection. So we achieve contradiction from \Cref{thm:baire-1}.
+\end{proof}
+\begin{example}
+	If $X$ is a complete metric space, one can take $U_n\coloneqq X$ for all $n\in\NN$, so $X$ itself is not of the first category. Thus, for example, a complete metric space cannot be countable by comparing with \Cref{ex:countable-first-cat}.
+\end{example}
+The point of \Cref{thm:baire-2} is that $A$ of \Cref{ex:open-dense} cannot be of the first category, so for example it cannot be countable.
+
+\subsection{The Open Mapping Theorem}
+Let's now apply our results for fun and profit. Here is our next statement.
+\begin{theorem}[Open mapping] \label{thm:open-map}
+	Fix a surjective bounded linear map $T\colon X\to Y$ of Banach spaces.
+	\begin{listalph}
+		\item Then $T$ is open.
+		\item There is $A>0$ such that any $y\in Y$ has some $x\in X$ such that $T(x)=y$ and $\norm{x}_X\le A\norm y_Y$.
+	\end{listalph}
+\end{theorem}
+\begin{remark} \label{rem:continuous-bijection}
+	\Cref{thm:open-map} is intended to recover some aspects of compactness. To see this, suppose $f\colon X\to Y$ is a continuous bijection of compact Hausdorff topological spaces. Then it turns out that $f$ is open: it's enough to see that $f$ is closed by taking complements, but for closed $K\subseteq X$, we see $K$ is compact, so $f(K)$ is compact, so $f(K)\subseteq Y$ is closed.
+\end{remark}
+Here's an application, explaining how to recover \Cref{rem:continuous-bijection}.
+\begin{corollary}
+	Fix a bijective bounded linear map $T\colon X\to Y$ of Banach spaces. Then $T^{-1}$ is bounded.
+\end{corollary}
+\begin{proof}
+	Part (b) of \Cref{thm:open-map} tells us that $\norm{T^{-1}(y)}_X\le A\norm{}$ (because $x=T^{-1}(y)$ is unique!), which is what we wanted.
+\end{proof}
+Anyway, let's begin proving \Cref{thm:open-map}.
+\begin{proof}[Proof of \Cref{thm:open-map}]
+	Consider $Y_n\coloneqq\ov{T(B_X(0,n))}$ to be a subset of $Y$, and we note that
+	\[\bigcup_{n\in\NN}Y_n=Y.\]
+	Thus, \Cref{thm:baire-2} implies there is some $N$ such that $Y_N$ contains some $B(y,\delta)$ for $\delta>0$.
+\end{proof}
+
+\end{document}
