@@ -1,0 +1,85 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we prove the Open mapping theorem.
+
+\subsection{Proof of the Open Mapping Theorem}
+Recall the statement.
+\omt*
+\begin{proof}
+	Let's focus on (b) for now. We proceed in steps; note that we may assume $y\ne0$.
+	\begin{enumerate}
+		\item Consider $Y_n\coloneqq\ov{T(B_X(0,n))}$ to be a subset of $Y$, and we note that
+		\[\bigcup_{n\in\NN}Y_n=Y.\]
+		Thus, \Cref{thm:baire-2} implies there is some $N$ such that $Y_N$ contains some $B(\ov y,\delta)$ for $\delta>0$. Namely, the complements have empty intersection, so at least one of the $Y\setminus Y_\bullet$ must fail to be open and dense, so one of the $Y_\bullet$ will contain an open ball. So we get
+		\[\ov{T(B_X(0,N))}\supseteq B(\ov y,\delta).\]
+		We now spend a couple steps upgrading this.
+	
+		\item Now, choose some $y\in B_Y(0,\delta)$ and $\varepsilon>0$. Then by construction, we may choose $x_1\in X$ with $\norm{Tx_1-\ov y}_Y<\varepsilon$ and $\norm{x_1}_X<N$ and $x_2\in X$ such that $\norm{Tx_2-(\ov y+y)}_Y<\varepsilon$ and $\norm{x_2}_X<N$. So setting $x\coloneqq x_1-x_2$, we find
+		\[\norm{Tx-y}_Y\le\norm{Tx_1-\ov y}_Y+\norm{Tx_2-(y+\ov y)}_Y<2\varepsilon,\]
+		and $\norm x<2N$.
+	
+		\item Continuing, set $C\coloneqq2N/\delta$. Then each nonzero $y\in Y$ and $\varepsilon>0$ has some $x\in X$ such that $\norm{Tx-y}<\varepsilon$ and $\norm x<2N/\delta$. Indeed, this is direct from the prior step: replace $y$ with $y_0\coloneqq\frac{\delta}{2\norm y}y$, conjuring $x_0$ with $\norm{x_0}_X<2N$ and $\norm{Tx_0-y_0}<\frac\delta{2\norm y}\varepsilon$ via the prior step, and then scale $x_0$ back up to $x\coloneqq\frac{2\norm y}{\delta}$ to conclude.
+
+		\item We now complete the proof by a limiting procedure. To begin, we choose $x_1\in X$ such that $\norm{x_1}_X\le C\norm y_Y$ and $\norm{Tx_1-y}_Y<2^{-1}\norm y$. Then given $x_n$, we choose $x_{n+1}\in X$ such that
+		\[\norm{Tx_{n+1}-(y-Tx_1-\cdots-Tx_n)}_Y<2^{-n-1}\norm y_Y\]
+		such that $\norm{x_{n+1}}_X\le C\norm{y-Tx_1-\cdots-Tx_n}_Y$, and this upper bound is just $C2^{-n}\norm y_Y$ by construction. So we may define
+		\[x\coloneqq\sum_{k=1}^\infty x_k,\]
+		which converges because $X$ is complete (and this series is absolutely convergent). Additionally, we see $\sum_{k=1}^NTx_k\to y$ by construction, so continuity of $T$ tells us $Tx=y$. Lastly, we bound $\norm x_X$ by the above absolutely convergent series, which is bounded by $C\norm y_Y\sum_{k=0}^\infty2^{-k}=2C\norm y_Y$, as required.
+	\end{enumerate}
+	It remains to show (a). Well, (b) provides a constant $A$ such that $T(B_X(0,A))$ contains $B_Y(0,1)$. So we see $T(B_X(0,Ar))\supseteq B_Y(0,r)$ for any $r>0$. By translating, we see that any ball $T(B_X(x,\varepsilon))$ contains $B_Y(Tx,\varepsilon/A)$. Thus, for any open subset $U\subseteq X$, we ere able to conclude that $T(U)\subseteq Y$ is open: for any $y\in T(U)$, write $y=Tx$ for $x\in U$, but then there is $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$, so
+	\[B(y,\varepsilon/A)\subseteq T(U)\]
+	is an open neighborhood of $y$ contained in $T(U)$. So $T(U)$ is in fact open.
+\end{proof}
+\begin{remark}
+	The power of \Cref{thm:open-map} is that it is able to provide a concrete bound ``$A$'' on solving the ``system'' of equations $Tx=y$.
+\end{remark}
+
+\subsection{The Closed Graph Theorem}
+Here is our next result.
+\begin{theorem}[Closed graph] \label{thm:closed-graph}
+	Fix a Banach spaces $X$ and $Y$. Fix a linear map $T\colon X\to Y$. If $T$ has a graph
+	\[\Gamma\coloneqq\{(x,Tx)\in X\times Y:x\in X\}\]
+	which is closed in $X\times Y$, then $T$ is bounded.
+\end{theorem}
+\begin{remark}
+	Again, the power of \Cref{thm:closed-graph} is that we are able to get a concrete bound on the norm of $T$ from a topological condition.
+\end{remark}
+Wait, how do we give the product a topology? One could use the product topology, but we can see this on the level of norms as well.
+\begin{definition}[product]
+	Given normed vector spaces $X$ and $Y$, then the \textit{product} $X\times Y$ is a vector space with norm given by
+	\[\norm{(x,y)}_{X\times Y}\coloneqq\norm x_X+\norm y_Y.\]
+\end{definition}
+\begin{remark}
+	If $X$ and $Y$ are both complete, then $X\times Y$ is also complete, which we can see by taking limits coordinate-wise.
+\end{remark}
+Let's see an example of an unbounded operator.
+\begin{example} \label{ex:deriv-unbounded}
+	Let $X$ be the collection of continuously differentiable functions $f\colon[0,1]\to\CC$, where we take $\norm f_X\coloneqq\sup\{f(x):x\in[0,1]\}$, which we can see is a norm. (Notably, $\norm f_X=0$ means that $f(x)=0$ everywhere, so $f=0$.) Then we let $Y$ be the collection of continuous functions $f\colon[0,1]\to\CC$ with the same norm $\norm f_Y\coloneqq\sup\{f(x):x\in[0,1]\}$, and we define $D\colon X\to Y$ by $Df\coloneqq f'$. Note $D$ is well-defined and linear, and we see $D$ is bounded is equivalent to requiring
+	\[\sup_{\substack{f\in X\\f\ne0}}\frac{\norm{Df}_Y}{\norm f_X}=\sup_{\substack{f\in X\\f\ne0}}\frac{\sup\{f'(x):x\in[0,1]\}}{\sup\{f(x):x\in[0,1]\}}<\infty,\]
+	but this is false; for example, we can consider the family $f_n(x)=\sin nx$ which has $\norm{f_n}_X=1$ but $\norm{Df_n}_Y\to\infty$ as $n\to\infty$.
+\end{example}
+\begin{example}
+	We continue \Cref{ex:deriv-unbounded}. Let $\Gamma$ be the graph of $D$, but we note that $\Gamma$ is closed! Unwinding definitions, we are being given a sequence of functions $\{f_n\}_{n\in\NN}\subseteq X$ and $g$ and $h$ such that $f_n\to g$ uniformly and $f_n'\to h$ uniformly, and we must show that $g'=h$. Well, write
+	\[f_n(x)=f_n(0)+\int_0^xf_n'(t)\,dt\]
+	and take limits everywhere to see $g(x)=g(0)+\int_0^xh(t)\,dt$, which implies $g'=h$.
+\end{example}
+It might look like the previous example violates \Cref{thm:closed-graph}, but in fact $X$ is not complete and hence not Banach.
+
+Here is another example.
+\begin{example}
+	Consider the function $f\colon\RR\to\RR$ by $f(x)\coloneqq1/x$ for nonzero $x$ and $f(0)=0$. Then the graph of $f(x)$ is $\{(0,0)\}\sqcup\{(x,y):xy=1\}$, which is a closed subset of $\RR^2$. But $f$ is certainly not continuous, which is not a violation of \Cref{thm:closed-graph} because $f$ is not linear!
+\end{example}
+Anyway, let's prove \Cref{thm:closed-graph}.
+\begin{proof}[Proof of \Cref{thm:closed-graph}]
+	Quickly, note that linearity of $T$ means that the graph $\Gamma$ is linear. Because $\Gamma$ is closed, we actually see that $\Gamma$ is a complete normed vector space, where the norm is given by $\norm\cdot_{X\times Y}$. So we now define $S\colon\Gamma\to X$ by $S(x,y)\coloneqq x$, which is linear (because look at it) and bounded because
+	\[\norm{S(x,y)}_X=\norm x_X\le\norm x_X+\norm y_Y=\norm{(x,y)}_{X\times Y}.\]
+	Furthermore, $S$ is a bijection, so in fact $S^{-1}$ is bounded by \Cref{cor:bounded-linear-bijection}, meaning that
+	\[\norm{(x,Tx)}_{X\times Y}\le C\norm x_X\]
+	for some absolute constant $C>0$. This unwinds into exactly showing that $T$ is bounded, as required.
+\end{proof}
+
+\end{document}
