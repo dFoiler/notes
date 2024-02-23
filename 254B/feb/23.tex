@@ -1,0 +1,101 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we are joined by a peach and a crab.
+
+\subsection{More on the Picard Scheme}
+Recall we were in the middle of proving \Cref{prop:ample-gives-surjective}. Morally, we are saying that $A$ is isogenous to its dual.
+\amplesurjprop*
+\begin{proof}
+	We may take $k$ to be algebraically closed. Assume for the sake of contradiction that there is a line bundle $\mc M\in\Pic^\circ(A_{\ov k})$ which is not of the form $\varphi_\mc L(x)=t_x^*\mc L\otimes\mc L^{-1}$, so we set
+	\[\mc N\coloneqq m^*\mc L\otimes\op{pr}_1^*\mc L^{-1}\otimes\op{pr}_2^*\left(\mc L^{-1}\otimes\mc M^{-1}\right),\]
+	which is a line bundle on $A\times A$.
+	
+	We now use the Leray spectral sequence.
+	\begin{theorem}[Leray spectral sequence]
+		Fix a morphism $f\colon X\to Y$ of schemes and a quasicoherent sheaf $\mc F$ on $X$. Then there is a spectral sequence
+		\[E_2^{pq}=H^p(Y,R^qf_*\mc F)\Rightarrow H^{p+q}(X,\mc F).\]
+	\end{theorem}
+	We will apply this to $\mc N$ on $A\times A$ with the two projections $\op{pr}_1,\op{pr}_2\colon A\times A\to A$.
+	\begin{itemize}
+		\item For example, $\mc N|_{\{x\}\times A}=t_x^*\mc L\otimes\mc L^{-1}\otimes\mc M^{-1}$ (which is nontrivial), so its cohomology vanishes by \Cref{lem:line-bundle-cohom-dies}. Thus, we see that $R^j\op{pr}_{1*}\mc N=0$ by computation of higher direct images via \Cref{thm:grauert}, so its cohomology vanishes.
+
+		\item On the other hand, $\mc N|_{A\times\{x\}}=t_x^*\mc L\otimes\mc L^{-1}$ is trivial if and only if $x\in K(\mc L)$ using the notation of \Cref{thm:get-ample}, which is a finite set by that theorem, so $H^j(A,\mc N|_{A\times\{x\}})=0$ for $x\in A\setminus K(\mc L)$, meaning that the higher direct images on $A\times K(\mc L)$ need to vanish via \Cref{thm:grauert}.
+
+		In other words, $R^j\op{pr}_{2*}\mc N$ is a coherent sheaf supported in the finite set $K(\mc L)$. In particular, dimension arguments mean that $H^i(A,R^j\op{pr}_{2*}\mc N)=0$ for positive $i$. So our spectral sequence looks like the following diagram.
+		% https://q.uiver.app/#q=WzAsMTIsWzEsMiwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzIsMiwiMCJdLFszLDIsIjAiXSxbMiwxLCIwIl0sWzMsMSwiMCJdLFsyLDAsIjAiXSxbMywwLCIwIl0sWzAsMiwiMCJdLFswLDEsIjAiXSxbMCwwLCIwIl0sWzIsNl0sWzEsNF1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}
+			0 & \bullet & 0 & 0 \\
+			0 & \bullet & 0 & 0 \\
+			0 & \bullet & 0 & 0
+			\arrow[from=1-2, to=2-4]
+			\arrow[from=2-2, to=3-4]
+		\end{tikzcd}\]
+		Because our spectral sequence is converging on this $E_2$ page, we are able to conclude that
+		\[H^n(A\times A,\mc N)=H^0(A,R^n\op{pr}_{2*}\mc N).\]
+		Our previous point tells us that the left group vanishes, but then the right-hand sheaf is just supported on finitely many points and so will have global sections unless we actually have $R^n\op{pr}_{2*}\mc N=0$ for all $n$. However, $\mc N|_{A\times\{0_A\}}\cong\OO_A$ by construction, so the vanishing of our higher direct images provides contradiction because $H^0(A,\OO_A)\ne0$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+This concludes the proof of \Cref{thm:pic-zero}. Notably, we are now able to upgrade $\varphi_{\mc L}$ to a full morphism $A\to\Pic^\circ_{A/k}$ sending rigidified line bundles to what we expect them to be. (Explicitly, $\varphi_{\mc L}$ is realized on the level of the moduli spaces.) We factor through $\Pic^\circ$ because $A$ is connected, meaning that the image of $\varphi_{\mc L}$ needs to actually land in the connected component.
+\begin{remark}
+	Notably, if $\mc L$ is an ample line bundle, we get a surjective map $\varphi_{\mc L}\colon A\to\Pic^\circ_{A/k}$, so $\dim A=\dim A^\lor$.
+\end{remark}
+
+\subsection{Smoothness of the Dual Abelian Variety}
+Here is the desired result.
+\begin{theorem} \label{thm:dual-av-smooth}
+	Fix an abelian $k$-variety $A$. Then $A^\lor=\Pic^\circ_{A/k}$ is smooth.
+\end{theorem}
+Notably, it will be enough to show that $A^\lor$ is smooth somewhere (because we are a group), so it is enough to show that $\dim T_0A^\lor=\dim A$.
+
+It will help to provide a cohomological description of the tangent space.
+\begin{lemma}
+	Fix an abelian $k$-variety $A$. Then $T_0A^\lor\cong H^1(A,\OO_A)$.
+\end{lemma}
+\begin{proof}
+	By definition,
+	\[T_0A^\lor\coloneqq\ker\left(A^\lor(\Lambda)\to A^\lor(k)\right),\]
+	where $\Lambda\coloneqq\Spec k[\varepsilon]/\left(\varepsilon^2\right)$ is the ring of dual numbers. Unwinding the definition of $A^\lor$, we are looking at
+	\[T_0A^\lor\coloneqq\ker\left(\Pic_{A/k}(\Lambda)\to \Pic_{A/k}(k)\right),\]
+	where we may replace $\Pic^\circ$ with $\Pic$ because $0\in\Pic^\circ_{A/k}$ anyway. As a moduli description, we see that $\Pic$ classifies line bundles up to some suitable equivalence, but this equivalence vanishes over the affine scheme $\Lambda$, so we are going to want to have an exact sequence
+	\[0\to T_0A^\lor\to\Pic(A\times\Lambda)\to\Pic A.\]
+	On the other side of things, we know $\Pic(X)=H^1(X,\OO_X^\times)$ for any scheme $X$, which explains how cohomology is going to appear. Notably, one has the ``exponential'' exact sequence
+	\[0\to\OO_A\to\OO_{A\times\Lambda}^\times\to\OO_A^\times\to1,\]
+	of quasicoherent sheaves on $A$, where the first map sends $f\mapsto 1+\varepsilon f$, and the second map comes from the inclusion $A\to A\times\Lambda$. Notably, the inclusion $A\to A\times\Lambda$ has a splitting given by the projection, so the above exact sequence will also split. Because we split, we will remain exact upon applying global sections, so long exact sequence may read
+	\[0\to H^1(A,\OO_A)\to H^1(A\times\Lambda,\OO_{A\times\Lambda}^\times)\to H^1(A,\OO_A^\times)\to\cdots.\]
+	(Here, $H^1(A\times\Lambda,\OO_{A\times\Lambda}^\times)=H^1(A,\OO_{A\times\Lambda}^\times)$ because the inclusion is a closed embedding.) The point is that we get the following morphism of left exact sequences.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCIwIl0sWzEsMCwiVF8wQV5cXGxvciJdLFsyLDAsIlxcUGljKEFcXHRpbWVzXFxMYW1iZGEpIl0sWzMsMCwiXFxQaWMgQSJdLFsyLDEsIkheMShBXFx0aW1lc1xcTGFtYmRhLFxcT09fe0FcXHRpbWVzXFxMYW1iZGF9XlxcdGltZXMpIl0sWzMsMSwiSF4xKEEsXFxPT197QX1eXFx0aW1lcykiXSxbMSwxLCJIXjEoQSxcXE9PX0EpIl0sWzAsMSwiMCJdLFs3LDZdLFs2LDRdLFs0LDVdLFswLDFdLFsxLDJdLFsyLDNdLFszLDUsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsNCwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw2LCIiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {T_0A^\lor} & {\Pic(A\times\Lambda)} & {\Pic A} \\
+		0 & {H^1(A,\OO_A)} & {H^1(A\times\Lambda,\OO_{A\times\Lambda}^\times)} & {H^1(A,\OO_{A}^\times)}
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[Rightarrow, no head, from=1-4, to=2-4]
+		\arrow[Rightarrow, no head, from=1-3, to=2-3]
+		\arrow[dashed, from=1-2, to=2-2]
+	\end{tikzcd}\]
+	The dashed arrow is induced an isomorphism, so we are done.
+\end{proof}
+\Cref{thm:dual-av-smooth} will now follow from the following proposition.
+\begin{proposition} \label{prop:cohom-of-av}
+	Let $k$ be an algebraically closed field, and fix an abelian $k$-variety $A$, and set $g\coloneqq\dim A$. Then $\dim H^1(A,\OO_A)=g$, and
+	\[\bigland H^1(A,\OO_A)\cong\bigoplus_{i=0}^gH^i(A,\OO_A)\]
+	of graded $k$-vector spaces.
+\end{proposition}
+\begin{remark}
+	A similar statement holds for \'etale cohomology and other Weil cohomology theories.
+\end{remark}
+\begin{remark}
+	In fact, we will be able to upgrade the isomorphism in \Cref{prop:cohom-of-av} to an isomorphism of Hopf $k$-algebras, where the Hopf algebra structure is provided by the cup product.
+\end{remark}
+Notably, \Cref{thm:dual-av-smooth} follows from the above two results because we are directly told that $\dim T_0A^\lor=\dim A=\dim A^\lor$.
+
+\end{document}
