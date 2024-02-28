@@ -1,0 +1,78 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We began class by completing the proof of a result.
+
+\subsection{Cohomology on Projective Schemes}
+We recall the following definition.
+\begin{definition}[very ample]
+	Fix a morphism $f\colon X\to Y$ of schemes. A line bundle $\mc L$ on $X$ is \textit{$f$-very ample} if and only if there is locally closed embedding $i\colon X\to\PP^r_Y$ for some $r\ge0$ such that $\mc L\cong i^*\OO_{\PP^r_Y}(1)$.
+\end{definition}
+\begin{remark}
+	Under proper hypotheses, we will be able to upgrade the locally closed embedding to a closed embedding. Explicitly, fix a scheme $X$ over a Noetherian scheme $Y$. Then the following are equivalent.
+	\begin{listalph}
+		\item $X$ is projective over $Y$.
+		\item $X$ is proper and has a $Y$-very ample sheaf.
+	\end{listalph}
+	For (a) implies (b), note projective implies proper, and projective grants a very ample sheaf by definition. For (b) implies (a), note having a very ample sheaf grants a locally closed embedding $i\colon X\to\PP^r_Y$, and $X$ being proper forces the image of $i$ to be closed, so $i$ upgrades to a closed embedding, making $X$ projective over $Y$.
+\end{remark}
+We now use \Cref{thm:cohom-proj-space} for fun and profit.
+\begin{theorem} \label{thm:coh-cohom-proj-space}
+	Fix a Noetherian ring $A$ and projective $A$-scheme $X$. Further, fix a very ample line bundle $\OO_X(1)$ on $X$ and coherent sheaf $\mc F$ on $X$.
+	\begin{listalph}
+		\item $H^i(X,\mc F)$ is a finitely generated $A$-modules for all $i>0$.
+		\item There exists an integer $n_0$ such that $H^i(X,\mc F(n))=0$ for $n>n_0$ and $i>0$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We proceed in steps.
+	\begin{enumerate}
+		\item We reduce to $X=\PP^r_A$ for some $r>0$. Indeed, fix some closed embedding $j\colon X\to\PP^r_A$ for some $r>0$ such that $\OO_X(1)=j^*\OO_{\PP^r_A}(1)$. Then $H^i(X,\mc F(n))=H^i(\PP^r_A,j_*(\mc F(n)))$ by \Cref{lem:closed-cohomology}; now, everything around is Noetherian and separated, so $j_*\mc F$ is coherent on $\PP^r_A$, so (a) will indeed follow from knowing the result for $\PP^r_A$. Further,
+		\[j_*(\mc F(n))=j_*(\mc F\otimes\OO_X(n))=j_*\mc F\otimes j_*j^*\OO_{\PP^r_A}(n)=(j_*\mc F)(n),\]
+		where $\stackrel*=$ is by the projection formula \cite[Exercise~II.5.1]{hartshorne}. Thus, (b) will also follow from the result for $\PP^r_A$.
+
+		\item We show the result for $\mc F=\OO_X(q)$ for $q\in\ZZ$. Indeed, we get this result directly from \Cref{thm:cohom-proj-space}: (a) follows from the stated computations, and (b) follows because $H^r(X,\OO_X(q))=0$ for $q$ sufficiently large.
+		\item We also note that one can glue the previous step together to achieve $\mc F$ isomorphic to a finite direct sum of sheaves of the form $\OO_X(q)$ for $q\in\ZZ$.
+
+		\item We now tackle the general case by descending induction on the index $i$. Notably, \v Cech cohomology via \Cref{thm:cech-comparison} tells us that $H^i(X,\mc F)=0$ for $i>r$ (see \Cref{rem:cech-proj-space}), making (a) and (b) have no content. (Technically, for (b), $n_0$ is not supposed to depend on $i$, but this will in practice be no issue because the value of $n_0$ doesn't even matter in these cases.)
+
+		For our induction, we take $i\le r$, assuming the result for $i+1$. The main point is that there is a sheaf $\mc E$ isomorphic to $\bigoplus_{i=1}^N\OO_X(q_i)$ with a surjection $\pi\colon\mc E\to\mc F$ by \cite[Corollary~II.5.18]{hartshorne}. So we set $\mc K\coloneqq\ker\pi$ to produce a short exact sequence
+		\begin{equation}
+			0\to\mc K\to\mc E\to\mc F\to0 \label{eq:dim-shift-proj-space-coh-cohom}
+		\end{equation}
+		of coherent sheaves. Thus, for (a), we note that the long exact sequence produces the exact sequence
+		\[H^i(X,\mc E)\to H^i(X,\mc F)\to H^{i+1}(X,\mc K),\]
+		so the middle term must be a finitely generated $A$-module because the end terms are by the previous step and the inductive hypothesis. (Explicitly, we are using some Noetherian submodule argument.) For (b), we twist \eqref{eq:dim-shift-proj-space-coh-cohom} by $n\in\ZZ$ and then take the long exact sequence to get the exact sequence
+		\[H^i(X,\mc E(n))\to H^i(X,\mc F(n))\to H^{i+1}(X,\mc K(n)).\]
+		Notably, for $n$ large enough the two terms on the end will vanish, so the middle term will vanish as well.
+
+		Technically, the value of $n_0$ in (b) is not supposed to depend on $i$. Well, we have shown that each $i\le r$ has $m_i\in\ZZ$ such that $H^i(X,\mc F(n))=0$ for $i>m_i$, and we can analogously take $m_i=0$ for $i>r$, so we can just take $n_0$ to be the maximum of all these values (or perhaps their sum) to complete the proof of (b).
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{corollary}
+	Fix a Noetherian ring $A$ and projective $A$-scheme $X$. For any coherent sheaf $\mc F$ on $X$, the $A$-module $\Gamma(X,\mc F)$ is finitely generated.
+\end{corollary}
+\begin{proof}
+	Take $i=0$ in (a) of \Cref{thm:coh-cohom-proj-space}.
+\end{proof}
+\begin{corollary}
+	Fix a Noetherian ring $A$ and a closed subscheme $X\subseteq\PP^r_A$ for some $r\ge0$. Then the restriction map
+	\[\Gamma(\PP^r_A,\OO_{\PP^r_A}(n))\to\Gamma(X,\OO_X(n))\]
+	is surjective for $n$ sufficiently large.
+\end{corollary}
+\begin{proof}
+	Let $\mc I\subseteq\OO_{\PP^r_A}$ be the ideal sheaf cutting out the closed subscheme $Y$. Notably, everything in sight is Noetherian, so $\mc I$ is coherent, so $H^1(\PP^r_A,\mc I(n))=0$ for $n$ sufficiently large by \Cref{thm:coh-cohom-proj-space}. Now, we take the short exact sequence
+	\[0\to\mc I\to\OO_{\PP^r_A}\to i_*\OO_X\to0,\]
+	twist by some sufficiently large $n\in\ZZ$ and take the long exact sequence so that
+	\[\Gamma(\PP^r_A,\OO_{\PP^r_A}(n))\to\Gamma(\PP^r_A,i_*\OO_X(n))\to H^1(\PP^r_A,\mc I(n)).\]
+	The rightmost term vanishes by construction of $n$, and the middle term is $\Gamma(X,\OO_X(n))$ (say, by \Cref{lem:closed-cohomology}), so the result follows.
+\end{proof}
+\begin{remark}
+	Because global sections of $\Gamma(\PP^r_A,\OO_{\PP^r_A}(n))$ are homogeneous polynomials of degree $n$ in $k[x_0,\ldots,x_r]$, we see that we can write out any global section in $\OO_X(n)$ in this way.
+\end{remark}
+
+\end{document}
