@@ -1,0 +1,109 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we discuss the uniform boundedness principle.
+
+\subsection{The Uniform Boundedness Principle}
+Here is our statement.
+\begin{theorem}[Uniform boundedness principle] \label{thm:ubp}
+	Fix a Banach space $X$. Let $\{T_\alpha\}_{\alpha\in\kappa}\subseteq X^*$ be a non\-empty collection of linear functionals. Suppose that the family $\{T_\alpha\}_{\alpha\in\kappa}$ is pointwise bounded; i.e., for each $x\in X$, we have
+	\[\sup_{\alpha\in\kappa}\left|T_\alpha(x)\right|<\infty.\]
+	Then in fact we are uniformly bounded: $\sup\left\{\norm{T_\alpha}_{X^*}:\alpha\in\kappa\right\}<\infty$.
+\end{theorem}
+Here are some non-examples.
+\begin{example}
+	Define a family $f_n\colon[0,1]\to\RR$ (where $n\in\ZZ^+$) by
+	\[f_n(x)\coloneqq\begin{cases}
+		n^2x & \text{if }0\le x\le1/n, \\
+		n^2(x-2/n) & \text{if }1/n\le x\le 2/n, \\
+		0 & \text{if }2/n\le x\le 1.
+	\end{cases}\]
+	Then $\{f_n\}_{n\in\ZZ^+}$ the family is pointwise bounded because $f_n(x)=0$ for $n>3/x$ (say), so $\{f_n(x)\}_{n\in\NN}$. Simply put, we do not violate \Cref{thm:ubp} because $[0,1]$ is not a Banach space, and our functions $f_n$ are not linear.
+\end{example}
+\begin{example}
+	Define $X\coloneqq\CC^{\oplus\NN}$ be an infinite direct sum of $\CC$s. Explicitly, $X$ consists of sequences which are eventually $0$. We give $X$ the norm
+	\[\norm x_X\coloneqq\max_{k\in\ZZ^+}\left\{\left|x_k\right|\right\}.\]
+	Now, define $T_n\colon X\to\CC$ by $T_n(x)\coloneqq nx_n$. Then the family $\{T_n\}_{n\in\NN}$ is pointwise bounded: for any $x\in X$, there is some $N>0$ such that $x_n=0$ for $n>N$, so
+	\[\sup_{n\in\NN}\left|T_n(x)\right|=\sup_{0\le n\le N}\left|T_n(x)\right|=\max_{0\le n\le N}\left|T_n(x)\right|<\infty.\]
+	However, we see that $\norm{T_n}_{X^*}\ge n$ for each $n$ by taking the sequence $x\in X$ given by $x_k\coloneqq1_{n=k}$, so this family is not uniformly bounded. (In fact, we see that $\norm{T_n}_{X^*}\le n$ as well by bounding $\left|T_n(x)\right|/\norm x_X=n\left|x_n\right|/\sup\{\left|x_k\right|\}\le n$.) The reason we do not violate \Cref{thm:ubp} is that $X$ is not complete and hence not Banach.
+\end{example}
+Anyway, let's prove \Cref{thm:ubp}.
+\begin{proof}[Proof of \Cref{thm:ubp}]
+	We proceed in steps. Let $\norm\cdot$ be the norm on $X$.
+	\begin{enumerate}
+		\item For $M>0$, define the subset $E_M\subseteq X$ by
+		\[E_M\coloneqq\left\{x\in X:\sup_{\alpha\in\kappa}\left|T_\alpha(x)\right|\le M\right\}.\]
+		Then we note that $X$ is covered by the collection $\{E_M\}_{M\in\ZZ^+}$ because the family $\{T_\alpha\}_{\alpha\in\kappa}$ is pointwise bound\-ed.
+	
+		Further, we note that $E_M$ is closed for each $M>0$. For this, we should show that $E_M$ contains its limit points. Well, suppose that $\{x_n\}_{n\in\NN}\subseteq X$ is a sequence in $E_M$ converging to some $x\in X$, and we want to show that $x\in E_M$. To check this, fix any $\alpha\in\kappa$, and we must show that $\left|T_\alpha(x)\right|\le M$. For this, we bound
+		\[\left|T_\alpha(x)\right|=\left|\lim_{n\to\infty}T_\alpha(x_n)\right|=\lim_{n\to\infty}\left|T_\alpha(x_n)\right|,\]
+		where the last equality is by continuity.
+
+		\item Thus, $X$ is the union of the countably many closed sets $\{E_M\}_{M\in\ZZ^+}$, so \Cref{thm:baire-2} explains that there must be some $M\in\ZZ^+$ and $\delta>0$ and $x_0\in X$ such that $B(x,\delta)\subseteq E_M$.
+
+		In fact, we claim that $B(0,\delta)\subseteq E_{2M}$. Indeed, if $\norm x<\delta$, then define $x\coloneqq(x_0+x)-x_0$ so that any $\alpha\in\kappa$ has
+		\[\left|T_\alpha(x)\right|=\left|T_\alpha(x_0+x)\right|-\left|T_\alpha(x_0)\right|\le2M,\]
+		so $x\in E_{2M}$.
+
+		\item We now do our bounding. Thus far we have shown that $\norm x<\delta$ implies that $\left|T_\alpha(x)\right|\le2M$ for any $\alpha\in\kappa$. But then we see we can write
+		\[\norm{T_\alpha}_{X^*}=\sup_{\substack{x\in X\\\norm x=\delta/2}}\frac{\left|T_\alpha(x)\right|}{\norm x}\le\frac{2M}{\delta/2},\]
+		so we have achieved our uniform bound.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	Later in life, we will use \Cref{thm:ubp} do some Fourier analysis.
+\end{remark}
+
+\subsection{A Little on Bases}
+Let's talk a little about bases for vector spaces. Notably, we have never defined a ``basis'' for a Banach space, and we will avoid doing so ever. Instead, we will define bases with adjectives.
+\begin{definition}[Hamel basis]
+	A \textit{Hamel basis} for a vector space $X$ is a collection $\{v_\alpha\}_{\alpha\in\kappa}$ of vectors in $X$ such that any $x\in X$ can be written uniquely as a linear combination
+	\[x=\sum_{\alpha\in\kappa}c_\alpha v_\alpha,\]
+	where the scalars $\{c_\alpha\}_{\alpha\in\kappa}$ are zero for all but finitely many $\alpha$. (This sum certainly converges because it is actually a finite sum.)
+\end{definition}
+\begin{remark}
+	Equivalently, we can ask for the linear combination to merely exist and for the subset to be linearly independent in the sense that having any linear combination
+	\[\sum_{\alpha\in\kappa}c_\alpha v_\alpha=0\]
+	(where $c_\alpha$ is zero for all but finitely many $\alpha$) will have $c_\alpha=0$ for all $\alpha$.
+\end{remark}
+\begin{remark}
+	Any vector space has a Hamel basis by some argument with the Axiom of choice (e.g., via Zorn's lemma). In fact, any linearly independent collection of vectors can be extended to a Hamel basis. Rigorously, one builds a partially ordered set of linearly independent sets (ordered by inclusion), use Zorn's lemma to extract a maximal such set, and then show that a maximal linearly independent set is spanning.
+\end{remark}
+\begin{remark}
+	Fix an infinite-dimensional normed vector space $X$ over $\FF$ and a nonzero normed vector space $Y$ over $\FF$. Then we can show that there is an unbounded linear functional $T\colon X\to Y$. Indeed, let $\{v_\alpha\}_{\alpha\in\kappa}$ be a Hamel basis, which is infinite because $X$ is infinite-dimensional. Now, choose a nonzero vector $y\in Y$ and some unbounded sequence $\{c_\alpha\}_{\alpha\in\kappa}\subseteq\FF$, and define
+	\[Tv_\alpha\coloneqq c_\alpha\norm{v_\alpha}_Xy\]
+	extended linearly to be a functional on $X$. (Explicitly, $T$ sends $\sum_{\alpha}c_\alpha v_\alpha=c_\alpha\norm{v_\alpha}_Xy$, which is well-defined because we are working with a Hamel basis.) However, $T$ is not bounded because
+	\[\norm T_{X^*}\ge\sup_{\alpha\in\kappa}\frac{\norm{Tv_\alpha}_Y}{\norm{v_\alpha}_X}=\sup_{\alpha\in\kappa}\left|c_\alpha\right|\norm y_Y=\infty.\]
+\end{remark}
+Here are some more cautionary tales.
+\begin{remark}
+	In general, closed subspaces of a Banach space do not have to have complements.
+\end{remark}
+\begin{remark}
+	``Useful'' bases for normed vector spaces $X$ do not exist in general. Later in life, we will have Hilbert bases for some subclass of normed vector spaces.
+\end{remark}
+\begin{remark}
+	Fix a normed vector space $X$. If $V\subseteq X$ is a closed subspace and a point $x\notin V$, there is no well-defined notion of ``closest point.'' In finite dimensions, it need not be unique, and in general, it need not even exist.
+\end{remark}
+
+\subsection{Weak Topologies}
+It will be helpful to have other topologies to work with on our normed vector spaces. We recall the following notion.
+\begin{definition}[weak topology]
+	Fix a nonempty set $X$, and let $\{f_\alpha\}_{\alpha\in\kappa}$ be a nonempty collection of maps $f_\alpha\colon X\to Y_\alpha$, where $\{Y_\alpha\}_{\alpha\in\kappa}$ is a collection of topological spaces. Then we define the \textit{weak topology} on $X$ to be the topology generated by the collection
+	\[\bigcup_{\alpha\in\kappa}\left\{f^{-1}(U_\alpha):\text{open }U_\alpha\subseteq Y_\alpha\right\}.\]
+\end{definition}
+\begin{remark}
+	Notably, the given collection above is a subbasis because it contains $\emp=f_\alpha^{-1}(\emp)$ and $X=f_\alpha^{-1}(Y_\alpha)$. As such, we can give ourselves a basis by taking finite intersections of the sets in our given collection.
+\end{remark}
+\begin{remark}
+	Observe that the weak topology on $X$ promises that each map $f_\alpha\colon X\to Y_\alpha$ is continuous. Conversely, if $\mc T$ is a topology on $X$ such that the maps $f_\alpha\colon X\to Y_\alpha$ are continuous, then $\mc T$ must contain the weak topology.
+\end{remark}
+\begin{remark}
+	We have the following universal property: a map $g\colon Z\to X$ is continuous if and only if the composites $(f_\alpha\circ g)\colon X\to Y_\alpha$ are all continuous. The forward direction occurs by taking composition. For the backward direction, it suffices to check that any $g^{-1}\left(f_\alpha^{-1}(U_\alpha)\right)\subseteq Z$ is open for any $\alpha\in\kappa$ and open $U_\alpha\subseteq Y_\alpha$, which holds by the continuity of $f_\alpha\circ g$.
+\end{remark}
+
+\end{document}
