@@ -1,0 +1,80 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{An Example Dual Space} \label{subsec:dual-c0}
+We begin class with an example of convergence being strange. Let $C_0$ denote the collection of sequences $\{(x_n)_{n\in\ZZ^+}\}$ converging to $0$, and we give $C_0$ the norm $\norm\cdot_\infty$ defined by taking the maximum. One can see that $C_0$ is now a normed vector space (inherited from $L^\infty(\NN)$), and it is complete (one needs to check that $C_0\subseteq L^\infty(\NN)$ is closed, which can be done via limit points).
+
+Let's attempt to understand $C_0^*$. For this, we consider $L^1(\NN)$, which consists of sequences $(y_m)_m$ such that $\sum_{m\ge1}\left|y_m\right|<\infty$. Then $L^1(\NN)$ is a normed vector space with norm given by
+\[\norm y_1\coloneqq\sum_{m=1}^\infty\left|y_m\right|.\]
+Now here is our duality check.
+\begin{lemma} \label{lem:dual-c0}
+	The map $L_\bullet\colon L^1(\NN)\to C_0^*$ defined by
+	\[L_y(x)\coloneqq\sum_{m=1}^\infty x_my_m\]
+	is an isomorphism.
+\end{lemma}
+\begin{proof}
+	Here are our many checks.
+	\begin{itemize}
+		\item Note $L_y(x)\in\RR$: the series (absolutely) converges because
+		\[\sum_{m=1}^\infty\left|x_my_m\right|\le\norm x_\infty\sum_{m=1}^\infty\left|y_m\right|=\norm x_\infty\norm y_1.\]
+		\item Note $L_y$ is linear for each $y\in L^1(\NN)$ by a direct check.
+		\item In fact, note $L_y$ is a bounded linear functional and hence in $C_0^*$; this finishes showing that $L_\bullet$ is well-defined. Indeed, we simply bound
+		\[\left|\sum_{m=1}^\infty x_my_m\right|\le\norm x_\infty\norm y_1\]
+		as above, meaning that $\left|L_y(x)\right|/\norm x_\infty\le\norm y_1$ for any nonzero $x\in C_0$.
+		\item Note $L_\bullet$ is linear by a direct check.
+		\item In fact, we claim that $\norm{L_y}_{C_0^*}=\norm y_{L^1}$ for any $y\in L^1(\NN)$; note that this shows that $L_\bullet$ is injective. Above we showed that $\left|L_y(x)\right|/\norm x_\infty\le\norm y_1$, so we get $\le$ immediately. For the other inequality, fix some $N>0$ very large, and we define $(x_n)$ to be
+		\[x_n\coloneqq\begin{cases}
+			+1 & \text{if }y_n\ge0\text{ and }n\le N, \\
+			-1 & \text{if }y_n\le0\text{ and }n\le N, \\
+			0 & \text{if }n>N.
+		\end{cases}\]
+		Then we see that $\norm x_\infty=1$
+		\[\left|L_y(x)\right|=\sum_{m=1}^N\left|y_m\right|\]
+		by construction, so $\left|L_y(x)\right|\to\norm y_1$ as $N\to\infty$, enforcing the equality.
+		\item Lastly, we must check surjectivity. This requires some work. Fix a linear functional $f\in C_0^*$, and we need to show that $f=L_y$ for some $y\in L^1(\NN)$. Well, simply define $y_n\coloneqq f(e_n)$ where $e_n$ is the $n$-indicator sequence $(e_n)_m\coloneqq1_{n=m}$. For example, this implies that
+		\[L_y(e_n)=f(e_n)\]
+		for each $n$. Then $L_y$ and $f$ agree on the subspace $C_{00}\subseteq C_0$ of sequences which are eventually $0$. Note that we have not technically shown that $y\in L^1(\NN)$ yet from its construction. Well, for large $N$, define the sequence $(x_n)_n$ as in the previous point, and we see that
+		\[\sum_{m=1}^N\left|y_m\right|=\left|L_y(x)\right|=\left|f(x)\right|\le\norm f\cdot\norm x=\norm f,\]
+		so sending $N\to\infty$ reveals that $y\in L^1(\NN)$. Thus, continuity of $L_y$ (it is now known to be bounded) and density of $C_{00}$ in $C_0$ (by definition of converging to $0$) forces $L_y=f$ is forced.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	Let's do a convergence check. Define the sequence $e_n\in C_0$ by $(e_n)_m\coloneqq1_{m=n}$, and it turns out that $e_n\to0$ as $n\to\infty$ in the weak topology, even though this is notably false in $C_0$ because $\norm{x_m}_\infty=1$ for each $m$! In other words, we have $f(e_n)\to0$ as $n\to\infty$ for any bounded linear functional $f\in C_0^*$. To see this, write $f=L_y$ for $y\in L^1(\NN)$ via \Cref{lem:dual-c0}, but now $f(e_n)=y_n$, which goes $0$ as $n\to\infty$ because $y\in L^1(\NN)$.
+\end{remark}
+\begin{remark}
+	In general, if $x_n\to x$ in the weak topology for $C_0$, then it turns out that $(x_n)_m\to x_m$ for any fixed $m$. Indeed, let $y=e_m$ be the $m$-indicator as above, and we must have $L_y(x_n)\to L_y(x)$ as $n\to\infty$, from which the claim follows.
+
+	However, the converse is not true: let $x_n\coloneqq2^ne_n$ be $2^n$ times the $n$-indicator. For this to converge to any $x$, the previous paragraph enforces $x=0$, but this sequence does not converge to $0$ by using the bounded linear functional $L_y$ where $y_m\coloneqq1/2^m$ for each $m$. The problem here is that the norms are getting too large, and it will turn out that the converse holds as long as the norms are bounded (e.g., in the unit ball).
+\end{remark}
+
+\subsection{The Weak-\texorpdfstring{$*$}{*} Topology}
+Here is our definition.
+\begin{definition}[weak-$*$ topology]
+	Fix a normed vector space $(X,\norm\cdot)$. Then the \textit{weak-$*$} topology on $X^*$ is the weak topology obtained by requiring that the linear functionals $\op{ev}_x\colon X^*\to\FF$ defined by $\op{ev}_x(f)\coloneqq f(x)$ are continuous.
+\end{definition}
+\begin{remark}
+	Note that $\op{ev}_x$ is actually a bounded linear functional on $X^*$. Indeed, one computes that
+	\[\norm{\op{ev}_x}_{X^{**}}=\sup_{\substack{f\in X^*\\f\ne0}}\frac{\left|\op{ev}_x(f)\right|}{\norm f_{X^*}}=\sup_{\substack{f\in X^*\\f\ne0}}\frac{\left|f(x)\right|}{\norm f_{X^*}}\le\norm x_X,\]
+	where the last inequality uses the definition of $\norm f_{X^*}$. Thus, $\op{ev}_x\colon X^*\to\FF$ is already continuous, so the weak-$*$ topology is in fact coarser (has fewer open sets) than the usual topology.
+\end{remark}
+\begin{example}
+	Given $g\in X^*$ and $\varepsilon>0$ and $x_0\in X$, the weak-$*$ topology has subbasic open subset given by
+	\[\left\{f\in X^*:\left|f(x_0)-g(x_0)\right|<\varepsilon\right\}.\]
+	Indeed, the point is that continuity of $\op{ev}_{x_0}$ may as well be checked on basic open subsets of $\FF$, and the above set is the pre-image of the open ball around $g(x_0)$ with radius $\varepsilon>0$.
+\end{example}
+\begin{example}
+	We continue the discussion of \cref{subsec:dual-c0} to explicate the weak-$*$ topology on $C_0^*\cong L^1(\NN)$. This amounts to choosing some $z\in L^1(\NN)$ and $\varepsilon>0$ and $x\in C_0$, for which our subbasic open subset is
+	\[\left\{y\in L^1(\NN):\left|\sum_{m=1}^\infty(y_m-z_m)x_m\right|<\varepsilon\right\}.\]
+\end{example}
+Next class we will show the following result.
+\begin{theorem}[Helly]
+	Fix a separable normed vector space $(X,\norm\cdot)$. Then the closed unit ball of $X^*$ is sequentially compact in the weak-$*$ topology. In other words, given a sequence of bounded linear functionals $\{f_n\}_{n\ge1}\subseteq X^*$ such that $\norm{f_n}_{X^*}\le1$ for each $n$, there is a subsequence $\{f_{n_k}\}_{k\ge1}$ and $f\in X^*$ such that each $x\in X$ makes $f_n(x)\to f(x)$ as $n\to\infty$.
+\end{theorem}
+
+\end{document}
