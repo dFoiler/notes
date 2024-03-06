@@ -1,0 +1,124 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+The midterms will be graded by next week.
+
+\subsection{The Whitney Approximation Theorem}
+Let's give another application of \Cref{thm:sard}.
+\begin{proposition}[Whitney approximation] \label{prop:whitney-approx}
+	Fix a continuous map $F\colon M\to\RR^k$ such that $F|_A$ is smooth on a closed subset $A\subseteq M$. Given a positive continuous ``error'' function $\delta\colon M\to\RR_{>0}$, there exists a smooth function $\widetilde F\colon M\to\RR^k$ such that $\widetilde F|_A=F|_A$ and
+	\[\left|\widetilde F(x)-F(x)\right|<\delta(x)\]
+	for all $x\in M$.
+\end{proposition}
+\begin{remark}
+	Do note that we may take $A=\emp$, which tells us that arbitrary continuous functions can be approximated by smooth ones.
+\end{remark}
+\begin{proof}
+	By \Cref{cor:extension-lemma}, we certainly get some smooth function $F_0\colon M\to\RR^k$ such that $F_0|_A=F|_A$. It remains to adjust $F_0$ to be close to $F$. Well, define
+	\[U_0\coloneqq\left\{x\in M:\left|F_0(x)-F(x)\right|<\delta(x)\right\}.\]
+	Intuitively, $U_0$ is the set of points where $F_0$ is already close to $F$; for example, $A\subseteq U_0$. Additionally, for each $x\notin A$, we choose an open neighborhood $U_x\subseteq M\setminus A$ of $x$ such that
+	\[\left|F(x)-F(y)\right|<\delta(y)\]
+	for all $y\in U_x$; continuity of $F$ and $\delta$ means that $U_x$ is actually open. Intuitively, $U_x$ asserts that $F$ does not move much around $x$.
+
+	The point is that $M$ is covered by the open collection $\{U_0\}\cup\{U_x\}_{x\in M\setminus A}$, so we get a partition of unity subordinate to this open cover, which we denote $\{\psi_0\}\cup\{\psi_x\}_{x\in M\setminus A}$. As such, we set
+	\[\widetilde F(y)\coloneqq\psi_0(y)F_0(y)+\sum_{x\in M\setminus A}\psi_x(y)F(x).\]
+	Note $\widetilde F$ in any neighborhood of some $y\in M$ is a finite sum of smooth functions and hence smooth, so $\widetilde F$ is itself smooth. Now, for our bounding, we see that
+	\[F(y)=\psi_0(y)F(y)+\sum_{x\in M\setminus A}\psi_x(y)F(y)\]
+	by the partition of unity, so the difference is bounded as
+	\[\left|\widetilde F(y)-F(y)\right|\le\psi_0(y)\left|F(y)-F_0(y)\right|+\sum_{x\in M\setminus A}\psi_x(y)\left|F(y)-F(x)\right|.\]
+	Each difference on the right-hand side is at most $\delta(y)$ by construction, so the entire sum continues to be at most $\delta(y)$.
+\end{proof}
+\begin{example}
+	Fix a smooth manifold $M$ and a continuous function $\delta\colon M\to\RR_{>0}$. Then there is smooth $\widetilde\delta\colon M\to\RR_{>0}$ such that $0<\widetilde\delta<\delta$ pointwise. Indeed, use \Cref{prop:whitney-approx} to approximate $\delta/2$ with error given by $\delta/2$.
+\end{example}
+We haven't used \Cref{thm:sard} yet, but we will do so soon, in the guise of \Cref{thm:whitney-embed}. In particular, we would like to upgrade \Cref{prop:whitney-approx} to smoothly approximate arbitrary continuous functions $F\colon N\to M$ (for suitable definition of approximation). The obstruction is that we took linear combinations in the proof of \Cref{prop:whitney-approx}, which is not possible in general. To fix this, we fix an embedding $M\subseteq\RR^N$, and we know that we can approximate in $\RR^N$, but we now need a way to retract the target to stay inside $M$.
+
+\subsection{Tubular Neighborhoods}
+Our current goal will be to understand retractions to embedded submanifolds $M\subseteq\RR^k$. This requires a notion of being perpendicular to $M$ (so that we can retract to $M$).
+\begin{definition}[normal bundle]
+	Fix an embedded submanifold $M\subseteq\RR^k$. Then the \textit{normal space} at $x\in M$ is
+	\[N_xM\coloneqq\left\{v\in\RR^n:v\perp T_xM\right\},\]
+	where $T_xM$ is identified with its image in $T_x\RR^k\cong\RR^k$. Then the \textit{normal bundle} is defined as
+	\[NM\coloneqq\bigsqcup_{x\in M}N_xM.\]
+\end{definition}
+\begin{remark}
+	It turns out that $NM$ is a smooth manifold of dimension $\dim M+(k-\dim M)=k$. In fact, $NM$ is an embedded submanifold of $T\RR^k\cong\RR^{2k}$, which is checked on slice charts. Roughly speaking, one may assume that $M$ itself is a slice chart by checking locally, and the normal bundle of a hyperplane (given by a slice chart) is essentially another hyperplane.
+\end{remark}
+\begin{remark}
+	Note that there is a subset $M_0\subseteq NM$ given by pairs of the form $(x,0)\in NM$. Then $M_0\subseteq NM$ is also an embedded submanifold.
+\end{remark}
+\begin{remark}
+	One can check that the map $E\colon NM\to\RR^k$ given by $(x,v)\mapsto(x+v)$ is smooth. Indeed, it is the restriction of a smooth map on $T\RR^k\cong\RR^k\times\RR^k$. We remark that $E(M_0)=M$.
+\end{remark}
+This definition allows us the notion of a tubular neighborhood.
+\begin{definition}[tubular neighborhood]
+	Fix an embedded submanifold $M\subseteq\RR^k$, and let $U$ be an open neighborhood of $M$. Then $U$ is a \textit{tubular neighborhood} if and only if there is an open neighborhood $V\subseteq NM$ of $M_0$ such that $E|_V\colon V\to U$ is a diffeomorphism.
+\end{definition}
+Morally, $E$ as addition with a normal tangent vector means that $E(V)$ should be thought of as a small tube sitting around $M$.
+\begin{remark} \label{rem:smooth-retraction-tubular}
+	Let $U$ be a tubular neighborhood of $M$. Then the projection $E(x,v)\mapsto x$ will provide a smooth submersion and a retraction to $M$. Note $r$ is smooth by construction, and the composite
+	\[M\subseteq U\stackrel r\to M\]
+	is the identity by construction, which implies that $r$ is a submersion by examining tangent spaces.
+\end{remark}
+Anyway, we should probably show that tubular neighborhoods exist.
+\begin{proposition} \label{prop:tubular-neighborhood}
+	Every embedded submanifold $M\subseteq\RR^k$ has a tubular neighborhood.
+\end{proposition}
+\begin{proof}
+	We proceed in steps.
+	\begin{enumerate}
+		\item We claim that the map $E\colon NM\to\RR^k$ is a local diffeomorphism at any $x\in M_0$. It suffices to check that $d_{(x,0)}E$ is an isomorphism for each $(x,0)\in M_0$, which is done by showing that its image contains $T_xM+N_xM=T_x\RR^k$.
+		\item Now, each $x\in M$ has some $V_x\subseteq NM$ such that $E|_{V_x}$ is a local diffeomorphism. Then one can shrink the $V_x$ so that $E$ is injective on $V\coloneqq\bigcup_{x\in M}V_x$, which makes $E$ a diffeomorphism. (Namely, as soon as $E$ is injective, it becomes a diffeomorphism onto its image: the inverse map exists by injectivity and is smooth by checking locally.)
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\subsection{Back to Whitney Approximation}
+Now here is our upgraded result.
+\begin{theorem}[Whitney approximation]
+	Let $M$ be a smooth manifold without boundary. Fix a continuous map $F\colon N\to M$ of smooth manifolds such that $F|_A$ is smooth for some closed subset $A\subseteq N$. Then $F$ is homotopic (relative to $A$) to a smooth map $\widetilde F\colon N\to M$.
+\end{theorem}
+Here, being homotopic relative to $A$ means that one has a continuous homotopy $H_\bullet\colon N\times[0,1]\to M$ such that $H_0=F$ and $H_1=\widetilde F$ and $H_\bullet|_A=F$.
+\begin{proof}
+	By \Cref{thm:whitney-embed}, we may fix a smooth embedding $M\subseteq\RR^k$. Additionally, \Cref{prop:tubular-neighborhood} grants us a tubular neighborhood $U\subseteq\RR^k$ of $M$, and we note \Cref{rem:smooth-retraction-tubular} provides a smooth retraction $r\colon U\to M$.
+
+	We now use \Cref{prop:whitney-approx} to perturb $F\colon N\to\RR^k$ inside $U$. For our error, define
+	\[\delta(x)\coloneqq\sup\{\varepsilon\le1:B_\varepsilon(x)\subseteq U\}.\]
+	One can see that $\delta(x)>0$ for each $x\in M$ because $M\subseteq U$ and $U$ is open. Further, we note that $\delta$ is continuous: by chaining balls together, we see
+	\[\delta(x')\ge\delta(x)-\left|x-x'\right|\]
+	for any $x,x'\in M$, so $\delta$ is in fact Lipschitz continuous by some rearranging. So \Cref{prop:whitney-approx} grants us $\widetilde F\colon N\to\RR^k$ such that $\widetilde F$ and $F$ do not differ by any more than $\delta$ everywhere, so we see that $\widetilde F$ outputs to $U$ by construction.
+
+	The smooth composite $r\circ\widetilde F$ will be the desired smooth approximation. Morally, because $U$ is locally convex, we can build a homotopy between $F$ and $\widetilde F$ directly, and then composition with $r$ completes the construction. Explicitly, we define
+	\[H_t(p)\coloneqq r\left((1-t)F(p)+t\widetilde F(p)\right).\]
+	Note $(1-t)F(p)+t\widetilde F(p)$ will live inside $B(F(p),\delta(F(p)))\subseteq U$ always, so we are in fact allowed to input that point into $r$. Now, $H$ is continuous as the composite of continuous functions, and it satisfies the needed restriction properties by construction.
+\end{proof}
+
+\subsection{Transverse Intersections}
+Here is our definition.
+\begin{definition}[transverse]
+	Fix a smooth map $F\colon N\to M$ of smooth manifolds. Then $F$ intersects \textit{transversally} with an embedded submanifold $S\subseteq M$ if and only if
+	\[\im dF_x+T_{F(x)}S=T_{F(x)}M\]
+	whenever $F(x)\in S$. In particular, taking $F$ to be an embedding, we say two embedded submanifolds $S_1,S_2\subseteq M$ intersect \textit{transversally} if and only if $T_pS_1+T_pS_2=T_pM$ for all $p\in S_1\cap S_2$. 
+\end{definition}
+Transverse intersections should provide smooth intersections. For a counterexample without transverse intersections, one can view level sets as intersections of a hyperplane with a graph and then take any example where a level set fails to be a submanifold. Anyway, here is our result.
+\begin{theorem} \label{thm:intersect-subman-transverse}
+	Fix embedded submanifolds $S_1,S_2\subseteq M$. If $S_1$ and $S_2$ intersect transversally (with nonempty intersection), then $S_1\cap S_2$ is an embedded submanifold with codimension $\op{codim}_MS_1+\op{codom}_MS_2$.
+\end{theorem}
+We can restate this in terms of the more general notion of transverse intersection.
+\begin{theorem} \label{thm:intersect-map-transverse}
+	Fix a smooth map $F\colon N\to M$ of smooth manifolds. If $F$ is transverse to an embedded submanifold $S\subseteq M$, then $F^{-1}(S)\subseteq N$ is an embedded submanifold of codimension $\op{codim}_MS$.
+\end{theorem}
+\begin{example}
+	Suppose $p\in M$ is a regular value of $M$. Then we know the level set $F^{-1}(\{p\})$ (if nonempty) is an embedded submanifold of codimension $\dim M$ by \Cref{prop:level-set-regular}.
+\end{example}
+Notably, \Cref{thm:intersect-subman-transverse} follows from \Cref{thm:intersect-map-transverse} by letting $F$ be an embedding. So it remains to prove \Cref{thm:intersect-map-transverse}.
+\begin{proof}[Proof of \Cref{thm:intersect-map-transverse}]
+	Set $n\coloneqq\dim N$ and $m\coloneqq\dim M$. One can check the result locally on $M$, so we may use $k$-slice charts in order to assume that $M\subseteq\RR^m$ is open, and $S\subseteq M$ is a hyperplane in $M$ of codimension $k$. Then let $\varphi\colon S\to\RR^k$ be a local defining function for $S$ by taking an orthogonal projection to the hyperplane $S$, and we check that $\varphi\circ F$ continues to have $0\in\RR^k$ as a regular value, which completes by appealing to \Cref{prop:level-set-regular}.
+
+	Let's discuss the check that $\varphi\circ F$ has $0\in\RR^k$ as a regular value. Note that $dF_\bullet\colon M\to\RR^{m-k}$ will be surjective by the transverse intersection, so adding in parts from $T_\bullet S$ (which are granted by examining what $\varphi$ does to the differential) completes the check.
+\end{proof}
+
+\end{document}
