@@ -1,0 +1,135 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Poincar\'e Reducibility}
+Now that we have a notion of inverse isogeny, we are able to establish the following result.
+\begin{theorem}[Poincar\'e reducibility] \label{thm:poincare-red-general}
+	Fix an abelian $k$-subvariety $B$ of $A$. Then there exists an abelian $k$-subvariety $B'$ such that $m\colon B\times B'\to A$ is an isogeny.
+\end{theorem}
+\begin{proof}
+	Let $i\colon B\into A$ denote the inclusion. We want to build a complement for $B$, which is essentially going to be a quotient of $A^\lor$ (by duality). Explicitly, there is a dual morphism $i^\lor\colon A^\lor\to B^\lor$, and pick an ample line bundle $\mc L$ on $A$ to provide a polarization $\varphi_\mc L\colon A\to A^\lor$. Notably, we have the following commutative diagram.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJCIl0sWzEsMCwiQSJdLFsxLDEsIkFeXFxsb3IiXSxbMCwxLCJCXlxcbG9yIl0sWzAsMSwiaSJdLFsyLDMsImleXFxsb3IiLDJdLFsxLDIsIlxcdmFycGhpX1xcbWMgTCJdLFswLDMsIlxcdmFycGhpX3tpXipcXG1jIEx9IiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		B & A \\
+		{B^\lor} & {A^\lor}
+		\arrow["i", from=1-1, to=1-2]
+		\arrow["{i^\lor}"', from=2-2, to=2-1]
+		\arrow["{\varphi_\mc L}", from=1-2, to=2-2]
+		\arrow["{\varphi_{i^*\mc L}}"', from=1-1, to=2-1]
+	\end{tikzcd}\]
+	As such, we consider the kernel of $(i^\lor\circ\varphi_\mc L)\colon A\to B^\lor$, and we let $B'$ be the reduced scheme structure on the connected component so that $B'$ is in fact an abelian $k$-variety.
+	
+	It remains to check that $B'$ works. Note that the kernel of the addition map $B\times B'\to A$ is contained in $B\cap B'$ (on $k$-points), which is contained in the kernel of $\varphi_{i^*\mc L}$ by the commutativity of the above diagram, which is finite because $\varphi_{i^*\mc L}$ is finite. So it is enough to just check that
+	\[\dim B+\dim B'\stackrel?=\dim A.\]
+	Well, finiteness of $B\cap B'$ at least gives $\dim B+\dim B'\le\dim A$, so we only need the other inequality. The main difficulty arises from understanding $\dim B'$. Well, abelian varieties have pure dimension, so
+	\[\dim B'=\dim\ker(i^\lor\circ\varphi_\mc L)=\dim\ker i^\lor.\]
+	(The second equality holds because $\varphi_\mc L$ has finite kernel, so it cannot adjust the dimension of the fiber.) Now, $i^\lor\colon B^\lor\to A^\lor$ is a group homomorphism, so all its fibers have the same dimension, and generically the dimension must be upper-bounded by $\dim A^\lor-\dim B^\lor$, which is $\dim A-\dim B$.
+\end{proof}
+
+\subsection{Finite Group Schemes}
+We are morally studying finite flat group schemes $G$ over a base scheme $S$, but we will ignore flatness and just work over a field $k$ (where everything is flat). We would like to move towards a classification.
+\begin{definition}[connected]
+	Fix a finite group $k$-scheme $G$. Then $G$ is \textit{local} or \textit{connected} if and only if $G$ is connected; i.e., $G=G^\circ$.
+\end{definition}
+\begin{example}
+	Fix a field $k$ of characteristic $p$ (possibly $0$), and let $\mu_n$ be the kernel of $[n]\colon\mathbb G_m\to\mathbb G_m$. Then
+	\[\mu_n=\Spec\frac{k[x]}{\left(x^n-1\right)}\]
+	is only connected when $n$ is a power of $p$, and $\mu_n$ is \'etale if and only if $p\nmid n$.
+\end{example}
+Here is our main result.\todo{Unique?}
+\begin{proposition} \label{prop:split-finite-group-scheme}
+	Fix a finite group $k$-scheme $G$. Then there is a connected group $k$-scheme $G_{\text{loc}}$ and \'etale group $k$-scheme $G_{\text{\'et}}$ such that
+	\[1\to G_{\text{loc}}\to G\to G_{\text{\'et}}\to1\]
+	is exact (as fppf sheaves, for example). In fact, if $k$ is perfect, then this splits naturally in $G$.
+\end{proposition}
+Morally, one should have $G_{\text{loc}}=G^\circ$ and $G_{\text{\'et}}$ to be the quotient given the reduced scheme structure. We begin with a lemma.
+\begin{lemma}
+	Fix a field $k$. There is an equivalence of categories between finite \'etale $k$-algebras and finite \'etale $k$-schemes. Explicitly, one sends a finite \'etale $k$-scheme $X$ to $\Gamma(X,\OO_X)$ and goes in the opposite direction
+\end{lemma}
+\begin{proof}
+	Everything is affine, so we are just moving the words \'etale and finite back and forth.
+\end{proof}
+\begin{lemma}
+	Fix a field $k$. There is an equivalence of categories between finite \'etale $k$-schemes $X$ and finite sets with continuous $\op{Gal}(k^{\mathrm{sep}}/k)$-action.
+\end{lemma}
+\begin{proof}
+	Send a scheme $X$ to the set $X(k^{\mathrm{sep}})$; one can see that this is fully faithful, so it is enough to show that we are essentially surjective. We will just give a functor from sets with action by $G\coloneqq\op{Gal}(k^{\mathrm{sep}}/k)$ to a finite \'etale $k$-algebra. Well, we just take
+	\[\left(\prod_{s\in S}k^{\mathrm{sep}}\right)^G,\]
+	where $G$ acts by permuting the coordinates and component-wise at the same time. This produces a finite \'etale $k$-algebra.
+\end{proof}
+\begin{example}
+	Fix a field $k$ of characteristic $p\coloneqq\op{char}k$, and choose an integer $n$ coprime to $p$. Then $\mu_n$ is an \'etale group scheme, and it corresponds to the set $\mu_n(k^{\mathrm{sep}})$, which is the set of $n$th roots of unity (equipped with Galois action).
+\end{example}
+We now add in group structure.
+\begin{lemma}
+	Fix a field $k$. Then the category of finite \'etale $k$-group schemes is equivalent to the category of finite groups with continuous action by $\op{Gal}(k^{\mathrm{sep}}/k)$.
+\end{lemma}
+\begin{proof}
+	Set $G\coloneqq\op{Gal}(k^{\mathrm{sep}}/k)$ for brevity. Then use the previous lemma and add in group structure everywhere.
+\end{proof}
+\begin{example}
+	Let $k$ be algebraically closed. The category of group $k$-schemes $G$ is just the category of groups because we are looking for sets with action by the trivial group.
+\end{example}
+To continue, we will want an understanding of \'etale morphisms. In particular, we want the notion of ``formally \'etale.''
+\begin{proposition}
+	Fix a field $k$ and a finite type $k$-scheme $X$. Then there is a finite \'etale $k$-scheme $\pi_0(X)$ and map $q\colon X\to\pi_0(X)$ with the following universal property: any map $q'\colon X\to Y'$ such that $Y'$ is finite \'etale factors uniquely through $q$.
+\end{proposition}
+Morally, we should think about $\pi_0(X)$ as (geometrically) connected components.
+\begin{proof}
+	The main point is the construction of $\pi_0(X)$, for which it is enough to give a set $\pi_0(X)(k^{\mathrm{sep}})$ with continuous action by $G\coloneqq\op{Gal}(k^{\mathrm{sep}}/k)$. Well, just take our set to be $\pi_0(X_{k^{\mathrm{sep}}})$ to be the collection of geometrically connected components. Then note that $G$ acts on $X_{k^{\mathrm{sep}}}$ continuously, so it will also permute the connected components, so our action descends to $\pi_0(X_{k^{\mathrm{sep}}})$. Thus, we have indeed constructed some finite \'etale $k$-scheme $X$.
+
+	Note that there is a natural map $X(k^{\mathrm{sep}})\to\pi_0(X)(k^{\mathrm{sep}})$ given by sending a point to its connected component, so we get to lift this to a map $q\colon X_{k^{\mathrm{sep}}}\to\pi_0(X)_{k^{\mathrm{sep}}}$. This map is $G$-invariant, so Galois descent provides a map $X\to\pi_0(X)$. (For example, one can even use \Cref{thm:fpqc-descent}.) We will not bother to check the universal property, but this can be seen by construction because any $q'\colon X\to Y'$ is essentially determined by where it sends the connected components of $X$, all of whose information is given by $\pi_0(X)$.
+\end{proof}
+\begin{remark}
+	One can also check that $q$ is faithfully flat, and its fibers are the connected components of $q$. Indeed, the fibers are the connected components by construction, so flatness follows by miracle flatness, and $q$ is faithful because $q$ is geometrically surjective.
+\end{remark}
+\begin{remark}
+	As usual, if $X$ is a group $k$-scheme, then we can force $\pi_0(X)$ to be a group $k$-scheme too.
+\end{remark}
+We are now ready to prove \Cref{prop:split-finite-group-scheme}.
+\begin{proof}[Proof of \Cref{prop:split-finite-group-scheme}]
+	Take $G_{\text{\'et}}\coloneqq\pi_0(G)$, which we know to be a finite \'etale group $k$scheme. Then the exact sequence is essentially immediate. For $k$ perfect, the point is that $G_{\text{red}}\subseteq G$ is a smooth subgroup $k$-scheme, and the splitting is given by
+	\[G_{\text{red}}\to G\to\pi_0(G),\]
+	whose composite we can find to be an isomorphism.\todo{Why?}
+\end{proof}
+We are now equipped to give the following definition.
+\begin{defihelper}[\'etale-local] \nirindex{etale-local@\'etale-local}
+	Fix a commutative group $k$-scheme $G$. Then $G$ is \textit{\'etale-local} if and only if $G$ is \'etale and its Cartier dual is connected.
+\end{defihelper}
+\begin{remark}
+	One finds that $G$ is the sum of four pieces which are \'etale-\'etale, \'etale-local, local-\'etale, and local-local. In fact, this decomposition is unique: any map to any other component must be the zero map (a map from something local to something \'etale must be trivial and vice versa, essentially because \'etale must reduce our scheme structure, but when connected, this must then just go to the identity).
+\end{remark}
+\begin{example}
+	Fix a field $k$ of characteristic $p\coloneqq\op{char}k$, where $p>0$.
+	\begin{itemize}
+		\item If $n$ is coprime to $p$, then $\mu_n$ is \'etale-\'etale (in fact, it is self-dual).
+		\item The group $\ZZ/p\ZZ$ is dual to $\mu_p$, so $\ZZ/p\ZZ$ is \'etale-local, and $\mu_p$ is local-\'etale.
+		\item There is a group $\alpha_p$ is self-dual and local, so it is local-local.
+	\end{itemize}
+\end{example}
+In fact, one has the following remark.
+\begin{remark} \label{rem:classify-pieces-of-group-scheme}
+	Fix an algebraically closed field $k$ of characteristic $p>0$.
+	\begin{itemize}
+		\item The only \'etale-\'etale commutative group $k$-schemes $G$ are products of $\mu_n$ where $n$ is coprime to $p$. Indeed, being \'etale means that $G$ is a sum of cyclic groups $\mu_n\cong\ZZ/n\ZZ$, and we can only have $n$ coprime to $p$ in order for the dual of $\mu_n$s to be \'etale.
+		\item A similar point holds for \'etale-local as being products of $\ZZ/p^\bullet\ZZ$. Essentially the same argument works, but now we need $n$ to be a power of $p$ in order for the dual factors $\mu_n$s to be local.
+		\item Lastly, a similar point holds for local-\'etale as being products of $\mu_{p^\bullet}$. Indeed, the dual is \'etale-local, and then we go to the previous point.
+	\end{itemize}
+	However, there can be lots of local-local commutative $k$-group schemes.%\todo{Does this depend on k?}
+\end{remark}
+\begin{remark}
+	Fix a field $k$ of characteristic $0$. Then every group $k$-scheme is smooth so every finite commutative group $k$-scheme is \'etale-\'etale.
+\end{remark}
+Here is an application.
+\begin{remark}
+	Fix a field $k$ of characteristic $p>0$. Given an abelian $k$-variety $A$ and positive integer $n$ coprime to $p$, one has
+	\[A[n]\oplus A\left[p^\nu\right]\cong A\left[np^\nu\right]\]
+	by the natural map. Note that $A[n]$ is \'etale, and its dual is $A^\lor[n]$, which continues to be \'etale. On the other hand, one finds that $A[p^\nu]$ has no \'etale-\'etale part: one could take a decomposition, and any \'etale-\'etale part remains that way after passing to $k^{\mathrm{sep}}$, whereupon \Cref{rem:classify-pieces-of-group-scheme} tells us that we can only have factors of $\mu_m$ with $\gcd(m,p)=1$, but $A[p^\nu]$ has order which is a power of $p$.
+\end{remark}
+
+\end{document}
