@@ -1,0 +1,135 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+The homework has been pushed back.
+\begin{remark}
+	Note that continuity is a requirement for smooth approximation via \Cref{thm:whitney-approx}. For example, a surjection $S^2\to S^1$ has no continuous approximation, so of course it has no smooth approximation.
+\end{remark}
+
+\subsection{More on Transverse Intersections}
+It should generically be true that submanifolds intersect transversally. However, we need a way to discuss what ``generically'' means in this context. This is the content of our next result.
+\begin{definition}[smooth family]
+	Fix smooth manifolds $S$, $N$, and $M$. Then a \textit{smooth family of maps} is a smooth map $F_\bullet\colon N\times S\to M$. Here, $S$ is viewed as a parameter so that $F_s\colon N\to M$ is a smooth map for each $s\in S$, and somehow the map $F_s$ itself varies smoothly in $s$.
+\end{definition}
+\begin{proposition}[Parametric transversality] \label{prop:parametric-transversality}
+	Fix a smooth family of maps $F_\bullet\colon N\times S\to M$. Fix a smooth submanifold $X\subseteq M$. If the family $F$ is transverse to $X$, then $F_s$ is transverse to $X$ for almost all every $s\in S$. (Namely, the conclusion holds outside a null set.)
+\end{proposition}
+The use of a null set tells us that we are going to use \Cref{thm:sard}. Morally, the intuition is that we should expect two generic manifolds to intersect transversally. For example, one can fix a hypersurface $X\subseteq M$ and then use $N\times SS$ so that $F_\bullet$ parameterizes hyperplanes on $M$, and we are being told that almost all hyperplanes intersect $X$ transversally.
+\begin{proof}[Proof of \Cref{prop:parametric-transversality}]
+	Set $W\coloneqq F^{-1}(X)\subseteq(N\times S)$, which is an embedded submanifold of $N\times S$ by \Cref{thm:intersect-map-transverse}. We want a result for almost every $s\in S$, so we will need to consider regular values of some function outputting to $S$. As such, we will look at the restriction of the projection $\pi\colon(N\times S)\to S$ to $W$.\footnote{Notably, even though $\pi$ itself is a submersion, meaning all values are regular, the map $\pi|_W$ might get some critical values. For example, one can restrict the projection $\pi\colon\RR^2\to\RR$ given by $\pi(x,y)\coloneqq y$ to the parabola $\left\{(x,y):y=x^2\right\}$, which now has $0$ as a critical value.}
+
+	So by \Cref{thm:sard}, it remains to show that $s_0\in S$ is a regular value for $\pi|_W$ implies that $F_{s_0}$ intersects transversally to $X$. Well, choose $p\in F^{-1}_{s_0}(X)$ so that $(p,s_0)\in S$. Set $q\coloneqq F_{s_0}(p)$. By the regularity of $s_0$, we know $(p,s_0)$ is regular for $\pi|_W$, so
+	\[d\pi_{(p,s_0)}(T_{(p,s_0)}W)=T_{s_0}S.\]
+	As such, up to some identifications, we may write
+	\[T_{(p,s)}(N\times S)=T_pN\oplus T_{s_0}S=T_pN\oplus\im d\pi_{(p,s_0)},\]
+	which we now carry over to $M$ as
+	\[(dF_{s_0})_p(T_pN)+T_qX=(dF)_{(p,s_0)}(T_{(p,s_0)}(N\times\{s_0\}))+T_qX\stackrel*=(dF)_{(p,s_0)}(T_{(p,s_0)}(N\times\{s_0\})+T_{(p,s_0)}W)+T_qX,\]
+	where $\stackrel*=$ holds because $dF$ maps $TW$ to $TX$ already, so we haven't gained anything. But now this is $T_qM$ because $F$ itself is transverse to $X$.
+\end{proof}
+As an application, we show that any embedding can be perturbed to smooth transverse one.
+\begin{proposition}[Transversality homotopy]
+	Fix a smooth map $f\colon N\to M$ and an embedded submanifold $X\subseteq M$. Then there is a smooth embedding $g\colon N\to M$ which is transverse to $X$ and homotopic to $f$.
+\end{proposition}
+\begin{proof}
+	The idea is that we should be able to work in a tubular neighborhood to perturb $f$ a small amount to achieve the transverse intersection. To discuss tubular neighborhoods, we go ahead and use \Cref{thm:whitney-embed} to place $M$ inside some $\RR^k$, from which we are able to extract a tubular neighborhood $U\subseteq\RR^k$ of $M$; let $r\colon U\to M$ be the corresponding smooth retraction. In order to make sure we only ever make small perturbations, define $\delta_0\colon M\to\RR_{>0}$ by
+	\[\delta_0(x)\coloneqq\max\{r\ge1:B(x,r)\subseteq U\},\]
+	and use \Cref{ex:get-smooth-error} to get some smooth $\delta\colon M\to\RR_{>0}$ with $\delta<\delta_0$.
+
+	We now build our family to make perturbations. Set $S\coloneqq B(0,1)\subseteq\RR^k$ and $F\colon N\times S\to M$ by
+	\[F_s(p)\coloneqq r(f(p)+\delta(f(p))s).\]
+	Note $F$ is smooth as some smooth composite, and $F$ is actually a submersion: $r$ is a submersion, so it is enough to check that $(p,s)\mapsto (f(p)+\delta(f(p))s )$ is a submersion, but actually $s\mapsto(f(p)+\delta(f(p))s)$ is already a smooth submersion. So \Cref{prop:parametric-transversality} grants $s_0$ such that $F_{s_0}$ is transverse to $X$, so a smooth map connecting $s$ and $s_0$ provides a homotopy from $F_0=f$ to the transverse embedding $F_{s_0}$.
+\end{proof}
+
+\subsection{Remarks on Cohomology}
+We conclude with some remarks about using transversal intersections for (co)homology.
+\begin{remark}
+	Fix a smooth compact $n$-manifold $M$ without boundary, and let $S\subseteq M$ be a closed submanifold of codimension $1$. We claim that the existence of a smooth retraction $r\colon M\to S$ implies that $M\setminus S$ is connected. Note $r$ being a smooth retraction makes it a smooth submersion, so $r^{-1}(\{s\})$ is a closed $1$-dimensional submanifold such that $r^{-1}(\{s\})\setminus S$. This is compact and connected, so one can see that $r^{-1}(\{s\})$ is a disjoint union of circles. Even after subtracting out $S$ then, this set will continue to be path-connected.
+\end{remark}
+\begin{remark}
+	Fix a compact oriented $n$-manifold $M$. Then one can use Sard's theorem to show that each $\alpha\in H_{n-1}(M,\ZZ)$ comes from a bona fide embedded submanifold! The idea is to write
+	\[H_{n-1}(M;\ZZ)\cong H^1(M;\ZZ)\]
+	by Poincar\'e duality, and $H^1(M;\ZZ)$ is basically homotopy classes of maps $M\to S^1$ by a discussion of the fundamental group. So one finds a map $f\colon M\to S^1$ representing $\alpha$ and brings it back to a submanifold, where the point is that we are allowed to adjust $f$ by a homotopy, allowing us to assume that we actually have an embedded submanifold.
+\end{remark}
+\begin{remark}
+	In general, an embedded $k$-submanifold $S\subseteq M$ of the smooth $n$-manifold $M$ provides a class $[S]\in H_k(M;\ZZ)$. Given two such embedded submanifolds $S_1$ and $S_2$ of dimensions $k_1$ and $k_2$, respectively, one can perturb them to intersect transversally into $[S_1\cap S_2]\in H_{k_1+k_2-n}(M;\ZZ)$. As such, we have defined a ``cap product''
+	\[\cap\colon H_{k_1}(M;\ZZ)\otimes_\ZZ H_{k_2}(M;\ZZ)\to H_{k_1+k_2-n}(M;\ZZ).\]
+	By Poincar\'e duality, one produces a cup product on cohomology.
+\end{remark}
+\begin{example}
+	Consider $M\coloneqq T^2=S^1\times S^1$, and let $S_1$ and $S_2$ be the embedded circles in $M$. One sees that $S_1\cap S_2$ has a single point of intersection, so $[S_1]\cap[S_2]$ is the generator of $H_0(M;\ZZ)$. On the other hand, $[S_1]\cap[S_1]=0$ because $S_1$ can be perturbed a little to not intersect with itself at all.
+\end{example}
+
+\subsection{Lie Groups}
+We now change our topic of discussion to Lie groups.
+\begin{definition}[Lie group]
+	A \textit{Lie group} is a smooth manifold $G$ equipped with a smooth multiplication map $m\colon G\times G\to G$ and smooth inversion map $i\colon G\to G$ making $G$ into a group.
+\end{definition}
+Here are many examples.
+\begin{example}
+	The manifolds $\RR^n$ and $\CC^n$ equipped with addition are Lie groups. Indeed, addition and inversion are both polynomial maps, which are smooth.
+\end{example}
+\begin{example}
+	The manifolds $\RR^\times$ and $\CC^\times$ are Lie groups equipped with multiplication. Multiplication is polynomial, and inversion is rational, both of which are smooth.
+\end{example}
+\begin{example}
+	The manifolds $\op{GL}_n(\RR)$ and $\op{GL}_n(\CC)$ are Lie groups, where the group operation is matrix multiplication. Indeed, matrix multiplication is a polynomial, and inversion is a rational function, both of which are smooth (where defined).
+\end{example}
+\begin{example}
+	There are more matrix groups $\op O(n)$, $\op{SO}(n)$, $\op{SL}_n(\RR)$, $\op{SU}(n)$, and so on. The main content is that they are cut out by polynomial equations, so they are all embedded submanifolds of some general linear group, where the multiplication and inversion maps are known to be smooth.
+\end{example}
+It will be helpful to have some notation.
+\begin{definition}
+	Given $g\in G$, we define the \textit{left translation} $L_g\colon G\to G$ and \textit{right translation} $R_g\colon G\to G$ by $L_g(h)\coloneqq gh$ and $R_g(h)\coloneqq hg$.
+\end{definition}
+\begin{remark}
+	The translations are smooth. For example, the left translation is the smooth composite
+	\[M\stackrel{(g,{\id})}\to M\times M\stackrel m\to M.\]
+\end{remark}
+\begin{remark} \label{rem:translate-diffeo}
+	Let $g_1,g_2\in M$ be elements, and let $e\in M$ be the identity. Here are some basic identities, checked by just plugging in a test element $x\in M$ and evaluating.
+	\begin{itemize}
+		\item $L_{g_1}\circ R_{g_2}=R_{g_2}\circ L_{g_1}$.
+		\item $L_{g_1}\circ L_{g_2}=L_{g_1g_2}$.
+		\item $R_{g_1}\circ R_{g_2}=R_{g_2g_1}$. (Note the reversal!)
+		\item $R_e=L_e=\id_M$.
+	\end{itemize}
+	The last three points show that $R_g$ and $L_g$ are diffeomorphisms with inverses given by $R_{g^{-1}}$ and $L_{g^{-1}}$, respectively.
+\end{remark}
+We want to upgrade our notion of morphism.
+\begin{definition}[homomorphism]
+	A smooth map $f\colon G\to H$ of Lie groups is a \textit{Lie group homomorphism} if and only if it is also a group homomorphism.
+\end{definition}
+\begin{example}
+	The exponential map $\exp\colon\CC\to\CC^\times$ is a Lie group homomorphism. Notably, $\exp$ is smooth!
+\end{example}
+\begin{example} \label{ex:det-is-hom}
+	The determinant map $\det\colon\op{GL}_n(\RR)\to\RR^\times$ is smooth (it's the restriction of a polynomial map $\RR^{n\times n}\to\RR$) and a homomorphism.
+\end{example}
+``Homogeneity'' of groups mean that morphisms must look the same everywhere.
+\begin{proposition} \label{prop:hom-is-constant-rank}
+	Fix a homomorphism $F\colon G\to H$ of Lie groups. Then $F$ has constant rank.
+\end{proposition}
+\begin{proof}
+	To see the aforementioned homogeneity, we compute
+	\[(F\circ L_g)(x)=F(gx)=F(g)F(x)=L_{F(g)}F(x)=\left(L_{F(g)}\circ F\right)(x).\]
+	So $F\circ L_g=L_{F(g)}\circ F$. To see our constant rank, we compute the differential. For $g\in G$, we see
+	\[dF_g\circ(dL_g)_e=d(F\circ L_g)_e=(dL_{F(g)})_{F(e)}\circ dF_e.\]
+	But $L_\bullet$ is always a diffeomorphism by \Cref{rem:translate-diffeo}, so we conclude that $\op{rank}dF_g=\op{rank}dF_e$ is forced. Thus, the rank is in fact constant.
+\end{proof}
+\begin{corollary}
+	Fix a homomorphism $F\colon G\to H$ of Lie groups. Then $\ker F\subseteq G$ is a closed embedded submanifold.
+\end{corollary}
+\begin{proof}
+	The map $F$ is constant rank by \Cref{prop:hom-is-constant-rank} above, so $\ker F=F^{-1}(\{e_G\})$ is an embedded submanifold by \Cref{thm:level-sub}. It is closed by continuity.
+\end{proof}
+\begin{example}
+	Let's actually check that $\op{SL}_n(\RR)\subseteq\op{GL}_n(\RR)$ is an embedded submanifold. Well, $\op{SL}_n(\RR)$ is the kernel (i.e., pre-image of the identity) of the map $\det\colon\op{GL}_n(\RR)\to\RR^\times$, so we are done!
+\end{example}
+\begin{remark}
+	By the ``global'' rank theorem, we see that a homomorphism of Lie groups is an immersion if and only if injective, a submersion if and only if surjective, and bijective if and only if a diffeomorphism.
+\end{remark}
+
+\end{document}
