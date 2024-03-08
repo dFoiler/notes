@@ -1,0 +1,86 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we complete our discussion of Banach spaces.
+
+\subsection{Alaoglu's Theorem}
+We are in the middle of proving the following result.
+\aballthm*
+\begin{proof}
+	Let $D\coloneqq\{z\in\FF:\left|z\right|\le1\}$ be the closed ball around $1$, which we note is compact. Now, we set $Y\coloneqq D^B$ to be the infinite product, which we note is compact by Tychonoff's theorem.
+
+	We will turn compactness of $Y$ to compactness of our closed unit ball $B^*\subseteq X^*$. As such, we define $\varphi\colon B^*\to Y$ by
+	\[\varphi(f)\coloneqq f|_B.\]
+	To see that $f|_B$ is in fact a map $B\to D$ note that $f\in B^*$ must have $\left|f(x)\right|\le\norm x$ for all $x\in X$, so in particular $\left|f(x)\right|\le1$ for $x\in B$.
+
+	We claim that $\varphi$ is a homeomorphism of $B^*$ (with the weak topology) onto a closed subset of $Y$. This will finish the proof because the image $\Lambda\coloneqq\im\varphi$ will be compact in $Y$, which then pulls back to compactness for $B^*$ via our homeomorphism. So it remains to show our claim.
+	\begin{itemize}
+		\item We claim that $\varphi$ is injective. Indeed, suppose that $\varphi(f)=\varphi(g)$. Then $f|_B=g|_B$, so $f=g$ by \Cref{lem:extend-from-ball}.
+
+		The point is that $\varphi\colon B^*\to\Lambda$ is now a bijection.
+
+		\item We claim that $\varphi\colon B^*\to\Lambda$ is a homeomorphism. This comes down to understanding the open subsets of $B^*$ and of $\Lambda$.
+
+		For example, subbasic open subsets of $\Lambda$ take the following form: choose some $x_0\in B$ and $c\in\FF$ and $\varepsilon>0$, and we have a subbasic open subset of the form
+		\[\{g\in\Lambda:\left|g(x_0)-c\right|<\varepsilon\}.\]
+		Unraveling $\Lambda$, we see that we are looking at
+		\[\{f|_B\in\Lambda:\left|f(x_0)-c\right|<\varepsilon\}.\]
+		On the other hand, subbasic open subsets of $B^*$ take the following form: choose some $x_0\in X$ and $c\in\FF$ and $\varepsilon>0$, and we have a subbasic open subset of the form
+		\[\{f\in B:\left|f(x_0)-c\right|<\varepsilon\}.\]
+		(Namely, we are finding the subbasic open subset forced by continuity of $\op{ev}_{x_0}\colon X^*\to\FF$.) It may appear that we are gaining subbasic open subsets by allowing $x_0\in X$ instead of restricting to $x_0\in B$ as previously, but in fact we gain nothing: if $x_0\notin B$, simply replace $x_0$ with $x_0/\norm{x_0}$ and $c$ with $c/\norm{x_0}$ and $\varepsilon$ with $\varepsilon/\norm{x_0}$. So we see that our topologies are really the same, so we are done.
+
+		\item We claim that $\Lambda\subseteq Y$ is closed. Well, choose some $g\in\ov\Lambda$, and we claim that $g(x+y)=g(x)+g(y)$ and $g(tz)=tg(z)$ whenever the relevant inputs live in $B$. This will imply that $g$ comes from some linear functional on $X$ by \Cref{lem:extend-from-ball}, and in fact $\left|g(x)\right|\le\norm x$ is forced because $\left|g(x/\norm x)\right|\le1$, meaning $g$ comes from some linear functional in $B^*$, as needed.
+
+		So it remains to show the claim of the previous paragraph. We will show that $g(ax+by)=ag(x)+bg(y)$ whenever all inputs are in $B$. Well, note that
+		\[V\coloneqq\{f\in Y:f(ax+by)=af(x)+bf(y)\}\]
+		is a closed subset of $Y$: the map $f\mapsto(f(x+y)-(f(x)+f(y)))$ is continuous as the linear combination of projections from $Y$, and $V$ is the pre-image of this map from $\{0\}$, so $V$ is closed. Additionally, $\Lambda\subseteq V$ because any element of $\Lambda$ comes from a linear functional, so $\ov\Lambda\subseteq V$ follows. Thus, $g\in V$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	One can use nets to prove \Cref{thm:alaoglu-ball-weak-compact}, but Professor Christ is quite proud of never using nets, so we will not.
+\end{remark}
+
+\subsection{Hilbert Spaces}
+We will want the notion of inner product spaces.
+\begin{definition}[inner product]
+	Fix an $\mathbb F$-vector space $X$. Then an \textit{inner product} $\langle\cdot,\cdot\rangle$ on $X$ is a mapping $X\times X\to\CC$ satisfying the following.
+	\begin{itemize}
+		\item Additive: $\langle x+y,z\rangle=\langle x,z\rangle+\langle y,z\rangle$.
+		\item Conjugate symmetry: $\langle x,y\rangle=\langle y,x\rangle$.
+		\item Positive definite: $\langle x,x\rangle\ge0$ for each $x$ and only zero when $x=0$.
+		\item Scalar multiplication: $\langle tx,y\rangle=t\langle x,y\rangle$.
+	\end{itemize}
+\end{definition}
+Inner products produce norms.
+\begin{definition}
+	Fix an inner product space $X$. Then the \textit{norm} on $X$ is given by
+	\[\norm x\coloneqq\langle x,x\rangle^{1/2}.\]
+\end{definition}
+We will not bother to check that $\norm\cdot$ is a norm, but it is.
+\begin{remark}
+	Note that
+	\[\norm{x-y}^2+\norm{x+y}^2=\langle x-y,x-y\rangle+\langle x+y,x+y\rangle\stackrel*=2\langle x,x\rangle+2\langle y,y\rangle=2\norm x^2+2\norm y^2,\]
+	where $\stackrel*=$ is by direct expansion. This is called the ``parallelogram law.'' It turns out that a norm satisfying the parallelogram law actually comes from an inner product. Explicitly, one can set
+	\[\langle x,y\rangle\coloneqq\frac{\norm{x+y}^2-\norm{x-y}^2}4+i\frac{\norm{ix-y}^2-\norm{ix+y}}4\]
+	and check that the various identities hold by creative applications of the parallelogram law.
+\end{remark}
+One has the following basic bounding result.
+\begin{proposition}[Cauchy--Schwarz]
+	Fix an inner product space $X$. Then each $x,y\in X$ has
+	\[\left|\langle x,y\rangle\right|\le\norm x\cdot\norm y.\]
+\end{proposition}
+Anyway, here is our definition.
+\begin{definition}[Hilbert space]
+	A normed vector space $X$ is a \textit{Hilbert space} if and only if is a complete inner product space (where the norm is induced by the inner product).
+\end{definition}
+Here is a basic lemma: closest points to subspaces make sense.
+\begin{lemma}
+	Fix a Hilbert space $X$. Given a closed subspace $V\subseteq X$ and $x\in X$ there is a unique $v\in V$ such that
+	\[\norm{x-v}=\inf_{u\in V}\norm{x-u}.\]
+\end{lemma}
+
+\end{document}
