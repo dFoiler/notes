@@ -1,0 +1,81 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Bump, bump, bump.
+
+\subsection{The Hilbert Polynomial}
+There is a notion of Hilbert polynomial arising from the Euler characteristic.
+\begin{proposition}
+	Fix a projective scheme $X$ over a Noetherian ring $A$, and let $\OO_X(1)$ be a very ample line bundle. Given a coherent sheaf $\mc F$ on $X$, there is a polynomial $P_\mc F\in\QQ[x]$ such that $\chi(\mc F(n))=P(n)$ for all $n$.
+\end{proposition}
+\begin{proof}
+	Morally, one inducts on the support of $\mc F$. Using the projectivity of $X$, we are granted a closed embedding $i\colon X\to\PP^r_A$ such that $\OO_X(1)=i^*\OO_{\PP^r_A}(1)$. Additionally, note that we may assume that $X=\PP^r_A$ by replacing $\mc F$ with $i_*\mc F$ (which is still coherent because $i$ is proper and everything in sight is Noetherian).
+
+	We will use Noetherian induction on $\op{supp}\mc F$. For our base case, if $\op{supp}\mc F$ is empty, then $\mc F$ vanishes, so $\chi(\mc F(n))=0$ always, so $P=0$ will work. Otherwise, we will take $\op{supp}\mc F$ to be nonempty for our induction. Without loss of generality that $\op{supp}\mc F\not\subseteq H_r$ (certainly the support cannot be contained in all the hyperplanes because they have empty intersection), where $H_r$ is cut out by $x_r=0$. We now define $\mc K$ and $\mc Q$ to build a short exact sequence
+	\[0\to\mc K\to\mc F(-1)\stackrel{x_r}\to\mc F\to\mc Q\to0.\]
+	Twisting, we get the short exact sequence
+	\[0\to\mc K(n)\to\mc F(-n)\stackrel{x_r}\to\mc F(n)\to\mc Q(n)\to0\]
+	for all integers $n$. Thus, \Cref{rem:euler-char-additive} tells us that
+	\[\chi(\mc F(n))-\chi(\mc F(n-1))=\chi(\mc Q(n))-\chi(\mc K(n))\]
+	for all integers $n$. We would now like to use the inductive hypothesis on $\mc Q$ and $\mc K$, which we see is legal because their supports are contained in $\op{supp}\mc F$ (by construction) but also in $H_r$ (because outside $H_r$ the map $x_r\colon\mc F(-1)\to\mc F$ is an isomorphism), and $H_r\cap\op{supp}\mc F\subsetneq\op{supp}\mc F$.\footnote{We are using ``Noetherian induction,'' which means that it is enough for these supports to be proper subsets of $\op{supp}\mc F$. The point is that there is no infinite descending chain}
+	
+	Thus, we get polynomials $P_\mc K$ and $P_\mc Q$ so that $\chi(\mc K(n))=P_\mc K(n)$ and $\chi(\mc Q(n))=P_\mc Q(n)$ for all integers $n$. But now we see that $\chi(\mc F(n))-\chi(\mc F(n-1))$ numerically agrees with a polynomial, so a quick computation with finite differences tells us that it too is a polynomial.
+\end{proof}
+\begin{remark}
+	Hartshorne has a hint for this result \cite[Exercise~III.5.2]{hartshorne}, which is somewhat misleading. Namely, it suggested cutting by a generic hyperplane, but if $A$ is finite, there may be no hyperplane which actually cuts down the dimension. One can fix this (as above) by using Noetherian induction; alternatively, one can use hypersurfaces instead of hyperplanes to get enough ways to cut down our dimension. A harder approach would be to base-change $A$ to $\ov{K(A)}$ in the finite case (and then $\ov{K(A)}$ is certainly infinite). But to show this move is legal, one has to know that this base-change does not adjust cohomology, which we will establish later.
+\end{remark}
+\begin{remark}
+	A careful reading of the above proof shows that $\deg P_\mc F\le\dim\op{supp}\mc F$.
+\end{remark}
+The above proposition permits the following definition.
+\begin{definition}[Hilbert polynomial]
+	Fix a projective $k$-scheme $X$ with very ample line bundle $\OO_X(1)$. Given a coherent sheaf $\mc F$, we let $P_\mc F(x)$ denote the \textit{Hilbert polynomial} defined so that $P(n)=\chi(\mc F(n))$ for all $n\in\ZZ$.
+\end{definition}
+Quickly, we establish that this Hilbert polynomial agrees with what is found in commutative algebra.
+\begin{corollary}
+	Fix a field $k$ and set $X\coloneqq\PP^r_A$ with $r>0$. Given a coherent sheaf $\mc F$, set
+	\[M\coloneqq\Gamma_\bullet(\mc F)\coloneqq\bigoplus_{n\in\ZZ}H^0(X,\mc F(n)).\]
+	Then the Hilbert polynomial $P_\mc F$ is the Hilbert polynomial of the module $M$ defined so that $P_M(n)=\dim_kM_n$ for $n$ sufficiently large.
+\end{corollary}
+\begin{proof}
+	Set $S\coloneqq k[x_0,\ldots,x_r]$ for brevity, and we see that $M$ is a graded $S$-module. Now, $\dim_kM_n=\dim_kH^0(X,\mc F(n))$ by definition, so we are asking for
+	\[\chi(\mc F(n))\stackrel?=\dim_kH^0(X,\mc F(n))\]
+	for $n$ large enough. Recalling what $\chi(\mc F(n))$ is, we are asking for
+	\[\sum_{i=0}^\infty\dim_kH^i(X,\mc F(n))\stackrel?=\dim_kH^0(X,\mc F(n)).\]
+	But now \Cref{prop:ample-kills-cohomology} tells us that there is $n_0(\mc F)$ so that $H^i(X,\mc F(n))=0$ for $i>0$ and $n>n_0(\mc F)$, so the higher terms of the sum vanish.
+\end{proof}
+
+\subsection{Divisors}
+We now escape our discussion of cohomology to discuss Weil divisors. Weil divisors only real make sense with sufficient regularity hypotheses.
+\begin{definition}[regular in codimension one]
+	Fix a scheme $X$. Then $X$ is \textit{regular in codimension one} if and only if $\OO_{X,\eta}$ is regular for all generic points $\eta$ of codimension $1$.
+\end{definition}
+\begin{remark}
+	A normal Noetherian scheme is regular in codimension $1$ because normal Noetherian local domains are regular (in fact, discrete valuation rings).
+\end{remark}
+We will want to bring down our schemes a little more.
+\begin{definition}[smoothish]
+	A scheme $X$ is \textit{smoothish} if it is Noetherian, separated, and regular in codimension $1$.
+\end{definition}
+Please note that ``smoothish'' is not a word used in the usual literature, but I would prefer to not have to write all the hypotheses all the time.
+
+Weil divisors are built from schemes of codimension $1$, which we now give a name to.
+\begin{definition}[Weil divisor]
+	Fix a smoothish scheme $X$. A \textit{prime divisor} on $X$ is a closed integral subscheme of codimension $1$; we denote the set of prime divisors by $X^{(1)}$. A \textit{Weil divisor} is an element of $\ZZ[X^{(1)}]$.
+\end{definition}
+\begin{definition}[effective]
+	A Weil divisor $D$ on a smoothish scheme $X$ is \textit{effective} if and only if
+	\[D=\sum_{Y\in X^{(1)}}n_YY\]
+	has $n_Y\ge0$ for all prime divisors $Y$.
+\end{definition}
+\begin{notation}
+	Fix a prime divisor $Y$ of a smoothish scheme $X$. Letting $\eta$ be the generic point of $Y$, we see that $\OO_{X,\eta}$ is a discrete valuation ring inside $K(X)$, so we let $\nu_Y\colon K(X)^\times\to\ZZ$ be the corresponding valuation.
+\end{notation}
+\begin{example}
+	Fix a (smoothish) curve $X$ over $\CC$. Notably, $X$ is smooth (it's a regular curve), so $X(\CC)$ is a Riemann surface. The prime divisors on $X$ are just the closed points, and $K(X)$ are the meromorphic functions on $X$. Given a point $p\in X$, one can now realize $\nu_p(f)$ as the order of vanishing of $f$ at $p$.
+\end{example}
+
+\end{document}
