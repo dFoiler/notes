@@ -1,0 +1,102 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Degree of Isogenies}
+Today we are going to discuss degrees of isogenies. The point is that we are going to show that the degree map $\deg\colon\op{End}A\to\ZZ$ is polynomial. Let's define what this means
+\begin{definition}
+	Fix a $k$-vector space $V$. Then a function $f\colon V\to k$ is a \textit{homogeneous polynomial of degree $n$} if and only if $f|_W$ is a homogeneous polynomial of degree $n$ for any finite-dimensional subspace $W\subseteq V$. In other words, for any finite set of linearly independent vectors $\{v_1,\ldots,v_n\}$, the function
+	\[(a_1,\ldots,a_n)\mapsto f(a_1v_1+\cdots+a_nv_n)\]
+	is a homogeneous polynomial of degree $n$. (The point here is that change of basis does not adjust the fact that $f$ is a homogeneous polynomial of degree $n$.)
+\end{definition}
+\begin{remark} \label{rem:reduce-poly-map-to-two}
+	An induction tells us that it suffices to check the result for sets of linearly independent vectors of size $2$.
+\end{remark}
+So we are actually going to show that $\deg\op{End}A\to\ZZ$ is a polynomial map of degree $2g$. For isogenies, we know how to make sense of degree, but we should probably make a convention if not an isogeny.
+\begin{definition}
+	Given a homomorphism $f\colon A\to B$ of abelian $k$-varieties, we define $\deg f=0$ if $f$ is not an isogeny. For a general map $\frac1nf\in\op{End}^0(A)$ where $g\coloneqq\dim A$, we define
+	\[\deg\left(\frac1nf\right)\coloneqq\frac{\deg f}{n^{2g}}.\]
+\end{definition}
+\begin{remark}
+	One can check that $\frac1mf=\frac1ng$ implies that
+	\[\frac{\deg f}{m^{2g}}=\frac{\deg g}{n^{2g}}.\]
+	Indeed, by \Cref{thm:mul-n-av}, we see that $\deg[n]=n^{2g}$ for any integer $n$, so $[m]\circ f=[n]\circ g$ yields the above equality after rearranging.
+\end{remark}
+So in fact we will aim to show that $\deg\colon\op{End}^0(A)\to\QQ$ is a homogeneous polynomial of degree $2g$.
+
+Here is a starting lemma.
+\begin{lemma} \label{lem:deg-by-euler-char}
+	Fix an isogeny $g\colon A\to B$ of abelian $k$-varieties. For all line bundles $\mc L$ on $B$, one has
+	\[\chi(g^*\mc L)=(\deg g)\chi(\mc L).\]
+\end{lemma}
+\begin{proof}
+	See \cite[Theorem~12.2]{mumford}. Note that this result is similar to \Cref{prop:deg-of-pullback}. We will have more context for this result when we discuss Riemann--Roch for abelian varieties in more detail. The main point is to reduce to the elliptic curve case, where one can use the Riemann--Hurwitz formula; notable, the map $g$ is a group homomorphism and hence unramified.
+\end{proof}
+And here is our result.
+\begin{theorem}
+	Fix a simple abelian $k$-variety $A$ of dimension $g$. Then $\deg\colon\op{End}^0(A)\to\QQ$ is a homogeneous polynomial of degree $2g$.
+\end{theorem}
+\begin{proof}
+	Once we know that we have a polynomial, the fact that $\deg(nf)=n^{2g}\deg f$ will enforce homogeneity. So it suffices to show that we are just polynomial, so by \Cref{rem:reduce-poly-map-to-two}, it suffices to show that the map $\deg(nf_1+f_2)$ is a polynomial map in $n$, where $f_1,f_2\colon A\to A$ are isogenies.
+
+	Choose an ample line bundle $\mc L$ on $A$. By Serre's criterion for ampleness, we may replace $\mc L$ with a power of itself so that $\mc L$ has no higher cohomology. But $\mc L$ must be globally generated (it's ample), so $\mc L$ has some global sections, so $\chi(\mc L)\ne0$. Now, \Cref{lem:deg-by-euler-char} tells us
+	\[\deg(nf_1+f_2)=\frac{\chi((nf_1+f_2)^*\mc L)}{\chi(\mc L)},\]
+	so it remains to work with the numerator. We would like to evaluate $\mc L_n\coloneqq (nf_1+f_2)^*\mc L$ inductively, for which we must use \Cref{thm:cube}. In particular, \Cref{thm:cube} tells us that
+	\[\mc L_{n+2}=(f_1+f_1+(nf_1+f_2))^*\mc L\cong\mc L_{n+1}\otimes\mc L_{n+1}\otimes(2f_1)^*\mc L\otimes\mc L_n^{-1}\otimes L_n^{-1}\otimes f_1^*\mc L^{\otimes-2}.\]
+	An induction is now able to show that
+	\[\mc L_n=\mc M^{\otimes n(n-1)/2}\otimes\mc N^{\otimes n}\otimes Q\]
+	for some line bundles $\mc M$ and $\mc N$ and $\mc Q$ (which do not depend on $n$).
+
+	Now, the same argument which shows that the Hilbert polynomial is a polynomial shows that the map
+	\[(n_1,\ldots,n_r)\mapsto\chi\left(\mc L_1^{\otimes n_1}\otimes\cdots\otimes\mc L_r^{\otimes n_r}\right)\]
+	is always a polynomial in $\QQ[n_1,\ldots,n_r]$, so we are done.
+\end{proof}
+
+\subsection{Riemann--Roch for Abelian Varieties}
+Let's study the Euler characteristic of line bundles in more detail.
+\begin{proposition} \label{prop:riemann-roch-av}
+	Fix a line bundle $\mc L$ on an abelian $k$-variety $A$.
+	\begin{listalph}
+		\item Then $n\mapsto\chi\left(\mc L^{\otimes n}\right)$ is a homogeneous polynomial of degree $2g$.
+		\item If $\mc L=\OO_A(D)$ for a divisor $D$, then $\chi(\mc L)=(D,\ldots,D)/g!$, where $(D,\ldots,D)$ is the intersection number.
+		\item The degree of the map $\varphi_\mc L\colon A\to A^\lor$ is $\chi(\mc L)^2$.
+	\end{listalph}
+\end{proposition}
+\begin{remark} \label{rem:euler-char-of-ample-nonzero}
+	Note that (c) of the above tells us that indeed $\mc L$ being ample means $\varphi_\mc L$ is an isogeny, so $\chi(\mc L)^2$ must be nonzero, so $\chi(\mc L)$ is nonzero.
+\end{remark}
+\begin{proof}
+	We may assume that $k$ is algebraically closed because we are just computing dimensions of cohomology, which is preserved by flat base change (such as a field extension).
+
+	For (a), we proceed in steps. The point is to reduce to the case of $\mc L$ being symmetric or in $A^\lor$, which can be attacked separately.
+	\begin{enumerate}
+		\item We claim that $\mc L_1\otimes\mc L_2^{-1}\in A^\lor$ implies that $\chi(\mc L_1)=\chi(\mc L_2)$. Indeed, $\mc L_1\otimes\mc L_2^{-1}$ being in $A^\lor$ implies that $\mc L_1$ and $\mc L_2$ are algebraically equivalent, so they arise as restrictions of a larger line bundle $\mc L$ on $A\times S$. However, the Euler characteristic $\chi$ is locally constant, so we conclude $\chi(\mc L_1)=\chi(\mc L_2)$.
+
+		\item We claim that any line bundle $\mc L$ on $A$ has line bundles $\mc L_1$ and $\mc L_2$ such that $\mc L=\mc L_1\otimes\mc L_2$ such that $\mc L_1$ is symmetric and $\mc L_2\in A^\lor$.
+
+		The main point is the construction of $\mc L_2$. We would like to set $\mc L_1$ to be $\mc L\otimes[-1]^*\mc L$, and take $\mc L_2$ to be $\mc L\otimes[-1]^*\mc L^{-1}$, but this does not actually multiply to $\mc L$. So we will want to take some square-roots, which requires a more careful argument.
+		
+		To begin, we claim that $\mc L\otimes[-1]^*\mc L^{-1}\in A^\lor$. Indeed, it suffices to show that the line bundle is trans\-lation-invariant, so we compute
+		\[t_x\left(\mc L\otimes[-1]^*\mc L^{-1}\right)\otimes\mc L^{-1}\otimes[-1]^*\mc L=t_x^*\mc L\otimes\mc L^{-1}\otimes[-1]^*\left(t_{-x}^*\mc L^{-1}\otimes\mc L\right).\]
+		Now, $t_x^*\mc L\otimes\mc L^{-1}$ is certainly in $A^\lor$ because it is just in the image of $\varphi_\mc L$, and pulling back along $[-1]^*$ stays in $A^\lor$ because this map is just $[-1]_{A^\lor}\colon A^\lor\to A^\lor$. In fact, $[-1]$ corresponds to inverting the line bundle, so our line bundle now looks like
+		\[t_x^*\mc L\otimes\mc L^{-1}\otimes\left(t_{-x}^*\mc L\otimes\mc L^{-1}\right),\]
+		which vanishes by \Cref{thm:square}.
+
+		We now use the fact that we are over $\ov k$, so we may find $\mc L_2\in A^\lor(\ov k)$ with $\mc L_2^{\otimes2}=\mc L\otimes[-1]^*\mc L^{-1}$. Now, we define $\mc L_1\coloneqq\mc L\otimes\mc L_2^{-1}$ so that
+		\[[-1]^*\mc L_1=[-1]^*\mc L\otimes[-1]^*\mc L_2^{-1}=[-1]^*\mc L\otimes\mc L_2^{\otimes2}\otimes\mc L_2^{-1}=[-1]^*\mc L\otimes\mc L\otimes[-1]^*\mc L^{-1}\otimes\mc L_2^{-1}=\mc L_1,\]
+		so $\mc L_1$ is in fact symmetric, as needed.
+
+		\item We now prove (a). As remarked in the previous proof, this function is certainly polynomial, so it is enough to compute the degree. The result is true for $\mc L\in A^\lor$ by an inductive argument via $m^*\mc L=\op{pr}_1^*\mc L\otimes\op{pr}_2^*\mc L$, so it remains to handle the case where $\mc L$ is symmetric. Here, an induction with \Cref{thm:cube} shows that
+		\[\chi\left(\mc L^{\otimes m^2n}\right)=\chi\left([m]^*\mc L^{\otimes n}\right)\stackrel*=\deg[m]\cdot\chi\left(\mc L^{\otimes n}\right)=m^{2g}\chi(\mc L^{\otimes n}),\]
+		where $\stackrel*=$ has used \Cref{lem:deg-by-euler-char}. This completes the homogeneity check.
+	\end{enumerate}
+	We now hand-wave the proof of (b) and leave the details for \cite[Theorem~III.16]{mumford}. Any line bundle can be written as the difference of two very ample line bundles, so it is enough to check the result for very ample line bundles. If $\mc L$ is very ample, then intersection theory provides the result: a choice of generic global sections of $\mc L$ as $\sigma_0,\ldots,\sigma_g$ so that they have no common zeroes and the $\op{div}\sigma_\bullet$ intersect transversally; as such,
+	\[D^g=(\op{div}\sigma_0,\ldots,\op{div}\sigma_g)\]
+	is literally the number of points in the intersection of the $\op{div}\sigma_\bullet$s. Now, our choice of global sections induces a closed embedding $\varphi\colon A\to\PP^g$, and the above intersection number is the pre-image of the point $[1:0:\cdots:0]$, so we see that $D^g=\deg\varphi$. On the other hand, $\chi(\mc L)=(\deg\varphi)\chi(\OO_{\PP^g}(1))$, which completes the proof upon a computation.
+\end{proof}
+
+\end{document}
