@@ -1,0 +1,94 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Bounding with Inner Products}
+Here are some fundamental bounding results.
+\begin{proposition}[Cauchy--Schwarz] \label{prop:cs-ineq}
+	Fix an inner product space $X$. Then each $x,y\in X$ has
+	\[\left|\langle x,y\rangle\right|\le\norm x\cdot\norm y.\]
+\end{proposition}
+\begin{proof}
+	Quickly, we take care of some special cases. If $\langle x,y\rangle=0$, there is nothing to do. Let's also handle the case where $x=0$. Then $\langle0,y\rangle=0$ because $\langle0,y\rangle=\langle0,y\rangle+\langle0,y\rangle$ by bilinearity. So we conclude that $\langle0,y\rangle\le\norm0\cdot\norm y$.
+
+	Otherwise, by scaling everything via bilinearity, we may assume that $\norm x=\norm y=1$. Then we find that
+	\[0\le\langle x+y,x+y\rangle=\norm x^2+\norm y^2+2\Re\langle x,y\rangle\]
+	by a direct expansion using the bilinearity. We now twist to get rid of $\Re$. Namely, choose $\theta\in\RR$ so that $\left\langle e^{i\theta}x,y\right\rangle=-\left|\langle x,y\rangle\right|$, doable because $\left\langle e^{i\theta}x,y\right\rangle=e^{i\theta}\left\langle x,y\right\rangle$ allows us to adjust the angle of $\langle x,y\rangle$ until it is a negative real number. As such, rerunning the argument at the start of the paragraph, we are able to conclude that
+	\[0\le\norm x^2+\norm y^2-2\left|\langle x,y\rangle\right|,\]
+	so
+	\[2\left|\langle x,y\rangle\right|\le\norm x^2+\norm y^2=2=2\norm x\cdot\norm y,\]
+	where we are using $\norm x=\norm y=1$.
+\end{proof}
+\begin{remark} \label{rem:inner-prod-cont}
+	\Cref{prop:cs-ineq} tells us that the map $X\times X\to\FF$ given by $(x,y)\mapsto\langle x,y\rangle$ is continuous. Indeed, it is enough to check that this linear functional is bounded, so we note that $\norm{(x,y)}\le1$ means $\norm x,\norm y\le1$, so
+	\[\left|\langle x,y\rangle\right|\le\norm x\cdot\norm y\le1\]
+	by \Cref{prop:cs-ineq}.
+\end{remark}
+\begin{proposition}[Triangle inequality] \label{prop:tri-ineq}
+	Fix an inner product space $X$. Then $\norm{x+y}\le\norm x+\norm y$.
+\end{proposition}
+\begin{proof}
+	It suffices to check that the squares have the inequality, but
+	\[\norm{x+y}^2=\langle x+y,x+y\rangle=\norm x^2+\norm y^2+2\Re\langle x,y\rangle.\]
+	Thus, \Cref{prop:cs-ineq} tells us that this is bounded above by $\norm x^2+\norm y^2+2\norm x\cdot\norm y$, which is precisely $(\norm x+\norm y)^2$.
+\end{proof}
+We now take a moment for an example.
+\begin{example}
+	Let $L^2(\NN)$ denote the set of sequences $\{x_n\}_{n=1}^\infty$ such that $\sum_{n=1}^\infty\left|x_n\right|^2<\infty$. To see that this is a vector space, note that
+	\[\sum_{n=1}^\infty\left|ax_n+by_n\right|^2=\left|a\right|^2\sum_{n=1}^\infty\left|x_n\right|^2+\left|b\right|^2\sum_{n=1}^\infty\left|y_n\right|^2+\left|ab\right|^2\sum_{n=1}^\infty2\left|x_ny_n\right|^2\]
+	Now, $\left|x_ny_n\right|\le\left|x_n\right|^2+\left|y_n\right|^2$, so the entire summation above absolutely converges. In fact, this same inequality tells us that
+	\[\langle x,y\rangle\coloneqq\sum_{n=1}^\infty x_n\ov{y_n}\]
+	absolutely converges, and so this formula provides us with an inner product on $L^2(\NN)$. For example, $\norm x^2=\langle x,x\rangle=\sum_{n=1}^\infty\left|x_n\right|^2$.
+\end{example}
+\begin{remark}
+	One can check that $L^2(\NN)$ is complete for its given norm, so in fact $L^2(\NN)$ is a Hilbert space. The point is that a Cauchy sequence $\{x_m\}_{m\in\NN}\subseteq L^2(\NN)$ will converge component-wise because $\norm{x_m-x_{m'}}\ge\left|(x_m)_n-(x_{m'})_n\right|^2$ for each $n$, so we can define the desired limit sequence $x$ so that $(x_m)_n\to x_n$ as $m\to\infty$. Now the absolute convergence everywhere will tell us that $x\in L^2(\NN)$ and that $x_m\to x$ as $m\to\infty$.
+\end{remark}
+
+\subsection{Geometry in Hilbert Spaces}
+We now show the following nice geometric consequence: closest points to subspaces make sense.
+\begin{lemma} \label{lem:closest-vector}
+	Fix a Hilbert space $X$. Given a closed subspace $V\subseteq X$ and $x\in X$ there is a unique $v\in V$ such that
+	\[\norm{x-v}=\inf_{u\in V}\norm{x-u}.\]
+\end{lemma}
+\begin{proof}
+	We begin by showing existence of $v$. Let $D$ be the minimal distance $\inf\{\norm{x-v}:v\in V\}$. Note that $D$ is finite because $V$ is nonempty (e.g., $0\in V$). Using this infimum, we are provided a sequence $\{u_m\}_{m\in\NN}$ such that $\norm{x-u_n}\to D$ as $n\to\infty$.
+	
+	By continuity of $\norm\cdot$ (this is true even for normed vector spaces, or one can use \Cref{rem:inner-prod-cont}), it suffices to show that the sequence $\{u_m\}_{m\in\NN}$ converges in $V$, so we want to show that this sequence is Cauchy (and the limit will land in $V$ because $V$ is closed). Well, for $m,n\in\NN$, we use the Parallelogram law \Cref{rem:parallelogram-law} to write
+	\[\norm{u_m-u_n}^2=\norm{(u_m-x)-(u_n-x)}^2=2\norm{u_m-x}^2+2\norm{u_n-x}^2-\norm{u_m+u_n-2x}^2.\]
+	The first two terms will be small, and the last term is $4\norm{\frac12(u_m+u_n)-x}\ge4D^2$ because $\frac12(u_m+u_n)\in V$. Thus,
+	\[\limsup_{m,n\to\infty}\norm{u_m-u_n}^2=2\limsup_{m,n\to\infty}\norm{u_m-x}^2+2\limsup_{n\to\infty}\norm{u_n-x}^2-4D^2=0\]
+	because $\norm{u_m-x}\to D$ as $m\to\infty$ (and similar for $n$).
+
+	We now show that $v$ is unique. Suppose that $v_1$ and $v_2$ both satisfy $\norm{x-v_1}=\norm{x-v_2}=D$. Then
+	\[\norm{v_1-v_2}^2\le2\norm{v_1-x}^2+2\norm{v_2-x}^2-4D^2=0\]
+	by the above computations, so $v_1=v_2$ is forced.
+\end{proof}
+With a notion of closest, we now talk about orthogonality.
+\begin{definition}[orthogonal complement]
+	Fix a subset $S$ of an inner product space $X$. Then we define the \textit{orthogonal complement}
+	\[S^\perp\coloneqq\{v\in X:\langle x,v\rangle=0\text{ for all }x\in S\}.\]
+\end{definition}
+\begin{remark}
+	One can check that $S^\perp$ is always a subspace (by the bilinearity of the inner product). In fact, $S^\perp$ is closed: it is the pre-image of $0$ along the continuous map $X\to\prod_{x\in S}\FF$ defined by $v\mapsto\{\langle x,v\rangle\}_{x\in S}$. (This map is continuous because its coordinates are continuous: indeed, we want to check that the map $v\mapsto\langle x,v\rangle$ is continuous, which is true.)
+\end{remark}
+As a sanity check, orthogonal complements produce unique decomposition.
+\begin{proposition}
+	Fix a Hilbert space $X$ and a closed subspace $V$. Then $V+V^\perp=X$. In fact, for any $x\in X$, there are unique $v\in V$ and $u\in V^\perp$ such that $x=v+u$.
+\end{proposition}
+\begin{proof}
+	We begin with existence. Let $v\in V$ be the closest vector to $x$, which exists by \Cref{lem:closest-vector}. We claim that $\langle x-v,w\rangle=0$ for all $w\in V$, which will complete the existence proof because then we may set $u\coloneqq x-v$. The point is to consider the function $F_w\colon\RR\to\CC$ defined by
+	\[F_w(t)\coloneqq\norm{x-(v+tw)}^2\]
+	for some fixed vector $w\in V$; this is a continuous function in $t$ because $\norm\cdot$ is continuous. Now, $F_w$ is minimized at $t=0$ by assumption on $v$, so $\frac d{dt}F_w\big|_{t=0}=0$ provided we can show that this derivative makes sense. Well, we see that
+	\[F_w(t)=\norm{x-v}^2-2t\Re\langle x-v,tw\rangle+t^2\norm w^2,\]
+	which is a polynomial in $t$, so this is indeed differentiable at $0$, whereupon we can compute its derivative to find that $\Re\langle x-v,w\rangle=0$. If $\FF=\CC$, this is enough to conclude that $\langle x-v,w\rangle=0$, but in this case, we rerun the argument with $w$ replaced by $iw$ to see that $\Re\langle x-v,iw\rangle=-i\Im\langle x-v,w\rangle$ also vanishes, so $\langle x-v,w\rangle=0$.
+
+	It remains to check uniqueness. Suppose that $v,v'\in V$ and $u,u'\in V^\perp$ satisfies $v+u=v'+u'$. Then we want to check that $v=v'$ and $u=u'$. Well, we see that
+	\[w\coloneqq v-v'=u'-u\]
+	lives in $V\cap V^\perp$, but then $\langle w,w\rangle=0$ by definition of $V^\perp$, so $\norm w^2=0$, so $w=0$.
+\end{proof}
+
+\end{document}
