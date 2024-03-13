@@ -1,0 +1,117 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Functionals on Hilbert Spaces}
+We begin with a remark on inner product spaces.
+\begin{remark}
+	Fix an inner product space $X$. Then the map $\varphi_y(x)\coloneqq\langle x,y\rangle$ satisfies the following properties.
+	\begin{itemize}
+		\item Linear in $x$: we see $\varphi_y(ax+a'x')=a\langle x,y\rangle+a'\langle x',y\rangle=a\varphi_y(x)+a'\varphi_y(x')$.
+		\item Conjugate-linear in $y$: we see $\varphi_{ay+a'y'}(x)=\langle x,ay+a'y'\rangle=\ov a\langle x,y\rangle+\ov{a'}\langle x,y'\rangle=(\ov a\varphi_y+\ov{a'}\varphi_{y'})(x)$.
+		\item Bounded: by \Cref{prop:cs-ineq}, we see
+		\[\left|f_y(x)\right|\le\norm x\cdot\norm y,\]
+		so $\norm{f_y}_{X^*}\le\norm y$. In fact, $f_y(y)=\norm y$, so actually $\norm{f_y}_{X^*}=\norm y$ exactly.
+	\end{itemize}
+	So we get a conjugate linear isometry $\varphi_\bullet\colon X\to X^*$.
+\end{remark}
+Being a Hilbert space lets us upgrade this map.
+\begin{proposition} \label{prop:hilb-star}
+	Fix a Hilbert space $X$. Then the map $y\mapsto\varphi_y$ (where $\varphi_y\colon X\to\RR$ is the map $\varphi_y(x)\coloneqq\langle x,y\rangle$) is a surjection from $X$ onto $X^*$.
+\end{proposition}
+\begin{proof}
+	Let $f$ be a bounded linear functional on $X$. If $f=0$, then $f=\varphi_0$, so we may assume that $f$ is not identically zero. Because $f$ is continuous, we note that
+	\[V\coloneqq\ker f=\{x\in X:f(x)=0\}\]
+	is a closed subspace of $X$ not equal to $X$. As such, we can find an element of $X$ not in $V$, and then \Cref{prop:ortho-decompose} allows us to make this into a nonzero element $y\in V^\perp$. We are going to show that $f$ is approximately $\varphi_y$.
+
+	Quickly, we claim that $\dim V^\perp=1$ and actually spanned by $y$. Well, suppose that $x\in V^\perp$ and set $\alpha\coloneqq f(x)/f(y)$ so that we would like to show $x=\alpha y$. Well, by rearranging, we know that
+	\[f(\alpha y-x)=0,\]
+	so $\alpha y-x\in V$, so write $\alpha y=x+v$ for some $v\in V$, but then the uniqueness of \Cref{prop:ortho-decompose} requires $(\alpha y,0)=(x,v)$, so $x=\alpha y$.
+
+	We are now able to show that $f=\varphi_y$. For example, any $x\in X$ by \Cref{prop:ortho-decompose} can be written uniquely as $\alpha y+v$ for some $\alpha\in\FF$ and $v\in V$ so that
+	\[\varphi_y(\alpha y+v)=\langle\alpha y+v,y\rangle=\alpha\norm y^2.\]
+	On the other hand, $f(x)=\alpha f(y)$, so
+	\[\frac{f_y(x)}{f(x)}=\frac{\norm y^2}{f(y)}\]
+	for each (nonzero) $x$, so $f$ and $\varphi_y$ only differ by a fixed nonzero element of $\FF$, so we can multiply $y$ through by (the conjugate of) this element to complete.
+\end{proof}
+\begin{remark}
+	One can use \Cref{prop:hilb-star} to show that Hilbert spaces $X$ are reflexive. In fact, this result tells us that $X^*$ should be a Hilbert space because its norm will satisfy the Parallelogram law. Now checking surjectivity of $\op{ev}_\bullet$ is some purely formal composition of surjections.
+\end{remark}
+
+\subsection{Orthonormal Sets}
+Here is our definition.
+\begin{definition}[orthonormal]
+	Fix an inner product space $X$. Then a set $S\subseteq X$ is an \textit{orthonormal set} if and only if
+	\[\langle v,w\rangle=1_{v=w}\]
+	for all $v,w\in S$. We say that $S$ is merely \textit{orthogonal} if and only if distinct $v,w\in S$ have $\langle v,w\rangle=0$.
+\end{definition}
+\begin{example}
+	Consider the Hilbert space $X=L^2(\NN)$. Then the set $\{e_n\}_{n\in\NN}$ where $(e_n)_i\coloneqq1_{i=n}$ is an orthonormal set.
+\end{example}
+One can define $L^2$ in more generality than we have done so.
+\begin{example}
+	Fix a measure space $(X,\mc M,\mu)$. Then the vector space $L^2(X,\mc M,\mu)$ of measurable functions $f\colon X\to\CC$ such that $\int_Xf^2\,d\mu<\infty$ is almost an inner product space when given the inner product
+	\[\langle f,g\rangle=\int_Xf\ov g\,d\mu.\]
+	The issue is that $\langle f,f\rangle=0$ only implies that $\int_X\left|f\right|^2\,d\mu=0$, meaning that $f$ merely vanishes almost everywhere. One fixes this by defining $\ell^2(X,\mc M,\mu)$ to be the vector space of equivalence classes of measurable functions.
+\end{example}
+We would like to work with infinite sums of our bases, but this requires a reasonable notion of convergence.
+\begin{definition}
+	Fix a set $S$ of nonnegative real numbers. Then we define the sum $\sum_{s\in S}S$ as
+	\[\sup_{\text{finite }S'\subseteq S}\sum_{s'\in S'}s'\]
+\end{definition}
+\begin{remark}
+	If $S$ is countable, then this is just usual convergence because absolute convergence permits us to sum in any order anyway.
+\end{remark}
+\begin{remark}
+	If $\sum_{s\in S}s$ is actually finite, then $S$ can only have countably many nonzero real numbers. Indeed, suppose the summation is finite. Then for each positive integer $N$, we see that
+	\[\sum_{s\in S}s\ge\sum_{\substack{s\in S\\s\ge1/N}}s\ge\frac1N\#\{s\in S:s\ge1/N\},\]
+	so $\#\{s\in S:s\ge1/N\}$ is finite for all $N$. Sending $N\to\infty$ tells us that the nonzero elements of $S$ live in a countable union of finite sets, so the nonzero elements of $S$ form a countable set.
+\end{remark}
+So far we have discussed convergence for sums of real numbers. We now pass to vectors.
+\begin{proposition}[Bessel's inequality]
+	Fix an orthonormal subset $S$ of an inner product space $X$. Then
+	\[\sum_{s\in S}\left|\langle x,s\rangle\right|^2\le\norm x^2\]
+	for any $x\in X$.
+\end{proposition}
+\begin{proof}
+	By the definition of our summation, it is enough to show that
+	\[\sum_{s'\in S'}\left|\langle x,s\rangle\right|^2\le\norm x^2\]
+	for any finite subset $S'\subseteq S$. Thus, we may assume that $S$ is finite.
+
+	The trick now is to take the projection onto the span of $S$. Set
+	\[y\coloneqq\sum_{s\in S}\langle x,s\rangle s,\]
+	which makes sense as a sum because now $S$ is finite. We claim that $\langle x-y,y\rangle=0$. This will complete the proof because then $\norm x^2=\norm{x-y}^2+\norm y^2$, and $\norm y^2$ is the sum $\sum_{s\in S}\left|\langle x,s\rangle\right|^2$ because the $s\in S$ are mutually orthogonal.
+
+	So it remains to show the claim. This is purely formal. Indeed,
+	\begin{align*}
+		\langle x-y,y\rangle &= \langle x,y\rangle-\langle y,y\rangle \\
+		&= \sum_{s\in S}\langle x,\langle x,s\rangle s\rangle+\sum_{s\in S}\langle x,s\rangle\ov{\langle x,s\rangle}\langle s,s\rangle \\
+		&= \sum_{s\in S}\ov{\langle x,s\rangle}\langle x, s\rangle+\sum_{s\in S}\langle x,s\rangle\ov{\langle x,s\rangle} \\
+		&= 0,
+	\end{align*}
+	where we have repeatedly used the orthogonality of $S$.
+\end{proof}
+\begin{lemma}
+	Fix a countable orthonormal subset $S$ of a Hilbert space $X$. Given scalars $\{t_s\}_{s\in S}$ in $\FF$ such that $\sum_{s\in S}\left|t_s\right|^2<\infty$, then
+	\[\sum_{s\in S}t_ss\]
+	converges in $X$.
+\end{lemma}
+\begin{proof}
+	One might complain that the last summation we wrote down might depend on the order of summation. We will show that it does not. If $S$ is finite, there is nothing to do, so we may assume that $S$ is enumerated as $\{v_n\}_{n\in\NN}$. We will complete this proof next class.
+\end{proof}
+\begin{remark}
+	One might expect the hypothesis on the scalars to be $\sum_s\left|t_s\right|\le1$ so that $\sum_s\norm{t_nu_n}<\infty$. Our lemma is stronger though. Indeed, note that $\sum_s\left|t_s\right|^2<\infty$ is a weaker condition than $\sum_s\left|t_s\right|<\infty$: if $\sum_s\left|t_s\right|<\infty$, then the sequence $\{t_s\}$ is bounded by some $T$, so we may write
+	\[\sum_{s\in S}\left|t_s\right|^2\le T\sum_{s\in S}\left|t_s\right|<\infty.\]
+	In fact, the sum of squares converging is strictly weaker: one has $\sum_n1/n^2<\infty$ but $\sum_n1/n=\infty$.
+\end{remark}
+\begin{remark}
+	To further motivate our hypothesis on the scalars, note that if $\sum_st_ss$ has any hope of convergence, then
+	\[\norm{\sum_{s\in S}t_ss}=\sum_{s\in S}\left|t_s\right|^2\]
+	had better converge.
+\end{remark}
+
+\end{document}
