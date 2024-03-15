@@ -1,0 +1,89 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Orthonormal Basis}
+We now move towards our definition of orthonormal basis.
+\begin{definition}[complete]
+	Fix a Hilbert space $X$. Then an orthonormal subset $S\subseteq X$ is \textit{complete} if and only if each $x\in X$ has $\langle x,s\rangle=0$ for all $s\in S$ if and only if $x=0$.
+\end{definition}
+This is some sort of analogue of spanning. So here is our definition of basis.
+\begin{definition}[orthornomal basis]
+	Fix a Hilbert space $X$. Then a subset $S\subseteq X$ is an \textit{orthonormal basis} if and only if it is orthonormal and complete.
+\end{definition}
+Let's actually check that ``complete'' reasonably means spanning.
+\begin{lemma}
+	Fix an orthonormal basis $S$ of a Hilbert space $X$. Then for each $x\in X$, we have
+	\[x=\sum_{s\in S}\langle x,s\rangle s.\]
+	In particular, the sum converges.
+\end{lemma}
+\begin{proof}
+	We begin by noting that
+	\[\norm x^2\le\sum_{s\in S}\left|\langle x,s\rangle\right|^2,\]
+	from \Cref{prop:bessel-ineq}; in particular, the sum converges, so \Cref{rem:converge-only-when-countable} reassures us that only countably many of these terms are nonzero. Anyway, the point is that \Cref{lem:converge-for-vectors} tells us that we may set
+	\[y\coloneqq\sum_{s\in S}\langle x,s\rangle s\]
+	to be a convergent series. Now, by continuity (noting that this is in fact a countable sum and then using sequence continuity), we see
+	\[\langle y,s'\rangle=\left\langle\sum_{s\in S}\langle x,s\rangle s,s'\right\rangle=\sum_{s\in S}\langle x,s\rangle\langle s,s'\rangle=\langle x,s'\rangle.\]
+	Thus, completeness of $S$ tells us that having $\langle x-y,s\rangle=0$ for all $s\in S$ requires $x=y$.
+\end{proof}
+\begin{remark}
+	Now, \Cref{rem:norm-of-series} combined with our equality implies
+	\[\norm x^2=\sum_{s\in S}\left|\langle x,s\rangle\right|^2.\]
+\end{remark}
+And now we check that these bases exist.
+\begin{theorem} \label{thm:hilb-has-ortho-basis}
+	Any Hilbert space $X$ has an orthonormal basis $S$.
+\end{theorem}
+\begin{proof}
+	We use Zorn's lemma. Let $\mc S$ denote the collection of orthonormal subsets of $X$, ordered by inclusion. Certainly $\mc S$ is nonempty because it contains $\emp$, and unions of orthonormal subsets are orthonormal, so $\mc S$ has an upper bound for any nonempty chain. Thus, Zorn's lemma provides a maximal orthonormal subset $S\subseteq X$. To see that $S$ is complete, for any vector $x\in X$, if $\langle x,s\rangle=0$ for all $s\in S$, then either $x=0$ or $S\cup\{x/\norm x\}$ is a larger orthonormal set than $S$, the latter of which cannot occur. So we must instead have $x=0$.
+\end{proof}
+It is useful to have countable bases, so we pick up the following proposition.
+\begin{proposition}
+	Fix a Hilbert space $X$. Then the following are equivalent.
+	\begin{listalph}
+		\item $X$ is separable.
+		\item $X$ has a countable orthonormal basis.
+		\item Every orthonormal basis for $X$ is countable.
+		\item $X$ has an isometric isomorphism to $L^2(\NN)$ or $L^2([n])$ for finite $n$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We won't show all these in detail, but let's show some of them. For example, (c) implies (b) with no content by \Cref{thm:hilb-has-ortho-basis}. To see that (a) implies (c), suppose for the sake of contraposition that $X$ has an uncountable orthonormal basis $S\subseteq X$. Then note that $\norm{s-s'}=\sqrt2$ for all distinct $s,s'\in S$, so the open subsets
+	\[B_s\coloneqq B(s,\sqrt2/2)\]
+	are all nonempty and disjoint. So any dense subset of $X$ must be uncountable to hit each of the $B_s$.
+
+	Continuing, to see that (b) implies (a), one fixes a countable orthonormal basis $S$, and then our countable dense subset is
+	\[\QQ S\coloneqq\left\{\sum_{s\in S}q_ss:\{s:q_s\ne0\}\text{ is finite}\right\}.\]
+	To see that this countable set is dense, the point is that any $x\in X$ can be written as $\sum_{s\in S}x_ss$ for real numbers $x_s$ satisfying $\sum_{s\in S}\left|x_s\right|^2=0$. Then for any $\varepsilon>0$, we see $\QQ S\cap B(x,\varepsilon)$ is nonempty by cutting off the sum $\sum_{s\in S}\left|x_s\right|^2$ and then approximating the rest of the sum arbitrarily well with rationals.
+
+	Lastly, certainly (d) implies (a) because $L^2(\NN)$ is separable. And for the other implication, note that (b) implies (d) by choosing a countable orthonormal basis and mapping the two orthonormal bases to each other.
+\end{proof}
+\begin{remark}
+	For (d), note that preserving the norm implies preserving the inner product because the inner product can be recovered from the norm (see \Cref{rem:parallelogram-law}).
+\end{remark}
+\begin{remark}
+	Here's a miscellaneous remark: given a bounded linear operator $T\colon X\to Y$ of normed vector spaces, then there is a notion of ``transpose'' $T^\intercal\colon Y^*\to X^*$ given by $T^*f\coloneqq f\circ T$.
+\end{remark}
+
+\subsection{Overview of Lebesgue Spaces}
+We now discuss some important examples of normed vector spaces. Here is our definition.
+\begin{definition}
+	Fix a measure space $(X,\mc M,\mu)$. Then for finite $p>0$, the associated \textit{Lebesgue space} is $\mc L^p(X)$, defined as the space of measurable functions $f\colon X\to\CC$ such that
+	\[\int_X\left|f\right|^p\,d\mu<\infty.\]
+\end{definition}
+It is not totally clear that $\mc L^p(X)$ is a $\CC$-vector space with semi-norm given by
+\[\norm f_p\coloneqq\left(\int_X\left|f\right|^p\,d\mu\right)^{1/p}.\]
+(Here, the $(\cdot)^{1/p}$ is taken to ensure homogeneity of the norm.) However, we can see that $\norm f_p=0$ occurs whenever $f$ vanishes almost everywhere, so $\norm\cdot_p$ fails to be a norm on $\mc L^p$. To fix this, we have the following.
+\begin{definition}
+	Fix a measure space $(X,\mc M,\mu)$. Then we define the equivalence relation $\equiv$ on measurable functions $X\to\CC$ by $f\equiv g$ if and only if $f=g$ almost everywhere. Then we define $L^p$ as $\mc L^p/{\equiv}$.
+\end{definition}
+\begin{remark}
+	Let's quickly argue that $\equiv$ is an equivalence relation. Reflexivity and symmetry have little content. Lastly, if $f\equiv g$ and $g\equiv h$, then $f-g$ and $g-h$ both vanish outside possibly different null sets, but they will both vanish outside the union of those two null sets (which is still a null set!), so their sum $f-h$ continues to vanish outside a null set, meaning $f\equiv h$.
+\end{remark}
+Once $\mc L^p(X)$ is a vector space, we see that $L^p(X)$ continues to be a vector space because it is the quotient of $\mc L^p(X)$ by the subspace consisting of measurable functions $f\colon X\to\CC$ vanishing almost everywhere. We argued earlier that $\norm f_p$ only depends on the class in $L^p(X)$, so $\norm\cdot_p$ goes down to a semi-norm on $L^p(X)$. We will later show this semi-norm is in fact a norm, and that $L^p(X)$ becomes a Banach space with this norm.
+
+\end{document}
