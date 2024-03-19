@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We continue our discussion of $L^p$ spaces.
+
+\subsection{Checks for Lebesgue Spaces}
+We begin running our checks on $L^p$. The most nontrivial check is the triangle inequality.
+\begin{proposition}[Minkowski's inequality] \label{prop:mink-ineq}
+	Fix a measure space $(X,\mc M,\mu)$ and $p\ge1$. Then for all $f,g\in\mc L^p(X)$, we have
+	\[\norm{f+g}_p\le\norm f_p+\norm g_p.\]
+\end{proposition}
+The proof of this will require H\"older's inequality.
+\begin{proposition}[H\"older's inequality] \label{prop:holder-ineq}
+	Fix a measure space $(X,\mc M,\mu)$ and real numbers $p,q\in(1,\infty)$ such that $\frac1p+\frac1q=1$. Given $f\in\mc L^p(X)$ and $g\in\mc L^q(X)$, then $fg\in\mc L^1(X)$ and
+	\[\norm{fg}_1\le\norm f_p\norm g_q.\]
+\end{proposition}
+\begin{remark}
+	The $q$ here is called the ``exponent conjugate to $p$.'' Notably, we can solve
+	\[q\coloneqq\frac p{p-1},\]
+	verifying that $p>1$ implies $q>1$. Notably, if $p=2$, then $q=2$.
+\end{remark}
+Our proofs will use the following geometric fact about convexity.
+\begin{lemma} \label{lem:exp-concave-up}
+	Given real numbers $u,v\in\RR$ and some $t\in[0,1]$, we have
+	\[e^{tu+(1-t)v}\le te^u+(1-t)e^v.\]
+\end{lemma}
+\begin{proof}
+	The point is that the exponential function $\exp$ has positive second derivative, so it is convex up. To be more rigorous, we write
+	\[f(t)\coloneqq te^u+(1-t)e^v-e^{tu+(1-t)v}.\]
+	We would like to show that $f(t)\ge0$ on $[0,1]$. Well, we note that $f''(t)=-(v-u)^2e^{tu+(1-t)v}$ is always negative, and $f(0)=f(1)=0$, so on the interval $[0,1]$ our function must be increasing and then decreasing but always above $f(0)=f(1)=0$, so we are done. Rigorously, if there is a point $p\in[0,1]$ with $f(p)<0$, then the Mean value theorem tells us that there are $0<p_-<p<p_+<1$ such that $f'(p_-)<0$ and $f'(p_+)>0$, so the Mean value theorem again tells us that there is some $q$ between $p_-$ and $p_+$ such that $f''(q)>0$, which is a contradiction!
+\end{proof}
+We now prove \Cref{prop:holder-ineq}.
+\begin{proof}[Proof of \Cref{prop:holder-ineq}]
+	By replacing $f$ and $g$ with their absolute values (which can only make $\int_X fg\,d\mu$ larger and not change any other integrals), we may assume that $f,g\ge0$. Additionally, if $f$ or $g$ vanish, there is nothing to prove, so we may assume that they are nonzero. Then by scaling $f$ and $g$ by their norms, we may assume that $\norm f_p=\norm g_p=1$. We may get rid of any zero set of $fg$ by restricting $X$ (this does not change $\int_Xfg\,d\mu$, and it can only make our right-hand side smaller), so we define $u\coloneqq\log f$ and $v\coloneqq\log g$, so
+	\[\int_X fg\,d\mu = \int_Xe^{u+v}\,d\mu = \int_Xe^{p^{-1}\cdot pu+q^{-1}\cdot qv}\,d\mu\]
+	which by \Cref{lem:exp-concave-up} is bounded above by
+	\[\int_X\left(p^{-1}e^{pu}+q^{-1}e^{qv}\right)\,d\mu=p^{-1}\norm f_p+q^{-1}\norm g_q=1,\]
+	as desired.
+\end{proof}
+\begin{remark}
+	If $p=1$, then the interpretation of \Cref{prop:holder-ineq} should take $q=\infty$, so we are asking for $f\in\mc L^1(X)$ and $g\in\mc L^\infty(X)$ implies $\norm{fg}_1\le\norm f_1\cdot\norm g_\infty$. But this is immediate because one we may upper-bound
+	\[\int_X\left|fg\right|\,d\mu\le\norm g_\infty\int_X\left|f\right|\,d\mu=\norm g_\infty\cdot\norm f_1.\]
+\end{remark}
+At long last, we are in a position to prove \Cref{prop:mink-ineq}.
+\begin{proof}[Proof of \Cref{prop:mink-ineq}]
+	Quickly, note that $p=1$ is simply the triangle inequality, so we may assume that $p>1$. Now, we are trying to show that
+	\[\int_X\left|f+g\right|^p\,d\mu\le\left(\norm f_p+\norm g_p\right)^p.\]
+	By replacing $f$ and $g$ with their absolute values (which does not change $\norm f_p$ and $\norm g_p$ but can make the above integral larger), it suffices to assume that $f,g\ge0$.
+
+	We now employ a trick. Expand
+	\[\int_X(f+g)^p\,d\mu=\int_Xf(f+g)^{p-1}\,d\mu+\int_Xg(f+g)^{p-1}\,d\mu.\]
+	We would now like to use H\"older's inequality. Well, setting $q\coloneqq\frac p{p-1}$ so that $\frac1p+\frac1q=1$, we would like to know that $(f+g)^{p-1}$ lives in $\mc L^q(X)$. Well, we compute
+	\[\int_X(f+g)^{(p-1)q}\,d\mu=\int_X(f+g)^p\,d\mu=\norm{f+g}_p^p<\infty.\]
+	As such, we may use \Cref{prop:holder-ineq} so that
+	\[\norm{f+g}_p^p\le\norm f_p\norm{(f+g)^{p-1}}_q+\norm g_p\norm{(f+g)^{p-1}}_q,\]
+	which the previous computation tells us is
+	\[\norm{f+g}_p^p\le(\norm f_p+\norm g_p)\norm{f+g}_p^{p-1}.\]
+	If $\norm{f+g}_p=0$, then $f+g$ vanishes almost everywhere because $f,g\ge0$ already, so there is nothing to prove. Otherwise, we may now cancel $\norm{f+g}_p^{p-1}$ on both sides to conclude.
+\end{proof}
+\begin{remark} \label{rem:lp-norm}
+	The nonnegative function $\norm\cdot_p$ on $\mc L^p(X)$ now satisfies the triangle inequality. It certainly satisfies $\norm{tf}_p=t\norm f_p$ by a direct expansion, so $\norm\cdot_p$ becomes a semi-norm on $\mc L^p(X)$, and it immediately descends to a semi-norm on $\mc L^p(X)$. In fact, we descend to a full norm on $L^p(X)$: if $\norm f_p=0$, then $\left|f\right|$ must vanish almost everywhere, so $f=0$ in $L^p(X)$.
+\end{remark}
+And we now check that $L^p(X)$ is a Banach space.
+\begin{theorem}
+	Fix a measure space $(X,\mc M,\mu)$ and $p\ge1$. Then $L^p(X)$ is a Banach space.
+\end{theorem}
+\begin{proof}
+	By \Cref{rem:lp-norm}, it remains to show that $L^p(X)$ is complete. Turning the Cauchy condition into a series, it suffices to check that any series of functions $\sum_{n=1}^\infty f_n$ converges (for the norm $\norm\cdot_p$) provided that
+	\[\sum_{n=1}^\infty\norm{f_n}_p<\infty.\]
+	Of course, we would like to take the function $f\coloneqq\sum_{n=1}^\infty f_n$, but to even define this function, we must know that $f$ converges pointwise almost everywhere. Well, define
+	\[h_N(x)\coloneqq\sum_{n=1}^N\left|f_n\right|(x)\]
+	so that $\norm{h_N}_p\le\sum_{n=1}^N\norm{f_n}_p$ for all $N>0$ by the triangle inequality. Thus, we see that $h_1\le h_2\le\cdots$ is a series of functions defined almost everywhere, and their values are bounded above for each $x\in X$, so Monotone convergence provides a limiting function $h$ defined almost everywhere. Notably, Monotone convergence tells us that
+	\[\int_Xh^p\,d\mu=\lim_{N\to\infty}\int_Xh_N^p\,d\mu<\infty.\]
+	So we see that the series $f\coloneqq\sum_{n=1}^\infty f_n$ absolutely converges almost everywhere (indeed, it absolutely converges to $h$), so $f$ is actually defined as a function almost everywhere. Further, $\left|f\right|\le\left|h\right|$, so $\norm f_p$ is bounded above by $\norm h_p$ (and in particular is finite), so $f\in L^p(X)$.
+
+	Next class we will complete the proof by showing that the series $\sum_{n=1}^\infty f_n$ converges to $f$ with respect to the norm $\norm\cdot_p$.
+\end{proof}
+
+\end{document}
