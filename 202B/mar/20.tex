@@ -1,0 +1,68 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We began class by completing the proof of \Cref{thm:lp-banach}.
+\begin{remark}
+	It is possible to have a sequence of functions $\{f_n\}_{n\in\NN}$ in $L^p(X)$ which go to $0$ pointwise but do not go to $0$ in $L^p(X)$. For example, set $f_n\coloneqq1_{[n,n+1]}$, so $\norm{f_n}_p=1$, so $f_n\in L^p(X)$. But of course $\norm{f_n-0}_p=1$ does not go to $0$ as $n\to\infty$.
+\end{remark}
+\begin{example}
+	We show that the triangle inequality fails in $L^p(X)$ for $0<p<1$. Indeed, simply set $f\coloneqq1_{[0,1]}$ and $g\coloneqq1_{[3,4]}$, so $\norm{f+g}_p=2^{1/p}$ while $\norm f_p=\norm g_p=1$.
+\end{example}
+\begin{remark}
+	For $0<p<1$, one does have
+	\[\int_X\left|f+g\right|^p\,d\mu\le\int_X\left|f\right|^p\,d\mu+\int_X\left|g\right|^p\,d\mu,\]
+	so $L^p(X)$ does become a metric on a vector space via $d(f,g)\coloneqq\int_X\left|f-g\right|^p\,d\mu$, though it will not be a normed vector space.
+\end{remark}
+\begin{remark}
+	The notion of convergence is a bit tricky. Given a sequence of functions $\{f_n\}_{n\in\NN}$ in $L^p(X)$ on a measure space $(X,\mc M,\mu)$, we have the following notions of convergence to a function $f$.
+	\begin{itemize}
+		\item Perhaps $f_n\to f$ pointwise for all $x\in X$ or pointwise almost everywhere.
+		\item Perhaps $f_n\to f$ in norm for $\norm\cdot_p$.
+		\item Perhaps $f_n\to f$ uniformly or uniformly almost everywhere.
+		\item Perhaps $f_n\to f$ almost uniformly, meaning that any $\varepsilon>0$ has some $E\subseteq X$ such that $\mu(X\setminus E)<\varepsilon$ and $f_n\to f$ uniformly on $E$.
+		\item Perhaps $f_n\to f$ in measure, meaning that any $\varepsilon>0$ has $\mu(\{x\in X:\left|f_n(x)-f(x)\right|>\varepsilon\})\to0$ as $n\to\infty$. See \cite[Example~8.11]{elber-top} for a nontrivial example.
+	\end{itemize}
+	Recall Egorov's theorem \cite[Theorem~9.13]{elber-top} tells us that $f_n\to f$ in measure in a finite measure space implies that any $\varepsilon>0$ has some $E\subseteq X$ such that $\mu(E\setminus X)<\varepsilon$ and $f_n\to f$ almost uniformly on $E\setminus X$. Note then that almost uniform convergence provides a limiting function for a subsequence.
+\end{remark}
+
+\subsection{The Dual Space of \texorpdfstring{$L^p(X)$}{Lp}}
+Here is our statement.
+\begin{theorem} \label{thm:dual-lp}
+	Fix $p\in[1,\infty)$, and let $q\coloneqq\frac p{p-1}$ be the conjugate exponent. Further, fix a $\sigma$-finite measure space $(X,\mc M,\mu)$.
+	\begin{listalph}
+		\item If $p>1$, then $L^p(X)^*$ is naturally isomorphic to $L^q(X)$ as Banach spaces.
+		\item If $p=1$, then $L^1(X)^*$ is naturally isomorphic to the space of equivalence classes of essentially bounded functions $f\colon X\to\CC$.
+	\end{listalph}
+\end{theorem}
+Wait, what does essentially bounded mean?
+\begin{definition}[essentially bounded]
+	Fix a measure space $(X,\mc M,\mu)$. A measurable function $f\colon X\to\CC$ is \textit{essentially bounded} if and only if there is some $M>0$ such that
+	\[\mu(\{x:\left|f(x)\right|>M\})=0.\]
+	We denote the vector space of such functions by $\mc L^\infty(X)$ and their vector space of equivalence classes by $L^\infty(X)$.
+\end{definition}
+We now prove \Cref{thm:dual-lp}.
+\begin{proof}[Proof of \Cref{thm:dual-lp}]
+	We begin with the proof of (a). Let's start by describing the map $T_\bullet\colon L^q(X)\to L^p(X)^*$. Well, for $g\in L^q(X)$, define $T_g\in L^p(X)^*$ by
+	\[T_g(f)\coloneqq\int_Xfg\,d\mu.\]
+	Note that $fg\in L^1(X)$ by \Cref{prop:holder-ineq}, so $T_g(f)$ is a well-defined quantity (and note that it does not depend on the choice of equivalence class for either $f$ or $g$). We also take a moment to note that $T_g$ is linear in $f$ because multiplication is linear, and in fact $T_\bullet\colon L^q(X)\to L^p(X)^*$ is again linear because multiplication is linear.
+	
+	To continue we claim that $T_\bullet$ preserves norms. For one inequality, note \Cref{prop:holder-ineq} tells us $\left|T_g(f)\right|\le\norm f_p\cdot\norm g_q$, so
+	\[\norm{T_g}_{L^p(X)^*}\le\norm g_q.\]
+	For the equality, we need to choose some functions $f$ making $T_g(f)$ large. Well, for each $n\in\NN$, set $E_n\coloneqq\{x:1/n\le\left|g(x)\right|\le n\}$, and define $f_n\coloneqq 1_{E_n}\cdot\ov g\left|g\right|^{q-2}$. To check that $f_n\in L^p(X)$, we compute
+	\[\norm{f_n}_p=\left(\int_{E_n}\left|g\right|^q\,d\mu\right)^{(q-1)/q}<\infty.\]
+	Further, we see
+	\[T_g(f)=\int_{E_n}\left|g\right|^q\,d\mu,\]
+	so
+	\[\limsup_{n\to\infty}\frac{T_g(f_n)}{\norm{f_n}_p}=\limsup_{n\to\infty}\left(\int_{E_n}\left|g\right|^q\right)^{1/q}=\norm g_q,\]
+	providing our lower bound on $\norm{T_g}_{L^p(X)^*}$. Note we did not actually need $E_n$ in the above argument, but we will reuse this calculation later when we don't know that $g\in L^q(X)$ a priori.
+
+	Taking stock, currently we know that $T_\bullet\colon L^q(X)\to L^p(X)^*$ is an isometric embedding of Banach spaces. We also remark on the side that this map is natural in $X$, but we will not show it. It remains to check that $T_\bullet$ is surjective.
+\end{proof}
+\begin{remark}
+	The result of (a) is true even without $\sigma$-finite hypotheses, though (b) does require this.
+\end{remark}
+
+\end{document}
