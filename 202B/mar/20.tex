@@ -56,10 +56,62 @@ We now prove \Cref{thm:dual-lp}.
 	Further, we see
 	\[T_g(f)=\int_{E_n}\left|g\right|^q\,d\mu,\]
 	so
-	\[\limsup_{n\to\infty}\frac{T_g(f_n)}{\norm{f_n}_p}=\limsup_{n\to\infty}\left(\int_{E_n}\left|g\right|^q\right)^{1/q}=\norm g_q,\]
+	\begin{equation}
+		\limsup_{n\to\infty}\frac{T_g(f_n)}{\norm{f_n}_p}=\limsup_{n\to\infty}\left(\int_{E_n}\left|g\right|^q\right)^{1/q}=\norm g_q, \label{eq:stange-norm-computation}
+	\end{equation}
 	providing our lower bound on $\norm{T_g}_{L^p(X)^*}$. Note we did not actually need $E_n$ in the above argument, but we will reuse this calculation later when we don't know that $g\in L^q(X)$ a priori.
 
 	Taking stock, currently we know that $T_\bullet\colon L^q(X)\to L^p(X)^*$ is an isometric embedding of Banach spaces. We also remark on the side that this map is natural in $X$, but we will not show it. It remains to check that $T_\bullet$ is surjective.
+
+	We begin by using $\sigma$-finiteness to reduce the surjectivity check to the case where $X$ is a finite measure space. Write $X=\bigsqcup_{n=1}^\infty$ where the $X_n$ are finite measure spaces. Now, if we are granted the finite measure space situation, the function $T|_{L^p(X_n)}$ gives us some $g_n\in L^q(X_n)$ such that
+	\[T(f)=\int_Xg_nf\,d\mu.\]
+	Now, a direct argument as in \eqref{eq:stange-norm-computation} allows us to check that $\sum_{n=1}^\infty g_n$ is in $L^q(X)$, and then we can check that $T=T_g$ holds on simple functions, so it will hold everywhere because simple functions are dense in $L^q(X)$.
+
+	Thus, for the rest of the proof, we may assume that $X$ is a finite measure space. We proceed in steps.
+	\begin{enumerate}
+		\item We would like to realize $T$ as an integral, so define a measure $\lambda$ on $X$ by
+		\[\lambda(E)\coloneqq T(1_E).\]
+		Note that this is well-defined for measurable sets $E$: $X$ is finite, so $E$ is finite, so $1_E$ is in $L^p(X)$, so $T(1_E)$ makes sense. We claim that $\lambda$ is a measure, for which we need to check that $\lambda$ is countably additive. Well, write $E=\bigsqcup_{n\in\NN}E_n$ as a disjoint union of countable measurable sets, and we want
+		\[T(1_E)=\lambda(E)\stackrel?=\sum_{n=1}^\infty\lambda(E_n)=\sum_{n=1}^\infty T(1_{E_n})\stackrel*=T\Bigg(\sum_{n=1}^\infty1_{E_n}\Bigg).\]
+		Here, $\stackrel*=$ will hold because continuity of $T$ allows it to move outside the summation. In particular, we would like to show that the partial sums $\sum_{n=1}^N1_{E_n}$ approaches $1_E$ as $N\to\infty$, but we need this convergence to hold in $L^p(X)$! In other words, we want to look at
+		\[\norm{1_E-\sum_{n=1}^N1_{E_n}}_p^p=\int_X1_{E\setminus\bigsqcup_{n=1}^NE_n}\,d\mu=\mu\Bigg(\bigsqcup_{n>N}E_n\Bigg).\]
+		Because we are in a finite measure space, we know that this right-hand side vanishes as $N\to\infty$.
+
+		\item We now apply the Radon--Nikodym theorem to write $\lambda$ as an integral. For this, we want to check that $\lambda\ll\mu$. Well, this means that we want to check that $\mu(E)=0$ implies that $T(1_E)=\lambda(E)=0$. The point is that $\mu(1_E)=0$ implies that $\norm{1_E}_p=0$, but then $T(1_E)=0$ because $1_E=0$ in $L^p(X)$! Thus, the Radon--Nikodym theorem provides $g\in L^1(X)$ such that
+		\[\lambda(E)=\int_Eg\,d\mu\]
+		for any measurable $E$.
+
+		It remains to check that $T=T_g$. We do this in steps.
+
+		\item For simple functions $f=\sum_{i=1}^nc_i1_{E_i}$ where the $E_\bullet$ are disjoint measurable functions, so
+		\[T(f)=\sum_{i=1}^nc_i\lambda(E_i)=\int_X\Bigg(\sum_{i=1}^nc_i1_{E_i}\Bigg)g\,d\mu=\int_Xfg\,d\mu.\]
+		So we get $T(f)=T_g(f)$.
+
+		\item For bounded functions $f$, we know that $f$ is the uniform limit of simple functions $\{f_n\}_{n\in\NN}$: indeed by taking linear combinations, we may assume that $f$ is real-valued, and then we partition the image of $f$ (which is a bounded set) into very small intervals of length $1/N$, taking the preimage of these intervals to build our $E_i\coloneqq f^{-1}([i/N,(i+1)/N))$. In particular, we may assume that $\left|f(x)-f_n(x)\right|<\frac1n$ for all $x$. But then we see that $f_n\to f$ even in $L^p(X)$ (note $p\ge1$), so $T(f_n)\to T(f)$, and we even have $T_g(f_n)\to T_g(f)$ by the $1/n$ bound and finiteness of our measure space. So we complete by passing to the limit.
+
+		\item We show that $g\in L^q(X)$ for $p>1$. For each $n$, define
+		\[G_n(x)\coloneqq\begin{cases}
+			\ov{g(x)}\left|g(x)\right|^{q-2} & \text{if }\left|g(x)\right|\le n, \\
+			0 & \text{otherwise}.
+		\end{cases}\]
+		Now, the function $G_n(x)$ is always bounded, so we get $T(G_n)=T_g(G_n)$ by the previous step. The point is that an argument identical to \eqref{eq:stange-norm-computation} shows that
+		\[\norm g_q=\limsup_{n\to\infty}\frac{\left|\int_XG_n\,d\mu\right|}{\norm{G_n}_p}=\limsup_{n\to\infty}\frac{\left|T(G_n)\right|}{\norm{G_n}_p}\le\norm T_{L^p(X)^*}\]
+		is finite.
+
+		\item We show that $g\in L^\infty(X)$ for $p=1$. If $f$ is bounded, we note that we will have
+		\[\left|\int_Xfg\,d\mu\right|\le\norm T_{L^1(X)^*}\norm f_1\]
+		by bounding $g$ by its maximum. Now, for each measurable set $E$, we set
+		\[f(x)\coloneqq\begin{cases}
+			1_E(x)\cdot\ov g(x)/g(x) & \text{if }g(x)\ne0, \\
+			0 & \text{if }g(x)=0,
+		\end{cases}\]
+		whereupon we see that
+		\[\int_E\left|g\right|\,d\mu=\left|\int_E\left|g\right|\,d\mu\right|=\left|\int_Xfg\,d\mu\right|=\left|T(f)\right|\le\norm T_{L^1(X)^*}\norm f_1\le T_{L^1(X)^*}\mu(E).\]
+		Now, this implies that $\left|g\right|\le T_{L^1(X)^*}$ almost everywhere: if we violated this for strict equality on a set of positive measure $E$, we could plug in $E$ above for contradiction. So $g\in L^\infty(X)$ follows.
+
+		\item Now, we know that $g\in L^q(X)$, so $T_g$ fully makes sense. We have $T=T_g$ on simple functions by a previous step, and simple functions are dense in $L^p(X)$, so we get the equality everywhere by continuity.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 \begin{remark}
 	The result of (a) is true even without $\sigma$-finite hypotheses, though (b) does require this.
