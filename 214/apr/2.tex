@@ -1,0 +1,128 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Welcome back from spring break.
+
+\subsection{The Flowout Theorem}
+We begin with a remark.
+\begin{remark}
+	Fix a vector field $V$ on $M$. When $V$ fails to be complete, there is not much we can say. We do know that each $p\in M$ has some maximal open neighborhood $D_p\subseteq\RR$ such that we have a trajectory $\theta_t(p)$ defined on $D^p$, so we can glue these together into
+	\[\mc D_V\coloneqq\bigcup_{p\in M}D_p\times\{p\}\]
+	as a subset of $\RR\times M$. The point is that we can glue these together into a big flow-like trajectory.
+\end{remark}
+Flowouts essentially allow us to work in a small neighborhood of a submanifold. Here is our result.
+\begin{theorem}[Flowout] \label{thm:flowout}
+	Let $S$ be a smooth $k$-submanifold of the smooth $n$-manifold $M$, and let $V\in\mf X(M)$ be a vector field such that $V_p\notin T_pS$ for all $p\in S$. Set $\Gamma\coloneqq(\RR\times S)\cap\mc D_V$, and define $\Phi\coloneqq\theta|_\Omega$ to be a flow of $V$.
+	\begin{listalph}
+		\item $\Phi$ is an immersion.
+		\item $\Phi$ relates $\frac\del/\del t$ and $V$.
+		\item For some smooth $\delta\colon S\to\RR_{>0}$, set
+		\[\Omega_\delta\coloneqq\{(t,p)\in\Omega:\left|t\right|<\delta(p)\}.\]
+		Then $\Phi|_{\Omega_\delta}$ is injective.
+		\item In the context of (c), further suppose that $k=n-1$. Then $\Phi|_{\Omega_\delta}$ is a diffeomorphism onto an open submanifold of $M$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}[Sketch]
+	Note (b) is basically by the definition of being a trajectory. For (a), we note that it follows for points $p\in S$ because $V_p\notin T_pS$ by hypothesis and then use the $\RR$-action from the flow to extend the immersive property to other points. For (c), one can use $k$-slice charts to check it on locally; a clever argument with partition of unity makes the injectivity global. Lastly, (d) follows from (a) and (c) because we have established that we have an injective local diffeomorphism on $\Omega_\delta$.
+\end{proof}
+Computations with vector fields are aided by the following nice form.
+\begin{lemma} \label{lem:get-vector-field-form}
+	Fix a vector field $V$ on the smooth $n$-manifold $M$. Then each $p\in M$ with $V_p\\ne0$ has a smooth chart $(U,(x_1,\ldots,x_n))$ such that
+	\[V|_U=\frac\del{\del x_1}.\]
+	In fact, given an $(n-1)$-submanifold $S\subseteq M$ and $p\in S$ with $V_p\notin T_pS$, we may assume that the smooth chart is a local slice chart for $S$ cut out by $x_1=0$.
+\end{lemma}
+\begin{proof}
+	The first claim follows from the second claim by just taking any chart $(U,(x_1,\ldots,x_n))$ and defining the needed $S$ by $x_1=0$. For the second claim, use \Cref{thm:flowout}.
+\end{proof}
+
+\subsection{The Lie Derivative}
+Given two vector fields $V$ and $W$, we would like to compute something like $\del_VW$. It is not so obvious, however, how to interpret these derivatives when not working in Euclidean space where we have an obvious identification between points and differentials.
+
+Flows will allow us to take derivatives by moving points (and thus their tangent spaces) around.
+\begin{definition}[Lie derivative]
+	Fix vector fields $V$ and $W$ of a smooth manifold $M$. Given $p\in M$, we define the \textit{Lie derivative} of $W$ with respect to $V$ at $p$ as
+	\[(\mc L_VW)_p\coloneqq\frac d{dt}(d\theta_{t})_p^{-1}(W_{\theta_t(p)})\bigg|_{t=0}\in T_pM,\]
+	where $\theta\colon\mc D\to M$ is the flow of $V$.
+\end{definition}
+The point of this definition is that we should want to take the derivative with respect to the ``direction'' of $V$ just by looking at how $W$ changes along the flow $\theta$ of $V$. This is essentially what the definition above is doing; note that the limit in the derivative makes sense because we only ever have vectors in $T_pM$.
+\begin{remark}
+	On smooth functions $f\in C^\infty(M)$, the analogous computation is
+	\[(\mc L_Vf)_p=\frac d{dt}(d\theta_t)_p^{-1}=\frac d{dt}(d\theta_t)_p^{-1}f\bigg|_{t=0}=\frac d{dt}f(\theta_t(p))\bigg|_{t=0}=df_p(V_p)=V_p(f).\]
+	So our notion of derivative makes some sense.
+\end{remark}
+\begin{remark}
+	One can see that $\mc L_VW$ assembles into a vector field on $\mf X$. This amounts to checking that everything is sufficiently smooth on charts, which can be done by writing everything out. For example, one can use \Cref{lem:get-vector-field-form} to make $V$ particularly nice, allowing for easy computation of the flow, whereupon we see that we are basically differentiating $W$ along a direction in Euclidean space, which is legal because $V$ and $W$ started out as smooth anyway.
+\end{remark}
+In fact, the Lie derivative agrees with our bracket!
+\begin{proposition}
+	Fix vector fields $V$ and $W$ of a smooth manifold $M$. Then $\mc L_VW=[V,W]$.
+\end{proposition}
+\begin{proof}
+	We check this at individual points $p\in M$. Note that the question is local, so we will repeatedly shrink $M$ without much comment. The hardest case is when $V_p\ne0$. In this case, we use \Cref{lem:get-vector-field-form} in order to replace $M$ with $\RR^n$ so that $V=\frac\del/\del x_1$. Then the flow $\theta_t(x)$ is just
+	\[\theta_t(x)\coloneqq(t+x_1,x_2,\ldots,x_n).\]
+	In this case, we expand out our Lie derivative to find
+	\[(\mc L_VW)_p=\sum_j\frac{\del W_j}{\del x_1}\frac{\del}{\del x_1},\]
+	and a direct computation shows
+	\[[V,W]=\sum_{i,j}\left(V_i\frac{\del W_j}{\del x_i}-W_i\frac{\del V_j}{x_i}\right)\frac{\del}{\del x_j},\]
+	which indeed agree because $V_i=1_{i=0}$.
+	
+	We now handle the other cases. If $V$ vanishes in a neighborhood of $p$, then everything in sight vanishes (namely, the flow is constant), so there is nothing to do; the previous two cases are dense in $M$, so we are done.
+\end{proof}
+\begin{example}
+	Consider the vector field $V=r\del r$ on Euclidean space $\RR^2$, where we defined $V$ using polar coordinates $(r,\alpha)$. Then this vector field is complete with flow given by $\theta_t(p)\coloneqq e^tp$. With $W\coloneqq\del/\del\alpha$, we expect to have $\mc L_VW$ because the two vector fields are essentially perpendicular, and indeed we can compute
+	\[[V,W]=[r\del r,\del\alpha]=r[\del r,\del\alpha]-\del_\alpha(r)\del r,\]
+	which vanishes.
+\end{example}
+\begin{remark}
+	Here are a few more properties of the Lie derivative.
+	\begin{itemize}
+		\item By the antisymmetry of the Lie bracket, we see $\mc L_VW=-\mc L_WV$.
+		\item The Jacobi identity grants the ``product rule''
+		\[\mc L_V[W,X]=[\mc L_VW,X]+[W,\mc L_VX].\]
+		Alternatively, one can write $\mc L_{[V,W]}X=\mc L_V\mc L_WX-\mc L_W\mc L_VX$.
+	\end{itemize}
+\end{remark}
+
+\subsection{Commuting Vector Fields}
+We are now able to provide a better understanding of commuting vector fields.
+\begin{proposition}
+	Fix vector fields $V$ and $W$ on a smooth manifold $M$. Then the following are equivalent.
+	\begin{listalph}
+		\item $V$ and $W$ commute: $[V,W]=0$.
+		\item $W$ is invariant under the flow of $V$: $(\theta_s^V)_*W=W$ for all $s$, where $\theta_s^V$ is the flow of $V$.
+		\item $V$ is invariant under the flow of $W$: $(\theta_t^W)_*V=V$ for all $t$, where $\theta_t^W$ is the flow of $W$.
+		\item The flows of $V$ and $W$ commute: one has $\theta_s^V\circ\theta_t^W=\theta_t^W\circ\theta_s^V$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Note (b) implies that $\mc L_VW=0$ because it tells us that $(d\theta_s)_p^{-1}(W_{\theta_s(p)})$ is constant in $s$ by the invariance. So (b) implies (a); an analogous argument shows (c) implies (a).
+
+	Next up, to use (d), we see that
+	\[\frac d{dt}(\theta_s^V\circ\theta_t^W)(p)\bigg|_{t=0}=(d\theta_s^V)_p(W_p)\]
+	by definition of the flow $\theta_t^W$, and
+	\[\frac d{dt}(\theta_t^W\circ\theta_s^V)(p)\bigg|_{t=0}=W(\theta_s^V(p))\]
+	again by using the definition of the flow $\theta_t^W$. Comparing our two equalities, we see that we have achieved (b); a symmetric argument is able to show that (d) implies (c).
+
+	Lastly, we have to show (a) implies (b)--(d); we focus on (b) and (d) and get (c) by symmetry. Fix a smooth chart $(U,(x_1,\ldots,x_n))$ of $M$. Assuming $V_p\ne0$ for now, we may assume that $V|_U=\del/\del x_1$. Now writing $W=\sum_jW_j\frac\del{\del x_j}$, we note that commuting $[V,W]=0$ implies $\mc L_VW=0$, which by a direct computation expanding the Lie derivative forces
+	\[\sum_j\frac\del{\del x_1}W_j=0.\]
+	This implies (b) and (d) locally at $p$. We should also consider the case where $p$ is outside the support of $V$, but then everything in sight vanishes; a continuity argument now achieves the result for all $p\in M$.
+\end{proof}
+We can now expand to many commuting vector fields.
+\begin{theorem}
+	Fix an open submanifold $W\subseteq M$, and let $V_1,\ldots,V_k$ be linearly independent commuting vector fields of $W$. Then any $p\in W$ has a smooth chart $(U,(x_1,\ldots,x_n))$ with $V_i=\del/\del x_i$ for each $i$.
+\end{theorem}
+\begin{proof}[Sketch]
+	Everything is local, so we may replace $M$ with $W$. By shrinking $M$ to a regular coordinate ball, we may assume that the $V_\bullet$s are complete. (Namely, being local means that we can replace them with compactly supported counterparts which agree in an open neighborhood $p$, but then we can shrink $M$ to this open neighborhood.) For simplicity, we will take $k=n$, but it has no impact on the actual logic of the argument.
+
+	Now, the point is that we should be able to read off the needed coordinate functions $x_\bullet$ by following the flows of $V$. Indeed, one just checks that the map
+	\[(t_1,\ldots,t_n)\mapsto\left(\theta^{V_1}_{s_1}\circ\cdots\circ\theta^{V_n}_{s_n}\right)\]
+	is a local diffeomorphism, which is enough for our purposes.
+\end{proof}
+\begin{remark}
+	If $k=n$, then we are noting that commuting local frames are actually local coordinate frames on (perhaps) a smaller open neighborhood.
+\end{remark}
+
+\end{document}
