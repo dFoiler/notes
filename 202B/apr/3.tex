@@ -1,0 +1,63 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we continue talking about locally compact Hausdorff spaces.
+
+\subsection{More on Locally Compact Hausdorff Spaces}
+Here is another lemma.
+\begin{lemma} \label{lem:lch-urysohn}
+	Fix a locally compact Hausdorff space $X$. Let $K$ be a compact subset contained in an open subset $U\subseteq X$. Then there is a real-valued continuous function $f\colon X\to[0,1]$ with compact support in $U$ such that $1_K\le f$.
+\end{lemma}
+It will be helpful to have the following notation.
+\begin{definition}
+	Fix a continuous function $f\colon X\to[0,1]$. Given an open subset $U\subseteq X$, we say that $f<U$ if and only if $f$ has compact support contained in $U$.
+\end{definition}
+\begin{nex}
+	Consider the function $f\colon\RR\to[0,1]$ defined by $f(x)\coloneqq\max\{0,1-\left|x\right|\}$. Then $f^{-1}(\{x:x>0\})=(-1,1)$, so even though $f$ has compact support, this compact support is not contained in $(-1,1)$, so $f\not<(-1,1)$.
+\end{nex}
+We will use \Cref{lem:best-loc-compact} to prove \Cref{lem:lch-urysohn}. One would like to use Urysohn's lemma directly, but this does not quite go through immediately because locally compact Hausdorff spaces need not be normal. To make sense of the previous sentence, we recall the following notions.
+\begin{definition}[normal]
+	A topological space $X$ is \textit{normal} if and only if disjoint closed subsets $E$ and $F$ have disjoint open neighborhoods $U$ and $V$, respectively.
+\end{definition}
+\begin{example} \label{ex:ch-is-normal}
+	A compact Hausdorff topological space $X$ is normal by \cite[Proposition~4.18]{elber-top}.
+\end{example}
+\begin{theorem}[Urysohn's lemma] \label{thm:urysohn}
+	Fix a normal topological space $X$. Given disjoint closed subsets $E,F\subseteq X$, there is a continuous function $f\colon X\to[0,1]$ such that $f|_E=0$ and $f|_F=1$.
+\end{theorem}
+\begin{proof}
+	See \cite[Theorem~3.8]{elber-top}.
+\end{proof}
+We now prove \Cref{lem:lch-urysohn}.
+\begin{proof}[Proof of \Cref{lem:lch-urysohn}]
+	\Cref{lem:best-loc-compact} provides an open subset $V\subseteq X$ such that $K\subseteq V\subseteq\ov V\subseteq U$ where $\ov V$ is compact. Now, $\ov V$ is a compact Hausdorff space, which is normal by \Cref{ex:ch-is-normal}, so \Cref{thm:urysohn} provides a continuous function $g\colon\ov V\to[0,1]$ such that $g|_K=1$ and $g|_{\del V}=0$. This is not quite we want because we need a continuous function on all of $X$, so we rudely extend $g$ to $\widetilde g\colon X\to[0,1]$ by
+	\[\widetilde g(x)\coloneqq\begin{cases}
+		g(x) & \text{if }x\in\ov V, \\
+		0 & \text{if }x\notin\ov V.
+	\end{cases}\]
+	Notably, we see that $1_K\le\widetilde g$ because $1_K\le g$, and the nonzero points of $\widetilde g$ are contained in $\ov V$, so the support of $g$ is contained in $\ov V\subseteq U$. Thus, it only remains to show that $\widetilde g$ is continuous. We show continuity on the points of $X$ by hand. For example, $\widetilde g$ is continuous on $V$ because $g$ is continuous on $V$. Further, $\widetilde g$ is continuous outside $\ov V$ because $\widetilde g$ vanishes there.
+
+	It remains to handle continuity at $x_0\in\ov V\setminus V$. Well, we know that $\widetilde g(x_0)=g(x_0)=0$. Fix some $\varepsilon>0$, and we need an open neighborhood $V'$ of $x_0$ such that $\left|\widetilde g(x)\right|<\varepsilon$ for $x\in V'$. Well, continuity of $g$ provides some open neighborhood $V'$ of $x_0$ such that $\left|g(x)\right|<\varepsilon$ for $x\in V'\cap\ov V$. But then we still have $\left|g(x)\right|=0<\varepsilon$ for $x\in V'\setminus\ov V$, so we are done.
+\end{proof}
+We are now able to prove a version of partition of unity.
+\begin{theorem}[Partition of unity]
+	Fix a locally compact Hausdorff space $X$ and a compact subspace $K$. Given a finite open cover $\mc U$ of $K$, there are continuous functions $X\to[0,1]$ denoted $\{f_U\}_{U\in\mc U}$ such that $f_U<U$ for each $U$ and
+	\[\sum_{U\in\mc U}f_U|_K=1.\]
+\end{theorem}
+\begin{proof}
+	We begin by claiming that we can find an open cover $\{V_U:U\in\mc U\}$ of $K$ such that $V_U\subseteq U$ and $\ov V_U$ is compact for each $U\in\mc U$. To begin, each $x\in K$ is contained in some $U_x\in\mc U$, and then \Cref{lem:better-loc-compact} provides an open neighborhood $V_x$ with compact closure contained in $U_x$. Then we reduce this to a finite subcover $\{V_{x_i}\}_{i=1}^n$, and then
+	\[V_U\coloneqq\bigcup_{\substack{i=1\\U_{x_i}=U}}^nV_{x_i}\]
+	makes $\{V_U:U\in\mc U\}$ an open cover of $K$ satisfying the required hypotheses. (In particular, the closure is compact and contained in $U$ because it is a subset of a finite union of compact sets contained in $U$.)
+
+	Now, we set $K_U\coloneqq\ov V_U$, which we know is compact and contained in $V_U$, and we see that \Cref{lem:lch-urysohn} provides a continuous function $g_U\colon X\to[0,1]$ such that $g_U|_{K_U}=1$ and has compact support contained in $U$ for each $U$. To complete the proof, we need to normalize these functions, so we define
+	\[f_U(x)\coloneqq\begin{cases}
+		g_U(x)/\left(\sum_{U'\in\mc U}g_{U'}(x)\right) & \text{if }\sum_{U'\in\mc U}g_{U'}(x)\ne0, \\
+		0 & \text{otherwise}.
+	\end{cases}\]
+	Then we see that $f_U$ is a continuous function $X\to[0,1]$ such that $f_U<U$ and $\sum_{U\in\mc U}f_U|_K=1$. It remains to check that $f_U$ is actually continuous.
+\end{proof}
+
+\end{document}
