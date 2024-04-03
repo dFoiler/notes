@@ -1,0 +1,68 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go. We began class finishing up some things on Cartier divisors, which I have just moved to the previous day for continuity reasons.
+
+\subsection{Ext Groups and Sheaves}
+For today, $(X,\OO_X)$ will be a ringed space. We will usually take $(X,\OO_X)$ to be a scheme, but we will have occasion to take $X$ to be a point and $\OO_X$ to be a ring. Instead of our usual cohomology taking place in $\mathrm{Ab}(X)$, we will work in $\mathrm{Mod}(\OO_X)$, which does not adjust any cohomology as we showed earlier.
+
+We will build ``Ext'' by deriving ``Hom,'' so we need the following check.
+\begin{proposition}
+	Fix a ringed space $(X,\OO_X)$ and $\OO_X$-modules $\mc F$ and $\mc G$. Then
+	\[\mathcal Hom(\mc F,\mc G)\colon U\mapsto\op{Hom}_U(\mc F|_U,\mc G|_U)\]
+	is a sheaf of $\OO_X$-modules, and the functors $\op{Hom}_X(\mc F,-)$ and $\mathcal Hom(\mc F,-)$ are left-exact.
+\end{proposition}
+\begin{proof}
+	Being a sheaf was checked in Math 256A. These are additive functors of course by adding pointwise, and to check left-exactness, we begin with
+	\[0\to\mc G'\to\mc G\to\mc G''\to0\]
+	and see that
+	\[\op{Hom}_U(\mc F|_U,\mc G'|_U)=\ker(\op{Hom}_U(\mc F,\mc G)\to\op{Hom}(\mc F,\mc G''))\]
+	by a computation on global sections (which commutes with taking the kernel anyway). This shows that $\op{Hom}_X$ is exact, and by working over all $U$, we see that $\mathcal Hom$ is exact by checking on sections.
+\end{proof}
+So we are able to make the following definition.
+\begin{definition}[Ext]
+	Fix a ringed space $(X,\OO_X)$ and $\OO_X$-module $\mc F$. Then we define the right-derived functors $\mathrm{Ext}^\bullet_X(\mc F,-)\coloneqq R^\bullet\op{Hom}_X(\mc F,-)$ and $\mathcal Ext^\bullet_X(\mc F,-)\coloneqq R^\bullet\mathcal Hom(\mc F,-)$.
+\end{definition}
+\begin{example}
+	For $i=0$, one always has $\mathcal Ext^0(\mc F,\mc G)=\mathcal Hom(\mc F,\mc G)$ and $\mathrm{Ext}^0(\mc F,\mc G)=\op{Hom}(\mc F,\mc G)$.
+\end{example}
+\begin{example}
+	Fix an $\mathcal O_X$-module $\mc G$ with injective resolution $0\to\mc G\to\mc I^\bullet$. For $i>0$, one finds
+	\[\mathcal Ext^i(\OO_X,\mc G)=h^i(\mathcal Hom(\OO_X,\mc I^\bullet))=h^\bullet(\mc I^\bullet)=0.\]
+	Similarly,
+	\[\mathrm{Ext}^i(\OO_X,\mc G)=h^i(\op{Hom}(\OO_X,\mc I^\bullet))=h^i(\Gamma(X,\mc I^\bullet))=H^i(X,\mc G).\]
+	Thus, $\Gamma\left(X,\mathcal Ext^i(\OO_X,G)\right)$ is not $\mathrm{Ext}^i(X,\mc G)$ in general.
+\end{example}
+We would like to understand these functors locally, which we now explain.
+\begin{lemma} \label{lem:restrict-injective-open}
+	Fix a ringed space $(X,\OO_X)$. Given an injective $\OO_X$-module $\mc I$ and open subset $U\subseteq X$, then $\mc I|_U$ is still an injective $\OO_U$-module.
+\end{lemma}
+\begin{proof}
+	Fix an injection $\mc F\to\mc G$ of $\OO_U$-modules, and suppose we have a map $\mc F\to\mc I|_U$ which we want to extend to a map $\mc G\to\mc I|_U$. Letting $j\colon U\to X$ be the inclusion, we can define extension by zero $j_!\colon\mathrm{Mod}(\OO_U)\to\mathrm{Mod}(\OO_X)$. Checking on stalks shows that $j_!\mc F\to j_!\mc G$ remains injective, and now we have a map $j_!\mc F\to j_!(\mc I|_U)\to\mc I$, so we get a map $j_!\mc G\to\mc I$ extending this. Restricting this map back to $U$ will do the trick; notably, it extends the original map $\mc F\to\mc I|_U$ by checking on stalks, where everything is okay by construction.
+\end{proof}
+\begin{proposition}
+	Fix modules $\mc F$ and $\mc G$ on the ringed space $(X,\OO_X)$. Then
+	\[\mathcal Ext^\bullet_U(\mc F|_U,\mc G|_U)\cong\mathcal Ext^\bullet_X(\mc F,\mc G)|_U\]
+	for any open subset $U\subseteq X$.
+\end{proposition}
+\begin{proof}
+	Fix an injective resolution $0\to\mc G\to\mc I^\bullet$ of $\mc G$. Then \Cref{lem:restrict-injective-open} tells us that $0\to\mc G|_U\to\mc I^\bullet|_U$ is another injective resolution. Now,
+	\[\mathcal Ext^\bullet_U(\mc F|_U,\mc G|_U)=h^\bullet\left(\mathcal Hom_U(\mc F|_U,\mc I^\bullet|_U)\right)=h^\bullet\left(\mathcal Hom_X(\mc F,\mc I^\bullet)|_U\right)\stackrel*=h^\bullet(\mathcal Hom_X(\mc F,\mc I^\bullet))|_U=\mathcal Ext_X^\bullet(\mc F,\mc G)|_U,\]
+	where $\stackrel*=$ holds because restricting to $U$ is an exact functor. For example, one has a map $\op{Hom}(\mc F,\mc E^\lor\otimes\mc G)$ to $\op{Hom}(\mc F\otimes\mc E,\mc G)$ by sending a sheaf morphism $\varphi\colon\mc F\to\mc E^\lor\otimes\mc G$ to the (pre)sheaf morphism $\mc F\otimes\mc E\to\mc G$ defined by $a\otimes b\mapsto\varphi(a)(b)$. Similarly, one has a map $\mathrm{Hom}(\mc F,\mc G)\otimes\mc E^\lor\to\mathrm{Hom}(\mc F,\mc E^\lor\otimes G)$ by sending $\varphi\otimes b$ to the morphism $a\mapsto(b\varphi(a))$.
+\end{proof}
+It will be helpful to have an understanding of locally free sheaves $\mc E$ of finite rank.
+\begin{remark}
+	For any locally free sheaf $\mc E$ and any sheaves $\mc F$ and $\mc G$, we see
+	\[\mathcal Hom(\mc F\otimes\mc E,\mc G)\cong\mathcal Hom(\mc F,\mc E^\lor\otimes\mc G)\cong\mathcal Hom(\mc F,\mc G)\otimes\mc E^\lor.\]
+	Indeed, one can write down natural maps in various directions, which we see is an isomorphism by checking on stalks where everything is basically $\mathcal Hom(\mc F,\mc G)$ taken to the power of the rank of $\mc E$.
+\end{remark}
+\begin{remark}
+	If $\mc E$ is locally free of finite rank, and $\mc I$ is injective, then we remark that $\mc E\otimes\mc I$ continues to be injective. Indeed, $\mc E$ is locally free, so $-\otimes\mc E^\lor$ is exact, and $\op{Hom}(-,\mc I)$ is exact because $\mc I$ is injective, so the prior remark tells us that
+	\[\op{Hom}(-\otimes\mc E^\lor,\mc I)\cong\op{Hom}(-,\mc E\otimes\mc I)\]
+	will be an exact functor, as needed.
+\end{remark}
+
+\end{document}
