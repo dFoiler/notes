@@ -1,0 +1,111 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we talk about vector bundles.
+
+\subsection{Vector Bundles}
+A vector bundle attaches a vector space to each point on our manifold in a way that is ``locally'' the trivial way to put a vector space (namely, the same vector space everywhere). Here is our definition.
+\begin{definition}[vector bundle]
+	Fix a smooth $n$-manifold $M$, possibly with boundary. A \textit{real smooth vector bundle of rank $k$} is a smooth surjective map $\pi\colon E\to M$ of smooth manifolds, where $\dim E=n+k$, satisfying the following: each $p\in M$ has an open neighborhood $U\subseteq M$ and a diffeomorphism $\varphi\colon\pi^{-1}U\to U\times\RR^k$ where $\varphi|_{\pi^{-1}(\{q\})}\colon\pi^{-1}(\{q\})\to\{q\}\times\RR^k$ is an isomorphism of vector spaces and the following diagram commute.
+	% https://q.uiver.app/#q=WzAsNixbMSwwLCJcXHBpXnstMX1VIl0sWzEsMSwiVSJdLFsyLDAsIkUiXSxbMCwwLCJVXFx0aW1lc1xcUlJeayJdLFswLDEsIlUiXSxbMiwxLCJNIl0sWzAsMiwiXFxzdWJzZXRlcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDEsIiIsMyx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsNSwiXFxzdWJzZXRlcSIsMyx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDUsIlxccGkiXSxbMCwxLCJcXHBpIl0sWzMsNCwiXFxvcHtwcn1fMSJdLFszLDAsIlxcdmFycGhpXnstMX0iXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{U\times\RR^k} & {\pi^{-1}U} & E \\
+		U & U & M
+		\arrow["\subseteq"{marking, allow upside down}, draw=none, from=1-2, to=1-3]
+		\arrow[Rightarrow, no head, from=2-1, to=2-2]
+		\arrow["\subseteq"{marking, allow upside down}, draw=none, from=2-2, to=2-3]
+		\arrow["\pi", from=1-3, to=2-3]
+		\arrow["\pi", from=1-2, to=2-2]
+		\arrow["{\op{pr}_1}", from=1-1, to=2-1]
+		\arrow["{\varphi^{-1}}", from=1-1, to=1-2]
+	\end{tikzcd}\]
+	Here, $E$ is the \textit{total space}. For $q\in M$, we set $E_q\coloneqq\pi^{-1}(\{q\})$.
+\end{definition}
+The point is that $\varphi$ is supposed to be a local trivialization of $E$.
+\begin{example}
+	The projection $\pi\colon TM\to M$ is a vector bundle of rank $n=\dim M$. Indeed, for any $p\in M$, choose a smooth chart $(U,(x_1,\ldots,x_n))$ of $p$, and then we know there exists a local frame $V_1,\ldots,V_n\in\mf X(U)$ where $V_i\coloneqq\del/\del x_i$. Then we have a trivialization $\Phi$ on $U$ given by
+	\[\Phi\colon\sum_{i=1}^nv_iV_i\mapsto\sum_{i=1}^nv_ie_i.\]
+\end{example}
+\begin{example}
+	There is a projection map $\pi\colon M\times\RR^k\to M$, which gives a vector bundle of rank $k$. In particular, $\pi$ is globally trivialized by the identity map $M\times\RR^k\to M\times\RR^k$.
+\end{example}
+\begin{example}[M\"obius strip]
+	Define $E$ to be the quotient of $\RR^2$ by the equivalence relation $\sim$ where $(x,y)\sim(x',y')$ if and only if there is an integer $n$ with $(x',y')=\left(x+n,(-1)^ny\right)$. Then there is a projection $E\to\RR/\ZZ$ given by projection onto the first coordinate.
+\end{example}
+As with any kind of projection, we have a notion of section.
+\begin{definition}[section]
+	Let $\pi\colon E\to M$ be a smooth vector bundle over the smooth manifold $M$. Then a \textit{local section} defined on some open subset $U\subseteq M$ is a map $\sigma\colon U\to E$ such that $\pi\circ\sigma=\id_U$. The map $\sigma$ is a \textit{global section} if $U=M$. We let $\Gamma(E)$ denote the space of smooth global sections $M\to E$.
+\end{definition}
+\begin{example}
+	Let $\pi\colon E\to M$ be the trivial vector bundle $E\coloneqq M\times\RR^k$. Then any smooth map $f\colon M\to\RR^k$ defines a global section $\sigma\colon M\to E$ given by $\sigma(p)\coloneqq(p,f(p))$. In fact, it is not hard to see that this defines all global sections because any global section $\sigma\colon M\to E$ must take the form $\sigma(p)=(p,\op{pr}_2\sigma(p))$, so we may just take $f\coloneqq{\op{pr}_2}\circ\sigma$. For example, $C^\infty(M)$ is in natural bijection with $\Gamma(M\times\RR)$.
+\end{example}
+Our notion of frame now generalizes.
+\begin{definition}[frame]
+	Fix a vector bundle $\pi\colon E\to M$ of rank $k$ on the smooth manifold $M$. Then a \textit{smooth local frame} of $\pi$ on the open subset $U\subseteq M$ is a collection of local sections $\{\sigma_1,\ldots,\sigma_k\}$ on $U$ such that $\{\sigma_1(p),\ldots,\sigma_k(p)\}$ is a basis for $E_p$ for all $p\in U$.
+\end{definition}
+It is notable that frames relate to trivializations.
+\begin{remark}
+	Using the trivialization of the vector bundle, we see that any vector bundle $\pi\colon E\to M$ has a smooth local frame around any $p\in M$. In fact, all local frames arise this way.
+	\begin{itemize}
+		\item Explicitly, we take a local trivialization $\Phi\colon\pi^{-1}(U)\to U\times\RR^k$ produces the smooth local frame $\{\sigma_1,\ldots,\sigma_k\}$ given by $\sigma_i(p)\coloneqq\Phi^{-1}(p,e_i)$, which is a basis at each point because $\{e_1,\ldots,e_k\}$ is a basis of $\RR^k$, and $\Phi$ is providing a vector space isomorphism at the fiber.
+		\item Conversely, one takes a local frame $\{\sigma_1,\ldots,\sigma_k\}$ on $U$ and defines $\Phi\colon\pi^{-1}(U)\to U\times\RR^k$ by
+		\[\Phi\left(\sum_{i=1}^kv_i(p)\sigma_i(p)\right)\coloneqq\left(p,v_1(p),\ldots,v_i(p)\right).\]
+		This map is smooth basically by the smoothness of the $\sigma_\bullet$s, and it is providing a vector space isomorphism at the fibers because the $\sigma_\bullet(p)$ are supposed to form a basis.
+	\end{itemize}
+\end{remark}
+We are now prepared to make the following definition.
+\begin{definition}[trivial]
+	A vector bundle $\pi\colon E\to M$ is \textit{trivial} if and only if there is a smooth global trivialization.
+\end{definition}
+In light of the previous remark, being trivial is equivalent to having a smooth global frame.
+\begin{remark}
+	As we saw with vector fields, one has difficulty defining directional derivatives or Lie derivatives or Lie brackets directly on global sections $\sigma\in\Gamma(E)$. One needs to make some extra choice about where to go along a given direction.
+\end{remark}
+
+\subsection{Constructing Vector Bundles}
+We quickly make a remark on computations. It may often be the case that we have two different smooth local frames that we want to compare. Explicitly, let $\pi\colon E\to M$ be our vector bundle of rank $k$, and let $\{\sigma_1,\ldots,\sigma_k\}$ and $\{\sigma_1',\ldots,\sigma_k'\}$ be smooth local frames on the open subset $U\subseteq M$. It will be helpful to have a change of basis matrix at each point $p\in U$ between our two bases $\{\sigma_1(p),\ldots,\sigma_k(p)\}$ and $\{\sigma_1'(p),\ldots,\sigma_k'(p)\}$ of the fiber $E_p$. Namely, one has
+\[\sigma_j'(p)=\sum_{i=1}^ka_{ji}(p)\sigma_i(p).\]
+By taking projections suitably, we see that the functions $a_{ji}(p)$ are all smooth functions in $p$. Explicitly, one can see this because these local frames give rise to local trivializations, and the coefficients of this matrix are essentially projections of the composite of the trivializations, which must be smooth.
+\begin{example}
+	Consider the tangent bundle $\pi\colon T\RR^2\to\RR^2$, and note that we have two local frames given by $\{\del/\del x,\del/\del y\}$ and $\{\del/\del r,\del/\del\theta\}$. One can compute explicitly that
+	\[\frac\del{\del r}=\frac x{\sqrt{x^2+y^2}}\frac\del{\del x}+\frac y{\sqrt{x^2+y^2}}\frac\del{\del y}\qquad\text{and}\qquad\frac\del{\del\theta}=-y\frac\del{\del x}+x\frac\del{\del y},\]
+	allowing us to write down a change-of-basis matrix.
+\end{example}
+Being able to change bases provides us with the following idea to construct a vector bundle: just specify a trivializing open cover, explain how to transition between two trivializations on overlaps, and then this will give a vector bundle.
+\begin{lemma} \label{lem:construct-vector-bundle}
+	Fix a smooth manifold $M$, possibly with boundary, and let $k$ be a nonnegative integer. Fix the following data.
+	\begin{listroman}
+		\item We have $k$-dimensional vector spaces $\{E_p\}_{p\in M}$, define $E\coloneqq\bigsqcup_{p\in M}E_p$, equipped with the standard projection $\pi\colon E\to M$.
+		\item We have an open cover $\{U_\alpha\}_{\alpha\in\kappa}$ on $M$ and local ``frames'' $\{\sigma_{\alpha1},\ldots,\sigma_{\alpha k}\}$ for each $\alpha\in\kappa$ providing a basis for $E_p$ at each $p\in U_\alpha$.
+		\item For any $\alpha,\beta\in\kappa$, our change-of-basis equations
+		\[\sigma_{\beta j}=\sum_{i=1}^ka_{\beta\alpha,ji}\sigma_{\alpha i}\]
+		makes the functions $a_{\beta\alpha,ji}$ into smooth functions.
+	\end{listroman}
+	Then there is a unique smooth manifold structure on $E$ such that $\pi\colon E\to M$ becomes a vector bundle, and the $\{\sigma_{\alpha1},\ldots,\sigma_{\alpha k}\}$ become actual local frames.
+\end{lemma}
+\begin{proof}
+	We omit the proof but make one or two comments gesturing in the direction of a proof. One can use the analogous result for smooth manifolds to at least provide a smooth structure for $E$. Then one finds that the functions $\sigma_{\alpha i}$ are all smooth, so these bases will produce local trivializations for $E$, making $E$ into a vector bundle. Lastly, the previous sentence doubles as a check that $\{\sigma_{\alpha1},\ldots,\sigma_{\alpha k}\}$ is in fact a local frame.
+\end{proof}
+Let's use this result to construct some vector bundles.
+\begin{example}[Whitney sum]
+	Fix two vector bundles $\pi\colon E\to M$ and $\pi'\colon E'\to M$ of ranks $k$ and $k'$, respectively. Then one can define the \textit{Whitney sum} $\widetilde E$ of $E$ and $E'$ with fibers given by
+	\[\widetilde E_p\coloneqq E_p\oplus E'_p,\]
+	which of course provides a projection $\widetilde\pi\colon\widetilde E\to M$. Let's explain how to do this via \Cref{lem:construct-vector-bundle}. By shrinking open neighborhoods as necessary, any point $p\in M$ has an open neighborhood $U_p\subseteq M$ where $E$ and $E'$ have local frames given by $\{\sigma_{p1},\ldots,\sigma_{pk}\}$ and $\{\sigma'_{p1},\ldots,\sigma'_{pk'}\}$, respectively. Then we will want $\{\sigma_{p1},\ldots,\sigma_{pk},\sigma'_{p1},\ldots,\sigma'_{pk'}\}$ to provide the local frames on $U_p$ of $\widetilde E$.
+
+	So we need to examine our change-of-basis matrices between the frames on $U_p$ and $U_q$. Now, the fact that $E$ and $E'$ are already vector bundles provides us with smooth coefficient functions $a_{p,ji}$ and $a'_{p,ji}$ such that
+	\[\sigma_{qj}=\sum_{i=1}^ka_{p,ji}\sigma_{pi}\qquad\text{and}\qquad\sigma'_{qj}=\sum_{i=1}^{k'}a_{p,ji}'\sigma'_{pi},\]
+	Concatenating these two change-of-basis matrices, we provide a change-of-basis matrix from the local frame on $U_p$ to the local frame on $U_q$, and the coefficients are now smooth by construction.
+\end{example}
+\begin{example}
+	In basically the same way, one can define a tensor product $\widetilde E$ of vector bundles $\pi\colon E\to M$ and $\pi'\colon E'\to M$ of ranks $k$ and $k'$, respectively. In short, we take $\widetilde E_p\coloneqq E_p\otimes E'_p$, and for our local frames, over a trivializing open subset $U\subseteq M$, we can take local frames $\{\sigma_{1},\ldots,\sigma_{k}\}$ of $E$ and $\{\sigma_1',\ldots,\sigma_{k'}'\}$ and turn them into a local frame
+	\[\{\sigma_i\otimes\sigma'_j\}_{1\le i\le k,1\le j\le k'}.\]
+	Again, the fact that $E$ and $E'$ are vector bundles to see that change-of-basis maps between the $\sigma$s and the $\sigma'$s are smooth, so some algebra shows the same is true of the above proposed local frames.
+\end{example}
+\begin{example}
+	One can also take duals. Let $\pi\colon E\to M$ be a vector bundle. Then we define the dual bundle $E^*$ by $E^*_p\coloneqq E_p^*$, and we propose local frames to be $\{\sigma_1^*,\ldots,\sigma_k^*\}$ whenever $\{\sigma_1,\ldots,\sigma_k\}$ is a local frame on some trivializing open subset $U\subseteq M$. The change-of-basis matrix for these dual bases will end up being the inverse transpose of the change-of-basis matrix for any original basis, so the change-of-basis matrix will succeed in having smooth coordinates, as needed.
+\end{example}
+
+\end{document}
