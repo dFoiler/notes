@@ -1,0 +1,86 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We are now ready to state and begin the proof of the Riesz representation theorem.
+
+\subsection{Riesz Representation}
+Here is our statement.
+\begin{theorem} \label{thm:rr-1}
+	Fix a locally compact Hausdorff topological space $X$. Then for any nonnegative linear functional $I\colon C_c(X)\to\CC$. Then there is a unique Radon Borel measure $\mu$ on $X$ such that
+	\[I(f)=\int_Xf\,d\mu\]
+	for any $f\in C_c(X)$.
+\end{theorem}
+\begin{remark}
+	If one only knows about Riemann integration, one can define
+	\[I(f)\coloneqq\int_{\RR^d}f(x)\,dx,\]
+	where the right-hand side is a Riemann integral! Then one gets our a Radon Borel measure $\mu$ from \Cref{thm:rr-1}, which can be used as a definition of the Lebesgue measure.
+\end{remark}
+Anyway, let's prove \Cref{thm:rr-1}.
+\begin{proof}[Proof of \Cref{thm:rr-1}]
+	We proceed with many steps. The general strategy is to reduce everything to open and compact subsets, where we have some control due to \Cref{lem:lch-urysohn}.
+	\begin{enumerate}
+		\item We begin with the proof of uniqueness. Suppose that $\mu$ is a Radon Borel measure satisfying the conclusion. Then we claim that
+		\[\mu(U)\stackrel?=\sup_{f<U}I(f)\]
+		for all open subsets $U\subseteq X$; the outer regularity of $\mu$ then implies that this pins down $\mu$.
+	
+		In one direction, suppose that $f<U$, and we want to show that $\mu(U)\ge I(f)$. Indeed, $f<U$ implies that
+		\[I(f)=\int_Xf\,d\mu\le\int_X1_U\,d\mu=\mu(U).\]
+		In the other direction, we must show that $\sup\{I(f):f<U\}\ge\mu(U)$. Well, by inner regularity of $\mu$, it suffices to show that $\mu(K)\le\sup\{I(f):f<U\}$ for any compact subset $K\subseteq U$. Well, \Cref{lem:lch-urysohn} grants $f_K\in C_c(X,[0,1])$ such that $f_K|_K=1$ and $f_K<U$, so
+		\[\mu(K)\le\int_Xf_K\,d\mu=I(f_K)\le\sup_{f<U}\{I(f):f<U\},\]
+		as desired.
+
+		\item We now move towards our proof of existence. We are going to use Carath\'eodory's Theorem \cite[Theorem~6.21]{elber-top}. Let's set some notation. Motivated by our proof of uniqueness, we define
+		\[\rho(U)\coloneqq\sup_{f<U}I(f)\]
+		for open subsets $U\subseteq X$, and we define
+		\[\rho^*(E)\coloneqq\inf_{E\subseteq U}\rho(U)\]
+		for any subset $E\subseteq X$.
+
+		We take a moment that we are going to constantly be dealing with infimums of supremums, which are complicated by nature, so the rest of the proof is going to be rather technical.
+		
+		\item We claim that $\rho^*(U)=\rho(U)$ for any open subset $U\subseteq X$. Certainly $\rho^*(U)\le\rho(U)$ by definition because $U\subseteq U$. For the other direction, suppose that $U\subseteq V$ for an open subset $V$. Then we must show that $\rho(U)\le\rho(V)$. Expanding, we are asking for
+		\[\sup_{f<U}I(f)\le\sup_{f<V}I(f),\]
+		for which we can show that $I(f_U)\le\sup\{I(f):f<V\}$ for any $f_U<U$. But this is direct: if $f_U<U$, then $f_U<V$ too, so the inequality follows.
+
+		\item We claim that $\rho^*$ is an outer measure. Certainly $\mu^*$ is monotone: if $E\subseteq E'$, then $\{\rho(U):E\subseteq U\}$ is a superset of $\{\rho(U):E'\subseteq U\}$, so $\inf\{\rho(U):E\subseteq U\}\le\inf\{\rho(U):E'\subseteq U\}$.
+
+		So now we want to show that $\rho^*$ is countably subadditive. Well, for a countable collection of subsets $\{E_i\}_{i\in\NN}\subseteq X$, then we want to show that
+		\[\rho^*\Bigg(\bigcup_{i\in\NN}E_i\Bigg)\stackrel?\le\sum_i\rho^*(E_i).\]
+		By definition of $\rho^*$ as an infimum, it will be enough to show that
+		\[\rho^*\Bigg(\bigcup_{i\in\NN}E_i\Bigg)\stackrel?\le\sum_{i\in\NN}\rho(U_i),\]
+		where $\{U_i\}_{i\in\NN}$ has $E_i\subseteq U_i$ for each $i$. (One has to make some argument of choosing $U_i$ such that $\rho^*(E_i)\le\rho(U_i)+\varepsilon/2^i$ or something, but it will go through.) But then $\rho^*$ being monotone means that it will be enough to show that
+		\[\rho\Bigg(\sum_{i\in\NN}U_i\Bigg)\stackrel?\le\sum_{i\in\NN}\rho(U_i),\]
+		so we are now showing that $\rho$ is countably subadditive. By expanding out $\rho$ as a supremum, we must show that having $f<\bigcup_{i\in\NN}U_i$ implies that we want
+		\[I(f)\stackrel?\le\sum_{i\in\NN}\rho(U_i).\]
+		This requires us to build some functions $f_i$ out of $f$ with $f_i<U_i$. Well, we use \Cref{thm:partition-unity}. Let $K\coloneqq\op{supp}f$ be the support of $f$, which we know is compact. Then $\{U_i\}_{i\in\NN}$ is an open cover of $K$, so we choose $N$ large enough so that $\{U_i\}_{1\le i\le N}$ is an open cover of $K$. Then \Cref{thm:partition-unity} provides functions $\{g_i\}_{1\le i\le N}$ such that $\sum_{i=1}^Ng_i|_K=1$ but $g_i<U_i$ for each $i$.
+
+		We are now ready to define $f_i\coloneqq fg_i$ for each $1\le i\le N$. Because $f$ is compactly supported, we see that each $f_i$ is compactly supported. Additionally, we know that
+		\[\sum_{i=1}^Nf_i=f.\]
+		Indeed, this is true on $K$ because $\sum_{i=1}^Ng_i|_K=1$, and it is true outside $K$ because everything in sight vanishes. Thus, we are able to write
+		\[I(f)=\sum_{i=1}^NI(f_i)\stackrel*\le\sum_{i=1}^N\rho(U_i)\le\sum_{i\in\NN}\rho(U_i),\]
+		where $\stackrel*\le$ is because $I(f_i)\le\rho(U_i)$ (note $f_i<U_i$ because $g_i<U_i$). This is what we wanted.
+
+		\item We would like to apply Carath\'eodory's Theorem \cite[Theorem~6.21]{elber-top} to take the outer measure $\rho^*$ to produce a Borel measure $\mu$. However, \cite[Theorem~6.21]{elber-top} produces a measure $\mu$ on the $\sigma$-algebra of subsets $A\subseteq X$ such that
+		\[\rho^*(E)=\rho^*(E\cap A)+\rho^*(E\setminus A)\]
+		for every set $E\subseteq X$. To restrict this measure $\mu$ to a Borel measure, we must show that the Borel algebra on $X$ satisfies the above condition. Because the Borel algebra is generated by open subsets of $X$, it is enough to check that
+		\[\rho^*(E)\stackrel?=\rho^*(E\cap U)+\rho^*(E\setminus U)\]
+		for any open subset $U\subseteq X$ and subset $E\subseteq X$. Note that the previous step's countably subadditive check proves $\le$, so we just need to check $\ge$.
+
+		Well, let's reduce our check to something we can check on opens. By definition of $\rho^*$ as an infimum, it is enough to show that any open subset $V$ containing $E$ will achieve
+		\[\rho^*(V)\stackrel?\ge\rho^*(E\cap U)+\rho^*(E\setminus U),\]
+		but by monotonicity, it will be enough for
+		\[\rho^*(V)\stackrel?\ge\rho^*(V\cap U)+\rho^*(V\setminus U).\]
+		Note we may replace the first two $\rho^*$s with $\rho$s. As such, by definition of $\rho$, it is enough to show that
+		\[\rho(V)\stackrel?\ge I(f)+\rho^*(V\setminus U)\]
+		for any $f<(V\cap U)$. Define $K\coloneqq\op{supp}f$, which is notably closed, and we actually claim that
+		\[\rho(V)\stackrel?\ge I(f)+\rho(V\setminus K),\]
+		which will be enough by monotonicity: $K\subseteq U$ implies $V\setminus K\supseteq V\setminus U$, which implies $\rho(V\setminus K)=\rho^*(V\setminus K)\ge\rho^*(V\setminus U)$. Well, for this, by definition of $\rho$, we know that it is enough to check
+		\[\rho(V)\stackrel?\ge I(f)+I(g)\]
+		for any $g<V\setminus K$. Well, $I(f)+I(g)=I(f+g)$, and $f+g$ is supported on $V$, where the $f$ piece is supported on $f$, and the $g$ piece is supported on $V\setminus K$. So the above claim follows by definition of $\rho$.
+	\end{enumerate}
+	We will continue the proof next class.
+\end{proof}
+
+\end{document}
