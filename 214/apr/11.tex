@@ -1,0 +1,179 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we continue talking about the cotangent bundle.
+
+\subsection{Differentials of a Function}
+By way of motivation, recall that there is a notion of the gradient $\nabla f$ of a smooth function $f\colon\RR^n\to\RR$. As we currently understand it, this is a special case of the total derivative $df$, which we can express as
+\[df=\sum_{i=1}^n\frac{\del f_i}{\del x_i}\frac\del{\del x_i}.\]
+However, note that if we change coordinates to $y_\bullet$, then we get
+\[\sum_{i=1}^n\frac{\del f}{\del x_i}\frac\del{\del x_i}=\sum_{i,j}\frac{\del f}{\del x_i}\frac{\del y_j}{\del x_i}\frac\del{\del y_j}.\]
+The problem is that this does not look like $\del f/\del y_j$ anywhere.
+
+As such, the correct thing to do is to think of the gradient not as a column vector in $T\RR^n$ but as a row covector in $T^*\RR^n$. Namely, we would like to define our gradient as
+\[\sum_{i=1}^n\frac{\del f}{\del x_i}dx_i,\]
+where ``$dx_\bullet$'' is the dual basis for $\del/\del x_i$.
+\begin{remark}
+	Here is another piece of motivation: we might want to imagine a chain rule
+	\[\frac d{dt}f(\gamma(t))=df(\gamma'(t)),\]
+	but then $df$ is acting as a map sending column vectors to scalars, so it should really be a row vector in the dual space.
+\end{remark}
+Anyway, here is our definition.
+\begin{definition}
+	Fix a smooth manifold $M$ without boundary. For an open subset $U\subseteq M$ and $f\in C^\infty(M)$, define the \textit{covector} $df_p\in T_p^*M$ by
+	\[df_p(v)\coloneqq v(f)\]
+	for all $v\in T_pM$.
+\end{definition}
+\begin{remark}
+	Note that the data of $df$ assembles to a ``covector field.''
+\end{remark}
+\begin{example}
+	Let's see how this works on local coordinates $(x_1,\ldots,x_n)$ of some open subset $U\subseteq M$. Set $v\coloneqq\sum_iv_i\del/\del x_i$ to be some vector field. Then
+	\[df(v)=v(f)=\sum_iv_i\frac{\del f}{\del x_i}.\]
+	On the other hand, we could compute
+	\[\Bigg(\sum_j\frac\del f{\del x_j}dx_j\Bigg)\Bigg(\sum_iV_i\frac\del{\del x_i}\Bigg)\]
+	gives the same answer by direct expansion.
+\end{example}
+\begin{example}
+	One sees that $dx_1,\ldots,dx_n$ is a local frame for the vector bundle $T^*M$ on the chart $(U,\varphi)$ where $\varphi=(x_1,\ldots,x_n)$.
+\end{example}
+We pick up the following computational lemmas.
+\begin{lemma}
+	Fix an open subset $U$ of a smooth manifold $M$. Then let $\sigma\in\mf X(U)$ be a local vector field, and let $\omega\in\mf X^*(U)$ be a local covector field, and let $(x_1,\ldots,x_n)$ be a chart on $U$. Then
+	\[\sigma=\sum_idx_i(\sigma)\frac\del{\del x_i}\qquad\text{and}\qquad \omega=\sum_j\omega\left(\frac\del{\del x_j}\right)dx_j.\]
+\end{lemma}
+\begin{proof}
+	Simply plug in the basis everywhere. For example, $\sigma(dx_i)$ on both sides reveals what the coordinate of $\sigma$ should be at the basis vector $\del/\del x_i$, which produces the left equality. The right equality is proven similarly.
+\end{proof}
+\begin{lemma}
+	If $(x_1,\ldots,x_n)$ and $(y_1,\ldots,y_n)$ are smooth charts on an open subset $U$ of a smooth manifold $M$, then
+	\[\frac\del{\del y_j}=\frac{\del x_i}{\del y_j}\frac\del{\del x_i}\qquad\text{and}\qquad dy_j=\frac{\del y_j}{\del x_i}dx_i.\]
+\end{lemma}
+\begin{proof}
+	The left equality is already known as our chain rule. The right equality holds by using the previous lemma and noting that
+	\[dy_j\left(\frac{\del}{\del x_i}\right)=\frac{\del y_j}{\del x_i}\]
+	by definition of $dy_j$.
+\end{proof}
+\begin{remark}
+	If $\gamma\colon(a,b)\to M$ is a smooth curve, then we see
+	\[\frac d{dt}f(\gamma'(t))=\gamma'(t)(f)=df\left(\frac{d\gamma}{dt}\right).\]
+	We then expect that
+	\[f(\gamma(b))-f(\gamma(a))=\int_a^bdf\left(\frac{d\gamma}{dt}\right)dt\]
+	as suggested by the notation. We will be able to make more sense of this later.
+\end{remark}
+
+\subsection{Pullback}
+As with differentials, we want to be able to pull back differentials.
+\begin{definition}[pullback]
+	Fix smooth manifolds $N$ and $M$ and a smooth map $F\colon N\to M$. Given $p\in N$ and $\omega\in T^*_pM$ and a smooth map $F\colon N\to M$, we define the \textit{pullback} by
+	\[(F^*\omega)_p(v)\coloneqq \omega_{F(p)}(dF_p(v)).\]
+	This is in fact a linear functional on $T_{p}N$ and hence provides an element $F^*\omega\in T^*_pN$.
+\end{definition}
+\begin{remark}
+	One can check that $\omega\in\mf X^*(M)$ gets pulled back smoothly to $F^*\omega\in\mf X^*(N)$. The smoothness check can be done on charts, as usual.
+\end{remark}
+\begin{remark}
+	If $f\in C^\infty(M)$, then $F^*(df)=d(f\circ F)$. This can be checked directly: for $p\in N$ and $v\in T_pN$, we compute
+	\[F^*(df)_p(v)=df_{F(p)}(dF_p(v))=d(f\circ F)_p(v),\]
+	as desired.
+\end{remark}
+\begin{remark}
+	Let's explain a computation. Suppose $M$ has a smooth chart $(U,\varphi)$ with coordinates $\varphi=(x_1,\ldots,x_m)$. Given a smooth map $F\colon N\to M$ as above and $\omega\coloneqq\sum_i\omega_idx_i$ where $\omega_i\in C^\infty(M)$, we compute
+	\[F^*\omega=F^*\left(\sum_i\omega_idx_i\right)=\sum_i(\omega_i\circ F)F^*dx_i=\sum_i(\omega_i\circ F)d(x_i\circ F),\]
+	and here $(x_i\circ F)$ is the $i$th component $F_i\coloneqq x_i\circ F$ of $F$. We can then give local coordinates $(y_1,\ldots,y_n)$ of $N$ and find that
+	\[F^*\omega=\sum_{i,j}(\omega_i\circ F)\frac{\del F_i}{\del y_j}dy_j.\]
+\end{remark}
+\begin{remark}
+	Given an embedding $i\colon S\to M$ of smooth manifolds, then for $\omega\in\mf X^*(M)$, we have $i^*\omega\ne \omega|_S$. Indeed, $\omega|_S$ is defined for all $v\in T_pM$ for $p\in S$, but $i^*\omega$ is only defined for $v\in T_pS$ for $p\in S$.
+\end{remark}
+
+\subsection{Line Integrals}
+We are finally able to integrate. Viewing $[a,b]$ as a $1$-manifold with boundary, we let $t\coloneqq\id_{[a,b]}$ be a coordinate function, and then we get the covector $dt\in\mf X^*([a,b])$. Then for any $\omega\in\mf X^*([a,b])$ the fact that $dt$ is a global frame (all on its own), we are able to write
+\[\omega=g\,dt.\]
+We are now able to provide the following definition.
+\begin{definition}
+	Fix a closed interval $[a,b]\subseteq\RR$ and some $w\in\mf X^*([a,b])$. Choosing $t\coloneqq\id_{[a,b]}$, we define
+	\[\int_{[a,b]}\omega\coloneqq\int_a^bg(t)\,dt,\]
+	where $\omega=g(t)\,dt$.
+\end{definition}
+As the notation suggests, we would like for our definition to be independent of $t$.
+\begin{proposition} \label{prop:reparam-line-int}
+	Fix an increasing diffeomorphism $\varphi\colon[c,d]\to[a,b]$. For $\omega\in\mf X^*([a,b])$, we have
+	\[\int_{[a,b]}\omega=\int_{[c,d]}\varphi^*\omega.\]
+\end{proposition}
+\begin{proof}
+	We only sketch the proof. The point is that one can write out $\varphi^*\omega$ and then use a $u$-substitution.
+\end{proof}
+We now move on to integrating on manifolds.
+\begin{definition}
+	Fix a smooth manifold $M$. Choose a path $\gamma\colon[a,b]\to M$ and covector $\omega\in\mf X^*(M)$. Then we define
+	\[\int_\gamma\omega\coloneqq\int_a^b\omega_{\gamma(t)}(\gamma'(t))\,dt.\]
+\end{definition}
+\begin{remark}
+	Note that
+	\[\int_a^b\omega_{\gamma(t)}(\gamma'(t))\,dt=\int_a^b(\gamma^*\omega)\left(\frac\del\del t\right)\,dt=\int_{[a,b]}\gamma^*\omega,\]
+	so this definition is independent of the choice of $t$. Explicitly, replacing $\gamma$ with $\gamma\circ\varphi$ for some increasing diffeomorphism $\varphi\colon[c,d]\to[a,b]$ implies that
+	\[\int_{[c,d]}(\gamma\circ\varphi)^*\omega=\int_{[c,d]}\varphi^*(\gamma^*\omega)=\int_{[a,b]}\gamma^*\omega,\]
+	where the last equality is by \Cref{prop:reparam-line-int}.
+\end{remark}
+Here is our main theorem.
+\begin{theorem}[Fundamental theorem of line integrals] \label{thm:line-integral}
+	Fix a smooth manifold $M$. Given $f\in C^\infty(M)$ and a smooth path $\gamma\colon[a,b]\to M$, we have
+	\[\int_\gamma df=f(\gamma(b))-f(\gamma(a)).\]
+\end{theorem}
+\begin{proof}
+	Unwinding definitions, we find
+	\[\int_\gamma df=\int_{[a,b]}\gamma^*\,df=\int_{[a,b]}d(f\circ\gamma)=\int_a^b\frac{\del(f\circ\gamma)}{\del t}\,dt.\]
+	Then the fundamental theorem of calculus tells us that this is $f(\gamma(b))-f(\gamma(a))$.
+\end{proof}
+\begin{remark}
+	This result even holds if $\gamma$ is only piecewise smooth, as can be seen by breaking up $\gamma$ into its smooth pieces and summing.
+\end{remark}
+
+\subsection{Conservative Vector Fields}
+As with multivariable calculus, we will want to give some adjectives to covector fields.
+\begin{defihelper}[exact, conservative] \nirindex{exact} \nirindex{conservative}
+	Fix a smooth manifold $M$.
+	\begin{itemize}
+		\item We say $\omega\in T^*M$ is \textit{exact} if and only if there exists $f\in C^\infty(M)$ such that $\omega=df$.
+		\item We say $\omega\in T^*M$ is \textit{conservative} if and only if
+		\[\int_\gamma\omega=0\]
+		for any piecewise smooth closed curve $\gamma\colon[a,b]\to M$.
+	\end{itemize}
+\end{defihelper}
+\begin{example}
+	If $\omega$ is exact, then \Cref{thm:line-integral} tells us that $\omega$ is conservative.
+\end{example}
+In fact, this example has a converse.
+\begin{proposition}
+	Fix a smooth manifold $M$. Then $\omega\in T^*M$ is conservative if and only if it is exact.
+\end{proposition}
+\begin{proof}
+	We know that exact implies conservative by \Cref{thm:line-integral}. In the other direction, suppose $\omega$ is conservative, and we must construct $f\in C^\infty(M)$ with $\omega=df$. We will do this by integrating.
+
+	Let $\{M_i\}$ denote the set of connected components of $M$, and select some $p_i\in M_i$. We begin by setting $f(p_i)\coloneqq0$, and then for any $q\in M_i$, we may choose some smooth path $\gamma\colon[a,b]\to M$ such that $\gamma(a)=p_i$ and $\gamma(b)=q$, and then we set
+	\[f(q)\coloneqq\int_\gamma\omega.\]
+	Because $\omega$ is conservative, we can concatenate paths to see that $f$ is well-defined. Smoothness can be checked on charts, and then again on coordinates we can check that $\omega=df$. We omit the details of these checks.
+\end{proof}
+\begin{example}
+	Take $\omega\coloneqq x\,dx+y\,dy$ on $\RR^2$. Then one can check that $\omega$ is conservative by hand. On the other hand, we can see that $\omega=df$ where $f(x,y)=\frac12\left(x^2+y^2\right)$.
+\end{example}
+\begin{example}
+	Take $\omega\coloneqq x\,dy-y\,dx$ on $\RR^2$. This is not conservative.
+	\begin{itemize}
+		\item For example, parameterize the unit circle counter-clockwise by $\gamma\colon\RR\to\RR^2$ by $\gamma(t)\coloneqq(\cos t,\sin t)$. Then one can compute $\int_\gamma\omega=2\pi$ by some explicit integration.
+		\item Alternatively, we can check that $\omega$ fails to be exact. Suppose $\omega=df$. Then $f$ needs to satisfy $\del f/\del x=-y$ and $\del f/\del y=x$, but then
+		\[\frac{\del^2f}{\del x\del y}=-1\ne1=\frac{\del^2f}{\del y\del x}.\]
+	\end{itemize}
+\end{example}
+Here is another definition to end the lecture.
+\begin{definition}
+	Fix a covector field $\omega$ on a smooth manifold $M$. Then $\omega$ is \textit{closed} if and only if any smooth chart $(U,\varphi)$ where $\varphi=(x_1,\ldots,x_n)$ has
+	\[\frac{\del\omega_j}{\del x_i}=\frac{\del\omega_i}{x_j}\]
+	for any $i$ and $j$.
+\end{definition}
+
+\end{document}
