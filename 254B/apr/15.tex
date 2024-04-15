@@ -1,0 +1,104 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we continue discussing Honda--Tate theory.
+
+\subsection{Building a CM Field}
+It remains to see the surjectivity of \Cref{thm:ht}. For this, we will start with a $q$-Weil number $\pi$ and actually construct an abelian variety $A$ over a number field $K$ with complex multiplication and then reduce it by some $\mf p\in V(K)$ (making $K$ large enough to ensure that the reduction is okay). This $A$ will be required to have $A_{\kappa(\mf p)}$ with the correct $q$-Weil number. The point is that our proof shows that we can lift any abelian variety over a finite field (up to finite extension) to an abelian variety with complex multiplication!
+\begin{remark}
+	It is in general an interesting question when one can add requirements to our lifting. For example, perhaps we want to avoid passing to the isogeny class or removing the finite extension or with some extra Hodge cycles or endomorphisms.
+\end{remark}
+As such, we need to construct a CM type for our $q$-Weil number $\pi$. Let's begin with building the CM field. It will be helpful to have a better understanding of $q$-Weil numbers.
+\begin{lemma}
+	Fix a $q$-Weil number $\pi$. Then exactly one of the following is true.
+	\begin{listroman}
+		\item $q$ is a square, and $\pi=\pm\sqrt q$, meaning $\QQ(\pi)=\QQ$.
+		\item $q$ is not a square, and $\pi=\pm\sqrt q$, meaning $\QQ(\pi)$ is a real quadratic extension of $\QQ$.
+		\item $\QQ(\pi)$ is CM.
+	\end{listroman}
+\end{lemma}
+\begin{proof}
+	For (i) and (ii), suppose we have some real embedding $\rho\colon\QQ(\pi)\to\RR$. Then $\rho(\pi)$ has magnitude $\sqrt q$, so $\rho(\pi)$ is one of $\pm\sqrt q$. If $q$ is a square, we get (i); if $q$ is not a square, we get (ii).
+
+	Otherwise, $\pi$ is totally imaginary, so we claim that $\QQ(\pi)$ is CM. We claim that $\QQ(\pi+q/\pi)$ is totally real, but then $\QQ(\pi)$ has degree at most $2$ over $\QQ(\pi+q/\pi)$ while having no real embeddings, so this extension must be quadratic and totally imaginary, which will complete the proof. So to check that $\pi+q/\pi$ is totally real, pick up some embedding $\tau\colon\QQ(\pi)\to\CC$, and then we see that
+	\[\tau\left(\pi+\frac q\pi\right)=\tau(\pi)+\ov{\tau(\pi)}\]
+	because $\left|\tau(\pi)\right|^2=q$. Now, the above quantity is always real, so we are done.
+\end{proof}
+We now construct our CM field.
+\begin{theorem} \label{thm:div-alg-of-simple-av-fq}
+	Fix a simple abelian $\FF_q$-variety $A$ where $\FF_q$ has characteristic $p$. Then set $D\coloneqq\op{End}^0(A)$ and $K\coloneqq Z(D)$ and $d\coloneqq\sqrt{[D:K]}$ and $e\coloneqq[K:\QQ]$. Then the following hold.
+	\begin{listalph}
+		\item $K=\QQ(\pi_A)$.
+		\item $de=2\dim A$.
+		\item For each place $v\in V(K)$, we have
+		\[\op{inv}_v(D\otimes_KK_v)=\begin{cases}
+			1/2 & \text{if }v\text{ is real}, \\
+			\frac{\op{ord}_v(\pi)}{\op{ord}_v(q)}[K_v:\QQ_p] & \text{if }v\mid p, \\
+			0 & \text{otherwise}.
+		\end{cases}\]
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We will show (a) and (b) and only sketch (c).
+	\begin{listalph}
+		\item By \Cref{thm:tate}, we know that
+		\[D\otimes_\QQ\QQ_\ell=\op{End}_{\op{Gal}(\ov{\FF_q}/\FF_q})(V_\ell A)=\op{End}_{\QQ(\pi_A)}(V_\ell A).\]
+		We now apply the double--centralizer theorem \cite[Theorem~IV.1.14]{milne-cft}. Let's recall the statement: fix a field $k$. Given a finite-dimensional $k$-algebra $B$ and some faithful semisimple $B$-module $V$, we have
+		\[Z(Z(B))=B,\]
+		where centralizers are taken in $\op{End}_k(V)$.
+		
+		Applying the theorem to $k\coloneqq\QQ_\ell$ and $B\coloneqq\QQ(\pi_A)\otimes_\QQ\QQ_\ell$ and $V\coloneqq V_\ell A$, we see that $Z(B)=D\otimes_\QQ\QQ_\ell$ because everything commutes with Frobenius, so
+		\[Z(D\otimes_\QQ\QQ_\ell)=K\otimes_\QQ\QQ_\ell.\]
+		Intersecting everything with $D$, we are done.
+
+		\item By the Albert classification, we already know that $ed\mid2\dim A$, so we only need to show the equality. Note that
+		\[K\otimes\QQ_\ell=K_{v_1}\times\cdots\times K_{v_r}\]
+		where $v_1,\ldots,v_r$ are the places of $K$ above $\ell$. Now, $K\otimes\QQ_\ell$ acts faithfully on $V_\ell A$, so we can split up $V_\ell A$ into
+		\[V_1\oplus\cdots\oplus V_r\]
+		where $K_{v_i}$ acts on $V_i$ for each $i$. We now do some careful dimension-counting. Note
+		\[D\otimes_\QQ\QQ_\ell=\op{End}_K(V_\ell A)=\prod_{i=1}^r\op{End}_{K_{v_i}}(V_i),\]
+		which by computing $\QQ_\ell$-dimensions provides
+		\[d^2e=\sum_{i=1}^re_id_i^2,\]
+		where $e_i\coloneqq[K_{v_i}:\QQ_\ell]$ and $d_i\coloneqq\dim_{K_{v_i}}V_i$. Now, we see that
+		\[(2g)^2\ge(de)^2=d^2e\cdot e=\Bigg(\sum_{i=1}^re_id_i^2\Bigg)\Bigg(\sum_{i=1}^re_i\Bigg)\stackrel*\ge\Bigg(\sum_{i=1}^re_id_i\Bigg)^2=(2g)^2,\]
+		where we have used Cauchy--Schwartz at $\stackrel*\ge$. So our inequalities get upgraded to equalities, so we are okay.
+
+		\item We postpone the case of $v\mid p$ until much later. For finite $v_i\mid\ell$ where $\ell$ is a rational prime not dividing $p$, we note that the proof of (b) above tells us that
+		\[D\otimes_{v_i}K_{v_i}=\op{End}_{K_{v_i}}(V_i)=M_d(K_{v_i}),\]
+		so our invariant vanishes.
+
+		For infinite places $v$, note that there is nothing to say if $v$ is complex, so we only focus on the real case. Looking at our Albert classification, we note that types I and II cannot occur because $ed=2g$, and type IV poses no threat because there are no real places anyway. So it remains to run type III, where the Albert classification tells us that $D\otimes\RR$ is non-split.%\todo{Why?}
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark}
+	By definition, we see that $A$ has complex multiplication. Namely, we are able to find some subfield of $D$ with degree $2\dim A$, which does provide CM by its technical definition.
+\end{remark}
+\begin{remark}
+	Using the above, we see that $P_A$ is the minimal polynomial of $\pi_A$ (which has degree $e$) to the power of $d$. But by facts about central simple algebras from class field theory, $d$ is the least common multiple of the local invariants. This enables us to pin down $D$ by global class field theory because we know that it is a division algebra.
+\end{remark}
+\begin{remark}
+	It is worth noting that our proof of (b) shows that we achieve the equality case in Cauchy--Schwartz, which implies that the dimensions of the $V_\bullet$ must all be equal to each other.
+\end{remark}
+We now begin our construction.
+\begin{lemma}
+	Fix a $q$-Weil number $\pi$. Then there is a division algebra $D$ over $F\coloneqq\QQ(\pi)$ such that it satisfies the local conditions of \Cref{thm:div-alg-of-simple-av-fq}(c).
+\end{lemma}
+\begin{proof}
+	By the fundamental exact sequence of global class field theory, it suffices to show that the required $D$ exists provided that
+	\[\sum_v\op{inv}_v(D\otimes_FF_v)=0.\]
+	If $D$ is totally real, we leave this for homework. It remains to deal with the case where $F$ is CM. Here, there are no infinite places to worry about, so it remains to study the places over $p=\op{char}\FF_q$. Being CM means that $\pi\ov\pi=q$ for our complex conjugation automorphism $\ov\cdot$. We have two cases for a place $v$ over $p$.
+	\begin{itemize}
+		\item If $v\ne\ov v$, then pairing off $\op{inv}_v(D\otimes K_v)$ and $\op{inv}_v(D\otimes K_v)$ will sum to zero because
+		\[\op{ord}_v(\pi)+\op{ord}_v(\ov\pi)=\op{ord}_v(q).\]
+		\item If $v=\ov v$, then we get $\frac12$ times the degree, but the number of cases where $v=\ov v$ must be even anyway because our total extension has even degree. So looping over all $v$, we get
+		\[\frac12\sum_{\substack{v\mid p\\v=\ov v}}[F_v:\QQ_p],\]
+		but the sum must be even because it is $[F:\QQ]$ (which is even) minus the contributions of the degrees from the previous case (which is even by the same sort of pairing with $[F_v:\QQ_p]=[F_{\ov v}:\QQ_p]$), as needed.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
