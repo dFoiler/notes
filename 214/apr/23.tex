@@ -1,0 +1,197 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We begin class continuing our discussion of Riemannian manifolds.
+
+\subsection{Curvature and Connections}
+\begin{warn}
+	The following content is unlikely to be on the exam.
+\end{warn}
+Fix a Riemannian manifold $(M,g)$. While we're here, we note that there is a notion of curvature for manifolds, which is basically a tensor $\mathrm{Rm}_g\in T^{(0,4)}TM$, which on vectors of the form $(v,w,v,w)$ in some $T_pM$ outputs the curvature of the manifold with respect to the plane spanned by $v$ and $w$.
+\begin{remark}
+	Suppose $(M,g)$ is a compact Riemannian manifold. Suppose that $\mathrm{Rm}_g(v,w,v,w)$ is a constant $K$ when $v$ and $w$ are orthonormal.
+	\begin{itemize}
+		\item If $K=0$, then $M$ is a torus $\RR^n/\Gamma$.
+		\item If $K>0$, then $M$ is a quotient of the $n$-sphere $S^n$.
+		\item If $K<0$, then $M$ is a quotient of hyperbolic space $\HH^n$.
+	\end{itemize}
+\end{remark}
+We now quickly discuss connections. Fix some $W\in\mf X(M)$ and $v\in T_pM$. We would like a notion of Lie derivative $(D_vW)_p\in T_pM$.
+\begin{remark}
+	One attempt at this was to take the Lie derivative with respect to some $V\in\mf X(M)$, where $V$ extends $v$. However, $\mc L_VW=[V,W]$ will depend on the choice of extension $V$ of $v$! The point is that $V$ determines a flow, and we are really taking a derivative via this flow.
+\end{remark}
+However, now that we have a Riemannian metric, we will be able to define $(D_vW)_p$ in a way that does not depend on the extension.
+
+As usual, one can choose a curve $\gamma\colon(-\varepsilon,\varepsilon)\to M$ with $\gamma(0)=p$ and $\gamma'(0)=v$. The central problem is to compare $\gamma'(0)=T_pM$ with $\gamma'(t)\in T_{\gamma(t)}M$ for some small $t$. For this, one wants to define a ``parallel transport'' to move around tangent spaces which preserves the inner product (i.e., preserves lengths and angles) and is ``torsion-free'' in the sense that it does not move around local frames. Letting $\mc P$ denote this parallel transport, we could then define our directional derivative as
+\[\nabla_VW\coloneqq\lim_{t\to0}\frac{\mc P_{\gamma(t)}^{-1}(W_{\gamma(t)})-W_p}{t}.\]
+Instead, we will codify what our directional derivative is, and this turns out to provide our parallel transport.
+\begin{definition}[Levi--Civita connection]
+	Fix a Riemannian manifold $(M,g)$. Then the \textit{Levi--Civita connection} is the unique map
+	\[\nabla\colon\Gamma(TM)\to\Gamma(T^*M\otimes TM)\]
+	satisfying the following.
+	\begin{itemize}
+		\item Linearity and Leibniz rule:
+		\[\nabla_V(f_1W_1+W_2)=f_1\nabla_VW_1+V(f_1)W+\nabla_VW_2.\]
+		\item Preserves the inner product $g$:
+		\[V(g(X,Y))=g(\nabla_VX,Y)+g(X,\nabla_VY).\]
+		\item Torsion-free:
+		\[\nabla_XY-\nabla_Y=[X,Y].\]
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	One can use the Levi--Civita connection $\nabla$ in order to define curvature. Professor Chen wrote out the formula, but I didn't really follow its construction.
+\end{remark}
+\begin{remark}
+	Doing parallel transport around a loop has no need to be the identity (e.g., imagine going around a loop of the sphere, but any reasonable way to parallel transport will have a problem at some poles). So parallel transport can send closed loops $\gamma\colon[a,b]\to M$ with $p\coloneqq\gamma(a)=\gamma(b)$ will induce a map $T_pM\to T_pM$; in fact, the action must preserve the inner product. The point is that we see that smooth loops give an orthogonal group action on $\op O(T_pM)$. Curvature, roughly speaking, is the failure of small loops to fix these tangent spaces.
+\end{remark}
+
+\subsection{Alternating Forms}
+We now shift gears and start discussing differential forms.
+\begin{definition}[alternating]
+	Fix a finite-dimensional (real) vector space $V$. An \textit{alternating $k$-form} is a functional $\alpha\in(V^{*})^{\otimes k}\cong\left(V^{\otimes k}\right)^*$ such that
+	\[\alpha(v_{\sigma1},\ldots,v_{\sigma k})=\op{sgn}(\sigma)\alpha(v_1,\ldots,v_k)\]
+	for any $v_1,\ldots,v_k\in V$ and $\sigma\in S_k$.
+\end{definition}
+\begin{remark}
+	This definition does not immediately imply that everything should vanish because the map $\op{sgn}\colon S_k\to\{\pm1\}$ is a homomorphism. Namely, permuting by $\sigma$ and then permuting by $\tau$ will have the same effect on the sign as permuting by $\tau\sigma$. We let $\land^k(V^*)$ denote the space of alternating $k$-forms.
+\end{remark}
+\begin{lemma}
+	Fix a finite-dimensional (real) vector space $V$ and some functional  $\alpha\in(V^{*})^{\otimes k}\cong\left(V^{\otimes k}\right)^*$. Then the following are equivalent.
+	\begin{listroman}
+		\item $\alpha\in\land^k(V^*)$.
+		\item $\alpha(v_1,\ldots,v_k)=0$ if $\{v_1,\ldots,v_k\}$ is linearly dependent.
+		\item $\alpha(v_1,\ldots,v_k)=0$ if $v_i=v_j$ for any distinct $i$ and $j$.
+	\end{listroman}
+\end{lemma}
+\begin{proof}
+	Certainly (a) implies (c) by using the transposition $\sigma$ swapping $i$ and $j$, and then (c) implies (a) by building up arbitrary permutations from transpositions. Then (c) implies (b) by using linearity to reduce to the equality case, and (b) implies (c) because having equal vectors requires linear dependence.
+\end{proof}
+\begin{remark}
+	There is a projection operator $\op{Alt}\colon(V^*)^{\otimes k}\to\land^k(V^*)$ given by
+	\[(\op{Alt}\alpha)(v_1,\ldots,v_k)\coloneqq\frac1{k!}\sum_{\sigma\in}\]
+	One can show that $\op{Alt}$ does actually output to $\land^k(V^*)$ by using our group action, so $\op{Alt}\alpha=\alpha$ implies $\alpha\in\land^k(V^*)$. Conversely, one can check that $\alpha\in\land^k(V^*)$ implies $\op{Alt}\alpha=\alpha$ again by a computation with the group action.
+\end{remark}
+\begin{example}
+	Here are some small computations. Given $V$ the basis $\{e_1,\ldots,e_n\}$ so that $V^*$ has dual basis $\{\varepsilon_1,\ldots,\varepsilon_n\}$.
+	\begin{itemize}
+		\item We have $\land^0(V^*)=\RR$ because all constants are alternating.
+		\item We have $\land^1(V^*)=V^*$ because all functionals are alternating. (Namely, for these two computations, there is nothing to check.)
+		\item One can check that $\alpha\coloneqq\sum_{i,j}a_{ij}(\varepsilon_i\otimes\varepsilon_j)\in\land^2(V^*)$ if and only if $\alpha(e_i,e_j)=-\alpha(e_j,e_i)$ for all $i$ and $j$ (by extending this identity linearly to all $V$), which is equivalent to $a_{ij}=-a_{ji}$ for all $i$ and $j$.
+	\end{itemize}
+\end{example}
+\begin{example}
+	There is an element $\det\in\land^n(\RR^n)$ given by
+	\[\det(v_1,\ldots,v_n)\coloneqq\det\begin{bmatrix}
+		| & & | \\
+		v_1 & \cdots & v_n \\
+		| && |
+	\end{bmatrix}.\]
+\end{example}
+To provide a simple basis for $\land^k(V^*)$, we would some basic elements in there.
+\begin{definition}[elementary alternating tensor]
+	Fix a real vector space $V$ with basis $\{e_1,\ldots,e_n\}$ so that we have a dual basis $\{\varepsilon_1,\ldots,\varepsilon_n\}$ on $V^*$. Given a sequence $I=\{i_1,\ldots,i_k\}$ of $k$ elements in $\{1,\ldots,n\}$, we define $\varepsilon^I\colon V^k\to\RR$ by
+	\[\varepsilon^I(v_1,\ldots,v-k)\coloneqq\det\begin{bmatrix}
+		\varepsilon^{i_1}(v_1) & \cdots & \varepsilon^{i_1}(v_k) \\
+		\vdots & \ddots & \vdots \\
+		\varepsilon^{i_k}(v_1) & \cdots & \varepsilon^{i_k}(v_k)
+	\end{bmatrix}.\]
+	One can check that $\varepsilon^I$ is multilinear (because $\det$ is multilinear), and in fact $\varepsilon^I$ is alternating (again, because $\det$ is alternating).
+\end{definition}
+\begin{example}
+	On $\RR^n$, we have $\varepsilon^I=\det$ when $I=\{1,\ldots,n\}$.
+\end{example}
+Many of our elementary alternating tensors are the same as each other, so we want a way to declare them the same.
+\begin{notation}
+	Given two sequences $I=\{i_1,\ldots,i_k\}$ and $J=\{j_1,\ldots,j_k\}$, we define
+	\[\delta_{I,J}\coloneqq\det\begin{bmatrix}
+		1_{i_1=j_1} & \cdots & 1_{i_1=j_k} \\
+		\vdots & \ddots & \vdots \\
+		1_{i_k=j_1} & \cdots & 1_{i_k=j_k}
+	\end{bmatrix}.\]
+\end{notation}
+\begin{remark}
+	One sees that $\delta_{I,J}\ne0$ if and only if $I$ nor $J$ have any repeated indices (for then we would see two of the same row or column) and each element of $I$ lies in $J$, meaning that $I$ is a permutation of $J$.
+\end{remark}
+And here is our proposition.
+\begin{proposition}
+	Fix an $n$-dimensional real vector space $V$ with basis $\{e_1,\ldots,e_n\}$ so that $V^*$ has dual basis $\{\varepsilon_1,\ldots,\varepsilon_n\}$. Then $\land^k(V^*)$ has basis given by $\varepsilon^I$ where $I$ is a strictly increasing sequence in $\{1,\ldots,n\}$.
+\end{proposition}
+\begin{proof}
+	This is some long computation in linear algebra, so we omit the proof. Essentially, we want to show that $\alpha\in\land^k(V^*)$ is uniquely a sum of the given $\varepsilon^I$. Well, by being multilinear, $\alpha$ is uniquely determined by its values $\alpha(e_{i_1},\ldots,e_{i_k})$ where $\{i_1,\ldots,i_k\}$ is some sequence in $\{1,\ldots,n\}$. By being alternating, we may assume that these indices are strictly increasing, but we are now free to set the values $\alpha(e_{i_1},\ldots,e_{i_k})$.
+\end{proof}
+\begin{remark}
+	Computing the size of our basis, we see that
+	\[\dim\land^k(V^*)=\begin{cases}
+		\binom nk & \text{if }k\le n, \\
+		0 & \text{if }k>n.
+	\end{cases}\]
+\end{remark}
+\begin{example}
+	Note $\dim \land^n(V^*)=\binom nn=1$ when $\dim V=n$, so $\land^n(V^*)$ is spanned by the single ``signed volume form'' $\det$.
+\end{example}
+\begin{remark}
+	For $\omega\in\land^n(V^*)$ and $T\colon V\to V$, one can show that
+	\[\omega(Tv_1,\ldots,Tv_n)\stackrel?=(\det T)\omega(v_1,\ldots,v_n).\]
+	Because $\dim\land^n(V^*)=1$, we may write $\omega$ as $c\det$ for some $c\in\RR$. After removing this $c$, we are trying to show
+	\[\det\begin{bmatrix}
+		| && | \\
+		Tv_1 & \cdots & Tv_n \\
+		| && |
+	\end{bmatrix}=(\det T)\begin{bmatrix}
+		| && | \\
+		v_1 & \cdots & v_n \\
+		| && |
+	\end{bmatrix}.\]
+	This is exactly the content of $\det(AB)=(\det A)(\det B)$ for matrices $A$ and $B$.
+\end{remark}
+
+\subsection{Some Product}
+Here is our definition.
+\begin{definition}[wedge product]
+	Fix a finite-dimensional (real) vector space $V$. For nonnegative integers $k$ and $\ell$, we define $\land\colon\land^k(V^*)\times\land^k(V^*)\to\land^{k+\ell}(V^*)$ by
+	\[\omega\land\eta\coloneqq\frac{(k+\ell)!}{k!\ell!}\op{Alt}(\omega\otimes\eta).\]
+\end{definition}
+\begin{example}
+	For $\omega,\eta\in\land^1(V^*)$, we can compute
+	\[\omega\land\eta=(\omega\otimes\eta-\eta\otimes\omega).\]
+\end{example}
+\begin{remark} \label{rem:explicit-wedge}
+	By expanding out the $\op{Alt}$, one finds that
+	\[(\omega\land\eta)(v_1,\ldots,v_{k+\ell})=\frac1{k!\ell!}\sum_{\sigma\in S_{k+\ell}}\omega(v_{\sigma1},\ldots,v_{\sigma k})\eta(v_{\sigma(k+1)},\ldots,v_{\sigma(k+\ell)}).\]
+\end{remark}
+\begin{lemma}
+	Fix a basis $\{e_1,\ldots,e_n\}$ of a vector space $V$ so that there is a dual basis $\{\varepsilon_1,\ldots,\varepsilon_n\}$ of $V^*$. Then for sequences of indices $I=\{i_1,\ldots,i_k\}$ and $J=\{j_1,\ldots,j_\ell\}$, we have
+	\[\varepsilon^I\land\varepsilon^J=\varepsilon^{I\sqcup J}.\]
+\end{lemma}
+\begin{proof}
+	Direct computation with the definitions. For example, one can use \Cref{rem:explicit-wedge} to compute the value of $\left(\varepsilon^I\land\varepsilon^J\right)(e_{i_1},\ldots,e_{i_{k+\ell}})$ on strictly increasing sequences $\{i_1,\ldots,i_{k+\ell}\}$ to verify the equality.
+\end{proof}
+\begin{remark}
+	One can show that $\land$ distributes over addition and is associative. It is anti-commutative in the sense that
+	\[\omega\land\eta=(-1)^{k\ell}(\eta\land\omega)\]
+	where $\omega\in\land^k(V^*)$ and $\eta\in\land^k(V^*)$.
+\end{remark}
+Having a product structure now provides a ring.
+\begin{definition}[exterior algebra]
+	Fix a finite-dimensional vector space $V$. Then we define
+	\[\land^*(V^*)\coloneqq\bigoplus_{k=0}^n\land^k(V^*)\]
+	to be an anti-commutative graded $\RR$-algebra when equipped with the wedge product.
+\end{definition}
+\begin{remark}
+	One can compute that
+	\[\dim\land^*(V^*)=\sum_{k=0}^n\dim\land^k(V^*)=\sum_{k=0}^n\binom nk=2^n.\]
+\end{remark}
+While we're here, we note that there is a notion of ``interior'' multiplication.
+\begin{definition}
+	Fix a vector space $V$. Given $v\in V$, there is a map $\iota_v\colon\land^k(V^*)\to\land^{k-1}(V^*)$ given by
+	\[\iota_v(w)(v_2,\ldots,v_k)\coloneqq w(v,v_2,\ldots,v_k).\]
+	We may write $\iota_v(w)$ as $v\lrcorner w$.
+\end{definition}
+\begin{remark}
+	One can show that $\iota_v\circ\iota_v=0$ and $\iota_v(\omega\land\eta)=\iota_v(\omega)\land\eta+(-1)^k\omega\land\iota_v(\eta)$.
+\end{remark}
+
+\end{document}
