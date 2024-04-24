@@ -1,0 +1,82 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+We continue discussing spectral sequences.
+
+\subsection{Building Spectral Sequences}
+Throughout, $(K^{\bullet,\bullet},d,\delta)$ is a double complex, and we define the complex $(K^\bullet,D^\bullet)$ by $K^n\coloneqq\bigoplus_{p+q=n}K^{p,q}$ to have filtration given by
+\[F^{p_0}K^n=\bigoplus_{\substack{p+q=n\\p\ge p_0}}K^{p,q}.\]
+Now, we will take $n\coloneqq p+q$ everywhere and take the notation $K^{n;p}=K^{p,q}$ so that $F^pK^n=\bigoplus_{p\ge p_0}K^{n;p_0}$. Additionally, we note that $d_0$ is induced by $D^1$ due to the commutativity of the following diagram.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGXnBLXm4iXSxbMSwwLCJGXnBLXm4vRl57cCsxfUtebiJdLFswLDEsIkZecEtee24rMX0iXSxbMSwxLCJGXnBLXntuKzF9L0Zee3BfMX1LXntuKzF9Il0sWzAsMiwiRF8xIiwyXSxbMSwzLCJkXzAiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJlcGkifX19XSxbMiwzLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJlcGkifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	{F^pK^n} & {F^pK^n/F^{p+1}K^n} \\
+	{F^pK^{n+1}} & {F^pK^{n+1}/F^{p_1}K^{n+1}}
+	\arrow[two heads, from=1-1, to=1-2]
+	\arrow["{D_1}"', from=1-1, to=2-1]
+	\arrow["{d_0}", from=1-2, to=2-2]
+	\arrow[two heads, from=2-1, to=2-2]
+\end{tikzcd}\]
+We now set $E_0^{n;p}=E_0^{p,q}\coloneqq F^pK^n/F^{p+1}K^n$ so that $E_0^{n;p}=K^{n;p}$ and $d_0=d$.
+
+Now, here is our main theorem.
+\begin{theorem} \label{thm:get-spectral-sequence}
+	Fix a filtered complex $(K^\bullet,D,F)$. Assume that $F^pK^n=0$ for $p>n$; for convenience, set $F^pK^n=K^n$ for $p<0$. Now, for all nonnegative integers $r,p,n\ge0$, set
+	\begin{align*}
+		X_{-1}^{n;p} &\coloneqq F^pK^n, \\
+		X_r^{n;p} &\coloneqq F^pK^n\cap D^{-1}\left(F^{p+r}K^{n+1}\right) \\
+		Y_r^{n;p} &\coloneqq D\left(X^{n-1;p-r+1}_{r-1}\right)+X_{r-1}^{n;p-1}, \\
+		E_r^{n;p} &\coloneqq X_r^{n;p}/Y_r^{n;p}.
+	\end{align*}
+	Then the following hold.
+	\begin{listalph}
+		\item $Y_r^{n;p}\subseteq X_r^{n;p}$ for all $r,n,p\ge0$.
+		\item $D$ produces a well-defined map $d_r^{n;p}\colon E_r^{n;p}\to E_r^{n+1;p+r}$ for all $r,n,p\ge0$.
+		\item $E_r^{p,q}$ is a spectral sequence with the above data.
+		\item $F^{n+1}(H^n(K^\bullet))=0$, and $F^p(H^n(K^\bullet))/F^{p+1}(H^n(K^\bullet))\cong E_\infty^{n;p}$ for all $n$ and $p\le n$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We omit this proof. It is a very long computation.
+\end{proof}
+As a quick aside, we note that we can take transposes.
+\begin{definition}[transpose]
+	Given a double complex $(K^{\bullet,\bullet},d,\delta)$, then one can define
+	\[\widetilde K^{p,q}\coloneqq K^{q,p}\]
+	so that $(\widetilde K^{\bullet,\bullet},\delta,d)$ is the \textit{transpose} double complex.
+\end{definition}
+\begin{remark}
+	Fix a double complex $(K^{\bullet,\bullet},d,\delta)$, and let $(K^\bullet,D^\bullet)$ be the filtered complex. Further, we let $(\widetilde K^\bullet,\widetilde D^\bullet)$ be the filtered complex of the transposed double complex. Then one can check that
+	\[H^n(K^\bullet)=H^n(\widetilde K^\bullet)\]
+	because the underlying modules are really the same.
+\end{remark}
+Anyway, let's see an application: let's finally prove \Cref{rem:resolve-for-left-ext}.
+\begin{proposition}
+	Fix a ringed space $X$, and let $\mc F,\mc G\in\mathrm{Mod}(\OO_X)$. Let $\mc E_\bullet\to\mc F$ be a resolution of $\mc F$ by locally free sheaves of finite rank. Then for all indices $i$,
+	\[\mc Ext^i(\mc F,\mc G)=h^i(\mc Hom(\mc E_\bullet,\mc G)).\]
+\end{proposition}
+\begin{proof}
+	Let $0\to\mc G\to\mc I^\bullet$ be an injective resolution of $\mc G$ in $\mathrm{Mod}(\OO_X)$, and let $K^{p,q}\coloneqq\mc Hom(\mc E_p,\mc I^q)$ be a double complex, where our differentials $d\colon K^{p,q}\to K^{p,q+1}$ and $\delta\colon K^{p,q}\to K^{p+1,q}$ are induced by the give resolutions (up to appropriate sign). Let $E_r^{p,q}$ be the resulting spectral sequence from \Cref{thm:get-spectral-sequence}. We now compute some pages.
+	\begin{itemize}
+		\item $E_0^{p,q}=K^{p,q}=\mc Hom(\mc E_p,\mc I^q)$.
+		\item $E_1^{p,q}=h^q(\mc Hom(\mc E_p,\mc I^\bullet))=\mc Ext^q(\mc E_p,\mc G)=\mc Ext^q(\OO_X,\mc E_p^\lor\otimes\mc G)$, which we see vanishes when $q>0$.
+		\item $E_2^{p,q}=h^p(E_1^{p,q})$ is $h^p(\mc Hom(\mc E_\bullet,\mc G))$ when $q=0$ and again vanishes when $q>0$.
+	\end{itemize}
+	Now, for $r>1$, we see that $d_r=0$ due to the slope of $d_r$, so $E_\infty^{p,q}=E_2^{p,q}$. Letting $K^\bullet$ be the total complex, we see that all but one of the quotients of the filtration of $H^n(K^\bullet)$ vanish for each $n$ (using the exactness of our $\mc Hom$ functors), so $H^n(K^\bullet)\cong E^{n,0}_\infty\cong h^n(\mc E_\bullet,\mc G)$ by the computation on the $E_2$ page.
+
+	We now let $\widetilde E_r^{p,q}$ be the transposed spectral sequence. Here are some computations.
+	\begin{itemize}
+		\item $\widetilde E_0^{p,q}=E_0^{q,p}=\mc Hom(\mc E_q,\mc I^p)$.
+		\item $\widetilde E_1^{p,q}=h^q(\mc Hom(\mc E_q,\mc I^p))$, but $\mc I^p$ is injective, so this is $\mc Hom(h^q(\mc E_\bullet),\mc I^p)$, which is $\mc Hom(\mc F,\mc I^p)$ when $q=0$ and vanishes for $q>0$.
+		\item $\widetilde E_2^{p,q}=h^p(\mc Hom(\mc F,\mc I^\bullet))$ if $q=0$ and vanishes otherwise.
+	\end{itemize}
+	For the same reasons as before, $\widetilde E^{p,q}_\infty=\widetilde E^{p,q}_2$ and $H^n(\widetilde K^\bullet)\cong\widetilde E_2^{n,0}\cong\mc Ext^n(\mc F,\mc G)$.
+
+	We now conclude because
+	\[\mc Ext^n(\mc F,\mc G)\cong H^n(\widetilde K^\bullet)=H^n(K^\bullet)\cong h^n(\mc Hom(\mc E_\bullet,\mc G)),\]
+	as desired.
+\end{proof}
+
+\end{document}
