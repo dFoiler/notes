@@ -1,0 +1,77 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we construct an important example.
+
+\subsection{A Closed Subspace with No Complement}
+Our goal is to construct a Banach space and closed subspace with no complement. Let's be precise by what we mean by ``complement.''
+\begin{definition}[complement]
+	Fix a Banach space $X$. Given closed subspaces $V,W\subseteq X$, we say that $W$ is a \textit{complement} of $V$ if and only if any $x\in X$ has unique $v\in V$ and $w\in W$ such that $x=v+w$, and there is a universal constant $C$ such that
+	\[\norm v_X+\norm w_X\le C\norm x_X.\]
+\end{definition}
+\begin{remark}
+	This definition is set up so that being complement means that $X$ is isomorphic as a Banach space to the product $V\oplus W$. Namely, the norm condition at the end is basically saying that the projections $X\to V$ and $X\to W$ are bounded linear operators.
+\end{remark}
+\begin{example}
+	If $V$ has finite codimension in $X$, then a complement of $V$ always exists, and one can basically show this by hand by completing a basis.
+\end{example}
+\begin{example}
+	If $V$ is a closed subspace of a Hilbert space $X$, then its orthogonal complement $V^\perp$ acts a complement. Most of this was proven in \Cref{prop:ortho-decompose}; to get the result on the norms, one can fix an orthonormal basis of $V$ and $V^\perp$ and then observe that the union of these two orthonormal bases provides an orthonormal basis for $X$.
+\end{example}
+For our example, we will consider the space $X\coloneqq C^0(\RR/\ZZ)$ of $1$-periodic differentiable functions $\RR\to\CC$, which is equipped with the uniform norm. We now define
+\[V\coloneqq\left\{f\in C_0(\RR/\ZZ):\widehat f(n)=0\text{ for }n<0\right\}.\]
+Note that $V$ is certainly a subspace of $X$, and $V$ is closed because the maps $f\mapsto\widehat f(n)$ are all bounded linear functionals on $X$.
+\begin{remark}
+	By identifying $\RR/\ZZ$ with $S^1$, we can see that $V$ is the collection of continuous functions which extend to holomorphic functions inside the disk. Approximately speaking, negative Fourier coefficients correspond to negative powers of $z\in S^1$, where the point is that Fourier series turn the functions $e_n\colon\RR/\ZZ\to S^1$ to the $n$th-power maps $S^1\to S^1$.
+\end{remark}
+We will show that $V\subseteq X$ has no complement, for which we use the following test.
+\begin{proposition}
+	Fix a closed subspace $V$ of a Banach space $X$. Then the following are equivalent.
+	\begin{listroman}
+		\item $V$ has a complement.
+		\item There is a closed subspace $W$ and linear isomorphism $\pi\colon V\oplus W\to X$ given by $\pi(v,w)\coloneqq v+w$ with bounded inverse.
+		\item There is a bounded linear operator $P\colon X\to X$ such that $P^2=P$ and $\op{range}P=V$ and $P|_V=\id_V$.
+	\end{listroman}
+\end{proposition}
+\begin{proof}
+	That (a) and (b) are equivalent basically follows from the definition of $W$ being a complement. That (b) implies (c) simply follows by taking the projection operator $X\to V$ provided by the inverse isomorphism $X\to V\oplus W$. Lastly, to recover (c) from (b), simply define $W\coloneqq\ker P$, which we see is a closed subspace (because $P$ is continuous), and we can check the map $\pi\colon X\to V\oplus W$ given by $\pi(x)\coloneqq(P(x),x-P(x))$ is a bounded linear isomorphism of vector spaces.
+\end{proof}
+Returning to our example, our goal now is to show that there is no projection operator $P\colon C^0(\RR/\ZZ)\to V$ such that $P^2=P$ and $\op{range}P=V$; note this implies $P|_V=\id_V$. Thus, suppose for the sake of contradiction that we have some such projection operator $P$.
+
+To begin, we note that there are shifting operators $T_y\colon C^0(\RR/\ZZ)\to C^0(\RR/\ZZ)$ by $T_yf(x)\coloneqq f(x+y)$; note that this map is a norm-preserving linear bijection. Notably, $T_yT_z=T_{y+z}$, so we have provided a group action of $\RR$ on $C^0(\RR/\ZZ)$. In fact, we see that
+\[\widehat{T_yf}(n)=\int_{\RR/\ZZ}T_yf(x)e^{-2\pi inx}\,dx=e^{-2\pi iny}\widehat f(n),\]
+so $T_y\colon V\to V$ is well-defined and has inverse $T_{-y}$. The point is that $P_y\coloneqq T_y^{-1}\circ P\circ T_y$ will also satisfy $P_y^2=P_y$ (which can be checked directly), and if $P$ has range $V$, then $P_y$ will still have range $V$.
+
+So we have actually produced a small family of projection operators. We now average over them: define the operator $Q$ on $C^0(\RR/\ZZ)$ by
+\[Qf(x)\coloneqq\int_{\RR/\ZZ}P_yf(x)\,dy.\]
+Of course $Q$ is linear, and everything in sight is $1$-periodic, so $Qf$ continues to be a $1$-periodic function. Let's check that $Q$ is bounded: given $f$, we would like to compute
+\[\sup_{x\in\RR/\ZZ}\left|\int_{\RR/\ZZ}P_yf(x)\,dy\right|\le\sup_{x\in\RR/\ZZ}\int_{\RR/\ZZ}\left|P_yf(x)\right|\,dy\le\sup_{x\in\RR/\ZZ}\int_{\RR/\ZZ}\norm{P_y}_{C^0(X)^*}\norm f_u\,dy.\]
+However, $T_y$ preserves norms, so $\norm{P_y}_{C^0(X)^*}=\norm P_{C^0(X)^*}$, so we are able to conclude that $\norm Q{C^0(X)^*}\le\norm P_{C^0(X)^*}$. We also note that $f\in V$ implies that $P_yf=f$ for all $y$ (Because $Pf=f$), so $Qf=f$ still, and $P_yf\in V$ always, so $Qf\in V$ as well (for example, one can show this by computing the Fourier coefficient of $Qf$ by hand, using \Cref{thm:tonelli}).
+
+Thus, $Q$ shares many properties with $P$, but it actually has the extra property that $T_zQ=QT_z$ for all $z\in\RR$, which we can see directly from the definition---this was the point of the averaging. Explicitly,
+\begin{align*}
+	T_zQf(x) &= \int_{\RR/\ZZ}T_zP_yf(x)\,dy \\
+	&= \int_{\RR/\ZZ}(T_z\circ T_{-y}\circ P\circ T_y\circ T_z)f(x)\,dy \\
+	&= \int_{\RR/\ZZ}(T_{-(y-z)}\circ P\circ T_{y-z}\circ T_z)f(x)\,dy \\
+	&= \int_{\RR/\ZZ}(P_{y-z}\circ T_z)f(x)\,dy \\
+	&= QT_zf(x).
+\end{align*}
+Let's use this.
+\begin{lemma}
+	Fix a bounded linear operator $T\colon C^0(\RR/\ZZ)\to C^0(\RR/\ZZ)$. If $T\circ T_y=T_y\circ T$ for all $y\in\RR$, then $Te_n\in\op{span}\{e_n\}$ for all $n\in\ZZ$.
+\end{lemma}
+\begin{proof}
+	Fix some $n\in\ZZ$. For a given $u\in\RR$, we compute
+	\[Te_n(u)=Te_n(0+u)=T_uTe_n(0)=TT_ue_n(0)=e^{2i\pi nu}Te_n(0)=Te_n(0)\cdot e_n(u).\]
+	Thus, we $Te_n=Te_n(0)\cdot e_n$, so we are done!
+\end{proof}
+Thus, we are able to conclude that $Qe_n=0$ for $n<0$. We next check that $Qe_n=e_n$; by linearity and density of finite linear combinations of $e_n$ in $C^0(\RR/\ZZ)$ (by the argument of \Cref{prop:ens-dense-in-l2}), this will fully determine $Q$ as just removing the negative Fourier coefficients.
+
+But then this operator $Q$ actually fails to be a bounded linear operator. Indeed, this would imply that our operators $S_N$ are uniformly bounded, which is a contradiction by \Cref{ex:family-of-unbounded}. Namely, the point is that one can check that
+\[S_N=E_N\circ Q\circ E_{-N}-E_{-N-1}\circ Q\circ E_{N+1},\]
+where $E_N$ is the operator defined by $E_Nf(x)\coloneqq e^{2\pi iNx}f(x)$. The point is that $Q$ is cutting out negative frequencies, so $S_N$ will cut out a particular frequency.
+
+\end{document}
