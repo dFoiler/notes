@@ -1,0 +1,109 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+I have transferred the beginning of our discussion of Fourier series from last class to this class for continuity reasons.
+
+\subsection{Beginning Fourier Series}
+Our setting will be the compact space $[0,1]$ equipped with the Lebesgue measure. Because points are measure zero anyway, we may as well think of $[0,1]$ as $\RR/\ZZ$ or $S^1$. We are interested in understanding the Hilbert space $L^2\left(\RR/\ZZ\right)$.
+
+We will show that there is a nice orthonormal basis given by the sequence of functions $e_n\colon \RR/\ZZ\to\CC^\times$ defined by $e_n(t)\coloneqq e^{2\pi int}$. Notably, the $e_\bullet$s are the characters of $\RR/\ZZ$ (this is not totally obvious, but it is true), and $\RR/\ZZ$ is abelian, so all representations are one-dimensional. These functions have other nice properties. For example,
+\[\frac d{dt}e^{2\pi int}=(2\pi in)e^{2\pi int},\]
+so $e_n$ is an eigenfunction for the derivative.
+\begin{remark}
+	Fourier's original motivation for Fourier series was to solve the heat equation
+	\[\frac{\del u}{\del t}=\frac{\del^2u}{\del x^2}\]
+	with initial condition $u(x,0)=f(x)$. Namely, for $f=e_n$, one can take $u_n(x,t)\coloneqq e_n(x)e^{-4\pi^2n^2t}$, which produces the solution for any $f$ in the form of a Fourier series by summing. There are many details to check here, but this rough idea can go through.
+\end{remark}
+Let's begin with an easier check.
+\begin{lemma} \label{lem:exp-is-orthonormal}
+	The functions $\{e_n:n\in\ZZ\}$ form an orthonormal set in $L^2(\RR/\ZZ)$.
+\end{lemma}
+\begin{proof}
+	For two $m,n\in\ZZ$, we must show $\langle e_m,e_n\rangle=1_{m=n}$. Now, we find
+	\[\langle e_m,e_n\rangle = \int_{\RR/\ZZ}e^{2\pi imt}\ov{e^{2\pi int}}\,dt = \int_{0}^1e^{2\pi i(m-n)t}\,dt,\]
+	where the last equality is by using the surjection $[0,1]\to\RR/\ZZ$, which we can pull back measures along because the only non-injective fiber is just a fiber of two points. Now, if $m=n$, we see that we get $1$; otherwise, we can compute that this integral is
+	\[\frac1{2\pi i(m-n)}e^{2\pi i(m-n)t}\bigg|_0^1=0.\]
+	So indeed, $\langle e_m,e_n\rangle=1_{m=n}$, as required.
+\end{proof}
+We would like to show that our orthonormal set is complete. For example, \Cref{lem:use-hilbert-basis} tells us that this will imply
+\begin{equation}
+	f(t)\stackrel?=\sum_{n\in\ZZ}\langle f,e_n\rangle e_n(t) \label{eq:exp-is-basis}
+\end{equation}
+So we have the following notation.
+\begin{notation}[Fourier coefficient]
+	Given $f\in L^2(\RR/\ZZ)$ and $n\in\ZZ$, we define
+	\[\widehat f(n)\coloneqq\langle f,e_n\rangle=\int_{\RR/\ZZ}f(t)e^{-2\pi int}\,dt.\]
+\end{notation}
+\begin{remark}
+	By construction, we see that $\left|\widehat f(n)\right|\le\norm f_1$; notably, $f\in L^1(\RR/\ZZ)$ by \Cref{prop:holder-ineq}.
+\end{remark}
+\begin{remark}
+	Plugging \Cref{lem:exp-is-orthonormal} into \Cref{prop:bessel-ineq}, we see that
+	\[\sum_{n\in\ZZ}\left|\widehat f(n)\right|^2\le\norm f_2^2.\]
+\end{remark}
+Now, one approach to showing \eqref{eq:exp-is-basis} is to actually compute some partial sums. For example, take some large $N>0$, and define
+\[S_Nf(x)\coloneqq\sum_{-N\le n\le N}\widehat f(n)e_n(x).\]
+For example, we are able to compute
+\begin{align*}
+	S_Nf(x) &= \sum_{-N\le n\le N}\int_{\RR/\ZZ}e^{2\pi in(x-t)}\,dt \\
+	&= \int_{\RR/\ZZ}\Bigg(\underbrace{\sum_{-N\le n\le N}e^{2\pi in(x-t)}}_{D_N(x-t)\coloneqq}\Bigg)f(t)\,dt \\
+	&= \int_{\RR/\ZZ}D_N(x-t)f(t)\,dt,
+\end{align*}
+where $D_N$ is known as the ``Dirichlet kernel.'' The kind of integral we are seeing above comes up so much it is worth a definition.
+\begin{definition}[convolution]
+	Fix two functions $f,g\in L^1(\RR/\ZZ)$. Then we define their \textit{Dirichlet convolution} as
+	\[(f*g)(x)\coloneqq\int_{\RR/\ZZ}f(x)g(y-x)\,dy.\]
+\end{definition}
+One can use the partial geometric series formula to show that
+\[D_N(x)=\sum_{-N\le n\le N}e^{2\pi inx}=\begin{cases}
+	2N+1 & \text{if }x=0, \\
+	\frac{\sin((2N+1)\pi x)}{\sin(\pi x)} & \text{if }x\ne0.
+\end{cases}\]
+Morally, one should imagine $D_N(x)$ as being some function  on $[-1/2,1/2]$ with a spike at $x=0$ but small away from $x=0$. Notably, $D_N$ has some rapid oscillation going on, so it is somewhat surprising that we are going to get $S_Nf\to f$ as $N\to\infty$.
+
+It will help to add some dampening factor to our Dirichlet kernel, so we define
+\[P_r(x)\coloneqq\sum_{n\in\ZZ}r^{\left|n\right|}e^{2\pi inx}\]
+for $r\in(0,1)$. Here are some checks on $P_r$.
+\begin{itemize}
+	\item This is two geometric series concatenated together (one for $r\ge0$ and one for $r<0$), so one can compute that
+	\[P_r(x)=\frac{1-r^2}{1+r^2-2r\cos(\pi x)}.\]
+	For example, it is not totally obvious from our earlier definition of $P_r$, but $P_r(x)$ is now seen to be nonnegative.
+	\item Further, one can use \Cref{thm:tonelli} to see that
+	\[\int_0^1P_r(x)\,dx=\sum_{n\in\ZZ}r^{\left|n\right|}\int_0^1e^{2\pi inx}\,dx=\sum_{n\in\ZZ}r^{\left|n\right|}1_{n=0}=1.\]
+	\item Another nice property of $P_r(x)$ is that $P_r(x)\to0$ uniformly as $r\to1^-$ on any interval $[\delta,1/2]$ where $\delta>0$. Indeed, one can see that $P_r(x)$ is decreasing on this interval, so it is enough to check that $P_r(\delta)\to0$ as $r\to1^-$, which is true.
+\end{itemize}
+These facts allow us to prove the following lemma.
+\begin{restatable}{lemma}{almostdirichletkernellem} \label{lem:almost-dirichlet-kernel}
+	Fix some continuous $f\colon\RR/\ZZ\to\CC$. Then
+	\[\int_{\RR/\ZZ}f(y)P_r(x-y)\,dy\to f(x)\]
+	uniformly as $r\to1^-$.
+\end{restatable}
+\noindent We will prove this later, but let's explain why it will be helpful. Write
+\begin{align*}
+	\int_{\RR/\ZZ}g(y)P_r(x-y)\,dy &= \int_{\RR/\ZZ}g(y)\sum_{n\in\ZZ}r^{\left|n\right|}e^{-2\pi iny}e^{2\pi inx}\,dy \\
+	&= \sum_{n\in\ZZ}r^{\left|n\right|}e^{2\pi inx}\int_{\RR/\ZZ}g(y)e^{-2\pi iny}\,dy \\
+	&= \sum_{n\in\ZZ}r^{\left|n\right|}e^{2\pi inx}\widehat g(n),
+\end{align*}
+and now we note that this last sum is basically our desired Fourier series for $g$ with the entries weighted by $r^{\left|n\right|}$, which is more or less a generalization of the notion of partial sums.
+
+Let's see this in action.
+\begin{proposition}
+	The set of functions which are finite linear combinations of $e_\bullet$s are dense in $L^2(\RR/\ZZ)$.
+\end{proposition}
+\begin{proof}
+	Fix some function $f\in L^2(\RR/\ZZ)$ we want to approximate by some error term of approximately $\varepsilon>0$. By \Cref{lem:cc-dense-lp}, we may assume that $f$ is continuous; explicitly, we may approximate some $g$ sufficiently close to $f$. Then \Cref{lem:almost-dirichlet-kernel} grants us $r>0$ such that $\norm{g-g*P_r}_u<\varepsilon$, but then partial sums of $P_r$ converge uniformly to $P_r$ (e.g., by the Weierstrass $M$-test), so we get some $M>0$ such that
+	\[\norm{g*P_r-\sum_{-M\le n\le M}r^{\left|n\right|}\widehat g(n)e^{2\pi inx}}_u<\varepsilon.\]
+	Thus, we have a trigonometric sum which is at most $2\varepsilon$ in uniform norm away from $g$. We are now done because $\norm\cdot_2\le\norm\cdot_u$ because our space has total measure $1$.
+\end{proof}
+\begin{remark}
+	We now see that the functions $E\coloneqq\{e_n:n\in\ZZ\}$ form an orthonormal basis for $L^2(\RR/\ZZ)$. Indeed, let's directly show that $E$ is complete: any $f\in L^2(\RR/\ZZ)$ with $\langle f,e_n\rangle=0$ for all $n$ can be approximated by a trigonometric polynomial $P$ up to some $\varepsilon$, but then $\langle P,e_n\rangle$ is within $\varepsilon$ of $\langle f,e_n\rangle=0$ for all $n$, so $P=0$ by writing it out and computing our integrals! Thus, $f$ is within $\varepsilon$ of $0$ for any $\varepsilon>0$, so we are done.
+\end{remark}
+In spite of this nice result for $L^2$, it fails for discontinuities.
+\begin{example}
+	We show that there is $f\in C^0(\RR/\ZZ)$ such that $S_Nf(0)$ does not converge to any value as $N\to\infty$. Indeed, define $\ell_N\colon C^0(\RR/\ZZ)\to\CC$ by $\ell_N(f)\coloneqq S_Nf(0)$. If our limit always existed, then the set $\{\ell_N(f):N\ge0\}$ would have to be bounded, so \Cref{thm:ubp} then promises that $\{\ell_N:N\ge0\}$ is a collection of bounded operators! But this is not possible because the Dirichlet kernel $D_N$ has unbounded $L^1$-norm, which can be shown by a rather annoying computation.
+\end{example}
+
+\end{document}

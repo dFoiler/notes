@@ -79,8 +79,70 @@ Anyway, let's prove \Cref{thm:rr-1}.
 		which will be enough by monotonicity: $K\subseteq U$ implies $V\setminus K\supseteq V\setminus U$, which implies $\rho(V\setminus K)=\rho^*(V\setminus K)\ge\rho^*(V\setminus U)$. Well, for this, by definition of $\rho$, we know that it is enough to check
 		\[\rho(V)\stackrel?\ge I(f)+I(g)\]
 		for any $g<V\setminus K$. Well, $I(f)+I(g)=I(f+g)$, and $f+g$ is supported on $V$, where the $f$ piece is supported on $f$, and the $g$ piece is supported on $V\setminus K$. So the above claim follows by definition of $\rho$.
+
+		For the rest of the proof, we let $\mu$ denote our Borel measure.
+
+		\item For any compact subset $K\subseteq X$, we claim that
+		\[\mu(K)\stackrel?=\inf\left\{I(f):f\in C_c(X)\text{ and }1_K\le f\right\}.\]
+		We show this via two inequalities.
+		\begin{itemize}
+			\item We show $\ge$. By definition of $\rho$ as an infimum, we must show that
+			\[\rho(U)\ge\inf\left\{I(f):f\in C_c(X)\text{ and }1_K\le f\right\}\]
+			for any open neighborhood $U$ of $K$. Well, \Cref{lem:lch-urysohn} promises a continuous function $f\colon X\to[0,1]$ such that $1_K\le f<U$, so $\rho(U)\ge I(f)$, which produces the required inequality.
+			\item We show $\le$. We would like to show that $\rho^*(K)\le I(f)$ for any $f$ such that $1_K\le f$. Well, for any $\varepsilon>0$, define the open subset
+			\[U_\varepsilon\coloneqq\{x\in X:f(x)>1-\varepsilon\}\]
+			of $X$, which notably contains $K$ by definition of $f$; thus, $\rho^*(K)\le\rho(U_\varepsilon)$.
+			
+			Now, if some $g$ has $g<U_\varepsilon$, then $g\le(1-\varepsilon)^{-1}f$, so $I(g)\le(1-\varepsilon)^{-1}I(f)$. So by definition of $\rho$, we get $\rho(U_\varepsilon)\le(1-\varepsilon)^{-1}I(f)$. Synthesizing, we see
+			\[\rho^*(K)=\inf_{K\subseteq U}\rho(U)\le\inf_{\varepsilon>0}\rho(U_\varepsilon)\le\inf_{\varepsilon>0}(1-\varepsilon)^{-1}I(f)=I(f),\]
+			as required.
+		\end{itemize}
+
+		\item We check that $\mu$ is in fact a Radon measure. Here are our checks.
+		\begin{itemize}
+			\item For any compact $K\subseteq X$, we see that \Cref{lem:lch-urysohn} provides a compactly supported $f\in C_c(X)$ with $f\ge1_K$. Then $\mu(K)\le I(f)$ by the previous step, so $\mu(K)$ is finite.
+			\item Outer regularity: note $\mu(U)=\rho^*(U)=\rho(U)$ for any open $U\subseteq X$, so we get outer regularity automatically by the definition of $\rho^*$.
+			\item Inner regularity for opens: let $U\subseteq X$ be an open set, and we want to show that
+			\[\mu(U)\stackrel?=\sup_{K\subseteq U}\mu(K).\]
+			Certainly $\mu(K)\le\mu(U)$ for any open subset $K\subseteq U$, so $\ge$ follows. So it only remains to show $\le$. Well, using the definition of $\rho(U)=\mu(U)$ as a supremum, we fix some $f$ such that $f<U$, and we need to show that $I(f)$ is bounded above by the right-hand supremum above. Well, let $K$ be the support of $f$, and then we see that any $g$ with $1_K\le g$ has $f\le g$ and hence $I(f)\le I(g)$, meaning that
+			\[I(f)\le\inf_{1_K\le g}I(f)=\rho^*(K),\]
+			where the last equality uses the previous step. This is what we wanted.
+		\end{itemize}
+
+		\item At long last, we have a good candidate Radon measure $\mu$. It remains to check that $I(f)=\int_Xf\,d\mu$ for all $f\in C_c(X)$. Because any $f\in C_c(X)$ can be broken up into real and imaginary parts, we may assume that $f$ is real-valued. Because we can write any real-valued $f$ as a difference of two nonnegative functions, we may assume that $f$ is nonnegative. (These previous two checks are using the fact that $I$ and $f\mapsto\int_Xf\,d\mu$ are both linear already.)
+		
+		Note that $\mu$ is defined entirely topologically, we will need to use topology to approximate $f$. Choose $\varepsilon>0$ to be taken to zero later. Define the sets
+		\[K_n\coloneqq\begin{cases}
+			\op{supp}f & \text{if }n=0, \\
+			\{x:f(x)\ge n\varepsilon\} & \text{if }n\ge1,
+		\end{cases}\qquad\text{and}\qquad U_n\coloneqq\{x:f(x)>n\varepsilon\}\]
+		Now, because $f$ is compactly supported, $K_0$ is compact, and each $K_n$ is a closed subset of $K_0$, so each $K_n$ is compact too. Because $X$ is locally compact, we may select an open neighborhood $U_{-1}$ with compact closure. Note that $f$ is bounded (it's continuous on a compact set), so we are promised some large $N$ such that $K_n=U_n=\emp$ for $n\ge N$. Thus, we have defined a chain of subsets
+		\[U_{-1}\supseteq K_0\supseteq U_0\supseteq K_1\supseteq U_0\supseteq K_2\supseteq U_2\supseteq\cdots\supseteq K_{n-1}\supseteq U_{n-1}\supseteq K_n=\emp.\]
+		The point is that we have found subsets of $X$ from which we can read off $f$ basically like a topographical map. Namely, we use \Cref{lem:lch-urysohn} to find functions $h_n\in C_c(X)$ such that $h_n|_{K_n}=1$ and $h_n<U_{n-1}$, meaning that
+		\[\varepsilon\sum_{n=1}^Nh_n\stackrel?\le f\stackrel?\le\varepsilon\sum_{n=0}^Nh_n.\]
+		Indeed, if $x\notin\op{supp}f$, then $x\notin K_n$ for any $n\ge0$, so the left and middle term both vanish. Otherwise, $x\in K_0$, and we can find the largest possible $m$ such that $m\varepsilon\le f(x)\le(m+1)\varepsilon$, and then we see that $x\in K_m$ but $x\notin U_m$, so the left-hand side above is $m\varepsilon$, and the right-hand side above is at least $(m+1)\varepsilon$ because $h_0(x)=\varepsilon$.
+
+		We will also want the inequalities
+		\[\sum_{n=1}^N1_{U_n}\stackrel?\le f\stackrel?\le\varepsilon\sum_{n=0}1_{K_n}.\]
+		Indeed, if $f(x)=0$, then the two left terms vanish. Otherwise, we can find $m$ such that $m\varepsilon\le f(x)<(m+1)\varepsilon$, and then the left sum is $m\varepsilon$, and the right sum is $m\varepsilon$, and the right sum is $(m+1)\varepsilon$.
+
+		Thus, we use monotonicity twice of $I$ 
+		\begin{align*}
+			I(f) &\le \varepsilon\sum_{n=0}^NI(h_n) \\
+			&\le \varepsilon\sum_{n=0}^N\mu(U_{n-1}) \\
+			&\le \varepsilon(\mu(U_{-1})+\mu(U_0))+\int_X\varepsilon\sum_{n=1}^N1_{U_n}\,d\mu \\
+			&\le \varepsilon(\mu(U_{-1})+\mu(U_0))+\int_Xf\,d\mu.
+		\end{align*}
+		Similarly, we use monotonicity of $I$ again to see
+		\begin{align*}
+			I(f) &\ge \varepsilon\sum_{n=1}^NI(h_n) \\
+			&\ge \varepsilon\sum_{n=1}^N\mu(K_n) \\
+			&\ge \int_X\varepsilon\sum_{n=1}1_{K_n}\,d\mu \\
+			&\ge \int_Xf\,d\mu-\varepsilon\mu(K_0).
+		\end{align*}
+		Sending $\varepsilon\to0^+$ is able to retrieve the required equality.
+		\qedhere
 	\end{enumerate}
-	We will continue the proof next class.
 \end{proof}
 
 \end{document}

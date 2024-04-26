@@ -1,0 +1,70 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we finish up our discussion of Lusin's theorem.
+
+\subsection{Lusin's Theorem}
+The following lemmas will aide our proof of Lusin's theorem.
+\begin{lemma} \label{lem:lusin-helper}
+	Fix a measure space $(X,\mc M,\mu)$ and $p\ge1$. Suppose that $f\in L^p(X)$ and $\{f_n\}_{n\in\NN}\subseteq L^p(X)$ with $\norm{f_n-f}_p\to0$ as $n\to\infty$. Then there is a subsequence $\{f_{n_k}\}_{k\in\NN}$ such that $f_{n_k}\to f$ almost everywhere.
+\end{lemma}
+\begin{proof}
+	We may choose our subsequence $\{n_k\}_{k\in\NN}$ to be increasing and so that
+	\[\norm{f_{n_k}-f}_p<2^{-k}\]
+	for each $k$. Now, set $h_k\coloneqq f_{n_k}-f$, and then \Cref{prop:cheby-ineq} tells us that
+	\[\mu(\underbrace{\{x\in X:\left|h_k(x)-f(x)\right|>2^{-k/2}\}}_{E_k\coloneqq})\le\left(2^{-k/2}\right)^{-p}\norm{h_k-f}_p^p=2^{-pk/2}.\]
+	We will use these $E_k$ to control our convergence.
+
+	In particular, suppose that $x\in E_k$ for finitely many $k$. In other words, there is some $K$ such that $x\notin E_k$ for $k>K$, so $\left|h_k(x)-f(x)\right|<2^{-k/2}$ for $k>K$, so $f_{n_k}(x)\to f(x)$ as $k\to\infty$. So because
+	\[\sum_{k=1}^\infty\mu(E_k)<\infty,\]
+	we are able to conclude that the set of $x\in X$ living in infinitely many $E_\bullet$s is a null set by the following lemma.
+	\begin{lemma}[Borel--Cantelli]
+		Fix a measure space $(X,\mc M,\mu)$. Given a family $\{E_k\}_{k\in\NN}$ of measurable sets such that
+		\[\sum_{k=1}^\infty\mu(E_k)<\infty,\]
+		then the set of $x\in X$ living in infinitely many $E_\bullet$s is a null set.
+	\end{lemma}
+	\begin{proof}
+		Consider the function $g\coloneqq\sum_{k\in\NN}1_{E_k}$. \Cref{thm:tonelli} grants
+		\[\int_Xg\,d\mu=\sum_{k\in\NN}\int_X1_{E_k}\,d\mu=\sum_{k\in\NN}\mu(E_k)<\infty.\]
+		Thus, $g$ must be finite almost everywhere, as required.
+	\end{proof}
+	The above lemma completes the proof of \Cref{lem:lusin-helper}.
+\end{proof}
+Now, here is our statement of Lusin's theorem. Intuitively, it says that any measurable function is almost continuous (even if it need not be continuous anywhere).
+\begin{theorem}[Lusin]
+	Fix a locally compact Hausdorff space $X$, and let $\mu$ be a nonnegative Radon measure on $X$ such that $\mu(X)<\infty$. Further, fix a measurable function $f\colon X\to\CC$.
+	\begin{listalph}
+		\item Suppose $f$ is ``small'' in the sense that $\mu(\{x:f(x)\ne0\})<\infty$. Then any $\varepsilon>0$ has some $g\in C_c(X)$ such that
+		\[\mu(\{x\in X:f(x)\ne g(x)\})<\varepsilon.\]
+		\item Suppose $f$ is ``small'' in the sense that $\mu(\{x:\left|f(x)\right|>t\})<\infty$ for all $t$. Then any $\varepsilon>0$ has some $g\in C_0(X)$ such that
+		\[\mu(\{x\in X:f(x)\ne g(x)\})<\varepsilon.\]
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We prove these separately.
+	\begin{listalph}
+		\item Set $X'\coloneqq\{x\in X:f(x)\ne0\}$ for brevity. We begin by claiming that there is a compact set $K\subseteq X$ sequence of continuous functions $\{g_n\}_{n\in\NN}\in C_c(X)$ supported in $K$ such that $\mu(X'\setminus K)<\varepsilon$ and $g_n(x)\to f(x)$ for almost every $x\in K$. (Note that this self-upgrades to $g_n(x)\to f(x)$ for every $x\in K$ by using \Cref{prop:radon-inner-reg-on-sigma-finite} after subtracting out from $K$ the points where we don't have this convergence.) Well, we can converge in norm using \Cref{lem:cc-dense-lp}, which we then upgrade to almost everywhere convergence by \Cref{lem:lusin-helper}.
+
+		We now complete the proof. Construct $K$ and $\{g_n\}_{n\in\NN}$ as in the previous step. Because $\mu(K)<\infty$, Egorov's theorem \cite[Theorem~9.13]{elber-top} provides a subset $L\subseteq K$ such that $\mu(K\setminus L)<\varepsilon$ and $g_{n_i}\to f$ uniformly on $L$ for some subsequence $g_{n_i}$. By again using our inner regularity, we may assume that $L$ is compact, so $f|_L$ becomes continuous. We now use Tietze's extension theorem \cite[Theorem~3.26]{elber-top} to get some $g\in C_c(X)$ such that $g|_L=f|_L$ with arbitrarily small support outside $X'$, so we are done because $\mu(X'\setminus L)<2\varepsilon$ and noting that $g$ will vanish only a little outside $X'$.
+
+		\item We use (a). We claim that we can write
+		\[f\stackrel?=\sum_{n=0}^\infty f_n,\]
+		where the $f_\bullet$s are measurable, satisfy $\mu(\{x\in X:f_n(x)\ne0\})<\infty$ and $\left|f_n(x)\right|<2^{-n}$ for all $x\in X$ and $n\ge1$. (Note that we are not asserting a bound on $f_0$!) To see how this completes the proof, use (a) to find $g_n\in C_c(X)$ such that
+		\[\mu(\{x\in X:g_n(x)\ne f_n(x)\})<2^{-n}\varepsilon\]
+		for each $n\ge0$. In fact, because $\norm{f_n}_u\le2^{-n}$, we can achieve $\norm{g_n}_u\le2^{-n}$ by using the approximation trick at the end of the proof of \Cref{thm:rr-2} involving $\varphi$. Now, the bound on the uniform bounds implies that $g\coloneqq\sum_ng_n$ is the uniform limit of continuous functions on $X$, so $g$ is continuous. In fact, $g$ lives in the closure of $C_c(X)$, which we know is $C_0(X)$ by \Cref{prop:co-banach,prop:closure-of-cc}. Lastly, we bound
+		\[\mu(\{x\in X:f_n(x)\ne g_n(x)\})\le\mu\left(\bigcup_{n\in\NN}\{x\in X:g_n(x)\ne f_n(x)\}\right)\le\sum_{n=0}^\infty2^{-n}\varepsilon<2\varepsilon,\]
+		which vanishes as $\varepsilon\to0^+$.
+
+		It remains to prove the claim. Write $f(x)=\left|f(x)\right|e^{ih(x)}$, where we know now that $h$ is a real-valued measurable function. We now decompose $F\coloneqq\left|f\right|$ into a sum of small real-valued functions $G_\bullet$, and then we will set $g_\bullet\coloneqq G_\bullet e^{ih}$. Well, simply cut up $F$ by
+		\[G_0(x)\coloneqq1_{F(x)>1}F(x),\]
+		and
+		\[G_n(x)\coloneqq1_{1/2^{n-1}\ge F(x)>1/2^{n}}F(x)\]
+		for $n\ge1$. Then $F=\sum_{n=0}^\infty G_n$, so $f=\sum_{n=0}^\infty G_ne^{ih}$, and we are done.
+		\qedhere
+	\end{listalph}
+\end{proof}
+
+\end{document}

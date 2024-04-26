@@ -1,0 +1,83 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Here we go.
+
+\subsection{Tying Up Loose Ends}
+Let's prove \Cref{lem:almost-dirichlet-kernel}.
+\almostdirichletkernellem*
+\begin{proof}
+	Note
+	\[(f*P_r)(x)=\int_{[0,1]}f(y)P_r(x-y)\,dy=\int_{[x-1,x]}f(x-y)P_r(y)\,dy=\int_{[-1/2,1/2]}f(x-y)P_r(y)\,dy,\]
+	where the last equality used periodicity of $f$ to split up the interval $[x-1,x]$ and then fit everything into $[-1/2,1/2]$. Now, we see
+	\[\left|(f*P_r)(x)-f(x)\right|=\left|\int_{[-1/2,1/2]}(f(x-y)-f(x))P_r(y)\,dy\right|.\]
+	Now, let $\delta>0$ to be determined later, and we bound the above as
+	\[\left|(f*P_r)(x)-f(x)\right|\le\int_{\left|y\right|<\delta}\left|f(x-y)-f(x)\right|P_r(y)\,dy+\int_{\delta\le\left|y\right|\le1/2}\left|f(x-y)-f(x)\right|P_r(y).\]
+	We now split up our bounding.
+	\begin{itemize}
+		\item On the left, we will have no hope of controlling $P_r(y)$, so we bound the left integral as
+		\[\sup\left\{\left|f(x')-f(x'')\right|:\left|x'-x''\right|<\delta\right\}.\]
+		\item On the right, we will have no hope of controlling the difference, so we bound the right integral as
+		\[2\norm f_u\int_{\delta\le\left|y\right|\le1/2}P_r(y)\,dy.\]
+	\end{itemize}
+	Now, fix some $\varepsilon>0$. Because $f$ is only being defined on the compact interval $[-1/2,1/2]$, it is uniformly continuous, so we can choose $\delta>0$ (not depending on $x$!) to make the left integral smaller than $\varepsilon/2$. Similarly, we know that $P_r(y)\to0$ uniformly as $r\to1^-$ on $y\in[\delta,1/2]\cup[-1/2,-\delta]$, so we can choose $r$ (not depending on $x$!) to make the right integral smaller than $\varepsilon/2$.
+\end{proof}
+\begin{remark}
+	One can extend this to make $\norm{f*P_r-f}_{L^p}\to0$ as $r\to1^-$ for any $f\in L^p([0,1])$. Indeed, one can approximate $f$ by some $g\in C_c(\RR/\ZZ)$, and then we see that $f*P-r$ is approximated by $g*P_r$. So because the uniform norm upper-bounds the $L^p$ norm, \Cref{lem:almost-dirichlet-kernel} completes the proof.
+\end{remark}
+
+\subsection{Fourier Analysis for \texorpdfstring{$L^1$}{ L1}}
+Note that $f\in L^2(\RR/\ZZ)$ implies that
+\[\sum_{n\in\ZZ}\left|\widehat f(n)\right|^2\le\norm f_2^2<\infty,\]
+so $\widehat f\in L^2(\ZZ)$; in fact, this is a bijection $L^2(\RR/\ZZ)\to L^2(\ZZ)$ because our $e_n$s form an orthonormal basis. We may be interested in extending this to $f\in L^1(\RR/\ZZ)$.
+\begin{remark} \label{rem:l1-fourier-coef}
+	For $f\in L^1(\RR/\ZZ)$, one can compute
+	\[\left|\widehat f(n)\right|\le\left|\int_{\RR/\ZZ}f(x)e^{-2\pi inx}\,dx\right|\le\int_{\RR/\ZZ}\left|f(x)\right|\,dx=\norm f_{L^1}.\]
+	Thus, our Fourier coefficients at least make sense.
+\end{remark}
+There are two results for $L^1$ we may be interested in.
+\begin{proposition} \label{prop:fourier-l1-to-zero}
+	Fix $f\in L^1(\RR/\ZZ)$. Then
+	\[\lim_{\left|n\right|\to0}\left|\widehat f(n)\right|=0.\]
+\end{proposition}
+\begin{proof}
+	Fix some $\varepsilon>0$ to be sent to $0$ later. We may choose $g\in C_c(\RR/\ZZ)\subseteq L^2(\RR/\ZZ)$ such that $\norm{f-g}_1\le\norm{f-g}_u<\varepsilon$. Now, because $\widehat\cdot$ is linear, we see
+	\[\limsup_{\left|n\right|\to\infty}\left|\widehat f(n)\right|\le\limsup_{\left|n\right|\to\infty}\left|\widehat g(n)\right|+\sup_{n\in\ZZ}\left|\widehat{f-g}(n)\right|.\]
+	Now, the left-hand $\limsup$ is actually $0$ because $\sum_{n\in\ZZ}\left|\widehat g(n)\right|^2$ vanishes. Additionally, the right-hand side is bounded by $\norm{f-g}_{L^1}<\varepsilon$ by \Cref{rem:l1-fourier-coef} (and construction of $g$).
+\end{proof}
+\begin{remark}
+	Even though our Fourier coefficients tend to $0$, this convergence can be made arbitrarily small: for any sequence $\{a_n\}_{n\in\ZZ}$ going to $0$ as $\left|n\right|\to\infty$, one can construct $f\in L^1(\RR/\ZZ)$ such that $\left|\widehat f(n)\right|\ge a_n$ for all $n$.
+\end{remark}
+\begin{proposition} \label{prop:fourier-uniq}
+	Fix $f,g\in L^1(\RR/\ZZ)$. If $\widehat f(n)=\widehat g(n)$ for all $n\in\ZZ$, then $f=g$.
+\end{proposition}
+\begin{proof}
+	By considering the difference $f-g$, we may assume that $g=0$. Define $g_r\coloneqq f*P_r$. A computation with \Cref{thm:tonelli} can show that $\widehat{f*P_r}=\widehat f(n)r^{\left|n\right|}$, basically by interchanging the integral with the infinite sum from $P_r$. Thus, $g_r$ has all of its Fourier coefficients equal to $0$, but now $g_r$ is continuous and hence in $L^2(\RR/\ZZ)$, so our expansion $g_r=\sum_{n\in\ZZ}\widehat{g_r}(n)e_n$ requires $g_r=0$. Because $g_r\to f$ uniformly as $r\to1^-$, this convergence also holds for $\norm\cdot_{L^1}$, so we see that $f=0$ in $L^1(\RR/\ZZ)$ because $g_r=0$ for all $r\in(0,1)$.
+\end{proof}
+We may be interested in classifying sequences which come from $L^1$ functions. Certainly they must converge to $0$ by \Cref{prop:fourier-l1-to-zero}, so a reasonable guess would be $C_0(\NN)$. However, this is not the case.
+\begin{proposition}
+	The map $\widehat\cdot\colon L^1(\RR/\ZZ)\to C_0(\ZZ)$ is not surjective.
+\end{proposition}
+\begin{proof}
+	Note $\widehat\cdot$ is a linear map between these Banach spaces, and it is bounded by \Cref{rem:l1-fourier-coef}, and it is injective by \Cref{prop:fourier-uniq}.
+
+	Suppose for the sake of contradiction that this map is a surjection. This is it is a bijection so \Cref{cor:bounded-linear-bijection} (which followed by the Open mapping theorem) yields that the inverse operator is bounded. Namely, there would be $\varepsilon>0$ such that $\norm{\widehat f}_{C_0(\ZZ)}\ge\varepsilon\norm f_{L^1(\RR/\ZZ)}$ for all $f$.
+
+	Well, we will show that any $\varepsilon>0$ has some $f$ such that
+	\[\norm{\widehat f}_{C_0(\ZZ)}\stackrel?<\varepsilon\norm f_{L^1(\RR/\ZZ)},\]
+	which will complete the proof as discussed in the previous paragraph. As such, we need to start building some functions $f$.
+	
+	Fix a large natural number $N$, and define $f_N(x)\coloneqq e^{2\pi iNx^2}$. On one hand, $\left|f_N\right|$ is constantly one, so $\norm{f_N}_{L^1}=1$. On the other hand, one can compute that there is some $C>0$ (not depending on $N$) such that
+	\[\left|\widehat f_N(n)\right|\le CN^{-1/2},\]
+	so sending $N\to\infty$ forces $\norm{\widehat f_N}_{C_0}<\varepsilon$ for any given $\varepsilon>0$.
+\end{proof}
+\begin{remark}
+	Differentiable functions can be shown to have controlled Fourier coefficients: if $g\colon\RR/\ZZ\to\CC$ is differentiable with $g'\in L^1(\RR/\ZZ)$ (say), then we see
+	\[\int_{\RR/\ZZ}g(x)e^{-2\pi inx}=\frac1{2\pi in}\int_{\RR/\ZZ}g'(x)e^{-2\pi inx}\,dx\]
+	by integrating by parts, so $\widehat g(n)=\frac1{2\pi in}\widehat{g'}(n)$, so control over $\widehat{g'}$ gives control of $\widehat g$.
+\end{remark}
+
+\end{document}
