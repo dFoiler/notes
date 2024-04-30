@@ -15,7 +15,10 @@ Sard's theorem will tell us that most values are regular values. In particular, 
 \begin{example}
 	According to the above definition, any countable subset is a null set, even if we are in $\RR^0$.
 \end{example}
-The point of the $r_i^n$ is that it is the volume of $B(x_i,r_i)$, up to a constant, so we are saying that $A$ can be covered by sets of arbitrarily small measure.
+The point of the $r_i^n$ is that it is the volume of $B(x_i,r_i)$, up to a constant only depending on the dimension, so we are saying that $A$ can be covered by sets of arbitrarily small measure.
+\begin{remark}
+	We can replace the balls in this definition with cubes.
+\end{remark}
 
 Here are some quick checks.
 \begin{lemma} \label{lem:null-set-checks}
@@ -24,7 +27,7 @@ Here are some quick checks.
 		\item If $A\subseteq\RR^n$ is a null set and $B\subseteq A$, then $B$ is a null set.
 		\item If $\{A_j\}_{j\ge1}$ is a countable collection of null sets, then $\bigcup_{i=1}^\infty A_i$ is a null set.
 		\item If $A\subseteq\RR^n$ makes $A\cap\left(\{c\}\times\RR^{n-1}\right)\subseteq\{c\}\times\RR^{n-1}$ into a null set for each $c\in\RR$, then $A$ is a null set.
-		\item If $f\colon U\to\RR$ is a continuous function with $U\subseteq\RR^{n-1}$, then the graph
+		\item If $f\colon U\to\RR$ is a continuous function with $U\subseteq\RR^{n-1}$ measurable, then the graph
 		\[\Gamma(f)\coloneqq\left\{(x,f(x)):x\in U\right\}\]
 		is a null set.
 		\item Every nontrivial affine subspace of $\RR^n$ (not equal to $\RR^n$) is a null set.
@@ -37,32 +40,56 @@ Here are some quick checks.
 \begin{proof}
 	Here we go.
 	\begin{listalph}
-		\item For any $\varepsilon>0$, use the countable list $\{B(x_i,r_i)\}_{i\ge1}$ such that
+		\item For any $\varepsilon>0$, we get a countable list $\{B(x_i,r_i)\}_{i\ge1}$ such that
 		\[A\subseteq\bigcup_{i\ge1}B(x_i,r_i)\qquad\text{and}\qquad\sum_{i=1}^\infty r_i^n<\varepsilon.\]
-		Indeed, the same conclusion will hold for $B\subseteq A$.
+		Thus, we see that $B\subseteq A\subseteq\bigcup_{i\ge1}B(x_I,r_i)$ too, so we are done.
 		\item Fix $\varepsilon>0$. For each $j$, build a countable list $\{B(x_{ij},r_{ij})\}_{i\ge1}$ such that
 		\[A_j\subseteq\bigcup_{i\ge1}B(x_{ij},r_{ij})\qquad\text{and}\qquad\sum_{i=1}^\infty r_{ij}^n<\frac{\varepsilon}{2^j}.\]
-		Then zipper the countable lists together to cover the union, and the total measure is bounded above by $\sum_{j=1}^\infty\varepsilon/2^j=\varepsilon$.
+		Now, set $\mc B\coloneqq\{B(x_{ij},r_{ij})\}_{i,j\ge1}$ to be a countable union of balls, and we see that $\bigcup_{j\ge1}A_j$ is contained in $\bigcup_{j\ge1}\bigcup_{i\ge1}B(x_{ij},r_{ij})$, and
+		\[\sum_{j\ge1}\sum_{i\ge1}r_{ij}^n<\sum_{j\ge1}\frac\varepsilon{2^j}=\varepsilon,\]
+		as required.
 		\item Use Fubini's theorem, integrating over $c\in\RR$. Explicitly, now using some heavier measure theory,
 		\[\mu(A)=\int_{\RR^n}1_A(x)\,dx=\int_\RR\int_{\RR^{n-1}}1_A(c,x)\,dx\,dc=\int_\RR0\,dc=0.\]
-		\item Apply the previous part, slicing by the last coordinate inductively.
+		\item We induct on $n$. If $n=1$, there is nothing to do because $\Gamma(f)$ is a single point. For the induction, we use the previous part: it is enough to check that $\Gamma(f)\cap\left(\{c\}\times\RR^{n-1}\right)\subseteq\{c\}\times\RR^{n-1}$ has measure zero. But this amounts to restricting $f$ to $\{c\}\times\RR^{n-1}$, so this intersection is now the graph of a continuous function in $n-2$ variables whose graph lives in $\RR^{n-1}$. So our dimension is one smaller, so we complete the induction.
 		\item Apply the previous part because an affine subspace is the image of a linear map composed with a translation.
 		\item If $\RR^n\setminus A$ fails to be dense, then there is an open subset in the complement of $\RR^n\setminus A$, so $A$ contains an open ball, so $A$ cannot be a null set.
-		\item The forward direction is immediate by taking subsets. Looping over all $p\in\RR^n$ produces an open cover of $\RR^n$, which can be reduced to a countable cover by a compactness argument of closed balls. Then we see that $A$ is a countable union of null sets and hence a null set.
-		\item For $\varepsilon>0$, cover $A$ with open balls of measure smaller than $\varepsilon$. Passing the open balls through $F$ (with Lipschitz constant $K$) will have image contained in an open ball with $K$ times the radius. So we have bounded the measure of $A$ by $K^n\varepsilon$, up to some constants, which vanishes as $\varepsilon\to0^+$.
+		\item The forward direction is immediate by taking subsets. In the reverse direction, we loop over all $p\in\RR^n$ produces an open $\{U_p\}_{p\in\RR^n}$ cover of $\RR^n$. However, $\RR^n$ is countably compact, so we can refine this to a countable cover $\{U_p\}_{p\in S}$ of $\RR^n$, where $S\subseteq\RR^n$ is some finite subset. Thus, $A$ is the union of the countably many null sets $\{U_p\cap A\}_{p\in S}$, so we are done by a previous part.
+		\item For $\varepsilon>0$, cover $A$ with open balls of measure smaller than $\varepsilon$; by shrinking the balls if necessary, we may assume that $F$ has a smooth extension to the (compact!) closure of each ball. Thus, $F$ becomes Lipschitz on each ball with a Lipschitz constant of (say) $K$,\footnote{For example, one can use some sort of multivariable mean value theorem on passing through a norm.} so passing the open balls through $F$ will have image contained in an open ball with $K$ times the radius. So we have bounded the measure of $A$ by $K^n\varepsilon$, up to some constants, which vanishes as $\varepsilon\to0^+$.
 		\item Use $k$-slice charts to realize $S^k$ locally as a slice chart, which have measure zero. Notably, if $A\subseteq U$ is a null set where $U\subseteq\RR^n$ is open, and $\varphi\colon U\to\widehat U$ is a diffeomorphism to some other $\widehat U\subseteq\RR^n$, then $\varphi(A)$ continues to be a null set by using (g) to allow us to check locally and then note that diffeomorphisms are locally Lipschitz by taking the Lipschitz constant to be the norm of the Jacobian matrix.
 		\qedhere
 	\end{listalph}
 \end{proof}
+% \begin{lemma}
+% 	Fix a $\sigma$-compact subset $A\subseteq\RR^n$. If $A\cap\left(\{c\}\times\RR^{n-1}\right)\subseteq\{c\}\times\RR^{n-1}$ is a null set for each $c\in\RR$, then $A$ is a null set.
+% \end{lemma}
+% \begin{proof}
+% 	This is essentially immediate by Fubini's theorem, but we will provide a proof which avoids discussing measure theory on $\RR^n$.
+
+% 	We begin by reducing to the case where $A$ is compact. Because $A$ is $\sigma$-compact, we write $A=\bigcup_{i\ge1}A_i$, where the $A_\bullet$ are compact. Then \Cref{lem:null-set-checks} tells us that it is enough to check that each $A_i$ is a null set. But then $A_i\cap\left(\{c\}\times\RR^{n-1}\right)\subseteq A\cap\left(\{c\}\times\RR^n\right)$ is a null set for each $c\in\RR$, so we see that $A_i$ is a null set as soon as we can show the result for compact sets.
+
+% 	Thus, we may suppose that $A$ is compact. Projecting down the first coordinate, we must get a bounded subset, so we select real numbers $a<b$ such that $A\subseteq[a,b]\times\RR^{n-1}$; for each $c\in[a,b]$, let $A_c\coloneqq A\cap\left(\{c\}\times\RR^{n-1}\right)$ be the slice.
+
+% 	Now fix some $\varepsilon>0$ to be sent to $0^+$ later.
+% \end{proof}
 And now let's glue.
 \begin{definition}[null set]
 	Let $M$ be a smooth $n$-manifold. Then a subset $A\subseteq M$ is a \textit{null set} if and only if any smooth chart $(U,\varphi)$ of $M$ makes $\varphi(A\cap U)\subseteq\RR^n$ into a null set.
 \end{definition}
 \begin{remark}
-	If $A\subseteq\RR^n$ is a null set, then actually $A$ has measure zero where we view $\RR^n$ as an $n$-manifold. The backward direction is clear because $(\RR^n,{\id_{\RR^n}})$ is a smooth chart; the forward direction follows because having measure zero is a diffeomorphism invariant as argued in (i) of \Cref{lem:null-set-checks}.
+	We remark that one can check that $A$ is a null set on a particular choice of smooth charts: suppose that $\{(U_\alpha,\varphi_\alpha)\}_{\alpha\in\kappa}$ is a collection of smooth charts covering $A$ for which $\varphi_\alpha(A\cap U_\alpha)$ is a null set. Then we must check that $A$ is a null set. Well, pick up any new chart $(U,\varphi)$, and we want to check that $\varphi(U\cap A)$ is a null set. Any open cover of $A$ can be refined with a countable subcover, so we may replace our cover with a countable one $\{(U_i,\varphi_i)\}_{i\ge1}$. Then $\varphi(U\cap A)$ is the countable union of the $\varphi(U\cap U_i\cap A)$s, so it is enough to check that these are null sets. But then
+	\[\varphi(U\cap U_i\cap A)=\left(\varphi\circ\varphi_i^{-1}\right)^{-1}\left(\varphi_i(U\cap U_i\cap A)\right)\]
+	is the image of a null set along a smooth map (of Euclidean spaces), which is a null set by \Cref{lem:null-set-checks}.
 \end{remark}
 \begin{remark}
-	A quick argument shows that (a), (b), (f), (g), (h), and (i).
+	If $A\subseteq\RR^n$ is a null set, then actually $A$ has measure zero where we view $\RR^n$ as an $n$-manifold. The backward direction is clear because $(\RR^n,{\id_{\RR^n}})$ is a smooth chart; the forward direction follows because having measure zero is a diffeomorphism invariant as argued in \Cref{lem:null-set-checks}.
+\end{remark}
+\begin{remark}
+	The image of a null set $A\subseteq M$ along a smooth map $F\colon M\to N$ continues to be a null set. Indeed, for each $p\in M$, choose charts $(U,\varphi)$ of $p$ and $(V,\psi)$ of $F(p)$ so that $F(U)\subseteq V$. Then we want to check that $\psi(F(A)\cap V)$ is a null set, where we know that $\varphi(A\cap U)$ is a null set. Well,
+	\[\psi(F(A)\cap V)=\psi(F(A\cap U))=\left(\psi\circ F\circ\varphi^{-1}\right)(\varphi(A\cap U))\]
+	is the image of a null set along a smooth map (of Euclidean spaces) and hence a null set by \Cref{lem:null-set-checks}.
+\end{remark}
+\begin{remark}
+	We still want to know that any null set $A\subseteq M$ is small. Concretely, we check that $M\setminus A$ is dense in $M$. Well, choose any open subset $U\subseteq M$, and we want to show that $U\setminus A$ has a point. By shrinking $U$ if necessary, we may suppose that $(U,\varphi)$ is a smooth chart, so we are told that $\varphi(U\cap A)$ is a null set of $\varphi(U)\subseteq\RR^n$. Thus, $\varphi(U\setminus A)\subseteq\varphi(U)$ has some point by \Cref{lem:null-set-checks}, so we are done.
 \end{remark}
 
 \subsection{Sard's Theorem}

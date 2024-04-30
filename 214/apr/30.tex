@@ -1,0 +1,103 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we discuss Stokes's theorem. Here are some notes about the final. There will be more information about the final later today; the format will be similar to the midterm, though not as long as two midterms. Stokes's theorem will be used on at least one problem on the final.
+
+\subsection{Integration}
+We begin by discussing integration on $\RR^n$. Given a smooth function $f\colon\RR^n\to\RR$, we would like to integrate $f$ on $\RR^n$ by summing up the value of $f$ on very small boxes. Imagining these small boxes in one coordinate at a time, this amounts to some kind of iterated integration. The direction here should be signed, so we are essentially integrating against the $n$-form $dx_1\land\cdots\land dx_n\in\Omega^n\left(\RR^n\right)$. This definition then generalizes for arbitrary $\omega\in\Omega^n\left(\RR^n\right)$.
+\begin{definition}
+	Fix a compactly supported $n$-form $\omega\in\Omega^n\left(\RR^n\right)$. Because $\Omega^n\left(\RR^n\right)$ is a line bundle with global frame given by $dx_1\land\cdots\land dx_n$, we may write $\omega\coloneqq f\,dx_1\land\cdots\land dx_n$ for some smooth $f\colon\RR^n\to\RR$, and then we define
+	\[\int_{\RR^n}\omega\coloneqq\int_\RR\cdots\int_\RR f\,dx_1\,\cdots\,dx_n.\]
+\end{definition}
+We would like to show that this definition does not depend on our choice of diffeomorphism.
+\begin{proposition}
+	Fix a diffeomorphism $G\colon U\to V$ of connected open subsets of $\RR^n$. Given a compactly supported $n$-form $\omega\in\Omega^n(V)$, we have
+	\[\int_UG^*\omega=\pm\int_V\omega,\]
+	where we take the $+$ sign if $G$ preserves orientation, and we take the $-$ sign if $G$ reverses orientation.
+\end{proposition}
+\begin{proof}
+	This amounts to change of variables for our iterated integrals. Write $\omega=f\,dx_1\land\cdots\land dx_n$. Because pullback commutes with the exterior derivative, we see that
+	\[G^*\omega=(f\circ G)(G^*dx_1)\land\cdots\land(G^*dx_n).\]
+	Now, by a direct expansion of $G$ on coordinates as we did in \Cref{ex:change-coords-n-form}, we see that this is
+	\[G^*\omega=(f\circ G)(\det dG)\,dx_1\land\cdots\land dx_n,\]
+	so
+	\[\int_UG^*\omega=\int_U(f\circ G)(\det dG)\,(dx_1\land\cdots\land dx_n).\]
+	Adjusting our coordinates, we note that our Jacobian is $\left|\det dG\right|$, so we are done upon noting that ``preserving orientation'' just means that $\det dG$ is positive.
+\end{proof}
+We are now ready to integrate on (oriented) manifolds.
+\begin{definition}
+	Fix a smooth manifold $M$, possibly with boundary, and fix a compactly supported $n$-form $\omega\in\Omega^n(M)$. Choose a collection of positively oriented charts $\{(U_i,\varphi_i)\}_{i=1}^N$ covering the support of $\omega$, and let $\{\psi_i\}_{i=1}^N$ be a smooth partition of unity subordinate to $\{U_i\}_{i=1}^N$. Then we define
+	\[\int_M\omega\coloneqq\sum_{i=1}^N\int_{\varphi_i(U_i)}\left(\varphi_i^{-1}\right)^*(\psi_i\omega)\]
+	The point is that $\omega=\sum_{i=1}^N\psi_i\omega$, so we are summing up our integral in the various pieces.
+\end{definition}
+One can check that this does not depend on the choice of charts covering $\op{supp}\omega$; this basically follows straight from the proposition.
+
+\subsection{Stokes's Theorem}
+We are now ready to state Stokes's theorem.
+\begin{theorem}[Stokes] \label{thm:stokes}
+	Fix some compactly supported $(n-1)$-form $\omega$ on a smooth $n$-manifold $M$ with boundary $\del M$. Then
+	\[\int_Md\omega=\int_{\del M}\omega.\]
+\end{theorem}
+For this to make sense, we need to orient $\del M$, presumably in a way that agrees with the orientation on $M$. Essentially, an orientation can be thought of as a non-vanishing choice of $n$-form $\omega\in\Omega^n(M)$. Then we take an outward-pointing tangent vector $v$ on $M$ at any boundary point, and we define our orientation as $v\lrcorner\omega$. Anyway, here are some applications.
+\begin{example}
+	Take $M=[a,b]$ and $\omega=f(x)$ for some smooth $f$. Then \Cref{thm:stokes} tells us
+	\[\int_{[a,b]}f'(x)\,dx=f(b)-f(a),\]
+	where we get the right-hand side by keeping track of the orientation on $\del M=\{a,b\}$.
+\end{example}
+\begin{example}
+	Choose some compact oriented domain $M\subseteq\RR^3$. Given a vector field $X=X_1\frac\del{\del x_1}+X_2\frac{\del}{\del x_2}+X_3\frac\del{\del x_3}$ on $\RR^3$, we may want to compute the flux through $M$. Then we define
+	\[\omega\coloneqq X_1\,dx_2\land dx_3-X_2\,dx_1\land dx_3+X_3\,dx_1\land dx_2.\]
+	(This is simply $X\lrcorner(dx_1\land dx_2\land dx_3)$.) One can compute that $d\omega=\left(\frac{\del X_1}{\del x_1}+\frac{\del X_2}{\del x_2}+\frac{\del X_3}{\del x_3}\right)\,dx_1\land dx_2\land dx_3$, which is precisely $\op{div}X$. Now, \Cref{thm:stokes} tells us
+	\[\int_M(\op{div}X)=\int_Md\omega=\int_{\del M}\omega=\int_{\del M}(X\lrcorner (dx_1\land dx_2\land dx_3)).\]
+	Now, we decompose $X$ into $X_\parallel+X_\perp$, where $X_\parallel$ is tangent to the boundary, and $X_\perp$ is perpendicular to the boundary. The tangent part vanishes in the interior product because we will get linearly dependent differential forms in our exterior product, so we are allowed to replace $X$ with $X_\perp$. But now $X_\perp$ has length $X\cdot v$ where $v$ is some unit normal vector, so we get to
+	\[\int_M(\op{div}X)=\int_{\del M}(X\cdot v)\,dA,\]
+	where $dA$ is the surface area measure.
+\end{example}
+\begin{example}
+	If $M$ has no boundary, then we are just saying that $\int_Md\omega=0$.
+\end{example}
+\begin{example}
+	If $\omega$ is a closed form, then $d\omega$ vanishes, so we are just saying that $\int_{\del M}\omega=0$.
+\end{example}
+\begin{example}
+	Given an oriented Riemannian manifold $(M,g)$, we can define the Laplacian as $\Delta f\coloneqq\op{div}\op{grad}f$. Then \Cref{thm:stokes} grants $\int_M\Delta f=0$ of $M$ is a smooth manifold without boundary because the divergence can be realized as an exterior derivative.
+\end{example}
+Let's see another application.
+\begin{theorem}[Green]
+	Fix a compact domain $D\subseteq\RR^2$, and let $P,Q\in C^\infty(D)$ be smooth functions. Then
+	\[\int_D\left(\frac{\del Q}{\del x}-\frac{\del P}{\del y}\right)\,dx\,dy=\int_{\del D}P\,dx+Q\,dy.\]
+\end{theorem}
+\begin{proof}
+	Apply \Cref{thm:stokes} to $\omega\coloneqq P\,dx+Q\,dy$ as a smooth $1$-form on $\del D$, and we can compute that $d\omega$ is as required.
+\end{proof}
+Anyway, let's go ahead and prove \Cref{thm:stokes}.
+\begin{proof}[Proof of \Cref{thm:stokes}]
+	We only know how to integrate via partition of unity, so we have to fix some partition of unity. Choose positively oriented charts $\{(U_i,\varphi_i)\}_{i=1}^N$ covering $\op{supp}\omega$, and choose a smooth partition of unity $\{\psi_i\}_{i=1}^N$ subordinate to $\{U_i\}_{i=1}^N$ so that
+	\[\omega=\sum_{i=1}^N\psi_i\omega.\]
+	Now, by linearity of the conclusion \Cref{thm:stokes}, it suffices to show the statement for $\psi_i\omega$ for each $i$.
+
+	By possibly shrinking the $U_\bullet$s, we may assume that $\varphi_i$ sends each $U_i$ to either $\RR^n$ or $\HH^n$. Thus, it suffices to prove \Cref{thm:stokes} in the two cases $M=\RR^n$ and $M=\HH^n$.
+	\begin{itemize}
+		\item Take $M=\HH^n$. This will basically be a direct computation. We write
+		\[\omega=\sum_{i=1}^n\omega_i\,dx_1\land\cdots\land\widehat{dx_i}\land\cdots\land dx_n\]
+		for smooth functions $\omega_1,\ldots,\omega_n\colon\HH^n\to\RR$. In this case, we find that
+		\[d\omega=\Bigg(\sum_{i=1}^n(-1)^{i-1}\frac{\del\omega_i}{\del x_i}\Bigg)dx_1\land\cdots\land dx_n,\]
+		so
+		\[\int_{\HH^n}d\omega=\sum_{i=1}^{n-1}\int_0^R\int_{-R}^R\cdots\int_{-R}^R\frac{\del\omega_i}{\del x_i}\,dx_1\,\cdots\,dx_{n-1}\,dx_n,\]
+		where we take $R$ large enough so that $\op{supp}\omega$ is contained in $(-R,R)^n\times[0,R)$. Now, for each $i\ne n$, we note that the corresponding integral contains the integral
+		\[\int_{-R}^R\frac{\del\omega_i}{\del x_i}\,dx_i=\omega_i\bigg|_{-R}^R=0,\]
+		which vanishes by considerations of $\op{supp}\omega$. So we only have to care about the $i=n$ term, leaving us with
+		\[\int_{\HH^n}d\omega=(-1)^n\int_{-R}^R\cdots\int_{-R}^R\omega_n(x_1,\ldots,x_{n-1},0)\,dx_1\,\cdots\,dx_{n-1}.\]
+		It remains to compute $\int_{\del\HH^n}\omega$. Well, $\HH^n$ has an outward pointing tangent vector given by $-e_n$ uniformly, so the coordinates $(x_1,\ldots,x_{n-1})$ will be positively oriented for $n$ even and negatively oriented for $n$ odd, so a computation shows
+		\[\int_{\del\HH^n}\omega=\int_{-R}^R\cdots\int_{-R}^R\omega_n(x_1,\ldots,x_{n-1},0)\,dx_1\,\ldots\,dx_{n-1}\]
+		to be equal to the above integral by a consideration of the orientation.
+
+		\item In the case where $M=\RR^n$, the same computation for $\int_{\RR^n}d\omega$ shows that it vanishes because this time even the $i=n$ term will vanish. And of course $\del M$ is empty, so $\int_{\del M}\omega=0$ as well.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
