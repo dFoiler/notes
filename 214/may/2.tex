@@ -1,0 +1,139 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+Today we talk a little about de Rham cohomology.
+
+\subsection{De Rham Cohomology}
+We begin by setting some notation. Let $M$ be a smooth manifold with boundary. Then we recall that we have built a chain
+\[0\to\Omega^0(M)\stackrel d\to\Omega^1(M)\stackrel d\to\Omega^2(M)\stackrel d\to\cdots,\]
+where $d$ denotes the exterior derivative. Notably, $d^2=0$, so we have a cochain complex $(\Omega^\bullet(M),d)$.
+\begin{definition}[de Rham cohomology]
+	Fix a smooth manifold $M$. Then we define the \textit{de Rham cohomology} of $M$ as the cohomology of the cochain complex $(\Omega^\bullet(M),d)$. More explicitly, we define the \textit{closed $p$-forms} as
+	\[Z^p(M)\coloneqq\ker\left(d\colon\Omega^p(M)\to\Omega^{p+1}(M)\right),\]
+	and
+	\[B^p(M)\coloneqq\im\left(d\colon\Omega^{p-1}(M)\to\Omega^p(M)\right),\]
+	so our de Rham cohomology is $H^\bullet_{\mathrm{dR}}(M)\coloneqq Z^p(M)/B^p(M)$. We will suppress the $\mathrm{dR}$ from our notation as much as possible.
+\end{definition}
+\begin{example}
+	We have that $H^0(M)$ consists of functions $f\in\Omega^0(M)=C^\infty(M)$ that vanish under the derivative. Thus, $H^0(M)$ consists of the locally constant functions on $M$, which we see is $\RR^{\pi_0(M)}$.
+\end{example}
+\begin{remark}
+	Directly from the definitions, we see that our cohomology are $\RR$-vector spaces.
+\end{remark}
+Because our cochain complex has some notion of functoriality, our cohomology does as well. More precisely, let $F\colon M\to N$ be a smooth map. Then pullback makes the diagram
+% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIlxcT21lZ2FeMChOKSJdLFsyLDAsIlxcT21lZ2FeMShOKSJdLFszLDAsIlxcT21lZ2FeMihOKSJdLFs0LDAsIlxcY2RvdHMiXSxbMCwxLCIwIl0sWzEsMSwiXFxPbWVnYV4wKE0pIl0sWzIsMSwiXFxPbWVnYV4xKE0pIl0sWzMsMSwiXFxPbWVnYV4yKE0pIl0sWzQsMSwiXFxjZG90cyJdLFswLDFdLFsxLDIsImRfTiJdLFsyLDMsImRfTiJdLFszLDQsImRfTiJdLFs1LDZdLFs2LDcsImRfTSJdLFs3LDgsImRfTSJdLFs4LDksImRfTSJdLFsxLDYsIkZfKiIsMl0sWzIsNywiRl8qIiwyXSxbMyw4LCJGXyoiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	0 & {\Omega^0(N)} & {\Omega^1(N)} & {\Omega^2(N)} & \cdots \\
+	0 & {\Omega^0(M)} & {\Omega^1(M)} & {\Omega^2(M)} & \cdots
+	\arrow[from=1-1, to=1-2]
+	\arrow["{d_N}", from=1-2, to=1-3]
+	\arrow["{F^*}"', from=1-2, to=2-2]
+	\arrow["{d_N}", from=1-3, to=1-4]
+	\arrow["{F^*}"', from=1-3, to=2-3]
+	\arrow["{d_N}", from=1-4, to=1-5]
+	\arrow["{F^*}"', from=1-4, to=2-4]
+	\arrow[from=2-1, to=2-2]
+	\arrow["{d_M}", from=2-2, to=2-3]
+	\arrow["{d_M}", from=2-3, to=2-4]
+	\arrow["{d_M}", from=2-4, to=2-5]
+\end{tikzcd}\]
+commute, which one can check (via some diagram-chasing) then produces a map $H^\bullet_{\mathrm{dR}}(F)\colon H^\bullet_{\mathrm{dR}}(N)\to H^\bullet_{\mathrm{dR}}(M)$. Explicitly, we take a class $[\omega]\in H^p(N)$ represented by $\omega\in Z^p(N)$ to the class $[F^*\omega]\in H^p(M)$. Let's go ahead and check that this is well-defined. To begin, we note that $\omega$ being closed implies $d\omega=0$, so $F^*(d\omega)=d(F^*\omega)=0$, so $F^*\omega\in Z^p(M)$. Then we want to check that $[\omega]=[\omega']$ implies $[F^*\omega]=[F^*\omega']$. Well, write $\omega=\omega'+d\eta$ where $\eta\in\Omega^{p-1}(N)$; then
+\[F^*\omega=F^*\omega'+F^*d\eta=F^*\omega+dF^*\eta,\]
+so $[F^*\omega]=[F^*\omega']$ follows.
+\begin{remark}
+	Functoriality of the pullback assures us that $H^\bullet_{\mathrm{dR}}$ is a functor. For example, one sees $H^\bullet({\id_M})=\id_{H^\bullet(M)}$.
+\end{remark}
+
+\subsection{Topology of Manifolds}
+We expect de Rham cohomology to produce a reasonable cohomology theory, so it should be topological in nature. Let's see some of this topological invariance.
+\begin{proposition}
+	Suppose $F,G\colon M\to N$ are smooth maps of smooth manifolds which are homotopic. Then $H^\bullet_{\mathrm{dR}}(F)=H^\bullet_{\mathrm{dR}}(G)$.
+\end{proposition}
+\begin{proof}
+	Let $H_\bullet\colon F\simeq G$ witness the homotopy with $H_0=F$ and $H_1=G$, which we may assume is smooth by an argument with Whitney approximation. To see this homotopy, define $i_t\colon M\to M\times[0,1]$ by $i_t(p)\coloneqq(p,t)$; in particular, $H\circ i_0=F$ and $H\circ i_1=G$.
+
+	Now, given $\omega\in\Omega^p(N)$, we would like to show that $[F_*\omega]=[G_*\omega]$ when $\omega\in Z^p(N)$. In other words, we want to show that
+	\[G_*\omega-F_*\omega=i_1^*H^*\omega-i_0^*H^*\omega\]
+	is in the image of $d\colon\Omega^{p-1}(M)\to\Omega^p(M)$. Set $\eta\coloneqq H^*\omega$ to be an element of $\Omega^p(M\times[0,1])$. Thus, we want to compute
+	\[i_1^*\eta-i_2^*\eta=\int_0^1\left(\frac d{dt}i_t^*\omega\right)\,dt,\]
+	where the derivative and integration is happening on the level of coordinates. (Namely, we should note that everything can be computed locally and glued together later, so fix some $p\in M$, place it in a chart, and expand everything out on coordinates.) We now use Cartan's magic formula to compute
+	\[\frac d{dt}i_t^*\eta=i_t^*\left(\mc L_{\del/\del t}\eta\right)=i_t^*\left(\frac{\del}{\del t}\lrcorner d\eta+d\left(\frac\del{\del t}\lrcorner\eta\right)\right)=i_t^*\left(\frac\del{\del s}\lrcorner d\eta\right)+di_t^*\left(\frac\del{\del s}\lrcorner\eta\right).\]
+	We are now ready to define our chain homotopy $h\colon\Omega^p(N)\to\Omega^{p-1}(M)$ as
+	\[h(\omega)\coloneqq\int_0^1i_t^*\left(\frac{\del}{\del s}\lrcorner H^*\omega\right)\,dt.\]
+	Thus, we see that $G^*\omega-F^*\omega=h(d\omega)+dh(\omega)$ for any $\omega$. Having a chain homotopy means that $H^\bullet(F)=H^\bullet(G)$. Let's see this more explicitly: given $[\omega]\in H^p(N)$ where $\omega\in Z^p(N)$, we see that
+	\[G^*\omega-F^*\omega=h(\underbrace{d\omega}_0)+dh(\omega)\in B^p(M),\]
+	as required.
+\end{proof}
+\begin{example}
+	If two smooth manifolds are homotopy equivalent (for example, if they are homeomorphic), then they have isomorphic cohomology groups. Namely, let $F\colon M\to N$ and $G\colon N\to M$ witness the homotopy equivalence, and then the above proposition implies that $H^\bullet_{\mathrm{dR}}(F)$ and $H^\bullet_{\mathrm{dR}}(G)$ are inverse maps on our cohomology.
+\end{example}
+\begin{example}
+	If $M$ is a contractible manifold, then it is homotopic to a point, so $H^\bullet(M)=H^\bullet(\{*\})$ which vanishes in positive degree. For example, if $U\subseteq\RR^n$ is star-shaped, then
+	\[H^p(U)=\begin{cases}
+		\RR & \text{if }p=0, \\
+		0 & \text{if }p>0.
+	\end{cases}\]
+\end{example}
+Here is another application.
+\begin{proposition} \label{prop:pi1-and-h1}
+	Fix a smooth connected manifold $M$, and fix a basepoint $q\in M$. Then the map $\Phi\colon H^1(M)\to\op{Hom}(\pi_1(M,q),\RR)$ defined by
+	\[\Phi([\omega])([\gamma])\coloneqq\int_\gamma\omega.\]
+\end{proposition}
+\begin{proof}
+	To begin, we check that the map is well-defined.
+	\begin{itemize}
+		\item We note that any $[\gamma]\in\pi_1(M,q)$ is homotopic to a piecewise smooth map with the same basepoint, so we can find a piecewise smooth representative to integrate over, so the integral at least makes sense.
+		\item If $[\omega]=[\omega']$, then write $\omega-\omega'=df$ for some $f\in C^\infty(M)$, and then we see that
+		\[\int_\gamma\omega-\int_\gamma\omega'=\int_\gamma(\omega-\omega')=\int_\gamma df=f(q)-f(q)=0\]
+		by \Cref{thm:line-integral}. 
+		\item If $[\gamma]=[\gamma']$, then let $H_\bullet\colon\gamma\simeq\gamma'$ witness the homotopy, where $H_0=\gamma$ and $H_1=\gamma'$. We may assume that everything in sight is smooth by the usual Whitney approximation arguments, so we may integrate
+		\[\int_{I\times I}d(H^*\omega)=\int_{I\times I}H^*d\omega=0\]
+		because $d\omega=0$. On the other hand, \Cref{thm:stokes} tells us that this integral is $\int_{\gamma}\omega-\int_{\gamma'}\omega$, so we finish.
+		\item The map $[\gamma]\mapsto\int_\gamma\omega$ is a homomorphism because concatenating paths will add the integrals together, by the definition of our integral.
+		\item The map $\Phi$ itself is $\RR$-linear because integration is $\RR$-linear on the differential form.
+	\end{itemize}
+	Lastly, we should check that $\Phi$ is injective. Well, if $\int_\gamma\omega=0$ for all $\gamma$ based at $q$, then we know $\omega$ is conservative (we can get rid of the basepoint by just drawing some smooth map connecting $p$ to $q$), so $\omega$ is exact by \Cref{prop:conservative-is-exact}, so $[\omega]=0$.
+\end{proof}
+\begin{example}
+	Fix a smooth connected manifold $M$. If $\pi_1(M)$ is torsion, then we see that $H^1(M)=0$.
+\end{example}
+\begin{remark}
+	It turns out that this map is an isomorphism, but it requires some more work to see.
+\end{remark}
+No discussion relating de Rham cohomology to topology would be complete without at least stating the de Rham theorem.
+\begin{theorem}[de Rham]
+	Fix a smooth manifold $M$. There is a natural isomorphism $\theta\colon H^p_{\mathrm{dR}}(M)\to H^p_{\mathrm{sing}}(M;\RR)$ given by
+	\[\theta_{[\omega]}(\sigma)\coloneqq\int_{\Delta^p}\sigma^*\omega,\]
+	where $\omega\colon\Delta^p\to M$ is a smooth embedding from the $p$-simplex to $M$.
+\end{theorem}
+Here, $H^\bullet_{\mathrm{sing}}$ refers to singular cohomology, which we will not define. As such, we will of course not attempt a proof.
+
+\subsection{The Mayer--Vietoris Sequence}
+We would like to compute cohomology in some cases, but so far we only know how to compute cohomology of small neighborhoods. Fitting everything we've done so far in this course, one way to imagine doing this is to break up a manifold into charts and then attempt to glue them back together. This will be attempted inductively, so we will work with covers of just two open subsets.
+\begin{theorem}[Mayer--Vietoris]
+	Fix open subsets $U,V\subseteq M$ which cover a smooth manifold $M$. Then there is a long exact sequence as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCIwIl0sWzEsMCwiSF4wKE0pIl0sWzIsMCwiSF4wKFUpXFxvcGx1cyBIXjAoVikiXSxbMywwLCJIXjAoVVxcY2FwIFYpIl0sWzEsMSwiSF4xKE0pIl0sWzQsMSwiXFxjZG90cyJdLFsyLDEsIkheMShVKVxcb3BsdXMgSF4xKFYpIl0sWzMsMSwiSF4xKFVcXGNhcCBWKSJdLFszLDQsIlxcZGVsdGFeMCIsMV0sWzAsMV0sWzEsMl0sWzIsM10sWzQsNl0sWzYsN10sWzcsNV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		0 & {H^0(M)} & {H^0(U)\oplus H^0(V)} & {H^0(U\cap V)} \\
+		& {H^1(M)} & {H^1(U)\oplus H^1(V)} & {H^1(U\cap V)} & \cdots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["{\delta^0}"{description}, from=1-4, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	Here, the horizontal maps are induced by the inclusions $U\cap V\subseteq U,V\subseteq M$, and the diagonal map is the boundary map, and it is harder to define.
+\end{theorem}
+Let's see an example computation.
+\begin{example}
+	We claim $H^p(S^n)=\RR^{1_{p\in\{0,n\}}}$ for $n\ge0$. We proceed by induction. For $n=0$, there is nothing is to do. For $n>0$, we begin by noting that $H^0(S^n)=\RR$ because there is still only one component. For $p=1$, we use \Cref{prop:pi1-and-h1}: if $n\ge2$, then we trivialize immediately, and if $n=1$, then our dimension becomes bounded below by $1$, and being oriented shows that the group is nontrivial. So we may focus on $p\ge2$. Now, let $U$ be an open collar neighborhood of the top hemisphere, and let $V$ be an open collar neighborhood of the bottom hemisphere. Then $U$ and $V$ are each contractible, so they have vanishing cohomology in higher degrees. We now note that any $p\ge2$ has the exact sequence
+	\[H^p(U)\oplus H^p(V)\to H^p(U\cap V)\to H^{p+1}(S^n)\to H^{p+1}(U)\oplus H^{p+1}(V).\]
+	The two ends trivialize, and $U\cap V$ is homotopic to $S^{n-1}$, so we finish by induction.
+\end{example}
+
+\end{document}
