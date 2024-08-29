@@ -1,0 +1,183 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{August 28}
+
+Today we review differential topology. Here are some logistical notes.
+\begin{itemize}
+	\item There will be weekly homeworks, of about 5 problems.
+	\item There will be a final take-home exam.
+	\item This course has a \href{https://bcourses.berkeley.edu/courses/1537579}{bCourses} page.
+	\item We will mostly follow Kirillov's book \cite{kirillov-lie-algebra}.
+\end{itemize}
+
+\subsection{Group Objects}
+The goal of this class is to study symmetries of geometric objects. As such, we are interested in studying (infinite) groups with some extra geometric structure, such as a real manifold or a complex manifold or a scheme structure. Speaking generally, we will have some category $\mc C$ of geometric objects, equipped with finite products (such as a final object), which allows us to have group objects in $\mc C$.
+\begin{definition}[group object]
+	Fix a category $\mc C$ with finite products, such as a final object $*$. A \textit{group object} is the data $(G,m,e,i)$ where $G\in\mc C$ is an object and $m\colon G\times G\to G$ and $e\colon *\to G$ and $i\colon G\to G$ are morphisms. We require this data to satisfy some associativity, identity, and inverse coherence laws.
+\end{definition}
+For concreteness, we go ahead and write out the coherence diagrams, but they are not so interesting.
+\begin{itemize}
+	\item Associative: the following diagram commutes.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJHXFx0aW1lcyBHXFx0aW1lcyBHIl0sWzEsMCwiR1xcdGltZXMgRyJdLFswLDEsIkdcXHRpbWVzIEciXSxbMSwxLCJHIl0sWzIsMywibSJdLFsxLDMsIm0iXSxbMCwxLCJ7XFxpZF9HfVxcdGltZXMgbSJdLFswLDIsIm1cXHRpbWVze1xcaWRfR30iLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{G\times G\times G} & {G\times G} \\
+		{G\times G} & G
+		\arrow["{{\id_G}\times m}", from=1-1, to=1-2]
+		\arrow["{m\times{\id_G}}"', from=1-1, to=2-1]
+		\arrow["m", from=1-2, to=2-2]
+		\arrow["m", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	\item Identity: the following diagram commutes.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJHIl0sWzEsMCwiR1xcdGltZXMgRyJdLFsyLDAsIkciXSxbMSwxLCJHIl0sWzAsMSwie1xcaWRfR31cXHRpbWVzIGUiXSxbMiwxLCJlXFx0aW1lc1xcaWRfRyIsMl0sWzEsMywibSIsMV0sWzIsMywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwzLCIiLDEseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		G & {G\times G} & G \\
+		& G
+		\arrow["{{\id_G}\times e}", from=1-1, to=1-2]
+		\arrow[Rightarrow, no head, from=1-1, to=2-2]
+		\arrow["m"{description}, from=1-2, to=2-2]
+		\arrow["{e\times\id_G}"', from=1-3, to=1-2]
+		\arrow[Rightarrow, no head, from=1-3, to=2-2]
+	\end{tikzcd}\]
+	\item Inverses: the following diagram commutes.
+	% https://q.uiver.app/#q=WzAsNSxbMCwxLCJHIl0sWzEsMCwiR1xcdGltZXMgRyJdLFsxLDEsIioiXSxbMiwxLCJHIl0sWzEsMiwiR1xcdGltZXMgRyJdLFswLDEsImlcXHRpbWVzXFxpZF9HIl0sWzAsNCwie1xcaWRfR31cXHRpbWVzIGkiLDJdLFs0LDMsIm0iLDJdLFsxLDMsIm0iXSxbMCwyXSxbMiwzLCJlIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		& {G\times G} \\
+		G & {*} & G \\
+		& {G\times G}
+		\arrow["m", from=1-2, to=2-3]
+		\arrow["{i\times\id_G}", from=2-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{{\id_G}\times i}"', from=2-1, to=3-2]
+		\arrow["e", from=2-2, to=2-3]
+		\arrow["m"', from=3-2, to=2-3]
+	\end{tikzcd}\]
+\end{itemize}
+\begin{example}
+	In the case where $\mc C=\mathrm{Set}$, we recover the notion of a group, where $G$ is the set, $m$ is the multiplication law, $e$ is the identity, and $i$ is the inverse.
+\end{example}
+\begin{example}
+	Group objects in the category of manifolds will be Lie groups.
+\end{example}
+
+\subsection{Review of Topology}
+This course requires some topology as a prerequisite, but let's review these notions for concreteness. We refer to \cite{elber-top} for most of these notions.
+\begin{definition}[topological space]
+	A \textit{topological space} is a pair $(X,\mc T)$ of a set $X$ and collection $\mc T\subseteq\mc P(X)$ of open subsets of $X$, which we require to satisfy the following axioms.
+	\begin{itemize}
+		\item $\emp,X\in\mc T$.
+		\item Finite intersection: for $U,V\in\mc T$, we have $U\cap V\in\mc T$.
+		\item Arbitrary unions: for a subcollection $\mc U\subseteq\mc T$, we have $\bigcup_{U\in\mc U}U\in\mc T$.
+	\end{itemize}
+	We will suppress the notation $\mc T$ from our topological space as much as possible.
+\end{definition}
+\begin{example}
+	The set $\RR$ equipped with its usual (metric) topology is a topological space.
+\end{example}
+\begin{example}
+	Given a topological space $X$ and a subset $Z\subseteq X$, we can make $Z$ into a topological space with open subsets given by $U\cap Z$ whenever $U\subseteq Z$ is open.
+\end{example}
+\begin{definition}[closed]
+	A subset $Z$ of a topological space $X$ is \textit{closed} if and only if $X\setminus Z$ is open.
+\end{definition}
+One way to describe topologies is via a base.
+\begin{definition}[base]
+	Given a topological space $X$, a \textit{base} $\mc B\subseteq\mc P(X)$ for the topology such that any open subset $U\subseteq X$ is the union of a subcollection of $\mc B$. Equivalently, for any open subset $U\subseteq X$ and $x\in U$, there is $B\in\mc B$ such that $x\in B\subseteq U$.
+\end{definition}
+\begin{example}
+	The collection of open intervals $(a,b)\subseteq\RR$ generates the usual topology. In fact, one can even restrict ourselves to open intervals $(a,b)$ where $a,b\in\QQ$, so $\RR$ has a countable base.
+\end{example}
+Our morphisms are continuous maps.
+\begin{definition}[continuous]
+	A function $f\colon X\to Y$ between topological spaces is \textit{continuous} if and only if $f^{-1}(V)\subseteq X$ is open for each open subset $V\subseteq Y$.
+\end{definition}
+Thus, we can define $\mathrm{Top}$ as the category of topological spaces equipped with continuous maps as its morphisms. Thinking categorically allows us to make the following definition.
+\begin{definition}[homeomorphism]
+	A \textit{homeomorphism} is an isomorphism in $\mathrm{Top}$. Namely, a function $f\colon X\to Y$ between topological spaces which is continuous and has a continuous inverse.
+\end{definition}
+\begin{remark}
+	There are continuous bijections which are not homeomorphisms! For example, one can map $[0,2\pi)\to S^1$ by sending $x\mapsto e^{ix}$, which is a continuous bijection, but the inverse is discontinuous at $1\in S^1$.
+\end{remark}
+
+Earlier, we wanted to have finite products in our category. Here is how we take products of pairs.
+\begin{definition}[product topology]
+	Given topological spaces $X$ and $Y$, we define the topological space $X\times Y$ as having $X\times Y$ as its set and open subsets given by arbitrary unions of sets of the form $U\times V$ where $U\subseteq X$ and $V\subseteq Y$ are open.
+\end{definition}
+\begin{remark}
+	Alternatively, we can say that the topology $X\times Y$ has a base given by the ``rectangles'' $U\times V$ where $U\subseteq X$ and $V\subseteq Y$ are open. In fact, if $\mc B_X$ and $\mc B_Y$ are bases for $X$ and $Y$, respectively, then we can check that the open subsets
+	\[\{U\times V:U\in\mc B_X,V\in\mc B_Y\}\]
+	is a base for $X\times Y$.
+\end{remark}
+\begin{remark}
+	The final object in $\mathrm{Top}$ is the singleton space.
+\end{remark}
+Now, group objects in $\mathrm{Top}$ are called topological groups, which are interesting in their own right. For example, locally compact topological groups have a good Fourier analysis theory.
+\begin{example}
+	The group $\RR$ under addition is a topological group. In fact, $\QQ$ under addition is also a topological group, though admittedly a more unpleasant one.
+\end{example}
+\begin{example}
+	The group $S^1\coloneqq\{z\in\CC:\left|z\right|=1\}$ is a topological group.
+\end{example}
+
+\subsection{Review of Differential Topology}
+However, in this course, we will be more interested in manifolds, so let's define these notions. We refer to \cite{elber-diff-top} for (a little) more detail, and we refer to \cite{lee-manifolds} for (much) more detail. To begin, we note arbitrary topological spaces are pretty rough to handle; here are some niceness requirements. The following is a smallness assumption.
+\begin{definition}[separable]
+	A topological space $X$ is \textit{separable} if and only if it has a countable base.
+\end{definition}
+The following says that points can be separated.
+\begin{definition}[Hausdorff]
+	A topological space $X$ is \textit{Hausdorff} if and only if any pair of distinct points $p,q\in X$ have disjoint open neighborhoods.
+\end{definition}
+The following is another smallness assumption, which we will use frequently but not always.
+\begin{definition}[compact]
+	A topological space $X$ is \textit{compact} if and only if any open cover $\mc U$ (i.e., each $U\in\mc U$ is open, and $X=\bigcup_{U\in\mc U}U$) has a finite subcollection which is still an open cover.
+\end{definition}
+We are now ready for our definition.
+\begin{definition}[topological manifold]
+	A \textit{topological manifold of dimension $n$} is a topological space $X$ satisfying the following.
+	\begin{itemize}
+		\item $X$ is Hausdorff.
+		\item $X$ is separable.
+		\item Locally Euclidean: $X$ has an open cover $\{U_\alpha\}_{\alpha\in\kappa}$ such that there are open subsets $V_\alpha\subseteq\RR^n$ and homeomorphisms $\varphi_\alpha\colon U_\alpha\to V_\alpha$.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	By passing to open balls, one can require that all the $V_\alpha$ are open balls. By doing a little more yoga with such open balls (noting $B(0,1)\cong\RR^n$), one can require that $V_\alpha=\RR^n$ always.
+\end{remark}
+\begin{remark}
+	It turns out that open subsets $U\subseteq\RR^n$ and $V\subseteq\RR^m$ can only be homeomorphic if and only if $n=m$. This implies that the dimension of a connected component of $X$ is well-defined without saying what $n$ is in advance. However, we should say what $n$ is in advance in order to get rid of pathologies like $\RR\sqcup\RR^2$.
+\end{remark}
+To continue, we must be careful about our choice of $U_\alpha$s and $\varphi_\alpha$s.
+\begin{defihelper}[chart, atlas, transition function] \nirindex{chart} \nirindex{atlas} \nirindex{transition function}
+	Fix a topological manifold $X$ of dimension $n$.
+	\begin{itemize}
+		\item A \textit{chart} is a pair $(U,\varphi)$ of an open subset $U\subseteq X$ and homeomorphism $\varphi$ of $U$ onto an open subset of $\RR^n$.
+		\item An \textit{atlas} is a collection of charts $\{(U_\alpha,\varphi_\alpha)\}_{\alpha\in\kappa}$ such that $\{U_\alpha\}_{\alpha\in\kappa}$ is an open cover of $X$.
+		\item The \textit{transition function} between two charts $(U,\varphi)$ and $(V,\psi)$ is the composite homeomorphism
+		\[\varphi(U\cap V)\stackrel\varphi\from (U\cap V)\stackrel\psi\to\psi(U\cap V).\]
+		Note that there is also an inverse transition map going in the opposite direction.
+	\end{itemize}
+\end{defihelper}
+Let's see some examples.
+\begin{example}
+	The space $\RR^n$ is a topological manifold of dimension $n$. It has an atlas with the single chart $\id\colon\RR^n\to\RR^n$.
+\end{example}
+\begin{example}
+	The singleton $\{*\}$ is a topological manifold of dimension $0$. In fact, $\{*\}=\RR^0$.
+\end{example}
+\begin{example}
+	The hypersurface $S^n\subseteq\RR^{n+1}$ cut out by the equation
+	\[x_0^2+\cdots+x_n^2=1\]
+	is a topological manifold of dimension $n$. It has charts given by stereographic projection out of some choice of north and south poles. Alternatively, it has charts given by the projection maps $\op{pr}_i\colon S^n\to\RR^n$ given by deleting the $i$th coordinate, defined on the open subsets
+	\[U_i^\pm\coloneqq\left\{(x_0,\ldots,x_n)\in\RR^n:\pm x_i>0\right\}\]
+	for choice of index $i$ and sign in $\{\pm\}$.
+\end{example}
+Calculus on our manifolds will come from our transition maps.
+\begin{definition}
+	An atlas $\mc A$ on a topological manifold $X$ is $C^k$, real analytic, or complex analytic (if $\dim X$ is even) if and only if the transition maps have the corresponding condition.
+\end{definition}
+
+\end{document}
