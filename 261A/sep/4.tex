@@ -1,0 +1,111 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 4}
+
+Today we hope to finish our review of differential topology.
+\begin{conv}
+	For the remainder of class, our manifolds will be smooth, real analytic, or complex analytic.
+\end{conv}
+
+\subsection{Tangent Spaces}
+Now that we are thinking locally about our functions via germs, we can think locally about our tangent spaces.
+\begin{definition}[derivation]
+	Fix a point $p$ on a regular manifold $X$. A \textit{derivation} at $p$ is an $\mathbb F$-linear map $D\colon\OO_{X,p}\to\FF$ satisfying the Leibniz rule
+	\[D(fg)=g(p)D(f)+f(p)D(g).\]
+\end{definition}
+\begin{definition}[tangent space]
+	Fix a point $p$ on a regular manifold $X$. Then the \textit{tangent space} $T_pX$ is the $\FF$-vector space of all derivations on $\OO_{X,p}$.
+\end{definition}
+As with everything in this subject, one desires a local description of the tangent space.
+\begin{lemma}
+	Fix an $n$-dimensional regular manifold $X$ and a point $p\in X$. Equip $p$ with a chart $(U,\varphi)$ giving local coordinates $(x_1,\ldots,x_n)$. Then the maps $D_i\colon\OO_{X,p}\to\FF$ given by
+	\[D_i\colon[(V,f)]\mapsto\frac{\del f|_{U\cap V}}{\del x_i}\bigg|_p\]
+	provide a basis for $T_pX$.
+\end{lemma}
+\begin{proof}
+	Checking that this is a derivation follows from the Leibniz rule on the chart. Linear independence of the $D_\bullet$s can also be checked locally by plugging in the germs $[(U,x_i)]$ into any linear dependence.
+	
+	It remains to check that our derivations span. Well, fix any other derivation $D$ which we want to be in the span of the $D_\bullet$s. By replacing $D$ with $D-\sum_iD(x_i)D_i$, we may assume that $D(x_i)=0$ for all $i$. We now want to show that $D=0$. This amounts to some multivariable calculus. Fix a germ $[(V,f)]$, and shrink $U$ and $V$ enough so that $f$ is defined on $U$; we want to show $D(f)=0$. The fundamental theorem of calculus implies
+	\[f(x_1,\ldots,x_n)=f(0)+\int_0^1\frac d{dt}f(tx_1,\ldots,tx_n)\,dt.\]
+	However, one can expand out the derivative on the right by the chain rule to see that
+	\[f(x_1,\ldots,x_n)=f(0)+\sum_{i=1}^nx_ih_i(x_1,\ldots,x_n)\]
+	for some regular functions $h_1,\ldots,h_n\colon X\to\FF$. Applying $D$, we see that
+	\[D(f)=\sum_{i=1}^n\underbrace{D(x_i)}_0h_i(p)+\underbrace{x_i(p)}_0D(h_i)=0,\]
+	as required.
+\end{proof}
+Tangent spaces have a notion of functoriality.
+\begin{definition}
+	Fix a regular map $F\colon X\to Y$ of regular manifolds. Given $p\in X$, the \textit{differential map} is the linear map $dF_p\colon T_pX\to T_{F(p)}Y$ defined by
+	\[dF_p(v)(g)\coloneqq v(g\circ F)\]
+	for any $v\in T_pX$ and germ $g\in\OO_{X,p}$. We may also denote $dF_p(v)$ by $F_*v$.
+\end{definition}
+One has to check that $dF_p$ is linear (which does not have much to check) and satisfies the Leibniz rule (which is a matter of expansion); we will omit these checks.
+\begin{remark}
+	One also has a chain rule: for regular maps $F\colon X\to Y$ and $G\colon Y\to Z$, one has $d(G\circ F)_p=dG_{F(p)}\circ dF_p$.
+\end{remark}
+
+\subsection{Immersions and Submersions}
+This map at the tangent space is important enough to give us other definitions.
+\begin{defihelper}[submersion, immersion, embedding] \nirindex{submersion} \nirindex{immersion} \nirindex{embedding}
+	Fix a regular function $F\colon X\to Y$.
+	\begin{itemize}
+		\item The map $F$ is a \textit{submersion} if and only if $dF_p$ is surjective for all $p\in X$.
+		\item The map $F$ is an \textit{immersion} if and only if $dF_p$ is injective for all $p\in X$.
+		\item The map $F$ is an \textit{embedding} if and only if $F$ is an immersion and a homeomorphism onto its image.
+	\end{itemize}
+\end{defihelper}
+\begin{remark} \label{rem:fiber-submanifold}
+	One can check that submersions $F\colon X\to Y$ have local sections $Y\to X$. Explicitly, for $Q\in Y$, the fiber $F^{-1}(\{Q\})\subseteq X$ is a manifold, and if $Q\in\im F$, the fiber has codimension $\dim Y$.
+\end{remark}
+\begin{remark}
+	If $F\colon X\to Y$ is an embedding, then the image $F(X)\subseteq Y$ inherits a unique manifold structure so that the inclusion $F(X)\subseteq Y$ is smooth.
+\end{remark}
+\begin{example}
+	The projection map $\pi\colon\RR^2\to\RR$ given by $\pi(x,y)\coloneqq x$ is a submersion.
+\end{example}
+\begin{example}[lemniscate]
+	The function $F\colon S^1\to\RR^2$ given by
+	\[F(\theta)\coloneqq\left(\frac{\cos\theta}{1+\sin^2\theta},\frac{\cos\theta\sin\theta}{1+\sin^2\theta}\right)\]
+	can be checked to be an immersion (namely, $F'(\theta)\ne0$ always), but it fails to be injective because $F(\pi/4)=F(3\pi/4)=(0,0)$, so it is not an embedding.
+\end{example}
+\begin{example}
+	The map $f\colon\RR\to\RR$ given by $f(x)\coloneqq x^3$ is a smooth homeomorphism onto its image, but it is not an immersion.
+\end{example}
+\begin{example}
+	For any open subset $U\subseteq X$ of a manifold, the inclusion map $U\to X$ is an embedding. (In fact, it is also a submersion.)
+\end{example}
+We will want to distinguish between embeddings, notably to get rid of open embeddings.
+\begin{definition}[closed]
+	An embedding $F\colon X\to Y$ of regular manifolds is \textit{closed} if and only if $F(X)\subseteq Y$ is closed.
+\end{definition}
+\begin{example}
+	Fix a submersion $F\colon X\to Y$. A point $Q\in Y$ gives rise to a fiber $Z\coloneqq F^{-1}(\{Q\})$, which \Cref{rem:fiber-submanifold} explains is a closed submanifold of $X$ of codimension $\dim Y$. One can check that $T_pZ$ is exactly the kernel of $dF_p\colon T_pX\to T_pY$; see \cite[Proposition~5.37]{lee-manifolds}.
+\end{example}
+
+\subsection{Lie Groups}
+We now may stop doing topology.
+\begin{definition}[Lie group]
+	A regular \textit{Lie group} is a group object in the category of regular manifolds. For brevity, we may call (real) smooth Lie groups simply ``Lie groups'' or ``real Lie groups,'' and we may call complex analytic Lie groups simply ``complex Lie groups.''
+\end{definition}
+\begin{remark}
+	If $X$ is already a regular manifold, and we are equipped with continuous multiplication and inverse maps, to check that $X$ becomes a regular Lie group, it is enough to check that merely the multiplication map is regular. See \cite[Exercise~7-3]{lee-manifolds}.
+\end{remark}
+\begin{remark}
+	Hilbert's 5th problem asks when $C^0$ Lie groups can give rise to real Lie groups, and there is a lot of work in this direction. As such, we will content ourselves to focus on real Lie groups instead of any weaker regularity.
+\end{remark}
+\begin{remark}
+	Any complex Lie group is also a real Lie group.
+\end{remark}
+Here is a basic check which allows one to translate checks to the identity.
+\begin{lemma}
+	Fix a regular Lie group $G$. For any $g\in G$, the maps $L_g\colon G\to G$ and $R_g\colon G\to G$ defined by $L_g(x)\coloneqq gx$ and $R_g(x)\coloneqq xg$ are regular diffeomorphisms.
+\end{lemma}
+\begin{proof}
+	Regulrity follows from regularity of multiplication. Our inverses of $L_g$ and $R_g$ are given by $L_{g^{-1}}$ and $R_{g^{-1}}$, which verifies that we have defined regular diffeomorphisms.
+\end{proof}
+
+\end{document}
