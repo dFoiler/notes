@@ -1,0 +1,180 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 18}
+Today we compute our Lie algebras.
+
+\subsection{The Exponential Map: The General Case}
+Given a Lie group $G$ with Lie algebra $\mf g$, we would like to define an exponential map $\exp\colon\mf g\to G$. Recall that $\exp$ gave rise to our homomorphisms $\gamma\colon\RR\to G$ with $\gamma(0)=e$ and $\gamma'(0)$ is specified. This will be our starting point.
+\begin{proposition} \label{lem:integral-curve-for-exp}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. For each $X\in\mf g$, there exists a unique Lie group homomorphism $\gamma_X\colon\RR\to G$ such that $\gamma_X'(0)=X$.
+\end{proposition}
+\begin{proof}
+	We use the theory of integral curves; see \cite[Chapter~9]{lee-manifolds}. In particular, we see that we must satisfy $\gamma(s+t)=\gamma(t)\gamma(s)$ for all $s,t\in\RR$, which yields
+	\[\gamma'(t)=\gamma(t)\gamma'(0),\]
+	where this multiplication really means $dL_{\gamma(t)}(\gamma'(0))$.
+	
+	Thus, we see that we want to extend $X\in T_eG$ to a left-invariant vector field, and then we let $\gamma\colon\RR\to G$ be the integral curve of this vector field satisfying $\gamma(0)=e$. (A priori, $\gamma$ can only be defined in a neighborhood of the identity, but we can translate around in the group $G$ to get a global solution. See \cite[Lemma~9.15]{lee-manifolds} and in particular its corollary \cite[Theorem~9.18]{lee-manifolds}.) Then
+	\[\gamma'(t)=X(\gamma(t))=dL_{\gamma(t)}(X(0))=dL_{\gamma(t)}(X)\]
+	for each $t\in\RR$.
+
+	Thus far we have shown that there is at most one Lie group homomorphism $\gamma_X\colon\RR\to G$ satisfying $\gamma_X'(0)=X$; namely, it will be the above integral curve! It remains to check that the above integral curve actually satisfies $\gamma(t+s)=\gamma(t)\gamma(s)$. Well, for $s\in\RR$, we define $\gamma_1(t)=\gamma(t+s)$ and $\gamma_2(t)=\gamma(s)\gamma(t)$. Then we see that $\gamma_1$ and $\gamma_2$ are both integral curves satisfying the ordinary differential equation
+	\[\widetilde\gamma'(t)=dL_{\widetilde\gamma(t)}(\widetilde\gamma'(0))\]
+	with initial condition $\widetilde\gamma(0)=\gamma(s)$, so the must be equal, completing the proof.
+\end{proof}
+\begin{remark}
+	Here is one way to conclude without using \cite[Theorem~9.18]{lee-manifolds}. The last paragraph of the proof provides a path $\gamma\colon(-\varepsilon,\varepsilon)\to G$ for some $\varepsilon>0$ satisfying the homomorphism property. But then any $N>0$ allows us to define $\widetilde\gamma\colon(-N,N)\to G$ given by
+	\[\widetilde\gamma(t)\coloneqq\gamma(t/N)^N.\]
+	However, we can check that $\widetilde\gamma$ satisfies $\widetilde\gamma'(t)=dL_{\widetilde\gamma(t)}(X)$ with initial condition $\widetilde\gamma(0)=e$, so $\widetilde\gamma$ extends $\gamma$. Thus, we can extend $\gamma$ to $\bigcup_{N>0}(-N\varepsilon,N\varepsilon)=\RR$.
+\end{remark}
+We now define $\exp$ motivated by the classical case.
+\begin{definition}[exponential]
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. For each $X\in\mf g$, define $\gamma_X$ via \Cref{lem:integral-curve-for-exp}. Then we define $\exp_G\colon\mf g\to G$ by
+	\[\exp_G(X)\coloneqq\gamma_X(1).\]
+	We will omit the subscript from $\exp_G$ as much as possible.
+\end{definition}
+\begin{example}
+	If $G\subseteq\op{GL}_n(\FF)$ is classical, we can take $\gamma_X(t)=\exp(tX)$ where $\exp$ is defined as for $\op{GL}_n$. Thus, $\exp(X)$ matches with the above definition.
+\end{example}
+\begin{example}
+	Consider the Lie group $\RR^n$. Then for each $X\in T_0\RR^n$, we identify $T_0\RR^n\cong\RR^n$ to observe that we can take $\gamma_X(t)\coloneqq tX$. Thus, $\exp(X)=X$.
+\end{example}
+\begin{example}
+	For any $G$, we can take $\gamma_0(t)\coloneqq0$, so $\exp(0)=1$.
+\end{example}
+\begin{example} \label{ex:derivative-of-exp}
+	We can directly compute that
+	\[(d\exp)_0(X)=\frac d{dt}\exp(tX)\bigg|_0\stackrel*=\frac d{dt}\gamma_X(t)\bigg|_{t=0}=X.\]
+	The equality $\exp(tX)\stackrel*=\gamma_X(t)$ is explained as follows: we can check that $\gamma_{rX}(t)=\gamma_X(rt)$ for any $r,t\in\RR$ by computing the derivative at $0$, so $\exp(tX)=\gamma_{tX}(1)=\gamma_X(t)$ follows.
+\end{example}
+Here are some quick checks.
+\begin{proposition} \label{prop:exp-regular}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Then $\exp\colon\mf g\to G$ is regular and a local diffeomorphism.
+\end{proposition}
+\begin{proof}
+	Note that $\exp$ solves the differential equation given by \Cref{ex:derivative-of-exp}, for which the theory of integral curves promises that this solution must be regular. \Cref{ex:derivative-of-exp} also tells us that $\exp$ is an isomorphism at the identity and hence a local diffeomorphism.
+\end{proof}
+We would like to know something like $\exp(A+B)=\exp(A)\exp(B)$ when $A$ and $B$ commute, but one needs to be a little careful in how to state this. Here are some manifestations.
+\begin{proposition}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Then
+	\[\exp((s+t)X)=\exp(sX)\exp(tX)\]
+	for any $s,t\in\RR$ and $X\in\mf g$.
+\end{proposition}
+\begin{proof}
+	This is a matter of following the definitions around. Let $\gamma_X\colon\RR\to G$ be the one-parameter family for $X$. Then we see that $\gamma_{rX}(t)=\gamma_X(rt)$ for any $r\in\RR$ as explained in \Cref{ex:derivative-of-exp}, so
+	\[\exp((s+t)X)=\gamma_{(s+t)X}(1)=\gamma_X(s+t)=\gamma_X(s)\gamma_X(t)=\exp(sX)\exp(tX),\]
+	as desired.
+\end{proof}
+\begin{proposition} \label{lem:exp-on-homs}
+	Fix a homomorphism $\varphi\colon G\to H$ of Lie groups. Then
+	\[\varphi(\exp_G(X))=\exp_H(d\varphi_0(X))\]
+	for any $X\in T_eG$.
+\end{proposition}
+\begin{proof}
+	This follows from the definition. In particular, we claim that
+	\[\gamma_{d\varphi_0(X)}(t)\stackrel?=\varphi(\gamma_X(t)).\]
+	To see this, note that $t\mapsto\varphi(\gamma_X(t))$ is a Lie group homomorphism $\RR\to H$, and we can compute the derivative at $0$ to be $d\varphi_0(\gamma_X'(0))=d\varphi_0(X)$, as required. Plugging in $t=1$ to the above equation completes the proof.
+\end{proof}
+\begin{corollary} \label{cor:get-morphism-from-algebra}
+	Fix homomorphisms $\varphi_1,\varphi_2\colon G\to H$ of Lie groups. Suppose $G$ is connected. If $d\varphi_1=d\varphi_2$, then $\varphi_1=\varphi_2$.
+\end{corollary}
+\begin{proof}
+	Using \Cref{lem:exp-on-homs}, we see that
+	\[\varphi(\exp(X))=\exp(d\varphi_0(X))\]
+	produces the same answer for $\varphi\in\{\varphi_1,\varphi_2\}$. However, $\exp$ is a local diffeomorphism by \Cref{prop:exp-regular}, so we have determined the values of $\varphi_1$ and $\varphi_2$ on the image of $\exp$, which must contain an open neighborhood of the identity of $G$. Thus, because $G$ is connected, we see that $G$ is generated by this open neighborhood, so in fact we have fully determined the values of $\varphi_1$ and $\varphi_2$.
+\end{proof}
+\begin{proposition}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$, and let $\op{Ad}_\bullet\colon G\to\op{GL}(\mf g)$ be the adjoint representation of \Cref{ex:adjoint}. For any $g\in G$ and $X\in\mf g$, we have
+	\[g\exp(X)g^{-1}=\exp(\op{Ad}_gX).\]
+\end{proposition}
+\begin{proof}
+	By \Cref{lem:exp-on-homs}, we see that
+	\[g\exp(X)g^{-1}=\op{Ad}_g(\exp(X))=\exp((d{\op{Ad}_g})_eX)=\exp(\op{Ad}_gX),\]
+	where the last equality holds by definition of the adjoint representation. (Yes, the notation is somewhat confusing.)
+\end{proof}
+While we are here, we note that there is a logarithm map.
+\begin{definition}[logarithm]
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Because $\exp$ is a local diffeomorphism, there are open neighborhoods $U\subseteq G$ and $\mf u\subseteq\mf g$ of the identities so that $\log\colon U\to\mf u$ is an inverse for $\exp$.
+\end{definition}
+
+\subsection{The Commutator}
+Define the form $\mu\colon\mf g\times\mf g\to\mf g$ by
+\[\mu(X,Y)\coloneqq\log(\exp(X)\exp(Y)).\]
+(Technically, $\mu$ is a priori only defined on an open neighborhood of the identity of $\mf g\times\mf g$.) Expanding out everything into coordinates, we see that $\mu$ has a Taylor series expansion as
+\[\mu(X,Y)=c+\alpha_1(X)+\alpha_2(Y)+Q_1(X)+Q_2(Y)+\lambda(X,Y)+\cdots,\]
+where $c$ is constant, $\alpha_1$ and $\alpha_2$ are linear, $Q_1$ and $Q_2$ are quadratic, $\lambda$ is bilinear, and $+\cdots$ denotes cubic and higher-order terms. However, we see that $\mu(X,0)=0$ and $\mu(0,Y)=0$ for any $X,Y\in\mf g$, so $c=Q_1=Q_2=0$ and $\alpha_1(X)=X$ and $\alpha_2(Y)=Y$. Further, we claim that $\lambda$ is skew-symmetric: it is enough to show that $\lambda(X,X)=0$, for which we note that
+\[2X=\log(\exp(2X))=\log(\exp(X)\exp(X))=\mu(X,X)=X+X+\lambda(X,X)+\cdots,\]
+so $\lambda(X,X)=0$ is forced.
+
+This $\lambda$ allows us to define the Lie bracket on $\mf g$ in a purely group-theoretic way.
+\begin{definition}[Lie bracket]
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Then we define the \textit{commutator} as the skew-symmetric form $\frac12\lambda\colon\mf g\times\mf g\to\mf g$, denoted $[-,-]$. In particular, we see that
+	\begin{equation}
+		\exp(X)\exp(Y)=\exp\left(X+Y+\frac12[X,Y]+\cdots\right), \label{eq:lie-bracket-exp}
+	\end{equation}
+	where $+\cdots$ denotes higher-order terms (as usual).
+\end{definition}
+\begin{remark}
+	A priori, the commutator may only be defined on an open neighborhood of the identity of $\mf g\times\mf g$, so \eqref{eq:lie-bracket-exp} only holds (a priori) for sufficiently small $X$ and $Y$. However, bilinearity allows us to scale our definition of $[-,-]$ from this open neighborhood everywhere.
+\end{remark}
+\begin{example} \label{ex:gl-bracket}
+	We compute the commutator map for $\op{GL}_n$. We see that
+	\begin{align}
+		\exp(X)\exp(Y) &= 1+X+Y+XY+\frac12\left(X^2+Y^2\right)+\cdots, \\
+		\exp\left(X+Y+\frac12[X+Y]+\cdots\right) &= 1+X+Y+\frac12\left(X^2+Y^2\right)+\frac12XY+\frac12YX+\frac12[X,Y]+\cdots,
+	\end{align}
+	giving $[X,Y]=XY-YX$ subtracting.
+\end{example}
+To compute the commutator for the classical groups, we need to check some functoriality.
+\begin{proposition} \label{prop:lie-bracket-functoriality}
+	Fix a homomorphism $\varphi\colon G\to H$ of Lie groups. For any $X,Y\in T_eG$, we have
+	\[d\varphi_0([X,Y])=[d\varphi_0(X),d\varphi_0(Y)].\]
+\end{proposition}
+\begin{proof}
+	We unravel the definitions. Everything in sight is linear, so we may assume that $X$ and $Y$ are sufficiently small, so $d\varphi_0(X)$ and $d\varphi_0(Y)$ are sufficiently small. We now compute
+	\begin{align*}
+		\exp\left(d\varphi_0(X)+d\varphi_0(Y)+\frac12[d\varphi_0(X),d\varphi_0(Y)]\right) &= \exp\left(d\varphi_0(X)\right)\exp\left(d\varphi_0(Y)\right) \\
+		&\stackrel*= \varphi(\exp(X))\varphi(\exp(Y)) \\
+		&= \varphi(\exp(X)\exp(Y)) \\
+		&= \varphi\left(\exp\left(X+Y+\frac12[X,Y]+\cdots\right)\right) \\
+		&\stackrel*= \exp\left(d\varphi_0(X)+d\varphi_0(Y)+\frac12d\varphi_0([X,Y])+\cdots\right),
+	\end{align*}
+	where we have used \Cref{lem:exp-on-homs} at the equalities $\stackrel*=$. Because $\exp$ is a diffeomorphism for $X$ and $Y$ sufficiently small, the desired equality follows.
+\end{proof}
+\begin{example}
+	The embedding $\op{SL}_n(\FF)\to\op{GL}_n(\FF)$ implies by \Cref{prop:lie-bracket-functoriality} that the Lie bracket on the Lie algebra $\mf{sl}_n$ can be computed by restricting the commutator Lie bracket on $\mf{gl}_n$ (given by \Cref{ex:gl-bracket}). In particular, we see that $\mf{sl}_n$ is closed under taking commutators, which is not totally obvious a priori! A similar operation permits computation of the Lie bracket of a Lie group $G$ whenever given an embedding $G\subseteq\op{GL}_n$ (such as for the classical groups).
+\end{example}
+\begin{corollary}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Let $\op{Ad}_\bullet\colon G\to\op{GL}(\mf g)$ denote the adjoint representation. For
+	\[\op{Ad}_g([X,Y])=[\op{Ad}_g(X),\op{Ad}_g(Y)].\]
+\end{corollary}
+\begin{proof}
+	We simply apply \Cref{prop:lie-bracket-functoriality} to $\op{Ad}\colon G\to\op{GL}(\mf g)$, which yields
+	\[(d{\op{Ad}_g})_e([X,Y])=[(d{\op{Ad}_g})_eX,(d{\op{Ad}_g})_eT],\]
+	which is the original equation after enough abuse of notation.
+\end{proof}
+\begin{proposition} \label{prop:exp-commutator}
+	Fix a Lie group $G$. For sufficiently small $X,Y\in T_eG$, we have
+	\[\exp(X)\exp(Y)\exp(X)^{-1}\exp(Y)^{-1}=\exp([X,Y]+\cdots).\]
+\end{proposition}
+\begin{proof}
+	This is a direct computation. We compute
+	\begin{align*}
+		\exp(X)\exp(Y)\exp(-X)\exp(-Y) &= \exp\left(X+Y+\frac12[X,Y]+\cdots\right)\exp\left(-X-Y+\frac12[X,Y]+\cdots\right)\\
+		&= \exp\left([X,Y]+\cdots\right),
+	\end{align*}
+	where we get some omitted cancellation of lower-order terms in the last equality (and there is a lot of higher-order terms).
+\end{proof}
+\begin{corollary}
+	If $G$ is abelian, then $[X,Y]=0$ for any $X$ and $Y$.
+\end{corollary}
+\begin{proof}
+	It suffices to assume that $X$ and $Y$ are sufficiently small because the conclusion is linear. Now, \Cref{prop:exp-commutator} implies that
+	\[\exp([X,Y]+\cdots)=0,\]
+	so because $\exp$ is a diffeomorphism for small enough $X$ and $Y$, so $[X,Y]=0$ follows.
+\end{proof}
+
+\end{document}
