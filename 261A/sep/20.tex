@@ -1,0 +1,206 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 20}
+Today we continue discussing the Lie bracket.
+
+\subsection{The Adjoint Action}
+Fix a regular Lie group $G$ with Lie algebra $\mf g$. Here is the standard example of a ``Lie algebra representation.''
+\begin{notation}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Note that the map $(d{\op{Ad}_g})_1\colon G\to\op{GL}(\mf g)$ is smooth, so we can consider the differential of this map, which we label $\op{ad}\colon\mf g\to\mf{gl}(\mf g)$.
+\end{notation}
+Here are some checks on this map.
+\begin{proposition} \label{prop:commutator-by-adjoint}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$.
+	\begin{listalph}
+		\item For $X,Y\in\mf g$, we have $\op{ad}_X(Y)=[X,Y]$.
+		\item For $X\in\mf g$, we have ${\op{Ad}_{\exp(X)}}=\exp({\op{ad}_X})$ as operators $\mf g\to\mf g$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item By definition of our differential action, we have
+		\[(d{\op{Ad}_g})_1(Y)=\frac d{dt}g\exp(tY)g^{-1}\bigg|_{t=0}\]
+		for any $g\in G$ and $Y\in\mf g$. We would like to compute a derivative of this map with respect to $g$ (at the identity). As such, we plug in $g=\exp(sX)$ to compute
+		\begin{align*}
+			\op{ad}_X(Y) &= \frac d{ds}(d{\op{Ad}_{\exp(sX)}})_1(Y)\bigg|_{s=0} \\
+			&= \frac d{ds}\frac d{dt}\exp(sX)\exp(tY)\exp(sX)\bigg|_{t=0}\bigg|_{s=0} \\
+			&\stackrel*= \frac d{ds}\frac d{dt}\exp(tY+st[X,Y]+\cdots)\bigg|_{t=0}\bigg|_{s=0},
+		\end{align*}
+		where in $\stackrel*=$ we have used the definition of our bracket. Upon expanding out $\exp$ as a series, we see that the lower-order terms are $1+tY+st[X,Y]+\cdots$ (everything higher is at least quadratic) for small enough $s$ and $t$, so the derivative evaluates to $[X,Y]$.
+		\item This follows immediately from \Cref{lem:exp-on-homs} upon setting $\varphi=(d{\op{Ad}_\bullet})_1$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+Here is an example computation of what all this adjoint business looks like for $\op{GL}_n$, more directly than appealing to the bracket.
+\begin{lemma} \label{lem:adjoint-rep-gln}
+	Identify $T\op{GL}_n(\FF)$ with $\op{GL}_n(\FF)\times\mf{gl}_n(\FF)$ via left-invariant vector fields. For $X\in\mf {gl}_n(\FF)$, we have
+	\[\begin{cases}
+		dL_g(X)=gX, \\
+		dR_g(X)=Xg^{-1}, \\
+		d\op{Ad}_g(X)=gXg^{-1}.
+	\end{cases}\]
+\end{lemma}
+\begin{proof}
+	Set $G\coloneqq\op{GL}_n(\FF)$ and $\mf g\coloneqq\mf{gl}_n(\FF)$. Note that the adjoint is the composite of $L_g$ and $R_g$, so the last equality follows from the first two. For the first equality, we are computing the differential of the maps $L_g,R_g\colon G\to G$ at some $h\in G$. Well, $L_g$ and $R_g$ actually extend to perfectly fine linear maps $M_n(\FF)\to M_n(\FF)$, and the differential of any linear map is simply itself upon identifying the tangent spaces of $M_n(\FF)$ with itself, so we conclude that $dL_g(X)=gX$ and $dR_g(X)=Xg^{-1}$, as required.
+\end{proof}
+\begin{lemma} \label{lem:adjoint-hom}
+	Fix a homomorphism $\varphi\colon G\to H$ of Lie groups with Lie algebras $\mf g$ and $\mf h$ respectively. For any $g\in G$ and $X\in\mf g$, we have
+	\[(d{\op{Ad}_{\varphi(g)}})_e(d\varphi_1(X))=d\varphi_1((d{\op{Ad}_g})_e(X)).\]
+\end{lemma}
+\begin{proof}
+	Simply take the differential (at $1$) of the equation ${\op{Ad}_{\varphi(g)}}\circ\varphi=\varphi\circ\op{Ad}_g$, which is true because $\varphi$ is a homomorphism.
+\end{proof}
+\begin{example}
+	Given any embedding $G\subseteq\op{GL}_n(\FF)$ with Lie algebra $\mf g\subseteq\mf{gl}_n(\FF)$, we can use \Cref{lem:adjoint-hom} to compute the adjoint action on $\mf g$ by conjugation (via \Cref{lem:adjoint-rep-gln})!
+\end{example}
+\begin{proposition} \label{lem:lie-adjoint-gln}
+	Let $(d{\op{Ad}_\bullet})_1\colon\op{GL}_n(\FF)\to\op{GL}(\mf{gl}_n(\FF))$ denote the adjoint representation. Then
+	\[\op{ad}_X(Y)=XY-YX.\]
+\end{proposition}
+\begin{proof}
+	To parse the symbols, we note that $(d(d{\op{Ad}_\bullet})_1)_1\colon\mf{gl}_n(\FF)\to\op{End}(\mf{gl}_n(\FF))$, so the statement at least makes sense. Now, given $X\in\mf{gl}_n(\FF)$, define $\gamma\colon\FF\to M_n(\FF)$ by $\gamma(t)\coloneqq 1+tX$. Then $\gamma'(0)=X$. As such,
+	\[(d(d{\op{Ad}_\bullet})_1)_1(X)=(d(d{\op{Ad}_\bullet})_1)_1(\gamma'(0))=((d{\op{Ad}_\bullet})_1\circ\gamma)'(0).\]
+	In particular, plugging in some $Y\in\mf{gl}_n(\FF)$, we may use \Cref{lem:adjoint-rep-gln} to compute that
+	\begin{align*}
+		\frac d{dt}((d{\op{Ad}_\bullet})_1\circ\gamma)(t)(Y)\bigg|_{t=0} &= \frac d{dt}(d{\op{Ad}_{1+tX}})_1(Y)\bigg|_{t=0} \\
+		&= \frac d{dt}(1+tX)Y(1+tX)^{-1}\bigg|_{t=0} \\
+		&= \frac d{dt}(1+tX)Y\left(1-tX+t^2X^2+\cdots\right)\bigg|_{t=0} \\
+		&= XY-YX,
+	\end{align*}
+	where the series expansion takes $t$ small enough for the series to converge. (For example, one can take $t$ small enough so that all eigenvalues of $tX$ are less than $1$.)
+\end{proof}
+\begin{example}
+	Given any embedding $G\subseteq\op{GL}_n(\FF)$ with Lie algebra $\mf g\subseteq\mf{gl}_n(\FF)$, we note that the action of $G$ on $\mf g$ actually extends to an action of $G$ on $\mf{gl}_n(\FF)$ (still by conjugation) which happens to stabilize $\mf g$. Then the action $G\to\op{GL}(\mf{gl}_n(\FF))$ is a restriction of the adjoint action $\op{GL}_n(\FF)\to\op{GL}(\mf{gl}_n(\FF))$ given by conjugation still, whose differential action $\mf{gl}_n(\FF)\to\mf{gl}(\mf{gl}_n(\FF))$ we computed above to be given by $\op{ad}_X\colon Y\mapsto XY-YX$. This restricts back to the subspace $\mf g\subseteq\mf{gl}_n(\FF)$ (via the inclusion $G\subseteq\op{GL}_n(\FF)$), where we know that the action must happen to stabilize $\mf g\subseteq\mf{gl}_n(\FF)$. The point is that we have computed our adjoint representation $\mf g\to\mf{gl}(\mf g)$ is given by the commutator. (Alternatively, one can redo the computation of the above proof.)
+\end{example}
+
+\subsection{Lie Algebras}
+Here is a standard consequence of this theory.
+\begin{proposition}[Jacobi identity]
+	Fix a Lie group $G$ with Lie algebra $\mf g$. Then we have the Jacobi identity
+	\[[X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]]=0.\]
+\end{proposition}
+\begin{proof}
+	Doing some rearranging with \Cref{prop:commutator-by-adjoint} (and the skew-symmetry), we see that this is equivalent to plugging $Z$ into the identity
+	\[{\op{ad}_{[X,Y]}}\stackrel?={\op{ad}_X}\circ{\op{ad}_Y}-{\op{ad}_Y}\circ{\op{ad}_X}.\]
+	To verify this, we note that the right-hand side is $[{\op{ad}_X},{\op{ad}_Y}]$, where the commutator is taken in $\mf{gl}(\mf g)$. Thus, we are trying to show that the adjoint preserves a commutator, which we do as follows: recall that $\op{Ad}_\bullet\colon G\to\op{GL}(\mf g)$ is a morphism of Lie groups, meaning that the differential map $\op{ad}$ preserves the commutator by \Cref{prop:lie-bracket-functoriality}.
+\end{proof}
+The Jacobi identity is important enough to earn the following definition.
+\begin{definition}[Lie algebra]
+	Fix a field $k$. Then a \textit{Lie algebra} is a $k$-vector space $\mf g$ equipped with a bilinear form $[-,-]\colon\mf g\times\mf g\to\mf g$ satisfying the following.
+	\begin{listalph}
+		\item Skew-symmetric: $[X,X]=0$ for all $X\in\mf g$.
+		\item Jacobi identity: for any $X,Y,Z\in\mf g$, we have
+		\[[X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]]=0.\]
+	\end{listalph}
+	A morphism of Lie algebras is a $k$-linear morphism preserving the forms.
+\end{definition}
+\begin{definition}[commutative]
+	A Lie algebra $\mf g$ is \textit{commutative} if and only if $[X,Y]=0$ for all $X,Y\in\mf g$.
+\end{definition}
+\begin{example}
+	For any $k$-algebra $A$, we produce a Lie bracket on $A$ given by
+	\[[X,Y]\coloneqq XY-YX.\]
+	This map is of course linear in both $X$ and $Y$ (because multiplication is $k$-linear in a $k$-algebra), and $[X,X]=X^2-X^2=0$. Lastly, to see the Jacobi identity, we expand:
+	\begin{align*}
+		[X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]] &= [X,YZ-ZY]+[Y,ZX-XZ]+[Z,XY-YX] \\
+		&= X(YZ-ZY)-(YZ-ZY)X \\
+		&\qquad+Y(ZX-XZ)-(ZX-XZ)Y \\
+		&\qquad+Z(XY-YX)-(XY-YX)Z \\
+		&= 0.
+	\end{align*}
+	For example, one can take $A$ to be $\op{End}_k(V)$ for some $k$-vector space $V$; this produces the Lie algebra $\mf{gl}(V)$.
+\end{example}
+\begin{example}
+	Given a regular Lie group $G$, the tangent space at the identity $\mf g$ is a Lie algebra according to the above definition.
+\end{example}
+The above example upgrades into a functor.
+\begin{proposition} \label{prop:lie-group-to-lie-algebra}
+	Fix a regular Lie group $G$. For any morphism of Lie groups $\varphi\colon G_1\to G_2$, the differential $d\varphi_e\colon T_eG_1\to T_eG_2$ is a (functorial) morphism of Lie algebras. In fact, if $G_1$ and $G_2$ is connected, the induced map
+	\[\op{Hom}_{\mathrm{LieGrp}}(G_1,G_2)\to\op{Hom}_{\mathrm{Lie}(k)}(T_eG_1,T_eG_2)\]
+	is injective. In other words, the functor $G\to T_eG$ from connected Lie groups to Lie algebras is faithful.
+\end{proposition}
+\begin{proof}
+	The differential being a homomorphism of Lie algebras follows from \Cref{prop:lie-bracket-functoriality}. Functoriality follows from the corresponding functoriality for differentials of more general smooth maps. The injectivity follows from \Cref{cor:get-morphism-from-algebra}.
+\end{proof}
+\begin{remark}
+	It turns out that the functor above is also full, though we are not in a position to show this yet.
+\end{remark}
+
+\subsection{Sub-algebras}
+Lie algebras are interesting enough to study on their own right, but we now note that we have sufficient motivation from \Cref{prop:lie-group-to-lie-algebra}.
+\begin{defihelper}[subalgebra, ideal] \nirindex{subalgebra} \nirindex{ideal}
+	Fix a Lie algebra $\mf g$.
+	\begin{itemize}
+		\item A \textit{Lie subalgebra} $\mf h\subseteq\mf g$ is a subspace closed under the Lie bracket of $\mf g$; note that $\mf h$ continues to be a Lie algebra.
+		\item A \textit{Lie ideal} is a subalgebra $\mf h\subseteq\mf g$ with the stronger property that
+		\[[X,Y]\in\mf h\]
+		for any $X\in\mf h$ and $Y\in\mf g$.
+	\end{itemize}
+\end{defihelper}
+\begin{definition}[representation]
+	A \textit{representation} of a Lie algebra $\mf g$ over a field $k$ is a morphism $\mf g\to\mf{gl}(V)$ for some vector space $V$ over $k$.
+\end{definition}
+Here is how these things relate back to Lie groups.
+\begin{proposition}
+	Fix a regular Lie subgroup $H$ of a regular Lie group $G$. Let their Lie algebras be $\mf h$ and $\mf g$, respectively.
+	\begin{listalph}
+		\item Then $\mf h\subseteq\mf g$ is a Lie subalgebra.
+		\item If $H$ is normal in $G$, then $\mf h$ is an ideal of $\mf g$.
+		\item If $G$ and $H$ are connected, and $\mf h$ is an ideal of $\mf g$, then $H$ is normal in $G$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Here we go.
+	\begin{listalph}
+		\item Certainly $\mf h\subseteq\mf g$ is a subspace, so we want to check that $[X,Y]\in\mf h$ for $X,Y\in\mf h$, where the target bracket is taken in $\mf g$. Consider the embedding $\varphi\colon H\to G$ so that $\mf h=\im d\varphi_0$. Thus, we use \Cref{prop:lie-bracket-functoriality} to see that
+		\[d\varphi_0([X,Y])=[d\varphi_0(X),d\varphi_0(Y)].\]
+		Thus, for any $X,Y\in\im d\varphi_0$, we see that $[X,Y]\in\im d\varphi_0$, as required.
+
+		\item For any $X\in\mf g$ and $Y\in\mf h$, we want to check that $[X,Y]\in\mf h$. By \Cref{prop:commutator-by-adjoint}, we are asking to check that $\op{ad}_X(Y)\in\mf h$. Well, for any $g\in G$, we see that $gHg^{-1}\subseteq H$, so the adjoint $\op{Ad}_g\colon G\to G$ restricts to $\op{Ad}_g\colon H\to H$. In particular, by taking the differential, we see that the adjoint $(d{\op{Ad}_\bullet})_1\colon G\to\op{GL}(\mf g)$ restricts to $(d{\op{Ad}_\bullet})_1\colon G\to\op{GL}(\mf h)$. (Namely, $(d{\op{Ad}_g})_1(Y)\in\mf h$ for any $Y\in\mf h$.) Taking the differential of this, we see that we get our map $\op{ad}_\bullet\colon\mf g\to\mf{gl}(\mf h)$, meaning that $\op{ad}_X(Y)\in\mf h$ for any $X\in\mf g$ and $Y\in\mf h$.
+		
+		\item Recall from \Cref{prop:commutator-by-adjoint} that
+		\[\op{Ad}_{\exp(X)}(Y)=\exp(\op{ad}_XY).\]
+		Thus, for any $X\in\mf g$, we see that $\op{Ad}_{\exp(X)}$ is an operator $\mf h\to\mf h$. Thus, for $g\in G$ sufficiently close to the identity, we see that $\op{Ad}_g(Y)\in\mf h$ for $Y\in\mf h$. Taking the exponential, \Cref{prop:exp-adjoint} tells us that $ghg^{-1}\in H$ for $g\in G$ and $h\in H$ both sufficiently close to the identity.
+		
+		Concretely, we get an open neighborhood $U$ of the identity of $G$ such that $ghg^{-1}\in H$ for any $g\in U$ and $h\in H\cap U$. Now, the subset of $G$ normalizing $U\cap H$ is a subgroup of $G$ containing $U$, so we see that it must be all of $G$ because $G$ is connected. Then the subset of $H$ normalized by $G$ is again a subgroup of $H$ containing $U\cap H$, so we see that it must be all of $H$ because $H$ is connected. Thus, $H$ is normal in $G$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+
+\subsection{Lie Algebra of a Vector Field}
+One can in general provide a Lie algebra of a vector field. Fix a regular vector field $\xi\colon X\to TX$ on a regular manifold $X$. For any regular function $f$ on an open subset $U\subseteq X$, we may define
+\[(\xi f)(x)\coloneqq\xi_x(f_x),\]
+where we recall that $\xi_x\in T_xX$ is some derivation which outputs a number when fed a germ $f_x$. The point is that $\xi f$ is itself a regular function $X\to\FF$! We are now able to define a bracket.
+\begin{proposition}
+	Fix a regular manifold $X$. Given vector fields $\xi,\eta\colon X\to TX$, we define the Lie bracket
+	\[[\xi,\eta]\coloneqq\xi\eta-\eta\xi.\]
+	Then $[-,-]$ is a derivation.
+\end{proposition}
+\begin{proof}
+	At each $x\in X$, we have certainly defined a map taking regular functions $f$ on $X$ and outputting an element of $\FF$ given by
+	\[[\xi,\eta]_x(f)\coloneqq\xi_x(\eta f)_x-\eta_x(\xi f)_x.\]
+	This is certainly linear in $f$ because $\xi$ and $\eta$ are. Further, the value of $[\xi,\eta]_x(f)$ only depends on the germ $f_x$ because having $f_x=g_x$ for functions $f$ and $g$ implies $(f-g)_x=0_x$, and then $\eta(f-g)$ and $\xi(f-g)$ both vanish in a neighborhood of $x$, so $[\xi,\eta]_x(f-g)=0$.
+	
+	It remains to check the product rule. Well, for regular functions $f$ and $g$ and some $y\in X$, we compute
+	\[(\eta fg)(y)=\eta_y(f_yg_y)=f(y)\eta_y(g_y)+g(y)\eta_y(g_y)=(f\cdot\eta g+g\cdot\eta f)(y),\]
+	and a similar computation works for $\xi$. Thus,
+	\begin{align*}
+		\xi(\eta fg)(x) &= \xi(f\eta g+g\eta f)(x) \\
+		&= \xi(f\eta g)(x)+\xi(g\eta f)(x) \\
+		&= f(x)\xi(\eta g)(x)+(\xi f)(x)(\eta g)(x)+g(x)\xi(\eta f)(x)+(\xi g)(x)(\eta f)(x),
+	\end{align*}
+	and a similar computation holds for $\eta(\xi fg)(x)$. Thus, we see that
+	\begin{align*}
+		[\xi,\eta]_x(fg) &= f(x)\xi(\eta g)(x)+(\xi f)(x)(\eta g)(x)+g(x)\xi(\eta f)(x)+(\xi g)(x)(\eta f)(x) \\
+		&\qquad-\left(f(x)\eta(\xi g)(x)+(\eta f)(x)(\xi g)(x)+g(x)\eta(\xi f)(x)+(\eta g)(x)(\xi f)(x)\right) \\
+		&= f(x)[\xi,\eta]_xg+g(x)[\xi,\eta]_xf
+	\end{align*}
+	after sufficient cancellation and rearranging.
+\end{proof}
+
+\end{document}
