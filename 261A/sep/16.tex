@@ -82,73 +82,309 @@ Before engaging with the examples, we note the following corollary.
 	It suffices to provide a slice chart of the identity for $G\subseteq\op{GL}_n(\FF)$; we then get slice charts everywhere by translation. Well, 
 \end{proof}
 Let's now proceed with our examples.
+We begin with some general remarks.
+\begin{lemma} \label{lem:special-tangent-space}
+	Let $G\subseteq\op{GL}_n(\FF)$ be a closed Lie subgroup, and let $SG\coloneqq\{g\in G:\det g=1\}$. We show $SG$ is a Lie subgroup and compute $T_1SG\subseteq T_1G$ as
+	\[T_1SG=\{g\in T_1G:\tr g=0\}.\]
+\end{lemma}
+\begin{proof}
+	Let $G$ act on $\FF$ by $\mu\colon G\times\FF\to\FF$ by $\mu(g,c)\coloneqq(\det g)c$. Note that $\mu$ is a polynomial and hence regular, so this is a regular action upon checking that $\mu(1,c)=c$ and $\mu(g,\mu(h,c))=\mu(gh,c)$, which hold because $\det$ is a homomorphism.
+	
+	Now, the stabilizer of $1\in\FF$ consists of the $g\in G$ such that $(\det g)\cdot1=1$, which is equivalent to $\det g=1$ and hence equivalent to $g\in SG$. Thus, $SG\subseteq G$ is a closed Lie subgroup with
+	\[T_1SG(\FF)=\{v\in T_1G:(d{\det})_1(v)=0\},\]
+	where $\det\colon G\to\FF$ is the determinant map. To compute $(d{\det})_1(v)$, we identify $T_1G\subseteq T_1\op{GL}_n(\FF)=T_1M_n(\FF)\cong M_n(\FF)$; then for any $X\in M_n(\FF)$, we note that the path $\gamma\colon\RR\to M_n(\RR)$ defined by $\gamma(t)\coloneqq 1+tX$ has $\gamma(0)=1$ and $\gamma'(0)=X$, so
+	\[(d{\det})_1(X)=(d{\det})_1(\gamma'(0))=(\det\circ\gamma)'(0)=\frac d{dt}\det(1+tX)\bigg|_{t=0}.\]
+	Thus, we are interested in the linear terms of the polynomial $\det(1+tX)$. Now, writing $X$ out in coordinates as $X=[X_{ij}]_{1\le i,j\le n}$ and setting $A_{ij}=1_{i=j}+tX_{ij}$, we note
+	\[\det(1+tX)=\det A=\sum_{\sigma\in S_n}\op{sgn}(\sigma)A_{1\sigma(1)}\cdots A_{n\sigma(n)}.\]
+	Now, the only way a summand can produce linear terms is if there is at most one non-diagonal entry $A_{ij}$, which of course forces all entries to be diagonal. Thus,
+	\[\frac d{dt}\det(1+tX)\bigg|_{t=0}=\frac d{dt}(1+tX_{11})\cdots(1+tX_{nn})\bigg|_{t=0}\stackrel*=(X_{11}+\cdots+X_{nn})=\tr X,\]
+	where $\stackrel*=$ holds by an expansion of the terms looking for linear terms. Thus,
+	\[T_1SG=\{X\in T_1G:\tr X=0\}.\]
+\end{proof}
+\begin{lemma} \label{lem:bilinear-tangent-space}
+	Let $J\in M_n(\FF)$ be some matrix, and let $(-)^*$ denote either of the involutions $(-)^\intercal$ or $(-)^\dagger$. Then one has the subgroup
+	\[O_J(\FF)\coloneqq\{g\in\op{GL}_n(\FF):g^*Jg=J\}.\]
+	We claim that $O_J(\FF)\subseteq\op{GL}_n(\FF)$ is a closed Lie subgroup (though if $(-)^*=(-)^\dagger$ and $\FF=\CC$, then $O_J(\FF)$ is a group over $\RR$) and compute that
+	\[T_1O_J(\FF)=\{X\in M_n(\FF):X^*J+JX=0\}.\]
+\end{lemma}
+\begin{proof}
+	Indeed, let $\op{GL}_n(\FF)$ act on $M_n(\FF)$ by $\mu(g,A)\coloneqq g^*Ag$. This (right!) action is polynomial and hence regular (with the previous parenthetical in mind), and we can check that it is an action because $\mu(1,A)=A$ and $\mu(g,\mu(h,A))=g^*h^*Ahg=\mu(hg,A)$.
+
+	Now, the stabilizer of $J\in M_n(\FF)$ is precisely $O_J(\FF)$ by definition, so $O_J(\FF)\subseteq\op{GL}_n(\FF)$ is in fact a closed Lie subgroup. We also go ahead and compute $T_1O_J(\FF)$. Letting $f\colon\op{GL}_n(\FF)\to M_n(\FF)$ be defined by $f(g)\coloneqq g^*Jg$, we see that
+	\[T_1O_J(\FF)=\ker df_1,\]
+	so we want to compute $df_1$. As usual, we identify $T_1G\subseteq T_1\op{GL}_n(\FF)=T_1M_n(\FF)\cong M_n(\FF)$; then for any $X\in M_n(\FF)$, we note that the path $\gamma\colon\RR\to M_n(\RR)$ defined by $\gamma(t)\coloneqq 1+tX$ has $\gamma(0)=1$ and $\gamma'(0)=X$, so
+	\[df_1(X)=df_1(\gamma'(0))=(f\circ\gamma)'(0)=\frac d{dt}f(1+tX)\bigg|_{t=0}.\]
+	Thus, we go ahead and compute
+	\[f(1+tX)=(1+tX)^*J(1+tX)=J+t(X^*J+JX)+t^2X^*JX,\]
+	so
+	\[df_1(X)=\frac d{dt}f(1+tX)\bigg|_{t=0}=X^*J+JX.\]
+	Thus,
+	\[T_1O_J(\FF)=\{X\in M_n(\FF):X^*J+JX=0\},\]
+	as required.
+\end{proof}
+We now execute our computations in sequence.
+\begin{listalph}
+	\item Using the preceding remarks, we see that
+	\[T_1\op U_{p,q}(\CC)=\{X\in M_n(\CC):X^*B_{p,q}+B_{p,q}X=0\},\]
+	where $B_{p,q}=\begin{bsmallmatrix}
+		1_p \\ & -1_q
+	\end{bsmallmatrix}$ is a diagonal matrix. We now continue as in (c). Set $X\coloneqq\begin{bsmallmatrix}
+		A & B \\ C & D
+	\end{bsmallmatrix}$ to have the appropriate dimensions, and then we compute
+	\begin{align*}
+		X^*B_{p,q}+B_{p,q}X &= \begin{bmatrix}
+			A^* & C^* \\ B^* & D^*
+		\end{bmatrix}\begin{bmatrix}
+			1 \\ & -1
+		\end{bmatrix}+\begin{bmatrix}
+			1 \\ & -1
+		\end{bmatrix}\begin{bmatrix}
+			A & B \\ C & D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			A^* & -C^* \\ B^* & -D^*
+		\end{bmatrix}+\begin{bmatrix}
+			A & B \\ -C & -D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			A^*+A & B-C^* \\ B^*-C & -D^*-D
+		\end{bmatrix}.
+	\end{align*}
+	In particular, this will vanish if and only if $A$ and $D$ are skew-Hermitian and $B=C^*$, so
+	\begin{align*}
+		T_1\op U_{p,q}(\CC) &= \left\{\begin{bmatrix}
+			A & B \\ B^* & D
+		\end{bmatrix}:A\in M_p(\CC),D\in M_q(\CC),A=-A^*,D=-D^*\right\}, \\
+		T_1\op U_n(\CC) &= \left\{A\in M_n(\CC):A=-A^*\right\}.
+	\end{align*}
+	Now, the space of $p\times p$ skew-Hermitian matrices $A$ (namely, satisfying $A=-A^*$) is forced to have imaginary diagonal, and then the remaining entries are uniquely determined by their values strictly above the diagonal. Thus, the real dimension of this space is $p+p(p-1)=p^2$. We conclude that
+	\begin{align*}
+		\dim_\RR\op U_{p,q}(\CC) &= p^2+2pq+q^2=n^2, \\
+		\dim_\RR\op U_n(\CC) &= n^2.
+	\end{align*}
+	From here, we address $\op{SU}$ by recalling that
+	\[T_1\op{SU}_{p,q}(\RR)=\{X\in T_1\op U_{p,q}(\CC):\tr X\}.\]
+	In particular,
+	\begin{align*}
+		T_1\op{SU}_{p,q}(\CC) &= \left\{\begin{bmatrix}
+			A & B \\ B^* & D
+		\end{bmatrix}:A\in M_p(\CC),D\in M_q(\CC),A=-A^*,D=-D^*,\tr A+\tr D=0\right\}, \\
+		T_1\op{SU}_n(\CC) &= \left\{A\in M_n(\CC):A=-A^*,\tr A=0\right\}.
+	\end{align*}
+	Now, $\tr$ continues is real and actually surjects onto $\RR$ for $n\ge1$, even for our family of matrices above (for example, for any real number $r$, the matrix $\op{diag}(r,0,\ldots,0)$ has trace $r$ and lives in the above families). Thus, the kernel has dimension one smaller than the total space, giving
+	\begin{align*}
+		\dim_\RR\op{SU}_{p,q}(\CC) &= n^2-1, \\
+		\dim_\RR\op{SU}_n(\CC) &= n^2-1.
+	\end{align*}
+\end{listalph}
 \begin{example}
 	We will show that
 	\[\op{SL}_n(\FF)\coloneqq\{A\in\op{GL}_n(\FF):\det A=1\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	is a Lie group over $\FF$ and compute its Lie algebra to find $\dim_\FF\op{SL}_n(\FF)=n^2-1$.
 \end{example}
 \begin{proof}
-	The main point is to classify which $A\in\im\exp$ actually live in our subgroup. Well, $A=\exp(X)$ has $\det A=1$ if and only if $\tr X=0$ by \Cref{lem:det-exp-exp-tr}, so we see that our Lie subalgebra is
-	\[\mf{sl}_n(\FF)\coloneqq\{X\in\mf{gl}_n(\FF):\tr X=0\}.\]
-	The result follows.
+	We use \Cref{lem:special-tangent-space}. We see that
+	\[{T_1\op{SL}_n(\FF)=\{X\in M_n(\FF):\tr X=0\}}.\]
+	(Note $T_1\op{GL}_n(\FF)=T_1M_n(\FF)\cong M_n(\FF)$.) As such, we note that $\tr\colon M_n(\FF)\to\FF$ is surjective (for $n\ge1$), so $\dim_\FF T_1\op{SL}_n(\FF)=\dim_\FF\ker\tr=\dim_\FF M_n(\FF)-1=n^2-1$.
 \end{proof}
 We now begin our computations for bilinear forms.
 \begin{example}
 	Let $B\coloneqq1_n$ be the standard bilinear form. We will show that
 	\[\op O_n(\FF)\coloneqq\left\{A\in\op{GL}_n(\FF):ABA^\intercal B\right\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	is a Lie group over $\FF$ and compute its Lie algebra to find $\dim_\FF\op O_n(\FF)=\frac12n(n-1)$.
 \end{example}
 \begin{proof}
-	As before, writing $A=\exp(X)$, we see that $ABA^\intercal=B$ is equivalent to $BA^\intercal B^{-1}=A^{-1}$, which is equivalent to
-	\[\exp\left(BXB^{-1}\right)=\exp(-X),\]
-	so we are asking for $BX^\intercal B^{-1}=-X$, as required.
+	We use \Cref{lem:bilinear-tangent-space}. We see that
+	\[T_1\op O_n(\FF)=\left\{X\in M_n(\FF):X^\intercal+X=0\right\},\]
+	which is the space of alternating matrices. Thus, we see that the diagonal of $X\in T_1\op O_n(\FF)$ vanishes, and the remaining entries are determined by the values strictly above the diagonal, of which there are $\frac12n(n-1)$. Thus, $\dim\op O_n(\FF)=\frac12n(n-1)$.
 \end{proof}
 \begin{example}
 	We will show that
 	\[\op{SO}_n(\FF)\coloneqq\{A\in\op{O}_n(\FF):\det A=1\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	is a Lie group over $\FF$ and compute its Lie algebra to find $\dim_\FF\op{SO}_n(\FF)=\frac12n(n-1)$.
 \end{example}
+\begin{proof}
+	Using \Cref{lem:special-tangent-space}, we see that
+	\[T_1\op{SO}_n(\FF)=\{X\in\op O_n(\FF):\tr X=0\}.\]
+	However, alternating matrices already have vanishing traces, so $T_1\op{SO}_n(\FF)$ is simply the full space of alternating matrices, giving $\dim_\FF\op{SO}_n(\FF)=\frac12n(n-1)$.
+\end{proof}
 Over $\RR$, there are more bilinear forms.
 \begin{example}
 	Let $B_{p,q}\coloneqq1_p\oplus1_q$ where $n=p+q$. We will show that
-	\[\op O_{p,q}(\FF)\coloneqq\left\{A\in\op{GL}_n(\FF):AB_{p,q}A^\intercal B_{p,q}\right\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	\[\op O_{p,q}(\RR)\coloneqq\left\{A\in\op{GL}_n(\RR):AB_{p,q}A^\intercal B_{p,q}\right\}\]
+	is a Lie group over $\RR$ and compute its Lie algebra to find $\dim_\RR\op O_{p,q}(\RR)=\frac12n(n-1)$.
 \end{example}
+\begin{proof}
+	By \Cref{lem:bilinear-tangent-space}, we see that
+	\[T_1\op O_{p,q}(\RR)=\left\{X\in M_n(\RR):X^\intercal B_{p,q}+B_{p,q}X=0\right\},\]
+	where $B_{p,q}=\begin{bsmallmatrix}
+		1_p \\ & -1_q
+	\end{bsmallmatrix}$ is a diagonal matrix. To compute the dimension of this space of matrices, we set $X\coloneqq\begin{bsmallmatrix}
+		A & B \\ C & D
+	\end{bsmallmatrix}$ to have the appropriate dimensions, and then we compute
+	\begin{align*}
+		X^\intercal B_{p,q}+B_{p,q}X &= \begin{bmatrix}
+			A^\intercal & C^\intercal \\ B^\intercal & D^\intercal
+		\end{bmatrix}\begin{bmatrix}
+			1 \\ & -1
+		\end{bmatrix}+\begin{bmatrix}
+			1 \\ & -1
+		\end{bmatrix}\begin{bmatrix}
+			A & B \\ C & D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			A^\intercal & -C^\intercal \\ B^\intercal & -D^\intercal
+		\end{bmatrix}+\begin{bmatrix}
+			A & B \\ -C & -D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			A^\intercal+A & B-C^\intercal \\ B^\intercal-C & -D^\intercal-D
+		\end{bmatrix}.
+	\end{align*}
+	In particular, this will vanish if and only if $A$ and $D$ are both alternating, and $B=C^\intercal$, yielding
+	\[T_1\op O_{p,q}(\RR)=\left\{\begin{bmatrix}
+		A & B \\ B^\intercal & D
+	\end{bmatrix}:A\in M_p(\RR)\text{ and }D\in M_q(\RR)\text{ are alternating}\right\}.\]
+	Thus, the dimension of our space is
+	\begin{align*}
+		\dim_\RR\op O_{p,q}(\RR) &= \underbrace{\frac12p(p-1)}_A+\underbrace{pq}_{B=C^\intercal}+\underbrace{\frac12q(q-1)}_{D} \\
+		&= \frac12\left(p^2+2pq+q^2-p-q\right) \\
+		&= \frac12(p+q)(p+q-1) \\
+		&= \frac12n(n-1),
+	\end{align*}
+	where the dimension computations for (the spaces of) $A$ and $D$ are as in.
+\end{proof}
 \begin{example}
 	We will show that
-	\[\op{SO}_{p,q}(\FF)\coloneqq\{A\in\op{O}_{p,q}(\FF):\det A=1\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	\[\op{SO}_{p,q}(\RR)\coloneqq\{A\in\op{O}_{p,q}(\FF):\det A=1\}\]
+	is a Lie group over $\RR$ and compute its Lie algebra to find $\dim_\RR\op{SO}_{p,q}(\RR)=\frac12n(n-1)$.
 \end{example}
+\begin{proof}
+	We use \Cref{lem:special-tangent-space}, we note that
+	\[T_1\op{SO}_{p,q}(\RR):\{X\in T_1\op O_{p,q}(\RR):\tr X=0\},\]
+	but our description of $X=\begin{bsmallmatrix}
+		A & B \\ C & D
+	\end{bsmallmatrix}$ has $A$ and $D$ alternating, so $\tr X=\tr A+\tr D=0$. Thus, we see $T_1\op{SO}_{p,q}(\RR)=T_1\op O_{p,q}(\RR)$, so the above description of tangent space and dimension go through.
+\end{proof}
 \begin{example}
 	Let $\Omega_{2n}\coloneqq\begin{bsmallmatrix}
 		0_n & -1_n \\
 		1_n & 0_n
 	\end{bsmallmatrix}$ be the standard symplectic form. We will show that
 	\[\op{Sp}_{2n}(\FF)\coloneqq\left\{A\in\op{GL}_n(\FF):A\Omega A^\intercal=A\right\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	is a Lie group over $\FF$ and compute its Lie algebra to find $\dim_\FF\op{Sp}_{2n}(\FF)=2n^2+n$.
 \end{example}
+\begin{proof}
+	By \Cref{lem:bilinear-tangent-space}, we see that
+	\[T_1\op{Sp}_{2n}(\FF)=\{X\in M_n(\FF):X^\intercal\Omega+\Omega X=0\},\]
+	where $\Omega=\begin{bmatrix}
+		& -1_n \\ 1_n
+	\end{bmatrix}$ is alternating. As usual, we set $X\coloneqq\begin{bsmallmatrix}
+		A & B \\ C & D
+	\end{bsmallmatrix}$ to have the appropriate dimensions, and we compute
+	\begin{align*}
+		X^\intercal\Omega+\Omega X &= \begin{bmatrix}
+			A^\intercal & C^\intercal \\ B^\intercal & D^\intercal
+		\end{bmatrix}\begin{bmatrix}
+			& -1 \\ 1
+		\end{bmatrix}+\begin{bmatrix}
+			& -1 \\ 1
+		\end{bmatrix}\begin{bmatrix}
+			A & B \\ C & D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			C^\intercal & -A^\intercal \\
+			D^\intercal & -B^\intercal
+		\end{bmatrix}+\begin{bmatrix}
+			-C & -D \\
+			A & B
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			C^\intercal-C & -D-A^\intercal \\
+			A+D^\intercal & B-B^\intercal
+		\end{bmatrix}.
+	\end{align*}
+	Thus, we see that
+	\[T_1\op{Sp}_{2n}(\FF)=\left\{\begin{bmatrix}
+		A & B \\ C & -A^\intercal
+	\end{bmatrix}:A,B,C\in M_n(\FF),B=B^\intercal,C=C^\intercal\right\},\]
+	and our dimension is
+	\[\dim_\FF\op{Sp}_{2n}(\FF)=\underbrace{n^2}_A+\underbrace{\frac12n(n+1)}_B+\underbrace{\frac12n(n+1)}_C=2n^2+n,\]
+	where we compute the dimension of space of symmetric matrices exactly analogously to the case of alternating matrices, except now the diagonal is permitted to be nonzero.
+\end{proof}
 Lastly, we handle Hermitian forms.
-\begin{example}
-	We will show that
-	\[\op U_n(\CC)\coloneqq\left\{A\in\op{GL}_n(\CC):AA^\dagger=1_n\right\}\]
-	is a Lie group over $\RR$ and compute its Lie algebra.
-\end{example}
-\begin{example}
-	We will show that
-	\[\op{SU}_n(\CC)\coloneqq\left\{A\in\op{U}_n(\CC):\det A=1_n\right\}\]
-	is a Lie group over $\RR$ and compute its Lie algebra.
-\end{example}
-And because we are over $\RR$, we have the following extra forms.
+% \begin{example}
+% 	We will show that
+% 	\[\op U_n(\CC)\coloneqq\left\{A\in\op{GL}_n(\CC):AA^\dagger=1_n\right\}\]
+% 	is a Lie group over $\RR$ and compute its Lie algebra.
+% \end{example}
+% \begin{example}
+% 	We will show that
+% 	\[\op{SU}_n(\CC)\coloneqq\left\{A\in\op{U}_n(\CC):\det A=1_n\right\}\]
+% 	is a Lie group over $\RR$ and compute its Lie algebra.
+% \end{example}
+% And because we are over $\RR$, we have the following extra forms.
 \begin{example}
 	Let $B_{p,q}\coloneqq1_p\oplus1_q$ where $n=p+q$. We will show that
-	\[\op U_{p,q}(\FF)\coloneqq\left\{A\in\op{GL}_n(\FF):AB_{p,q}A^\dagger B_{p,q}\right\}\]
-	is a Lie group over $\FF$ and compute its Lie algebra.
+	\[\op U_{p,q}(\CC)\coloneqq\left\{A\in\op{GL}_n(\FF):AB_{p,q}A^\dagger B_{p,q}\right\}\]
+	is a Lie group over $\RR$ and compute its Lie algebra to find $\dim_\RR\op U_{p,q}(\CC)=n^2$.
 \end{example}
+\begin{proof}
+	Using \Cref{lem:bilinear-tangent-space}, we see that
+	\[T_1\op U_{p,q}(\CC)=\{X\in M_n(\CC):X^*B_{p,q}+B_{p,q}X=0\},\]
+	where $B_{p,q}=\begin{bsmallmatrix}
+		1_p \\ & -1_q
+	\end{bsmallmatrix}$ is a diagonal matrix. We now continue as in (c). Set $X\coloneqq\begin{bsmallmatrix}
+		A & B \\ C & D
+	\end{bsmallmatrix}$ to have the appropriate dimensions, and then we compute
+	\begin{align*}
+		X^*B_{p,q}+B_{p,q}X &= \begin{bmatrix}
+			A^* & C^* \\ B^* & D^*
+		\end{bmatrix}\begin{bmatrix}
+			1 \\ & -1
+		\end{bmatrix}+\begin{bmatrix}
+			1 \\ & -1
+		\end{bmatrix}\begin{bmatrix}
+			A & B \\ C & D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			A^* & -C^* \\ B^* & -D^*
+		\end{bmatrix}+\begin{bmatrix}
+			A & B \\ -C & -D
+		\end{bmatrix} \\
+		&= \begin{bmatrix}
+			A^*+A & B-C^* \\ B^*-C & -D^*-D
+		\end{bmatrix}.
+	\end{align*}
+	In particular, this will vanish if and only if $A$ and $D$ are skew-Hermitian and $B=C^*$, so
+	\begin{align*}
+		T_1\op U_{p,q}(\CC) &= \left\{\begin{bmatrix}
+			A & B \\ B^* & D
+		\end{bmatrix}:A\in M_p(\CC),D\in M_q(\CC),A=-A^*,D=-D^*\right\}, \\
+		T_1\op U_n(\CC) &= \left\{A\in M_n(\CC):A=-A^*\right\}.
+	\end{align*}
+	Now, the space of $p\times p$ skew-Hermitian matrices $A$ (namely, satisfying $A=-A^*$) is forced to have imaginary diagonal, and then the remaining entries are uniquely determined by their values strictly above the diagonal. Thus, the real dimension of this space is $p+p(p-1)=p^2$. We conclude that
+	\[\dim_\RR\op U_{p,q}(\CC) = p^2+2pq+q^2=n^2,\]
+	as required.
+\end{proof}
 \begin{example}
 	We will show that
 	\[\op{SU}_{p,q}(\CC)\coloneqq\left\{A\in\op{SU}_{p,q}(\CC):\det A=1_n\right\}\]
-	is a Lie group over $\RR$ and compute its Lie algebra.
+	is a Lie group over $\RR$ and compute its Lie algebra to find $\dim_\RR\op{SU}_{p,q}(\CC)=n^2-1$.
 \end{example}
-All the above examples are similar to the orthogonal group case. I will add the computations in after doing the homework.
+\begin{proof}
+	By \Cref{lem:special-tangent-space}, we see
+	\[T_1\op{SU}_{p,q}(\RR)=\{X\in T_1\op U_{p,q}(\CC):\tr X\}.\]
+	In particular,
+	\begin{align*}
+		T_1\op{SU}_{p,q}(\CC) &= \left\{\begin{bmatrix}
+			A & B \\ B^* & D
+		\end{bmatrix}:A\in M_p(\CC),D\in M_q(\CC),A=-A^*,D=-D^*,\tr A+\tr D=0\right\}, \\
+		T_1\op{SU}_n(\CC) &= \left\{A\in M_n(\CC):A=-A^*,\tr A=0\right\}.
+	\end{align*}
+	Now, $\tr$ continues is real and actually surjects onto $\RR$ for $n\ge1$, even for our family of matrices above (for example, for any real number $r$, the matrix $\op{diag}(r,0,\ldots,0)$ has trace $r$ and lives in the above families). Thus, the kernel has dimension one smaller than the total space, giving
+	\[\dim_\RR\op{SU}_{p,q}(\CC) = n^2-1,\]
+	as required.
+\end{proof}
 
 \end{document}
