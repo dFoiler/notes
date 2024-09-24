@@ -1,0 +1,135 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 23}
+Today we continue talking about vector fields.
+
+\subsection{Vector Fields on Lie Groups}
+Let's return to Lie groups.
+\begin{lemma} \label{lem:left-invariant-by-germ}
+	Fix a regular Lie group $G$. A vector field $\xi$ on $G$ is left-invariant if and only if
+	\[\xi(f\circ L_g)=\xi f\circ L_g\]
+	for any germ $f$ defined in a neighborhood of $g$.
+\end{lemma}
+\begin{proof}
+	We show the two implications separately.
+	\begin{itemize}
+		\item If $\xi$ is left-invariant, then $\xi_{gh}=(dL_g)_h(\xi_h)$ for any $g,h\in G$. Thus, for any $h\in G$, we see that
+		\begin{align*}
+			(\xi f\circ L_g)(h) &= \xi_{gh}f \\
+			&= ((dL_g)_h\xi_h)f \\
+			&= \xi_h(f\circ L_g),
+		\end{align*}
+		as required.
+		\item Suppose $\xi(f\circ L_g)=\xi f\circ L_g$ for any $f$. Then plugging in the identity tells us that
+		\[\xi_gf=(\xi f\circ L_g)(e)=\xi_e(f\circ L_g)=((dL_g)_e(\xi_e))(f).\]
+		Thus, $\xi_g=(dL_g)_e\xi_e$, as required.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{lemma} \label{lem:vector-field-lie-group-action}
+	Fix a left-invariant vector field $\xi$ on a regular Lie group $G$. Then for a germ $f$ at a point $g\in G$, one has
+	\[\xi_g f=\frac d{dt}f(g\exp(t\xi_e))\bigg|_{t=0}.\]
+\end{lemma}
+\begin{proof}
+	This is more or less the chain rule. For our $g\in G$, \Cref{lem:left-invariant-by-germ} tells us that
+	\[\xi_gf=\xi_e(f\circ L_g).\]
+	Now, the path $\gamma\colon\FF\to G$ given by $\gamma(t)\coloneqq\exp(t\xi_e)$ has $\gamma'(0)=\xi_e$, so
+	\[\xi_e(f\circ L_g)=d(f\circ L_g\circ\gamma)'(0)=\frac d{dt}f(g\exp(t\xi_e))\bigg|_{t=0},\]
+	as required.
+\end{proof}
+\begin{proposition}
+	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Then the collection of left-invariant vector fields $\op{Vect}^L(G)$ is a Lie subalgebra of $\op{Vect}(G)$ which is isomorphic to $\mf g$.
+\end{proposition}
+\begin{proof}
+	By \Cref{rem:lie-algebra-to-invariant}, one certainly has an isomorphism $\op{Vect}^L(G)\to\mf g$ given by $\xi\mapsto\xi_e$, with inverse given by $X\mapsto\xi_X$, where $\xi_X$ is the vector field $\xi_X(g)\coloneqq dL_g(X)$. Now, by \Cref{lem:left-invariant-by-germ}, $\xi$ is left-invariant if and only if
+	\[\xi(f\circ L_g)=\xi f\circ L_g\]
+	for any germ $f$ defined in a neighborhood of $g$. Thus, we see that $\op{Vect}^L(G)$ is preserved by the commutator of $\op{Vect}(G)$.
+	
+	It remains to check that our isomorphism with $\mf g$ is a morphism of Lie algebras. Fix $X,Y\in\mf g$, and we would like to show that $[\xi_X,\xi_Y]=\xi_{[X,Y]}$. It is enough to check this equality after mapping back down to $\mf g$, so we want to check that $[\xi_X,\xi_Y]_e=[X,Y]$. This is a direct computation: by \Cref{lem:vector-field-lie-group-action}, any germ $f$ at $e$ has
+	\begin{align*}
+		[\xi_X,\xi_Y]_ef &= \frac d{dt}\big(\xi_Yf(\exp(tX))-\xi_Xf(\exp(tY))\big)\bigg|_{t=0} \\
+		&= \frac{\del^2}{\del s\del t}\frac d{ds}\big(f(\exp(tX)\exp(sY))-f(\exp(tY)\exp(sX))\big)\bigg|_{(s,t)=(0,0)} \\
+		&= \frac{\del^2}{\del s\del t}\bigg(f\exp\left(tX+sY+\frac12st[X,Y]+\cdots\right)-f\exp\left(tX+sY-\frac12st[X,Y]+\cdots\right)\bigg)\bigg|_{(s,t)=(0,0)}.
+	\end{align*}
+	Now, one can imagine taking a Taylor series expansion of $f\circ\exp\colon\mf g\to\RR$ in terms of $Z$, in which we see that the above derivative will only depend on the $st$ term of the relevant expansion. More precisely, write $(f\circ\exp)(Z)=f(e)+\lambda(Z)+Q(Z)+C(Z)$, where $\lambda$ is linear, $Q$ is quadratic, and $C$ has vanishing first- and second-order derivatives. Then, after cancellation within $\lambda$, we see that
+	\begin{align*}
+		[\xi_X,\xi_Y]_ef &= \frac{\del^2}{\del s\del t}st\lambda(st[X,Y])\bigg|_{(s,t)=(0,0)} \\
+		&\qquad+\frac{\del^2}{\del s\del t}Q\left(tX+sY+\frac12st[X,Y]+\cdots\right)\bigg|_{(s,t)=(0,0)} \\
+		&\qquad+\frac{\del^2}{\del s\del t}Q\left(tX+sY-\frac12st[X,Y]+\cdots\right)+\cdots\bigg|_{(s,t)=(0,0)},
+	\end{align*}
+	where $+\cdots$ denotes higher-order terms which will not affect the current derivative (for example, containing $C$). Now, the linear terms inside $Q$ will produce cancelling terms after expansion, so the only term we are left to care about is
+	\[[\xi_X,\xi_Y]_ef=\lambda([X,Y])=\frac d{dt}(f\circ\exp)(t[X,Y])\bigg|_{t=0}=(\xi_{[X,Y]})_ef,\]
+	as required.
+\end{proof}
+
+\subsection{Group Actions and Vector Fields}
+In general, if $G$ acts on a regular manifold $M$ via the action $a\colon G\times X\to X$, one can define an action of $\mf g$ on $\op{Vect}(X)$ by analogy with \Cref{lem:vector-field-lie-group-action}.
+\begin{definition}
+	Fix a left action $a\colon G\times M\to M$ of a regular Lie group $G$ on a regular manifold $M$. Then we define $a_*\colon\mf g\to\op{Vect}(M)$ by
+	\[(a_*X)_pf\coloneqq\frac d{dt}f(a(\exp(-tX),p))\bigg|_{t=0}\]
+	for any $p\in M$ and germ $f$ at $p$.
+\end{definition}
+\begin{remark}
+	Let's explain the sign in the above definition: the action of $G$ on $M$ induces a natural action of $G$ on the regular functions $\OO(M)$ by $(g\cdot f)(p)\coloneqq f\left(g^{-1}\cdot p\right)$. It is this action of $G$ on $\OO(M)$ which motivates the above definition.
+\end{remark}
+\begin{remark}
+	On the homework, we will check that $a_*$ is a morphism of Lie algebras.
+\end{remark}
+We can now prove the Orbit--stabilizer theorem in the following more precise form.
+\begin{theorem}[Orbit--stabilizer]
+	Fix a left action $a\colon G\times M\to M$ of a regular Lie group $G$ on a regular manifold $M$. Fix some $p\in M$.
+	\begin{listalph}
+		\item For all $p\in M$, the stabilizer $G_p$ is a closed Lie subgroup with Lie algebra
+		\[\op{Lie}G_p=\{X\in\mf g:(a_*X)_p=0\}.\]
+		\item The induced map $G/G_p\to M$ given by $g\mapsto g\cdot p$ is an injective immersion. In particular, the orbit $Go$ is an immersed submanifold.
+		\item If the induced map $G/G_p\to M$ is an embedding, then $G/G_p$ is diffeomorphic to $Gp$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We begin with the proof of (a), which we do in steps.
+	\begin{enumerate}
+		\item Set
+		\[\mf g_p\coloneqq\{X\in\mf g:(a_*X)_p=0\}\]
+		for brevity. We claim that $\mf g_p\subseteq\mf g$ is a Lie subalgebra. Certainly $X\mapsto (a_*X)_p$ is a linear map $\mf g\to\op{Vect}(M)\to T_pM$, so $\mf g_p$ is a linear subspace.
+		
+		It remains to check that $\mf g_p$ is preserved by the bracket. Fix $X,Y\in\mf g_p$, and we want to check $[X,Y]\in\mf g_p$. Well, because $a_*$ is a homomorphism of Lie algebras, we see
+		\[a_*[X,Y]_pf=\underbrace{(a_*X)_p}_0(a_*Yf)-\underbrace{(a_*Y)_p}_0(a_*Xf)=0\]
+		for any germ $f$ at $p$. Thus, $a_*[X,Y]=0$, so $[X,Y]\in\mf g_p$.
+
+		\item For $X\in\mf g_p$, we check that $\exp(X)\in G_p$. Indeed, we claim the two curves $\gamma_1(t)\coloneqq \exp(-tX)\cdot p$ and $\gamma_2(t)\coloneqq p$ are both integral curves for $a_*X$ with the same initial condition at $0$. This completes the check because it implies that $\exp(X)\cdot p=\gamma_1(-1)=\gamma_2(-1)=p$ by uniqueness of integral curves.
+		
+		To prove the claim, we note that $\gamma_2$ is constant, so there is nothing to check there. For $\gamma_1$, we must check that
+		\[\gamma_2'(t)\stackrel?=(a_*X)_{\gamma_2(t)}\]
+		in $T_{\gamma_2(t)}M$. To check this, we pass through an arbitrary germ $f$ to see that
+		\[\gamma_2'(t)f=(f\circ\gamma_2)'(t)=\frac d{ds}f(\exp(-sX-tX)\cdot p)\bigg|_{s=0},\]
+		and
+		\[(a_*X)_{\gamma_2(t)}f=\frac d{ds}f(\exp(-tX-sX)\cdot p)\bigg|_{s=0},\]
+		as required.
+		
+		\item We attempt to control $\mf g/\mf g_p$. Choose a complement $\mf u$ of $\mf g_p\subseteq\mf g$ so that $\mf g=\mf g_p\oplus\mf u$. (We do not require that $\mf u$ is a Lie subalgebra, despite the font.) Then the map $f\colon\mf u\to T_pM$ given by $Z\mapsto(a_*Z)_p$ has kernel $\mf g_p\cap\mf u=0$ and hence is injective. Thus, the Implicit function theorem tells us that the map $F\colon\mf u\to M$ given by $v\mapsto\exp(-V)\cdot p$ must be an injective immersion for small $v$ because $df_p(V)=dF_p(V)$.
+		
+		Instead of using the Implicit function theorem, we can argue using local diffeomorphisms as follows: fix a basis $\{e_1,\ldots,e_k\}$ of $\mf u$, and extend the linearly independent set $\{dF_p(e_1),\ldots,df_p(e_k)\}\subseteq T_pM$ to a basis $\{dF_p(e_1),\ldots,dF_p(e_k)\}\sqcup\{e_{k+1}',\ldots,e_m'\}$. Then define a local map $\widetilde F\colon\mf u\times\FF^{m-k}\to M$ by
+		\[\widetilde F(a_1e_1+\cdots+a_me_m)=F(a_1e_1+\cdots+a_ke_k)+a_{k+1}e'_{k+1}+\cdots+a_me_m',\]
+		where the addition on the right-hand side is defined in a local chart of $M$ around $p$. (Technically, $\widetilde F$ is only defined in a neighborhood of $0\in\mf u$.) Then $\widetilde F$ is a local diffeomorphism at $0$ by construction, so $F$ is an injective immersion in this same neighborhood of $0$.
+
+		\item We construct a slice chart for $G_p\subseteq G$ at the identity, which will complete the proof (a) by \Cref{lem:one-slice-subgroup}. Note that the map $e\colon\mf g_p\oplus\mf u\to G$ given by $(V,X)\mapsto\exp(V)\exp(X)$ is a local diffeomorphism at $0$ (because the differential is simply the identity by checking what happens on each piece $\mf g_p$ and $\mf u$ separately). Thus, for $g\in G$ sufficiently close to $e$, we can write $g$ uniquely as in the image of $e$ and thus as $g=\exp(V)\exp(X)$ where $V\in\mf u$ and $X\in\mf g_p$. Now, we see that $g\in G_p$ if and only if $\exp(V)\in G_p$, which for small enough $V$ is equivalent to $V\in\mf g_p$ by the previous step.
+
+		In total, we have constructed a very small open neighborhood $U\subseteq\mf g_p\oplus\mf u$ of the identity such that $e|_U$ is a diffeomorphism onto its image $e(U)\subseteq G$ and
+		\[G_p\cap e(U)=\{(V,X)\in\mf g_p\oplus\mf u:V=0\},\]
+		which is a slice chart.
+		\qedhere
+
+		% \item Now, one sees that $\mf u\times\mf g_p\to G$ given by the exponential is a local diffeomorphism. Thus, for a small open neighborhood $U$ of $G$, one finds that $g\in G_x$ can be written uniquely as $\exp(v)\exp(Z)$, so $g\in G_x$ if and only if $v=0$, which provides a slice chart. Thus, $G_p$ is an embedded submanifold with the described Lie subalgebra.
+		
+		% \item For any $Z\in\mf g_p$, we claim that $\exp(-tZ)p=p$ for all $t$. Indeed, both sides are integral curves for $Z$, so the uniqueness of integral curves completes the proof.
+	\end{enumerate}
+\end{proof}
+% \begin{remark}
+% 	Let's discuss Fix any $\FF$-vector space $V$, possibly infinite. 
+% \end{remark}
+
+\end{document}
