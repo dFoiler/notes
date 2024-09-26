@@ -1,0 +1,153 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 23}
+We began class by finishing the proof of \Cref{thm:orbit-stabilizer-lie-algebra} and giving an example.
+
+\subsection{The Orbit--Stabilizer Theorem for Fun and Profit}
+Let's see an example of \Cref{thm:orbit-stabilizer-lie-algebra}.
+\begin{example}
+	Fix a finite-dimensional representation $V$ of a regular Lie group $G$ given by $\rho\colon G\to\op{GL}(V)$. For $v\in V$, its stabilizer $G_v$ has Lie algebra given by
+	\[\mf g_v=\{X\in\mf g:(\rho_*X)_v=0\}.\]
+\end{example}
+\begin{example}
+	Fix a finite-dimensional algebra $A$ over a field $\FF$. Then we claim that $\op{Aut}_k(A)$ is a closed Lie subgroup of $\op{GL}(A)$, and we claim that
+	\[\op{Lie}(\op{Aut}A)=\op{Der}(A)\subseteq\op{End}(A).\]
+\end{example}
+\begin{proof}
+	Note that $\varphi\in\op{GL}(A)$ is an automorphism if and only if $\varphi$ also preserves the multiplication map $\mu\colon A\otimes A\to A$ of $A$. Now, $\op{GL}(A)$ has a natural action $\rho\colon\op{GL}(A)\to\op{GL}(\op{Hom}(A\otimes A,A))$ by
+	\[(\rho(g)\varphi)(x\otimes y)\coloneqq g\varphi\left(g^{-1}x\otimes g^{-1}y\right).\]
+	Precisely speaking, this is the composite of the actions of $G$ on the various pieces by \Cref{rem:rep-operations}, so this is in fact a representation of $G$. Now, $g\in\op{GL}(A)$ preserves the multiplication map $\mu$ if and only if
+	\[g(\mu(a\otimes b))=\mu(g(a)\otimes g(b))\]
+	for all $a,b\in A$, which is equivalent to
+	\[(\rho(g)\mu)(a\otimes b)=g\mu\left(g^{-1}a\otimes g^{-1}b\right)=\mu(a\otimes b)\]
+	for all $a,b\in A$. Thus, $\op{Aut}(A)\subseteq\op{GL}(A)$ is the stabilizer of $\mu\in\op{Hom}(A\otimes A,A)$ and hence a closed Lie subgroup by \Cref{thm:orbit-stabilizer-lie-algebra}.
+
+	It remains to compute the Lie algebra, which \Cref{thm:orbit-stabilizer-lie-algebra} tells us is
+	\[\mf{gl}(A)_\mu=\{X\in\mf{gl}(A):(\rho_*X)_\mu=0\}.\]
+	Thus, we want to compute $(\rho_*X)_\mu$. Note that $\op{Hom}(A\otimes A,A)$ is some finite-dimensional $\FF$-vector space, so for any germ $f$ defined around $\mu$, we may use the chain rule to compute
+	\begin{align*}
+		(\rho_*X)_\mu f &= \frac d{dt}f(\rho(\exp(-tX),\mu))\bigg|_{t=0} \\
+		&= df_\mu\left(\frac d{dt}\rho(\exp(-tX),\mu)\bigg|_{t=0}\right).
+	\end{align*}
+	Thus, we see that $X\in\mf{gl}(A)_\mu$ if and only if $\frac d{dt}\rho(\exp(-tX),\mu)\big|_{t=0}=0$. Now, linear operators pass through derivatives, and evaluation is a linear operator on $\op{Hom}(A\otimes A,A)$, so it suffices to check when
+	\[\frac d{dt}\rho(\exp(-tX),\mu)(a\otimes b)\big|_{t=0}\]
+	vanishes, for arbitrary $a,b\in A$. Thus, we compute
+	\begin{align*}
+		\rho(\exp(-tX),\mu)(a\otimes b) &= \exp(-tX)\mu(\exp(tX)a,\exp(tX)b) \\
+		&= \sum_{n=0}^\infty\frac{(-1)^nt^n}{n!}X^n\Bigg(\sum_{k=0}^\infty\frac{t^k}{k!}X^ka\cdot\sum_{\ell=0}\frac{t^\ell}{\ell!}X^\ell b\Bigg) \\
+		&= \sum_{n,k,\ell=0}^\infty\frac{(-1)^nt^{n+k+\ell}}{n!k!\ell!}X^n\left(X^ka\cdot X^\ell b\right),
+	\end{align*}
+	where we have rearranged the sums with impunity because everything in sight converges absolutely. Furthermore, we can differentiate term-by-term to see that
+	\begin{align*}
+		\frac d{dt}\rho(\exp(-tX),\mu)(a\otimes b)\bigg|_{t=0} &= \frac{(-1)^1t^{1+0+0}}{1!0!0!}X^1\left(X^0a\cdot X^0b\right) \\
+		&\qquad+\frac{(-1)^0t^{0+1+0}}{0!1!0!}X^0\left(X^1a\cdot X^0b\right) \\
+		&\qquad+\frac{(-1)^0t^{0+0+1}}{0!0!1!}X^0\left(X^0a\cdot X^1b\right) \\
+		&= -X(a\cdot b)+Xa\cdot b+a\cdot Xb.
+	\end{align*}
+	Thus,
+	\[\op{Lie}(\op{Aut}A)=\{X\in\mf{gl}(A):X(a\cdot b)=Xa\cdot b+a\cdot Xb\},\]
+	which of course is the set of derivations.
+\end{proof}
+\begin{remark}
+	A close examination of the above proof finds that we only need $\mu$ to be an element of $\op{Hom}(A\otimes A,A)$ for the argument to go through. Notably, we may replace $(A,\mu)$ above with a Lie algebra $(\mf g,[-,-])$ to find that $\op{Aut}_{\mathrm{LieAlg}}(\mf g)\subseteq\op{GL}(\mf g)$ is a Lie subgroup with Lie algebra given by the derivations
+	\[\{\varphi\in\mf{gl}(\mf g):\varphi([X,Y])=[\varphi(X),Y]+[X,\varphi(Y)]\text{ for all }X,Y\in\mf g\}.\]
+\end{remark}
+\begin{remark}
+	The adjoint map $\op{ad}\colon\mf g\to\mf{gl}(\mf g)$ actually lands in $\op{Der}(\mf g)$: checking this is tantamount to checking that $X,Y,Z\in\mf g$ has
+	\[\op{ad}_X[Y,Z]\stackrel?=[\op{ad}_XY,Z]+[Y,\op{ad}_XZ],\]
+	which one can check is equivalent to the Jacobi identity of \Cref{prop:jacobi}.
+\end{remark}
+\begin{remark}
+	Similarly, the adjoint action $\op{Ad}\colon G\to\op{GL}(\mf g)$ actually lands in $\op{Aut}_{\mathrm{LieAlg}}(\mf g)$. Indeed, for $g\in G$ and $X,Y\in\mf g$, this amounts to checking that
+	\[\op{Ad}_g[X,Y]\stackrel?=[\op{Ad}_gX,\op{Ad}_gY],\]
+	which is \Cref{cor:adjoint-commutator}.
+\end{remark}
+Here is another application.
+\begin{definition}[center]
+	Fix a group $G$. Then the \textit{center} of $G$ is the subset
+	\[Z(G)\coloneqq\{z\in G:zg=gz\text{ for all }g\in G\}.\]
+	Similarly, fix a Lie algebra $\mf g$, then the \textit{center} of $\mf g$ is
+	\[\mf z(\mf g)\coloneqq\{X\in\mf g:[X,Y]=0\text{ for all }Y\in\mf g\}.\]
+\end{definition}
+\begin{remark}
+	We will not bother to check that $Z(G)$ is a subgroup because this is a standard result of group theory. However, in order to do something, let's check that $\mf z(\mf g)$ is a Lie ideal of $\mf g$. Note that $\mf z(\mf g)$ is the kernel of the collection of linear maps $X\mapsto[X,Y]$ as $Y\in\mf g$ varies, so $\mf z(\mf g)$ is an intersection of Lie ideals (by \Cref{lem:subalgebra-checks}) and hence a Lie ideal by \Cref{rem:intersect-lie-ideals}.
+\end{remark}
+\begin{proposition}
+	Fix a connected regular Lie group $G$. Then $Z(G)$ is a closed Lie subgroup with Lie algebra
+	\[\mf z(\mf g)\coloneqq\{X\in\mf g:[X,Y]=0\text{ for all }Y\in\mf g\}.\]
+\end{proposition}
+\begin{proof}
+	We would like to see that $Z(G)$ is the kernel of the adjoint map $\op{Ad}\colon G\to\op{Aut}G$, but it is difficult to make sense of this argument because $\op{Aut}G$ is not a manifold.
+
+	Instead, we note that $g\in G$ if and only if $g$ commutes with an open neighborhood $U$ of the identity: indeed, commuting with $U$ implies commuting with the subgroup generated by $U$, but $G$ is connected, so commuting with $U$ is equivalent to commuting with $G$. Now, we can take $U$ to be some neighborhood of the identity in the image of the local diffeomorphism $\exp\colon\mf g\to G$, so $g\in Z(G)$ if and only if
+	\[g\exp(X)g^{-1}=\exp(X)\]
+	for all $X\in\mf g$ in an open neighborhood of $0$. Now, $\op{Ad}_g\exp(X)=\exp(\op{Ad}_gX)$ by \Cref{prop:exp-adjoint}, so the above equality is equivalent to having $\op{Ad}_gX=X$ for $X$ in a neighborhood of $0$.
+
+	Thus, \Cref{rem:isomorphism-theorem} tells us that $Z(G)$ is the kernel of the representation $\op{Ad}_\bullet\colon G\to\op{GL}(\mf g)$. We conclude that its Lie algebra is the kernel of the differential of $\op{Ad}_\bullet$, which of course is $\op{ad}_\bullet\colon\mf g\to\mf{gl}(\mf g)$. Thus,
+	\[\op{Lie}Z(G)=\{X\in\mf g:{\op{ad}_X}=0\},\]
+	but \Cref{prop:commutator-by-adjoint} explains that ${\op{ad}_X}=[X,-]$, so we see that this is simply $\mf z(\mf g)$, as required.
+\end{proof}
+\begin{definition}[adjoint]
+	Fix a connected regular Lie group $G$. Then the \textit{adjoint group} of $G$ is $G^{\op{ad}}\coloneqq G/Z(G)$.
+\end{definition}
+\begin{example}
+	For $G=\op{GL}_n(\FF)$, one can check that $Z(G)$ is the subgroup $\{cI:c\in\FF\}$. The adjoint group is then $\op{PGL}_n(\FF)$.
+\end{example}
+
+\subsection{The Baker--Campbell--Hausdorff Formula}
+For completeness, we mention the Baker--Campbell--Hausdorff formula. We will not need this result, so we will not prove it, and the discussion in this subsection will be quite terse. Fix a Lie group $G$ with Lie algebra $\mf g$. We would like to understand the group law on $G$ purely in terms of $\mf g$. As in our discussion of the commutator, we note that
+\[\mu(X,Y)=\log(\exp(X)\exp(Y)),\]
+defined in an open neighborhood of $\mf g$ can be expanded out as
+\[\mu(X,Y)=X+Y+\frac12[X,Y]+\mu_3(X,Y)+\mu_4(X,Y)+\cdots=\sum_{n=1}^\infty\mu_n(X,Y),\]
+where $\mu_n(X,Y)$ consists of the order-$n$ terms in this Taylor expansion. Here is the main result. For example, as above, $\mu_1(X,Y)=X+Y$ and $\mu_2(X,Y)=\frac12[X,Y]$.
+\begin{theorem}[Baker--Campbell--Hausdorff]
+	The polynomials $\mu_n$ above are independent of $G$.
+\end{theorem}
+One proves this basically by solving differential equations for the $\mu_n$ inductively in $n$.
+\begin{example}
+	One could compute that
+	\[\mu_3(X,Y)=\frac1{12}([X,[X,Y]]+[Y,[Y,X]]).\]
+\end{example}
+
+\subsection{The Fundamental Theorems of Lie Theory}
+To wrap up our transition to Lie algebras, we state the fundamental theorems of Lie theory, which we will mostly not prove.
+\begin{theorem} \label{thm:lie-1}
+	For a regular Lie group $G$ with Lie algebra $|mf g$, there is a bijection between Lie subgroups $H\subseteq G$ and Lie subalgebras $\mf h\subseteq\mf g$. This bijection sends $H\subseteq G$ to $\mf h\coloneqq\op{Lie}H$.
+\end{theorem}
+\begin{theorem} \label{thm:lie-2}
+	Fix a simply connected regular Lie group $G$ with Lie algebra $\mf g$. Then for any regular Lie group $H$ with Lie algebra $\mf h$, the map
+	\[\op{Hom}_{\mathrm{LieGrp}}(G,H)\to\op{Hom}_{\mathrm{LieAlg}}(\mf g,\mf h),\]
+	given by taking the differential at the identity, is a bijection.
+\end{theorem}
+\begin{theorem} \label{thm:lie-3}
+	Any finite-dimensional Lie algebra $\mf g$ is isomorphic to the Lie algebra of some simply connected regular Lie group.
+\end{theorem}
+Here is the consequence.
+\begin{corollary}
+	The (full subcategory) of simply connected regular Lie groups is equivalent to the category of finite-dimensional Lie algebras, given by the Lie algebra functor.
+\end{corollary}
+\begin{proof}
+	\Cref{thm:lie-2} shows that this functor is fully faithful, and \Cref{thm:lie-3} shows that this functor is essentially surjective. This completes the proof.
+\end{proof}
+We begin with the proof of \Cref{thm:lie-1}. This requires the theory of distributions.
+\begin{definition}[distribution]
+	Fix a regular manifold $M$. Then a \textit{$k$-dimensional distribution $\mc D$} on $X$ is a $k$-dimensional (local) subbundle $\mc D\subseteq TX$.
+\end{definition}
+\begin{remark}
+	Locally at a point $p\in M$, we can think about $\mc D_p$ as being spanned by $k$ linearly independent differentials which spread out over a neighborhood.
+\end{remark}
+\begin{definition}[integrable]
+	A distribution $\mc D$ of dimension $k$ on a regular manifold $M$ is \textit{integrable} if and only if each $p\in M$ has a regular chart $(U,\varphi)$ with local coordinates $\varphi=(x_1,\ldots,x_n)$ such that
+	\[D|_U=\op{span}\left\{\frac\del{\del x_1},\ldots,\frac\del{\del x_k}\right\}.\]
+\end{definition}
+Here is a more coordinate-free check for being integrable.
+\begin{definition}[foliation]
+	A distribution $\mc D$ of dimension $k$ on a regular manifold $M$ is a \textit{foliation} if and only if $p\in M$ has an ``integral'' immersed submanifold $S_p\subseteq M$, meaning that $T_qS_p=D_q$ for all $q\in S_p$.
+\end{definition}
+Of course, integrable distributions are foliations, but it is a theorem that one can show the converse; see \cite[Theorem~19.12]{lee-manifolds}.
+
+\end{document}
