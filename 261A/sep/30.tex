@@ -15,7 +15,10 @@ for all $g\in G$. The category here is called $\mathrm{Rep}_k(G)$.
 Similarly, for a Lie algebra $\mf g$, a representation is a morphism $\rho_V\colon\mf g\to\mf{gl}(V)$ of Lie algebras. A morphism $\varphi\colon V\to W$ of representations is one respecting the $G$-action again: again, we need
 \[\rho_W(g)\circ\varphi=\varphi\circ\rho_V(g).\]
 The category here is called $\mathrm{Rep}_k(\mf g)$.
-
+\begin{remark} \label{rem:bijective-morphism-reps}
+	As a quick aside, we note that a bijective morphism $\varphi\colon V\to W$ will be an isomorphism. Indeed, the inverse map $\psi\colon W\to V$ is an isomorphism of vector spaces by linear algebra, and we see that it is invariant under our action as follows: for any $w\in W$ and operator $g$ in $G$ or $\mf g$, write $w=\varphi(v)$ for some unique $v\in V$ so that
+	\[\psi(gw)=\psi(g\varphi(v))=\psi(\varphi(gv))=gv=g\psi(w).\]
+\end{remark}
 Note that if $\mf g=\op{Lie}G$, then we have a functor taking $\rho\colon G\to\op{GL}(V)$ to $d\rho_e\colon\mf g\to\mf{gl}(V)$. Let's explain this.
 \begin{lemma} \label{lem:rep-theory-to-lie-alg}
 	Fix a regular Lie group $G$ with Lie algebra $\mf g$.
@@ -25,7 +28,32 @@ Note that if $\mf g=\op{Lie}G$, then we have a functor taking $\rho\colon G\to\o
 	\end{listalph}
 \end{lemma}
 \begin{proof}
-	I check this on my homework assignment.
+	For (a), we explain that $F\colon\mathrm{Rep}(G)\to\mathrm{Rep}(\mf g)$ is a functor. Here is the data.
+	\begin{itemize}
+		\item On objects, we send $\rho\colon G\to\op{GL}(V)$ to the map $d\rho_e\colon\mf g\to\mf{gl}(V)$, which we know is a morphism of Lie algebras because $\rho$ is a group homomorphism.
+
+		\item Further, we send morphisms $\varphi\colon V\to W$ of $G$-representations (namely, satisfying $\varphi\circ\rho_V(g)=\rho_W(g)\circ\varphi$ for all $g\in G$) to the morphism $d\varphi_0\colon V\to W$, which of course can be identified with the original map because $\varphi$ is linear. For this to make sense, we should check that $\varphi\colon V\to W$ preserves the $\mf g$-action if it preserves the $G$-action. Well, for $X\in\mf g$ and $v\in V$, we must check that
+		\[\varphi(d(\rho_V)_e(X)v)\stackrel?=d(\rho_W)_e(X)\varphi(v).\]
+		Well, define $\gamma\colon\FF\to G$ by $\gamma(t)\coloneqq\exp(tX)$. Then we note that linear maps (such as evaluation at $v$) pass through derivatives by their definition as a limit, so
+		\begin{align*}
+			\varphi(d(\rho_V)_e(X)v) &= \varphi(d(\rho_V)_e(\gamma'(0))v) \\
+			&= \varphi\left((\rho_V\circ\gamma)'(0)v\right) \\
+			&= \varphi\left(\frac d{dt}\rho_V\circ\gamma(t)\bigg|_{t=0}v\right) \\
+			&= \frac d{dt}\varphi(\rho_V(\gamma(t))(v))\bigg|_{t=0} \\
+			&= \frac d{dt}\rho_W(\gamma(t))(\varphi(v))\bigg|_{t=0} \\
+			&= (\rho_W\circ\gamma)'(0)(\varphi(v)) \\
+			&= d\rho_e(X)(\varphi(v)),
+		\end{align*}
+		as required.
+	\end{itemize}
+	Here are the coherence checks.
+	\begin{itemize}
+		\item Identity: note that the identity map $\id_V\colon V\to V$ on $G$-representations (which is the identity linear map) gets sent to the identity linear map $V\to V$ on $\mf g$-representations.
+		\item Associativity: for morphisms $\varphi\colon V\to V'$ and $\varphi'\colon V'\to V''$ of $G$-representations, we note that we get the exact same maps out as $\mf g$-representations, so $\psi\circ\varphi$ as a $G$-representation gets sent to $F(\psi\circ\varphi)=\psi\circ\varphi=F\psi\circ F\varphi$.
+	\end{itemize}
+	The previous point has given us our functor, so we now need to check that it is faithful for (b). Well, a $G$-invariant map $\varphi\colon V\to W$ goes to the same map $\varphi\colon V\to W$ as a $\mf g$-representation by definition of $F$. Thus, given two maps $\varphi_1,\varphi_2\colon V\to W$ of $G$-representations, we see that $F\varphi_1=F\varphi_2$ implies that
+	\[\varphi_1=F\varphi_1=F\varphi_2=\varphi_2,\]
+	as required.
 \end{proof}
 
 \subsection{Operations on Representations}
@@ -268,19 +296,19 @@ Here is also a good notion of subobjects.
 		\item For a Lie algebra $\mf g$, we see that a subspace $U\subseteq V$ preserved by the $\mf g$-action on a representation $\rho_V\colon\mf g\to\mf{gl}(V)$ means that we can restrict this linear map to $\rho_U\colon\mf g\to\mf{gl}(U)$. Notably, the Lie bracket of $\mf{gl}(U)$ is more or less the restriction of the Lie bracket on $\mf{gl}(V)$, so $\rho_U$ continues to be a Lie algebra representation, and we see that the natural inclusion $U\into V$ is a morphism in $\op{Rep}_k(\mf g)$.
 	\end{itemize}
 \end{remark}
-\begin{example}
+\begin{example} \label{ex:ker-subrep-grp}
 	Let $\varphi\colon V\to W$ be a morphism in $\op{Rep}_k(G)$. Then $\ker\varphi$ is a subrepresentation of $V$. Indeed, $\ker\varphi\subseteq V$ is certainly a linear subspace, and for the $G$-invariance, we note that any $v\ker\varphi$ has
 	\[\varphi(\rho_V(g)v)=\rho_W(g)(\varphi(v))=0\]
 	for any $g\in G$, so $\rho_V\colon G\to\op{GL}(V)$ restricts to a subrepresentation $\rho_{\ker\varphi}\colon G\to\op{GL}(\ker\varphi)$. (More precisely, we have restricted our regular action $G\times\ker\varphi\to V$ to a regular action $G\times\ker\varphi\to\ker\varphi$.)
 \end{example}
-\begin{example}
+\begin{example} \label{ex:ker-subrep-alg}
 	Let $\varphi\colon V\to W$ be a morphism in $\op{Rep}_k(\mf g)$. Again, we see that $\ker\varphi\subseteq V$ is a subrepresentation for essentially the same reason: certainly $\ker\varphi\subseteq V$ is a linear subspace, and $v\in\ker\varphi$ has $\varphi(Xv)=X(\varphi(v))=0$ for any $X\in\mf g$, so $\ker\varphi$ is closed under the $G$-action.
 \end{example}
 \begin{example} \label{ex:image-subrep}
 	Let $\varphi\colon V\to W$ be a morphism in $\op{Rep}_k(G)$. Then $\im\varphi$ is a subrepresentation of $W$. Again, it is certainly a linear subspace, and it is preserved by the $G$-action because any $g\in G$ and $\varphi(v)\in\im\varphi$ has
 	\[\rho_W(g)(\varphi(v))=\varphi(\rho_V(g)v)\in\im\varphi.\]
 \end{example}
-\begin{example}
+\begin{example} \label{ex:image-subrep-alg}
 	Let $\varphi\colon V\to W$ be a morphism in $\op{Rep}_k(\mf g)$. Then $\im\varphi$ is a subrepresentation of $W$. As usual, we have a linear subspace, and it is fixed by the $G$-action because $X\in\mf g$ and $\varphi(v)\in\im\varphi$ has $X\cdot\varphi(v)=\varphi(X\cdot v)\in\im\varphi$.
 \end{example}
 Invariants provide an important example of subrepresentations.
@@ -380,7 +408,7 @@ Here is a more general notion of invariants.
 
 \subsection{Lie's Theorems for Representation Theory}
 We now discuss how to pass the representation theory for $G$ to the representation theory of $\mf g$. We want the following lemma.
-\begin{lemma}
+\begin{lemma} \label{lem:invariants-lie-group-algebra}
 	Fix a regular Lie group $G$ with Lie algebra $\mf g$. For a representation $V\in\op{Rep}_k(G)$, give $V$ the natural $\mf g$-action via $d\rho$. Further, fix some character $\chi\colon G\to\op{GL}_1(\FF)$ inducing a character $d\chi\colon\mf g\to\mf{gl}(\FF)$.
 	\begin{listalph}
 		\item We always have $V^\chi\subseteq V^{d\chi}$.
@@ -414,11 +442,21 @@ And here is our main result.
 	Fix a regular Lie group $G$ with Lie algebra $\mf g$. Recall the functor $F\colon\mathrm{Rep}(G)\to\mathrm{Rep}(\mf g)$ sending a representation $\rho\colon G\to\op{GL}(V)$ to $d\rho_e\colon\mf g\to\mf{gl}(V)$.
 	\begin{listalph}
 		\item If $G$ is connected, then $F$ is fully faithful.
-		\item If $G$ is simply connected, then $F$ is essentially surjective and hence an equivalence.
+		\item If $G$ is connected and simply connected, then $F$ is essentially surjective and hence an equivalence.
 	\end{listalph}
 \end{proposition}
 \begin{proof}
-	I check this on my homework assignment.
+	Here we go.
+	\begin{listalph}
+		\item Suppose that $G$ is connected, and we want to show that $F$ is fully faithful. In \Cref{lem:rep-theory-to-lie-alg}, we showed that $F$ is faithful, so we now must show that $F$ is full. Well, for $G$-representations $V$ and $W$, we must show that any linear map $\varphi\in\op{Hom}_{\mf g}(V,W)$ is in fact $G$-invariant. Well, we simply note that
+		\[\op{Hom}_{\mf g}(V,W)=\op{Hom}(V,W)^{\mf g},\]
+		which equals $\op{Hom}(V,W)^G=\op{Hom}_G(V,W)$ by \Cref{lem:invariants-lie-group-algebra}, so we are done.
+
+		\item Suppose that $G$ is connected and simply connected. We want to show that $F$ is essentially surjective in order to finish the proof that $F$ is an equivalence of categories. Well, fix a representation of $\mf g$ given by some Lie algebra homomorphism $\ov\rho\colon\mf g\to\mf{gl}(V)$. Then \Cref{thm:lie-2} tells us that the differential provides a bijection
+		\[F\colon\op{Hom}_{\mathrm{LieGrp}}(G,\op{GL}(V))\cong\op{Hom}_{\mathrm{LieAlg}}(\mf g,\mf{gl}(V))\]
+		because $G$ is simply connected. In particular, there is a Lie algebra homomorphism $\rho\colon G\to\op{GL}(V)$ such that $\ov\rho=F\rho$, as required.
+		\qedhere
+	\end{listalph}
 \end{proof}
 \begin{remark}
 	Given any connected Lie group $G$ with universal cover $\widetilde G$, one can attempt to recover the representation theory of $G$ from $\widetilde G$ via the short exact sequence in \Cref{rem:universal-cover-ses}.
@@ -433,7 +471,7 @@ With direct sums, we have notions of irreducibility.
 	Fix a representation $V$. Then $V$ is \textit{indecomposable} if and only if any direct sum decomposition $V=V_1\oplus V_2$ must have $V_1=0$ or $V_2=0$.
 \end{definition}
 \begin{definition}[irreducible]
-	Fix a representation $V$. Then $V$ is \textit{irreducible} if and only if any subrepresentation $U\subseteq V$ has $U=0$ or $U=V$.
+	Fix a representation $V$. Then $V$ is \textit{irreducible} if and only if $V$ is nonzero, and any subrepresentation $U\subseteq V$ has $U=0$ or $U=V$.
 \end{definition}
 \begin{example}
 	The standard representation $V$ of $\op{GL}(V)$ is irreducible. Indeed, any nonzero subrepresentation $U\subseteq V$ has a nonzero vector $v\in U$. But then the orbit of $v$ under $\op{GL}(V)$ is $V\setminus\{0\}$, so $U$ must contain $V\setminus\{0\}$, so $U=V$.
