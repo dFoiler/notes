@@ -195,14 +195,162 @@ To understand the theorem of this subsection, we make the following observation.
 	has fewer than $m$ monomials after expanding $[X_{i_{j_\ell}},X_{i_{j_\ell+1}}]$.
 \end{remark}
 With the lemma in mind, here is our statement of the theorem.
-\begin{theorem} \label{thm:pbw}
+\begin{theorem}[Poincar\'e--Birkoff--Witt] \label{thm:pbw}
 	Fix a Lie algebra $\mf g$ over a field $F$ with basis $\{X_1,\ldots,X_n\}$. Then the ordered monomials
 	\[\left\{X_1^{d_1}\cdots X_n^{d_n}:a_1,\ldots,a_n\ge0\right\}\]
 	are linearly independent in $U\mf g$.
 \end{theorem}
 \begin{proof}
-	We omit the proof of this theorem for now because it is somewhat tedious.\todo{}
+	We will define a linear map $\varphi\colon T\mf g\to S\mf g$ satisfying the following properties.
+	\begin{listalph}
+		\item We have $\varphi\left(X_1^{d_1}\cdots X_n^{d_n}\right)=X_1^{d_1}\cdots X_n^{d_n}$ for any ordered monomial $X_1^{d_1}\cdots X_n^{d_n}$.
+		\item We have $L\mf g\subseteq\ker\varphi$.
+	\end{listalph}
+	Let's see why this will complete the proof. Note (b) tells us that $\varphi$ descends to a linear map $U\mf g\to S\mf g$. But then because the ordered monomials are linearly independent in $S\mf g$, we see that the ordered monomials of $U\mf g$ (which go the ordered monomials in $S\mf g$ by (a)) must also be linearly independent.
+
+	We will define $\varphi$ inductively by taking a union of linear maps $\varphi_k\colon\mc F_kT\mf g\to S\mf g$ satisfying the following.
+	\begin{enumerate}[label=(\alph*')]
+		\item We have $\varphi_k\left(X_1^{d_1}\cdots X_n^{d_n}\right)=X_1^{d_1}\cdots X_n^{d_n}$ for any ordered monomial $X_1^{d_1}\cdots X_n^{d_n}$ of total degree at most $k$.
+		\item We have \[\sum_{a+b+2\le k}\big\{A(XY-YX-[X,Y])B:X,Y\in\mf g,A\in\mc F_{a}T\mf g,B\in\mc F_bT\mf g\big\}\subseteq\ker\varphi_k\]
+		for each $k$. (We are not going to directly argue that the above equals $L\mf g\cap\mc F_kT\mf g$.)
+		\item $\varphi_{k+1}|_{\mc F_kT\mf g}=\varphi_k$.
+	\end{enumerate}
+	Let's quickly explain how these conditions imply the result. Here are these checks.
+	\begin{itemize}
+		\item Quickly, note that (c') tells us that our $\varphi_\bullet$s at least assemble into a function $\varphi\colon T\mf g\to S\mf g$.
+		\item Linear: we use the linearity of the $\varphi_\bullet$s. Indeed, for any $c_1,c_2\in F$ and $a_1,a_2\in T\mf g$, find some $k$ large enough so that $a_1,a_2\in\mc F_kT\mf g$, and then the linearity check
+		\[\varphi(c_1a_1+c_2a_2)\stackrel?=c_1\varphi(a_1)+c_2\varphi(a_2)\]
+		immediately reduces to the corresponding equality for $\varphi_k$.
+		\item Note that $\varphi$ satisfies (a) because the $\varphi_\bullet$s satisfy (a').
+		\item For (b), we need to show that $\ker\varphi$ contains $L\mf g$. Well, we know that $\ker\varphi$ is a subspace of $T\mf g$, so it suffices to check that an $F$-spanning subset of $L\mf g$ is contained in $\ker\varphi$. As such, it is enough to check that
+		\[A(XY-YX-[X,Y])\in\ker\varphi\]
+		for any $A\in\mc F_kT\mf g$ and $X,Y\in\mf g$. (Technically we must also check this for elements of the form $(XY-YX-[X,Y])A$, which follows by a symmetric argument.) However, the above element is in the kernel of $\varphi_{k+2}$ by (b'), so it will be in the kernel of $\varphi$.
+	\end{itemize}
+	We will construct the $\varphi_\bullet$s inductively. For $k=-1$, there is nothing to do because $\mc F_{-1}T\mf g=0$, and for $k=0$, there is still nothing to do because $\mc F_0T\mf g=F$, which must land identically to $F\subseteq S\mf g$.
+
+	We now proceed with the induction to define the $\varphi_\bullet$s. Suppose that we have defined $\varphi_k$ already, and we would like to define $\varphi_{k+1}$. Because monomials $X\coloneqq X_{i_1}\cdots X_{i_{k+1}}$ of total degree $k+1$ form a basis of $\mc F_{k+1}T\mf g=\mf g^{\otimes(k+1)}$, we merely have to define $\varphi_{k+1}$ on such unordered monomials. Well, start with an ordering of the indices $i_1\le\cdots\le i_{k+1}$, and we want to define $\varphi(\sigma(X_{i_1}\cdots X_{i_{k+1}}))$ for each $\sigma\in S_{k+1}$, where $S_{k+1}$ acts on $\mc F_{k+1}T\mf g$ by permuting the basis.
+	
+	For motivation, note that it is clearest what to do on transpositions $\sigma$: for $Y_1\cdots Y_{k+1}\in\mf g$ and a transposition $(j,j+1)\in S_{k+1}$, we see that we need
+	\begin{align*}
+		\varphi(Y_1\cdots Y_{k+1}) &= Y_1\cdots Y_{j-1}(Y_{j+1}Y_j+[Y_j,Y_{j+1}])Y_{j+2}\cdots Y_{k+1} \\
+		&= Y_1\cdots Y_{j-1}Y_{j+1}Y_jY_{j+2}\cdots Y_{k+1} \\
+		&\qquad+Y_1\cdots Y_{j-1}[Y_j,Y_{j+1}]Y_{j+2}\cdots Y_{k+1}
+	\end{align*}
+	in order for $L\mf g\subseteq\ker\varphi$.
+
+	We now iterate the computation of the previous paragraph to define $\varphi$ on general $\sigma(X_{i_1}\cdots X_{i_{k+1}})$. Because the transpositions $s_j\coloneqq(j,j+1)\in S_{k+1}$ generate $S_{k+1}$, we may decompose
+	\[\sigma=s_{j_\ell}\cdots s_{j_1}.\]
+	We now define
+	\[\varphi_{k+1}\left(\sigma(X_{i_1}\cdots X_{i_{k+1}})\right)\coloneqq X_{\sigma(i_1)}\cdots X_{\sigma(i_{k+1})}-\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big),\]
+	where the notation $[,]_j$ applied to a monomial is given by
+	\[[,]_j(Y_1\cdots Y_{k+1})\coloneqq Y_1\cdots Y_{j-1}[Y_j,Y_{j+1}]Y_{j+2}\cdots Y_{k+1},\]
+	which we note lives in $\mc F_kT\mf g$. There are many checks we must do to see that this definition works.
+	\begin{itemize}
+		\item We check that our definition does not depend on the choice of decomposition $\sigma=(j_1,j_1+1)\cdots(j_\ell,j_\ell+1)$. This is somewhat technical. To this end, we note that viewing $S_n$ as a Coxeter group with the reflection generators $s_j\coloneqq(j,j+1)$, we see that $S_{k+1}$ is generated by $\{s_1,\ldots,s_k\}$ with the generators
+		\[\begin{cases}
+			s_j^2 & \text{if }j\in\{1,\ldots,k\}, \\
+			s_js_{j'}=s_{j'}s_j & \text{if }\left|j-j'\right|\ge2, \\
+			s_js_{j+1}s_j=s_{j+1}s_js_{j+1} & \text{if }j\in\{1,\ldots,k-1\}.
+		\end{cases}\]
+		(The first relation holds because it squares a transposition. The second relation holds because $s_j$ and $s_{j'}$ are disjoint permutations. Computing $s_js_{j+1}s_j=(j,j+2)=s_{j+1}s_js_{j+1}$ gives the third relation. We will not check that these relations generate all relations.) Thus, any two decompositions may apply the above three rules to be shown equal. We will use this for our well-defined check as follows.
+		\begin{itemize}
+			\item First relation: after the dust settles, this follows by the skew-symmetry of the Lie bracket. Suppose our decompositions differ as $\sigma=\sigma_1\sigma_2=\sigma_1s_j^2\sigma_2$, where $\sigma_1=s_{j_\ell}\cdots s_{j_{r+1}}$ and $\sigma_2=s_{j_{r}}\cdots s_{j_1}$; label the second decomposition as $s_{j_{\ell+2}'}\cdots s_{j_1'}$. We now expand
+			\begin{align*}
+				& \sum_{m=0}^{\ell+1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				={}& \sum_{m=0}^{r-1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\sum_{m=0}^{r-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				&+\varphi_k\big([,]_{j_{r+1}'}(s_{j_r'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\varphi_k\big([,]_{j_{r+1}}(s_{j_r}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				&+\varphi_k\big([,]_{j_{r+1+1}'}(s_{j_{r+1}'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)+\varphi_k\big([,]_{j_{r+2+1}'}(s_{j_{r+2}'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				&+\sum_{m=r+3}^{\ell+1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\sum_{m=r+1}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big).
+			\end{align*}
+			Now, we see that the sums in each row are identically equal: in the top row, the summands are both contained in $\sigma_2$, and in the bottom row, the summands are both contained in $\sigma_1\sigma_2$. Thus, it remains to show that the middle rows cancel out. Note $s_{j'_{r+1}}\cdots s_{j_1'}=s_j\sigma_2$, and $s_{j'_{r+2}}\cdots s_{j_1'}=s_j\sigma_2=s_js_j\sigma_2$, so we see are looking at
+			\begin{align*}
+				& \varphi_k\big([,]_{j_{r+1}'}(s_{j_r'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\varphi_k\big([,]_{j_{r+1}}(s_{j_r}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				&+\varphi_k\big([,]_{j_{r+1+1}'}(s_{j_{r+1}'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)+\varphi_k\big([,]_{j_{r+2+1}'}(s_{j_{r+2}'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				={}& \varphi_k\big([,]_{j}\sigma_2X_{i_1}\cdots X_{i_{k+1}}\big)-\varphi_k\big([,]_{j_{r+1}}\sigma_2X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				&+\varphi_k\big([,]_{j}s_j\sigma_2X_{i_1}\cdots X_{i_{k+1}}\big)+\varphi_k\big([,]_{j_{r+1}}\sigma_2X_{i_1}\cdots X_{i_{k+1}}\big).
+			\end{align*}
+			The two right terms now vanish, so we want the two left terms to cancel. Well, we see that
+			\[[,]_{j}\sigma_2X_{i_1}\cdots X_{i_{k+1}}=X_{\sigma_2(i_1)}\cdots X_{\sigma_2(i_{j-1})}[X_{\sigma_2(i_j)},X_{\sigma_2(i_{j+1})}]X_{\sigma_2(i_{j+2}}\cdots X_{\sigma_2(i_{k+1})},\]
+			but
+			\[[,]_{j}s_j\sigma_2X_{i_1}\cdots X_{i_{k+1}}=X_{\sigma_2(i_1)}\cdots X_{\sigma_2(i_{j-1})}[X_{\sigma_2(i_{j+1})},X_{\sigma_2(i_{j})}]X_{\sigma_2(i_{j+2}}\cdots X_{\sigma_2(i_{k+1})},\]
+			so the two terms cancel by skew-symmetry of the Lie bracket!
+
+			\item Second relation: suppose our decompositions differ as $\sigma=\sigma_1s_{j_{r+1}}s_{j_{r+2}}\sigma_2=\sigma_1s_{j_{r+2}}s_{r+1}\sigma_2$ where $\sigma_1=s_{j_\ell}\cdots s_{j_{r+3}}$ and $\sigma_2=s_{j_r}\cdots s_{j_1}$; label the second decomposition as $s_{j_\ell'}\cdots s_{j_1'}$. We now note that the sums
+			\begin{align*}
+				& \sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)\qquad\text{and}\qquad\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big)
+				% \\
+				% ={}& \sum_{m=0}^{r-1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\sum_{m=0}^{r-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				% &+ \varphi_k\big([,]_{j_{r+1}'}(s_{j_r'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)- \varphi_k\big([,]_{j_{r+1}}(s_{j_r}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				% &+ \varphi_k\big([,]_{j_{r+2}'}(s_{j_{r+1}'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)- \varphi_k\big([,]_{j_{r+2}}(s_{j_{r+1}}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+				% &= \sum_{m=r+1}^{\ell-1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)-\sum_{m=0}^{r-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big).
+			\end{align*}
+			differ only at terms $m\in\{r,r+1\}$: otherwise, the permutations applied to $X_{i_1}\cdots X_{i_{k+1}}$ are the same, we are taking the bracket at the same location. To deal with the terms $m\in\{r,r+1\}$ without too much pain, assume $(j,j')\coloneqq(j_{r+1},j_{r+2})$ has $j<j'$ (without loss of generality) and write $\sigma_2(X_{i_1}\cdots X_{i_{k+1}})=AY_{j}Y_{j+1}BY_{j'}Y_{j'+1}C$, where $A,B,C$ are monomials, and the $Y_\bullet$s are at the corresponding location. Examining the terms for $m\in\{r,r+1\}$, we would like
+			\begin{align*}
+				&\varphi_k(AY_{j}Y_{j+1}B[Y_{j'},Y_{j'+1}]C)+\varphi_k(A[Y_{j},Y_{j+1}]BY_{j'+1}Y_{j'}C) \\
+				\stackrel?={}& \varphi_k(A[Y_{j},Y_{j+1}]BY_{j'}Y_{j'+1}C)+\varphi_k(AY_{j+1}Y_{j}B[Y_{j'},Y_{j'+1}]C).
+			\end{align*}
+			Well, by the inductive hypothesis on $\varphi_k$, we see
+			\begin{align*}
+				& \varphi_k(AY_{j}Y_{j+1}B[Y_{j'},Y_{j'+1}]C)-\varphi_k(AY_{j+1}Y_{j}B[Y_{j'},Y_{j'+1}]C) \\
+				={}& \varphi_k(A(Y_{j}Y_{j+1}-Y_{j+1}Y_j)B[Y_{j'},Y_{j'+1}]C) \\
+				={}& \varphi_k(A[Y_{j},Y_{j+1}]B[Y_{j'},Y_{j'+1}]C) \\
+				={}& \varphi_k(A[Y_{j},Y_{j+1}]B(Y_{j'}Y_{j'+1}-Y_{j'+1}-Y_{j'})C) \\
+				={}& \varphi_k(A[Y_{j},Y_{j+1}]BY_{j'}Y_{j'+1}C)-\varphi_k(A[Y_{j},Y_{j+1}]BY_{j'+1}Y_{j'}C),
+			\end{align*}
+			so we are done.
+			
+			\item Third relation: suppose our decompositions differ as $\sigma=\sigma_1s_js_{j+1}s_j\sigma_2=\sigma_1s_{j+1}s_js_{j+1}\sigma_2$, where $\sigma_2=s_{j_r}\cdots s_{j_1}$ and $\sigma_1=\sigma_{j_\ell}\cdots s_{j_{r+4}}$. Labeling the two decompositions as $s_{j_\ell}\cdots s_{j_1}$ and $s_{j_\ell'}\cdots s_{j_1'}$, respectively, we as above notice that the two sums
+			\[\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}'}(s_{j_m'}\cdots s_{j_1'})X_{i_1}\cdots X_{i_{k+1}}\big)\qquad\text{and}\qquad\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big)\]
+			only differ at terms $m\in\{r,r+1,r+2\}$, for otherwise we are applying to the same location of Lie bracket to the same permuted monomial.
+			As such, we write $\sigma_2(X_{i_1}\cdots X_{i_{k+1}})=AY_jY_{j+1}Y_{j+2}B$ for some monomials $A$ and $B$, where the $Y_\bullet$s are at the corresponding location.
+			Comparing terms $m\in\{r,r+1,r+2\}$, we would like for
+			\begin{align*}
+				&\varphi_k(A[Y_j,Y_{j+1}]Y_{j+2}B)+\varphi_k(AY_{j+1}[Y_j,Y_{j+2}]B)+\varphi_k(A[Y_{j+1},Y_{j+2}]Y_{j}B) \\
+				\stackrel?={}& \varphi_k(AY_j[Y_{j+1},Y_{j+2}]B)+\varphi_k(A[Y_j,Y_{j+2}]Y_{j+1}B)+\varphi_k(AY_{j+2}[Y_{j},Y_{j+1}]B).
+			\end{align*}
+			Well, modulo $\ker\varphi_k$, we see that
+			\begin{align*}
+				& A[Y_j,Y_{j+1}]Y_{j+2}B + AY_{j+1}[Y_j,Y_{j+2}]B + A[Y_{j+1},Y_{j+2}]Y_{j}B \\
+				={}& A\big(Y_jY_{j+1}Y_{j+2}-Y_{j+1}Y_jY_{j+2} + Y_{j+1}Y_jY_{j+2} - Y_{j+1}Y_{j+2}Y_j + Y_{j+1}Y_{j+2}Y_j - Y_{j+2}Y_{j+1}Y_j\big)B \\
+				={}& A\big(Y_jY_{j+1}Y_{j+2} - Y_{j+2}Y_{j+1}Y_j\big)B,
+			\end{align*}
+			and
+			\begin{align*}
+				& AY_j[Y_{j+1},Y_{j+2}]B + A[Y_j,Y_{j+2}]Y_{j+1}B + AY_{j+2}[Y_{j},Y_{j+1}]B \\
+				={}& A\big(Y_jY_{j+1}Y_{j+2}-Y_jY_{j+2}Y_{j+1} + Y_jY_{j+2}Y_{j+1}-Y_{j+2}Y_jY_{j+1} + Y_{j+2}Y_jY_{j+1}-Y_{j+2}Y_{j+1}Y_j\big)B \\
+				={}& A\big(Y_jY_{j+1}Y_{j+2}-Y_{j+2}Y_{j+1}Y_j\big)B,
+			\end{align*}
+			so we will get the same result out after applying $\varphi_k$.
+		\end{itemize}
+		Because the three relations generate all equalities in $S_{k+1}$, we see that our $\varphi$ does not depend on the decomposition of $\sigma$.
+
+		\item We check that the definition of $\varphi_{k+1}\left(\sigma(X_{i_1}\cdots X_{i_{k+1}})\right)$ does not depend on the choice of $\sigma$. Indeed, if $\sigma(X_{i_1}\cdots X_{i_{k+1}})=\sigma'(X_{i_1}\cdots X_{i_{k+1}})$ for two $\sigma,\sigma'\in S_{k+1}$, then $\sigma^{-1}\sigma'$ is a permutation which can only swap $X_{i_{j_1}}$ and $X_{i_{j_2}}$ when $i_{j_1}=i_{j_2}$. The collection of legal permutations is thus some product of symmetric groups (there is a permutation group for each $X_i$ because we are allowed to swap two copies of $X_i$ in different places). However, all the copies of $X_i$ in $X_{i_1}\cdots X_{i_{k+1}}$ are located right next to each other because this is an ordered monomial, so the legal permutations live in a product of symmetric groups of intervals of integers. Each of these individual symmetric groups of intervals of integers are generated by permutations $s_j$, so we can write
+		\[\sigma'=\sigma s_{j_\ell}\cdots s_{j_1},\]
+		where $s_{j_1},\ldots,s_{j_\ell}$ have $X_{i_{j_\bullet}}=X_{i_{j_\bullet+1}}$ for each $j_\bullet$.
+		
+		Thus, to check that our definition does not depend on the choice of $\sigma$, it is enough (by induction) to check that we can replace $\sigma$ with some $\sigma s_{j_1}$ when $X_{i_{j_1}}=X_{i_{j_1+1}}$. As such, we decompose $\sigma=s_{j_\ell}\cdots s_{j_2}$, and we want to show
+		\[\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big)\stackrel?=\sum_{m=1}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_2})X_{i_1}\cdots X_{i_{k+1}}\big).\]
+		These sums are term-wise equal for $m\ge1$ because it is the same Lie bracket applied to the same location of the same monomial (notably, $s_{j_1}$ fixes $X_{i_1}\cdots X_{i_{k+1}}$ by its construction). Thus, we want to show that
+		\[\varphi_k\big([,]_{j_{1}}X_{i_1}\cdots X_{i_{k+1}}\big)\stackrel?=0.\]
+		Well,
+		\[[,]_{j_{1}}X_{i_1}\cdots X_{i_{k+1}}=X_{i_1}\cdots X_{i_{j-1}}[X_{i_j},X_{i_{j+1}}]X_{i_{j+1}}\cdots X_{i_{k+1}},\]
+		which vanishes because $X_{i_j}=X_{i_{j+1}}$.
+		
+		\item We now know that our definition of $\varphi_k$ is well-defined. It remains to check that our linear map satisfies (c') for $\varphi_{k+1}$. Thus, fix some pair $(a,b)$ with $a+b+2\le k$; we may assume equality for otherwise this is true by the inductive hypothesis. The condition is linear in $A$ and $B$, so we may check it on a spanning subset of $\mc F_aT\mf g$ and $\mc F_bT\mf g$, for which we take the monomials; write $A=X_{i_1'}\cdots X_{i_a'}$ and $B=X_{i_{a+3}'}\cdots X_{i_{k+1}'}$. Similarly, the condition is linear in $X$ and $Y$, so we may assume that they are basis vectors $X_{i_{a+1}'}$ and $X_{i_{a+2}'}$. Rearranging, we would like to show that
+		\[\varphi_k(s_a(X_{i_1'}\cdots X_{i_{k+1}'}))\stackrel?=\varphi_k(X_{i_1'}\cdots X_{i_{k+1}'})-\varphi_k([,]_aX_{i_1'}\cdots X_{i_{k+1}'}).\]
+		Well, let $i_1\le\cdots\le i_{k+1}$ be an ordering, and let $\sigma\in S_{k+1}$ be the permutation so that $\sigma(i_j)=i_{\sigma(j)}'$. Thus, to compute $\varphi_k$, we expand $\sigma=s_{j_{\ell}}\cdots s_{j_1}$ and set $j_{\ell+1}\coloneqq a$ so that
+		\begin{align*}
+			\varphi_k(s_a\sigma(X_{i_1}\cdots X_{i_{k+1}})) &= X_{i_1}\cdots X_{i_{k+1}}-\sum_{m=0}^{\ell}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+			&= X_{i_1}\cdots X_{i_{k+1}}-\sum_{m=0}^{\ell-1}\varphi_k\big([,]_{j_{m+1}}(s_{j_m}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+			&\qquad-\varphi_k\big([,]_{j_{\ell+1}}(s_{j_\ell}\cdots s_{j_1})X_{i_1}\cdots X_{i_{k+1}}\big) \\
+			&= \varphi_k(\sigma (X_{i_1}\cdots X_{i_{k+1}}))-\varphi_k\big([,]_{a}\sigma (X_{i_1}\cdots X_{i_{k+1}})\big),
+		\end{align*}
+		as required.
+		\qedhere
+	\end{itemize}
 \end{proof}
+
+\subsection{Consequences of the Poincar\'e--Birkoff--Witt Theorem}
 \Cref{thm:pbw} has important consequences for the structure of $U\mf g$. Let's see some.
 \begin{corollary}
 	Fix a Lie algebra $\mf g$ over a field $F$. Then the inclusion $\mf g\to U\mf g$ is actually injective.
@@ -354,29 +502,5 @@ We next move on to results which sharpen \Cref{thm:pbw} in various ways. To begi
 % \begin{example}
 % 	One can check that the Casimir element $C=ef+fe+\frac12h^2$ lives in the center of $Z(\mf{sl}_2)$. In fact, one can show that $Z(\mf{sl}_2)$ is generated by $C$.
 % \end{example}
-
-\subsection{Ideals and Commutants}
-One can check that sums of ideals are ideals. Also, one sees that $\mf g/[\mf g,\mf g]$ is the maximal abelian quotient: if $I\subseteq\mf g$ is an ideal with $\mf g/I$ abelian, then we must have $[\mf g,\mf g]\subseteq I$.
-\begin{example}
-	One can check that $[\mf{gl}_n,\mf{gl}_n]\subseteq\mf{sl}_n$ because the trace of $XY-YX$ is zero for any $X,Y\in\mf{gl}_n$. In fact, this is an equality, which one can check by hand.
-\end{example}
-These commutants provide a derived series: we define $\left\{D^i\mf g\right\}_{i\ge0}$ inductively by $D^0\mf g\coloneqq\mf g$ and
-\[D^{i+1}\mf g\coloneqq\left[D^i\mf g,D^i\mf g\right]\]
-for all $i\ge0$. This derived series plays the role of derived series in group theory. For example, one can use this to define solvability.
-\begin{proposition}
-	Fix a Lie algebra $\mf g$. Then the following are equivalent.
-	\begin{listalph}
-		\item $D^n\mf g=0$ for $n$ sufficiently large.
-		\item There exists a sequence of subalgebras
-		\[\mf g=\mf a^0\supseteq\mf a^1\supseteq\cdots\supseteq\mf a^k=0\]
-		such that $\mf a^{i+1}$ is an ideal in $\mf a^i$ with abelian quotient.
-		\item For every $n$ sufficiently large and sequence of elements $\{x_1,\ldots,x_{2^n}\}\subseteq\mf g$, the $n$-fold commutator
-		\[[\cdots[[x_1,x_2],[x_3,x_4]],\cdots]\]
-		vanishes.
-	\end{listalph}
-\end{proposition}
-\begin{proof}
-	The equivalence of (a) and (c) has no content. Note that (a) implies (b) because one may take $\mf a^i=D^i\mf g$. One achieves (b) implies (a) by showing that $\mf a^i\supseteq D^i\mf g$ inductively.
-\end{proof}
 
 \end{document}
