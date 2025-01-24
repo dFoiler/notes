@@ -1,0 +1,76 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{January 23}
+
+This is a pretty small class, so it will be rather informal. This course is going to assume some basic \'etale theory, roughly speaking up to the construction of the derived functors and some of their fundamental properties. We will also freely black-box the difficult theorems of the theory, most notably the Grothendieck--Lefschetz trace formula.
+
+In this course, we are interested in proving the Weil conjectures, but we will be modest and focus on curves. Historically, the proof of the Weil conjectures for curves is much older than Weil II, but part of our goal will be to introduce the important relative techniques. For example, there should be a notion of weights attached to sheaves on a variety, known already from Hodge theory. However, we will require a way to see this purely from algebraic geometry; in fact, one expects the notion of weight to be motivic.
+
+\subsection{The Zeta Function}
+Let's begin by setting some notation which will be in place for the entire course. We take $k$ to be a finite field $\FF_q$ of characteristic $p$, embedded in a fixed algebraic closure $\ov k=\overline{\mathbb F_p}$; we write $q=p^n$. For brevity, we may write $k_m=\FF_{q^m}$ for each $m\ge1$. Then we let $X$ be a smooth, projective, geometrically connected variety over the field $k$; we set $d\coloneqq\dim X$.
+\begin{definition}[zeta function]
+	Let $X$ be a variety over $\FF_q$. Then we define the \textit{zeta function} as the generating function
+	\[\zeta_X(T)\coloneqq\exp\Bigg(\sum_{m=1}^\infty\left|X(\FF_{q^m})\right|\frac{T^m}m\Bigg).\]
+\end{definition}
+In order to do algebraic geometry to $\zeta_X(T)$, we would like to have a different description for $X(\FF_{q^m})$. For this, we need to discuss closed points.
+\begin{definition}[closed point]
+	Let $X$ be a variety over $k$. Then a point $x\in X$ is \textit{closed} if and only if $\dim\overline{\{x\}}=0$. Its \textit{degree} $\deg x$ is the degree $[k(x):k]$, where $k(x)$ is the minimal field of definition.
+\end{definition}
+We now see that
+\[X(\FF_{q^m})=\op{Mor}_{\FF_q}\left(\op{Spec}\FF_{q^m},X\right).\]
+For example, we see that this consists of the collection of closed points $x\in X$ of degree dividing $m$, counted with a certain multiplicity.
+
+Now, to read off fields of definition, we introduce some Frobenius morphisms.
+\begin{definition}
+	Fix a scheme $X$ over $k=\FF_q$. Then there is a \textit{Frobenius morphism} $\mathrm{Frob}_X\colon X\to X$ defined as being an identity on the underlying topological space and the $q$-power map on $\OO_X$. We may write $\mathrm{Frob}_{X,q}$ for $\mathrm{Frob}_X$ if we want to remember the power. We may also extend scalars and write $\mathrm{Frob}_{X_{\ov k},q}=\mathrm{Frob}_{X,q}\times\id_{\ov k}$, which we note is a morphism of schemes over $\ov k$ by its construction.
+\end{definition}
+\begin{remark}
+	Fix a morphism $f\colon X\to Y$ of schemes over $\FF_q$. Then we see $\mathrm{Frob}_Y\circ f=f\circ \mathrm{Frob}_X$, which can be checked directly: both sides are $f$ on the topological spaces, and both sides are the same on the level of sheaves.
+\end{remark}
+\begin{example}
+	On $\AA^n_k=\op{Spec}k[x_1,\ldots,x_n]$, our Frobenius map may be defined as the $k$-algebra endomorphism of $k[x_1,\ldots,x_n]$ which sends $x_i\mapsto x_i^q$. Thus, on points, we see that $(p_1,\ldots,p_n)\in\AA^n_k(\ov k)$ has
+	\[F_{\AA^n_k}(p_1,\ldots,p_n)=\left(\op{Frob}_{q}^{-1}p_1,\ldots,\op{Frob}_q^{-1}p_n\right).\]
+\end{example}
+\begin{remark}
+	We now see that we can think about $X(\FF_q)$ as the subset of $X(\ov k)$ fixed by $F_{X,q^m}$. Thus, we note that one can realize $X(k_m)$ as the set of closed points of the scheme $(\Gamma_{F_{X,q^m}}\cap\Delta)$, where $\Delta\colon X\times X\to X$ is the diagonal map.
+\end{remark}
+\begin{definition}[arithmetic Frobenius]
+	The \textit{arithmetic Frobenius} $\op{Frob}_k$ is the $q$-power automorphism of $\ov k$.
+\end{definition}
+\begin{definition}[geometric Frobenius]
+	Let $X$ be a scheme over $k$. Then we define the \textit{geometric Frobenius} of $X_{\ov k}$ as $F_X\coloneqq{\id_{X_{\ov k}}}\times\op{Frob}_k^{-1}$. It fits in the following commutative diagram.
+	% https://q.uiver.app/#q=WzAsNyxbMSwxLCJYX3tcXG92IGt9Il0sWzIsMSwiWCJdLFsyLDIsIlxcU3BlYyBrIl0sWzEsMiwiXFxTcGVjXFxvdiBrIl0sWzEsMCwiWCJdLFswLDEsIlxcU3BlY1xcb3YgayJdLFswLDAsIlhfe1xcb3Yga30iXSxbMywyLCJcXG9we0Zyb2J9X2teey0xfSIsMl0sWzAsM10sWzEsMl0sWzAsMV0sWzQsMSwiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNSwzXSxbNiw0XSxbNiwwLCJGX1giLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNiw1XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}
+		{X_{\ov k}} & X \\
+		{\Spec\ov k} & {X_{\ov k}} & X \\
+		& {\Spec\ov k} & {\Spec k}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["{F_X}"{description}, dashed, from=1-1, to=2-2]
+		\arrow[equals, from=1-2, to=2-3]
+		\arrow[from=2-1, to=3-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-2, to=3-2]
+		\arrow[from=2-3, to=3-3]
+		\arrow["{\op{Frob}_k^{-1}}"', from=3-2, to=3-3]
+	\end{tikzcd}\]
+\end{definition}
+\begin{definition}[absolute Frobenius]
+	Let $X$ be a scheme over $k$. One can check that $F_X$ commutes with $\mathrm{Frob}_{X,q}$. We then define the \textit{absolute Frobenius} as the composite $F_X\circ\mathrm{Frob}_{X_{\ov k},q}$.
+\end{definition}
+\begin{remark}
+	It turns out that the absolute Frobenius is the identity on the level of \'etale cohomology.
+\end{remark}
+We now return to our zeta function. To be able to undo the exponential, we note
+\[\log\left(\frac1{1-T^d}\right)=\sum_{m\ge1}d\cdot\frac{T^{nd}}{dn}.\]
+Thus,
+\[\sum_{m\ge1}\left|X(\FF_{q^m})\right|\frac{T^m}m=\sum_{\text{closed }x\in X}\log\left(\frac1{1-T^{\deg x}}\right),\]
+so taking the exponential reveals
+\[\zeta_X(T)=\prod_{\text{closed }x\in X}\frac1{1-T^{\deg x}},\]
+and now this Euler product appears similar to the usual Euler products we expect.
+
+\end{document}
