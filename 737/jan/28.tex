@@ -1,0 +1,109 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{January 28}
+
+Today we do something with cohomology.
+
+\subsection{The Rationality Conjecture}
+We would like to relate our zeta function to cohomology. It turns out that the key input is the following result.
+\begin{theorem}[Grothendieck--Lefschetz trace formula] \label{thm:g-l-trace}
+	Let $X$ be a smooth projective variety over a finite field $k=\FF_q$. Then
+	\[X\left(\FF_{q^m}\right)=\sum_{i\ge0}(-1)^i\tr\left(\mathrm{Frob}_{X_{\ov k}}^m;\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)\right).\]
+\end{theorem}
+Here, recall that
+\[\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)=\limit\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\ZZ/\ell^\bullet\ZZ)\otimes_{\ZZ_\ell}\QQ_\ell.\]
+Namely, this is our Weil cohomology (over the field $\QQ_\ell$) produced by \'etale cohomology.
+\begin{remark}
+	It is the goal of Weil II (and thus of the course) to be able to work more general local systems than the ``constant'' sheaf $\QQ_\ell$.
+\end{remark}
+To relate this to $\zeta_X$, we recall the following result from linear algebra.
+\begin{lemma} \label{lem:exp-tr-is-det}
+	Fix an endomorphism $\varphi$ of a finite-dimensional vector space $V$ (over a field $K$). Then we have an equality of power series
+	\[\exp\Bigg(\sum_{m\ge1}\tr\left(\varphi^m;V\right)\frac{T^m}m\Bigg)=\det\left(1-\varphi T;V\right)^{-1}.\]
+\end{lemma}
+\begin{proof}
+	It is enough to check the equality after base-changing to the algebraic closure, so we may assume that $K$ is algebraically closed. Then we may give $V$ a basis so that $\varphi$ is upper-triangular.
+
+	Let $\{\lambda_1,\ldots,\lambda_d\}$ be the eigenvalues of $\varphi$. Then we are tasked with showing
+	\[\exp\Bigg(\sum_{m\ge0}\sum_{i=1}^d\lambda_i^m\cdot\frac{T^m}m\Bigg)\stackrel?=\prod_{i=1}^d\frac1{1-\lambda_iT}.\]
+	Well, we may move the sum on the left-hand side outside so that we see we are interested in showing
+	\[\exp\Bigg(\sum_{m\ge1}\frac{(\lambda T)^m}m\Bigg)=\frac1{1-\lambda T}\]
+	for any eigenvalue $\lambda$ of $\varphi$. The result now follows by considering the Taylor expansion $-\log(1-x)=\sum_{m\ge1}x^m/m$.
+\end{proof}
+Here is the punchline: we are able to prove the rationality conjecture.
+\begin{proposition}[Rationality]
+	Let $X$ be a smooth projective variety over a finite field $k=\FF_q$ of dimension $d$. Then there are polynomials $P_0,\ldots,P_{2d}\in\QQ_\ell[T]$ such that
+	\[Z_X(T)=\frac{P_1(T)\cdots P_{2d-1}(T)}{P_0(T)\cdots P_{2d}(T)}.\]
+\end{proposition}
+\begin{proof}
+	By \Cref{thm:g-l-trace}, we see that
+	\[Z_X(T)=\prod_{i=0}^{2d}\exp\Bigg(\sum_{m\ge1}\tr\left(\mathrm{Frob}_{X_{\ov k}}^m;\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)\right)\frac{T^m}m\Bigg)^{(-1)^i}.\]
+	We now define
+	\[P_i(T)\coloneqq\det\left(1-\mathrm{Frob}_{X_{\ov k}}T;\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)\right).\]
+	The result now follows from \Cref{lem:exp-tr-is-det}.
+\end{proof}
+\begin{remark}
+	In fact, we see that $P_i(T)$ has degree $\dim \mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)$. This fact can be combined with the comparison theorem to Betti cohomology.
+\end{remark}
+\begin{remark}
+	We thus see that $Z_X(T)\in\QQ_\ell(T)$, so because we already know $Z_X(T)\in\QQ[[T]]$, we see $Z_X(T)\in\QQ(T)$.
+\end{remark}
+\begin{remark}
+	It turns out that $P_i(T)\in\ZZ[T]$ and is independent of $\ell$, but the proof above does not show this.
+\end{remark}
+\begin{example}
+	At $i=0$, we see that the Frobenius acts trivially on $\mathrm H^0_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)=\QQ_\ell$, so $P_0(T)=1-T$. Using Poincar\'e duality, we can similarly compute $P_{2d}(T)=1-q^{d}T$.
+\end{example}
+\begin{remark}
+	There is also a functional equation for $Z_X(T)$, which is purely formal from the above expression for $Z_X$ when combined with Poincar\'e duality for \'etale cohomology.
+\end{remark}
+
+\subsection{The Riemann Hypothesis}
+This course will be interested in the following conjecture.
+\begin{conj}[Riemann hypothesis]
+	Let $X$ be a smooth projective variety over a finite field $k=\FF_q$ of dimension $d$. Fix an index $i\in\{0,\ldots,2d\}$.
+	\begin{listalph}
+		\item The eigenvalues of $\mathrm{Frob}_{X_{\ov k}}$ on $\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\QQ_\ell)$ are algebraic integers of magnitude $q^{i/2}$.
+		\item $P_i(T)\in\ZZ[T]$ and is independent of $\ell$.
+	\end{listalph}
+\end{conj}
+The condition in (a) is interesting enough to deserve a name.
+\begin{defihelper}[$q$-Weil] \nirindex{q-Weil@$q$-Weil}
+	An algebraic integer $\alpha\in\ov\QQ$ is \textit{$q$-Weil of weight $i$} if and only if $\left|\iota(\alpha)\right|=q^{i/2}$ for all embeddings $\iota\colon\ov\QQ\into\CC$.
+\end{defihelper}
+\begin{example}
+	The number $\sqrt2$ is a $2$-Weil number. The number $1+\sqrt2$ is not a $q$-Weil number for any $q$.
+\end{example}
+In general, we find that the eigenvalues of a Frobenius action on a local system will still be $q$-Weil numbers of prescribed weight.
+
+To be precise, the goal of this course will be to prove the following generalization of the above Riemann hypothesis.
+\begin{theorem}[Deligne] \label{thm:weil-ii}
+	Let $f\colon X\to Y$ be a morphism of schemes of finite type over $\FF_q$. Fix an index $i$ and a locally constant constructible $\ov\QQ_\ell$-sheaf $\mc F$ on $X$ that is mixed of weights at most $n$. Then $R^if_!\mc F$ is also mixed of weights at most $w+i$.
+\end{theorem}
+We will define the notion of weights shortly. The idea intuitively comes from Hodge theory: the cohomology groups on a complex K\"ahler manifold naturally have a weight filtration, which then lifts to sheaves by taking a suitable compactification and studying differential forms suitably. Weights in our context will come from reading off $q$-Weil numbers.
+\begin{remark}
+	Issues with compactification explain why we are forced to merely deal with mixed weights instead of upgrading this result to one on pure weights. Already this can be seen in Hodge theory.
+\end{remark}
+This course will not prove \Cref{thm:weil-ii} in full. Instead, we will focus on the case where $f$ has fibers of dimension $1$; it turns out that the general case follows from this from some argument involving fibering by curves and using the Leray spectral sequence.
+\begin{corollary}
+	Let $X$ be a scheme of finite type over $\FF_q$. Fix an index $i$ and a locally constant constructible $\ov\QQ_\ell$-sheaf $\mc F$ on $X$.
+	\begin{listalph}
+		\item If $\mc F$ is mixed of weights at most $n$, then $\mathrm H^i_{c,\mathrm{\acute et}}(X_{\ov k},\mc F)$ is mixed of weights at most $n+i$.
+		\item If $\mc F$ is mixed of weights at least $n$, then $\mathrm H^i_{c,\mathrm{\acute et}}(X_{\ov k},\mc F)$ is mixed of weights at least $n+i$.
+		\item Assume that $X$ is smooth and that $\mc F$ is pure of weight $n$. Then the image of the canonical map $\mathrm H^i_{c,\mathrm{\acute et}}(X_{\ov k},\mc F)\to\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\mc F)$ is pure of weight $n+i$.
+		\item Assume that $X$ is smooth and proper and that $\mc F$ is pure of weight $n$. Then $\mathrm H^i_{\mathrm{\acute et}}(X_{\ov k},\mc F)$ is pure of weight $n+i$.
+	\end{listalph}
+\end{corollary}
+\begin{proof}
+	Here, (a) is direct from \Cref{thm:weil-ii}. Then (b) will follow from (a) via Poincar\'e duality as soon as we know that the duality given by Poincar\'e duality inverts the weights. Now, (c) follows from combining (a) and (b), and (d) follows from (c).
+\end{proof}
+\begin{remark}
+	One can then prove the result for sheaves over $\QQ_\ell$ by base-changing up to the algebraic closure.
+\end{remark}
+The moral of the story is that we are going to use weights to significant profit in this course. Next class we will define weights.
+
+\end{document}
