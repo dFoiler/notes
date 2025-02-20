@@ -1,0 +1,205 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 20}
+
+Here we go.
+
+\subsection{Frobenius and Verschiebung}
+Let's write down a Frobenius and Verschiebung for finite groups. For motivation, we recall the construction of the relative Frobenius. Fix a scheme $X$ over a field $k$ of positive characteristic $p$. Then we draw the following pullback diagram.
+% https://q.uiver.app/#q=WzAsNSxbMSwxLCJYXnsocCl9Il0sWzIsMSwiWCJdLFsyLDIsIlxcU3BlYyBrIl0sWzEsMiwiXFxTcGVjIGsiXSxbMCwwLCJYIl0sWzMsMiwiXFxzaWdtYSJdLFswLDEsIlxcc2lnbWEiXSxbMCwzXSxbMSwyXSxbNCwxLCJcXHNpZ21hIiwwLHsiY3VydmUiOi0yfV0sWzQsMywiIiwwLHsiY3VydmUiOjJ9XSxbNCwwLCJGX3tYL2t9IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}
+	X \\
+	& {X^{(p)}} & X \\
+	& {\Spec k} & {\Spec k}
+	\arrow["{F_{X/k}}"{description}, dashed, from=1-1, to=2-2]
+	\arrow["\sigma", curve={height=-12pt}, from=1-1, to=2-3]
+	\arrow[curve={height=12pt}, from=1-1, to=3-2]
+	\arrow["\sigma", from=2-2, to=2-3]
+	\arrow[from=2-2, to=3-2]
+	\arrow[from=2-3, to=3-3]
+	\arrow["\sigma", from=3-2, to=3-3]
+\end{tikzcd}\]
+Concretely, $X^{(p)}$ is $X\to\Spec k$ pulled back everywhere by Frobenius. On affine open subsets of finite type, one writes $U=\Spec k[x_1,\ldots,x_n]/(f_1,\ldots,f_n)$, and then $X^{(p)}$ is cut out by the same variables but where the coefficients of the polynomials are $\sigma(f_\bullet)$. Then we note that our map $F_{X/k}$ above is the relative Frobenius, which is understood to send the variables $x_\bullet\mapsto x_\bullet^p$ on affine open subsets of finite type.
+
+We are now ready to define the Frobenius and Verschiebung.
+\begin{definition}[Frobenius]
+	Fix an affine commutative group $G$ over a field $k$ of positive characteristic $p$. This is the map $F_G\colon G\to G^{(p)}$ given in the above construction.
+\end{definition}
+\begin{remark}
+	Let's give a more concrete definition when the group is finite. Write $A=k[G]$ for the underlying Hopf algebra of $G$. Then our map $A^{(p)}\to A$ is given by
+	\[a\mapsto\underbrace{(a\otimes\cdots\otimes a)}_p\mapsto a^p,\]
+	where the last map is the $k$-linear multiplication.
+\end{remark}
+For the Verschiebung, one should imagine taking a Cartier dual.
+\begin{definition}[Verschiebung]
+	Fix an affine commutative group $G$ over a field $k$ of positive characteristic $p$. Let $A$ be the underlying Hopf algebra, and then we define the Verschiebung morphism $G^{(p)}\to G$ to be given by $A\to A^{(p)}$ by the composite
+	\[\arraycolsep=1.4pt\begin{array}{ccccccc}
+		A &\to& (A\otimes\cdots\otimes A)^{S_p} &\to& A^{(p)} \\
+		a &\mapsto& a\otimes\cdots\otimes a &\mapsto& a
+	\end{array}\]
+	where the last map is uniquely defined by sending those invariant tensors as shown.
+\end{definition}
+\begin{remark}
+	Note that this last map notably sends $(ca\otimes\cdots\otimes ca)\mapsto c^pa$, which explains why the target should be $A^{(p)}$ and $A$: this last map is not $k$-linear but only $\sigma$-semilinear!
+\end{remark}
+For each of our finite group examples, let's explain what happens to the Frobenius and Verschiebung.
+\begin{example}
+	Because Frobenius acts by $0$ on $\alpha_p$, we see that the Verschiebung is $0$ as well.
+\end{example}
+\begin{example}
+	Frobenius acts as an isomorphism on the constant groups $\ZZ/N\ZZ$ for any $N$.
+\end{example}
+\begin{example}
+	Frobenius acts by $0$ on $\mu_p$ and as an isomorphism on $\mu_N$ when $\gcd(p,N)=1$.
+\end{example}
+This suggests the following classification.
+\begin{proposition}
+	Fix a finite group $G$ over a base field $k$ of positive characteristic $p$.
+	\begin{listalph}
+		\item Then $G$ is connected if and only if the Frobenius $F$ is nilpotent.
+		\item Then $G$ is \'etale if and only if the Frobenius $F$ is an isomorphism.
+		\item Dually, $G$ is unipotent if and only if the Verschiebung $V$ is nilpotent.
+		\item Dually, $G$ is multiplicative if and only if the Verschiebung $V$ is an isomorphism.
+	\end{listalph}
+\end{proposition}
+These last two conditions have more intuitive descriptions.
+\begin{proposition}
+	Fix a finite group $G$ over a base field $k$ of positive characteristic $p$.
+	\begin{listalph}
+		\item The group $G$ is unipotent if and only if $G$ embeds into as a subgroup of upper-triangular unipotent matrices. More abstractly, there is a filtration of normal subgroups with quotients embedding in $\mathbb G_a$.
+		\item The group $G$ is multiplicative if and only if $G$ embeds into a split torus.
+	\end{listalph}
+\end{proposition}
+
+\subsection{Semilinear Algebra for Fun and Profit}
+We are now ready to state a classification theorem.
+\begin{theorem} \label{thm:witt-for-finite-groups}
+	Fix a perfect field $k$ of positive characteristic $p$. Then the rings $W_n$ generate the category of affine unipotent finite type abelian groups over $k$ in the following sense: the functor $G\to M(G)$ given by
+	\[M\colon G\mapsto\colimit\op{Hom}(G,W_\bullet)\]
+	is a contravariant fully faithful embedding into $\op{End}(W_\infty)$-modules, where $W_\infty=\colimit W_n$.
+\end{theorem}
+\begin{remark}
+	More succinctly, we can think about the functor $M$ as
+	\[\op{Hom}(G,W_\infty),\]
+	where $W_\infty$ is some direct limit. For example, one can think of $W_\infty(\FF_p)$ as $\QQ_p/\ZZ_p$ because the direct limit morphisms are approximately compatible with identifications
+	\[W_n(\FF_p)=\ZZ_p/p^n\ZZ_p\cong\frac1{p^n}\ZZ_p/\ZZ_p\subseteq\QQ_p/\ZZ_p.\]
+\end{remark}
+\begin{remark}
+	This is a fairly typical statement in representation theory: one has a category we'd like to understand, so we pick up some particularly interesting objects $W_\bullet$ in it, and it turns out that we can read off the entire category from these elements as modules in some sense.
+\end{remark}
+This is a nice result because it tells us that our $p$-power unipotent groups are found in some linear algebra.
+
+Let's spend a moment describing $\op{End}(W_\infty)$. Of course, $W$ has an action on $W_\infty$: admittedly one has to twist the action a bit because the embeddings $W_n\to W_{n+1}$ are not actually $W$-equivariant, but one can fix it by defining
+\[w\star x\coloneqq \sigma^{1-n}(w_n)x\]
+for $w\in W$ and $x\in W_n$, where the multiplication on the right is happening in $W_n$. But there are more endomorphisms: there is a Frobenius morphism $F\colon W_\infty\to W_\infty$ (glued together from the Frobenius morphism above), and there is a Verschiebung $V$ morphism. In fact, we claim that these are all the endomorphisms.
+\begin{definition}[Dieudonn\'e module]
+	Fix a perfect field $k$ of positive characteristic. Then we define the \textit{Dieudonn\'e ring} as being generated by the Witt vectors $W(k)$ and two extra variables $F$ and $V$ subject to the requirements
+	\[\begin{cases}
+		F\circ\lambda = \sigma\lambda\circ F, \\
+		V\circ\sigma\lambda = \lambda\circ V,
+	\end{cases}\]
+	where $\lambda\in W(k)$.
+\end{definition}
+\begin{lemma}
+	Fix a perfect field $k$ of positive characteristic. Then $\op{End}_kW_n=D_k/D_kV^n$ for any $n\ge0$, and $\op{End}_kW_\infty=D_k$.
+\end{lemma}
+\begin{remark}
+	The essential image of $M$ in \Cref{thm:witt-for-finite-groups} can now be described as requiring that $V$ acts as a nilpotent operator.
+\end{remark}
+\begin{remark}
+	One can now restrict \Cref{thm:witt-for-finite-groups} to an equivalence between the category finite unipotent groups over $k$ and the category of $D_k$-modules which have finite length as a $W(k)$-module.
+\end{remark}
+With the above remark in hand, we are able to classify all $p$-power torsion groups with some Cartier duality.
+\begin{theorem}
+	Fix a perfect field $k$ of positive characteristic $p$. Then there is an equivalence $M$ of categories between the category of finite $p$-power torsion abelian groups over $k$ and the category of $D_k$-modules of finite length as a $W(k)$-module. It is categorized as follows.
+	\begin{listroman}
+		\item If $G$ is unipotent, then $M(G)$ is defined as in \Cref{thm:witt-for-finite-groups}.
+		\item For any finite $G$, one has $M(G^\lor)=M(G)^\lor$.
+	\end{listroman}
+\end{theorem}
+\begin{remark}
+	In particular, it is true that \'etale-\'etale groups are never $p$-power torsion.
+\end{remark}
+% \subsection{Back to \texorpdfstring{$p$}{p}-Divisible Groups}
+We now go back to classify $p$-divisible groups. Here is our result.
+\begin{theorem}
+	Fix a perfect field $k$ of positive characteristic $p$. For a $p$-divisible group $\mc G=\{G_n\}_{n\ge1}$, we define the functor $M$ out of $p$-divisible groups by
+	\[M\mc G\coloneqq\limit M(G_\bullet).\]
+	Then $M$ is an equivalence between the following two categories.
+	\begin{itemize}
+		\item The category of $p$-divisible groups (of height $h$).
+		\item The category of $D_k$-modules which are free of rank $h$ as $W(k)$-modules and such that $FV=p$.
+	\end{itemize}
+\end{theorem}
+\begin{remark}
+	The condition that we have a $D_k$-action on $M$ with $FV=p$ can be recast as requiring that our modules have a $\sigma$-semilinear endomorphism $F$ (over $W(k)$) such that $pM\subseteq FM$. Roughly speaking, one can construct $V$ uniquely from this condition by attempting to invert the isomorphism
+	\[pM[1/p]\cong FM[1/p].\]
+\end{remark}
+Let's indicate how some of these conditions come about.
+\begin{itemize}
+	\item The fact that $G_1$ is $p$-torsion turns out to require that $FV=p$. Namely, $G_1$ being $p$-torsion means that $FV$ should vanish on $MG_1$, and similarly, we see that $FV$ on $G_n$ becomes the map $p\colon G_n\to G_{n-1}$ which should be some kind of surjection.
+	\item The rank condition comes about because one finds that $\deg G_n=p^{nh}$ for each $n\ge1$.
+\end{itemize}
+Lastly, we go all the way back to formal $p$-divisible groups. Because we haven't yet, let's give a definition.
+\begin{definition}
+	A \textit{formal $p$-divisible group} $\mc G$ of dimension $d$ consists of the data of a formal group law on the formal neighborhood $A\coloneqq k[[X_1,\ldots,X_d]]$ such that the multiplication map $[p]\colon\mc G\to\mc G$ is an isogeny (i.e., the induced map $[p]\colon A\to A$ presents $A$ as a locally free module over itself).
+\end{definition}
+\begin{remark}
+	There is a functor sending such formal $p$-diivisible groups $\mc G$ to $p$-divisible groups given by
+	\[\mc G\mapsto\left\{\mc G[p^n]\right\}_{n\ge1}.\]
+	This functor is fully faithful, and it preserves dimensions in some sense.
+\end{remark}
+\begin{remark}
+	There is a way to read the dimension of $\mc G$ off of only(!) the $p$-divisible group $\{G_n\}_{n\ge1}$ where $G_n\coloneqq\mc G[p^n]$. Roughly speaking, it turns out that one can do some tangent space computations. Notably, it turns out that $h(G)=h(G')$, but it turns out that $\dim\mc G+\dim\mc G'=h$.
+\end{remark}
+\begin{example}
+	Here are two examples.
+	\begin{itemize}
+		\item The $p$-divisible group $G=\QQ_p/\ZZ_p$ has dimension $0$ because it is \'etale everywhere.
+		\item The $p$-divisible group $G=\mu_{p^\infty}$ has dimension $1$ because it comes from the formal group $\widehat{\mathbb G}_m$.
+	\end{itemize}
+	Do note that both of these examples have height $1$.
+\end{example}
+\begin{remark}
+	Our CM and Lubin--Tate stories can be seen as explaining what happens with our formal groups of dimension $1$ and varying height. Similarly, local Langlands for $\mathrm{GL}_2(\QQ_p)$ works with dimension $1$ and varying height. However, there is a use for higher dimension: abelian varieties of dimension $g$ produce formal $p$-divisible groups of height $2g$, and abelian varieties are relevant to us because they produce the CM theory for CM fields.
+\end{remark}
+
+\subsection{A Little Local Langlands}
+Let's finish today's lectures by indicating what local Langlands looks like for $\mathrm{GL}_h$, for fixed height $h$.
+
+Let's build a tower of moduli spaces. We begin with a moduli space $\mc M_0$ of (connected) one-dimensional $p$-divisible groups of height $h$ (over $\ZZ_p$ or something like this). More generally, for $n\ge0$, we let $\mc M_n$ be the moduli space of one-dimensional $p$-divisible groups of height $h$ but with $p^n$-level structure; for example, in the \'etale case, we choose to fix an isomorphism $G_n\cong\left(\frac1{p^n}\ZZ/\ZZ\right)^h$. This produces a tower
+\[\cdots\to\mc M_{n+1}\to\mc M_n\to\mc M_{n-1}\to\cdots\to\mc M_2\to\mc M_1\to\mc M_0,\]
+and we will call the limiting tower by $\mc M_\infty$. We would like to say that something about $\mathrm H^\bullet(\mc M_\infty)$ realizes the local Langlands correspondence. Namely, we would like to have something like
+\[\mathrm H^\bullet(\mc M_\infty)\approx\bigoplus_{\rho\colon W_{\QQ_p}\to\mathrm{GL}_h(\QQ_p)}\rho\boxtimes\mathrm{LLC}(\rho),\]
+where $\rho$ is a representation of the Weil group $W_{\QQ_p}$, and $\mathrm{LLC}(\rho)$ is a representation of $\mathrm{GL}_h(\QQ_p)$. Here are some reasons why this doesn't work.
+\begin{enumerate}[label=(\roman*)]
+	\item Morally, the trivializations admit some action by $\mathrm{GL}_h(\ZZ_p)$ instead of $\mathrm{GL}_h(\QQ_p)$, so something must be a bit wrong.
+	\item There is an additional action by a group $J=\op{Aut}\mc G_0$, where $\mc G_0$ is the unique connected one-dimensional $p$-divisible group of height $h$ over $\ov\FF_p$. Concretely, $\mc G_0$ can be realized as $W(\ov\FF_p)^h=\ZZ_{p^\infty}^h$, where we twist the Frobenius $\sigma$-action by the automorphism
+	\[\sigma\star v=\begin{bmatrix}
+		0 & 1 & 0 & \cdots & 0 & 0 \\
+		0 & 0 & 1 & \cdots & 0 & 0 \\
+		0 & 0 & 0 & \cdots & 0 & 0 \\
+		\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+		0 & 0 & 0 & \cdots & 0 & 1 \\
+		p & 0 & 0 & \cdots & 0 & 0
+	\end{bmatrix}(\sigma v).\]
+	Then one can realize $J$ as the units of some division algebra, which one can see from some explicit construction of the Dieudonn\'e module of $\mc G_0$. One finds that $J$ looks like the units in some division algebra $D$.
+\end{enumerate}
+To fix this, maybe we should write something like
+\[\mathrm H^\bullet(\mc M_\infty)\approx\bigoplus_{\rho\colon W_{\QQ_p}\to\mathrm{GL}_h(\QQ_p)}\rho\boxtimes\mathrm{LLC}(\rho)\boxtimes\mathrm{JL}(\mathrm{LLC}(\rho)),\]
+where the last term is a representation of $D_h(\QQ_p)$. This still doesn't work. Here is another reason.
+\begin{enumerate}[label=(\roman*), resume]
+	\item The moduli space $\mc M_\infty$ doesn't even make sense. We swept the trivializations under the rug, but they present a genuine problem to make $\mc M_\infty$ live over $\ZZ_p$ because our groups are frequently connected over the special fiber. Instead, $\mc M_0$ will only be able to be pro-representable over Artinian algebras: it sends an Artinian local ring $A$ with residue field $k$ to a pair $(\mc G,\iota)$, where $\mc G$ is a $p$-divisible group over $A$, and $\iota\colon\mc G_0\to\mc G|_k$ is some isomorphism.
+	
+	We will now only be able to lift $\mc M_0$ to the formal scheme $\op{Spf}\ZZ_p$, and the $\mc M_n$s will only be able to live over $\op{Spf}\ZZ_p$ minus a point (which is merely a rigid analytic space) because the trivializations we are asking for do not live over the special fiber! (Namely, the special fiber has all of its torsion trivial.)
+
+	\item Any kind of rigid cohomology of $\mathrm H^\bullet(\mc M_n)$ we choose will be enormous. The problem is that we end up looking at some sort of meromorphic functions on a non-compact space, so one needs to do some fixing.
+
+	To fix this, one should add some finiteness conditions coming from vanishing cycles next to the special fiber.
+\end{enumerate}
+
+\end{document}
