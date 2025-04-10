@@ -67,7 +67,97 @@ The above remark motivates the following definition.
 The point of this definition is to read off the value of $w(\mc G_0)$ without an assumption that the Frobenius eigenvalues of $\mc G_0$ are actually controlled. Namely, we have recovered weights on the ``function'' side of the sheaf-function correspondence.
 \begin{remark}
 	Alternatively, one can check that $q^{-\norm{G_0}-\dim X}$ is the radius of convergence of the power series
-	\[\varphi^{\mc G_0}(t)\coloneqq\sum_{m=1}^\infty\norm{f^{\mc G_0}}_m^2t^{m-1}.\]
+	\[% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 8}
+Welcome back.
+
+\subsection{Recollections on Waldspurger's Formula}
+For context, we are working in the context of smooth admissible representations. Globally over a number field $F$, this means that we are looking at some kind of representation $\pi$ of $G(\AA_F)$, which then has a decomposition into a restricted tensor product $\bigotimes'_v\pi_v$. For our setup, we take $G$ to be a suitable form of $\op{GL}_2$: let $K/F$ be a quadratic extension (where $F$ will be set to $\QQ$ later), we let $T$ be the torus $\op{Res}_{K/F}\mathbb G_{m,F}$, which is naturally embedded in $G\coloneqq\op{GL}_F(K)$, which is non-canonically isomorphic to $\op{GL}_2$.
+
+Now, for $\chi$ and $\pi$ automorphic representations of $T$ and $G$ (respectively), we may set $\widetilde G\coloneqq(T\times G)/\mathbb G_m$. For Waldspurger's formula, we set $\delta_T\colon\chi\boxtimes\pi\to\CC$ to be the distribution given by integration over $\int_{[\mathbb G_m\backslash T]}$. Waldspurger's formula will compute the spectral decomposition of $\delta_T$. Morally, we would like to expand
+\[\langle\delta_T,\delta_T\rangle\approx\int_{\widehat{\widetilde G}}\langle\delta_T,\delta_T\rangle_{\chi\boxtimes\pi}\,d(\chi\boxtimes\pi)\]
+in terms of the special values $L(1/2,\pi\times\chi)$. We can think about $\langle\delta_T,\delta_T\rangle_{\chi\boxtimes\pi}$ formally as $\sum_{\varphi\in\op{ON}(\pi)}\left|\ell_\chi(\varpi)\right|^2$ (here, $\op{ON}(\pi)$ is an orthonormal basis), where
+\[\ell_\chi(\varphi)\coloneqq\int\varphi(t)\chi(t)\,dt\]
+for $\varphi\in\pi$. However, this latter sum is infinite, so we must do some regularization. Here are two ways to regularize.
+\begin{itemize}
+	\item Perhaps we can try to write a formula for $\left|\ell_\chi\right|^2$ directly as some map $\pi\otimes\ov\pi\to\CC$.
+	\item Alternatively, we can add a Schwarz function to smoothen the sum. Choose a Schwarz function $f$ on $G(\AA_F)$, and we will instead compute $\langle f\cdot\delta_T,\delta_T\rangle$, where $f\cdot\delta_T$ refers to some convolution
+	\[(f\cdot\varphi)(x)\coloneqq\int_{G(\AA_F)}f(g)\varphi(xg)\,dg.\]
+	In particular, we may manipulate
+	\begin{align*}
+		\langle f\cdot\delta_T,\delta_T\rangle_{\chi\boxtimes\pi} &= \sum_\varphi\langle f\cdot\delta_T,\chi\varphi\rangle\overline{\langle\chi\varphi,\delta_T\rangle} \\
+		&= \sum_\varphi\int_{[T]}f^\lor\cdot\varphi(t)\chi(t)\,dt\overline{\int_{[T]}\varphi(t)\chi(t)\,dt},
+	\end{align*}
+	where $f^\lor(g)\coloneqq f\left(g^{-1}\right)$.
+	This sum is now finite: for example, on nonarchimedean places, $f$ becomes compactly supported, so $f\cdot\varphi$ must live in $J$-invariants of $\pi$ for some open subgroup $J\subseteq G(F_v)$, which is a finite-dimensional space due to the smoothness of $\pi$.
+\end{itemize}
+These approaches are in fact equivalent. Namely, having the first computation done implies that we ought to be able to compute $\langle f\cdot\delta_T,\delta_T\rangle_{\chi\boxtimes\pi}$ because our final sum above may as well be plugging $(f\cdot\varphi)\otimes\widetilde\varphi$ into $\ell_\chi\otimes\ell_{\chi^{-1}}$. Conversely, given the second computation, we note that the map $S(G(\AA_F))\to\op{End}(\pi)$ given by $f\mapsto(f\cdot-)$ surjects onto the ``smooth'' endomorphisms of $\pi$ (namely, having finite-dimensional output), so if we want to compute $(\ell_\chi\otimes\ell_{\chi^{-1}})(\varphi_1\otimes\varphi_2)$, we simply choose $f_1$ and $f_2$ so that their endomorphisms project $\pi$ and $\widetilde\pi$ onto the spans of $\varphi_1$ and $\varphi_2$ (respectively). Then $\ell_\chi(\varphi_1)\ell_{\chi^{-1}}(\varphi_2)$ is seen to be proportional to the sum
+\[\sum_\varphi\ell_\chi(f_1\cdot\varphi)\ell_{\chi^{-1}}(f_2\cdot\widetilde\varphi),\]
+but this last sum is an instance of the computation of $\langle f\cdot\delta_T,\delta_T\rangle_{\chi\boxtimes\pi}$.
+\begin{remark}
+	Here is a more succinct way to give the previous paragraph. The construction of $\ell_\chi$ implies that $\ell_\chi\otimes\ell_{\chi^{-1}}$ lives in
+	\[\op{Hom}_{T(\AA_F)\times T(\AA_F)}(\pi\otimes\widetilde\pi,\CC_{\chi^{-1}\boxtimes\chi}).\]
+	On the other hand, the functional $f\mapsto\langle f\cdot\delta_T,\delta_T\rangle$ lives in
+	\[\op{Hom}_{T(\AA_F)\times T(\AA_F)}(S(G(\AA_F)),\CC_{\chi\boxtimes\chi^{-1}}),\]
+	possibly up to correcting some signs. Then the equivalence of our two computations comes down to the image of $S(G(\AA_F))$ in endomorphisms (thought of as $\widetilde\pi\widehat\otimes\pi$) is large enough so that we can read off the value of any functional.
+\end{remark}
+\begin{remark}
+	For reference, it is true that
+	\[\dim\op{Hom}_{T(\AA_F)\times T(\AA_F)}(\pi\otimes\widetilde\pi,\CC_{\chi^{-1}\boxtimes\chi})=1.\]
+\end{remark}
+Now, Waldspurger's formula provides a local decomposition of $\ell_\chi\otimes\ell_{\chi^{-1}}$ as
+\[\ell_\chi\otimes\ell_{\chi^{-1}}\approx\prod_v\alpha_v,\]
+where $\alpha_v\in\op{Hom}_{T(F_v)\times T(F_v)}(\pi_v\otimes\widetilde\pi_v,\CC_{\chi^{-1}\boxtimes\chi})$ is defined by
+\[\alpha_v(\varphi\otimes\widetilde\varphi)=\int_{\mathbb G_m\backslash T(F_v)}\langle\pi(t)\varphi,\widetilde\varphi\rangle\,dt.\]
+Here, the $\approx$ in our statement means that the equality is only true up to some explicit volume factors which notably depend on choices of Haar measures.
+
+Let's explain what this has to do with special values. If $v$ is nonarchimedean with $K_v/F_v$ unramified, and if we further assume $\pi_v^{G(\OO_v)}\ne0$ and $\chi_v|_{T(\OO_v)}=1$ and $\varphi\otimes\widetilde\varphi\in\pi_v^{G(\OO_v)}\otimes\widetilde\pi_v^{G(\OO_v)}$, then we are going to recover something about our local $L$-factors. (Note that these hypotheses hold for all but finitely many $v$.) Namely, one can calculate
+\[\alpha_v(\varphi\otimes\widetilde\varphi)\approx\frac{L(1/2,\pi_v\times\chi_v)}{L(1,\mathrm{Ad},\pi_v)L(1,\eta_v)},\]
+where $\eta\colon\AA_K^\times\to\CC^\times$ is the quadratic (Dirichlet) character associated to $K/F$.
+\begin{remark}
+	These conditions are potentially bizarre. Suppose that $v$ splits in two up in $K$, meaning that $K_v=F_v\oplus F_v$. Then we note $\mathbb G_m\backslash T$ is just $\mathrm U_1$, which is the kernel of the norm map $K^\times\to F^\times$. But now $\mathrm U_1(K_v)=F_v^\times$ because the norm map $F_v\times F_v\to F_v$ is just the product.
+\end{remark}
+We are now ready for a statement.
+\begin{theorem}[Waldsburger's formula]
+	Fix notation as above. For a set $S$ of places of $F$ which is large enough, we have
+	\[\ell_\chi\otimes\ell_{\chi^{-1}}\approx\frac{L^S(1/2,\pi\times\chi)}{L^S(\pi,\mathrm{Ad},1)L^S(\eta,1)}\prod_{v\in S}\alpha_v,\]
+	up to some volume factors.
+\end{theorem}
+\begin{remark}
+	In terms of our second question, we may equivalently ask for our functional $S(G(\AA_F))\to\CC$ to suitably factor into local pieces when the input $f\in G(\AA_F)$ does.
+\end{remark}
+Let's recall something about our $L$-functions. To do this appropriately, we think of $T$ as $\op{GSO}_2$, where the ambient quadratic form is given by the norm; similarly, we can think of $G$ as $\op{GSO}_3$. (Here, $\op{GSO}_\bullet$ refers to $\op{SO}_\bullet$ plus scalars and is in particular connected, unlike $\op{GO}_\bullet$ which may be disconnected.) Now, $\check T$ is still $\op{GSO}_2$ and has $^LT=\op{GO}_2$ due to a nontrivial Galois action. Similarly, $\check G=\op{GSp}_2$. Now, one may compute that
+\[\check{\widetilde G}=\left(\check T\times\check G\right)^{\det=1}=\left(\mathrm{GSO}_2\times\mathrm{GSp}_2\right)^{\det=1},\]
+where the point is that the modding out by $\mathbb G_m$ is turned into a determinant $1$ condition. Thus, we see that $^L\widetilde G$ will have a standard four-dimensional symplectic representation $r$ given by $\chi$ and $\pi$, so we can build a degree four $L$-function $L(\chi\boxtimes\pi,r,s)$.
+
+This construction of the $L$-function is not very helpful for us. Instead, we will use the theory of base change. Morally, note that there is an embedding of Langlands parameters $W_F\to{^LG}$ to Langlands parameters $W_K\to{^LG}$ simply by embedding the Weil groups. Thus, we expect to have a ``base-change'' functor from automorphic representations of $G_F$ to automorphic representations of $G_K$ which agrees with this. This is conjectural for general extensions $K/F$, but it is known if $K/F$ is quadratic (due to Langlands) or solvable (due to Arthur--Clozel). The moral is that we can think of $\pi$ has a base-change to some automorphic representation $\Pi_{K/F}$ of $G_K$, and we will have
+\[L(\chi\times\pi,s)=L(\chi\otimes\Pi_{K/F},\mathrm{Std},s),\]
+where now the right-hand side is the standard $L$-function for (a form of) $\mathrm{GL}_{2,K}$. Perhaps one is confused because the right-hand side is an $L$-function of degree $2$, but this is okay because $K/F$ is a quadratic extension which absorbed a factor of $2$.
+
+For simplicity, we will take $\chi=1$ (so that the central character $\omega_\pi$ of $\pi$ is trivial) for the remainder of the course. Then it turns out that
+\[L(\chi\times\pi,s)=L(\pi,s)L(\pi\otimes\eta,s).\]
+Let's explain this in terms of Langlands parameters. Taking $\chi=1$ amounts to taking the trivial Langlands parameter of $^LT$, but $^LT$ already has some Galois action, so it amounts to the canonical projection $W_F\to\op{Gal}(K/F)$. Thus, tensoring with $\pi$ basically gives us two copies of $\pi$, one for each character of $\op{Gal}(K/F)$, so we get $\pi\oplus\pi\eta$.
+
+Anyway, these are now some standard $L$-functions, which have integral representations, allowing us to do some computations. Namely, we would like to compare $\langle\delta_T,\delta_T\rangle_\pi$ to $\langle\delta_A,\delta_{A,\eta}\rangle_\pi$ where $A$ is the diagonal torus of elements of the form $\begin{bsmallmatrix}
+	* \\ & 1
+\end{bsmallmatrix}$. In fact, we will show the following.
+\begin{theorem}[Jacquet]
+	Fix everything as above. Then for $f\in S(G(\AA_F))$, one can construct $f'\in S(G(\AA_F))$ such that
+	\[\langle f\cdot\delta_T,\delta_T\rangle=\langle f'\cdot\delta_A,\delta_{A,\eta}\rangle.\]
+	Further, for $h\in S(G(F_v))^{G(\OO_v)\times G(\OO_v)}$, we have $h*f=h*f'$.
+\end{theorem}
+Let's explain the application to Waldspurger's theorem. The left-hand side admits a spectral decomposition
+\[\langle f\cdot\delta_T,\delta_T\rangle=\int_{\widehat G}\underbrace{\langle f\cdot\delta_T,\delta_T\rangle_\pi}_{J_\pi(f)\coloneqq}\,d\pi,\]
+so we give the right-hand side a similar spectral decomposition, writing
+\[\langle f'\cdot\delta_A,\delta_{A,\eta}\rangle=\int_{\widehat G}\langle f\cdot\delta_A,\delta_{A,\eta}\rangle_\pi\,d\pi.\]
+Now, one can try to use Hecke algebras to try to separate the contribution of each $\pi$ on each side matches up. For example, if $\langle f\cdot\delta_T,\delta_T\rangle_\pi$ is not identically zero, then $\langle f\cdot\delta_A,\delta_{A,\eta}\rangle_\pi$ will also not be identically zero, which by an argument with the functional equation implies that $L(\pi,1/2)L(\eta\otimes\eta,1/2)$ fails to vanish.
+
+\end{document}.\]
 	In particular, one now sees that $\norm{\mc G_0}\le w(\mc G_0)$ from (the proof of) \Cref{lem:l-func-converge-by-weight}.
 \end{remark}
 
