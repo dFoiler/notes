@@ -1,0 +1,188 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 4}
+Here are some administrative notes.
+\begin{itemize}
+	\item Office hours will be on Tuesday and Thursday immediately after class in 2-374.
+	\item The syllabus will be posted to the course website later.
+	\item The syllabus will contain some recommended textbooks, which are some free online texts that contain supersets of our class material.
+	\item The grade will be 20\% from a fifty-minute exam and 80\% coming from problem sets. The exam will probably occur shortly before the drop deadline.
+\end{itemize}
+We hope to cover simplicial sets, $\infty$-categories, homotopy theory, Eilenberg--MacLane spaces, Postnikov towers, the Serre spectral sequence, and a little on vector bundles and characteristic classes. In particular, we see that the first part of the class is some purely formal nonsense, which we then use to set up the $\infty$-category of spaces, which is the natural setting for homotopy theory.
+
+\subsection{Category Theory}
+Let's recall some starting notions of category theory.
+\begin{warn}
+	We will mostly ignore size issues. If it makes the reader feel better, we are willing to assume the existence of a countable ascending chain of inaccessible cardinals throughout the class.
+\end{warn}
+\begin{definition}[category]
+	A \textit{category} $\mc C$ is a collection of objects, a collection of morphisms $\op{Mor}_\mc C(A,B)$ for each pair of objects, a distinguished identity element $\id_A$ in $\op{Mor}_{\mc C}(A,A)$, and a composition law
+	\[\circ\colon\op{Mor}_{\mc C}(B,C)\times\op{Mor}_{\mc C}(A,B)\to\op{Mor}_{\mc C}(A,C).\]
+	We then require the composition law to be associative and unital with respect to the identity maps.
+\end{definition}
+\begin{remark}
+	We will use the notation $\op{Hom}$ for $\op{Mor}$ whenever the category $\mc C$ is additive, meaning that these collections of morphisms are abelian groups, and the composition law is $\ZZ$-bilinear.
+\end{remark}
+\begin{definition}[functor]
+	A \textit{functor} $F$ between two categories $\mc C$ and $\mc D$ is a map which sends an object $A\in\mc C$ to an object $FA\in\mc D$ and a morphism $f\colon A\to B$ in $\mc C$ to a morphism $Ff\colon FA\to FB$. We further require $F$ to respect identities and composition.
+\end{definition}
+\begin{definition}[isomorphism]
+	A morphism $f\colon A\to B$ in a category $\mc C$ is an \textit{isomorphism} if and only if there is a morphism $g\colon B\to A$ for which $f\circ g=\id_B$ and $g\circ f=\id_A$.
+\end{definition}
+\begin{definition}[groupoid]
+	A \textit{groupoid} is a category in which every morphism is an isomorphism.
+\end{definition}
+\begin{example}
+	Any category $\mc C$ gives rise to a core groupoid $\op{Core}\mc C$, which is the subcategory with the same objects but only taking the morphisms which are isomorphisms. One can check that this is in fact a subcategory.
+\end{example}
+In mathematics, one frequently encounters a category $\mc C$, and we are then interested in classifying the objects up to isomorphism.
+\begin{example}
+	If $\mc C=\mathrm{Set}$, then isomorphisms are bijections, so sets ``up to bijection'' are simply given by their cardinalities.
+\end{example}
+\begin{example}
+	A commutative ring $R$ gives rise to a category $\mathrm{Mod}_R$ of (left) $R$-modules. If $R$ is a field, then this is a category of vector spaces, and objects up to isomorphism are given by their dimensions.
+\end{example}
+\begin{example}
+	One can consider the category $\mathrm{Top}$ of topological spaces, whose morphisms are continuous maps. (We will frequently restrict our category of topological spaces with some nicer subcategories, such as CW complexes or manifolds.) It is rather hard to classify objects up to isomorphism (here, isomorphisms are homeomorphisms), but there are some tools. For example, there are homology functors
+	\[\mathrm H_i(-;R)\colon\mathrm{Top}\to\mathrm{Mod}_R.\]
+	Because functors preserve isomorphisms, homeomorphic spaces must have isomorphic homology.
+\end{example}
+The definition of homology finds itself focused on continuous maps $\left|\Delta^n\right|\to X$, where $\left|\Delta^n\right|$ is the (topological) $n$-simplex.
+\begin{defihelper}[$n$-simplex] \nirindex{n-simplex@$n$-simplex}
+	The \textit{(topological) $n$-simplex} $\left|\Delta^n\right|$ is the subspace
+	\[\left|\Delta^n\right|\coloneqq\left\{(t_0,\ldots,t_n)\in\RR_{\ge0}^{n+1}:\sum_{i=0}^nt_i=1\right\}.\]
+\end{defihelper}
+We will soon upgrade this topological $n$-simplex $\left|\Delta^n\right|$, which explains why we are writing $\left|\Delta^n\right|$ instead of $\Delta^n$.
+
+\subsection{Homotopy Types, Intuitively}
+The homology functors $\mathrm H_i(-;R)\colon\mathrm{Top}\to\mathrm{Mod}_R$ factors through the homotopy category $\mathrm{Ho}(\mathrm{Top})$, which is obtained from $\mathrm{Top}$ by declaring homotopic maps to be equal.
+
+We are going to be homotopy theorists for the most part, which means that we will be interested in understanding invariants of the category $\mathrm{Ho}(\mathrm{Top})$. One may complain that only studying spaces up to homotopy is an over-simplification. However, there are good reasons to only be interested in these ``homotopy types'' because such things also come up in other areas of mathematics.
+
+Approximately speaking, a homotopy type is a collection of objects and morphisms between them. To ensure some level of homogeneity, one may require that any pair $f,g\colon A\to B$ of morphisms has a collection of ``$2$-isomorphisms'' $f\Rightarrow g$. Furthermore, there should be ``$3$-isomorphisms'' between these $2$-isomorphisms, and this thinking continues inductively.
+\begin{example}
+	Given two objects $A$ and $B$ with an isomorphism $f\colon A\to B$, one may think about these objects as being identified. Similarly, if we have a third isomorphism $g\colon B\to C$, then we can canonically identify all three objects.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIlxcc2ltZXEiXSxbMywwLCJBIl0sWzAsMSwiZiIsMCx7ImN1cnZlIjotMX1dLFswLDEsImciLDIseyJjdXJ2ZSI6MX1dLFszLDMsImciXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		A & B & \simeq & A
+		\arrow["f", curve={height=-6pt}, from=1-1, to=1-2]
+		\arrow["g"', curve={height=6pt}, from=1-1, to=1-2]
+		\arrow["g", from=1-4, to=1-4, loop, in=55, out=125, distance=10mm]
+	\end{tikzcd}\]
+\end{example}
+\begin{example}
+	Given two objects $A$ and $B$, there may be two isomorphisms $f,g\colon A\to B$. One may want to identify these two objects via either isomorphism, but then we don't want to forget about the other isomorphism, so perhaps we are thinking about an object with an automorphism.
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIlxcc2ltZXEiXSxbMywwLCJBIl0sWzAsMSwiZiIsMCx7ImN1cnZlIjotMX1dLFswLDEsImciLDIseyJjdXJ2ZSI6MX1dLFszLDMsImciXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		A & B & \simeq & A
+		\arrow["f", curve={height=-6pt}, from=1-1, to=1-2]
+		\arrow["g"', curve={height=6pt}, from=1-1, to=1-2]
+		\arrow["g", from=1-4, to=1-4, loop, in=55, out=125, distance=10mm]
+	\end{tikzcd}\]
+	If one wanted to identify $f$ and $g$, then there should be a ``$2$-isomorphism'' identifying $f$ and $g$.
+\end{example}
+\begin{example}
+	We can think about a set as a homotopy type where all isomorphisms, $2$-isomorphisms, and so on are all just the identity maps.
+\end{example}
+\begin{example}
+	We can think about a groupoid as a homotopy type where all $2$-isomorphisms, $3$-iso\-morphisms, and so on are all just the identity maps.
+\end{example}
+The above two examples will let us think about $\op{Ho}(\mathrm{Top})$ as a category of $\infty$-groupoids. This is more or less why homotopy types are relevant to other areas of mathematics: one is frequently interested in not just isomorphisms between objects but also the uniqueness of those isomorphisms, and also the uniqueness of the isomorphisms identifying the isomorphisms, and so on.
+
+Of course, we started with topological spaces, so let's explain how then make some $\infty$-groupoid.
+\begin{example}
+	Given a topological space $X$, we can build a corresponding $\infty$-groupoid as follows.
+	\begin{itemize}
+		\item The points provide objects in our $\infty$-groupoids; these are functions $\left|\Delta^0\right|\to X$.
+		\item The maps between points are given by paths; these are functions $\left|\Delta^1\right|\to X$.
+		\item The maps between paths are given by homotopies of paths; these are functions $\left|\Delta^2\right|\to X$. Technically speaking, $\left|\Delta^2\right|$ gives two paths $f$ and $g$ whose composite should be homotopic to $h$. Thus, the structure of such a map tells us something about how composition should behave!
+	\end{itemize}
+\end{example}
+
+\subsection{Simplices}
+After building up some intuition, we are now forced to do some combinatorics in order to get ourselves off of the ground.
+\begin{notation}
+	For each integer $n\ge0$, we define the category $[n]$ whose objects are the elements of $\{0,1,\ldots,n\}$ and whose morphisms are given by
+	\[\op{Hom}_{[n]}(i,j)\coloneqq\begin{cases}
+		\emp & \text{if }i<k, \\
+		* & \text{if }i\le j,
+	\end{cases}\]
+	where $*$ simply refers to some one-element set (which we see must be the identity when $i=j$).
+\end{notation}
+\begin{remark}
+	Combinatorially, $[n]$ is the poset category given by the totally ordered set
+	\[0\le 1\le2\le\cdots\le n.\]
+\end{remark}
+\begin{definition}[simplex]
+	The \textit{simplex category} $\Delta$ has objects given by the categories $[n]$, and the morphisms are given by the collection of functors between any two such categories.
+\end{definition}
+\begin{remark}
+	Combinatorially, we see that a functor $F\colon[n]\to[m]$ amounts to the data of an increasing map. Indeed, whenever $i\le j$ in $[n]$, which is equivalent to having a morphism $i\to j$, we see that there is a morphism $Fi\to Fj$, which is equivalent to the requirement $Fi\le Fj$.
+\end{remark}
+\begin{example}
+	There are six morphisms $[1]\to[2]$.
+	\begin{itemize}
+		\item If $0\mapsto0$, then $1\in[1]$ can go anywhere.
+		\item If $0\mapsto1$, then $1$ maps to $1$ or $2$ in $[2]$.
+		\item If $0\mapsto2$, then $1$ maps to $2$.
+	\end{itemize}
+\end{example}
+\begin{example}
+	For each nonnegative integer $n$, there is a unique map $[n]\to[0]$ for each $n$. Indeed, everything must go to $0$.
+\end{example}
+\begin{remark} \label{rem:}
+	There is an important functor $F\colon\Delta\to\mathrm{Top}$ given by sending $[n]\mapsto\left|\Delta^n\right|$. Let's explain what this functor is on morphisms: given an increasing map $f\colon[n]\to[m]$, then we need to provide a continuous map $Ff\colon\left|\Delta^n\right|\to\left|\Delta^m\right|$. Well, we may identify $[n]$ and $[m]$ with bases of $\RR^n$ and $\RR^m$, respectively, so $f$ is now a function on bases, so it upgrades uniquely to a linear map $\RR^n\to\RR^m$ given by
+	\[Ff\Bigg(\sum_{i=0}^nt_ie_i\Bigg)\coloneqq\sum_{i=0}^nt_ie_{f(i)}.\]
+	Thus, we see that $Ff$ does restrict to a map $\left|\Delta^n\right|\to\left|\Delta^m\right|$, and functoriality follows by the uniqueness of the construction of $Ff$.
+\end{remark}
+
+\subsection{Simplicial Sets}
+The following is the first important definition of this course.
+\begin{definition}[simplicial set]
+	A \textit{simplicial set} is a functor $\Delta\opp\to\mathrm{Set}$. We let $\mathrm{sSet}$ denote the category of such functors.
+\end{definition}
+\begin{example}[$\op{Sing}(X)$]
+	Given a topological space $X$, there is a simplicial set $\op{Sing}(X)$ defined as follows. Send $[n]\in\Delta\opp$ to
+	\[\op{Sing}(X)([n])\coloneqq\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)\]
+	Now, given an increasing map $[n]\to[m]$, we need to provide a functorial map $\op{Mor}_{\mathrm{Top}}(\left|\Delta^m\right|,X)\to\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)$, which we see can be induced by the functorial map $\left|\Delta^n\right|\to\left|\Delta^m\right|$. One can check that this construction $\op{Sing}\colon\mathrm{Top}\to\mathrm{sSet}$ is functorial.
+\end{example}
+\begin{remark}
+	It turns out that not all simplicial sets arise from this construction. In particular, it turns out that the image of $\op{Sing}$ has many nice properties, and investigating it will provide our definition of $\infty$-categories.
+\end{remark}
+\begin{remark}
+	It will turn out that the homotopy type of $X$ is uniquely determined by $\op{Sing}(X)$. This is remarkable because one expects $\op{Top}$ to be a difficult category, even taken up to homotopy, but $\op{sSet}$ just looks like some combinatorial data.
+\end{remark}
+\begin{example}[nerve]
+	Fix a category $\mc C$. Then we define a simplicial set $N(\mc C)\colon\Delta\opp\to\mathrm{Set}$ given by sending $[n]$ to the functors from $[n]$ to $\mc C$. As before, this defines a simplicial set in a functorial way with respect to $\mc C$.
+\end{example}
+Let's try to work more combinatorially with our simplicial sets.
+\begin{notation}[boundary maps]
+	Given some $i\in[n]$, we let $\delta^i\colon[n-1]\to[n]$ denote the embedding which omits $i$. Namely, it sends the set $\{0,\ldots,i-1\}$ to itself and sends $\{i,\ldots,n\}$ to one more than each element.
+\end{notation}
+\begin{notation}[degeneracy maps]
+	Given some $i\in[n+1]$, we let $\sigma^i\colon[n+1]\to[n]$ denote the surjection which hits $i$ twice. Namely, it sends the set $\{0,\ldots,i\}$ to itself and sends $\{i+1,\ldots,n+1\}$ to one less than each element.
+\end{notation}
+\begin{remark}
+	One can check that every morphism in $\Delta$ can be written as a composite of $\delta^\bullet$s and $\sigma^\bullet$s.\todo{Check it}
+\end{remark}
+Having access to generators of these maps allows us to provide a combinatorial definition of a simplicial set.
+\begin{proposition}
+	A simplicial set $X$ has equivalent data to a sequence of sets $\{X_n\}_{n\in\NN}$ equipped with maps $d_0,\ldots,d_n\colon X_n\to X_{n-1}$ and $s_0,\ldots,s_n\colon X_n\to X_{n+1}$ satisfying the following identities
+	\[\begin{cases}
+		d_jd_i=d_{i-1}d_j & \text{if }i>j, \\
+		s_js_i=s_{i-1}s_j & \text{if }i>j, \\
+		d_js_i=s_id_{j-1} & \text{if }i<j-1, \\
+		d_js_i=1_{X_n} & \text{if }i=j-1\text{ or }i=j, \\
+		d_js_i=s_{i-1}d_j & \text{if }i>j.
+	\end{cases}\]
+\end{proposition}
+The point is that the $d_\bullet$s are induced by $\delta^\bullet$s, and the $s_\bullet$s are induced by $\sigma^\bullet$s.\todo{Check it}
+\begin{remark}
+	There is also a notion of ``semi-simplicial set'' where we remove all the data associated to the $s_\bullet$s. This notion is sufficient to work with homology, but because we are now homotopy theorists, we work with simplicial sets.
+\end{remark}
+
+\end{document}
