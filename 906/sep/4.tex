@@ -15,7 +15,7 @@ Here are some administrative notes.
 We hope to cover simplicial sets, $\infty$-categories, homotopy theory, Eilenberg--MacLane spaces, Postnikov towers, the Serre spectral sequence, and a little on vector bundles and characteristic classes. In particular, we see that the first part of the class is some purely formal nonsense, which we then use to set up the $\infty$-category of spaces, which is the natural setting for homotopy theory.
 
 \subsection{Category Theory}
-Let's recall some starting notions of category theory.
+Let's recall some starting notions of category theory, though we may use more than we define here.
 \begin{warn}
 	We will mostly ignore size issues. If it makes the reader feel better, we are willing to assume the existence of a countable ascending chain of inaccessible cardinals throughout the class.
 \end{warn}
@@ -58,6 +58,58 @@ The definition of homology finds itself focused on continuous maps $\left|\Delta
 \end{defihelper}
 We will soon upgrade this topological $n$-simplex $\left|\Delta^n\right|$, which explains why we are writing $\left|\Delta^n\right|$ instead of $\Delta^n$.
 
+We are shortly going to get a lot of mileage out of the next example, so we spend some time to prove it in detail. We would like to define a category of functors between two given categories,\footnote{For those who are choosing to think about size issues, we remark that we will typically have one of $\mc C$ or $\mc D$ be locally small.} but this requires us to have a notion of morphism between functors.
+\begin{definition}[natural transformation]
+	Given two functors $F,G\colon\mc C\to\mc D$, a \textit{natural transformation} $\eta\colon F\Rightarrow G$ is the data of a morphism $\eta_A\colon FA\to GA$ for each object $A\in\mc C$. We further require that $Gf\circ\eta_A=\eta_{B}\circ Ff$ for any morphism $f\colon A\to B$. A \textit{natural isomorphism} is a natural transformation $\eta$ in which each morphism $\eta_A$ is an isomorphism.
+\end{definition}
+Diagrammatically, the equation $Gf\circ\eta_A=\eta_{B}\circ Ff$ amounts to the commutativity of the following square.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGQSJdLFsxLDAsIkdBIl0sWzAsMSwiRkIiXSxbMSwxLCJHQiJdLFswLDEsIlxcZXRhX0EiXSxbMiwzLCJcXGV0YV9CIl0sWzAsMiwiRmYiLDJdLFsxLDMsIkdmIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	FA & GA \\
+	FB & GB
+	\arrow["{\eta_A}", from=1-1, to=1-2]
+	\arrow["Ff"', from=1-1, to=2-1]
+	\arrow["Gf", from=1-2, to=2-2]
+	\arrow["{\eta_B}", from=2-1, to=2-2]
+\end{tikzcd}\]
+Anyway, here is our result.
+\begin{lemma} \label{lem:functor-cat}
+	Let $\mc C$ and $\mc D$ be categories. Then there is a functor category $\op{Fun}(\mc C,\mc D)$ where the objects are functors $\mc C\to\mc D$ and the morphisms are natural transformations.
+\end{lemma}
+\begin{proof}
+	We have explained our objects and morphisms, but we still have to provide identities and composition laws and check that everything works.
+	\begin{itemize}
+		\item Identities: given a functor $F\colon\mc C\to\mc D$, there is an identity natural transformation $\id_F\colon F\to F$ given by $({\id_F})_A\coloneqq\id_{FA}$; checking that this is a natural transformation amounts to noting that $Ff\circ{\id_{FA}}={\id_{FB}}\circ Ff$ for any morphism $f\colon A\to B$.
+
+		\item Composition: given two natural transformations $\alpha\colon F\Rightarrow G$ and $\beta\colon G\Rightarrow H$, we define the composite natural transformation $(\beta\circ\alpha)\colon F\Rightarrow H$ by $(\beta\circ\alpha)_A\coloneqq\beta_A\circ\alpha_A$ for each $A\in\mc A$. Checking that this is a natural transformation amounts to checking the commutativity of the outer rectangle of
+		% https://q.uiver.app/#q=WzAsNixbMCwwLCJGQSJdLFsxLDAsIkdBIl0sWzIsMCwiSEEiXSxbMCwxLCJGQiJdLFsxLDEsIkdCIl0sWzIsMSwiSEIiXSxbMCwxLCJcXGFscGhhX0EiLDJdLFsxLDIsIlxcYmV0YV9BIiwyXSxbMCwyLCIoXFxiZXRhXFxjaXJjXFxhbHBoYSlfQSIsMCx7ImN1cnZlIjotMn1dLFswLDMsIkZmIiwyXSxbMSw0LCJHZiIsMl0sWzIsNSwiSGYiXSxbMyw0LCJcXGFscGhhX0IiXSxbNCw1LCJcXGJldGFfQiJdLFszLDUsIihcXGJldGFcXGNpcmNcXGFscGhhKV9CIiwyLHsiY3VydmUiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			FA & GA & HA \\
+			FB & GB & HB
+			\arrow["{\alpha_A}"', from=1-1, to=1-2]
+			\arrow["{(\beta\circ\alpha)_A}", curve={height=-12pt}, from=1-1, to=1-3]
+			\arrow["Ff"', from=1-1, to=2-1]
+			\arrow["{\beta_A}"', from=1-2, to=1-3]
+			\arrow["Gf"', from=1-2, to=2-2]
+			\arrow["Hf", from=1-3, to=2-3]
+			\arrow["{\alpha_B}", from=2-1, to=2-2]
+			\arrow["{(\beta\circ\alpha)_B}"', curve={height=12pt}, from=2-1, to=2-3]
+			\arrow["{\beta_B}", from=2-2, to=2-3]
+		\end{tikzcd}\]
+		which indeed commutes: the top and bottom triangles commute by definition of $\beta\circ\alpha$, and the two inner squares commute by naturality of $\alpha$ and $\beta$.
+
+		\item Identities: given a natural transformation $\eta\colon F\Rightarrow G$, we need to check that ${\id_G}\circ\eta=\eta\circ{\id_F}=\eta$. Well, for any object $A$, we see that
+		\[({\id_G}\circ\eta)_A=({\id_G}\circ\eta)_A={\id_{G(A)}}\circ\eta_A=\eta_A,\]
+		and
+		\[(\eta\circ{\id_F})_A=\eta_A\circ{\id_{FA}}=\eta_A.\]
+
+		\item Associativity: given natural transformations $\alpha$, $\beta$, and $\gamma$ with appropriate domains and codomains, we must check that $(\alpha\circ\beta)\circ\gamma=\alpha\circ(\beta\circ\gamma)$. Well, for any object $A$, we see that
+		\[((\alpha\circ\beta)\circ\gamma)=(\alpha_A\circ\beta_A)\circ\gamma_A=\alpha_A\circ(\beta_A\circ\gamma_A)=(\alpha\circ(\beta\circ\gamma))_A,\]
+		as required.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
 \subsection{Homotopy Types, Intuitively}
 The homology functors $\mathrm H_i(-;R)\colon\mathrm{Top}\to\mathrm{Mod}_R$ factors through the homotopy category $\mathrm{Ho}(\mathrm{Top})$, which is obtained from $\mathrm{Top}$ by declaring homotopic maps to be equal.
 
@@ -65,17 +117,16 @@ We are going to be homotopy theorists for the most part, which means that we wil
 
 Approximately speaking, a homotopy type is a collection of objects and morphisms between them. To ensure some level of homogeneity, one may require that any pair $f,g\colon A\to B$ of morphisms has a collection of ``$2$-isomorphisms'' $f\Rightarrow g$. Furthermore, there should be ``$3$-isomorphisms'' between these $2$-isomorphisms, and this thinking continues inductively.
 \begin{example}
-	Given two objects $A$ and $B$ with an isomorphism $f\colon A\to B$, one may think about these objects as being identified. Similarly, if we have a third isomorphism $g\colon B\to C$, then we can canonically identify all three objects.
-	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIlxcc2ltZXEiXSxbMywwLCJBIl0sWzAsMSwiZiIsMCx7ImN1cnZlIjotMX1dLFswLDEsImciLDIseyJjdXJ2ZSI6MX1dLFszLDMsImciXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	Given two objects $A$ and $B$ with an isomorphism $f\colon A\to B$, one may think about these objects as being identified. Similarly, if we have a third isomorphism $g\colon B\to C$, then we can canonically identify all three objects. Here is diagram for this situation.
+	% https://q.uiver.app/#q=WzAsNSxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIkMiXSxbMywwLCJcXHNpbWVxIl0sWzQsMCwiQSJdLFswLDEsImYiXSxbMSwyLCJnIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}[cramped]
-		A & B & \simeq & A
-		\arrow["f", curve={height=-6pt}, from=1-1, to=1-2]
-		\arrow["g"', curve={height=6pt}, from=1-1, to=1-2]
-		\arrow["g", from=1-4, to=1-4, loop, in=55, out=125, distance=10mm]
+		A & B & C & \simeq & A
+		\arrow["f", from=1-1, to=1-2]
+		\arrow["g", from=1-2, to=1-3]
 	\end{tikzcd}\]
 \end{example}
 \begin{example}
-	Given two objects $A$ and $B$, there may be two isomorphisms $f,g\colon A\to B$. One may want to identify these two objects via either isomorphism, but then we don't want to forget about the other isomorphism, so perhaps we are thinking about an object with an automorphism.
+	Given two objects $A$ and $B$, there may be two isomorphisms $f,g\colon A\to B$. One may want to identify these two objects via either isomorphism, but then we don't want to forget about the other isomorphism, so perhaps we are thinking about an object with an automorphism. Here is a diagram for this situation.
 	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzEsMCwiQiJdLFsyLDAsIlxcc2ltZXEiXSxbMywwLCJBIl0sWzAsMSwiZiIsMCx7ImN1cnZlIjotMX1dLFswLDEsImciLDIseyJjdXJ2ZSI6MX1dLFszLDMsImciXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}[cramped]
 		A & B & \simeq & A
@@ -111,8 +162,9 @@ After building up some intuition, we are now forced to do some combinatorics in 
 		\emp & \text{if }i<k, \\
 		* & \text{if }i\le j,
 	\end{cases}\]
-	where $*$ simply refers to some one-element set (which we see must be the identity when $i=j$).
+	where $*$ simply refers to some one-element set.
 \end{notation}
+We remark that identities and the composition maps are then all uniquely defined (because everything is unique in the one-element set $*$); similarly, the coherence checks of identity and associativity have no content because everything is equal in $*$.
 \begin{remark}
 	Combinatorially, $[n]$ is the poset category given by the totally ordered set
 	\[0\le 1\le2\le\cdots\le n.\]
@@ -124,7 +176,7 @@ After building up some intuition, we are now forced to do some combinatorics in 
 	Combinatorially, we see that a functor $F\colon[n]\to[m]$ amounts to the data of an increasing map. Indeed, whenever $i\le j$ in $[n]$, which is equivalent to having a morphism $i\to j$, we see that there is a morphism $Fi\to Fj$, which is equivalent to the requirement $Fi\le Fj$.
 \end{remark}
 \begin{example}
-	There are six morphisms $[1]\to[2]$.
+	There are six morphisms $[1]\to[2]$, as follows.
 	\begin{itemize}
 		\item If $0\mapsto0$, then $1\in[1]$ can go anywhere.
 		\item If $0\mapsto1$, then $1$ maps to $1$ or $2$ in $[2]$.
@@ -134,10 +186,10 @@ After building up some intuition, we are now forced to do some combinatorics in 
 \begin{example}
 	For each nonnegative integer $n$, there is a unique map $[n]\to[0]$ for each $n$. Indeed, everything must go to $0$.
 \end{example}
-\begin{remark} \label{rem:}
+\begin{remark} \label{rem:simplex-maps}
 	There is an important functor $F\colon\Delta\to\mathrm{Top}$ given by sending $[n]\mapsto\left|\Delta^n\right|$. Let's explain what this functor is on morphisms: given an increasing map $f\colon[n]\to[m]$, then we need to provide a continuous map $Ff\colon\left|\Delta^n\right|\to\left|\Delta^m\right|$. Well, we may identify $[n]$ and $[m]$ with bases of $\RR^n$ and $\RR^m$, respectively, so $f$ is now a function on bases, so it upgrades uniquely to a linear map $\RR^n\to\RR^m$ given by
 	\[Ff\Bigg(\sum_{i=0}^nt_ie_i\Bigg)\coloneqq\sum_{i=0}^nt_ie_{f(i)}.\]
-	Thus, we see that $Ff$ does restrict to a map $\left|\Delta^n\right|\to\left|\Delta^m\right|$, and functoriality follows by the uniqueness of the construction of $Ff$.
+	Thus, we see that $Ff$ does restrict to a map $\left|\Delta^n\right|\to\left|\Delta^m\right|$. Functoriality follows by the uniqueness of the construction of $Ff$: given two increasing maps $f\colon[n]\to[n']$ and $g\colon[n']\to[n'']$, we see $Fg\circ Ff$ and $F(g\circ f)$ definitionally are both defined as $g\circ f$ on the basis of $\RR^n$. (Of course, we should mention $\id_{[n]}\colon[n]\to[n]$ defines the identity on $\RR^n$.)
 \end{remark}
 
 \subsection{Simplicial Sets}
@@ -145,11 +197,34 @@ The following is the first important definition of this course.
 \begin{definition}[simplicial set]
 	A \textit{simplicial set} is a functor $\Delta\opp\to\mathrm{Set}$. We let $\mathrm{sSet}$ denote the category of such functors.
 \end{definition}
-\begin{example}[$\op{Sing}(X)$]
-	Given a topological space $X$, there is a simplicial set $\op{Sing}(X)$ defined as follows. Send $[n]\in\Delta\opp$ to
-	\[\op{Sing}(X)([n])\coloneqq\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)\]
-	Now, given an increasing map $[n]\to[m]$, we need to provide a functorial map $\op{Mor}_{\mathrm{Top}}(\left|\Delta^m\right|,X)\to\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)$, which we see can be induced by the functorial map $\left|\Delta^n\right|\to\left|\Delta^m\right|$. One can check that this construction $\op{Sing}\colon\mathrm{Top}\to\mathrm{sSet}$ is functorial.
+Note that this ``functor category'' is in fact a category by \Cref{lem:functor-cat}. Here are some examples of simplicial sets.
+\begin{example}[$\op{Sing}(X)$] \label{ex:sing-is-sset}
+	There is a functor $\op{Sing}\colon\mathrm{Top}\to\mathrm{sSet}$ such that
+	\[\op{Sing}(X)\colon[n]\mapsto\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X).\]
 \end{example}
+\begin{proof}
+	We have many checks to do, which we handle in sequence.
+	\begin{itemize}
+		\item We define $\op{Sing}(X)$ on morphisms. Well, given an increasing map $f\colon[n]\to[m]$, the functor $F$ of \Cref{rem:simplex-maps} provides a continuous map $Ff\colon\left|\Delta^m\right|\to\left|\Delta^n\right|$, so there is a map
+		\[(-\circ Ff)\colon\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)\to\op{Mor}_{\mathrm{Top}}(\left|\Delta^m\right|,X).\]
+		\item We check that $\op{Sing}(X)$ is a functor. First, the identity morphism $\id_{[n]}\colon[n]\to[n]$ goes to the map
+		\[(-\circ F{\id_{[n]}})\colon\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)\to\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X),\]
+		which is the identity because $F{\id_{[n]}}=\id_{\left|\Delta^n\right|}$. Second, given increasing maps $f\colon[n]\to[n']$ and $g\colon[n']\to[n'']$, we need to check that
+		\[(-\circ F(g\circ f))=(-\circ Ff)\circ(-\circ Fg),\]
+		which is true because $F(g\circ f)=Fg\circ Ff$.
+		\item We define $\op{Sing}$ on morphisms. Well, given a continuous map $f\colon X\to Y$, we use the map
+		\[(f\circ-)\colon\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)\to\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,Y).\]
+		\item We check that $\op{Sing}$ is a functor. First, the identity $\id_X\colon X\to X$ goes to the map $({\id_X}\circ-)$, which is just the identity composition. Second, given continuous maps $f\colon X\to Y$ and $g\colon Y\to Z$, we note that
+		\[(g\circ-)\circ(f\circ-)=((g\circ f)\circ-)\]
+		by the associativity of composition.
+		\qedhere
+	\end{itemize}
+\end{proof}
+% \begin{example}[$\op{Sing}(X)$]
+% 	Given a topological space $X$, there is a simplicial set $\op{Sing}(X)$ defined as follows. Send $[n]\in\Delta\opp$ to
+% 	\[\op{Sing}(X)([n])\coloneqq\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)\]
+% 	Now, given an increasing map $[n]\to[m]$, we need to provide a functorial map $\op{Mor}_{\mathrm{Top}}(\left|\Delta^m\right|,X)\to\op{Mor}_{\mathrm{Top}}(\left|\Delta^n\right|,X)$, which we see can be induced by the functorial map $\left|\Delta^n\right|\to\left|\Delta^m\right|$. One can check that this construction $\op{Sing}\colon\mathrm{Top}\to\mathrm{sSet}$ is functorial.
+% \end{example}
 \begin{remark}
 	It turns out that not all simplicial sets arise from this construction. In particular, it turns out that the image of $\op{Sing}$ has many nice properties, and investigating it will provide our definition of $\infty$-categories.
 \end{remark}
@@ -157,30 +232,201 @@ The following is the first important definition of this course.
 	It will turn out that the homotopy type of $X$ is uniquely determined by $\op{Sing}(X)$. This is remarkable because one expects $\op{Top}$ to be a difficult category, even taken up to homotopy, but $\op{sSet}$ just looks like some combinatorial data.
 \end{remark}
 \begin{example}[nerve]
-	Fix a category $\mc C$. Then we define a simplicial set $N(\mc C)\colon\Delta\opp\to\mathrm{Set}$ given by sending $[n]$ to the functors from $[n]$ to $\mc C$. As before, this defines a simplicial set in a functorial way with respect to $\mc C$.
+	Fix a category $\mc C$. Then there is a ``nerve'' functor $N\colon\mathrm{Cat}\to\mathrm{sSet}$ such that
+	\[N(\mc C)\colon[n]\mapsto\op{Fun}([n],\mc C).\]
+	The proof of this claim is exactly the same as in \Cref{ex:sing-is-sset} (note that $\op{Fun}([n],\mc C)=\op{Mor}_{\mathrm{Cat}}([n],\mc C)$), except now there is now need for the auxiliary functor $F\colon\Delta\to\mathrm{Top}$ because $\Delta$ is already a category. (Being brazen, one can copy the same proof but erasing all $F$s, replacing $\mathrm{Top}$ with $\mathrm{Cat}$ throughout, and replacing $\left|\Delta^\bullet\right|$s with $[\bullet]$s throughout.)
 \end{example}
-Let's try to work more combinatorially with our simplicial sets.
+
+\subsection{Simplicial Sets by Combinatorics}
+Even though we will avoid doing so as much as possible in the sequel, it can be worthwhile to have a purely combinatorial description of a simplicial set. Let's begin by classifying increasing maps. We will get some utility out of the following lemma, which allows us to think about increasing maps $f$ in terms of the multi-set $\im f$.
+\begin{lemma} \label{lem:inc-by-fibers}
+	Let $f,g\colon[n]\to[m]$ be increasing maps. Suppose that
+	\[\#f^{-1}(\{k\})=\#g^{-1}(\{k\})\]
+	for all $k\in[m]$. Then $f=g$.
+\end{lemma}
+\begin{proof}
+	We proceed by induction on $n$. If $n=0$, then $[n]$ is a singleton, so there is a unique $k\in[m]$ for which $f^{-1}(\{k\})$ and $g^{-1}(\{k\})$ are nonempty, namely $f(0)$ and $g(0)$ respectively, so the result follows.
+
+	For the induction, we are given two increasing maps $f,g\colon[n+1]\to m$. There are two steps.
+	\begin{enumerate}
+		\item The main claim is that $f(n+1)=g(n+1)$. To show this, note that $\im f=\im g$ because these sets are just the $k\in[m]$ with nonempty fibers. Thus, because $n+1$ is the maximum of $[n+1]$, we see that $f(n+1)$ and $g(n+1)$ are maximal elements of $\im f$ and $\im g$, respectively, so $f(n+1)=g(n+1)$ follows.
+		\item We now complete the proof. Note that
+		\[\#f|_{[n]}^{-1}(\{k\})=\begin{cases}
+			\#f^{-1}(\{k\}) & \text{if }f(n+1)\ne k, \\
+			\#f^{-1}(\{k\})-1 & \text{if }f(n+1)=k,
+		\end{cases}\]
+		and similar for $g$, so $f|_{[n]}$ and $g|_{[n]}$ have fibers of the same cardinality, so $f|_{[n]}=g|_{[n]}$ by the induction, so $f=g$ follows because they are already equal on $n+1$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+Let's now classify injective maps.
 \begin{notation}[boundary maps]
-	Given some $i\in[n]$, we let $\delta^i\colon[n-1]\to[n]$ denote the embedding which omits $i$. Namely, it sends the set $\{0,\ldots,i-1\}$ to itself and sends $\{i,\ldots,n\}$ to one more than each element.
+	Given some $i\in[n]$, we let $\delta^i\colon[n-1]\to[n]$ denote the embedding which omits $i$ by sending the set $\{0,\ldots,i-1\}$ to itself and sending the set $\{i,\ldots,n\}$ to one more than each element.
 \end{notation}
-\begin{notation}[degeneracy maps]
-	Given some $i\in[n+1]$, we let $\sigma^i\colon[n+1]\to[n]$ denote the surjection which hits $i$ twice. Namely, it sends the set $\{0,\ldots,i\}$ to itself and sends $\{i+1,\ldots,n+1\}$ to one less than each element.
-\end{notation}
-\begin{remark}
-	One can check that every morphism in $\Delta$ can be written as a composite of $\delta^\bullet$s and $\sigma^\bullet$s.\todo{Check it}
+\begin{lemma} \label{lem:classify-embed}
+	Every injective increasing map $f\colon[n]\to[m]$ can be written uniquely as a composite
+	\[f=\delta^{i_1}\circ\cdots\circ\delta^{i_r},\]
+	where $i_1>i_2>\cdots>i_r$.
+\end{lemma}
+\begin{proof}
+	We proceed in steps.
+	\begin{enumerate}
+		% \item We claim that there is exactly one injective increasing map $[n]\to[m]$ avoiding a given subset $I\subseteq[m]$ with $m-n$ elements. Well, $[m]\setminus I$ is some totally ordered set with $n+1$ elements, so it suffices to show that there is exactly one injective increasing map between $[n]$ and a totally ordered set with $n+1$ elements.
+		
+		% Upon relabeling the target, it is enough to show that there is only one injective increasing map $[n]\to[n]$. We show this by induction on $n$; note there is nothing to do for $n=0$. For the inductive step, once given an injective increasing map $[n+1]\to[n+1]$, we note that the image of $n+1\in[n+1]$ must have $n$ distinct elements strictly smaller than it, so we must have $(n+1)\mapsto(n+1)$. After removing this element, we are left with a strictly increasing map $[n]\to[n]$, which is unique by the induction.
+
+		\item Given a decreasing sequence $i_1> i_2>\cdots> i_r$, we claim that the map
+		\[(\delta^{i_1}\circ\cdots\circ\delta^{i_r})\colon[n]\to[n+r]\]
+		avoids the set $\{i_1,\ldots,i_r\}$. We proceed by induction on $r$; for $r=0$, the statement is vacuous. For the induction, we are given a decreasing sequence $i_1> i_2>\cdots> i_r> i_{r+1}$. By the induction, the map
+		\[(\delta^{i_2}\circ\cdots\circ\delta^{i_{r+1}})\colon[n]\to[n+r]\]
+		already avoids the set $\{i_2,\ldots,i_{r+1}\}$. Then $\delta^{i_1}$ preserves the set $\{0,\ldots,i_1-1\}$ (and in particular preserves the omitted set $\{i_2,\ldots,i_{r+1}\}$) while going on to omit $i_1$, so the total composite $\delta^{i_1}\circ\cdots\circ\delta^{i_{r+1}}$ successfully omits $\{i_1,\ldots,i_{r+1}\}$.
+
+		\item We show that any injective $f$ is a composite of $\delta^\bullet$s as given. Well, given an injective increasing map $f\colon[n]\to[m]$, set $I\coloneqq[m]\setminus\im f$, and arrange the elements of $I$ as $\{i_1,\ldots,i_r\}$ in decreasing order. Then $\delta^{i_1}\circ\cdots\circ\delta^{i_r}$ is another injective increasing map which omits $I$ by the previous step, so it equals $f$ by \Cref{lem:inc-by-fibers}.
+
+		\item We show that two composites of decreasing $\delta^\bullet$s are equal if and only if the indices are equal. More precisely, suppose that
+		\[\delta^{i_1}\circ\cdots\delta^{i_r}=\delta^{i_1'}\circ\cdots\delta^{i_{r'}'}\]
+		as maps $[n]\to[m]$, and the sequence of indices are both strictly decreasing; denote this map by $f$ for brevity. By the first step, the size of the fibers of $f$ can be read off of the indices $i_\bullet$ or $i'_\bullet$ (an index is present exactly when not in $\im f$), so these sequences must be equal.
+		% Then $f$ is an injective increasing maps; by the second step, the left-hand side avoids the set $\{i_1,\ldots,i_r\}$ while the right-hand side avoids the set $\{i_1',\ldots,i_{r'}'\}$. But both of these sets are the same, so the result follows.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark} \label{rem:delta-relation}
+	It follows that $\delta^i$ is the unique injection $[n]\to[n+1]$ omitting a given element of $[n+1]$.
 \end{remark}
-Having access to generators of these maps allows us to provide a combinatorial definition of a simplicial set.
-\begin{proposition}
-	A simplicial set $X$ has equivalent data to a sequence of sets $\{X_n\}_{n\in\NN}$ equipped with maps $d_0,\ldots,d_n\colon X_n\to X_{n-1}$ and $s_0,\ldots,s_n\colon X_n\to X_{n+1}$ satisfying the following identities
+\begin{remark}
+	The requirement that the indices are strictly decreasing is necessary for the uniqueness. Indeed, if $i\le j$, then $\delta^i\circ\delta^j$ avoids $i$ and $j+1$, so it equals $\delta^{j+1}\circ\delta^i$.
+\end{remark}
+Analogously, we have should handle surjective increasing maps.
+\begin{notation}[degeneracy maps]
+	Given some $j\in[n+1]$, we let $\sigma^j\colon[n+1]\to[n]$ denote the surjection which hits $j$ twice by sending the set $\{0,\ldots,j\}$ to itself and sending $\{j+1,\ldots,n+1\}$ to one less than each element.
+\end{notation}
+\begin{lemma} \label{lem:classify-surj}
+	Every surjective increasing map $f\colon[n]\to[m]$ can be written uniquely as a composite
+	\[f=\sigma^{j_1}\circ\cdots\circ\sigma^{j_r},\]
+	where $j_1\ge j_2\ge \cdots\ge j_r$.
+\end{lemma}
+\begin{proof}
+	The structure of this proof is similar to \Cref{lem:classify-embed}, but the technical core requires a couple modifications.
+	\begin{enumerate}
+		\item Given a decreasing sequence $j_1\ge j_2\ge\cdots\ge j_r$, we claim that the map
+		\[(\sigma^{j_1}\circ\cdots\circ\sigma^{j_r})\colon[n]\to[n-r]\]
+		has fiber over $k\in[n-r]$ of size equal to $1+\#\{t:j_t=k\}$. We proceed by induction on $r$; for $r=0$, the statement is vacuous. For the induction, we are given a decreasing sequence $j_1\ge\cdots\ge j_{r+1}$. By induction, we know that the fiber of $\sigma\coloneqq\sigma^{j_2}\circ\cdots\circ\sigma^{j_{r+1}}$ over $k$ is $1+\{2\le t\le r+1:j_t=k\}$.
+		
+		Now, $\sigma^{j_1}\circ\sigma$ has the same-size fibers over any $k<j_1$ as $\sigma$ because $\sigma^{j_1}$ preserves $\{0,\ldots,j_1\}$. For $k>j_1$, we note that the fibers of $\sigma$ over each such $k$ is $1$ because $k>j_i$ for each $i$ (by the induction), so $\sigma^{j_1}\circ\sigma$ also has fiber of size $1$ over this $k$. Lastly, for $k=j_1$, we see that the fiber increases in size by $1$ because $\sigma^{j_1}$ sends $j_1+1$ (whose fiber has size $1$ for $\sigma$) to $j_1$. This casework completes the proof.
+
+		\item We show that any surjective $f$ is a composite of $\sigma^\bullet$s as given. Well, let $J$ be the multi-subset of $[m]$ hit multiple times by $f$, counted with multiplicity, and we may arrange the elements of $J$ as $\{j_1,\ldots,j_r\}$ in decreasing order. Then $\sigma^{j_1}\circ\cdots\circ\sigma^{j_r}$ and $f$ have fibers of the same size by the previous step, so they are equal functions by \Cref{lem:inc-by-fibers}.
+
+		\item We show that two composites of decreasing $\sigma^\bullet$s are equal if and only if the indices are equal. More precisely, suppose that
+		\[\sigma^{j_1}\circ\cdots\circ\sigma^{j_r}=\sigma^{j'_1}\circ\cdots\circ\sigma^{j'_{r'}}\]
+		as maps $[n]\to[m]$, and the sequences of indices are both decreasing; denote this map by $f$. Well, the fibers of $f$ can be read off the indices $\{j_\bullet\}$ or $\{j'_\bullet\}$ by the first step, so these sequences must be equal.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark} \label{rem:sigma-relation}
+	As in \Cref{rem:delta-relation}, we note that the requirement that the indices are decreasing is necessary for the uniqueness. Indeed, if $i<j$, then $\sigma^i\circ\sigma^j$ hits $j-1$ twice and $i$ twice (counted with multiplicity), so $\sigma^i\circ\sigma^j=\sigma^{j-1}\circ\sigma^i$.
+\end{remark}
+We are now ready to classify general maps.
+\begin{lemma} \label{lem:classify-inc}
+	Every increasing map $f\colon[n]\to[m]$ can be written uniquely as a composite
+	\[f=(\delta^{i_1}\circ\cdots\circ\delta^{i_r})\circ(\sigma^{j_1}\circ\cdots\sigma^{j_s}),\]
+	where $i_1>\cdots>i_r$ and $j_1\ge\cdots\ge j_s$.
+\end{lemma}
+\begin{proof}
+	The main point is to show that any increasing map $f$ admits a unique decomposition as $\delta\circ\sigma$ where $\delta\colon[k]\to[m]$ is injective and $\sigma\colon[n]\to[k]$ is surjective. The existence and uniqueness of the required decomposition now follows by the existence and uniqueness of the decomposition $f=\delta\circ\sigma$ with \Cref{lem:classify-embed,lem:classify-surj}. For example, to get the uniqueness, if
+	\[\delta^{i_1}\circ\cdots\circ\delta^{i_r}\circ\sigma^{j_1}\circ\cdots\sigma^{j_s}=\delta^{i_1'}\circ\cdots\circ\delta^{i'_{r'}}\circ\sigma^{j'_1}\circ\cdots\sigma^{j'_{s'}},\]
+	then the composites of the $\delta^\bullet$s and of the $\sigma^\bullet$s must each be equal (because those are injections and surjections, respectively), and then the equalities of the indices follows from using \Cref{lem:classify-embed,lem:classify-surj}, respectively.
+
+	It remains to show the main claim. We show existence and uniqueness separately.
+	\begin{itemize}
+		\item Existence: note $\im f\subseteq[m]$ is some totally ordered subset, so we let its cardinality be $k+1$. By suitably ordering the elements of $\im f$, we receive a totally ordered bijection $[k]\to\im f$. Then we see that $f$ decomposes into
+		\[\underbrace{[n]\stackrel f\to\im f\from[k]}_{\sigma}=\underbrace{[k]\to\im f\subseteq[m]}_\delta,\]
+		as required.
+		\item Uniqueness: suppose we have two equal decompositions $f=\delta\circ\sigma=\delta'\circ\sigma'$ where $\sigma\colon[n]\to[k]$ and $\sigma'\colon[n]\to[k']$ and $\delta\colon[k]\to[m]$ and $\delta\colon[k']\to[m]$. To begin, note that the injectivity of $\delta$ and $\delta'$ implies that $k+1$ and $k'+1$ are both the cardinality of $\im f$, so $k=k'$ follows. Now, because $\delta$ and $\delta'$ have the same image, and both are injective, it follows that all their fibers from $[m]$ have the same size (as either $0$ or $1$)! Thus, $\delta=\delta'$ follows from \Cref{lem:inc-by-fibers}. The injectivity of $\delta$ now shows that $\delta\circ\sigma=\delta\circ\sigma'$ implies $\sigma=\sigma'$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark} \label{rem:delta-sigma-relation}
+	As in \Cref{rem:delta-relation,rem:sigma-relation}, we note that putting $\delta$s before $\sigma$s is important for the uniqueness. Suppose we have some $\sigma^j\circ\delta^i$, and then we have the following cases.
+	\begin{itemize}
+		\item If $j>i$, then $\sigma^j$ fixes $\{0,\ldots,i+1\}$, so $\sigma^j\circ\delta^i$ avoids $i$ and hits $j$ twice. This is the same as $\delta^i\circ\sigma^{j-1}$.
+		\item If $j=i$ or $j=i-1$, then $\sigma^j\circ\delta^i$ fixes $\{0,\ldots,i-1\}$ throughout, and the elements at least $i$ get $+1$ from $\delta^i$ and $-1$ from $\sigma^j$. Thus, $\sigma^j\circ\delta^i=\id$.
+		\item If $j<i-1$, then $\sigma^j\circ\delta^i$ avoids $i-1$ ($-1$ from $\sigma^j$) and hits $j$ twice. This is the same as $\delta^{i-1}\circ\sigma^j$.
+	\end{itemize}
+\end{remark}
+% \begin{remark}
+% 	One can check that every morphism in $\Delta$ can be written as a composite of $\delta^\bullet$s and $\sigma^\bullet$s.\todo{Check it}
+% \end{remark}
+Having access to generators of these maps and some relations between them allows us to provide a combinatorial definition of a simplicial set.
+\begin{definition}
+	A \textit{combinatorial simplicial set} is a sequence of sets $\{X_n\}_{n\in\NN}$ equipped with boundary maps $d_0,\ldots,d_n\colon X_n\to X_{n-1}$ and degeneracy maps $s_0,\ldots,s_n\colon X_n\to X_{n+1}$ (for each $n$) satisfying the following simplicial identities
 	\[\begin{cases}
-		d_jd_i=d_{i-1}d_j & \text{if }i>j, \\
-		s_js_i=s_{i-1}s_j & \text{if }i>j, \\
-		d_js_i=s_id_{j-1} & \text{if }i<j-1, \\
-		d_js_i=1_{X_n} & \text{if }i=j-1\text{ or }i=j, \\
-		d_js_i=s_{i-1}d_j & \text{if }i>j.
+		d_jd_i=d_id_{j+1} & \text{if }i\le j, \\
+		s_js_i=s_is_{j-1} & \text{if }i<j, \\
+	\end{cases}\qquad\text{and}\qquad\begin{cases}
+		d_is_j=s_{j-1}d_i & \text{if }i<j, \\
+		d_is_j={\id} & \text{if }i=j\text{ or }i=j+1, \\
+		d_is_j=s_jd_{i-1} & \text{if }i>j+1.
+	\end{cases}\]
+	A morphism $f\colon \{X_n\}\to \{Y_n\}$ of combinatorial simplicial sets is a function $f_n\colon X_n\to Y_n$ for each $n$ commuting with the boundary and degeneracy maps; i.e., $f_{n-1}\circ d_n=d_n\circ f_n$ and $f_{n+1}\circ s_n=s_n\circ f_n$.
+\end{definition}
+\begin{remark}
+	One can check that there is a category of combinatorial simplicial sets. In particular, the identity is given by $({\id_X})_n\coloneqq\id_{X_n}$, and composition is defined by $(g\circ f)_n\coloneqq g_n\circ f_n$ (which commutes with the boundary and degeneracy maps because $g$ and $f$ do).
+\end{remark}
+\begin{proposition} \label{prop:sset-by-combo}
+	There is an equivalence of categories from the category of simplicial sets to the category of combinatorial simplicial sets by sending $X\in\mathrm{sSet}$ to a combinatorial simplicial set given by
+	\[\begin{cases}
+		X_n\coloneqq X([n]), \\
+		d_\bullet\coloneqq X(\delta^\bullet) & \text{for each }n\in\NN, \\
+		s_\bullet\coloneqq X(\sigma^\bullet) & \text{for each }n\in\NN.
 	\end{cases}\]
 \end{proposition}
-The point is that the $d_\bullet$s are induced by $\delta^\bullet$s, and the $s_\bullet$s are induced by $\sigma^\bullet$s.\todo{Check it}
+\begin{proof}
+	We run our many checks in sequence.
+	\begin{itemize}
+		\item To check that $X\in\mathrm{sSet}$ is sent to a combinatorial simplicial set $\{X_n\}$, we just need to check that the $d_\bullet$s and $s_\bullet$s satisfy the simplicial identities. This follows from the functoriality of $X$ and \Cref{rem:delta-relation,rem:sigma-relation,rem:delta-sigma-relation}.
+
+		\item We define $X\mapsto\{X_n\}$ on morphisms. Well, a functor $f\colon X\Rightarrow Y$ of simplicial sets defines maps $f_{[n]}\colon X([n])\to Y([n])$, which we claim assembles into a morphism $f\colon\{X_n\}\to\{Y_n\}$ of combinatorial simplicial sets by $f_n\coloneqq f_{[n]}$. To check this, we need to check compatibility with the boundary and degeneracy maps. Well, $f_{n-1}\circ d_n=d_n\circ f_n$ and $f_{n+1}\circ s_n=s_n\circ f_n$ follow by naturality of $f$ because these amount to requiring
+		\[f_{[n-1]}\circ X(\delta^n)=Y(\delta^n)\circ f_{[n]}\qquad\text{and}\qquad f_{[n+1]}\circ X(\sigma^n)=Y(\sigma^n)\circ f_{[n]}.\]
+
+		\item We show that $X\mapsto\{X_n\}$ is functorial. To begin, note $\id\colon X\Rightarrow X$ goes to the identity maps $\id_n\colon X_n\to X_n$. Then given $f\colon X\Rightarrow Y$ and $g\colon Y\Rightarrow Z$, we see that the composite $(g\circ f)\colon\{X_n\}\to\{Z_n\}$ is given by $(g\circ f)_n=(g\circ f)_{[n]}= g_{[n]}\circ f_{[n]}=g_n\circ f_n$, as required.
+
+		\item We define a map from combinatorial simplicial sets back to simplicial sets. Well, given a combinatorial simplicial set $\{X_n\}$, we begin defining our functor $X\colon\Delta\opp\to\mathrm{Set}$ by $X([n])\coloneqq X_n$. On morphisms $f\colon[n]\to[m]$, we need to define some map $Xf\colon X_m\to X_n$. For this, we note that \Cref{lem:classify-inc} allows us to write $f$ uniquely as a composite
+		\[f=(\delta^{i_1}\circ\cdots\circ\delta^{i_r})\circ(\sigma^{j_1}\circ\cdots\circ\sigma^{j_s}),\]
+		where $i_\bullet$ is strictly decreasing and $j_\bullet$ is decreasing. Thus, we define
+		\[Xf\coloneqq(s_{j_s}\circ\cdots\circ s_{j_1})\circ(d_{i_r}\circ\cdots\circ d_{i_1}).\]
+		For example, $f=\id_{[n]}$ is equal to the empty composite everywhere, so $X{\id_{[n]}}=\id_{X_n}$.
+
+		To complete our functoriality check, because any morphisms can be written as a composite of $\delta^\bullet$s and $\sigma^\bullet$s, it is enough to check functoriality for such morphisms. Namely, we have to check that
+		\[\begin{cases}
+			X(\delta_i\delta_j)=X(\delta_j)X(\delta_i), \\
+			X(\sigma_i\sigma_j)=X(\sigma_j)X(\sigma_i), \\
+			X(\delta_i\sigma_j)=X(\sigma_j)X(\delta_i), \\
+			X(\sigma_j\delta_i)=X(\delta_i)X(\sigma_j).
+		\end{cases}\]
+		For the first, this is by definition when $i>j$ and follows from the simplicial identities otherwise; the second is similar. The third is also automatic, and the last follows from the simplicial identities again.
+		% suppose we have another increasing map $f'$ with domain $[m]$, which we also write out as
+		% \[f'=(\delta^{i_1'}\circ\cdots\circ\delta^{i_{r'}'})\circ(\sigma^{j'_1}\circ\cdots\circ\sigma^{j'_{s'}})\]
+		% Similarly, one can write out
+		% \[f'\circ f=(\delta^{i_1''}\circ\cdots\circ\delta^{i_{r''}''})\circ(\sigma^{j''_1}\circ\cdots\circ\sigma^{j''_{s''}})\]
+		% Now, to check that $X(f\circ f')=Xf'\circ Xf$, we want to check that
+		% \[(s_{{j''}_{s''}}\cdots s_{{j''}_1})(d_{i''_{r''}}\cdots d_{i''_1})=(s_{{j'}_{s'}}\cdots s_{{j'}_1})(d_{i'_{r'}}\cdots d_{i'_1})(s_{j_s}\cdots\circ s_{j_1})(d_{i_r}\cdots d_{i_1}).\]
+		% Well, the construction of the simplicial identities allows us to reorder the right-hand side until all $s$s appear before all $d$s (using the second set of identities) and then reorder all $d$s to be strictly increasing order and all $s$s to be increasing order. And due to the functoriality described previously, we already know that 
+
+		\item We define our map  on morphisms. Well, given a morphism $F\colon\{X_n\}\to\{Y_n\}$ of combinatorial simplicial sets, we already have our component morphisms $F_n\colon X_n\to Y_n$ which will become our morphisms $F_{[n]}\colon X([n])\to Y([n])$. It remains to check the naturality of $F\colon X\Rightarrow Y$. Well, let $f\colon[n]\to[m]$ be an increasing map, we should check that $Xf\circ F_m=F_n\circ Yf$. Because $f$ can be written as a composite of $\delta^\bullet$s and $\sigma^\bullet$s (by \Cref{lem:classify-inc}), it is enough to check this for $f\in\{\delta^\bullet,\sigma^\bullet\}$, which now follows because $F$ started its life as a morphism of combinatorial simplicial sets.
+
+		\item We show that $\{X_n\}\mapsto X$ is functorial. To begin, note $\id\colon\{X_n\}\to\{X_n\}$ goes to the identity maps $\id_{[n]}\colon X([n])\to X([n])$. Then given $f\colon\{X_n\}\to\{Y_n\}$ and $g\colon\{Y_n\}\to\{Z_n\}$, we see that the composite $(g\circ f)\colon X\Rightarrow Z$ is given by $(g\circ f)_{[n]}=(g\circ f)_n=g_n\circ f_n=g_{[n]}\circ f_{[n]}$.
+
+		\item We complete the check that we have defined inverse equivalences. For concreteness, let $A\colon\{X_n\}\mapsto X$ and $B\colon X\mapsto\{X_n\}$ be our functors.
+		
+		Let's check $BA=\id$. On an object $\{X_n\}$, we see that $BA\{X_n\}$ has $(BA\{X_n\})_n=A\{X_n\}([n])=X_n$ and simplicial maps $d_i$ and $s_j$ given by $A(\{X_n\})(\delta^i)$ and $A(\{X_n\})(\sigma^j)$ which are $d_i$ and $s_j$, respectively. On morphisms, we see $BAf=f$ because $(BAf)_n=Af_{[n]}=f_n$ for each $n$.
+		
+		Lastly, let's check $AB=\id$. On an object $X$, we analogously see that $ABX([n])=BX_n=X([n])$; further, to check that $ABX(f)=X(f)$ for an increasing map $f$, we note that \Cref{lem:classify-inc} reduces this check to $\delta^\bullet$ and $\sigma^\bullet$ by functoriality, which similarly follows by construction of $A$ and $B$ (which turns $\delta^\bullet$s and $\sigma^\bullet$s to $d_\bullet$s and $s_\bullet$s and vice versa). Lastly, on morphisms, we see $(ABf)_{[n]}=Bf_n=f_{[n]}$ for each $n$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	In light of \Cref{prop:sset-by-combo}, we will occasionally identify simplicial sets and combinatorial simplicial sets. In particular, the term ``combinatorial simplicial set'' will not appear again.
+\end{remark}
 \begin{remark}
 	There is also a notion of ``semi-simplicial set'' where we remove all the data associated to the $s_\bullet$s. This notion is sufficient to work with homology, but because we are now homotopy theorists, we work with simplicial sets.
 \end{remark}
