@@ -1,0 +1,121 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 9}
+Today, we will discuss some general nonsense of topological vector spaces.
+
+\subsection{Examples of Representations}
+Last time, we ended with the following example, which we recall here.
+\begin{example}[Heisenberg group] \label{ex:real-heisenberg}
+	Fix a positive integer $n\ge1$. Then we define the Heisenberg group $H_n$ as the matrix group
+	\[H_n\coloneqq\left\{\begin{bmatrix}
+		1 & a & c \\
+		0 & 1_n & b \\
+		0 & 0 & 1
+	\end{bmatrix}:a\in\RR^{1\times n},b\in\RR^{n\times1},c\in\RR\right\}.\]
+	It turns out that $H_n$ admits a natural action on $L^2(\RR^n)$, which is an irreducible representation. Quickly, the $a$-coordinate will act by translation on the $\RR^n$, and the $b$-coordinate will act by a character $b\mapsto e^{2\pi i\langle b,-\rangle}$. One finds a similar action on $C^\infty(\RR^n)$ and $\mc S(\RR^n)$.\todo{Check it}
+\end{example}
+\begin{remark}
+	There is a finite analogue, where all the $\RR$s are replaced with a finite field $\FF_p$, and the character $b\mapsto e^{2\pi i\langle b,-\rangle}$ is replaced with $b\mapsto e^{2\pi i\langle b,-\rangle/p}$. Equivalently, we find $H_n(\FF_p)=\FF_p\times V\times V^\lor$ (where $V=\FF_p^n$); then $H_n(\FF_p)$ admits a natural action on $V$, where $V$ acts by translation, and $\xi\in V^\lor$ acts by multiplying with the function $\psi_\xi(x)\coloneqq e^{2\pi i\langle x,\xi\rangle/p}$. The central $\FF_p\subseteq H$ now acts by scalar multiplication as $a\mapsto e^{2\pi ia/p}$.
+
+	Let's check that this representation is irreducible. It is enough to check that $\op{End}_{H_n}(\CC[V])$ is $\CC$. Well, commuting with the $V$ leaves us with
+	\[\op{End}_V(\CC[V])=\op{End}_{\CC[V]}(\CC[V])=\CC[V].\]
+	Further, one sees that commuting with the scalar multiplication by elements in $V^\lor$ restricts the possible endomorphisms all the way down to scalars.
+\end{remark}
+\Cref{ex:real-heisenberg} appears in the book, and the argument is not too different from the one given in the remark.
+\begin{example} \label{ex:sl2-standard}
+	The group $\op{SL}_2(\RR)$ acts on $\RR^2$ and therefore has a unitary representation on $L^2(\RR^2)$. This cannot possibly be irreducible because $\op{SL}_2(\RR)$ commutes with the extra scalar action on $\RR^2$, so $L^2(\RR^2)$ has too many endomorphisms. To make this representation smaller, we can choose $s\in\CC$, which produces a character on $\RR^+$ by $\chi_s\colon t\mapsto t^s$; then we can define $L^2(\RR^2,\chi_s)$ to be the functions with commute with this character (namely, $f(t^{-1}x)=t^sf(x)$). (Geometrically, this is basically the sections of a line bundle on $\RP^1$ given by the character.) We will soon see that almost all $s$ produces an irreducible representation.
+	
+	For example, for $s=0$, then $L^2(\RR^2,\chi_0)$ consists of the functions on $\RP^1$. This is not irreducible because it has a subrepresentation given by the constant functions. But $L^2(\RR^2,\chi_0)/(\CC\cdot1)$ is still not irreducible: it turns out to be the sum of two irreducible representations $L^+$ and $L^-$, where $L^+$ is the closure of $z\CC[z]$, and $L^-$ is the closure of $z^{-1}\CC[z^{-1}]$, where $z$ is a standard coordinate on $\RP^1$. This can be related to Fourier series by embedding $\RP^1$ into $\CP^1$, which is basically a circle. We will prove all these claims later.
+\end{example}
+\begin{remark}
+	Here is an amusing way to view $L^2(\RR^2,\chi_s)$: this amounts to sections of a line bundle on $\RP^1$, and after removing $\infty$, we see that we are looking at functions on $\RR$. One can check that these are the functions which transform by
+	\[\begin{bmatrix}
+		a & b \\ c & d
+	\end{bmatrix}^{-1}f(z)=f\left(\frac{az+b}{cz+d}\right)\left|cz+d\right|^s.\]
+\end{remark}
+Fix a Lie group $G$ acting on an orientable manifold $X$. If $G$ preserves a volume form $dx$ on $X$, then $C_c^\infty(X)$ will have an invariant pairing
+\[\langle\varphi,\psi\rangle\coloneqq\int_X\varphi(x)\overline{\psi(x)}\,dx.\]
+More generally, one can work with half-densities.
+\begin{definition}[density]
+	An $s$-density on a smooth manifold $X$ is a section of a line bundle whose sections on an affine patch are just functions but which has transformations between coordinate charts $(x_n)\mapsto (x'_n)$ given by
+	\[f(x_1,\ldots,x_n)\mapsto f(x_1',\ldots,x_n')\left|\det\left(\frac{\del x'_i}{\del x_j}\right)\right|^s.\]
+\end{definition}
+The point of working with half-densities is that we can define the standard inner product between them in the usual way.
+\begin{example}
+	Half-densities of $\op{SL}_2(\RR)$ acting on $\RP^1$ (in the obvious way) amounts to considering $L^2(\RR^2,\chi_{-1})$.
+\end{example}
+
+\subsection{Topological Vector Spaces}
+We spend a moment reviewing what we need about locally convex topological spaces; we refer to \Cref{chap:functional} for a more in-depth treatment.
+\begin{conv}
+	All topological vector spaces are over $\CC$ and are Hausdorff.
+\end{conv}
+\begin{definition}[locally convex]
+	A topological vector space $V$ is \textit{locally convex} if and only if $0$ has an open neighborhood basis of convex sets.
+\end{definition}
+\begin{remark}
+	Equivalently, by \Cref{cor:locally-convex-by-seminorm} a topological vector space $V$ if and only if its topology is generated by a collection of seminorms.
+\end{remark}
+All representations in this class will actually be given by ``Fr\'echet spaces.''
+\begin{definition}[Fr\'echet]
+	A topological vector space $V$ is \textit{Fr\'echet} if and only if it is locally convex, has a countable basis of neighborhoods of $0$, and is sequentially complete.
+\end{definition}
+\begin{remark}
+	By \Cref{prop:locally-convex-to-metric}, having a countable basis of neighborhoods of $0$ is equivalent to being metrizable. (In fact, one can choose the metric to be translation-invariant.) Once $V$ is metrizable, being sequentially complete is equivalent to being complete.
+\end{remark}
+We will also frequently take our vector spaces $V$ to be separable.
+\begin{definition}[separable]
+	A topological space $X$ is \textit{separable} if and only if it admits a countable basis.
+\end{definition}
+\begin{conv}
+	In this course, all Fr\'echet spaces are separable unless otherwise specified.
+\end{conv}
+\begin{nex}
+	For $p<1$, the space $L^p([0,1])$ fails to be locally convex. In fact, the only open nonempty convex subspace is the whole space!
+\end{nex}
+\begin{example}
+	For a topological space $X$, let $C(X)$ be the space of continuous functions, where the topology is given by uniform convergence. If $X$ is (Hausdorff) compact, then $C(X)$ is a Banach space (given by $\norm\cdot_\infty$). However, if $X$ is merely a (Hausdorff, second countable) locally compact topological space, then $C(X)$ is merely a Fr\'echet space: write $X$ as a countable union $\bigcup_i K_i$ of compact sets, and then we can use the seminorms $\norm{\cdot|_{K_i}}_{\infty}$.
+\end{example}
+\begin{example}
+	If $X$ is a manifold, then we can consider the topological space $C^k(X)$. (The topology is given by uniform convergence of the first $k$ derivatives.) Similarly, we see that $C^k(X)$ is Banach when $k$ is finite and $X$ is compact; otherwise, it is merely Fr\'echet. The same sort of argument shows that the space $S(\RR^n)$ of Schwartz functions is Fr\'echet.
+\end{example}
+\begin{nex}
+	If $X$ fails to be compact, then the subspace $C_c^\infty(X)$ of $C^\infty(X)$ is not a Fr\'echet space because it fails to be complete.
+\end{nex}
+Sometimes, we will find ourselves in a circumstance where we can restrict to a nice class of spaces.
+\begin{definition}[Banach]
+	A topological vector space $V$ is a \textit{Banach space} if and only if its topology is given by a norm, and it is complete with respect to that norm.
+\end{definition}
+For example, Hilbert spaces are Banach spaces.
+
+Here is one benefit of working with a Banach space.
+\begin{lemma}
+	Fix a topological group $G$ acting on a Banach space $V$. Then the action $G\times V\to V$ is continuous if and only if the induced map $\rho\colon G\to\op{Aut}(V)$ is continuous in the strong topology, in which $\{E_i\}\to E$ if and only if $\{E_iv\}\to Ev$ converges for all $v\in V$.
+\end{lemma}
+\begin{proof}
+	The forward direction has little content: given a net $\{g_i\}\to g$, we know that $\rho(g_i)v\to\rho(g)v$ for each $v$ by continuity, so it follows that $\rho(g_i)\to\rho(g)$.
+	
+	The reverse direction follows from the Uniform boundedness principle, which claims that $\left|E_iv\right|$ being bounded for every $v$ implies that $\norm{E_i}$ is bounded. Namely, to show that $G\times V\to V$ is continuous, we choose a net $\{(g_i,v_i)\}\to (g,v)$ in $G\times V$, and we would like to show that $g_iv_i\to gv$. By translation, we may assume that $g=1$. We are given that $\rho(g_i)\to1$ in the strong topology, which implies that $\rho(g_i)w\to w$ for all $w$, so we may also assume that $v=0$ by translation. Because now $v_i\to0$, it is enough to show that $\norm{\rho(g_i)}$ is bounded, which is what follows from the Uniform boundedness principle.
+\end{proof}
+\begin{remark}
+	A Banach space $V$ can alternatively give $\op{End}V$ the norm topology, but then the map $G\to\op{Aut}V$ need not be continuous with the norm topology. For example, the action of $\RR$ on $L^2(\RR)$ by translation $T_af(x)\coloneqq f(x+a)$ fails to be continuous: as $a\to0$, we see $T_a\to\id$, but $\norm{T_a-\id}=1$ for all $a\ne0$.
+\end{remark}
+
+\subsection{Measures on a Space}
+Let's say a bit about measures.
+\begin{remark} \label{rem:measures-on-top-grp}
+	Given a locally compact second countable topological space $X$, then $C(X)$ has topological dual $C(X)^*$, which is thought of as the (compact) measures on $X$. Given a measure $\mu$, we can define its support $\op{supp}\mu$ by having $x\notin\op{supp}\mu$ if and only if there is an open neighborhood $U$ of $x$ for which $\mu(f)=0$ for all $f$ with $f|_U=0$. It follows that $\op{supp}\mu$ is closed, and one can even check that it is compact by construction of $C(X)^*$. If $X$ is an orientable manifold, then we remark that the Poincar\'e pairing $f\mapsto\int_Xf\varphi\,\omega$ defines an embedding $C_c(X)\to C(X)^*$.
+\end{remark}
+\begin{nex}
+	Continuing with \Cref{rem:measures-on-top-grp}, we can take the discrete space $X=\NN$. Then $C(X)$ is given by sequences in $\CC$, but $C(X)^*$ is given by finite sequences in $\CC$, and we have some convergence $\sigma^i\to\sigma$ if and only if there is a finite subset $S\subseteq\NN$ containing all the supports, and we have pointwise convergence in $S$. One can check that this is separable, sequentially complete, but it is not complete and thus not a Fr\'echet space!
+\end{nex}
+\begin{remark}
+	One can replace the topology on $C(X)^*$ with the weak-$*$ topology, in which $\{\mu_i\}\to\mu$ if and only if $\{\mu_i(f)\}\to\mu(f)$ for all $f$. However, $C(\NN)^*$ continues to not be complete: it embeds into the space of all linear maps $C(\NN)\to\CC$, but it is not a closed subset of this space.
+\end{remark}
+Next class, we will take $G$ to be a Lie group, and we will find that compact measures on $G$ is an algebra, and it acts continuously on our continuous representations. The point is that it more or less plays the role of the group algebra.
+
+\end{document}

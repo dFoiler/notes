@@ -1,0 +1,350 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Functional Analysis} \label{chap:functional}
+In this appendix, we introduce the small amount of functional analysis we will need in order to get going with infinite-dimensional vector spaces. In other words, we need to set up the theory of Fr\'echet spaces. Throughout this appendix, $\FF$ denotes one of the fields $\RR$ or $\CC$. Our exposition is largely stolen from \cite{conway-functional}.
+
+\section{Locally Convex Spaces}
+We begin with the following definition.
+\begin{definition}[topological vector space]
+	Fix a topological field $k$. Then a \textit{topological vector space} is a vector space $V$ over $k$ equipped with a topology so that addition map $+\colon V\times V\to V$ and scalar multiplication map $\cdot\colon k\times V\to V$ are both continuous. In these notes, all topological vector spaces will be assumed to be Hausdorff.
+\end{definition}
+A Fr\'echet space will be a complete topological vector space admitting two notable definitions: having its topology is defined by a countable family of seminorms, or being locally convex and metrizable. As such, let's quickly recall the definition of a seminorm.
+\begin{definition}[seminorm]
+	Fix a vector space $V$ over $\FF$. Then a \textit{seminorm} is a function $p\colon V\to\RR$ satisfying the following.
+	\begin{itemize}
+		\item Subadditive: we have $p(x+y)\le p(x)+p(y)$ for any $x,y\in V$.
+		\item Homogeneous: we have $p(\lambda x)=\left|\lambda\right|p(x)$ for any $x\in V$ and $\lambda\in\FF$.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	The homogeneity implies that $p(0)=0$, which is sometimes included in the definition. Similarly, the subadditivity now implies that $2p(x)=p(x)+p(-x)$ is at least $p(0)=0$, so $p$ is automatically nonnegative; this is also sometimes included in the definition.
+\end{remark}
+It is worthwhile to have a few ways to check continuity.
+\begin{lemma} \label{lem:seminorm-continuity-grab-bag}
+	Fix a topological vector space $V$ over $\FF$, and let $p\colon V\to\RR$ be a seminorm. Then the following are equivalent.
+	\begin{listroman}
+		\item $p$ is continuous.
+		\item $\{v:p(v)<1\}$ is open.
+		\item $p$ is continuous at $0$.
+	\end{listroman}
+\end{lemma}
+\begin{proof}
+	This is \cite[Proposition~1.3]{conway-functional}. Of course (i) implies (ii). We show the remaining implications independently.
+	\begin{itemize}
+		\item We show (ii) implies (iii). For any net $\{x_i\}$ converging to $0$, we want to show that $\{p(x_i)\}\to0$, which is true because any $x_i$ in the open neighborhood $\varepsilon U$ of $0$ has $p(x_i)<\varepsilon$.
+		\item We show (iii) implies (i). Note that any net $\{x_i\}$ converging to some $x$ has
+		\[\left|p(x_i)-p(x)\right|\le p(x_i-x),\]
+		and $p(x_i-x)\to0$ because $x_i-x\to0$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+We now start talking about convex sets, but we will relate our definitions back to seminorms.
+\begin{definition}[convex]
+	Fix a vector space $V$ over $\FF$. A subset $A\subseteq V$ is \textit{convex} if and only if any two $a,b\in A$ has
+	\[ta+(1-t)b\in A\]
+	for any $t\in[0,1]$.
+\end{definition}
+\begin{example} \label{ex:seminorm-to-convex}
+	Let $p\colon V\to\RR$ be a seminorm. Then we claim that $A\coloneqq\left\{v\in V:p(v)<1\right\}$ is convex. Indeed, for $a,b\in A$ and $t\in[0,1]$, we see that
+	\[p(ta+(1-t)b)=tp(a)+(1-t)p(b),\]
+	which is still less than $1$, so $ta+(1-t)b\in A$.
+\end{example}
+\begin{example}[convex hull] \label{ex:convex-hull}
+	For any subset $A\subseteq V$, we may define the convex hull
+	\[\op{conv}(A)\coloneqq\left\{\sum_{i=1}^nt_ia_i:\{a_i\}_i\subseteq A,\{t_i\}_i\in[0,1],t_1+\cdots+t_n=1\right\}.\]
+	Note that $\op{conv}(A)$ is convex: for two points $\sum_it_ia_i$ and $\sum_js_jb_j$ and $t\in[0,1]$, the sum $\sum_itt_ia_i+\sum_j(1-t)s_jb_j$ still has $\sum_itt_i+\sum_j(1-t)s_j=t+(1-t)=1$. In fact, if $B$ is convex and contains $A$, then $\op{conv}(A)\subseteq B$ because the sums $\sum_it_ia_i$ can be checked to be in $B$ by induction.
+\end{example}
+Convex sets on their own turn out to not be good enough for our purposes, so we will need extra adjectives.
+\begin{definition}[balanced]
+	Fix a vector space $V$ over $\FF$. A subset $A\subseteq V$ is \textit{balanced} if and only if $\lambda A\subseteq A$ for all $\lambda\in\FF$ such that $\left|\lambda\right|\le1$.
+\end{definition}
+\begin{example} \label{ex:seminorm-to-balanced}
+	Let $p\colon V\to\RR$ be a seminorm. Then we claim that $A\coloneqq\left\{v\in V:p(v)<1\right\}$ is balanced. Indeed, for $a\in A$ and $\lambda$ with $\left|\lambda\right|\le1$, we see that $p(\lambda a)=\left|\lambda\right|p(a)$, which is still less than $1$, so $\lambda a\in A$.
+\end{example}
+\begin{example} \label{ex:balanced-hull}
+	For any subset $A\subseteq V$, the subset
+	\[\op{bal}(A)\coloneqq\bigcup_{\left|\lambda\right|\le1}\lambda A\]
+	is balanced. Indeed, for any $\mu$ with $\left|\mu\right|\le1$, we see that $\mu\op{bal}(A)=\bigcup_\lambda\mu\lambda A$ is contained in $\op{bal}(A)$ because $\left|\lambda\mu\right|\le1$ whenever $\left|\lambda\right|\le1$. Of course, we always have $A\subseteq\op{bal}(A)$, and one can see that any balanced set containing $A$ must contain each $\lambda A$ and hence contain $\op{bal}(A)$.
+\end{example}
+It turns out that passing to balanced convex sets is not too big of a burden.
+\begin{lemma} \label{lem:convex-to-convex-balanced}
+	Fix a topological vector space $V$ over $\FF$. Any convex open neighborhood of $0$ contains a balanced convex open neighborhood of $0$.
+\end{lemma}
+\begin{proof}
+	Let $U$ be a convex open neighborhood of $0$. The point is to use the continuity of scalar multiplication: the continuity of
+	\[\cdot\colon\FF\times V\to V\]
+	provides a basic open neighborhood $B(0,\varepsilon)\times U'$ of $(0,0)$ of $\FF\times V$ such that $B(0,\varepsilon)U'\subseteq U$. We claim that $\op{conv}(B(0,\varepsilon)U')$ is the desired open neighborhood. Here are our checks; set $U''\coloneqq B(0,\varepsilon)U'$ for brevity.
+	\begin{itemize}
+		\item Because $U$ is already convex, \Cref{ex:convex-hull} explains that $U''\subseteq U$ implies that $\op{conv}(U'')\subseteq U$.
+		\item Convex: note $\op{conv}(U'')$ is convex by \Cref{ex:convex-hull}.
+		\item Open: because scalar multiplication by a nonzero number is a homeomorphism, we see that $U''\coloneqq B(0,\varepsilon)U'$, which is
+		\[\bigcup_{0<\left|\lambda\right|<\varepsilon}\lambda U',\]
+		is open. Then once $U'$ is open, we see that $\op{conv}(U')$ can be written as a union
+		\[\bigcup_{n\ge1}\Bigg(\bigcup_{t_1+\cdots+t_n=1}t_1U''+\cdots+t_nU''\Bigg),\]
+		which is open because the sum of two open subsets is open (indeed, the sum of open sets is a union of translates of just one of the open sets).
+		\item Balanced: the previous step realized $U''$ as a union $\bigcup_{0<\left|\lambda\right|<\varepsilon}\lambda U'$, which can be shown to be balanced exactly as in \Cref{ex:balanced-hull}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark} \label{rem:balanced-convex-basis}
+	Here is a sample application: suppose that $0$ has a neighborhood basis of convex sets. Then \Cref{lem:convex-to-convex-balanced} implies that $0$ also admits a neighborhood basis of balanced convex sets: for each $U$ in the neighborhood basis, the lemma produces a smaller open subset which is still convex but now also balanced. Similarly, admitting a countable neighborhood basis of convex sets can be upgraded to admitting a countable neighborhood basis of balanced convex sets.
+\end{remark}
+The previous remark allows us to make the following definition.
+\begin{definition}[locally convex]
+	A topological vector space $V$ is \textit{locally convex} if and only if $0$ admits a neighborhood basis of convex sets.
+\end{definition}
+\begin{remark} \label{rem:better-locally-convex}
+	By translation, it is equivalent to require $V$ to have a basis of convex sets. (Namely, if $\mc U$ is the neighborhood basis of $0$, then $\bigcup_{v\in V}v+\mc U$ is the basis of $V$.) By \Cref{rem:balanced-convex-basis}, we can also upgrade these notions to having bases of balanced convex sets.
+\end{remark}
+It is notable that the previous two definitions avoid the mention of any topology. In order to continue not doing any topology, we pick up the following definition, which provides a linear algebraic stand-in for ``contains an open neighborhood of the origin.''
+\begin{definition}[absorbing]
+	Fix a vector space $V$ over $\FF$. A subset $A\subseteq V$ is \textit{absorbing} if and only if any $v\in V$ admits some $\varepsilon>0$ such that $tv\in A$ for all $t\in[0,\varepsilon)$.
+\end{definition}
+For example, we see that $0$ is contained in any absorbing subset.
+\begin{remark}
+	Of course, if $A$ is absorbing, and $A\subseteq B$, then $B$ is absorbing: for each $v$, the $\varepsilon$ which worked for $A$ continues to work for $B$.
+\end{remark}
+\begin{example} \label{ex:open-to-absorbing}
+	Let's explain the remark given before the definition. If $V$ is a topological vector space over $\FF$, then we claim that any open neighborhood $U$ of $0$ is absorbing. This will follow by the continuity of scalar multiplication: for any $v\in V$, the map $\RR\to V$ given by $t\mapsto tv$ is continuous. Thus, because $0\in U$, there must be $\varepsilon>0$ such that $(-\varepsilon,\varepsilon)v\subseteq U$.
+\end{example}
+\begin{example} \label{ex:seminorm-to-absorbing}
+	Let $p\colon V\to\RR$ be a seminorm, and set $A\coloneqq\{v\in V:p(v)<1\}$. Then we claim that $(-a)+A$ is absorbing for all $a\in A$; for example, setting $a=0$ will imply that $A$ is absorbing. Now, for any $v\in V$, we need to show that $a+tv\in A$ for small $t$. Well, $p(a+tv)\le p(a)+\left|t\right|p(v)$, so taking any $t$ with $p(v)\left|t\right|<(1-p(a))$ will do. (In particular, any $t$ will work if $p(v)=0$.)
+\end{example}
+We are now ready to construct some seminorms.
+\begin{notation}
+	Fix a vector space $V$ over $\FF$. For any absorbing subset $A\subseteq V$, we define $\norm\cdot_A\colon V\to\RR_{\ge0}$ by
+	\[\norm v_A=\inf\left\{t\ge0:v\in tA\right\}.\]
+\end{notation}
+Here are some basic facts about this construction.
+\begin{remark} \label{rem:mink-seminorm-defined}
+	Because $A$ is absorbing, we see that any $v\in V$ does in fact have some $t>0$ for which $(1/t)v\in A$ and hence $v\in tA$, so the infimum is a real number.
+\end{remark}
+\begin{remark} \label{rem:better-mink-seminorm}
+	Suppose further that $A$ is convex. Then we claim that $v\in tA$ whenever $t>\norm v_A$; note if $v=0$, then $\norm 0_A=0$, so there is nothing to do. The main point is to note that $sv\in A$ implies that $s'v\in A$ for any $s'\in[0,s]$ by convexity. Thus, if $t>\norm v_A$, then we know there is $s<t$ such that $v\in sA$, so $(1/s)v\in A$ while $1/t<1/s$, so $(1/t)v\in A$, so $v\in tA$.
+\end{remark}
+Let's put all our adjectives together, finally explaining the relationship between seminorms and convex sets.
+\begin{proposition} \label{prop:convex-to-seminorm}
+	Fix a vector space $V$ over $\FF$ and a subset $A\subseteq V$.
+	\begin{listalph}
+		\item There is a seminorm $p\colon V\to\RR$ such that $A=\{v\in V:p(v)<1\}$ if and only if $A$ is nonempty, convex, balanced, and $(-a)+A$ is absorbing for all $a\in A$.
+		\item If $A$ is merely convex, balanced, and absorbing, then there is a seminorm $p\colon V\to\RR$ such that $\{v:p(v)<1\}\subseteq A$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	This is \cite[Proposition~1.14]{conway-functional}. The forward direction of (a) follows from combining \Cref{ex:seminorm-to-convex,ex:seminorm-to-balanced,ex:seminorm-to-absorbing}. It remains to show the reverse direction of (a) and (b). For both of these, we will take $p\coloneqq\norm\cdot_A$, which is a well-defined function by \Cref{rem:mink-seminorm-defined} (once we know that $A$ in (a) is absorbing). We will run our checks in a few pieces.
+	\begin{itemize}
+		\item In (a), we show that $A$ is absorbing. It is enough to check that $0\in A$. Well, being nonempty, there is some $a\in A$. Because $A$ is balanced, we see $-a\in A$, and because $A$ is convex, it follows that $0\in A$.
+		\item If $A$ is absorbing and balanced, we check that $p(\lambda v)=\left|\lambda\right|p(v)$ for $v\in V$ and $\lambda\in\FF$. Well, $\lambda v\in tA$ if and only if $v\in\frac t\lambda A$, which is equivalent to $v\in\frac t{\left|\lambda\right|}A$ because $A$ is balanced! It follows that
+		\[\{t\ge0:\lambda v\in tA\}=\left|\lambda\right|\left\{\frac t{\left|\lambda\right|}:v\in\frac t{\left|\lambda\right|}A\right\},\]
+		so the check follows.
+		\item If $A$ is convex, balanced, and absorbing, then we check that $p(v+w)\le p(v)+p(w)$ for $v,w\in V$. The geometric input is that $tA+sA\subseteq(t+s)A$ for any $t,s>0$; this follows by convexity because
+		\[tA+sA=(t+s)\left(\frac t{t+s}A+\frac s{t+s}A\right)\]
+		is contained in $(t+s)A$ by convexity. Now, for the check, we note that having $p(v)<t$ and $p(w)<s$ implies that $v\in tA$ and $w\in sA$ by \Cref{rem:better-mink-seminorm}, so $v+w\in(t+s)A$, so $p(v+w)\le t+s$. Sending $t\to p(v)$ and $s\to p(w)$ completes the check.
+		\item We complete the proof of (b). The above checks show that $p$ is a seminorm, so it remains to check that $\{v:p(v)<1\}\subseteq A$. This follows from $A$ being balanced: if $p(v)<1$, then there is $t<1$ such that $v\in tA$, and $tA\subseteq A$ because $A$ is balanced.
+		\item We complete the proof of (a). The previous check shows that $\{v:p(v)<1\}\subseteq A$, so it remains to check the other inclusion. Well, for any $a\in A$, we see that $(-a)+A$ is absorbing, so $a+ta\in A$ for small $t>0$. It follows that $a\in(1+t)^{-1}A$, so $p(a)<(1+t)^{-1}<1$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{corollary} \label{cor:locally-convex-by-seminorm}
+	Fix a topological vector space $V$ over $\FF$. The following are equivalent.
+	\begin{listroman}
+		\item $V$ is locally convex.
+		\item The topology on $V$ is induced by a family of seminorms.
+	\end{listroman}
+\end{corollary}
+\begin{proof}
+	We show the implications separately.
+	\begin{itemize}
+		\item Suppose that $V$ is locally convex, so $0$ admits a neighborhood basis $\mc U$ of balanced convex sets by \Cref{rem:better-locally-convex}. By \Cref{ex:open-to-absorbing}, we see that each $U\in\mc U$ has $(-a)+U$ absorbing for all $a\in U$, so \Cref{prop:convex-to-seminorm} provides a seminorm $p_U\colon V\to\RR$ such that $U=\{v:p_U(v)<1\}$. Note that $p_U$ is continuous by \Cref{lem:seminorm-continuity-grab-bag}.
+
+		Lastly, we should check that the topology given by the seminorms $\{p_U\}$ is the correct one. Well, this topology has basis given by finite intersections of sets of the form
+		\[\{v\in V:p_U(v)\in(a,b)\},\]
+		where $(a,b)\subseteq\RR$. The continuity of the $p_U$s implies that any such subset is open in $V$. Conversely, any open neighborhood of $0$ in $V$ contains some $U\in\mc U$ and therefore contains $\{v\in V:p(v)\in(-1,1)\}$, so a comparison of the neighborhood bases (via translation) implies that the open neighborhood of $0$ is still open.
+
+		\item Suppose that $V$ has its topology generated by a family of seminorms $\{p_i\}$. Well, because $p_i(0)=0$ for each $i$, an open neighborhood basis of $0$ can be given by finite intersections of sets of the form $p_i^{-1}((-\varepsilon,\varepsilon))$. Of course, this is just
+		\[\varepsilon\{v\in V:p_i(v)<1\},\]
+		which we note is convex by \Cref{ex:seminorm-to-convex}. Thus, $0$ admits a neighborhood basis of convex sets.
+		\qedhere
+	\end{itemize}
+\end{proof}
+Now that we have an understanding of locally convex spaces, we may define Fr\'echet spaces.
+\begin{definition}[Fr\'echet]
+	A topological vector space $X$ is \textit{Fr\'echet} if and only if it is locally convex, metr\-izable, and complete.
+\end{definition}
+The bizarre addition here is metrizable. This condition fits in with the other ones as follows.
+\begin{proposition} \label{prop:locally-convex-to-metric}
+	Fix a locally convex topological vector space $V$ over $\FF$. Then the following are equivalent.
+	\begin{listroman}
+		\item $V$ has its topology induced by a translation-invariant metric.
+		\item $V$ is metrizable.
+		\item $V$ has a countable neighborhood basis of $0$.
+		\item The topology on $V$ is induced by a countable family of seminorms.
+	\end{listroman}
+\end{proposition}
+\begin{proof}
+	The implication (i) to (ii) has no content, and (ii) to (iii) follows by taking the neighborhood basis of open subsets given by $\{v:d(v,0)<1/n\}$ for positive integers $n$. Next, (iii) implies (iv) by the proof of the forward direction of \Cref{cor:locally-convex-by-seminorm}, which built one seminorm for each balanced convex subset in the neighborhood basis of $0$.
+
+	Lastly, we have to show that (iv) implies (i). Well, given the countable family of seminorms $\{p_i\}_{i\ge1}$, we define the function $d\colon V\times V\to\RR$ by
+	\[d(x,y)\coloneqq\sum_{i=1}^\infty\frac1{2^i}\cdot\frac{p_i(x-y)}{1+p_i(x-y)}.\]
+	Here are our checks on $d$.
+	\begin{itemize}
+		\item We check that $d$ is a metric. The summation always converges because $\frac{p_i(x-y)}{1+p_i(x-y)}\le1$ always. Continuing, $d(x,x)=0$ follows because $p_i(0)=0$ for all $i$, and the triangle inequality follows from the subadditivity of each of the $p_i$s.
+
+		It remains to check the positivity of $d$. Well, if $x\ne y$, then because $V$ is Hausdorff, we see that $p_i(x-y)>0$ for some $p_i$. (Otherwise, the constant net $\{x-y\}$ would converge to both $0$ and $x-y$.) Thus, $d(x,y)>0$.
+
+		\item We check that $d$ is translation-invariant. Well, for any $a\in V$, we see that $d(x+a,y+a)$ is a function of $(x+a)-(y+a)=(x-y)$ and will equal $d(x,y)$.
+
+		\item Lastly, we check that $d$ induces the topology on $V$. It is enough to check that these two topologies have the same convergent nets. Well, a net $\{x_i\}$ converges to some $x\in V$ if and only if $p_\bullet(x_i-x)\to0$ for all seminorms $p_\bullet$. This surely implies that $d(x_i,x)\to0$, and conversely, $d(x_i,x)\to0$ will require that $p_\bullet(x_i-x)\to0$ for each $p_\bullet$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\section{The Open Mapping Theorem}
+In this section, we review the proof of the Open mapping theorem in order to extend the usual proof (for Banach spaces) to the setting of Fr\'echet spaces.
+
+As usual, our proof will have to rely on the Baire category theorem. Before introducing any strange terminology, let's start with a statement on just metric spaces.
+\begin{lemma} \label{lem:baire-cat-start}
+	Let $X$ be a nonempty complete metric space. Then a countable intersection of dense open subsets is dense.
+\end{lemma}
+\begin{proof}
+	Let $\{U_i\}_{i\in\NN}$ be our collection of dense open subsets. We would like to show that their intersection $\bigcap_{i\in\NN}U_i$ intersects any open subset $V$ of $X$. The idea is to recursively choose nearby elements in $U_i\cap V$ for each $i$, and then use completeness of $X$ to finish the proof. We proceed in steps.
+	\begin{enumerate}
+		\item We build a sequence of points $\{x_n\}_{n\in\NN}$ recursively, as follows. To start us off, we note $V\cap U_0$ is nonempty and open (by density of $U_0$), so we are granted a point $x_0\in U_0$ and $\varepsilon_0$ such that $B(x_0,\varepsilon_0)\subseteq V\cap U_0$. For the recursion, we suppose that we are given such an open neighborhood $B(x_n,\varepsilon_n)$, and then because $U_{n+1}$ is open and dense, we are provided a point $x_{n+1}$ in the intersection and some $\varepsilon_{n+1}<\varepsilon_n/3$ such that
+		\[B(x_{n+1},\varepsilon_{n+1})\subseteq B(x_n,\varepsilon_n)\cap U_{n+1}.\]
+
+		\item We claim that the sequence $\{x_n\}_{n\in\NN}$ is (rapidly) Cauchy. Indeed, note $\varepsilon_{n+1}<\varepsilon_n/2$ for each $n$, so $\varepsilon_n<2^{-n}$ follows by an induction. Thus, $d(x_n,x_{n+1})<2^{-n}$ for each $n$, so our sequence is rapidly Cauchy. To finish checking that it is Cauchy, we note that whenever $i<j$, we have
+		\[d(x_i,x_j)\le\sum_{k=i}^{j-1}\underbrace{d(x_k,x_{k+1})}_{<2^{-k}},\]
+		which is upper-bounded by $2^{-i+1}$.
+
+		\item Now, we let $x$ be a limit point of $\{x_n\}_{n\in\NN}$. (This is where we used completeness!) Because our sequence is eventually in $B(x_n,\varepsilon_n)$ for any given $n$, we see that $x\in B(x_n,\varepsilon_n)$ for each $n$. Thus, $x\in V\cap U_0$ by the first step of the construction, and $x\in U_n$ for each $n\ge1$ by the recursive step of the construction.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+The previous lemma now upgrades to the Baire category theorem.
+\begin{theorem}[Baire category] \label{thm:baire-cat}
+	Let $X$ be a nonempty complete metric space. Let $\{U_i\}_{i\in\NN}$ be a countable collection of dense open subsets. Then the intersection $\bigcap_{i\in\NN}U_i$ is not contained in a countable union of nowhere dense subsets.
+\end{theorem}
+\begin{proof}
+	Suppose for the sake of contradiction that we have
+	\[\bigcap_{i\in\NN}U_i\subseteq\bigcup_{j\in\NN}A_j,\]
+	where each $A_j$ is nowhere dense. It thus follows that
+	\[\bigcap_{i\in\NN}U_i\cap\bigcap_{j\in\NN}X\setminus\overline{A_j}\]
+	is empty. We claim that $X\setminus\overline{A_j}$ is open and dense, which yields the desired contradiction by \Cref{lem:baire-cat-start}. Certainly $X\setminus\overline{A_j}$ is open; for density, note that $\overline{A_j}$ contains no open subset, which means that the complement intersects any open subset.
+\end{proof}
+\begin{corollary} \label{cor:baire-cat-whole-space}
+	Let $X$ be a nonempty complete metric space. Then $X$ is not the countable union of nowhere dense subsets.
+\end{corollary}
+\begin{proof}
+	This follows from taking $U_i=X$ for each $i$ in \Cref{thm:baire-cat}.
+\end{proof}
+We now proceed with the Open mapping theorem. We will isolate the application of the Baire category theorem to the following lemma: \Cref{cor:baire-cat-whole-space} shows that the hypothesis is satisfied.
+\begin{lemma} \label{lem:omt-use-baire}
+	Let $f\colon X\to Y$ be a linear map of locally convex topological vector spaces. Suppose that $\im f$ is not the union of nowhere dense subsets. Then $\overline{f(U)}$ contains an open neighborhood of $0$ for each open neighborhood $U$ of $0$.
+\end{lemma}
+\begin{proof}
+	This more or less follows from unwinding the hypothesis. Because $V$ is locally convex, we may shrink $U$ to make it convex and balanced (by \Cref{lem:convex-to-convex-balanced}); we will only use this at the end of the proof. The hypothesis is applied as follows: because $U$ is open, it is absorbing (by \Cref{ex:open-to-absorbing}), so $V=\bigcup_{i\in\NN}iU$, so
+	\[\im f=\bigcup_{i>0}iU.\]
+	Thus, the hypothesis implies that one of the $iU$ fails to be nowhere dense; because multiplication by $i>0$ is a homeomorphism, we see that $U$ is also fails to be nowhere dense, so it contains an open subset $V$.
+
+	We now upgrade $V$ into an open neighborhood of $0$. Well, simply set $V'\coloneqq\frac12(V-V)$. Then $f(V')$ is contained in $\frac12(U-U)$ by linearity, which is $\frac12(U+U)$ because $U$ is balanced, which is contained in $U$ because $U$ is convex.
+\end{proof}
+It remains to use the hypothesis that $X$ is complete, which is done in the following lemma.
+\begin{lemma} \label{lem:omt-use-complete}
+	Let $f\colon X\to Y$ be a continuous linear map of metrizable locally convex topological spaces. Suppose that $X$ is complete and that $\overline{f(U)}$ contains an open neighborhood of $0$ for each open neighborhood $U$ of $0$. Then $f$ is open.
+\end{lemma}
+\begin{proof}
+	The idea is to use the completeness of $X$ to construct points of $U$ which go to a required open neighborhood. We proceed in steps.
+	\begin{enumerate}
+		\item We are going to show that $f(U)$ contains an open neighborhood of $0$ for each open neighborhood $U$ of $0$, so let's spend a moment to explain why this is enough. For each open subset $U'\subseteq X$ and $x\in U'$, we note that $f(U'-x)$ contains an open neighborhood $V_x$ of the origin. Thus, $f(U')$ contains the open neighborhood $f(x)+V_x$, so $f(U')$ equals
+		\[\bigcup_{x\in U'}f(x)+V_x,\]
+		which is open because it is a union of open subsets.
+
+		\item We unwind the hypothesis on $f$. By shrinking our open neighborhood $U$ of $0$, we may assume that $U$ is convex and balanced (by \Cref{lem:convex-to-convex-balanced}), so there is a seminorm $p$ on $X$ for which $U$ is $B(0,1)$ for some translation-invariant metric $d$ on $X$, chosen via \Cref{prop:locally-convex-to-metric}.
+		% \[U=\{x\in X:p(x)<1\}\]
+		% by \Cref{prop:convex-to-seminorm} (which applies because the absorbing hypothesis follows from \Cref{ex:open-to-absorbing}).
+		Similarly, by hypothesis on $f$, we know that $\overline{f(U)}$ contains some open neighborhood $V$ of $0$, which we may again shrink until it is $B(0,2)$ for some translation-invariant metric $d$ on $Y$.
+		% \[V=\{y\in Y:q(y)<2\}\]
+		% for some seminorm $q$ on $Y$.
+		It will be worthwhile to remove the closure from this statement. Well, for any $y\in Y$, we see that $y\in d(y,0)V$ and so $y\in\overline{q(y)\cdot f(U)}$, so any $\varepsilon>0$ has some $x\in X$ for which $d(x,0)<d(y,0)$ and $d(y,f(x))<\varepsilon$.
+
+		\item We will actually show that $V\subseteq f(U)$, so choose some $y\in V$. The completeness of $X$ will be used via a limiting process to produce an element of $U$ mapping to $y$. To start us off, fix some $\varepsilon>0$ (to be fixed at the end of the proof), and we take $x_0\coloneqq0$. Now, if we are given $x_0+\cdots+x_n$, we may select $x_{n+1}$ so that $d(x_{n+1},0)<d(y-f(x_0+\cdots+x_n),0)$ and
+		\[d(y-f(x_0+\cdots+x_n),f(x_{n+1}))<\varepsilon/2^{n+1}\]
+		by the above paragraph.
+
+		\item We complete the proof. Now, by construction, $d(x_n,0)<\varepsilon/2^{n-1}$ for all $n\ge2$, so the sequence of partial sums is rapidly Cauchy. As in the proof of \Cref{lem:baire-cat-start}, it follows that these partial sums converge to some $x\in X$.
+		
+		We claim that this $x$ is the desired element. To start, we see that $f(x_0+\cdots+x_n)\to y$ as $n\to\infty$ by construction, so $f(x)=y$ by continuity of $f$!
+
+		It remains to check that $x\in U$. Well, $d(x,0)$ is bounded by
+		\[\sum_{n=0}^\infty d(x_n,0)<d(x_0,0)+d(x_1,0)+\sum_{n=2}^\infty\frac\varepsilon{2^{n-1}},\]
+		and $d(x_1,0)<d(y,0)<2$ and $\sum_{n=2}^\infty\frac\varepsilon{2^{n-1}}=\varepsilon$, so $x\in U$ for $\varepsilon$ small enough.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{theorem}[Open mapping] \label{thm:omt}
+	Let $f\colon X\to Y$ be a continuous linear map of Fr\'echet spaces. If $f$ is surjective, then $f$ is open.
+\end{theorem}
+\begin{proof}
+	By \Cref{cor:baire-cat-whole-space}, we see that $X$ is not a countable union of nowhere dense subsets. The result now follows from combining \Cref{lem:omt-use-baire,lem:omt-use-complete}.
+\end{proof}
+\begin{corollary}
+	Let $f\colon X\to Y$ be a bijective continuous linear map of Fr\'echet spaces. Then $f$ has continuous inverse.
+\end{corollary}
+\begin{proof}
+	Let $g$ be the inverse map. Checking that $g$ is continuous is equivalent to checking that $f$ is open, which follows from \Cref{thm:omt}.
+\end{proof}
+
+\section{The Hahn--Banach Theorem}
+In this section, we review the proof of the Hahn--Banach theorem. This section will be filled with plenty of nonsense. Ultimately, we are interested in extending continuous linear functionals on Fr\'echet spaces, but along the way, we will show that linear functionals separate convex sets.
+
+As with Banach spaces, we check if a linear functional is continuous by checking if it is bounded, but the definition of bounded needs to be adjusted.
+\begin{definition}[bounded]
+	Fix a topological vector space $V$ over $\FF$. A linear functional $\ell\colon V\to\FF$ is \textit{bounded} if and only if there is an open neighborhood $U$ of $0$ and a constant $c>0$ such that $\left|\ell(x)\right|\le c$ for all $x\in U$.
+\end{definition}
+\begin{lemma}
+	Fix a topological vector space $V$ over $\FF$ and a linear functional $\ell$ on $V$. Then the following are equivalent.
+	\begin{listroman}
+		\item $\ell$ is continuous.
+		\item $\ell$ is bounded.
+		\item $\ell$ is continuous at $0$.
+	\end{listroman}
+\end{lemma}
+\begin{proof}
+	We use \Cref{lem:seminorm-continuity-grab-bag}. The implication from (i) to (ii) is direct; the proof that (iii) implies (i) is identical to the proof in \Cref{lem:seminorm-continuity-grab-bag}. To show (ii) implies (iii), we note $\left|\ell\right|$ is a seminorm, and by considering nets, we see that it is enough to check that $\left|\ell\right|$ is continuous at $0$, which follows from \Cref{lem:seminorm-continuity-grab-bag}(ii) and the fact that $\ell$ is bounded.
+\end{proof}
+\begin{corollary}
+	Fix a topological vector space $V$ over $\FF$, and let $p\colon V\to\RR$ be a continuous seminorm. Given a linear functional $\ell\colon V\to\FF$, if $\ell\le p$ pointwise, then $\ell$ is continuous.
+\end{corollary}
+\begin{proof}
+	Because $\ell\le p$, we see that 
+\end{proof}
+Thus, it will be important to be able to extend linear functionals along with an upper bound against a seminorm. By considerations with Zorn's lemma, we will find that the hard part is extending the linear functional one step, which is the content of the next lemma.
+\begin{lemma} \label{lem:hahn-banach-one-step}
+	Fix a vector space $V$ over $\RR$, a seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $\ell\le p$ pointwise. Given any $v'\in V$, there is an extension $\ell'$ to a linear functional on a subspace $W'$ containing $v'$ such that $\ell'\le p$ pointwise.
+\end{lemma}
+\begin{proof}
+	If $v'\in W$ already, then there is nothing to do. Otherwise, for any real number $c$, we see that we may extend $\ell$ to a linear functional $\ell'$ on $W'\coloneqq W+\RR v'$ by setting $\ell'(v')\coloneqq c$. Namely, we have
+	\[\ell'(w+tv')=\ell(w)+tc\]
+	for any $w\in W$ and $t\in\RR$.
+	
+	We would like to show that we can choose $c$ so that $\ell'\le p$ pointwise. This requires a little trickery. By scaling, it is enough to only check with $t\in\{\pm1\}$ (because $t=0$ follows by hypothesis). Thus, we need both $\ell(w)+c\le p(w+v')$ and $\ell(w)-c\le p(w-v')$ for all $w\in W$. Now, such a $c$ exists if and only if
+	\[\sup_{w\in W}(\ell(w)-p(w-v'))\stackrel?\le\inf_{w\in W}(p(w+v')-\ell(w)).\]
+	For this, we should check that $\ell(w)-p(w-v')\le p(w'+v')-\ell(w')$ for any $w,w'\in W$, which is equivalent to $\ell(w+w')\le p(w-v')+p(w'+v')$. This last inequality follows because $\ell\le p$ and the subadditivity of $p$.
+\end{proof}
+\begin{theorem}[Hahn--Banach]
+	Fix a vector space $V$ over $\RR$, a seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $\ell\le p$ pointwise. Then $\ell$ extends to a linear functional $\ell'$ on $V$ such that $\ell'\le p$.
+\end{theorem}
+\begin{proof}
+	After \Cref{lem:hahn-banach-one-step}, the rest of this proof is largely formal nonsense. We use Zorn's lemma on the partially ordered set $\mathcal P$ of pairs $(V',\ell')$, where $V'$ is an intermediate subspace, and $\ell'$ is a functional on $V'$ bounded above by $p$; the ordering is given by $(V',\ell')\le(V'',\ell'')$ if and only if $V'\subseteq V''$ and $\ell''|_{V'}=\ell'$. Our application of Zorn's lemma is in two steps.
+	\begin{itemize}
+		\item We claim that $\mathcal P$ has a maximal element, for which we use Zorn's lemma. First, note $\mathcal P$ is nonempty because it has $(W,\ell)$. Secondly, any ascending chain $\{(W_i,\ell_i)\}_i$ in $\mathcal P$ has upper bound given by setting $V'\coloneqq\bigcup_iW_i$ and defining $\ell'$ as the union of the $\ell_i$s. We can see that $V'$ is still a vector space, and the nature of the partial ordering verifies that $\ell'$ is a well-defined functional extending $\ell$. Thus, so $(V',\ell')$ is indeed an upper bound for our chain.
+		\item Let $(V',\ell')$ be a maximal element of $\mathcal P$. We claim that $V'=V$, which will complete the proof. We already have $V'\subseteq V$, so it remains to show the other inclusion. Well, for any $v\in V$, we see that $(V',\ell')$ can be extended up to $V'+\RR v$ by \Cref{lem:hahn-banach-one-step}, so the maximality of $(V',\ell')$ requires $V'+\RR v=V'$. Thus, $v\in V'$, so $V\subseteq V'$ follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
