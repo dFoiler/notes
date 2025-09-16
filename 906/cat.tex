@@ -1,0 +1,422 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Category Theory} \label{chap:cat}
+In this appendix, we review some category theory as fast as possible.
+\begin{warn}
+	We will mostly ignore size issues. If it makes the reader feel better, we are willing to assume the existence of a countable ascending chain of inaccessible cardinals throughout the class.
+\end{warn}
+
+\section{Basic Definitions}
+Let's recall some starting notions of category theory.
+\begin{definition}[category]
+	A \textit{category} $\mc C$ is a collection of objects, a collection of morphisms $\op{Mor}_\mc C(A,B)$ for each pair of objects, a distinguished identity element $\id_A$ in $\op{Mor}_{\mc C}(A,A)$, and a composition law
+	\[\circ\colon\op{Mor}_{\mc C}(B,C)\times\op{Mor}_{\mc C}(A,B)\to\op{Mor}_{\mc C}(A,C).\]
+	We then require the composition law to be associative and unital with respect to the identity maps.
+\end{definition}
+\begin{remark}
+	We will use the notation $\op{Hom}$ for $\op{Mor}$ whenever the category $\mc C$ is additive, meaning that these collections of morphisms are abelian groups, and the composition law is $\ZZ$-bilinear.
+\end{remark}
+The following two examples are most important for this class.
+\begin{example}
+	There is a category $\mathrm{Set}$ of all sets. The morphisms are given by functions of sets, and the identity maps are compositions are all as usual. The fact that function composition is associative and unital implies that $\mathrm{Set}$ succeeds at being a category.
+\end{example}
+\begin{example}
+	We let $\Delta$ to be the category whose objects are the nonnegative integers $n$, written $[n]\in\Delta$, where $\op{Mor}_\Delta([m],[n])$ consists of the increasing maps $\{0,\ldots,m\}\to\{0,\ldots,n\}$. Composition of functions and identities are defined as for $\mathrm{Set}$, allowing one to check that $\Delta$ is a category in exactly the same way.
+\end{example}
+The following example provides a useful technical tool.
+\begin{example}
+	Given a category $\mc C$, there is an opposite category $\mc C\opp$ whose objects are the same, but the morphisms are given by
+	\[\op{Mor}_{\mc C\opp}(c,c')\coloneqq\op{Mor}_{\mc C}(c',c).\]
+	We may write $f\opp\colon c'\to c$ for the morphism corresponding to $f\colon c\to c'$. Identities remain the same, but composition is defined by $f\opp\circ (f')\op=(f'\circ f)\opp$. The fact that $\mc C$ is a category makes $\mc C\opp$ into a category.
+\end{example}
+\begin{definition}[isomorphism]
+	A morphism $f\colon A\to B$ in a category $\mc C$ is an \textit{isomorphism} if and only if there is a morphism $g\colon B\to A$ for which $f\circ g=\id_B$ and $g\circ f=\id_A$.
+\end{definition}
+\begin{definition}[groupoid]
+	A \textit{groupoid} is a category in which every morphism is an isomorphism.
+\end{definition}
+It is worthwhile to have maps between categories as well.
+\begin{definition}[functor]
+	Fix categories $\mc C$ and $\mc D$. A \textit{functor} $F\colon\mc C\to\mc D$ is the data of a map on the level of objects and maps
+	\[F\colon\op{Mor}_{\mc C}(c,c')\to\op{Mor}_{\mc D}(Fc,Fc')\]
+	for any $c,c'\in\mc C$. Furthermore, we require $F{\id_c}=F\id_{Fc}$ and $F(f'\circ f)=Ff'\circ Ff$ for any $c\in\mc C$ and compose-able $f$ and $f'$.
+\end{definition}
+Here are some adjectives that a functor can have.
+\begin{definition}[isomorphism]
+	A functor $F\colon\mc C\to\mc D$ is an \textit{isomorphism} if and only if there is an inverse functor $G\colon\mc D\to\mc C$ for which $FG$ and $GF$ are both the identity functors.
+\end{definition}
+\begin{defihelper}[full, faithful] \nirindex{full} \nirindex{faithful}
+	Fix a functor $F\colon\mc C\to\mc D$ and consider the maps
+	\[F\colon\op{Mor}_{\mc C}(c,c')\to\op{Mor}_{\mc D}(Fc,Fc')\]
+	for any $c,c'\in\mc C$. We say that $F$ is \textit{full} if and only if these maps are always surjective, and we say that $F$ is \textit{faithful} if and only if these maps are always injective.
+\end{defihelper}
+
+\subsection{Natural Transformations}
+We are shortly going to get a lot of mileage out of the next example, so we spend some time to prove it in detail. We would like to define a category of functors between two given categories,\footnote{For those who are choosing to think about size issues, we remark that we will typically have one of $\mc C$ or $\mc D$ be locally small.} but this requires us to have a notion of morphism between functors.
+\begin{definition}[natural transformation]
+	Given two functors $F,G\colon\mc C\to\mc D$, a \textit{natural transformation} $\eta\colon F\Rightarrow G$ is the data of a morphism $\eta_A\colon FA\to GA$ for each object $A\in\mc C$. We further require that $Gf\circ\eta_A=\eta_{B}\circ Ff$ for any morphism $f\colon A\to B$. A \textit{natural isomorphism} is a natural transformation $\eta$ in which each morphism $\eta_A$ is an isomorphism.
+\end{definition}
+Diagrammatically, the equation $Gf\circ\eta_A=\eta_{B}\circ Ff$ amounts to the commutativity of the following square.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGQSJdLFsxLDAsIkdBIl0sWzAsMSwiRkIiXSxbMSwxLCJHQiJdLFswLDEsIlxcZXRhX0EiXSxbMiwzLCJcXGV0YV9CIl0sWzAsMiwiRmYiLDJdLFsxLDMsIkdmIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	FA & GA \\
+	FB & GB
+	\arrow["{\eta_A}", from=1-1, to=1-2]
+	\arrow["Ff"', from=1-1, to=2-1]
+	\arrow["Gf", from=1-2, to=2-2]
+	\arrow["{\eta_B}", from=2-1, to=2-2]
+\end{tikzcd}\]
+Anyway, here is our result.
+\begin{lemma} \label{lem:functor-cat}
+	Let $\mc C$ and $\mc D$ be categories. Then there is a functor category $\op{Fun}(\mc C,\mc D)$ where the objects are functors $\mc C\to\mc D$ and the morphisms are natural transformations.
+\end{lemma}
+\begin{proof}
+	We have explained our objects and morphisms, but we still have to provide identities and composition laws and check that everything works.
+	\begin{itemize}
+		\item Identities: given a functor $F\colon\mc C\to\mc D$, there is an identity natural transformation $\id_F\colon F\to F$ given by $({\id_F})_A\coloneqq\id_{FA}$; checking that this is a natural transformation amounts to noting that $Ff\circ{\id_{FA}}={\id_{FB}}\circ Ff$ for any morphism $f\colon A\to B$.
+
+		\item Composition: given two natural transformations $\alpha\colon F\Rightarrow G$ and $\beta\colon G\Rightarrow H$, we define the composite natural transformation $(\beta\circ\alpha)\colon F\Rightarrow H$ by $(\beta\circ\alpha)_A\coloneqq\beta_A\circ\alpha_A$ for each $A\in\mc A$. Checking that this is a natural transformation amounts to checking the commutativity of the outer rectangle of
+		% https://q.uiver.app/#q=WzAsNixbMCwwLCJGQSJdLFsxLDAsIkdBIl0sWzIsMCwiSEEiXSxbMCwxLCJGQiJdLFsxLDEsIkdCIl0sWzIsMSwiSEIiXSxbMCwxLCJcXGFscGhhX0EiLDJdLFsxLDIsIlxcYmV0YV9BIiwyXSxbMCwyLCIoXFxiZXRhXFxjaXJjXFxhbHBoYSlfQSIsMCx7ImN1cnZlIjotMn1dLFswLDMsIkZmIiwyXSxbMSw0LCJHZiIsMl0sWzIsNSwiSGYiXSxbMyw0LCJcXGFscGhhX0IiXSxbNCw1LCJcXGJldGFfQiJdLFszLDUsIihcXGJldGFcXGNpcmNcXGFscGhhKV9CIiwyLHsiY3VydmUiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			FA & GA & HA \\
+			FB & GB & HB
+			\arrow["{\alpha_A}"', from=1-1, to=1-2]
+			\arrow["{(\beta\circ\alpha)_A}", curve={height=-12pt}, from=1-1, to=1-3]
+			\arrow["Ff"', from=1-1, to=2-1]
+			\arrow["{\beta_A}"', from=1-2, to=1-3]
+			\arrow["Gf"', from=1-2, to=2-2]
+			\arrow["Hf", from=1-3, to=2-3]
+			\arrow["{\alpha_B}", from=2-1, to=2-2]
+			\arrow["{(\beta\circ\alpha)_B}"', curve={height=12pt}, from=2-1, to=2-3]
+			\arrow["{\beta_B}", from=2-2, to=2-3]
+		\end{tikzcd}\]
+		which indeed commutes: the top and bottom triangles commute by definition of $\beta\circ\alpha$, and the two inner squares commute by naturality of $\alpha$ and $\beta$.
+
+		\item Identities: given a natural transformation $\eta\colon F\Rightarrow G$, we need to check that ${\id_G}\circ\eta=\eta\circ{\id_F}=\eta$. Well, for any object $A$, we see that
+		\[({\id_G}\circ\eta)_A=({\id_G}\circ\eta)_A={\id_{G(A)}}\circ\eta_A=\eta_A,\]
+		and
+		\[(\eta\circ{\id_F})_A=\eta_A\circ{\id_{FA}}=\eta_A.\]
+
+		\item Associativity: given natural transformations $\alpha$, $\beta$, and $\gamma$ with appropriate domains and codomains, we must check that $(\alpha\circ\beta)\circ\gamma=\alpha\circ(\beta\circ\gamma)$. Well, for any object $A$, we see that
+		\[((\alpha\circ\beta)\circ\gamma)=(\alpha_A\circ\beta_A)\circ\gamma_A=\alpha_A\circ(\beta_A\circ\gamma_A)=(\alpha\circ(\beta\circ\gamma))_A,\]
+		as required.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{example}
+	For any $c\in\mc C$, there is a functor $\op{ev}_c\colon\op{Fun}(\mc C,\mc D)\to\mc D$ given by $\op{ev}_c(F)\coloneqq Fc$ on objects. On morphisms, we send a natural transformation $\eta\colon F\Rightarrow F'$ to the morphism $\op{ev}_c(\eta)\coloneqq\eta_c$. For example, $\op{ev}_c({\id_F})=({\id_F})_c=\id_{Fc}$. Lastly, to check functoriality, we pick up two natural transformations $\eta\colon F\Rightarrow F'$ and $\eta'\colon F'\Rightarrow F''$, and we note that $\op{ev}_c(\eta'\eta)=(\eta'\eta)_c=\eta'_c\eta_c=\op{ev}_c(\eta')\op{ev}_c(\eta)$. 
+\end{example}
+
+\section{The Yoneda Lemma}
+We are going to get some mileage out of using presheaf categories.
+\begin{definition}[presheaf]
+	Fix a category $\mc C$. Then a \textit{presheaf} on $\mc C$ is a functor $\mc C\opp\to\mathrm{Set}$. Accordingly, the presheaf category $\op{PSh}(\mc C)$ is the functor category $\op{Fun}(\mc C\opp,\mathrm{Set})$.
+\end{definition}
+\begin{remark} \label{rem:get-subpresheaf}
+	It will be worthwhile to have a way to build ``subpresheaves.'' Given a functor $F\colon\mc C\opp\to\mathrm{Set}$, suppose that we have a collection of sets $\{Gc\}_{c\in\mc C}$ such that $Gc\subseteq Fc$ for each $c\in\mc C$. Furthermore, suppose that each map $f\colon c\to c'$ has $Ff(Gc)\subseteq Gc'$. Then we can define $Gf\coloneqq Ff|_{Gc}$, and it follows that $G$ is a functor because $F$ is a functor, and the inclusions $Gc\subseteq Fc$ now assemble into a natural transformation.
+\end{remark}
+Here is our main result.
+\begin{theorem}[Yoneda lemma]
+	Fix a category $\mc C$. Then there is a functor $\yo\colon\mc C\to\mathrm{PSh}(\mc C)$ which is defined on objects by
+	\[\yo_c\coloneqq\op{Mor}_{\mc C}(-,c).\]
+	Furthermore, $\yo$ is fully faithful.
+\end{theorem}
+\begin{proof}
+	This is purely formal. We proceed with our checks in sequence.
+	\begin{itemize}
+		\item For $c\in\mc C$, we show that $\yo_c\colon\mc C\opp\to\mathrm{Set}$ is a functor. To review, on morphisms $g\colon d\to d'$, we define $\yo(g)\colon\op{Mor}_{\mc C}(d',c)\to\op{Mor}_{\mc C}(d,c)$ by $\yo_c(g)\coloneqq(-\circ g)$. For example, $\yo_c({\id_d})=(-\circ{\id_d})$, which is just the identity map. Lastly, for maps $g\colon d\to d'$ and $g'\colon d'\to d''$, we see that $\yo_c(g'\circ g)$ and $\yo_c(f)\circ\yo_c(f')$ both equal
+		\[(-\circ(g'\circ g))=(-\circ g)\circ(-\circ g')\]
+		by the associativity of composition.
+		\item We construct $\yo$ on morphisms. Given $f\colon c\to c'$, we need a natural transformation $\yo_f\colon\yo_c\Rightarrow\yo_{c'}$. Well, for any object $d\in\mc D$, we define the component map $(\yo_f)_d\colon\op{Mor}_{\mc C}(d,c)\to\op{Mor}_{\mc C}(d,c')$ by $(f\circ-)$. To see that $\yo_f$ assembles into a natural transformation, we see that any morphism $g\colon d\to d'$ makes the following diagram commute.
+		% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXHlvX2MoZCcpIl0sWzEsMCwiXFx5b19jKGQpIl0sWzAsMSwiXFx5b197Yyd9KGQnKSJdLFsxLDEsIlxceW9fe2N9KGQnKSJdLFsyLDAsImgiXSxbMywwLCJoXFxjaXJjIGciXSxbMiwxLCJmXFxjaXJjIGgiXSxbMywxLCJmXFxjaXJjIGhcXGNpcmMgZyJdLFswLDEsIlxceW9fYyhnKSJdLFsyLDMsIlxceW9fe2MnfShnKSJdLFswLDIsIihcXHlvX2YpX3tkJ30iLDJdLFsxLDMsIihcXHlvX2YpX2QiXSxbNCw2LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\yo_c(d')} & {\yo_c(d)} & h & {h\circ g} \\
+			{\yo_{c'}(d')} & {\yo_{c}(d')} & {f\circ h} & {f\circ h\circ g}
+			\arrow["{\yo_c(g)}", from=1-1, to=1-2]
+			\arrow["{(\yo_f)_{d'}}"', from=1-1, to=2-1]
+			\arrow["{(\yo_f)_d}", from=1-2, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow["{\yo_{c'}(g)}", from=2-1, to=2-2]
+			\arrow[maps to, from=2-3, to=2-4]
+		\end{tikzcd}\]
+		\item We show that $\yo$ is a functor. For example, $\yo_{\id_c}$ is the identity natural transformation because $(\yo_{\id_c})_d$ is just $({\id_c}\circ-)$ for each $d\in\mc C$, which is in fact the identity. Continuing, for any $f\colon c\to c'$ and $f'\colon c'\to c''$, we see that any object $d\in\mc C$ makes both $(\yo_{f'\circ f})_d$ and $(\yo_{f'}\circ\yo_f)_d$ equal to
+		\[((f'\circ f)-)=(f'\circ-)\circ(f\circ-)\]
+		by associativity.
+		\item Fix any functor $F\colon\mc C\opp\to\mathrm{Set}$. We define  an injective map $\op{Mor}_{\mathrm{PSh}(\mc C)}(\yo_c,F)\to Fc$. To define our map, we send a natural transformation $\eta\colon\yo_c\Rightarrow F$ to $\eta_c({\id_c})\in Fc$. Let's check that this is injective: if $\eta$ and $\eta'$ have $\eta_c({\id_c})=\eta'_c({\id_c})$, then we need to show that $\eta_d(h)=\eta'_d(h)$ for any $d\in\mc C$ and $h\colon d\to c$. Well, the commutativity of the diagram
+		% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXHlvX2MoYykiXSxbMSwwLCJGYyJdLFsxLDEsIkZkIl0sWzAsMSwiXFx5b19jKGQpIl0sWzIsMCwiXFxpZF9jIl0sWzIsMSwiaCJdLFszLDAsIlxcZXRhX2Moe1xcaWRfY30pIl0sWzMsMSwiRmgoXFxldGFfYyh7XFxpZF9jKX0pIl0sWzEsMiwiRmgiXSxbMCwzLCJcXHlvX2MoaCkiLDJdLFswLDEsIlxcZXRhX2MiXSxbMywyLCJcXGV0YV9kIl0sWzQsNiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9LCJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\yo_c(c)} & Fc & {\id_c} & {\eta_c({\id_c})} \\
+			{\yo_c(d)} & Fd & h & {Fh(\eta_c({\id_c})}
+			\arrow["{\eta_c}", from=1-1, to=1-2]
+			\arrow["{\yo_c(h)}"', from=1-1, to=2-1]
+			\arrow["Fh", from=1-2, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow["{\eta_d}", from=2-1, to=2-2]
+			\arrow[dashed, maps to, from=2-3, to=2-4]
+		\end{tikzcd}\]
+		reveals that $\eta_d(h)=Fh(\eta_c({\id_c}))$. A similar argument holds for $\eta'$, so we conclude that $\eta_d(h)=\eta'_d(h)$.
+		\item We show that the map of the previous point is in fact surjective. The end of the argument informs our construction: for any $x\in Fc$, we define $\eta\colon\yo_c\Rightarrow F$ by $\eta_d(h)\coloneqq Fh(x)$ for any $d\in\mc C$ and $h\colon d\to c$. This $\eta$ of course satisfies $\eta_c({\id_c})=x$, so it only remains to check that $\eta$ is actually a natural transformation. Well, for any morphism $g\colon d\to d'$, we see that the following diagram commutes.
+		% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXHlvX2MoZCcpIl0sWzEsMCwiRmQnIl0sWzAsMSwiXFx5b19jKGQpIl0sWzEsMSwiRmQiXSxbMiwwLCJoIl0sWzIsMSwiaFxcY2lyYyBnIl0sWzMsMCwiRmgoeCkiXSxbMywxLCJGZyhGaCh4KSkiXSxbMCwxLCJcXGV0YV9kIl0sWzIsMywiXFxldGFfe2QnfSJdLFswLDIsIlxceW9fYyhnKSIsMl0sWzEsMywiRmciXSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\yo_c(d')} & {Fd'} & h & {Fh(x)} \\
+			{\yo_c(d)} & Fd & {h\circ g} & {Fg(Fh(x))}
+			\arrow["{\eta_d}", from=1-1, to=1-2]
+			\arrow["{\yo_c(g)}"', from=1-1, to=2-1]
+			\arrow["Fg", from=1-2, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-3, to=2-3]
+			\arrow[maps to, from=1-4, to=2-4]
+			\arrow["{\eta_{d'}}", from=2-1, to=2-2]
+			\arrow[maps to, from=2-3, to=2-4]
+		\end{tikzcd}\]
+		\item We complete the proof. We need to show that $\yo$ gives bijections $\yo\colon\op{Mor}_{\mc C}(c,c')\to\op{Mor}_{\mathrm{PSh}}(\yo_c,\yo_{c'})$. Well, the two previous points shows that the target is in bijection with $\yo_{c'}(c)$ via $\eta\mapsto(\yo_{c'})_c({\id_c})$. But the total composite
+		\[\op{Mor}_{\mc C}(c,c')\to\op{Mor}_{\mathrm{PSh}}(\yo_c,\yo_{c'})\to\yo_{c'}(c)\]
+		sends a map $f\colon c\to c'$ to the natural transformation $(f\circ-)$ and then back to the map $f$. We conclude that $\yo$ is the inverse bijection for the map of the previous two points.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark} \label{rem:general-yoneda}
+	It is worth noting that the previous point provides us with a bijection
+	\[\op{Mor}_{\mathrm{PSh}}(\yo_c,F)\to Fc\]
+	by $\eta\mapsto\eta_c({\id_c})$. In fact, we also exhibited an inverse map by sending $x\in Fc$ to the natural transformation $\eta$ defined by $\eta_d(h)\coloneqq Fh(x)$ for any $h\colon d\to c$.
+\end{remark}
+Motivated by algebraic geometry, one has the following definition.
+\begin{definition}[representable]
+	A presheaf $\mc F$ on a category $\mc C$ is \textit{representable} if and only if there is an object $c\in\mc C$ for which $\mc F$ is isomorphic to $\yo(c)$.
+\end{definition}
+
+\section{Limits and Colimits}
+Some objects in categories can be characterized by their special properties. Limits and colimits provide a convenient language for this.
+\begin{definition}[limit]
+	Fix a functor $F\colon\mc I\to\mc C$. An object $c\in\mc C$ is a \textit{limit} of $F$ if and only if $c$ is ``universal'' with respect to having morphisms $Fi\to c$ for each $i\in\mc I$ making the diagrams
+	% https://q.uiver.app/#q=WzAsMyxbMSwwLCJGaSJdLFsxLDEsIkZpJyJdLFswLDAsImMiXSxbMCwxXSxbMiwwXSxbMiwxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		c & Fi \\
+		& {Fi'}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+	commute for any $i\to i'$. In other words, for any other object $c'$ equipped with such morphisms, there is a unique map $c'\to c$ commuting with these morphisms. A \textit{colimit} of $F$ is the same notion, but the maps from $F$ go into $c$ instead of out of $c$.
+\end{definition}
+\begin{example}[product]
+	A product is a limit of a functor $F\colon\mc I\to\mc C$, where the category $\mc I$ has no non-identity morphisms. The colimit is called the coproduct.
+\end{example}
+\begin{example}[equalizer]
+	An equalizer is a limit of a functor $F\colon\mc I\to\mc C$, where the category $\mc I$ has exactly two objects and one morphism between them. The colimit is called the co-equalizer.
+\end{example}
+\begin{lemma} \label{lem:limit-uniq}
+	Fix a functor $F\colon\mc I\to\mc C$. Then any two limits of $F$ are isomorphic. 
+\end{lemma}
+\begin{proof}
+	Let $c$ and $c'$ be limits of $F$. Then there are unique maps $c\to c'$ and $c'\to c$ commuting with the morphisms from $F(\mc I)$ by definition of a limit. But then there is also a unique morphism $c\to c$ commuting with these morphisms, which must be the identity, so the composite
+	\[c\to c'\to c\]
+	must also be the identity. Similarly, we see that $c'\to c\to c'$ is the identity, thereby completing the proof.
+\end{proof}
+The above lemma allows us to give some notation for our limits: we may write the limit of $F$ as $\lim_{\mc I}F$ (when it exists!) and the colimit as $\colim_{\mc I}F$.
+\begin{remark}
+	\Cref{lem:limit-uniq} also holds for colimits, which we can see by passing to opposite categories.
+\end{remark}
+\begin{example}
+	The category $\mathrm{Set}$ admits all limits and colimits of functors $F\colon\mc I\to\mc C$, where the category $\mc I$ has at most $\kappa$ many objects and morphisms for some cardinal $\kappa$.
+\end{example}
+\begin{proof}
+	We explicitly construct the limit and colimit of such a functor $F$.
+	\begin{itemize}
+		\item We handle the limit. Define the set
+		\[L\coloneqq\left\{(x_i)\in\prod_{i\in\mc I}Fi:Ff(x_i)=x_j\text{ for all }f\colon i\to j\right\}.\]
+		We claim that $L$ is the limit. Because $L$ is a subset of the product, there are projection maps $\op{pr}_i\colon L\to Fi$ for each $i\in\mc I$. Furthermore, for any $f\colon i\to j$ and $(x_i)\in L$, we see that $\op{pr}_j(x_i)=f(\op{pr}_i(x_i))$ by construction of $L$.
+
+		It remains to check that $L$ is universal. Well, if $L'$ is any object equipped with such maps $\varphi_i\colon L'\to Fi$ for each $i$, then we must construct a unique map $\varphi\colon L'\to L$ commuting with everything. For the uniqueness, we see that this commuting requires $\op{pr}_i\varphi(x')=\varphi_i(x')$ for all $i\in\mc I$, so we are forced to define
+		\[\varphi(x')\coloneqq(\varphi_i(x'))\]
+		for all $i\in\mc I$. It remains to check that this map works. We already know that it commutes with all the given maps, so we only have to check that $\varphi$ is well-defined (i.e., outputs to $L$). Namely, for any $f\colon i\to j$, we need to check that $Ff(\varphi_i(x'))=\varphi_j(x')$, which is true by hypothesis on the $\varphi_\bullet$s.
+
+		\item We handle the colimit, which is similar. We will only give the construction. Define the set
+		\[C\coloneqq\left(\bigsqcup_{i\in\mc I}F_i\right)/{\sim},\]
+		where $\sim$ is the equivalence relation generated by having $x_i\in Fi$ and $x_j\in Fj$ similar if and only if there is a map $f\colon i\to j$ for which $Ff(x_i)=x_j$. Because $L$ is a quotient of a disjoint union, there are inclusion maps $\iota_i\colon F_i\to L$ for each $i\in\mc I$. Furthermore, for any $f\colon i\to j$ and $\iota_i(x_i)\in L$, we see that $\iota_j(Ff(x_i))=\iota_i(x_i)$ by definition of the equivalence relation.
+
+		It remains to check that $C$ is universal, which we omit.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{example} \label{ex:compute-pointwise}
+	Fix categories $\mc C$ and $\mc D$, and suppose that $\mc D$ admits all colimits from categories of cardinality at most $\kappa$. Then $\mathrm{Fun}(\mc C,\mc D)$ admits all limits and colimits of functors $F\colon\mc I\to\op{Fun}(\mc C,\mc D)$, where the category $\mc I$ of cardinality at most $\kappa$.
+\end{example}
+\begin{proof}
+	We explicitly construct the colimit ``pointwise.'' Namely, we need to define some functor $A$ to be the colimit of $F$, so we ought to construct $Ac\in\mc D$ for each $c\in\mc C$. With this in mind, we set
+	\[Ac\coloneqq\colim_{i\in\mc I}F(i)(c),\]
+	which exists as an element of $\mc D$ because $\mc D$ admits a colimit of the functor
+	\[\mc I\stackrel F\to\op{Fun}(\mc C,\mc D)\stackrel{\op{ev}_c}\to \mc D.\]
+	We will let $(\eta_i)_c\colon Fi(c)\to Ac$ be the induced morphism. Now, for each morphism $f\colon c\to c'$, we need to define a morphism $Af\colon Ac\to Ac'$. Well, we claim that the maps $F(i)(c)\to F(i)(c')$ assemble into a morphism
+	\[\colim_{i\in\mc I}F(i)(c)\to\colim_{i\in\mc I}F(i)(c').\]
+	Well, to map out of $\colim_{i\in\mc I}F(i)(c)$, we need to check that the maps $F(j)(c)\to F(j)(c')\to\colim F(i)(c')$ commute with the internal maps of $\mc I$, which amounts to the commutativity of the following diagram.
+	% https://q.uiver.app/#q=WzAsNSxbMCwwLCJGaihjKSJdLFswLDEsIkZqJyhjKSJdLFsxLDAsIkZqKGMnKSJdLFsxLDEsIkZqJyhjJykiXSxbMiwwLCJcXGRpc3BsYXlzdHlsZVxcY29saW1fe2lcXGluXFxtYyBJfUZpKGMnKSJdLFswLDIsIkZqKGYpIl0sWzEsMywiRmonKGYpIl0sWzIsNF0sWzMsNF0sWzIsMywiRmYoYycpIl0sWzAsMSwiRmYoYykiLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{Fj(c)} & {Fj(c')} & {\displaystyle\colim_{i\in\mc I}Fi(c')} \\
+		{Fj'(c)} & {Fj'(c')}
+		\arrow["{Fj(f)}", from=1-1, to=1-2]
+		\arrow["{Ff(c)}"', from=1-1, to=2-1]
+		\arrow[from=1-2, to=1-3]
+		\arrow["{Ff(c')}", from=1-2, to=2-2]
+		\arrow["{Fj'(f)}", from=2-1, to=2-2]
+		\arrow[from=2-2, to=1-3]
+	\end{tikzcd}\]
+	Here, the square commutes because the internal map $j\to j'$ goes to a natural transformation $Fj\Rightarrow Fj'$. The point is that $Af$ is the unique map making the diagram
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGaihjKSJdLFsxLDAsIkZqKGMnKSJdLFswLDEsIkFjIl0sWzEsMSwiQWMnIl0sWzAsMSwiRmooZikiXSxbMiwzLCJBZiJdLFswLDJdLFsxLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{Fj(c)} & {Fj(c')} \\
+		Ac & {Ac'}
+		\arrow["{Fj(f)}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow["Af", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	commute for every $j\in\mc I$; note that this is equivalent to saying that $\eta_j\colon Fj\Rightarrow A$ is a natural transformation for each $j\in\mc J$. For example, if $f=\id_c$, then certainly having $Af=\id_{Ac}$ will make the diagram commute. Similarly, given two maps $f\colon c\to c'$ and $f'\colon c'\to c''$, the commutativity of the diagram
+	% https://q.uiver.app/#q=WzAsNixbMCwwLCJGaihjKSJdLFsxLDAsIkZqKGMnKSJdLFswLDEsIkFjIl0sWzEsMSwiQWMnIl0sWzIsMCwiRmooYycnKSJdLFsyLDEsIkFjJyciXSxbMCwxLCJGaihmKSIsMl0sWzIsMywiQWYiXSxbMCwyXSxbMSwzXSxbMSw0LCJGaihmJykiLDJdLFszLDUsIkFmJyJdLFs0LDVdLFsyLDUsIkEoZidmKSIsMix7ImN1cnZlIjoxfV0sWzAsNCwiRmgoZidmKSIsMCx7ImN1cnZlIjotMX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{Fj(c)} & {Fj(c')} & {Fj(c'')} \\
+		Ac & {Ac'} & {Ac''}
+		\arrow["{Fj(f)}"', from=1-1, to=1-2]
+		\arrow["{Fh(f'f)}", curve={height=-12pt}, from=1-1, to=1-3]
+		\arrow[from=1-1, to=2-1]
+		\arrow["{Fj(f')}"', from=1-2, to=1-3]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=2-3]
+		\arrow["Af", from=2-1, to=2-2]
+		\arrow["{A(f'f)}"', curve={height=12pt}, from=2-1, to=2-3]
+		\arrow["{Af'}", from=2-2, to=2-3]
+	\end{tikzcd}\]
+	for all $j\in\mc I$ implies that $A(f'f)=Af'\circ Af$ by the uniqueness of a map making the outer rectangle commute.
+
+	We thus see that we have constructed a functor $A\colon\mc C\to\mc D$. It remains to actually show that $A$ is the colimit. Well, suppose we have an object $B\colon\mc C\to\mc D$ equipped with natural transformations $\varphi_i\colon Fi\Rightarrow B$ for each $i\in\mc I$ commuting with the induced maps from $\mc I$. We would like to induce a unique map $\varphi\colon A\Rightarrow B$ such that $\varphi\eta_i=\varphi_i$ for all $i\in\mc I$.
+
+	Let's show uniqueness by showing why $\varphi$ is forced. Having $\varphi\eta_i=\varphi_i$ implies that $\varphi_c\circ(\eta_i)_c=(\varphi_i)_c$ for each $c\in\mc C$. On the other hand, these maps $(\eta_i)_c$ cause the diagram
+	% https://q.uiver.app/#q=WzAsMyxbMSwwLCJCYyJdLFswLDAsIkZpKGMpIl0sWzAsMSwiRmooYykiXSxbMSwwLCIoXFxldGFfaSlfYyJdLFsyLDAsIihcXGV0YV9qKShjKSIsMl0sWzEsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{Fi(c)} & Bc \\
+		{Fj(c)}
+		\arrow["{(\eta_i)_c}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["{(\eta_j)(c)}"', from=2-1, to=1-2]
+	\end{tikzcd}\]
+	to commute for each map $i\to j$ (by applying $\op{ev}_c$ to the commutativity relation for the $\eta_i$s). Thus, there is a unique map $\varphi_c\colon Ac\to Bc$ satisfying $\varphi_c\circ(\eta_i)_c=(\varphi_i)_c$. This proves uniqueness.
+
+	It remains to show that the data of these maps $\varphi_c\colon Ac\to Bc$ actually assemble into a natural transformation $\varphi\colon A\Rightarrow B$; this would directly imply that $\varphi\circ\eta_i=\varphi_i$ for each $i\in\mc I$ because we already know this to be true at each $c\in\mc C$. For our naturality check, we choose some map $f\colon c\to c'$, and we draw the following diagram.
+	% https://q.uiver.app/#q=WzAsNixbMSwwLCJBYyJdLFsyLDAsIkJjIl0sWzEsMSwiQWMnIl0sWzIsMSwiQmMnIl0sWzAsMCwiRmkoYykiXSxbMCwxLCJGaShjJykiXSxbMCwxLCJcXHZhcnBoaV9jIiwyXSxbMCwyLCJBZiJdLFsxLDMsIkJmIl0sWzIsMywiXFx2YXJwaGlfe2MnfSJdLFs0LDAsIihcXGV0YV9pKV9jIiwyXSxbNSwyLCIoXFxldGFfaSlfe2MnfSJdLFs0LDUsIkZpKGYpIiwyXSxbNCwxLCIoXFx2YXJwaGlfaSlfYyIsMCx7ImN1cnZlIjotMn1dLFs1LDMsIihcXHZhcnBoaV9pKV97Yyd9IiwyLHsiY3VydmUiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{Fi(c)} & Ac & Bc \\
+		{Fi(c')} & {Ac'} & {Bc'}
+		\arrow["{(\eta_i)_c}"', from=1-1, to=1-2]
+		\arrow["{(\varphi_i)_c}", curve={height=-12pt}, from=1-1, to=1-3]
+		\arrow["{Fi(f)}"', from=1-1, to=2-1]
+		\arrow["{\varphi_c}"', from=1-2, to=1-3]
+		\arrow["Af", from=1-2, to=2-2]
+		\arrow["Bf", from=1-3, to=2-3]
+		\arrow["{(\eta_i)_{c'}}", from=2-1, to=2-2]
+		\arrow["{(\varphi_i)_{c'}}"', curve={height=12pt}, from=2-1, to=2-3]
+		\arrow["{\varphi_{c'}}", from=2-2, to=2-3]
+	\end{tikzcd}\]
+	The left square and outer rectangle commute by naturality. Now, by the same colimit argument executed in the previous paragraph, there is at most one map $Ac\to Bc'$ factoring through the maps $Fi(c)\to Bc\to Bc'$ for all $i\in\mc I$; however, both $Bf\circ\varphi_c$ and $\varphi_{c'}\circ Af$ satisfy this property, so we conclude!
+\end{proof}
+\begin{remark}
+	There is an analogous statement if $\mc D$ admits all limits, whose proof is the same. (Indeed, one can recover the limit version by passing from $\mc D$ to $\mc D\opp$.)
+\end{remark}
+Here is an application of the Yoneda lemma.
+\begin{example}
+	Fix a category $\mc C$ and presheaf $A\in\op{PSh}(\mc C)$. Construct a category $\mc I$ of pairs $(c,\eta)$, where $c\in\mc C$, and $\eta\colon\yo(c)\Rightarrow A$. Then the canonical map
+	\[\colim_{(c,\eta)\in\mc I}\yo(c)\to A\]
+	is an isomorphism.
+\end{example}
+\begin{proof}
+	In other words, we would like to show that the given maps $\eta\colon\yo(c)\to A$ for each pair $(c,\eta)$ makes into $A$ a colimit of the functor $F\colon\mc I\to\op{PSh}(\mc C)$. We run many checks.
+	\begin{enumerate}
+		\item We check that $F$ is actually a functor. On objects, we are sending $F((c,\eta))\coloneqq\yo(c)$. On morphisms, we send a morphism $f\colon (c,\eta)\to (c',\eta')$ to the morphism $\yo(f)\colon\yo(c)\to\yo(c')$. Because $\yo\colon\mc C\to\op{PSh}(\mc C)$ is already functorial, we see that $F$ becomes functorial.
+		\item We note that each pair $(c,\eta)\in\mc I$ has $\eta\colon\yo(c)\Rightarrow A$. For $A$ to be a candidate colimit of $F$, we need to check that any map $f\colon(c,\eta)\to(c',\eta')$ makes the diagram
+		% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXHlvKGMpIl0sWzAsMSwiXFx5byhjJykiXSxbMSwwLCJBIl0sWzAsMSwiXFx5byhmKSIsMl0sWzAsMiwiXFxldGEiXSxbMSwyLCJcXGV0YSciLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\yo(c)} & A \\
+			{\yo(c')}
+			\arrow["\eta", from=1-1, to=1-2]
+			\arrow["{\yo(f)}"', from=1-1, to=2-1]
+			\arrow["{\eta'}"', from=2-1, to=1-2]
+		\end{tikzcd}\]
+		commute, which of course is true by definition of the morphisms in $\mc I$.
+		\item We run the uniqueness part of the universality check for $A$. Indeed, suppose that we have some $B$ with maps $\varphi_{(c,\eta)}\colon\yo(c)\Rightarrow B$ for each $(c,\eta)\in\mc I$ such that $\yo(f)\varphi_{(c,\eta)}=\varphi_{(c',\eta')}$ for each $f\colon(c,\eta)\to(c',\eta')$ in $\mc I$. Then we show that there is at most one map $\varphi\colon A\to B$ making the diagram
+		% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXHlvKGMpIl0sWzEsMCwiQSJdLFsxLDEsIkIiXSxbMCwxLCJcXGV0YSJdLFswLDIsIlxcdmFycGhpX2MiLDJdLFsxLDIsIlxcdmFycGhpIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\yo(c)} & A \\
+			& B
+			\arrow["\eta", from=1-1, to=1-2]
+			\arrow["{\varphi_{(c,\eta)}}"', from=1-1, to=2-2]
+			\arrow["\varphi", dashed, from=1-2, to=2-2]
+		\end{tikzcd}\]
+		commute for each pair $(c,\eta)\in\mc I$. Well, fix some object $c\in\mc C$ and element $a\in Ac$, and we need to show that $\varphi(a)$ has at most one value. Well, $a\in Ac$ has equivalent data to some natural transformation $\eta\colon\yo(c)\to A$ satisfying $\eta_c({\id_c})\in Ac$ by \Cref{rem:general-yoneda}, so we have a pair $(c,\eta)\in\mc I$. Similarly, the natural transformation $\varphi_{(c,\eta)}\colon\yo(c)\to B$ has equivalent data to the element $(\varphi_{(c,\eta)})_c({\id_c})$. But now the commutativity of the above diagram
+		% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXHlvKGMpIl0sWzEsMCwiQSJdLFsxLDEsIkIiXSxbMiwwLCJcXGlkX2MiXSxbMywwLCJhIl0sWzMsMSwiXFxldGFfYyh7XFxpZF9jfSkiXSxbMCwxLCJcXGV0YSJdLFswLDIsIlxcdmFycGhpX3soYyxcXGV0YSl9IiwyXSxbMSwyLCJcXHZhcnBoaSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDQsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\yo(c)} & A & {\id_c} & a \\
+			& B && {\eta_c({\id_c})}
+			\arrow["\eta", from=1-1, to=1-2]
+			\arrow["{\varphi_{(c,\eta)}}"', from=1-1, to=2-2]
+			\arrow["\varphi", dashed, from=1-2, to=2-2]
+			\arrow[maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-3, to=2-4]
+			\arrow[maps to, from=1-4, to=2-4]
+		\end{tikzcd}\]
+		requires that $\varphi(a)=\eta_c({\id_c})$. Thus, there is at most one map $\varphi$.
+		\item We show that the recipe for $\varphi\colon A\to B$ defined in the previous step is actually a morphism of pre\-sheaves. Thus far, we have defined maps $\varphi_c\colon Ac\to Bc$ for each $c\in\mc C$, and we remark that these maps are well-defined by the uniqueness properties of \Cref{rem:general-yoneda}. It now remains to show naturality. Well, fix a morphism $f\colon c\to c'$ and some $a'\in Ac'$, and we want to show that
+		\[Bf(\varphi_{c'}(a'))\stackrel?=\varphi_{c}(Af(a')).\]
+		Well, $a\in Ac$ corresponds (via \Cref{rem:general-yoneda}) to some natural transformation $\eta\colon\yo(c')\Rightarrow A$ such that $\eta_{c'}({\id_{c'}})=a'$, so we have a pair $(c',\eta')\in\mc I$; namely, for any $h\colon d\to c'$, we have $\eta'_d(h)=Ah(a')$. Similarly, $Af(a')\in Ac'$ corresponds to some natural transformation $\eta\colon\yo(c)\Rightarrow A$ given by $\eta_d(h)=Ah(Af(a))$ for any $h\colon d\to c$. By definition of $\yo$, we also have a morphism of pairs $f\colon(c,\eta)\to(c',\eta')$. We are now able to chase around the following diagram.
+		% https://q.uiver.app/#q=WzAsMTMsWzAsMCwiQWMnIl0sWzAsMiwiQmMnIl0sWzAsMSwiXFx5byhjJykoYycpIl0sWzEsMSwiXFx5byhjJykoYykiXSxbMiwxLCJcXHlvKGMpKGMpIl0sWzEsMCwiQWMiXSxbMSwyLCJCYyJdLFszLDAsImEnIl0sWzMsMiwiXFx2YXJwaGlfe2MnfShhJykiXSxbNCwwLCJBZihhKSJdLFs1LDEsIlxcaWRfYyJdLFs0LDIsIlxcdmFycGhpX2MoQWYoYSkpIl0sWzMsMSwiXFxpZF97Yyd9Il0sWzAsNSwiQWYiXSxbMSw2LCJCZiJdLFsyLDAsIlxcZXRhJ197Yyd9Il0sWzMsNSwiXFxldGFfYyciXSxbMiwxLCIoXFx2YXJwaGlfeyhjJyxcXGV0YScpfSlfe2MnfSIsMl0sWzMsNiwiKFxcdmFycGhpX3soYycsXFxldGEnKX0pX2MiLDJdLFsxMCw5LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzcsOSwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIihcXHZhcnBoaV97KGMsXFxldGEpfSlfYyJdLFsyLDMsIlxceW8oYycpKGYpIl0sWzQsMywiXFx5byhmKShjKSIsMl0sWzQsNSwiXFxldGFfYyIsMl0sWzEwLDExLCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzgsMTEsIkJmIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9LCJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMTIsNywiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxMiw4LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{Ac'} & Ac && {a'} & {Af(a)} \\
+			{\yo(c')(c')} & {\yo(c')(c)} & {\yo(c)(c)} & {\id_{c'}} && {\id_c} \\
+			{Bc'} & Bc && {\varphi_{c'}(a')} & {\varphi_c(Af(a))}
+			\arrow["Af", from=1-1, to=1-2]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow["{\eta'_{c'}}", from=2-1, to=1-1]
+			\arrow["{\yo(c')(f)}", from=2-1, to=2-2]
+			\arrow["{(\varphi_{(c',\eta')})_{c'}}"', from=2-1, to=3-1]
+			\arrow["{\eta_c'}", from=2-2, to=1-2]
+			\arrow["{(\varphi_{(c',\eta')})_c}"', from=2-2, to=3-2]
+			\arrow["{\eta_c}"', from=2-3, to=1-2]
+			\arrow["{\yo(f)(c)}"', from=2-3, to=2-2]
+			\arrow["{(\varphi_{(c,\eta)})_c}", from=2-3, to=3-2]
+			\arrow[maps to, from=2-4, to=1-4]
+			\arrow[maps to, from=2-4, to=3-4]
+			\arrow[maps to, from=2-6, to=1-5]
+			\arrow[maps to, from=2-6, to=3-5]
+			\arrow["Bf", from=3-1, to=3-2]
+			\arrow["Bf", dashed, maps to, from=3-4, to=3-5]
+		\end{tikzcd}\]
+		The triangles commute because we have morphisms of pairs. The squares are naturality squares. The $\varphi_{c'}(a')$ and $\varphi_c(Af(a))$ appear at the bottom by construction of $\varphi_{c'}$ and $\varphi_c$ by definition of those maps. We are now done by commutativity!
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\section{Adjoints}
+Here is the main definition.
+\begin{definition}[adjoint]
+	Fix two functors $F\colon\mc C\to\mc D$ and $G\colon\mc D\to\mc C$. Then $F$ and $G$ are \textit{adjoint functors} if and only if there are bijections
+	\[\op{Mor}_{\mc D}(Fc,d)=\op{Mor}_{\mc C}(c,Gd)\]
+	for all $c\in\mc C$ and $d\in\mc D$ which are functorial in $c$ and $d$. In this situation, we say that $F$ is the \textit{left adjoint} and that $G$ is the \textit{right adjoint}.
+\end{definition}
+Here is the main result on adjoints.
+\begin{proposition}
+	Fix adjoint functors $F\colon\mc C\to\mc D$ and $G\colon\mc D\to\mc C$. Then $F$ preserves colimits.
+\end{proposition}
+\begin{proof}
+	
+\end{proof}
+\begin{remark}
+	Similarly, $G$ preserves limits; one can see this by passing to the opposite category everywhere.\todo{}
+\end{remark}
+
+\end{document}

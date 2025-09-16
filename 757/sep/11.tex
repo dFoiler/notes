@@ -1,0 +1,473 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 9}
+Today, we work with measures.
+
+\subsection{Partition of Unity}
+It will be helpful to have the following incarnation of partition of unity.
+\begin{lemma}[Partition of unity] \label{lem:partition-unity}
+	Let $X$ be metric space. For any countable open cover $\{U_i\}_{i\in\NN}$ of precompact open subsets of $X$, there are continuous functions $\{f_i\}_{i\in\NN}$ from $X$ to $[0,1]$ such that $f_i|_{X\setminus U_i}=0$ and
+	\[\sum_{i\in\NN}f_i=1.\]
+	% If $X$ is a manifold, then the $f_i$s can be chosen to be smooth.
+\end{lemma}
+\begin{proof}
+	Let's begin by proving a version of Urysohn's lemma: for any nonempty closed subset $A\subseteq X$, the function $d_A\colon X\to\RR$ given by
+	\[d_A(x)\coloneqq\inf_{a\in A}d(x,a)\]
+	is well-defined and (Lipschitz) continuous because $d_A(x)\le d_A(y)+d(x,y)$ for any $x,y\in X$. Furthermore, we see that $d_A(x)=0$ if and only if $x\in A$: if $d_A(x)=0$, then there is a sequence of points $\{x_i\}$ in $A$ for which $d(x,x_i)\to0$, but this implies that $x_i\to x$, so $x\in A$ because $A$ is closed.
+
+	Now, for each $i$, we start with the function $g_i\coloneqq d_{A_i}/(1+d_{A_i})$ where $A_i\coloneqq X\setminus U_i$, so we see that $\im g_i\subseteq[0,1]$, and $g_i(x)=0$ if and only if $x\notin U_i$. We now define $G(x)\coloneqq\sum_i2^{-i}g_i$ and set $f_i\coloneqq2^{-i}g_i/G$. The function $G$ is continuous by the Weierstrass $M$-test, and it is always positive because the $U_i$s cover $X$; thus, the functions $f_i$ are well-defined, positive, and continuous. Lastly, we see that
+	\[\sum_{i\in\NN}f_i=\frac1G\sum_{i\in\NN}2^{-i}g_i,\]
+	which is $1$ by construction of $G$.
+\end{proof}
+Because we will have occasion to retreat to topological spaces instead of manifolds, we pick up the following result.
+\begin{lemma} \label{lem:locally-compact-to-metric}
+	Let $X$ be a locally compact second countable (Hausdorff) topological space $X$. Then $X$ is metrizable.
+\end{lemma}
+\begin{proof}
+	By the Urysohn metrization theorem, it is enough to check that $X$ is Hausdorff, second countable, and regular. However, regularity follows from being locally compact and Hausdorff.
+\end{proof}
+
+\subsection{Measures on a Space}
+Let's say a bit about measures.
+\begin{definition}[measure]
+	Fix a locally compact second countable topological space $X$. Then a \textit{measure} is an element of the topological dual $C(X)^*$. In other words, it is a continuous linear functional on $C(X)$. Given $\mu\in C(X)^*$, we may write $\int_Xf\,d\mu$ for $\mu(f)$. We denote this space by $\op{Meas}_c(X)$, and give it the weak topology, where $\{\mu_i\}\to\mu$ if and only if $\{\mu_i(f)\}\to\mu(f)$ for all $f\in C(X)$.
+\end{definition}
+\begin{remark}
+	In other words, the topology is given by the family of seminorms $\mu\mapsto\left|\mu(f)\right|$. Thus, $C(X)^*$ is Hausdorff and locally convex by \Cref{cor:locally-convex-by-seminorm}.
+\end{remark}
+\begin{example}
+	Suppose that $X$ is an orientable manifold with volume form $\omega$. Then $C_c(X)$ embeds into $C(X)^*$ by sending $g\in C_c(X)$ to the functional
+	\[g\,\omega\colon f\mapsto\int_Xfg\,\omega.\]
+	This is linear by the linearity of the integral, so it remains to check that is continuous; by \Cref{cor:functional-check-continuity}, it is enough to show that $\left|g\,\omega\right|$ is bounded above by a continuous seminorm. Let $K$ be the support of $g$, which is compact, and we claim that $g\,\omega\le\left(\norm g_\infty\int_K\omega\right)\norm{\cdot|_K}_\infty$, which will be enough. Well, for any $f$, we see $g\,\omega(f)$ is bounded by
+	\[\left|\int_Kfg\,\omega\right|\le\norm g_\infty\int_K\omega\cdot\norm{f|_K}_\infty.\]
+\end{example}
+\begin{example}
+	For any $x\in X$, there is a $\delta$-distribution $\delta_x\colon C(X)\to\CC$ given by $\delta_x(f)\coloneqq f(x)$. To show that this measure is continuous, we use \Cref{cor:functional-check-continuity}, which tells us that it is enough to check that $\left|\delta_x\right|\le\norm{\cdot|_K}_\infty$ for some compact $K\subseteq X$. Well, taking $K=\{x\}$, we see $\left|\delta_x(f)\right|=\left|f(x)\right|=\norm{f|_K}_\infty$ for any $f$.
+\end{example}
+\begin{example} \label{ex:push-dirac}
+	If $f\colon X\to Y$ is a continuous map, then there is a linear map $f^*\colon C(Y)\to C(X)$ given by $f^*\coloneqq(-\circ f)$. (It sends continuous maps to continuous maps because $f$ is continuous.) Continuing, we get a map $f_*\colon C(X)^*\to C(Y)^*$ by sending $\mu\in C(X)^*$ to $(\mu\circ f^*)\in C(Y)^*$, where $f^*$ is continuous by \Cref{ex:pushforward-cont}. We may write $\mu\circ f^*$ as $f_*\mu$. Note $f_*$ is continuous: if $\{\mu_i\}\to\mu$ in $C(X)^*$, then any $g\in C(Y)$ has $\{\mu_i(g\circ f)\}\to\mu(g\circ f)$, so $\{f_*\mu_i(g)\}\to f_*\mu_i(g)$.
+\end{example}
+\begin{remark}
+	If $i$ is the inclusion $K\subseteq X$ of a compact set, then $i_*$ is just the restriction map $C(K)^*\to C(X)^*$ given by $i_*\mu(g)\coloneqq\mu(g|_K)$.
+\end{remark}
+\begin{remark}
+	If $X$ is compact, then $C(X)^*$ has a natural (operator) norm given by
+	\[\norm\mu\coloneqq\sup_{\norm f_\infty=1}\left|\mu(f)\right|.\]
+	However, $C(X)^*$ is usually not equipped with the norm topology: for example, if $\{x_i\}\to x$, then $\{\delta_{x_i}\}\to\delta_x$ in the weak topology because $\{f(x_i)\}\to f(x)$ for any continuous $f$, but $\norm{\delta_x-\delta_{x_i}}=2$ whenever $x\ne x_i$.
+\end{remark}
+
+\subsection{Supports}
+Here is our main definition.
+\begin{definition}[support]
+	Fix a locally compact second countable topological space $X$. Then the \textit{support} $\op{supp}\mu$ of a functional $\mu$ on $C(X)$ is defined by $x\notin\op{supp}\mu$ if and only if there is an open neighborhood $U$ of $x$ for which any $f$ satisfying $f|_{X\setminus U}=0$ also has $\mu(f)=0$.
+\end{definition}
+\begin{lemma} \label{lem:supp-compact}
+	Fix a locally compact second countable topological space $X$. For any functional $\mu\in C(X)\to\CC$, the subset $\op{supp}\mu$ is closed. Furthermore, if $\mu$ is continuous, then $\op{supp}\mu$ is compact.
+\end{lemma}
+\begin{proof}
+	To see that $\op{supp}\mu$ is closed, we show that its complement is open. Indeed, note that any $x\notin\op{supp}\mu$ admits an open neighborhood $U$ of $x$ satisfying some condition in the definition; but then any $y\in U$ still admits this open neighborhood, so $U\cap\op{supp}\mu=\emp$.
+
+	It remains to show that $\op{supp}\mu$ is compact. We will show that $\op{supp}\mu$ failing to be compact implies that $\mu\colon C(X)\to\FF$ fails to be continuous. For this, it is enough to check that there is a compact set $K$ containing $\op{supp}\mu$. Well, because $X$ is locally compact and second countable, we can find a countable collection of precompact open subsets covering $X$, so upon taking suitable unions and closures, we see that there is a sequence $\{K_i\}_{i\in\NN}$ of compact sets covering $X$. (This construction is also used in \Cref{ex:c-x-frechet}.)
+
+	We now use the assumption that $\op{supp}\mu$ fails to be compact, which means that it cannot be contained in any $K_i$. Then we are granted $x_i\in\op{supp}\mu\setminus K_i$ for each $i$, which means that any open neighborhood $U_i$ of $x_i$ admits a function $f_i$ such that $f_i|_{X\setminus U_i}=0$ and $\mu(f_i)\ne0$; we go ahead and shrink $U_i$ to fully avoid $K_i$. Additionally, by adjusting $f_i$ by a scalar, we may assume that $\mu(f_i)=1$. Now, the point is to consider the sum
+	\[\sum_if_i,\]
+	which converges uniformly on compact sets: as in \Cref{ex:c-x-frechet}, it is enough to check uniform convergence on just the $K_i$s, and we see that this is a finite sum when restricted to any $K_n$ because $f_i$ is nonzero only inside $U_i$, so $f_i|_{K_n}=0$ for $i>n$.
+
+	On the other hand, we see that continuity of $\mu$ would imply that
+	\[\mu\left(\sum_if_i\right)=\sum_i\mu(f_i)\]
+	is a finite number, which is false because $\mu(f_i)=1$ for each $i$! Thus, $\mu$ fails to be continuous.
+\end{proof}
+\begin{remark}
+	\Cref{lem:supp-compact} explains why there is a $c$ in our notation $\op{Meas}_c(X)$.
+\end{remark}
+\begin{lemma} \label{lem:meas-depends-on-supp}
+	Fix a locally compact second countable topologically space $X$. For any $\mu\in C(X)^*$ and $f\in C(X)$ for which $f|_{\op{supp}\mu}=0$, we have $\mu(f)=0$.
+\end{lemma}
+\begin{proof}
+	For each $x\notin\op{supp}\mu$, we are granted an open neighborhood $U_x$ of $x$ such that any function $g$ vanishes outside $U$ has $\mu(g)=0$. Because $X$ is second countable, the open cover $\{U_x\}_{x\notin\op{supp}\mu}$ of $X\setminus\op{supp}\mu$ can be refined to a countable subcover. Let $\{U_i\}_{i\in\NN}$ be this countable subcover, and we let $\{f_i\}_{i\in\NN}$ be the partition of unity granted by \Cref{lem:partition-unity} (which applies by \Cref{lem:locally-compact-to-metric}). But now we see that
+	\[f=\sum_{i\in\NN}f_if.\]
+	Thus, $\mu(f)=0$: it's enough to see that $\mu(f_if)=0$ for all $i\in\NN$ because $f_if$ vanishes outside $U$.
+\end{proof}
+As an application, we are able to push forward measures!
+\begin{lemma} \label{lem:pullback-compact}
+	Fix a locally compact second countable topologically space $X$. Given $\mu\in C(X)^*$ such that $\op{supp}\mu$ is contained in a compact set $K$, there is a unique measure $\nu\in C(K)^*$ such that
+	\[\nu(f)\coloneqq\mu(\widetilde f),\]
+	whenever $\widetilde f\in C(X)^*$ satisfies $\widetilde f|_K=f$.
+\end{lemma}
+\begin{proof}
+	Let's begin with uniqueness. This will be accomplished as soon as we show that any function $f\in C(K)$ is the restriction of some function $\widetilde f\in C(X)$. This amounts to the Tietze extension theorem. To avoid issues with the normality hypothesis, we write $X$ as an ascending union $\bigcup_{i\in\NN}K_i$ of compact sets with $K_0\coloneqq K$. Then compact Hausdorff spaces are normal, so $f\in C(K)$ may inductively be extended to each $K_n$ via the Tietze extension theorem, so $f$ admits an extension $\widetilde f$ to $C(X)$. We remark that the Tietze extension theorem allows this extension to be done with $\norm{\widetilde f}_\infty=\norm f_\infty$.
+
+	It remains to show existence. For this, we should show that the given formula for $\nu$ is well-defined, linear, and continuous.
+	\begin{itemize}
+		\item Well-defined: we use \Cref{lem:meas-depends-on-supp}. Indeed, if $\widetilde f_1$ and $\widetilde f_2$ in $C(X)$ restrict to the same function $f\in C(K)$, then $\mu(\widetilde f_1-\widetilde f_2)=0$ by \Cref{lem:meas-depends-on-supp}.
+		\item Linear: for any functions $f$ and $g$ in $C(X)^*$, we see that $\nu(af|_K+bg|_K)=a\nu(f|_K)+b\nu(f|_K)$ because this check lifts to $\mu$.
+		\item Continuous: because $\mu$ is continuous, it is bounded by \Cref{lem:linear-func-cont-grab-bag}, so there is an open neighborhood $U$ of $0$ for which $\sup_{f\in U}\left|\mu(f)\right|<\infty$. However, basic open neighborhoods of $0$ look like finite intersections of open sets of the form
+		\[\{f\in C(X):\norm {f|_E}_\infty<\varepsilon\}\]
+		for some compact subset $E\subseteq X$ and some $\varepsilon>0$. By taking the union of the relevant $E$s (and the minimum of the $\varepsilon$s), we may assume that $U$ actually has the above form. Additionally, because $\mu$ only depends on $f|_K$, we may as well assume that $E\subseteq K$.
+		
+		Now, the formula $\norm {f|_E}_\infty<\varepsilon$ also cuts out an open subset of $C(K)$, and we claim that
+		\[\sup_{f\in U}\left|\mu(f)\right|\stackrel?=\sup_{f\in U\cap C(K)}\left|\nu(f)\right|,\]
+		which shows that $\nu$ is bounded and hence continuous by \Cref{lem:linear-func-cont-grab-bag}. Well, any $f\in U\cap C(K)$ can be extended to some $\widetilde f\in U$ by our Tietze extension theorem argument, so the result follows by construction of $\nu$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{notation}
+	Fix a locally compact second countable topologically space $X$, and let $i\colon K\to X$ be the inclusion of a compact subset. Given $\mu\in C(X)^*$ such that $\op{supp}\mu$ is contained in $K$, we let $i^*\mu$ denote the measure constructed in \Cref{lem:pullback-compact}. This is called the pullback measure.
+\end{notation}
+\begin{remark} \label{rem:pullback-cont}
+	We note that $i^*$ is continuous. Well, if $\mu_n\to\mu$, we need to check that $i^*\mu_n\to i^*\mu$. Checking this on the weak topology is not hard: given any function $f\in C(K)$, we need to know that $i^*\mu_n(f)\to i^*\mu(f)$, which follows because $\mu_n(\widetilde f)\to\mu(\widetilde f)$ for any lift $\widetilde f\in C(X)$ of $f$.
+\end{remark}
+\begin{lemma} \label{lem:pull-push}
+	Fix a locally compact second countable topologically space $X$, and let $i\colon K\to X$ be the inclusion of a compact subset.
+	\begin{listalph}
+		\item If $\mu\in C(X)^*$ has $\op{supp}\mu\subseteq K$, then $i_*i^*\mu=\mu$.
+		\item If $\mu\in C(K)^*$, then $\op{supp}i_*\mu\subseteq K$ and $i^*i_*\mu=\mu$.
+		\item The map $i_*\colon C(K)^*\to C(X)^*$ is a homeomorphism onto the space of measures $\mu$ with $\op{supp}\mu\subseteq K$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	Note (c) follows from (a) and (b). To see (a), we note that any $f\in C(X)$ has $i_*i^*\mu(f)=i^*\mu(f|_K)$, which is $\mu(f)$ by definition of the pullback. To see (b), we start by assuming $\op{supp}i_*\mu\subseteq K$. Then we may take any $f\in C(K)$, lift it to $\widetilde f\in C(X)$, and we compute that $i^*i_*\mu(f)=i_*\mu(\widetilde f)$ is $\mu(\widetilde f|_K)=\mu(f)$.
+
+	It remains to show that $\op{supp}i_*\mu\subseteq K$. Well, for any $x\notin K$, we need to show $x\notin\op{supp}i_*\mu$, for which we use the open neighborhood $U\coloneqq X\setminus K$. Indeed, if $f|_{X\setminus U}=0$, then $f|_K=0$, so $i_*\mu(f)=0$ follows.
+\end{proof}
+
+\subsection{Sequential Completeness}
+We now turn towards showing that $C(X)^*$ is sequentially complete.
+\begin{lemma} \label{lem:cauchy-seq-supp-in-compact}
+	Fix a locally compact second countable topologically space $X$. If $\{\mu_i\}$ is a Cauchy sequence in $C(X)^*$, then there is a compact set $K$ such that $\op{supp}\mu_i\subseteq K$ for all $i$.
+\end{lemma}
+\begin{proof}
+	This argument is similar to \Cref{lem:supp-compact}, but the bookkeeping is more painful.
+
+	Suppose there is no such compact set $K$, and we will show that $\{\mu_i\}$ has a subsequence which fails to be Cauchy. Before doing anything, note we are trying to see if $\bigcup_{i\in\NN}\op{supp}\mu_i$ is contained in a compact set. If we ever have $\op{supp}\mu_i$ contained in $\bigcup_{j<i}\op{supp}\mu_j$, then we may as well remove $\mu_i$ from the Cauchy sequence because it will not affect the final containment in a compact set.
+	
+	Now, we will run an inductive construction as follows. Start with the compact set $K_0\coloneqq\emp$ and $\nu_0\coloneqq\mu_0$. Now, for every $n\ge0$, we take $(K_n,\mu_n)$ and build a triple $(f_n,K_{n+1},\nu_{n+1})$ as follows.
+	\begin{enumerate}
+		\item Observe that there is a point $x_n\in\op{supp}\nu_n\setminus K_n$. Thus, we are granted a function $f_n$ and a small open neighborhood $U_n$ of $x_n$ such that $f_n$ vanishes outside $U_n$ and $\mu_n(f_n)\ne0$. By shrinking $U_n$, we may avoid $K_n$ and assume that $U_n$ is precompact. By rescaling, we may assume that $\mu_n(f_1+\cdots+f_n)=n$.
+		\item Now, expand $K_n$ (by $\overline{U_n}$) to a compact set $K_{n+1}$ containing $U_n$ and $\op{supp}\nu_n$. Because $\bigcup_{i\in\NN}\op{supp}\mu_i$ is contained in no compact set, we may find $\nu_{n+1}$ such that $\op{supp}\nu_{n+1}\setminus K_{n+1}$.
+	\end{enumerate}
+	The above process continues indefinitely by the hypothesis on the $\mu_\bullet$s.
+
+	The point is that the series $\sum_nf_n$ converges uniformly on the compacts $\{K_n\}$ because $f_n|_{K_m}=0$ for $n>m$. Letting this limiting function be $f$, we then see that $\nu_n(f)$ only has the nonzero terms $\nu_n(f_1+\cdots+f_n)=n$: the point is that $f_m$ is only nonzero on $U_m$, so if $m>n$, then $\op{supp}\nu_n$ is contained in $K_{n+1}$, so $\nu_n(f_m)=0$. Thus, we see that
+	\[\left|\nu_n(f)-\nu_m(f)\right|=\left|n-m\right|\]
+	fails to go to $0$ as $n,m\to\infty$, so the sequence $\{\nu_n\}$ fails to be Cauchy.
+\end{proof}
+\begin{remark}
+	This argument must do something a little tricky because the statement is false if $\{\mu_i\}$ is replaced by a Cauchy net. Indeed, if that were true, then \Cref{rem:weird-cauchy-net-limit} explains that $C(X)^*$ would be complete, which is not true in general (see \Cref{ex:c-x-not-complete}).
+\end{remark}
+Here is an application of our work with supports.
+\begin{lemma}
+	Fix a locally compact second countable topological space $X$. The space $C(X)^*$ is sequentially complete.
+\end{lemma}
+\begin{proof}
+	We proceed in steps. The first half of the proof handles the case where $X$ is compact by using the Uniform boundedness principle, and the second half of the proof reduces to this case by using \Cref{lem:cauchy-seq-supp-in-compact}.
+	\begin{enumerate}
+		\item Let's start by handling the case where $X$ is compact. The general case will then follow by applying \Cref{lem:cauchy-seq-supp-in-compact}. Fix a Cauchy sequence $\{\mu_i\}_{i\in\NN}$ for which we want to find a limit. Well, for each $f\in C(X)$, the nature of the weak topology makes $\{\mu_i(f)\}$ a Cauchy sequence in $\RR$, so it admits a limiting value which we label
+		\[\mu(f)\coloneqq\lim_{i\to\infty}\mu_i(f).\]
+		Thus, we have defined a function $\mu\colon C(X)\to\CC$. Note linearity of the $\mu_i$s and taking the limit implies that $\mu$ is linear. Additionally, having $\mu_i(f)\to\mu(f)$ for all functions $f$ implies that we will have $\mu_i\to\mu$ as soon as we actually check that $\mu\in C(X)^*$.
+
+		\item When $X$ is compact, it still remains to check that $\mu$ as defined above is actually continuous. The point is that, because $X$ is compact, $C(X)$ is a Banach space with norm given by $\norm\cdot_\infty$ (see \Cref{ex:c-x-frechet}). By \Cref{cor:functional-check-continuity}, it is enough to check that $\norm\mu$ is bounded, for which we will use the Uniform boundedness principle. As such, we will be able to use the Uniform boundedness principle: because each sequence $\{\mu_i(f)\}$ is Cauchy for every $f$, we see that these sequences are always bounded, so the operator norms $\norm{\mu_i}$ must also be bounded. In particular, there is a large constant $C$ for which $\left|\mu_i(f)\right|\le C\norm f_\infty$ for all $f$, so we see that $\left|\mu(f)\right|\le C\norm f_\infty$ for all $f$, so $\norm f\le C$.
+
+		\item We now turn to the general case. Once again, fix a Cauchy sequence $\{\mu_i\}_{i\in\NN}$ for which we want to find a limit. We use \Cref{lem:cauchy-seq-supp-in-compact}, which allows us to produce a compact subset $K\subseteq X$ such that we may assume that $\op{supp}\mu_i\subseteq K$ for each $i$. Let $j\colon K\to X$ be the inclusion.
+		
+		To reduce to the compact case, we note that \Cref{lem:pull-push} shows that the $\mu_i$s are in the image of the topological embedding $j_*\colon C(K)^*\to C(X)^*$, so it is enough to find a limit in $C(K)^*$. This is exactly the compact case!
+		% ill reduce to $K$. To start, we note that $\{j^*\mu_i\}$ is a Cauchy sequence because $j^*$ is continuous (by \Cref{rem:pullback-cont}). Thus, the first half of our argument provides us with a limiting measure $\nu\in C(K)^*$, so we claim that $\{\mu_i\}$ approaches $\mu\coloneqq j_*\nu$. Indeed, $j_*$ is continuous by \Cref{ex:pushforward-cont}, so $\{j_*j^*\mu_i\}\to j_*\nu$, so we are done as soon as we note that $j_*j^*\mu_i=\mu_i$ by \Cref{lem:pull-push}.
+		% Lastly, to check that $\mu_i\to\mu$, we note that any function $f\in C(X)$ has $\mu_i(f)=\nu_i(f|_K)$, which approaches $\nu(f|_K)$ by construction of $\nu$, which is $\mu(f)$ by construction of $\mu$.
+		% By keeping track of a sub-basis for a topology on $C(K)^*$, it is enough to show that $\{j_*\mu_i(f)\}$ is a Cauchy sequence in $\CC$ for any function $f$, which is true because $\{\mu_i\}$ being Cauchy makes $\{\mu_i(\widetilde f)\}$ Cauchy.
+		% Thus, by \Cref{lem:meas-depends-on-supp}, we see that each value $\mu_i(f)$ depends only on $f|_K$: if $f|_K=g|_K$, then $(f-g)|_K$, so $(f-g)|_{\op{supp}\mu_i}=0$, so $\mu_i(f-g)=0$, so $\mu_i(f)=\mu_i(g)$.
+		%
+		% Accordingly, define the measure $\nu_i$ on $K$ as follows: any function $f\in C(K)$ extends to a continuous function $\widetilde f$ on $X$ by the Tietze extension theorem,\footnote{Technically, we should use the fact that $X$ can be written as an ascending union $\bigcup_{i\ge1}K_i$ of compact Hausdorff subsets because the $K_i$s are normal even though $X$ need not be.} so we take $\nu_i(f)\coloneqq\mu_i(\widetilde f)$. The previous paragraph has shown that $\nu_i(f)$ does not depend on the choice of $\widetilde f$.
+		%
+		% \item We complete the argument in the general case. %Further, note that $\{\nu_i\}$ is a Cauchy sequence. By keeping track of a sub-basis for a topology on $C(K)^*$, it is enough to show that $\{\nu_i(f)\}$ is a Cauchy sequence in $\RR$ for any function $f$, which is true because $\{\mu_i\}$ being Cauchy makes $\{\mu_i(\widetilde f)\}$ Cauchy.
+		%
+		%Now, $\{j_*\mu_i\}$ is a Cauchy sequence in $C(K)^*$, so 
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark} \label{rem:weird-cauchy-net-limit}
+	The argument for $X$ in the compact case applies to general Cauchy nets, so it follows that $C(X)^*$ is complete. More generally, the argument shows that if $\{\mu_i\}$ is a Cauchy net for which
+	\[\bigcup_i\op{supp}\mu_i\]
+	is contained in a compact set, then the limit exists.
+\end{remark}
+It is worthwhile to have an example where $C(X)^*$ is not complete. 
+\begin{example} \label{ex:c-x-not-complete}
+	Give $X=\NN$ the discrete topology. Then we show that $C(X)^*$ is not complete.
+\end{example}
+\begin{proof}
+	Here, $C(X)$ is just functions $\NN\to\CC$, which are sequences in $\CC$. We let $\delta_n$ be the sequence $\{\delta_n(i)\}_{i\in\NN}$.
+	
+	Next, we calculate $C(X)^*$. For any $\mu\in C(X)^*$, we see that $\mu(f)$ only depends on $f|_{\op{supp}\mu}$ by \Cref{lem:meas-depends-on-supp}. But $\op{supp}\mu$ is some compact set in $\NN$, so it is some finite set $\{n_1,\ldots,n_r\}$. Thus, we see that $\mu(f)$ is
+	\[\mu(f|_K)=\sum_{i=1}^rf(n_i)\mu(\delta_{n_i}).\]
+	Thus, we see that $\mu$ only depends on the sequence $\{\mu(\delta_n)\}_{n\in\NN}$, which has only finitely many nonzero terms. Conversely, any such sequence $\{\mu_n\}_{n\in\NN}$ defines a measure by
+	\[\mu(f)\coloneqq\sum_{n\in\NN}f(n)\mu_n,\]
+	which is a finite sum because only finitely many of the $\mu_\bullet$s are nonzero. It is not hard to see that these constructions are linear and inverse, so our measures are in bijection with finitely supported sequences in this manner. (For example, any measure $\mu$ produces the sequence $\{\mu(\delta_n)\}$, which then produces the measure $f\mapsto\sum_nf(n)\mu(\delta_n)$, which is the original measure. The other inverse check is easier.)
+
+	To show that $C(X)^*$ fails to be complete, we will show that $C(X)^*$ is a dense subset of the dual space $C(X)^\lor$ (where $C(X)^\lor$ continues to have the weak topology). To explain why this completes this proof, note that $C(X)^*\ne C(X)^\lor$ for dimension reasons, so $C(X)^*$ cannot be a closed subset, so $C(X)^*$ will have some Cauchy net not admitting a limit, as required.
+
+	It remains to show that $C(X)^*\subseteq C(X)^\lor$ is dense, where $C(X)^\lor$ has the weak topology. Well, basic open subsets in the weak topology look like $\mu+U$ where $\mu\in C(X)^\lor$ and $U$ has the form
+	\[\bigcap_{i=1}^n\underbrace{\{\nu:\left|\nu(f_i)\right|<\varepsilon_i\}}_{U_i\coloneqq}\]
+	for some finitely many functions $\{f_1,\ldots,f_n\}$ and small real numbers $\varepsilon_i>0$. We may as well assume that these functions are linearly independent, or else we can make the list of functions smaller. We would like to find some element of $C(X)^*$ in $\mu+U$.
+	
+	% In fact, we will show that there is an element $\mu_k$ of $\mu+\bigcap_{i=1}^kU_k$ with $\#\op{supp}\mu_k=k$ by induction on $k$; there is nothing to do for $k=0$.
+
+	% For the induction, we suppose that we already have our $\mu_k$, which we would like to extend to $\mu_{k+1}$. Because the functions $\{f_1,\ldots,f_{k+1}\}$ are linearly independent.
+
+	Because $\{f_1,\ldots,f_n\}$ are linearly independent, they span an $n$-dimensional subspace. We now claim that there is a subset $K\subseteq\NN$ of size $n$ for which the sequences $\{f_i(k)\}_{k\in K}$ continue to be linearly independent in $\CC^K$. Well, the sequences $\{f_i(n)\}_{n\in\NN}$ form an $n$-dimensional subspace of $\CC^\NN$, so one can apply Gaussian elimination to this $n\times\left|\NN\right|$ matrix to put it into row-reduced Echelon form, from which the subset $K$ can be read off as the pivots. (Row operations do not change the dimension of the span of any given collection of columns!)
+
+	Now, by rearranging, we may as well take $K=\{1,2,\ldots,n\}$. Then we can find constants $\{c_1,\ldots,c_n\}$ solving the system of $n$ equations
+	\[\mu(f_i)=\sum_{j=1}^nc_jf_i(j)\]
+	because the matrix $\{f_i(j)\}_{i,j}$ is invertible by the previous paragraph. These constants now define a measure $\nu$ in $C(X)^*$ satisfying $\mu(f_i)=\nu(f_i)$ for each $i$, so $\nu\in\mu+U$ follows.
+\end{proof}
+Here is the theoretical culmination of our work with measures.
+\begin{notation}
+	Fix a locally compact second countable topological space $X$. Then we set $\op{Meas}_c^0(X)\subseteq\op{Meas}_c(X)$ to be the subspace spanned by $\{\delta_x\}_{x\in X}$.
+\end{notation}
+\begin{proposition} \label{prop:dirac-dense}
+	Fix a locally compact second countable topological space $X$. Then $\op{Meas}_c^0(X)$ is sequentially dense in $\op{Meas}_c(X)$ is sequentially dense.
+\end{proposition}
+\begin{proof}
+	Quickly, we reduce to the case where $X$ is compact. Fix some $\mu\in\op{Meas}_c(X)$ that we want to approximate, and set $K\coloneqq\op{supp}\mu$. Then \Cref{lem:pull-push} shows that $\mu$ is in the image of the topological embedding $j_*\colon\op{Meas}_c(K)\to\op{Meas}_c(X)$, where $j\colon K\to X$ is the embedding. Note further that $j_*$ restricts to a linear map $\op{Meas}_c^0(K)\to\op{Meas}_c^0(X)$ by \Cref{ex:push-dirac}: it's enough to check this on generators, for which we note $j_*\delta_k=\delta_k$. Thus, for any open neighborhood $U\subseteq\op{Meas}_c(X)$ of $\mu$, it is enough to find $\nu$ in the intersection $U\cap\op{Meas}_c^0(K)$ (meaning $j^*U$) and then apply $j_*$ to complete the argument.
+
+	Thus, we may assume that $X$ is compact. The idea is to basically approximate $\mu$ using Riemann sums. Because we only have access to continuous functions, our Riemann sums will have to use a partition of unity. To explain the idea, we suppose that we are given a finite open cover $\mc U$ of $X$. Then \Cref{lem:partition-unity} (which applies by \Cref{lem:locally-compact-to-metric}) grants us continuous nonnegative functions $\{f_U\}_{U\in\mc U}$ such that $\op{supp}f_U\subseteq U$ for each $U\in\mc U$ and that $\sum_{U\in\mc U}f_U=1$. We then define
+	\[\mu_{\mc U}\coloneqq\sum_{U\in\mc U}\mu(f_U)\delta_{x_U}\in\op{Meas}_c^0(X),\]
+	where $x_U\in U$ is some basepoint. (Technically, $\mu_{\mc U}$ also depends on the functions $f_\bullet$ and basepoints $x_\bullet$, but we will suppress this from the notation.) The hope is that if the open sets $\mc U$ are small enough, then we can show that $\mu$ and $\mu_{\mc U}$ are close. To get some idea of what we need, we note that any $f\in C(X)$ has $\mu(f)-\mu_{\mc U}(f)$ equal to
+	\begin{align*}
+		\mu(f)-\mu_{\mc U}(f) &= \sum_{U\in\mc U}\mu(ff_U)-\sum_{U\in\mc U}\mu(f_U)f(x_U) \\
+		&= \mu\Bigg(\sum_{U\in\mc U}ff_U-f(x_U)f_U\Bigg),
+	\end{align*}
+	which one may hope to be small because the functions $ff_U-f(x_U)f_U$ should be small and have small support. Indeed, we now note that $\mu$ being continuous means that it is bounded, so because $C(X)$ is Banach with the norm $\norm\cdot_\infty$ (recall $X$ is compact!), we are able to write
+	\begin{align*}
+		\left|\mu(f)-\mu_{\mc U}(f)\right| &\le \norm\mu\sup_{x\in X}\sum_{U\in\mc U}\left|f(x)-f(x_U)\right|f_U(x) \\
+		&\le \norm\mu\sup_{\substack{U\in\mc U\\x\in U}}\left|f(x)-f(x_U)\right|.
+	\end{align*}
+	To continue, we see that we are going to need to produce good, uniform approximations of $f$ with our open covers.
+
+	We are now ready to define our open covers $\mc U$. Fix some $\delta>0$. Because $X$ is a compact metric space, we may take $\mc U$ to be a collection of open balls of radius $\delta$. Let $\mu_\delta$ be the resulting measure, and we claim that $\{\mu_\delta\}\to\mu$ as $\delta\to0^+$. This will complete the proof because, for example, we also see that $\{\mu_{1/n}\}\to\mu$ as $n\to\infty$.
+
+	To check that $\{\mu_\delta\}\to\mu$, we fix a function $f\in C(X)$, and we must show that $\{\mu_\delta(f)\}\to\mu(f)$. Because $X$ is compact(!), the function $f$ is actually uniformly continuous, so for any $\varepsilon>0$, we can choose any $\delta>0$ small enough so that $d(x,y)<\delta$ implies that $\left|f(x)-f(y)\right|<\varepsilon$. Then we see that
+	\[\sup_{\substack{U\in\mc U\\x\in U}}\left|f(x)-f(x_U)\right|<\varepsilon,\]
+	so $\left|\mu(f)-\mu_{\mc U}(f)\right|<\varepsilon$. The claim follows.
+\end{proof}
+% \begin{corollary}
+% 	Fix a locally compact second countable topological space $X$. Then $\op{Meas}_c(X)$ is separable.
+% \end{corollary}
+% \begin{proof}
+% 	Because $\op{Meas}_c(X)$ is 
+% \end{proof}
+
+\subsection{The Algebra of Measures}
+The point of \Cref{prop:dirac-dense} is that we can define maps on $C(X)^*$ by just defining them on $\delta_x$s and extending by continuity. Here is an application of this.
+\begin{lemma} \label{lem:measure-algebra-operation}
+	Fix locally compact second countable spaces $X$ and $Y$. Then there is a unique bilinear map
+	\[\boxtimes\colon\op{Meas}_c(X)\times\op{Meas}_c(Y)\to\op{Meas}_c(X\times Y)\]
+	such that $\delta_x\boxtimes\delta_y=\delta_{(x,y)}$ and which is sequentially continuous.\todo{}
+\end{lemma}
+\begin{proof}
+	% Let's begin with uniqueness. By linearity, there is a unique bilinear map
+	% \[\boxtimes\colon\op{Meas}^0_c(X)\times\op{Meas}^0_c(Y)\to\op{Meas}_c(X\times Y)\]
+	% such that $\delta_x\boxtimes\delta_y\coloneqq\delta_{(x,y)}$. Then \Cref{prop:dirac-dense} implies that $\op{Meas}_c^0(X)\subseteq\op{Meas}_c(X)$ and $\op{Meas}_c^0(Y)\subseteq\op{Meas}_c(Y)$ are sequentially dense subsets.
+	%
+	% Now, for any $\mu\in\op{Meas}_c(X)$ and $\nu\in\op{Meas}_c(Y)$, we would like to show that $\mu\boxtimes\nu$ is unique given that $\boxtimes$ is further continuous in both variables. Well, we may find sequences $\{\mu_i\}\in\op{Meas}_c^0(X)$ and $\{\nu_j\}\in\op{Meas}_c(Y)$ such that $\{\mu_i\}\to\mu$ and $\{\nu_j\}\to\nu$. Now, continuity in each variable implies that $\{\mu_i\boxtimes\nu\}_i\to\mu\boxtimes\nu$ while $\{\mu_i\boxtimes\nu_j\}_j\to\mu_i\boxtimes\nu$ for each $i$. Thus,
+	% \[\mu\boxtimes\nu=\lim_{j\to\infty}\left(\lim_{i\to\infty}\mu_i\boxtimes\nu_j\right),\]
+	% which is unique if it exists. We conclude that $\mu\boxtimes\nu$ is uniquely defined!
+	%
+	By linearity, we see that the given relation extends uniquely to some bilinear map
+	\[\boxtimes\colon\op{Meas}_c^0(X)\times\op{Meas}_c^0(Y)\to\op{Meas}_c(X\times Y).\]
+	By \Cref{prop:extend-cont}, it is enough to check that $\boxtimes\colon\op{Meas}^0_c(X)\times\op{Meas}^0_c(Y)\to\op{Meas}_c(X\times Y)$ is sequentially continuous. Thus, fix Cauchy sequences $\{\mu_i\}\to\mu$ and $\{\nu_j\}\to\nu$, and we want to check that $\{\mu_i\boxtimes\nu_j\}\to\mu\boxtimes\nu$ as $i,j\to\infty$. Quickly, we remark that we can reduce to the case where $X$ and $Y$ are compact: let $a\colon K\subseteq X$ be a compact subset containing the supports of $\mu$ and the $\mu_\bullet$s, and define $b\colon L\subseteq Y$ similarly. (These exist by \Cref{lem:cauchy-seq-supp-in-compact}.) Then \Cref{lem:pull-push} allows us to restrict all measures on $X$ to $K$ and restrict all measures on $Y$ to $L$ (and all measures on $X\times Y$ to $K\times L$), thereby reducing to the case that $X$ and $Y$ are compact.
+
+	The benefit of working with compact spaces is that we are able to use the Stone--Weierstrass theorem. Indeed, note that $C(X)\otimes C(Y)\subseteq C(X\times Y)$ is a subalgebra separating points, so it is dense. Thus, though we want to check that $\{\mu_i\boxtimes\nu_j(h)\}\to\mu\boxtimes\nu(h)$ for any $h\in C(X\times Y)$, we may find some $h'\in C(X)\otimes C(Y)$ for which $\norm{h-h'}_\infty<\varepsilon$ and then observe that
+	\[\left|\mu\boxtimes\nu(h)-\mu_i\boxtimes\nu_j(h)\right|\le\left|\mu\boxtimes\nu(h')-\mu_i\boxtimes\nu_j(h')\right|+(\norm\mu\cdot\norm\nu+\norm{\mu_i}\cdot\norm{\nu_j})\norm{h-h'}_\infty.\]
+	All the norms are uniformly bounded by the Uniform boundedness principle, so we see that it is now enough to check that $\{\mu_i\boxtimes\nu_j(h')\}\to\mu\boxtimes\nu(h')$.
+	
+	By linearity, we may further assume that $h'=fg$ for some $f\in C(X)$ and $g\in C(Y)$. In this case, we see that $\delta_x\boxtimes\delta_y(fg)=f(x)g(y)$ is a relation bilinear in both coordinates, so we see that $\mu'\boxtimes\nu'(fg)=\mu'(f)\nu'(g)$ for any $\mu'\in C(X)$ and $\nu'\in C(Y)$. Now, $\{\mu_i(f)\}\to\mu(f)$ and $\{\nu_j(g)\}\to\nu(g)$ are convergent sequences by the definition of the weak topology, so we conclude that $\{\mu_i(f)\nu_j(g)\}\to\mu(f)\nu(g)$ and so $\{\mu_i\boxtimes\nu_j(fg)\}\to\mu\boxtimes\nu(fg)$.
+	% \begin{enumerate}
+	% 	\item For any fixed $\mu\in\op{Meas}_c^0(X)$, we claim that $(\mu\boxtimes-)\colon\op{Meas}_c^0(Y)\to\op{Meas}_c(X\times Y)$ is continuous; by \Cref{prop:extend-cont}, we are then able to extend $(\mu\boxtimes-)$ to a continuous map with domain $\op{Meas}_c(Y)$. Indeed, choose a convergent net $\{\nu_i\}\to\nu$ in $\op{Meas}_c^0(Y)$, and we want to check that $\{\mu\boxtimes\nu_i\}\to(\mu\boxtimes\nu)$. By the ambient bilinearity of $\boxtimes$, we may assume that $\mu=\delta_x$ for some $x\in X$.
+	%
+	% 	Now, for any $f\in C(X\times Y)$, we would like to show that $\{(\mu\boxtimes\nu_i)(f)\}\to(\mu\boxtimes\nu)(f)$. By a quick expansion of $\nu_i$ as $\sum_jc_{ij}\delta_{y_{ij}}$ for some constants $\{c_{ij}\}_j$ and points $\{y_{ij}\}$, we see that
+	% 	\[(\mu\boxtimes\nu_i)(f)=\nu_i(f_x),\]
+	% 	where $f_x\colon Y\to\CC$ is defined as $f_x(y)\coloneqq f(x,y)$. Note $f_x\in C(Y)$, so we know that $\{\nu_i(f_x)\}\to\nu(f)$ because $\{\nu_i\}\to\nu$.
+	%
+	% 	\item For any fixed $\nu\in\op{Meas}_c(Y)$, we claim that $(-\boxtimes\nu)\colon\op{Meas}_c^0(X)\to\op{Meas}_c(X\times Y)$ is continuous; by \Cref{prop:extend-cont}, we are then able to extend $(-\boxtimes\nu)$ to a continuous map with domain $\op{Meas}_c(X)$.
+	%
+	% 	Once again, for any net $\{\mu_i\}\to\mu$ in $\op{Meas}_c^0(X)$, we would like to check that $\{\mu_i\boxtimes\nu\}\to\mu\boxtimes\nu$. In other words, for any fixed function $f\in C(X\times Y)$, we would like to show that $\{(\mu_i\boxtimes\nu)(f)\}\to(\mu\boxtimes\nu)(f)$. Now, by definition, $(-\boxtimes\nu)(f)=(-\boxtimes\nu_j)(f)$ for some chosen Cauchy sequence $\{\nu_j\}\to\nu$ where $\nu_j\in\op{Meas}_c^0(X)$.
+	%
+	% 	To complete the argument, fix an error tolerance $\varepsilon>0$. Thus, for large $j$, we see that $(\mu\boxtimes\nu)(f)$ is with $\varepsilon$ of $(\mu\boxtimes\nu_j)(f)$. But now $(-\boxtimes\nu_j)$ is continuous on $\op{Meas}_c^0(X)$ by applying the previous step symmetrically, so $(\mu\boxtimes\nu_j)(f)$ is within $\varepsilon$ of $(\mu_i\boxtimes\nu_j)(f)$ for large $i$. Lastly, $(\mu_i\boxtimes-)$ is continuous, so $(\mu_i\boxtimes\nu_j)(f)$ is within $\varepsilon$ of $(\mu_i\boxtimes\nu)(f)$ for large $j$. Thus, choosing $i$ and $j$ large enough, we see that
+	% 	\[\left|(\mu_i\boxtimes\nu)(f)-(\mu\boxtimes\nu)(f)\right|\le3\varepsilon,\]
+	% 	so the result follows by sending $\varepsilon\to0^+$.
+	%
+	% 	\item It remains to check that the map $(\mu\boxtimes-)\colon\op{Meas}_c(Y)\to\op{Meas}_c(X\times Y)$ is continuous for any $\mu$. This is simply a more involved version of the argument in the second step, so we will omit it.
+	% \end{enumerate}
+\end{proof}
+\begin{notation}
+	Fix locally compact second countable spaces $X$ and $Y$. Given $\mu\in\op{Meas}_c(X)$ and $\nu\in\op{Meas}_c(Y)$, we define $\mu\boxtimes\nu\in\op{Meas}_c(X\times Y)$ via \Cref{lem:measure-algebra-operation}.
+\end{notation}
+Intuitively,
+\[\int_{X\times Y}h\,d(\mu\boxtimes\nu)=\int_X\int_Yh\,d\nu\,d\mu.\]
+% \begin{remark}
+% 	Given compactly supported functions $f\in C(X)$ and $g\in C(Y)$, one can check that
+% 	\[(\mu\boxtimes\nu)(f\times g)=\mu(f)\nu(g),\]
+% 	where $(f\times g)\in C(X\times Y)$ is the function given by $(f\times g)(x,y)\coloneqq f(x)g(y)$.
+% \end{remark}
+% \begin{definition}
+% 	Fix a locally compact second countable topological group $G$ with multiplication $m\colon G\times G\to G$. Given $\mu,\nu\in\op{Meas}_c(G)$, we define
+% 	\[\mu*\nu\coloneqq m_*(\mu\boxtimes\nu).\]
+% \end{definition}
+Here is the sort of thing that we can show with this definition. The main idea of all these proofs is to find a way to reduce to $\delta$s.
+\begin{lemma}
+	Fix locally compact second countable spaces $X$, $Y$, and $Z$. Up to identifying $(X\times Y)\times Z$ and $X\times(Y\times Z)$, we have that $\boxtimes$ is associative.
+\end{lemma}
+\begin{proof}
+	The first part of the argument of \Cref{lem:measure-algebra-operation} shows that there is a unique tri-linear, sequentially continuous map
+	\[\boxtimes\colon\op{Meas}_c(X)\times\op{Meas}_c(Y)\times\op{Meas}_c(Z)\to\op{Meas}_c(X\times Y\times Z)\]
+	such that $\delta_x\boxtimes\delta_y\boxtimes\delta_z=\delta_{(x,y,z)}$. (Namely, linearity extends this map to the $\op{Meas}_c^0$s, which are then sequentially dense.) However, the two maps $(\mu_X,\mu_Y,\mu_Z)\mapsto(\mu_X\boxtimes\mu_Y)\boxtimes\mu_Z$ and $(\mu_X,\mu_Y,\mu_Z)\mapsto\mu_X\boxtimes(\mu_Y\boxtimes\mu_Z)$ both satisfy this relation.
+\end{proof}
+% \begin{remark}
+% 	One can check that $*$ is associative.
+% \end{remark}
+\begin{notation}
+	Fix a locally compact second countable topological group $G$. Then we define the binary operator $*$ on $\op{Meas}_c(G)$ by
+	\[\mu*\nu\coloneqq m_*(\mu\boxtimes\nu),\]
+	where $m\colon G\times G\to G$ is the multiplication map.
+\end{notation}
+\begin{example}
+	For $g,h\in G$, we compute that $\delta_g*\delta_h$ is $m_*(\delta_g\boxtimes\delta_h)=\delta_{gh}$.
+\end{example}
+\begin{remark}
+	Because $m_*$ and $\boxtimes$ are both sequentially continuous, we conclude that $*$ is also sequentially continuous.
+\end{remark}
+\begin{example} \label{ex:multiply-g-mu}
+	For any $\mu\in\op{Meas}_c(G)$ and $f\in C(G)$, we claim that $\delta_g*\mu(f)=\mu(x\mapsto f(gx))$. Intuitively, this corresponds to the formula
+	\[\int_{G\times G}f(xy)\,d\delta_g(x)\,d\mu(y)=\int_Gf(gy)\,d\mu(y).\]
+	Anyway, the map sending $f$ to $g^*f\colon x\mapsto f(gx)$ is continuous by \Cref{ex:pushforward-cont}, so we are checking for an equality of measures. Because $\mu\mapsto\delta_g*\mu$ is sequentially continuous, as is $\mu\mapsto g_*\mu$, it is enough to check this on the dense subspace $\op{Meas}_c^0(X)$, so by linearity, it is enough to check this for $\mu=\delta_h$ for $h\in G$, where this now has no content.
+\end{example}
+The point of defining $\op{Meas}_c(G)$ is that it provides some continuous extension of the group algebra. For example, the group algebra has a natural action on any representation.
+\begin{lemma}
+	Fix a Fr\'echet representation $V$ of a locally countable second countable topological group $G$. Then the natural map
+	\[\op{Meas}_c^0(G)\times V\to V\]
+	is continuous.
+\end{lemma}
+\begin{proof}
+	We remark that the natural map is defined by linearly extending $(\delta_g,v)\mapsto\rho(g)v$, where $\rho\colon G\to\op{Aut}(V)$ is the action map. We let $\rho\colon\op{Meas}_c^0(G)\to\op{End}(V)$ be the induced map.
+
+	Now, for two convergent nets $\{\mu_i\}\to\mu$ and $\{v_j\}\to v$, we would like to show that $\{\rho(\mu_i)v_j\}\to\rho(\mu)v$. Thus, for any seminorm $p$ on $V$, we must show that $\{p(\rho(\mu_i)v_j-\rho(\mu)v)\}\to0$. However, we note that
+	\[p(\rho(\mu_i)v_j-\rho(\mu)v)\le p(\rho(\mu_i-\mu)v)+p(\rho(\mu_i)(v_j-v)).\]
+	The action map $\rho(\mu_i)\colon V\to V$ is certainly continuous, so the right-hand term vanishes as $j\to\infty$.
+	
+	It remains to deal with the left-hand term $p(\rho(\mu_i-\mu)v)$. By replacing $\mu_i-\mu$ with $\mu_i$, we see that we may now assume that $\mu=0$. Thus, given that $\{\mu_i\}\to0$, we want to show that $\{p(\rho(\mu_i)v)\}\to0$. We will do this by upper-bounding the map $\mu\mapsto p(\rho(\mu)v)$ by a continuous function vanishing at $\mu=0$, which will complete the proof. We do this in steps.
+	\begin{enumerate}
+		\item For any $\mu\in\op{Meas}_c^0(X)$, we note that we may expand $\mu=\sum_{g\in G}c_g\delta_g$, from which we define $\left|\mu\right|\coloneqq\sum_{g\in G}\left|c_g\right|\delta_g$. One can check directly with the weak topology that $\left|\cdot\right|$ is continuous.
+		\item The same expansion $\mu=\sum_{g\in G}c_g\delta_g$ allows us to see
+		\[\left|p(\rho(\mu)v)\right|\le\sum_{g\in G}\left|c_g\right|p(\rho(g)v).\]
+		With this in mind, we define $f\in C(G)$ by $f(g)\coloneqq p(\rho(g))$, and then $\left|p(\rho(\mu)v)\right|\le\left|\mu\right|(f)$. However, the function $\mu\mapsto\left|\mu\right|(f)$ is continuous by the construction of the weak topology, so we are done.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark} \label{rem:cont-extend-action}
+	In this situation, we note that the action map $\rho\colon\op{Meas}_c^0(G)\to\op{End}(V)$ is continuous, where the target has been given the strong topology: this amounts to checking that $\{\mu_i\}\to\mu$ implies $\{\rho(\mu_i)v\}\to\rho(\mu)v$ for all $v$. By continuity (via a suitable modification of \Cref{prop:extend-cont}), we then have a continuous map
+	\[\op{Meas}_c(G)\to\op{End}(V).\]
+	(Technically, we should check that $\op{End}(V)$ is complete when given the strong topology; let us content ourselves by allowing non-continuous endomorphisms in $\op{End}(V)$ for this statement, and then this is not so hard. This is also implied by the Uniform boundedness principle if $V$ is Banach.\todo{}) Note that this improves \Cref{lem:banach-has-cont-action-map}!
+\end{remark}
+
+\subsection{Dense Subspaces}
+In this subsection, we show that certain subspaces of controlled vectors are in fact dense. We will get some utility out of the following construction.
+\begin{definition}[approximate identity]
+	Fix a locally compact second countable topological group $G$ with Haar measure $dg$. Then an \textit{approximate identity} is a sequence of functions $\{\varphi_i\}$ in $C_c(G)$ satisfying the following two properties.
+	\begin{itemize}
+		\item We have $\int_G\varphi_i\,dg=1$ for all $n$.
+		\item For any open neighborhood $U$ of $1$, we have $\op{supp}\varphi_i\subseteq U$ for all but finitely many $i$.
+	\end{itemize}
+	If $G$ is a Lie group, we further require that the $\varphi_i$ are smooth.
+\end{definition}
+\begin{remark} \label{rem:get-approx-id}
+	Let's explain why approximate identities exist. Let $\{U_i\}_{i\in\NN}$ be a neighborhood basis for $1\in G$, which is allowed to be countable because $G$ is first countable. By shrinking the $U_i$s, we may as well assume that it is a descending sequence of precompact open subsets. Then a suitable version of Urysohn's lemma (on the $\overline{U_i}$s) provides a nonnegative function $\varphi_i$ in $C(U_i)\subseteq C_c(G)$, and scaling allows us to assume that $\int_G\varphi_n\,dg=1$. (If $G$ is a Lie group, then the $U_n$s can be precompact open balls, and we can define the $\varphi_i$s as smooth bump functions.) Now, $\{\varphi_i\}$ is an approximate identity because the $\{U_i\}$s form a descending neighborhood basis of $1$.
+\end{remark}
+\begin{remark} \label{rem:use-approx-id}
+	The key property of approximate identities is that $\{\varphi_i\,dg\}\to\delta_1$ in the weak topology. Indeed, for $f\in C(G)$, we need to show that $\int_Gf\varphi_i\,dg\to f(1)$; by translation, we may assume that $f(1)=0$. Well, by continuity of $f$, any $\varepsilon>0$ has an open neighborhood $U$ of $1$ such that $\left|f(x)\right|<\varepsilon$ for all $x\in U$. Choosing $U$ to be precompact, we see that any $i$ large enough has $\op{supp}\varphi_i\subseteq U$, so we may write
+	\[\left|\int_Gf\varphi_i\,dg\right|\le\int_U\varepsilon\varphi_i\,dg=\varepsilon.\]
+\end{remark}
+% \begin{lemma}
+% 	Fix a locally compact second countable topological group $G$ with Haar measure $dg$.
+% 	\begin{listalph}
+% 		\item There exists a sequence of functions $\{\varphi_i\}$ in $C_c(G)$ such that $\{\varphi_i\,dg\}\to\delta_1$ in $\op{Meas}_c(G)$.
+% 		\item If $G$ is a Lie group, then there exists a sequence of functions $\{\varphi_i\}$ in $C_c^\infty(G)$ such that $\{\varphi_i\,dg\}\to\delta_1$ in $\op{Meas}_c(G)$.
+% 	\end{listalph}
+% \end{lemma}
+% \begin{proof}
+% 	We will more or less prove (a) and (b) simultaneously. Here is the main idea: suppose that $\int_G\varphi_i\,dg=1$ for all $i$.
+% \end{proof}
+Here is our first class of well-behaved vectors.
+\begin{definition}[finite]
+	Let $K$ be a compact second countable topological group. Fix a continuous representation $V$ of $K$. Then a vector $v\in V$ is \textit{$K$-finite} if and only if the vector space
+	\[\op{span}\{gv:g\in K\}\]
+	is finite-dimensional. We let $V_{\mathrm{fin}}$ denote the space of $K$-finite vectors.
+\end{definition}
+\begin{remark}
+	Note that $V_{\mathrm{fin}}$ is in fact a subspace of $V$. For example, certainly $0\in V$, and if $v,w\in V_{\mathrm{fin}}$, then
+	\[\op{span}\{agv+bhw:a,b\in\FF,g,h\in K\}\]
+	is finite-dimensional, so $\op{span}\{v,w\}\subseteq V_{\mathrm{fin}}$.
+\end{remark}
+\begin{remark} \label{rem:finite-by-connected}
+	We claim that $v\in V$ is $K$-finite if and only if it is $K^\circ$-finite. Indeed, $K$ has only finitely many connected components (because $K$ is compact), so we can find a finite subset $S\subseteq K$ representing $K/K^\circ$. (Note also that $K^\circ$ is normal: for any $g\in K$, the conjugation automorphism is continuous while fixing the identity and therefore must send $K^\circ$ to itself.) Now, if $v$ is $K$-finite, then of course it is $K^\circ$-finite. On the other hand, if $v$ is $K^\circ$-finite, then the normality of $K^\circ\subseteq K$ implies that $sv$ is still $K^\circ$-finite for all $s\in S$, so the space
+	\[\op{span}\{gv:g\in K\}=\op{span}\{gsv:g\in K^\circ,s\in S\}\]
+	continues to be finite-dimensional.
+\end{remark}
+\begin{proposition} \label{prop:finite-is-dense}
+	Fix a compact second countable topological group $K$. For any Fr\'echet representation $V$ of $K$, the subspace $V_{\mathrm{fin}}$ is sequentially dense in $V$.
+\end{proposition}
+\begin{proof}
+	By \Cref{rem:finite-by-connected}, we may assume that $K$ is connected. Now, the trick is to convolve with an approximate identity. Let $\{\varphi_i\}$ be an approximate identity for $K$, which exists by \Cref{rem:get-approx-id}. For any $v\in V$, we note that $\{(\varphi_i\,dg)\}\to\delta_1$ (by \Cref{rem:use-approx-id}) implies that $\{(\varphi_i\,dg)\cdot v\}\to v$, where the action map is the one given by \Cref{rem:cont-extend-action}.
+
+	It now remains to approximate $(\varphi_i\,dg)\cdot v$ by a $K$-finite vector. But this is easier because we know how to approximate functions. Indeed, by the Peter--Weyl theorem, we know that the $K$-finite vectors of $L^2(K)$ are given by the dense subspace
+	\[\bigoplus_{\rho\in\op{IrRep}(K)}\rho\otimes\rho^*\]
+	of $L^2(K)$ and are in particular given by continuous functions. Thus, we may find a $K$-finite $\psi_i\in C(K)$ for which $\norm{\varphi_i-\psi_i}_2<1/i$ for each $i$. It follows that $\varphi_i-\psi_i\to0$ in $L^2(K)$, so we also have this limit in $L^1(K)$ because $K$ is compact (via Cauchy--Schwarz), so $\varphi_if-\psi_if\to0$ in $L^1(K)$ for any $f\in C(K)$, so $\varphi_i\,dg-\psi_i\,dg\to0$ in $\op{Meas}_c(K)$, so $\psi_i\,dg\to\delta_1$ in $\op{Meas}_c(K)$.
+
+	Thus, we once again have $(\psi_i\,dg)\cdot v\to v$ as $i\to\infty$, and we can now show that $(\psi_i\,dg)\cdot v$ is $K$-finite. Indeed, for any $h\in G$, we note that
+	\[h\cdot(\psi_i\,dg\cdot v)=(\delta_h*\psi_i\,dg)\cdot v\]
+	by the associativity of our action (which, as usual, can be checked on $\delta$-distributions). But now $\delta_h*\psi_i\,dg=h_*(\psi_i\,dg)$ by \Cref{ex:multiply-g-mu}, which we claim is $h\psi_i\,dg$. Indeed, for any $f\in C(G)$, we see that
+	\[h_*(\psi_i\,dg)(f)=\int_Gf(hg)\psi_i(g)\,dx=\int_Gf(g)\psi_i\left(h^{-1}g\right)\,dg.\]
+	Thus, the span of the vectors $h\cdot(\psi_i\,dg\cdot v)$ equals the span of the vectors $(h\psi_i\,dg)\cdot v$, which is finite-dimensional because $\psi_i$ is $K$-finite!
+\end{proof}
+\begin{corollary}
+	Fix a compact second countable topological group $K$. Any irreducible representation of $K$ is finite-dimensional.
+\end{corollary}
+\begin{proof}
+	\Cref{prop:finite-is-dense} shows that there is a nonzero $K$-finite vector, which spans a finite-dimensional subrepresentation. But then this subrepresentation must be the whole space by irreducibility!
+\end{proof}
+For our next application, we pass to Lie groups.
+\begin{definition}[smooth]
+	Fix a Lie group $G$. For any representation $V$ of $G$, a vector $v\in V$ is \textit{smooth} if and only if the function $g\mapsto gv$ is smooth. We let $V_{\mathrm{sm}}$ denote the collection of smooth vectors.
+\end{definition}
+\begin{remark}
+	Suppose $G$ is compact. If $V=C(G)$ (with $G$ acting by either left or right multiplication), then $V_{\mathrm{sm}}=C^\infty(G)$.
+\end{remark}
+\begin{proposition}
+	Fix a Lie group $G$. Then $V_{\mathrm{sm}}$ is dense in $G$.
+\end{proposition}
+\begin{proof}
+	Apparently, this follows from the Peter--Weyl theorem because matrix coefficients are smooth.
+\end{proof}
+\begin{proposition}
+	Fix a Lie group $G$ and a compact Lie subgroup $K\subseteq G$. Then $V_{\mathrm{fin}}\cap V_{\mathrm{sm}}$ is sequentially dense in $V$. Here, $V_{\mathrm{fin}}$ refers to the $K$-finite vectors.
+\end{proposition}
+\begin{proof}
+	One uses a similar argument. Choose $\{\mu_i\}$ to be $K$-finite and $\{\mu_i'\}$ to be smooth. Then $\mu_i*\mu_i'$ is both $K$-finite and smooth. The same sort of convolution argument now goes through.
+\end{proof}
+Let's preview what we will do next class. For any continuous representation $V$, one can expand
+\[V_{\mathrm{fin}}=\bigoplus_{L_i\in\op{IrRep}(K)}V_i\otimes L_i,\]
+where $V_i$ is some finite-dimensional vector space. It turns out that there is also a natural action of $\mf g$ on this space, so we are able to produce something called a $(\mf g,K)$-module.
+% \begin{remark} \label{rem:measures-on-top-grp}
+% 	Given a locally compact second countable topological space $X$, then $C(X)$ has topological dual $C(X)^*$, which is thought of as the (compact) measures on $X$. Given a measure $\mu$, we can define its support $\op{supp}\mu$ by having $x\notin\op{supp}\mu$ if and only if there is an open neighborhood $U$ of $x$ for which $\mu(f)=0$ for all $f$ with $f|_U=0$. It follows that $\op{supp}\mu$ is closed, and one can even check that it is compact by construction of $C(X)^*$. If $X$ is an orientable manifold, then we remark that the Poincar\'e pairing $f\mapsto\int_Xf\varphi\,\omega$ defines an embedding $C_c(X)\to C(X)^*$.
+% \end{remark}
+% \begin{nex}
+% 	Continuing with \Cref{rem:measures-on-top-grp}, we can take the discrete space $X=\NN$. Then $C(X)$ is given by sequences in $\CC$, but $C(X)^*$ is given by finite sequences in $\CC$, and we have some convergence $\sigma^i\to\sigma$ if and only if there is a finite subset $S\subseteq\NN$ containing all the supports, and we have pointwise convergence in $S$. One can check that this is separable, sequentially complete, but it is not complete and thus not a Fr\'echet space!
+% \end{nex}
+% \begin{remark}
+% 	One can replace the topology on $C(X)^*$ with the weak-$*$ topology, in which $\{\mu_i\}\to\mu$ if and only if $\{\mu_i(f)\}\to\mu(f)$ for all $f$. However, $C(\NN)^*$ continues to not be complete: it embeds into the space of all linear maps $C(\NN)\to\CC$, but it is not a closed subset of this space.
+% \end{remark}
+% Next class, we will take $G$ to be a Lie group, and we will find that compact measures on $G$ is an algebra, and it acts continuously on our continuous representations. The point is that it more or less plays the role of the group algebra.
+
+\end{document}

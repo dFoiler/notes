@@ -15,27 +15,7 @@ Here are some administrative notes.
 We hope to cover simplicial sets, $\infty$-categories, homotopy theory, Eilenberg--MacLane spaces, Postnikov towers, the Serre spectral sequence, and a little on vector bundles and characteristic classes. In particular, we see that the first part of the class is some purely formal nonsense, which we then use to set up the $\infty$-category of spaces, which is the natural setting for homotopy theory.
 
 \subsection{Category Theory}
-Let's recall some starting notions of category theory, though we may use more than we define here.
-\begin{warn}
-	We will mostly ignore size issues. If it makes the reader feel better, we are willing to assume the existence of a countable ascending chain of inaccessible cardinals throughout the class.
-\end{warn}
-\begin{definition}[category]
-	A \textit{category} $\mc C$ is a collection of objects, a collection of morphisms $\op{Mor}_\mc C(A,B)$ for each pair of objects, a distinguished identity element $\id_A$ in $\op{Mor}_{\mc C}(A,A)$, and a composition law
-	\[\circ\colon\op{Mor}_{\mc C}(B,C)\times\op{Mor}_{\mc C}(A,B)\to\op{Mor}_{\mc C}(A,C).\]
-	We then require the composition law to be associative and unital with respect to the identity maps.
-\end{definition}
-\begin{remark}
-	We will use the notation $\op{Hom}$ for $\op{Mor}$ whenever the category $\mc C$ is additive, meaning that these collections of morphisms are abelian groups, and the composition law is $\ZZ$-bilinear.
-\end{remark}
-\begin{definition}[functor]
-	A \textit{functor} $F$ between two categories $\mc C$ and $\mc D$ is a map which sends an object $A\in\mc C$ to an object $FA\in\mc D$ and a morphism $f\colon A\to B$ in $\mc C$ to a morphism $Ff\colon FA\to FB$. We further require $F$ to respect identities and composition.
-\end{definition}
-\begin{definition}[isomorphism]
-	A morphism $f\colon A\to B$ in a category $\mc C$ is an \textit{isomorphism} if and only if there is a morphism $g\colon B\to A$ for which $f\circ g=\id_B$ and $g\circ f=\id_A$.
-\end{definition}
-\begin{definition}[groupoid]
-	A \textit{groupoid} is a category in which every morphism is an isomorphism.
-\end{definition}
+Here are some examples of categories to keep in mind for this course. We refer to \Cref{chap:cat} for the definitions.
 \begin{example}
 	Any category $\mc C$ gives rise to a core groupoid $\op{Core}\mc C$, which is the subcategory with the same objects but only taking the morphisms which are isomorphisms. One can check that this is in fact a subcategory.
 \end{example}
@@ -57,58 +37,6 @@ The definition of homology finds itself focused on continuous maps $\left|\Delta
 	\[\left|\Delta^n\right|\coloneqq\left\{(t_0,\ldots,t_n)\in\RR_{\ge0}^{n+1}:\sum_{i=0}^nt_i=1\right\}.\]
 \end{defihelper}
 We will soon upgrade this topological $n$-simplex $\left|\Delta^n\right|$, which explains why we are writing $\left|\Delta^n\right|$ instead of $\Delta^n$.
-
-We are shortly going to get a lot of mileage out of the next example, so we spend some time to prove it in detail. We would like to define a category of functors between two given categories,\footnote{For those who are choosing to think about size issues, we remark that we will typically have one of $\mc C$ or $\mc D$ be locally small.} but this requires us to have a notion of morphism between functors.
-\begin{definition}[natural transformation]
-	Given two functors $F,G\colon\mc C\to\mc D$, a \textit{natural transformation} $\eta\colon F\Rightarrow G$ is the data of a morphism $\eta_A\colon FA\to GA$ for each object $A\in\mc C$. We further require that $Gf\circ\eta_A=\eta_{B}\circ Ff$ for any morphism $f\colon A\to B$. A \textit{natural isomorphism} is a natural transformation $\eta$ in which each morphism $\eta_A$ is an isomorphism.
-\end{definition}
-Diagrammatically, the equation $Gf\circ\eta_A=\eta_{B}\circ Ff$ amounts to the commutativity of the following square.
-% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGQSJdLFsxLDAsIkdBIl0sWzAsMSwiRkIiXSxbMSwxLCJHQiJdLFswLDEsIlxcZXRhX0EiXSxbMiwzLCJcXGV0YV9CIl0sWzAsMiwiRmYiLDJdLFsxLDMsIkdmIl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-\[\begin{tikzcd}[cramped]
-	FA & GA \\
-	FB & GB
-	\arrow["{\eta_A}", from=1-1, to=1-2]
-	\arrow["Ff"', from=1-1, to=2-1]
-	\arrow["Gf", from=1-2, to=2-2]
-	\arrow["{\eta_B}", from=2-1, to=2-2]
-\end{tikzcd}\]
-Anyway, here is our result.
-\begin{lemma} \label{lem:functor-cat}
-	Let $\mc C$ and $\mc D$ be categories. Then there is a functor category $\op{Fun}(\mc C,\mc D)$ where the objects are functors $\mc C\to\mc D$ and the morphisms are natural transformations.
-\end{lemma}
-\begin{proof}
-	We have explained our objects and morphisms, but we still have to provide identities and composition laws and check that everything works.
-	\begin{itemize}
-		\item Identities: given a functor $F\colon\mc C\to\mc D$, there is an identity natural transformation $\id_F\colon F\to F$ given by $({\id_F})_A\coloneqq\id_{FA}$; checking that this is a natural transformation amounts to noting that $Ff\circ{\id_{FA}}={\id_{FB}}\circ Ff$ for any morphism $f\colon A\to B$.
-
-		\item Composition: given two natural transformations $\alpha\colon F\Rightarrow G$ and $\beta\colon G\Rightarrow H$, we define the composite natural transformation $(\beta\circ\alpha)\colon F\Rightarrow H$ by $(\beta\circ\alpha)_A\coloneqq\beta_A\circ\alpha_A$ for each $A\in\mc A$. Checking that this is a natural transformation amounts to checking the commutativity of the outer rectangle of
-		% https://q.uiver.app/#q=WzAsNixbMCwwLCJGQSJdLFsxLDAsIkdBIl0sWzIsMCwiSEEiXSxbMCwxLCJGQiJdLFsxLDEsIkdCIl0sWzIsMSwiSEIiXSxbMCwxLCJcXGFscGhhX0EiLDJdLFsxLDIsIlxcYmV0YV9BIiwyXSxbMCwyLCIoXFxiZXRhXFxjaXJjXFxhbHBoYSlfQSIsMCx7ImN1cnZlIjotMn1dLFswLDMsIkZmIiwyXSxbMSw0LCJHZiIsMl0sWzIsNSwiSGYiXSxbMyw0LCJcXGFscGhhX0IiXSxbNCw1LCJcXGJldGFfQiJdLFszLDUsIihcXGJldGFcXGNpcmNcXGFscGhhKV9CIiwyLHsiY3VydmUiOjJ9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-		\[\begin{tikzcd}[cramped]
-			FA & GA & HA \\
-			FB & GB & HB
-			\arrow["{\alpha_A}"', from=1-1, to=1-2]
-			\arrow["{(\beta\circ\alpha)_A}", curve={height=-12pt}, from=1-1, to=1-3]
-			\arrow["Ff"', from=1-1, to=2-1]
-			\arrow["{\beta_A}"', from=1-2, to=1-3]
-			\arrow["Gf"', from=1-2, to=2-2]
-			\arrow["Hf", from=1-3, to=2-3]
-			\arrow["{\alpha_B}", from=2-1, to=2-2]
-			\arrow["{(\beta\circ\alpha)_B}"', curve={height=12pt}, from=2-1, to=2-3]
-			\arrow["{\beta_B}", from=2-2, to=2-3]
-		\end{tikzcd}\]
-		which indeed commutes: the top and bottom triangles commute by definition of $\beta\circ\alpha$, and the two inner squares commute by naturality of $\alpha$ and $\beta$.
-
-		\item Identities: given a natural transformation $\eta\colon F\Rightarrow G$, we need to check that ${\id_G}\circ\eta=\eta\circ{\id_F}=\eta$. Well, for any object $A$, we see that
-		\[({\id_G}\circ\eta)_A=({\id_G}\circ\eta)_A={\id_{G(A)}}\circ\eta_A=\eta_A,\]
-		and
-		\[(\eta\circ{\id_F})_A=\eta_A\circ{\id_{FA}}=\eta_A.\]
-
-		\item Associativity: given natural transformations $\alpha$, $\beta$, and $\gamma$ with appropriate domains and codomains, we must check that $(\alpha\circ\beta)\circ\gamma=\alpha\circ(\beta\circ\gamma)$. Well, for any object $A$, we see that
-		\[((\alpha\circ\beta)\circ\gamma)=(\alpha_A\circ\beta_A)\circ\gamma_A=\alpha_A\circ(\beta_A\circ\gamma_A)=(\alpha\circ(\beta\circ\gamma))_A,\]
-		as required.
-		\qedhere
-	\end{itemize}
-\end{proof}
 
 \subsection{Homotopy Types, Intuitively}
 The homology functors $\mathrm H_i(-;R)\colon\mathrm{Top}\to\mathrm{Mod}_R$ factors through the homotopy category $\mathrm{Ho}(\mathrm{Top})$, which is obtained from $\mathrm{Top}$ by declaring homotopic maps to be equal.
@@ -195,7 +123,7 @@ We remark that identities and the composition maps are then all uniquely defined
 \subsection{Simplicial Sets}
 The following is the first important definition of this course.
 \begin{definition}[simplicial set]
-	A \textit{simplicial set} is a functor $\Delta\opp\to\mathrm{Set}$. We let $\mathrm{sSet}$ denote the category of such functors.
+	A \textit{simplicial set} is a functor $\Delta\opp\to\mathrm{Set}$. We let $\mathrm{sSet}$ denote the category of such functors. In other words, $\mathrm{sSet}=\mathrm{PSh}(\Delta)$.
 \end{definition}
 Note that this ``functor category'' is in fact a category by \Cref{lem:functor-cat}. Here are some examples of simplicial sets.
 \begin{example}[$\op{Sing}(X)$] \label{ex:sing-is-sset}
@@ -231,10 +159,11 @@ Note that this ``functor category'' is in fact a category by \Cref{lem:functor-c
 \begin{remark}
 	It will turn out that the homotopy type of $X$ is uniquely determined by $\op{Sing}(X)$. This is remarkable because one expects $\op{Top}$ to be a difficult category, even taken up to homotopy, but $\op{sSet}$ just looks like some combinatorial data.
 \end{remark}
+We are also interested in generalizing categories, so we pick up the following example.
 \begin{example}[nerve] \label{ex:nerve}
 	Fix a category $\mc C$. Then there is a ``nerve'' functor $N\colon\mathrm{Cat}\to\mathrm{sSet}$ such that
 	\[N(\mc C)\colon[n]\mapsto\op{Fun}([n],\mc C).\]
-	The proof of this claim is exactly the same as in \Cref{ex:sing-is-sset} (note that $\op{Fun}([n],\mc C)=\op{Mor}_{\mathrm{Cat}}([n],\mc C)$), except now there is now need for the auxiliary functor $F\colon\Delta\to\mathrm{Top}$ because $\Delta$ is already a category. (Being brazen, one can copy the same proof but erasing all $F$s, replacing $\mathrm{Top}$ with $\mathrm{Cat}$ throughout, and replacing $\left|\Delta^\bullet\right|$s with $[\bullet]$s throughout.)\todo{Check: fully faithful.}
+	The proof of this claim is exactly the same as in \Cref{ex:sing-is-sset} (note that $\op{Fun}([n],\mc C)=\op{Mor}_{\mathrm{Cat}}([n],\mc C)$), except now there is no need for the auxiliary functor $F\colon\Delta\to\mathrm{Top}$ because $\Delta$ is already a category. (Being brazen, one can copy the same proof but erasing all $F$s, replacing $\mathrm{Top}$ with $\mathrm{Cat}$ throughout, and replacing $\left|\Delta^\bullet\right|$s with $[\bullet]$s throughout.)\todo{Check: fully faithful.}
 \end{example}
 \begin{remark}
 	As in \Cref{rem:more-sset-than-sing}, nerves of categories have some nice properties which prevent them from producing all simplicial sets. It turns out that $\infty$-categories will be some kind of simultaneous generalization of $\op{Sing}$s and nerves.

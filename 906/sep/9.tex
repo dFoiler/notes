@@ -4,12 +4,195 @@
 
 \begin{document}
 
-\section{September 4}
+\section{September 9}
 The first problem set will be posted in about a day.
 
-\subsection{More on Simplicial Sets}
-It is worthwhile to explain nerves a little more.
-\begin{exe}
+\subsection{Some Simplicial Sets}
+We are now allowed to remove the absolute value bars from our $\Delta^n$.
+\begin{definition}[simplex]
+	For each $n\ge0$, we define the \textit{$n$-simplex} $\Delta^n$ as the simplicial set $\yo([n])$.
+\end{definition}
+\begin{remark}
+	As in \Cref{rem:general-yoneda}, we see $\Delta^n([m])$ is $\op{Mor}_{\mathrm{sSet}}([m],\Delta^n)$, which is $\yo_{[n]}([m])$ or $\op{Fun}([m],[n])$. Of course, this is just the collection of order-preserving maps $[m]\to[n]$. Then given an increasing map $f\colon[m]\to[m']$, we see that $\Delta^n(f)\colon\Delta^n([m'])\to\Delta^n([m])$ is
+	\[\yo_{[n]}(f)\colon\op{Mor}_{\mathrm{sSet}}([m'],\Delta^n)\to\op{Mor}_{\mathrm{sSet}}([m],\Delta^n),\]
+	which of course is just $(-\circ f)$. All the prior identifications chain to show that we are still looking at $(-\circ f)$ on the level of order-preserving maps.
+\end{remark}
+\begin{example}
+	We see $\left(\Delta^2\right)_0$ has three elements, and $\left(\Delta^2\right)_1$ has six elements. Here are three of the elements of $\left(\Delta^2\right)_1$.
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCIwIl0sWzEsMCwiMSJdLFsxLDEsIjIiXSxbMCwxXSxbMSwyXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		0 & 1 \\
+		& 2
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+	\end{tikzcd}\]
+\end{example}
+\begin{remark} \label{rem:get-n-simplices}
+	On the other hand, for a simplicial set $X$, \Cref{rem:general-yoneda} tells us that $\op{Mor}_{\mathrm{sSet}}(\Delta^n,X)$ is in bijection with $X_n$, and this bijection takes $\varphi\colon\Delta^n\to X$ to $\varphi_{[n]}({\id_{[n]}})\in X_n$. We even know that the inverse map takes some $x\in X$ and outputs a natural transformation $\Delta^n\to X$ defined by sending $f\colon[m]\to[n]$ in $\Delta^n(m)$ to $Xf(x)\in X_m$.
+\end{remark}
+\begin{example}
+	The maps $\delta^i\colon[n-1]\to[n]$ and $\sigma^i\colon[n+1]\to[n]$ induce maps $\yo\delta^i\colon\Delta^{n-1}\to\Delta^{n}$ and $\yo\sigma^i\colon\Delta^{n+1}\to\Delta^n$ given by $(-\circ\delta^i)$ and $(-\circ\sigma^i)$, respectively. We continue to label our face maps by $d_i\colon\Delta^{n-1}\to\Delta^n$ and degeneracy maps by $s_i\colon\Delta^{n+1}\to\Delta^n$.
+\end{example}
+Here is the sort of thing that this language allows us to prove.
+\begin{lemma}
+	A map $f\colon X\to Y$ of simplicial sets is monic if and only if $f_n\colon X_n\to Y_n$ is injective for all $n\ge0$.
+\end{lemma}
+\begin{proof}
+	In one direction, if $f_n$ is injective for all $n\ge0$, then one can see directly that $f$ is monic: given maps $g_1,g_2\colon Y\to Z$, we see that $f\circ g_1=f\circ g_2$ implies that $g_1=g_2$, as we can see by passing to $n$-simplices for each $n$.
+
+	In the reverse direction, suppose that $f$ is monic. Then $f$ must induce injections
+	\[\op{Mor}_{\mathrm{sSet}}(\Delta_n,X)\to\op{Mor}_{\mathrm{sSet}}(\Delta_n,Y).\]
+	However, as described in \Cref{rem:get-n-simplices}, this is (naturally) isomorphic to the map $f_n\colon X_n\to Y_n$, which is therefore also injective!
+\end{proof}
+Here are two more important simplicial sets.
+\begin{definition}[boundary]
+	For each $n\ge0$, we define the \textit{boundary} $\del\Delta^n\in\mathrm{sSet}$ to be the subfunctor of $\Delta^n$ with $\del\Delta^n(m)$ given by the non-surjective maps $[m]\to[n]$.
+\end{definition}
+\begin{remark} \label{rem:include-boundary}
+	There are canonical inclusions $\del\Delta^n(m)\subseteq\Delta^n(m)$ for each $m$, which we claim upgrades into an embedding of simplicial sets. Well, for each $g\colon[m]\to[m']$ and $f\in\del\Delta^n(m)$, we see that $(f\circ g)$ continues to not be surjective, so $(f\circ g)\in\del\Delta^n(m')$, so the claim follows from \Cref{rem:get-subpresheaf}.
+\end{remark}
+\begin{definition}[horn]
+	For each $i\in[n]$, we define the \textit{$i$th horn} $\Lambda_i^n\in\mathrm{sSet}$ to be the subfunctor of $\Delta^n$ with $\Lambda^i_n$ given by the maps $[m]\to[n]$ which avoid an element not equal to $i$. We say that $\Lambda_i^n$ is an \textit{inner horn} if and only if $0<i<n$; otherwise, $\Lambda_i^n$ is an \textit{outer horn}.
+\end{definition}
+\begin{remark}
+	As in \Cref{rem:include-boundary}, there are canonical inclusions $\Lambda^i_n(m)\subseteq\del\Delta^n(m)$ for each $i$ and $n$ and $m$ with $0\le i\le n$. We check that this upgrades to an inclusion of simplicial sets with \Cref{rem:get-subpresheaf}: we have to check that any maps $g\colon[m]\to[m']$ and $f\in\del\Delta^n(m)$ has $(f\circ g)\in\del\Delta^n(m)$, which is true because $i\notin\im f$.
+\end{remark}
+\begin{example}
+	Intuitively, $\Lambda^n_i$ deletes the face opposite $i$. For example, here is $\Lambda_0^2$.
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCIwIl0sWzEsMCwiMSJdLFsxLDEsIjIiXSxbMCwxXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		0 & 1 \\
+		& 2
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-2]
+	\end{tikzcd}\]
+	One can similarly draw $\Lambda^2_1$ (which omits $0\to2$) and $\Lambda^2_2$ (which omits $0\to1$).
+\end{example}
+% As one would expect from CW complexes, we are able to construct horns as colimits.
+% \begin{lemma}
+% 	Fix $n\ge2$. For any $i\in[n]$, the horn $\Lambda^n_i$ is the colimit of the face maps $d_i\colon\Delta^{n-2}\to\Delta^{n-1}$\todo{}
+% \end{lemma}
+
+\subsection{Dimension}
+We take a moment to introduce a complexity measure of simplicial sets, which will be helpful in the sequel when we are making inductive arguments.
+\begin{definition}[dimension]
+	Fix a simplicial set $X$. Then $X$ has \textit{dimension} $d$ if and only if $d$ is the smallest nonnegative integer for which all simplices in $X_k$ are in the image of the degeneracy maps for $k>d$. (We may say that such a simplex is \textit{degenerate}.) If there is no such nonnegative integer $d$, we say that $X$ is infinite-dimensional. We may write the dimension as $\dim X$.
+\end{definition}
+\begin{remark} \label{rem:degenerate-im}
+	Given a morphism $f\colon X\to Y$, if $x\in X_n$ is degenerate, then so is $f(x)\in Y_n$. Indeed, we are provided with $x'\in X_{n-1}$ for which $x=f(x')$, so the claim follows from the commutativity of the following diagram.
+	% https://q.uiver.app/#q=WzAsOCxbMCwxLCJYX24iXSxbMSwxLCJZX24iXSxbMCwwLCJYX3tuLTF9Il0sWzEsMCwiWV97bi0xfSJdLFsyLDAsIngnIl0sWzIsMSwieCJdLFszLDAsImYoeCcpIl0sWzMsMSwiZih4KSJdLFsyLDAsInNfaSIsMl0sWzAsMSwiZiJdLFsyLDMsImYiXSxbMywxLCJzX2kiLDJdLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{X_{n-1}} & {Y_{n-1}} & {x'} & {f(x')} \\
+		{X_n} & {Y_n} & x & {f(x)}
+		\arrow["f", from=1-1, to=1-2]
+		\arrow["{s_i}"', from=1-1, to=2-1]
+		\arrow["{s_i}"', from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow["f", from=2-1, to=2-2]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+\end{remark}
+\begin{example} \label{ex:dim-of-simplex}
+	We claim that $\dim\Delta^n=n$. In fact, we will show that a map $[m]\to[n]$ in $\Delta^n(m)$ is non-degenerate if and only if it is injective, which completes the proof of the claim ($\id_{[n]}$ is injective, but nothing will be injective for $m>n$). In one direction, for any $m\ge0$, the degeneracy map $s_i\colon X_m\to X_{m+1}$ sends an increasing map $[m]\to[n]$ to the composite $[m+1]\onto[m]\to[n]$; in particular, the composite necessarily fails to be injective. Conversely, any non-injective map sends two consecutive inputs $i$ and $i+1$ to the same output because it is still increasing. Thus, $[k]\to[n]$ factors through $\sigma_i\colon [k]\to[k-1]$ and is therefore degenerate!
+\end{example}
+\begin{example} \label{ex:dim-of-horn}
+	We claim that $\dim\Lambda^n_i=n-1$. As in \Cref{ex:dim-of-simplex}, it is enough to show that a map $[m]\to[n]$ in $\Lambda^n_i(m)$ is non-degenerate if and only if it is injective, which completes the proof of the claim ($\delta_i$ is injective, but nothing will be injective for $m\ge n$). The arguments are now exactly the same as in \Cref{ex:dim-of-simplex}, with the caveat that the converse argument must ensure that we avoid an element away from $i$ in the image at all times.
+\end{example}
+% \begin{remark}
+% 	Essentially the same argument verbatim shows that $\dim\del\Delta^n=n-1$ and $\dim\Lambda^n_i=n-1$ for $n\ge1$. The point is that the forced failure of surjectivity makes the corresponding maps $[m]\to[n]$ fail to be surjective as soon as $m>n-1$, so these maps become degenerate. On the other hand, the map $\delta_i\colon[n-1]\to[n]$ is injective and in $\Lambda^n_i(n-1)$, so $\dim\Lambda^n_i\ge n-1$.
+% \end{remark}
+Intuitively, we expect that a simplicial set $X$ can be (canonically) built out of its $k$-simplices where $k$ varies over all nonnegative integers bounded by $\dim X$. Here, ``built'' means that we are gluing via colimits.
+\begin{lemma} \label{lem:dim-of-colimit}
+	Let $F\colon\mc I\to\mathrm{sSet}$ be a functor with colimit $X$. Then
+	\[\dim A\le\sup_{i\in\mc I}F(i).\]
+\end{lemma}
+\begin{proof}
+	Let the given supremum be $d$. We have to show that $d\le n$ implies that $\dim A\le n$ for any $n$. To show that $\dim A\le n$, we have to show that any element of $A_k$ for $k>n$ is degenerate. Because colimits are computed pointwise, we know that
+	\[A_k=\colim_{i\in I}F(i),\]
+	so the construction of colimits in $\mathrm{Set}$ implies that $a$ is in the image of one of the canonical maps $F(i)_k\to A_k$. But all elements in $F(i)_k$ are degenerate, and the fact that the elements in $F(i)_k$ are degenerate implies that the elements of $A_k$ by \Cref{rem:degenerate-im}.
+\end{proof}
+Now, we will show that simplicial sets can be built out of their $k$-simplices for $k\le\dim X$ in steps. We will require the following technical lemma.
+\begin{lemma} \label{lem:get-nondegen-simplex}
+	Fix some map $\sigma\colon\Delta^n\to X$ of simplicial sets. Then $\sigma$ factors uniquely into a composite
+	\[\Delta^n\onto\Delta^m\into X,\]
+	where the map $\Delta^n\to\Delta^m$ is induced by a surjection $[n]\onto[m]$ and the map $\Delta^m\into X$ maps to a non-degenerate $m$-simplex.
+\end{lemma}
+\begin{proof}
+	It is easier to show the uniqueness of the factorization: simply set $m$ to be the smallest positive integer for which $\sigma$ factors into
+	\[\Delta^n\stackrel{\pi}\onto\Delta^m\stackrel\iota\into X.\]
+	We have now two checks.
+	\begin{itemize}
+		\item Surjective: suppose for the sake of contradiction, suppose that the map $[n]\to[m]$ induced by $\pi$ fails to be surjective. Then we can factor the map $[n]\to[m]$ into some composite $[n]\to[m-1]\to[m]$, so $\pi$ can be factored into a composite $\Delta^n\to\Delta^{m-1}\to\Delta^m$, which violates the minimality of $m$.
+		\item Non-degenerate: suppose that the image of $\iota$ is not a non-degenerate $m$-simplex. Then $x$ is in the image of some degeneracy map $X_{m-1}\to X_m$; say $x=s_i(x')$. Thus, the commutative diagram in \Cref{rem:degenerate-im} shows that $\iota$ factors as some composite $\Delta^{m-1}\stackrel{s_i}\to\Delta^m\to X$, which again violates the minimality of $m$.
+	\end{itemize}
+	It remains to show the uniqueness of the given factorization. Well, suppose that we have another such factorization
+	\[\Delta^n\stackrel{\pi'}\onto\Delta^{m'}\stackrel{\iota'}\into X\]
+	such that $\pi'$ is induced by a surjection $[n]\onto[m']$, and $\iota'$ maps $[m']$ to a non-degenerate $m'$-simplex. %Quickly, we remark that it is enough to show that $m=m'$ and $\pi=\pi'$: simply choose a section $\alpha$ of $\pi$ (so that $\pi\alpha=\id_{\Delta^m}$), and we conclude because $\iota\pi=\iota'\pi$ implies $\iota\pi\alpha=\iota'\pi\alpha$ and so $\iota=\iota'$.
+
+	In fact, the main claim will be that $\pi$ factors through $\pi'$. Let's explain why this is enough. Say that $\pi=\pi''\pi'$, where $\pi''\colon\Delta^{m'}\to\Delta^m$ is some map. We will end up showing that $\pi''$ is the identity. Now, we choose a section $\alpha'$ of $\pi'$ (so that $\pi'\alpha'=\id_{\Delta^{m'}}$), and $\iota\pi''\pi'=\iota'\pi'$ implies that $\iota\pi''\pi'\alpha=\iota'\pi'\alpha$ and so
+	\[\iota\pi''=\iota'.\]
+	We now see that having $\pi''$ is the identity implies that $m=m'$ and $\pi=\pi'$ and $\iota=\iota'$, so we focus our efforts on showing $\pi''$ is the identity. Because $\pi$ is induced by a surjective map $[n]\onto[m]$, we conclude that $\pi''$ is induced by a surjective map $[m']\onto[m]$. It remains to show that $m\le m'$, which will then force $\pi''$ to be induced by the identity map. Well, if $\pi''$ fails to be injective, then $\pi''$ has degenerate image, so $\iota\pi''$ has degenerate image, so $\iota'$ will have degenerate image! This contradicts the construction of $\iota'$, so we are done.
+
+	We now turn our attention to showing the main claim, which is some hands-on combinatorics. To show that $\pi$ factors through $\pi'$, we will identify these maps with their induced maps $[n]\onto[m]$ and $[n]\onto[m']$. Then $\pi$ factors through $\pi'$ if and only if $\pi'(i)=\pi'(j)$ implies $\pi(i)=\pi(j)$. Assume this is not the case for the sake of contradiction. In other words, we have some $i$ and $j$ for which $\pi'(i)=\pi'(j)$ while $\pi(i)\ne\pi(j)$; note that $i$ and $j$ must be distinct. Now, find a section $\alpha\colon[m]\into[n]$ of $\pi$ whose image includes both $i$ and $j$, which is possible because $\pi(i)\ne\pi(j)$. Then $\iota\pi=\iota'\pi'$ implies that $\iota'\pi'\alpha=\iota$, but $\pi'\alpha$ is not injective (because $\pi'(i)=\pi'(j)$), so $\iota'\pi'\alpha$ does not map to a non-degenerate simplex, which contradicts the construction of $\iota$.
+\end{proof}
+\begin{proposition} \label{prop:sset-as-union}
+	Fix a simplicial set $X$ and a nonnegative integer $d$. Then the following are equivalent.
+	\begin{listalph}
+		\item $\dim X\le d$.
+		\item $X$ is the colimit of some functor $F\colon\mc I\to\mathrm{sSet}$, where $\dim F(i)\le d$ for all $i$.
+		\item $X$ is the colimit of some functor $F\colon\mc I\to\mathrm{sSet}$, and each $i$ has some $k\le d$ for which $F(i)=\Delta^k$.
+		\item Let $\mc I$ be the category of pairs $([k],x)$, where $k\le d$ and $x\in X_k$ is some map, where morphisms are increasing maps $[k]\to[k']$ for which the induced map $X_k\to X_{k'}$ sends $x$ to $x'$. Then $X$ is the colimit of the natural functor $F\colon\mc I\to\mathrm{sSet}$ given by $F(([k],x))=\Delta^k$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Note that (d) implies (c) with no effort, and (c) implies (b) with no effort as soon as we recall \Cref{ex:dim-of-simplex}. Similarly, (b) implies (a) is exactly \Cref{lem:dim-of-colimit}.
+
+	It remains to show that (a) implies (d), for which we will use \Cref{lem:get-nondegen-simplex}. Quickly, we remark that the natural functor $F\colon\mc I\to\mathrm{sSet}$ simply sends the pair $([k],x)$ to the element $x\in X_k$. Note that there is a natural map
+	\[f\colon\colim_{i\in\mc I}F(i)\to X\]
+	induced by the maps $F(([k],x))\to X$ defined by $x\colon\Delta^k\to X_k$. (Indeed, we have induced a map from the colimit because the maps $F(i)\to X$ automatically commute with the internal maps $F(i)\to F(j)$ for each $i\to j$ in $\mc I$ by the definition of the category $\mc I$.) We would like to show that $f$ is an isomorphism.
+
+	It is enough to show that $f$ is injective and surjective; then the inverse can be constructed on the level of the simplices by hand. Quickly, we show that $f$ is surjective. This uses the existence assertion in \Cref{lem:get-nondegen-simplex}, which shows that $\im f$ contains every non-degenerate $m$-simplex of $X$ for each $m\le d$. We would like to show that these simplices generate $X$ (via the degeneracy maps). Well, for any $x\in X_n$, either $x$ is non-degenerate or in the image of a degeneracy map. Continuing inductively, we conclude that $x$ equals $\sigma(x')$ where $x'\in X_m$ is non-degenerate, and $\sigma$ is some composite of degeneracy maps. Note then that $m\le d$ because $\dim X\le d$, so $x'\in\im f$. Thus, $x\in\im f$ as well because $f$ commutes with the degeneracy maps!
+
+	We will now show that $f$ is injective, which will complete the proof. We will use the uniqueness assertion in \cref{lem:get-nondegen-simplex}. Well, suppose that we have two elements $y$ and $y'$ in the colimit for which $f(y)=f(y')$; we would like to show that $y=y'$. We may assume that $y$ and $y'$ are both $\ell$-simplices for the same $\ell$ because they both must map to the same graded piece of $X$.
+
+	We now apply some reductions to simplify the presentation of $y$ and $y'$. Set $x\coloneqq f(y)=f(y')$ for brevity.
+	\begin{itemize}
+		\item Because colimits are computed pointwise, we see that $y$ arises as an $\ell$-simplex of some $F(([k],x))=\Delta^k$. This means that we have an increasing map $[\ell]\to[k]$, and $f(y)$ is induced by the map $\Delta^\ell\to\Delta^k\to X$. By factoring $[\ell]\to[k]$ into a surjection and an injection via \Cref{lem:classify-inc}, we may as well assume that the map $[\ell]\to[k]$ is a surjection (simply by changing the pair $([k],x)$). One similarly finds $y'$ in the image of some $F([k'],x')$, where the promised map $[\ell']\to[k']$ is surjective.
+		\item We reduce to the case where $x$ is non-degenerate. Note $x\colon\Delta^k\to X$ factors as
+		\[\Delta^k\onto\Delta^m\into X,\]
+		where $\Delta^k\onto\Delta^m$ is induced by a surjection, and $\Delta^m\to X$ goes to a non-degenerate $m$-simplex. We can now replace $k$ with $m$ so that $F(([k],x))$ also has $x$ non-degenerate. One can do something similar for $y'$ to assume that $x'$ is non-degenerate.
+	\end{itemize}
+	Now, the moral is that $f(y)=f(y')$ implies that the composites $\Delta^\ell\onto\Delta^k\into X$ and $\Delta^\ell\onto\Delta^{k'}\into X$ produces the same $\ell$-simplex, but this factorization is unique by \Cref{lem:get-nondegen-simplex}. This shows that $([k],x)=([k'],x')$, and in fact we see that $y=y'$ because $y$ and $y'$ amount to the data of the map $\Delta^\ell\to\Delta^k$.
+\end{proof}
+The category $\mc I$ may look like it admits a rather complicated definition, but it can be used effectively in practice. Indeed, it is essentially a combinatorial gadget which tells us how to glue simplices together.
+\begin{example} \label{ex:horn-as-colim}
+	We write $\Lambda^2_1$ as a colimit of $\Delta^0$s and $\Delta^1$s. By \Cref{ex:dim-of-horn}, the non-degenerate $m$-simplices are given by injective maps $[m]\to[n]$ avoiding an element away from $1$, so of course $m\in\{0,1\}$. In particular, our $0$-simplices are $0$, $1$, and $2$; our $1$-simplices are $0\le1$ and $1\le2$. Keeping track of the maps between these simplices, we see that $\Lambda^2_1$ is the colimit of the following diagram, where we are identifying an $m$-simplex of $\Lambda^2_1$ with $\Delta^m$.
+	% https://q.uiver.app/#q=WzAsNSxbMCwxLCIoMCkiXSxbMSwwLCIoMFxcbGUxKSJdLFsyLDEsIigxKSJdLFszLDAsIigxXFxsZTIpIl0sWzQsMSwiKDIpIl0sWzAsMSwiXFxzaWdtYV4wIiwwLHsib2Zmc2V0IjotMX1dLFsxLDAsIlxcZGVsdGFeMSIsMCx7Im9mZnNldCI6LTF9XSxbMSwyLCJcXGRlbHRhXjAiLDIseyJvZmZzZXQiOjF9XSxbMiwxLCJcXHNpZ21hXjEiLDIseyJvZmZzZXQiOjF9XSxbMiwzLCJcXHNpZ21hXjEiLDAseyJvZmZzZXQiOi0xfV0sWzMsMiwiXFxkZWx0YV4yIiwwLHsib2Zmc2V0IjotMX1dLFs0LDMsIlxcc2lnbWFeMiIsMix7Im9mZnNldCI6MX1dLFszLDQsIlxcZGVsdGFeMSIsMix7Im9mZnNldCI6MX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		& {(0\le1)} && {(1\le2)} \\
+		{(0)} && {(1)} && {(2)}
+		\arrow["{\delta^1}", shift left, from=1-2, to=2-1]
+		\arrow["{\delta^0}"', shift right, from=1-2, to=2-3]
+		\arrow["{\delta^2}", shift left, from=1-4, to=2-3]
+		\arrow["{\delta^1}"', shift right, from=1-4, to=2-5]
+		\arrow["{\sigma^0}", shift left, from=2-1, to=1-2]
+		\arrow["{\sigma^1}"', shift right, from=2-3, to=1-2]
+		\arrow["{\sigma^1}", shift left, from=2-3, to=1-4]
+		\arrow["{\sigma^2}"', shift right, from=2-5, to=1-4]
+	\end{tikzcd}\]
+	In this way, we see that a map $\Lambda^2_1\to X$ amounts to the data of three objects $e_0,e_1,e_2\in X$ and two morphisms $f_{01},f_{12}\in X$ such that $d_1f_{01}=e_0$, $d_0f_{01}=d_1f_{12}=e_1$, and $d_0f_{12}=e_2$. In fact, one can throw away the data of $e_0$ and $e_2$ because it is determined by $f_{01}$ and $f_{12}$ by the face maps.
+\end{example}
+
+% \begin{remark}
+% 	If $\mc I$ is a discrete category, then equality holds.
+% \end{remark}
+
+\subsection{More on Nerves}
+It is worthwhile to explain nerves a little more. In this section, we will characterize which simplicial sets appear as nerves of categories.
+\begin{exe} \label{exe:nerve-simplices}
 	Fix a category $\mc C$. We work our $N(\mc C)_i$ for $i\in\{0,1,2\}$.
 \end{exe}
 \begin{proof}
@@ -31,68 +214,88 @@ It is worthwhile to explain nerves a little more.
 		\end{tikzcd}\]
 		so that the nerve is required to know something about composition!
 	\end{itemize}
-	Let's work out $N$ on some morphisms. For example, the canonical map $\sigma_0\colon[n]\to[0]$ picks out the identity diagram, and the maps $\delta^i$ pick out some sub-diagrams.
+	We can also describe $N$ on some easy morphisms. For example, there is a unique map $[n]\to[0]$ for any $n\ge0$: it sends all objects of $[n]$ to $0$ and all morphisms to $\id_0$. For example, the corresponding map $N(\mc C)_0\to N(\mc C)_1$ needs to send the object $c\in\mc C$, which corresponds to the constant functor $[0]\to\mc C$, to the identity map $\id_c\colon c\to c$, which indeed is the image of the morphism in $[1]$ when passed through the composite $[1]\to[0]\stackrel c\to\mc C$.
+	% Let's work out $N$ on some morphisms. For example, the canonical map $\sigma_0\colon[n]\to[0]$ picks out the identity diagram, and the maps $\delta^i$ pick out some sub-diagrams.
 \end{proof}
-It turns out that $\mathrm{sSet}$ is a presheaf category.
-\begin{definition}[presheaf]
-	Fix a category $\mc C$. Then a \textit{presheaf} on $\mc C$ is a functor $\mc C\opp\to\mathrm{Set}$. Accordingly, the presheaf category $\op{PSh}(\mc C)$ is the functor category $\op{Fun}(\mc C\opp,\mathrm{Set})$.
-\end{definition}
-\begin{example}
-	We see that $\mathrm{sSet}=\op{PSh}(\Delta)$.
-\end{example}
-These categories are nice because they admit Yoneda embeddings.
-\begin{lemma}[Yoneda]
-	Fix a category $\mc C$. Then there is a functor $\yo\colon\mc C\to\mathrm{PSh}(\mc C)$ which is defined on objects by
-	\[\yo(c)\coloneqq\op{Mor}_{\mc C}(-,c).\]
-	Furthermore, $\yo$ is fully faithful.
+\begin{remark} \label{rem:nerve-elements}
+	More generally, an element of $N(\mc C)_m$ is a functor $F\colon[m]\to\mc C$. Because $[m]$ is a totally ordered set, this amounts to having objects $\{F(0),\ldots,F(m)\}$ and morphisms $F(i)\to F(i+1)$ for each $i\in[m-1]$; from here, we see that the morphism $i\to i+j$ equals the composite $i\to i+1\to\cdots\to i+j$ and thus goes to the composite
+	\[F(i)\to F(i+1)\to\cdots\to F(i+j)\]
+	by functoriality. The construction of these maps provides functoriality automatically. (We should send the identity maps to identity maps, of course.)
+\end{remark}
+\begin{remark} \label{rem:extract-nerve-data}
+	Given an element $F\in N(\mc C)_m$, it is possible to use naturality to extract out the objects $F(i)$ and morphisms $F(i)\to F(j)$ (where $i\le j$).
+	\begin{itemize}
+		\item There is a morphism $\varepsilon_i\colon[0]\to[m]$ defined by $0\mapsto i$, which then induces a map $N(\mc C)\varepsilon_i\colon N(\mc C)_m\to N(\mc C)_0$ by functoriality. This map sends $F$ to $(F\circ \varepsilon_i)\colon[0]\to\mc C$, which is the functor which picks out the object $F(i)$.
+		\item There is a morphism $\varepsilon_{ij}\colon[1]\to[m]$ defined by $0\mapsto i$ and $1\mapsto j$, which then induces a map $N(\mc C)\varepsilon_{ij}\colon N(\mc C)_m\to N(\mc C)_1$ by functoriality. This map sends $F$ to $(F\circ\varepsilon_{ij})\colon[1]\to\mc C$, which is the functor which picks out the morphism $F(i)\to F(j)$.
+	\end{itemize}
+\end{remark}
+We will get some utility out of the following lemmas. Roughly speaking, the point is that a map to a nerve is determined by what it does on the level of morphisms.
+\begin{lemma} \label{lem:nerve-uniq-from-deg-1}
+	Fix a category $\mc C$. Suppose that we have a simplicial set $X$ and two maps $\varphi,\psi\colon X\to N(\mc C)$. If $\varphi_0=\psi_0$ and $\varphi_1=\psi_1$, then $\varphi=\psi$.
 \end{lemma}
-\begin{remark}
-	Another way to state the last conclusion is that there is a canonical bijection between $\op{Mor}_{\mc C}(c_1,c_2)$ and natural transformations $\yo(c_1)\Rightarrow\yo(c_2)$.
-\end{remark}
-\begin{definition}[representable]
-	A presheaf $\mc F$ on a category $\mc C$ is \textit{representable} if and only if there is an object $c\in\mc C$ for which $\mc F$ is isomorphic to $\yo(c)$.
-\end{definition}
-We are now allowed to remove the absolute value bars from our $\Delta^n$.
-\begin{notation}
-	We define $\Delta^n$ as the simplicial set $\yo([n])$.
-\end{notation}
-\begin{example}
-	We see that $\left(\Delta^n\right)_m$ consists of the order-preserving maps $[m]\to[n]$. For example, $\left(\Delta^2\right)_0$ has three elements, and $\left(\Delta^2\right)_1$ has six elements. Here are three of the elements of $\left(\Delta^2\right)_1$.
-	% https://q.uiver.app/#q=WzAsMyxbMCwwLCIwIl0sWzEsMCwiMSJdLFsxLDEsIjIiXSxbMCwxXSxbMSwyXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}[cramped]
-		0 & 1 \\
-		& 2
-		\arrow[from=1-1, to=1-2]
-		\arrow[from=1-1, to=2-2]
-		\arrow[from=1-2, to=2-2]
-	\end{tikzcd}\]
-\end{example}
-Here is another important simplicial set.
-\begin{definition}[boundary]
-	For each $n\ge0$, we define the \textit{boundary} $\del\Delta^n\in\mathrm{sSet}$ to be the subfunctor of $\Delta^n$ with $\del\Delta^n(m)$ given by the non-surjective maps $[m]\to[n]$.
-\end{definition}
-\begin{definition}[horn]
-	For each $i\in[n]$, we define the \textit{$i$th horn} $\Lambda_i^n\in\mathrm{sSet}$ to be the subfunctor of $\Delta^n$ with $\Lambda^i_n$ given by the maps $[m]\to[n]$. We say that $\Lambda_i^n$ is an \textit{inner horn} if and only if $0<i<n$; otherwise, $\Lambda_i^n$ is an outer horn.
-\end{definition}
-\begin{remark}
-	There are canonical inclusions $\Lambda^i_n\subseteq\del\Delta^n\subseteq\Delta^n$ for each relevant $i$ and $n$.
-\end{remark}
-\begin{example}
-	Intuitively, $\Lambda^n_i$ deletes the face opposite $i$. For example, here is $\Lambda_0^2$.
-	% https://q.uiver.app/#q=WzAsMyxbMCwwLCIwIl0sWzEsMCwiMSJdLFsxLDEsIjIiXSxbMCwxXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
-	\[\begin{tikzcd}[cramped]
-		0 & 1 \\
-		& 2
-		\arrow[from=1-1, to=1-2]
-		\arrow[from=1-1, to=2-2]
-	\end{tikzcd}\]
-	One can similarly draw $\Lambda^2_1$ (which omits $0\to2$) and $\Lambda^2_2$ (which omits $0\to1$).
-\end{example}
+\begin{proof}
+	The main point is to use \Cref{rem:extract-nerve-data}. We need to show that $\varphi_m=\psi_m$ for all $m$. Note that there is nothing to do for $m\in\{0,1\}$, so we may assume that $m\ge2$. Thus, we begin by choosing some $x\in X_m$. We claim that the value of $\varphi_m(x)$ only depends on $\varphi_0(X\varepsilon_i(x))$s and $\varphi_1(X\varepsilon_{ij}(x))$s; an analogous claim holds for $\psi$ by symmetry, so the proof will be complete.
 
-\subsection{Lifting Horns}
+	Well, as in \Cref{rem:nerve-elements}, $\varphi_m(x)$ amounts to the data of some chain
+	\[c_0\to\cdots\to c_m\]
+	of morphisms in $\mc C$. As explained in \Cref{rem:extract-nerve-data}, we see that $c_i=N(\mc C)\varepsilon_i(\varphi_m(x))$ for each $i$, which is simply $\varphi_1(X\varepsilon_i(x))$ by naturality. Similarly, the map $c_i\to c_j$ for $i\le j$ is $N(\mc C)\varepsilon_{ij}(\varphi_m(x))$, which is simply $\varphi_1(X\varepsilon_{ij}(x))$ by naturality again!
+\end{proof}
+We even remark that we have the following existence result.
+\begin{lemma} \label{lem:extend-simplex-to-nerve}
+	Fix a category $\mc C$ along with $n+1$ objects $\{c_0,\ldots,c_n\}$ and morphisms $f_{i,i+1}\colon c_i\to c_{i+1}$ for each $i$. Suppose we have a simplicial subset $S\subseteq\Delta^n$ such that $S_1$ contains all maps $\varepsilon_i\colon[1]\to[n]$ of the form $x\mapsto(i+x)$ for each $0\le i<n$. Then there is a map $\varphi\colon S\to N(\mc C)$ for which $\varphi_0(x)=c_x$ for each $x$ and $\varphi_1(\varepsilon_i)=f_{i,i+1}$ for each $i$.
+\end{lemma}
+\begin{proof}
+	Let's begin with existence so that we know what we are expecting. For the existence argument, we may as well assume that $S=\Delta^n$ because the problem only becomes harder with a larger simplicial set. With \Cref{rem:nerve-elements} in mind, we define $f_{i,i+j}$ for any $j\ge0$ as being the composite $f_{i+j-1,i+j}\circ\cdots\circ f_{i,i+1}$. Then we send any increasing map $g\colon[m]\to[n]$ in $\Delta^n(m)$ to the functor $[m]\to\mc C$ defined by
+	\[c_{g(0)}\to c_{g(1)}\to\cdots\to c_{g(m)},\]
+	where the intermediate morphisms are $f_{g(i),g(i+1)}\colon c_{g(i)}\to c_{g(i+1)}$. To show that this is natural, we choose a map $h\colon[m]\to[m']$ and observe that the diagram
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXERlbHRhXm4obScpIl0sWzAsMSwiXFxEZWx0YV5uKG0pIl0sWzEsMCwiXFxvcHtGdW59KFttJ10sXFxtYyBDKSJdLFsxLDEsIlxcb3B7RnVufShbbV0sXFxtYyBDKSJdLFsyLDAsImciXSxbMiwxLCIoZ1xcY2lyYyBoKSJdLFszLDAsImNfe2coMCl9XFx0b1xcY2RvdHNcXHRvIGNfe2cobScpfSJdLFszLDEsImNfe2coaCgwKSl9XFx0b1xcY2RvdHNcXHRvIGNfe2coaChtKSl9Il0sWzAsMSwiKC1cXGNpcmMgaCkiLDJdLFswLDJdLFsxLDNdLFsyLDMsIigtXFxjaXJjIGgpIl0sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\Delta^n(m')} & {\op{Fun}([m'],\mc C)} & g & {c_{g(0)}\to\cdots\to c_{g(m')}} \\
+		{\Delta^n(m)} & {\op{Fun}([m],\mc C)} & {(g\circ h)} & {c_{g(h(0))}\to\cdots\to c_{g(h(m))}}
+		\arrow[from=1-1, to=1-2]
+		\arrow["{(-\circ h)}"', from=1-1, to=2-1]
+		\arrow["{(-\circ h)}", from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commutes.
+\end{proof}
+\begin{nex}
+	One does not expect any map $\Lambda_0^2\to N(\mc C)$ to always extend to $\Delta^2$. Indeed, $\Lambda_0^2$ only has the maps $0\to 1$ and $0\to 2$, but there is no obvious way to then produce a map $1\to 2$ in the nerve!
+\end{nex}
+\begin{lemma}
+	The functor $N\colon\mathrm{Cat}\to\mathrm{sSet}$ is fully faithful.
+\end{lemma}
+\begin{proof}
+	We will show this directly.
+	\begin{itemize}
+		\item Faithful: given two functors $F,G\colon\mc C\to\mc D$ such that $NF=NG$, we need to check that $F=G$. Well, for any object $c\in\mc C$, we see that $c\in N(\mc C)_0$, and by construction $(NF)_0(c)=Fc$ and $(NG)_0(c)=Gc$. (Explicitly, $(NF)_0$ is the composite functor $[0]\stackrel c\to\mc C\to\mc D$, which simply picks out the object $Fc$.) Similarly, for any morphism $f\colon c\to c'$, we note that $f\in N(\mc C)_1$, whereupon we find that the construction of the nerve has $NF(f)=Ff$ and $NG(f)=Gf$. (Again, one explicitly has that $(NF)_1$ is the composite functor $[1]\stackrel f\to\mc C\to\mc D$.)
+
+		\item Full: fix a map $\varphi\colon N\mc C\to N\mc D$ of simplicial sets, and we need to go back and define a functor $F\colon\mc C\to\mc D$. As in the previous point, we see that $\varphi_0\colon(N\mc C)_0\to(N\mc D)_0$ is a map of objects, so we define $Fc\coloneqq\varphi_0(c)$ for all $c\in\mc C$. Similarly, we see that $\varphi_1\colon(N\mc C)_1\to(N\mc D)_1$ is a map of morphisms, so we define $Ff\coloneqq\varphi_1(f)$ for all morphisms $f\colon c\to c'$.
+
+		It remains to check that these data assemble into a functor $F$ and that $NF=\varphi$. For example, as in \Cref{exe:nerve-simplices}, the identity map $\id_c\colon c\to c$ is the image of $c$ along the canonical map $N(\mc C)_0\to N(\mc C)_1$. Because $\varphi$ is a natural transformation, we see $\varphi_1({\id_c})$ must then be the image of $\varphi_0(c)$ along the canonical map $N(\mc D)_0\to N(\mc D)_1$, which of course is $\id_{\varphi_0(c)}$; we conclude $F{\id_c}=\id_{Fc}$.
+
+		Next, we need to check associativity. Choose maps $f_{01}\colon c_0\to c_1$ and $f_{12}\colon c_1\to c_2$, and we need to check $F(f_{12}\circ f_{01})=Ff_{12}\circ Ff_{01}$; set $f_{02}\colon c_0\to c_2$ for brevity. Well, consider the functor $G\colon[2]\to\mc C$ given by $c_0\to c_1\to c_2$ (as in \Cref{rem:nerve-elements}); this will go to some element $\varphi_2(G)\colon[2]\to\mc D$ which we would like to describe. This is a diagram of the form $\bullet\to\bullet\to\bullet$, and as described in \Cref{rem:extract-nerve-data}, we can extract out the $i$th object as $N(\mc D)\varepsilon_i(\varphi_2(G))$ and the morphism between the $i$th and $j$th object as $N(\mc D)\varepsilon_{ij}(\varphi_2(G))$. By naturality, we see that $N(\mc D)\varepsilon_i(\varphi_2(G))=\varphi_1(c_i)=Fc_i$ for each $i$. Similarly, we see and that $N(\mc D)\varepsilon_{ij}(\varphi_2(G))=\varphi(f_{ij})=Ff_{ij}$ for each $i\le j$. In total, $\varphi_2(G)$ is a diagram of the form
+		% https://q.uiver.app/#q=WzAsMyxbMCwwLCJGY18wIl0sWzEsMCwiRmNfMSJdLFsxLDEsIkZjXzIiXSxbMCwxLCJGZl97MDF9Il0sWzEsMiwiRmZfezEyfSJdLFswLDIsIkZmX3swMn0iLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{Fc_0} & {Fc_1} \\
+			& {Fc_2}
+			\arrow["{Ff_{01}}", from=1-1, to=1-2]
+			\arrow["{Ff_{02}}"', from=1-1, to=2-2]
+			\arrow["{Ff_{12}}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+		thereby completing the argument because the triangle must commute.
+
+		Lastly, we have to check that $NF=\varphi$. But these are equal in degrees $0$ and $1$ by construction, so we are done by \Cref{lem:nerve-uniq-from-deg-1}.
+		\qedhere
+	\end{itemize}
+\end{proof}
 These horns allow us to state a special property of nerves.
 \begin{proposition} \label{prop:nerve-has-inner-horn-filler}
-	Fix a category $\mc C$. Then any map $\Lambda_i^n\to N(\mc C)$ from an inner horn $\Lambda^n_i$ extends uniquely to a map $\Delta^n\to N(\mc C)$.
+	Fix a category $\mc C$. Then any map $\Lambda_i^n\to N(\mc C)$ from an inner horn $\Lambda^n_i$ extends uniquely to a map $\Delta^n\to N(\mc C)$, as in the following diagram.
 	% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXExhbWJkYV9pXm4iXSxbMSwwLCJOKFxcbWMgQykiXSxbMCwxLCJcXERlbHRhXm4iXSxbMCwyLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFswLDFdLFsyLDEsIiEiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}[cramped]
 		{\Lambda_i^n} & {N(\mc C)} \\
@@ -102,29 +305,89 @@ These horns allow us to state a special property of nerves.
 		\arrow["{!}"{description}, dashed, from=2-1, to=1-2]
 	\end{tikzcd}\]
 \end{proposition}
+\begin{proof}
+	If $n\ge3$, then any map $[1]\to[n]$ avoids at least $2$ elements, so $(\Lambda^n_i)_0=(\Delta^n)_0$ and $(\Lambda^n_i)_1=(\Delta^n)_1$. Thus, uniqueness follows from \Cref{lem:nerve-uniq-from-deg-1}, and existence follows from \Cref{lem:extend-simplex-to-nerve}. We note that the same argument even works for $n=2$ because we are only worried about the inner horn $\Lambda^2_1$, which still has the morphisms $0\to1$ and $1\to2$. Lastly, there are no inner horns for $n\in\{0,1\}$, so the statement is vacuous, and we are done.
+\end{proof}
+\begin{proposition}
+	Fix a simplicial set $N$. Suppose that every map $\Lambda_i^n\to N$ from an inner horn extends uniquely to a map $\Delta^n\to N$. Then there is a category $\mc C$ such that $N\cong N(\mc C)$.
+\end{proposition}
+\begin{proof}
+	We proceed in steps.
+	\begin{enumerate}
+		\item We define the objects and morphisms of the category $\mc C$. Indeed, simply take the objects to be $N_0$ and the collection of all morphisms to be $N_1$. More specifically, for any $x,y\in\mc C$, we use \Cref{rem:extract-nerve-data} to motivate the definition
+		\[\op{Mor}_{\mc C}(x,y)\coloneqq\{f\in N_1:N\varepsilon_0(f)=x\text{ and }N\varepsilon_1(f)=y\}.\]
+		For example, the canonical map $\sigma_0\colon[1]\to[0]$ induces a special morphism $s_0(x)$ for each $x\in N_0$ such that $N\varepsilon_0(s_0(x))=N\varepsilon_1(s_0(x))=x$. Accordingly, we define ${\id_x}\coloneqq s_0(x)$.
+
+		\item We define composition in the category of $\mc C$. Well, suppose we have two morphisms $f_{01}\colon c_0\to c_1$ and $f_{12}\colon c_1\to c_2$ which we would like to compose.
+
+		The point is that these data assemble into a map $\Lambda_1^2\to N$ which maps $i\mapsto c_i$ in degree $0$ and maps $(i\to j)$ to $f_{ij}$ (for $(i,j)\in\{(0,1),(1,2)\}$) in degree $1$; this in fact gives a map $\Lambda^1_2\to N$ by \Cref{ex:horn-as-colim}. Thus, the hypothesis on $N$ gives us a unique $f_{12}\odot f_{01}\in N$ such that $d_2(f_{12}\odot f_{01})=f_{01}$ and $d_0(f_{12}\odot f_{01})=f_{12}$, so we define
+		\[f_{12}\circ f_{01}\coloneqq d_1(f_{12}\odot f_{01}).\]
+		By construction, we see that $(f_{12}\circ f_{01})\colon c_0\to c_2$.
+
+		\item We check that composition is unital. Well, start with some map $f\colon c_0\to c_1$, and we need to show that $f\circ{\id_{c_0}}=f$ and ${\id_{c_1}}\circ f=f$. We will content ourselves with showing that $f\circ{\id_{c_0}}=f$ because the argument is symmetric for the other identity. For this, we claim that $s_0(f)=(f\odot{\id_{c_0}})$, which will complete the proof because then $d_1(s_0(f))=f$ by the simplicial identities, thereby implying that $f\circ{\id_{c_0}}=f$. Now, to check that $s_0(f)=(f\odot{\id_{c_0}})$, we use the uniqueness of our lifting: we must check that $d_2(s_0(f))=\id_{c_0}$ and $d_0(s_0(f))=f$, which both follow from the simplicial identities.
+
+		\item We check that composition is associative. This will be a little technical because it requires us to work with inner horns of $\Delta^3$. We are given three morphisms $f_{01}\colon c_0\to c_1$ and $f_{12}\colon c_1\to c_2$ and $f_{23}\colon c_2\to c_3$, and we want to check that $f_{23}\circ(f_{12}\circ f_{01})=(f_{23}\circ f_{12})\circ f_{01}$. We go ahead and set $f_{02}\coloneqq f_{12}\circ f_{01}$ and $f_{13}\coloneqq f_{23}\circ f_{12}$.
+
+		Next, we build some $2$-simplices. By hypothesis on $N$, it is enough to define a map from an inner horn $\Lambda^3_i$. As in \Cref{ex:horn-as-colim}, it is enough to provide three suitable elements of $N_2$. Well, for any $i<j<k$ in $\{0,1,2,3\}$, we define the $2$-simplex $f_{ijk}\coloneqq f_{jk}\odot f_{ij}$, which we note is always well-defined because $\{k-j,j-i\}\subseteq\{1,2\}$. %In particular, we see that $d_0(f_{ijk})=f_{jk}$ and $d_1(f_{ijk})=f_{jk}\circ f_{ij}$ and $d_2(f_{ijk})=f_{ij}$. We now see that we would like to show $d_1(f_{013})=d_1(f_{023})$.
+
+		We now build a $3$-simplex to do our bidding. We can build a map $\Lambda^3_1\to N$ via \Cref{prop:sset-as-union}. To start, we send $i\mapsto c_i$ for each $i$ and $i\le j$ to $f_{ij}$ for each $i$ and $j$. Lastly, on $2$-simplices, we will glue $f_{012}$, $f_{013}$, and $f_{123}$, which cohere in the colimit because we only have to check that the edges $0\le1$ and $1\le2$ and $1\le3$ and $2\le3$ agree in $\Lambda^3_1$. Thus, $\Lambda^3_1$ now extends to a unique $3$-simplex $e_1\in N_3$.
+
+		Now, on one hand, we note that $d_1(e_1)$ is a $2$-simplex with $d_2(d_1(e_1))=f_{23}$ and $d_0(d_1(e_1))=f_{02}$, so $d_1(e_1)=f_{23}\odot f_{02}$, so $d_1(d_1(e_1))=f_{23}\circ f_{02}$. In the same way, we calculate that $d_2(e_1)=f_{13}\odot f_{01}$, so $d_1(d_2(e_1))=f_{13}\circ f_{01}$.
+
+		% On the other hand, we note that $d_2(e_1)$ is a $2$-simplex with $d_2(d_2(e_1))=f_{01}$ and $d_0(d_2(e_1))=f_{13}$, so $d_2(e_1)=f_{13}\odot f_{01}$, so $d_1(d_2(e_1))=f_{13}\circ f_{01}$.
+
+		However, $(d_1\circ d_1)$ and $(d_1\circ d_2)$ are the same map $N_3\to N_1$, so the claim follows.
+		
+		\item We define a natural transformation $\eta\colon N\to N(\mc C)$. Thus, for each $n$, we must define a map $N_n\to N(\mc C)_n$, so each $x\in N_n$ must produce some functor $\eta_n(x)\colon[n]\Rightarrow\mc C$.
+		
+		Well, on objects, we should send $i\in[n]$ to $(x\circ\varepsilon_i)\in N_0$, and on morphisms, we should send $i\to j$ to the map $(x\varepsilon_{ij})\in N_1$; note that $(x\varepsilon_{ij})\colon(x\varepsilon_i)\to(x\varepsilon_j)$ by construction of $\mc C$. The construction of the identities in $\mc C$ shows that $(x\varepsilon_{ii})=s_i(x\varepsilon_i)=\id_{x\varepsilon_i}$. Lastly, given two maps $\varepsilon_{ij}\colon i\to j$ and $\varepsilon_{jk}\colon j\to k$, we need to check that $x\varepsilon_{jk}\circ x\varepsilon_{ij}=x\varepsilon_{ik}$. Well, there is a map $\varepsilon_{ijk}\colon\Delta^3\to\Delta^n$ given by $i\le j\le k$, which we notice has
+		\[d_2(x\varepsilon_{ijk})=x\varepsilon_{ij}\qquad\text{and}\qquad d_2(x\varepsilon_{ijk})=x\varepsilon_{jk}\]
+		by an explicit calculation, so we see that $x\varepsilon_{ijk}=x\varepsilon_{jk}\odot x\varepsilon_{ik}$ and thus
+		\[x\varepsilon_{jk}\circ x\varepsilon_{ij}=d_1(x\varepsilon_{ijk}),\]
+		which is $x\varepsilon_{ik}$, as required.
+
+		We now must check that the map $\eta_n\colon N_n\to N(\mc C)_n$ is natural. Well, for any increasing map $f\colon[m]\to[n]$ and $x\in N_n$, we need to check that $\eta_m(f(x))=f(\eta_n(x))$ in $N(\mc C)_m$. As explained in \Cref{rem:nerve-elements}, the data of a functor $[m]\to N(\mc C)_m$ amounts to the data in degrees $0$ and $1$, so we should check the equalities against $\varepsilon_i$s and $\varepsilon_{ij}$s. Unwinding all the abuse of notation, we see that $\eta_m(f(x))$ on the morphism $\varepsilon_{ij}$ is $Nf(x)\circ\varepsilon_{ij}$, which is $x\circ f\circ\varepsilon_{ij}$ or $x\varepsilon_{f(i),f(j)}$. On the other hand, $f(\eta_n(x))$ on $i\le j$ is $\eta_n(x)$ on $f(i)\le f(j)$ (by the functoriality described in \Cref{rem:nerve-elements}), which is $x\varepsilon_{f(i),f(j)}$ again.
+
+		\item We show that $\eta$ is an isomorphism of simplicial sets. Because we have already described a morphism of simplicial sets, we must merely check that $\eta_n$ is a bijection for each $n$. We will do this by induction, where the cases $n\in\{0,1\}$ have no content. For $n\ge2$, we may choose some $i$ with $0<i<n$, and then we see that the inclusion defines a natural map
+		\[(-)_n=\op{Mor}_{\mathrm{sSet}}(\Delta^n,-)\to\op{Mor}_{\mathrm{sSet}}\left(\Lambda^n_i,-\right),\]
+		which is an isomorphism for both $N$ and $N(\mc C)$ by the uniqueness of the lifting. Now, \Cref{prop:sset-as-union} (combined with \Cref{ex:dim-of-horn}) shows that $\Lambda^n_i$ is the colimit of some functor $F\colon\mc I\to\mathrm{sSet}$, where $F(i)=\Delta^{k_i}$ for some $k_i<n$ for each $i$. Thus, we see that there is a natural map
+		\[(-)_n\to\lim_{i\in\mc I}\op{Mor}_{\mathrm{sSet}}(\Delta^{k_i},-)=\lim_{i\in\mc I}(-)_{k_i},\]
+		which is still an isomorphism for both $N$ and $N(\mc C)$. Thus, the map $\eta\colon N\to N(\mc C)$ fits into a commuting diagram
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCJOX24iXSxbMCwxLCJOKFxcbWMgQylfbiJdLFsxLDAsIlxcZGlzcGxheXN0eWxlXFxsaW1fe2lcXGluXFxtYyBJfU5fe2tfaX0iXSxbMSwxLCJcXGRpc3BsYXlzdHlsZVxcbGltX3tpXFxpblxcbWMgSX1OKFxcbWMgQylfe2tfaX0iXSxbMCwxLCJcXGV0YV9uIiwyXSxbMiwzLCJcXGxpbVxcZXRhIl0sWzAsMl0sWzEsM11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{N_n} & {\displaystyle\lim_{i\in\mc I}N_{k_i}} \\
+			{N(\mc C)_n} & {\displaystyle\lim_{i\in\mc I}N(\mc C)_{k_i}}
+			\arrow[from=1-1, to=1-2]
+			\arrow["{\eta_n}"', from=1-1, to=2-1]
+			\arrow["{\lim\eta}", from=1-2, to=2-2]
+			\arrow[from=2-1, to=2-2]
+		\end{tikzcd}\]
+		where we know that the horizontal arrows are isomorphisms as described above. But the right arrow is an isomorphism by the inductive hypothesis, so the left arrow is as well, so we are done.
+		\qedhere
+	\end{enumerate}
+\end{proof}
 \begin{remark}
 	In fact, a simplicial set is the nerve of a category if and only if it satisfies the conclusion of \Cref{prop:nerve-has-inner-horn-filler}. Thus, we have a characterization of the image of the fully faithful nerve functor! Amusingly, this allows one to give an alternate definition of a category in terms of simplicial sets; this is not circular because one can define simplicial sets as combinatorial simplicial sets.
 \end{remark}
-\begin{example}
-	We show that any map $\Lambda_2^1\to N(\mc C)$ admits a unique extension to $\Delta^2$. Well, $\Lambda_2^1$ specifies two maps $f\colon c_0\to c_1$ and $g\colon c_1\to c_2$, which we complete to a map from $\Delta^2$ by defining the map $c_0\to c_2$ to be the composite.
-\end{example}
-\begin{example}
-	It turns out that extending maps $\Lambda_1^3\to N(\mc C)$ and $\Lambda_2^3\to N(\mc C)$ to $\Delta^3$ encodes associativity of composition.
-\end{example}
-\begin{nex}
-	One does not expect any map $\Lambda_0^2\to N(\mc C)$ to always extend to $\Delta^2$. Indeed, $\Lambda_0^2$ only has the maps $0\to 1$ and $0\to 2$, but there is no obvious way to then produce a map $1\to 2$ in the nerve!
-\end{nex}
+% \begin{example}
+% 	We show that any map $\Lambda_2^1\to N(\mc C)$ admits a unique extension to $\Delta^2$. Well, $\Lambda_2^1$ specifies two maps $f\colon c_0\to c_1$ and $g\colon c_1\to c_2$, which we complete to a map from $\Delta^2$ by defining the map $c_0\to c_2$ to be the composite.
+% \end{example}
+% \begin{example}
+% 	It turns out that extending maps $\Lambda_1^3\to N(\mc C)$ and $\Lambda_2^3\to N(\mc C)$ to $\Delta^3$ encodes associativity of composition.
+% \end{example}
 \begin{remark} \label{rem:groupoid-is-kan}
 	One can check that a category is a groupoid if and only if the outer horns also admit horn fillings. The point is that being a groupoid allows one to reverse all the arrows, so coherence of composition allows one to do the filling.
 \end{remark}
+
+\subsection{More on \texorpdfstring{$\op{Sing}$}{ Sing}}
 We now turn to $\op{Sing}$.
 \begin{proposition}
 	The functor $\op{Sing}\colon\mathrm{sSet}\to\mathrm{Top}$ admits a left adjoint $\left|\cdot\right|\colon\mathrm{Top}\to\mathrm{sSet}$. In fact, $\left|\Delta^n\right|$ is defined to be the topological $n$-simplex.
 \end{proposition}
 It is worthwhile to know how to construct adjoints.
-\begin{theorem}
-	Fix a category $\mc C$. Then $\op{PSh}(\mc C)$ has all limits and colimits.
-\end{theorem}
+% \begin{theorem}
+% 	Fix a category $\mc C$. Then $\op{PSh}(\mc C)$ has all limits and colimits.
+% \end{theorem}
 \begin{theorem}
 	Suppose that $\mc C$ and $\mc D$ are categories, where $\mc D$ admits colimits. For any functor $F\colon\mc C\to\mc D$, there is a unique functor $G\colon\mathrm{PSh}(\mc C)\to\mc D$ preserving colimits for which the composite
 	\[\mc C\stackrel{\yo}\to\mathrm{PSh}(\mc C)\stackrel G\to\mc D.\]
@@ -155,7 +418,7 @@ We are now able to characterize the image of $\op{Sing}$.
 \end{example}
 At long last, we may define $\infty$-categories, which is intended to simultaneously generalize nerves and Kan complexes.
 \begin{defihelper}[$\infty$-category, quasicategory] \nirindex{quasicategory} \nirindex{infinity category@$\infty$-category}
-	An \textit{$\infty$-category} \textit{quasicategory} is a simplicial set $X$ where every inner horn $\Lambda^n_i\to X$ admits a lift to $\Delta^n\to X$. We may call $X_0$ the \textit{objects}, call $X_1$ the \textit{morphisms}, and call $X_n$ the $n$-morphisms for $n\ge1$. More concretely, for any $E\in\mc C_2$, we may say that $d_1E$ exhibits a \textit{$2$-isomorphism} between $d_0E$ and $d_2E$.
+	An \textit{$\infty$-category} or \textit{quasicategory} is a simplicial set $X$ where every inner horn $\Lambda^n_i\to X$ admits a lift to $\Delta^n\to X$. We may call $X_0$ the \textit{objects}, call $X_1$ the \textit{morphisms}, and call $X_n$ the $n$-morphisms for $n\ge1$. More concretely, for any $E\in\mc C_2$, we may say that $d_1E$ exhibits a \textit{$2$-isomorphism} between $d_0E$ and $d_2E$.
 \end{defihelper}
 \begin{definition}[homotopic]
 	Two maps $f,g\colon X\to Y$ are \textit{homotopic} if and only if there is a map $h\colon X\times\Delta^1\to Y$ such that the composites with $d_0\colon X\times\Delta^0\to X\times\Delta^1$ and $d_1\colon X\times\Delta^0\to X\times\Delta^1$ are $g$ and $f$, respectively.

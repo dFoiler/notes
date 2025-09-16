@@ -141,7 +141,7 @@ Let's put all our adjectives together, finally explaining the relationship betwe
 		\item If $A$ is absorbing and balanced, we check that $p(\lambda v)=\left|\lambda\right|p(v)$ for $v\in V$ and $\lambda\in\FF$. Well, $\lambda v\in tA$ if and only if $v\in\frac t\lambda A$, which is equivalent to $v\in\frac t{\left|\lambda\right|}A$ because $A$ is balanced! It follows that
 		\[\{t\ge0:\lambda v\in tA\}=\left|\lambda\right|\left\{\frac t{\left|\lambda\right|}:v\in\frac t{\left|\lambda\right|}A\right\},\]
 		so the check follows.
-		\item If $A$ is convex, balanced, and absorbing, then we check that $p(v+w)\le p(v)+p(w)$ for $v,w\in V$. The geometric input is that $tA+sA\subseteq(t+s)A$ for any $t,s>0$; this follows by convexity because
+		\item If $A$ is convex and absorbing, then we check that $p(v+w)\le p(v)+p(w)$ for $v,w\in V$. The geometric input is that $tA+sA\subseteq(t+s)A$ for any $t,s>0$; this follows by convexity because
 		\[tA+sA=(t+s)\left(\frac t{t+s}A+\frac s{t+s}A\right)\]
 		is contained in $(t+s)A$ by convexity. Now, for the check, we note that having $p(v)<t$ and $p(w)<s$ implies that $v\in tA$ and $w\in sA$ by \Cref{rem:better-mink-seminorm}, so $v+w\in(t+s)A$, so $p(v+w)\le t+s$. Sending $t\to p(v)$ and $s\to p(w)$ completes the check.
 		\item We complete the proof of (b). The above checks show that $p$ is a seminorm, so it remains to check that $\{v:p(v)<1\}\subseteq A$. This follows from $A$ being balanced: if $p(v)<1$, then there is $t<1$ such that $v\in tA$, and $tA\subseteq A$ because $A$ is balanced.
@@ -172,6 +172,12 @@ Let's put all our adjectives together, finally explaining the relationship betwe
 	\end{itemize}
 \end{proof}
 Now that we have an understanding of locally convex spaces, we may define Fr\'echet spaces.
+\begin{definition}[complete]
+	Fix a topological vector space $V$. Then a \textit{Cauchy net} in $V$ is a net $\{v_i\}$ such that each neighborhood $U$ of $0$ has some $N$ for which $v_i-v_j\in U$ for all $i,j>N$. We say that $V$ is \textit{complete} if every Cauchy net converges.
+\end{definition}
+\begin{remark}
+	If $V$ is metrizable, then we may as well work with Cauchy sequences and being sequentially complete.
+\end{remark}
 \begin{definition}[Fr\'echet]
 	A topological vector space $X$ is \textit{Fr\'echet} if and only if it is locally convex, metr\-izable, and complete.
 \end{definition}
@@ -202,6 +208,60 @@ The bizarre addition here is metrizable. This condition fits in with the other o
 		\qedhere
 	\end{itemize}
 \end{proof}
+
+\section{Cauchy Sequences}
+Because we will have occasion to work with more general topological spaces than metric spaces, we go ahead and pick up some facts about Cauchy sequences and completeness.
+% \begin{definition}[uniformly continuous]
+% 	Fix a linear map $f\colon V\to V'$ of topological vector spaces. Then $f$ is \textit{uniformly continuous} if and only if every open neighborhood $U'\subseteq V'$ of $0$ admits an open neighborhood $U\subseteq V$ of $0$ such that $x-y\in U$ implies $f(x)-f(y)\in U'$.
+% \end{definition}
+\begin{lemma} \label{lem:uniform-cont-is-cauchy-cont}
+	Fix a continuous linear map $f\colon V\to V'$ of topological vector spaces. Then $f$ sends Cauchy nets to Cauchy nets.
+\end{lemma}
+\begin{proof}
+	Suppose that $\{a_i\}_{i\in I}$ is a Cauchy net of $V$, and we would like to show that $\{f(a_i)\}_{i\in I}$ is a Cauchy net of $V'$. Well, for any open neighborhood $U'\subseteq V'$ of $0$, we are granted an open neighborhood $U\subseteq V$ of $0$ for which $x\in U$ implies that $f(x)\in U$. In particular, there is $N\in I$ for which $i,j>N$ implies that $a_i-a_j\in U$ and thus $f(a_i)-f(a_j)\in U'$, as required.
+\end{proof}
+\begin{definition}[Cauchy sequence]
+	Fix a topological vector space $V$. Then a \textit{Cauchy sequence} is a Cauchy net where the index set is a $\NN$.
+\end{definition}
+\begin{proposition} \label{prop:extend-cont}
+	Fix a sequentially dense linear subspace $W\subseteq V$, and choose a sequentially continuous linear map $f\colon W\to V'$ of topological vector spaces.
+	\begin{listalph}
+		\item There is at most one sequentially continuous linear map $g\colon V\to V'$ such that $g|_W=f$.
+		\item If $V'$ is sequentially complete, then there is a sequentially continuous linear map $g\colon V\to V'$ such that $g|_W=f$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We start with (a). By linearity of restriction, it is enough to show that any continuous linear map $g\colon V\to V'$ for which $g|_W=0$ has $g=0$. Well, for any $v\in V$, the density of $W\subseteq V$ grants a Cauchy sequence $\{w_i\}$ in $W$ for which $\{w_i\}\to v$. Thus, the continuity of $g$ requires that $\{g(w_i)\}\to g(v)$, so $g(v)=0$.
+
+	It remains to show (b), which is trickier. We begin by defining $g$, and then we will run many checks on it. Because $W\subseteq V$ is sequentially complete, each $v\in V$ admits a Cauchy sequence $\{w_i\}$ of $W$ such that $\{w_i\}\to v$. Then \Cref{lem:uniform-cont-is-cauchy-cont} implies that $\{f(w_i)\}$ is still a Cauchy sequence in $V'$, so we define
+	\[g(v)\coloneqq\lim_{i\to\infty}f(w_i).\]
+	(The limit exists because $V'$ is sequentially complete!) It remains to run many checks on $g$.
+	\begin{itemize}
+		\item Well-defined: if $\{w_i\}$ and $\{w_i'\}$ are two Cauchy sequences approaching a given $v\in V$, then we need to check that $\lim f(w_i)=\lim f(w_i')$. Well, we see that $\{w_i-w_i'\}\to0$, so $\{f(w_i)-f(w_i')\}\to f(0)$ by continuity of $f$, so the claim follows.
+
+		\item Linear: given scalars $a^1$ and $a^2$ and $v^1,v^2\in V$, we should check that $g\left(a^1v^1+a^2v^2\right)=a^1$. Well, we simply pick up Cauchy sequences $\left\{w^1_i\right\}$ approaching $v^1$ and $\left\{w^2_i\right\}$ approaching $v^2$. Then $\left\{a^1w^1_i+a^2w^2_i\right\}$ approaches $a^1v^1+a^2v^2$, so we can pass everything through the definition of $g$.
+
+		\item Continuous: given a convergent sequence $\{v_i\}\to v$ in $V$, we would like to check that $\{g(v_i)\}\to g(v)$. By linearity of $g$, we may assume that $v=0$ (by subtracting out $v$ everywhere). Now, for any open neighborhood $U'\subseteq V'$ of $0$, we would like to show that $g(v_i)\in U'$ for large $i$. For technical reasons, we choose an open neighborhood $U'_0\subseteq U'$ of $0$ such that $U'_0+U'_0\subseteq U'$, which is possible by the continuity of addition. The point of doing this is that the closure of $U'_0$ is contained in $U'$: for any Cauchy net $\{u_i'\}$ in $U'_0$ converging to some $u'$, we see that $u'-u'_i\in U'_0$ for any $i$ large enough, so $u'\in U_0'+U'_0$.
+
+		Now, by continuity of $f$, we are granted an open neighborhood $U\subseteq V$ of $0$ such that $x\in U\cap W$ implies $f(x)\in U'_0$. For any $i$ large enough, we see that $v_i\in U_0$. Then for each $i$, we fix a Cauchy sequence $\{w_{ij}\}$ of $W$ approaching $v_i$; for any $j$ large enough, we see $w_{ij}\in U_0$ as well. Thus, $\{f(w_{ij})\}\to g(v_i)$ by definition of $g$, so $g(v_i)$ is in the closure of $U'_0$, so $g(v_i)\in U'$, as required.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	By replacing all sequences with nets in the proof, we can upgrade the statement to show that continuous linear maps extend uniquely from dense linear subspaces when the target is complete.
+\end{remark}
+% \begin{remark} \label{rem:seq-cont-to-cont}
+% 	If $V$ is first countable, then $g\colon V\to V'$ being sequentially continuous implies that $g$ is continuous. Indeed, given any net $\{x_i\}_{i\in I}\to x$, we note that there is a subsequence $\{x_j\}_{j\in\NN}$ of the net converging to $x$: for a descending countable base $\{U_j\}_{j\in\NN}$ of the neighborhoods of $x$, one just chooses $x_j\in U_j$. Then $\{g(x_j)\}\to g(x)$ by assumption on $g$. But note $\{g(x_i)\}_{i\in I}$ is a Cauchy net by \Cref{lem:uniform-cont-is-cauchy-cont}, so it converges to at most one point, which we see must be $g(x)$.
+% \end{remark}
+% \begin{lemma}
+% 	Fix a topological vector space $V$. Then the following are equivalent.
+% 	\begin{listalph}
+% 		\item $V$ is complete: every Cauchy net in $V$ admits a limit.
+% 		\item For any continuous linear map $\varphi\colon V\to W$, the image $\im\varphi$ is closed in $W$.
+% 	\end{listalph}
+% \end{lemma}
+% \begin{proof}
+% \end{proof}
 
 \section{The Open Mapping Theorem}
 In this section, we review the proof of the Open mapping theorem in order to extend the usual proof (for Banach spaces) to the setting of Fr\'echet spaces.
@@ -298,14 +358,20 @@ It remains to use the hypothesis that $X$ is complete, which is done in the foll
 	Let $g$ be the inverse map. Checking that $g$ is continuous is equivalent to checking that $f$ is open, which follows from \Cref{thm:omt}.
 \end{proof}
 
-\section{The Hahn--Banach Theorem}
+\section{The Hahn--Banach Theorems}
 In this section, we review the proof of the Hahn--Banach theorem. This section will be filled with plenty of nonsense. Ultimately, we are interested in extending continuous linear functionals on Fr\'echet spaces, but along the way, we will show that linear functionals separate convex sets.
+
+For one of our applications, we will require a weaker notion than a seminorm.
+\begin{definition}
+	Fix a vector space $V$ over $\FF$. A function $p\colon V\to\RR_{\ge0}$ is a half-seminorm if and only if it is sublinear and satisfies $p(tx)=tp(x)$ for $t>0$ and $x\in V$.
+\end{definition}
+The lack of input for $p(-x)$ prevents $p$ from being a seminorm.
 
 As with Banach spaces, we check if a linear functional is continuous by checking if it is bounded, but the definition of bounded needs to be adjusted.
 \begin{definition}[bounded]
 	Fix a topological vector space $V$ over $\FF$. A linear functional $\ell\colon V\to\FF$ is \textit{bounded} if and only if there is an open neighborhood $U$ of $0$ and a constant $c>0$ such that $\left|\ell(x)\right|\le c$ for all $x\in U$.
 \end{definition}
-\begin{lemma}
+\begin{lemma} \label{lem:linear-func-cont-grab-bag}
 	Fix a topological vector space $V$ over $\FF$ and a linear functional $\ell$ on $V$. Then the following are equivalent.
 	\begin{listroman}
 		\item $\ell$ is continuous.
@@ -316,28 +382,28 @@ As with Banach spaces, we check if a linear functional is continuous by checking
 \begin{proof}
 	We use \Cref{lem:seminorm-continuity-grab-bag}. The implication from (i) to (ii) is direct; the proof that (iii) implies (i) is identical to the proof in \Cref{lem:seminorm-continuity-grab-bag}. To show (ii) implies (iii), we note $\left|\ell\right|$ is a seminorm, and by considering nets, we see that it is enough to check that $\left|\ell\right|$ is continuous at $0$, which follows from \Cref{lem:seminorm-continuity-grab-bag}(ii) and the fact that $\ell$ is bounded.
 \end{proof}
-\begin{corollary}
-	Fix a topological vector space $V$ over $\FF$, and let $p\colon V\to\RR$ be a continuous seminorm. Given a linear functional $\ell\colon V\to\FF$, if $\ell\le p$ pointwise, then $\ell$ is continuous.
+\begin{corollary} \label{cor:functional-check-continuity}
+	Fix a topological vector space $V$ over $\FF$, and let $p\colon V\to\RR_{\ge0}$ be a continuous half-seminorm. Given a linear functional $\ell\colon V\to\FF$, if $-p(-v)\le\ell(v)\le p(v)$ for all $v$, then $\ell$ is continuous.
 \end{corollary}
 \begin{proof}
-	Because $\ell\le p$, we see that 
+	Because $-p(-v)\le\ell(v)\le p(v)$ for all $v$, we see that the open subset $U\coloneqq\{v\in V:p(v)<1\}$ bounds $\ell$ (with the constant $1$), so we are done by \Cref{lem:linear-func-cont-grab-bag}.
 \end{proof}
 Thus, it will be important to be able to extend linear functionals along with an upper bound against a seminorm. By considerations with Zorn's lemma, we will find that the hard part is extending the linear functional one step, which is the content of the next lemma.
 \begin{lemma} \label{lem:hahn-banach-one-step}
-	Fix a vector space $V$ over $\RR$, a seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $\ell\le p$ pointwise. Given any $v'\in V$, there is an extension $\ell'$ to a linear functional on a subspace $W'$ containing $v'$ such that $\ell'\le p$ pointwise.
+	Fix a vector space $V$ over $\RR$, a half-seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $-p(-w)\le\ell(w)\le p(w)$ for all $w\in W$. Given any $v'\in V$, there is an extension $\ell'$ to a linear functional on a subspace $W'$ containing $v'$ such that $-p(-v)\le\ell'(v)\le p(v)$ for all $v$.
 \end{lemma}
 \begin{proof}
 	If $v'\in W$ already, then there is nothing to do. Otherwise, for any real number $c$, we see that we may extend $\ell$ to a linear functional $\ell'$ on $W'\coloneqq W+\RR v'$ by setting $\ell'(v')\coloneqq c$. Namely, we have
 	\[\ell'(w+tv')=\ell(w)+tc\]
 	for any $w\in W$ and $t\in\RR$.
 	
-	We would like to show that we can choose $c$ so that $\ell'\le p$ pointwise. This requires a little trickery. By scaling, it is enough to only check with $t\in\{\pm1\}$ (because $t=0$ follows by hypothesis). Thus, we need both $\ell(w)+c\le p(w+v')$ and $\ell(w)-c\le p(w-v')$ for all $w\in W$. Now, such a $c$ exists if and only if
+	We would like to show that we can choose $c$ so that $-p(-v)\le\ell'(v)\le p(v)$ for all $v$ of the form $w+tv'$. This requires a little trickery. By scaling, it is enough to only check with $t\in\{\pm1\}$ (because $t=0$ follows by hypothesis). Thus, we need both $\ell(w)+c\le p(w+v')$ and $\ell(w)-c\le p(w-v')$ for all $w\in W$. Now, such a $c$ exists if and only if
 	\[\sup_{w\in W}(\ell(w)-p(w-v'))\stackrel?\le\inf_{w\in W}(p(w+v')-\ell(w)).\]
-	For this, we should check that $\ell(w)-p(w-v')\le p(w'+v')-\ell(w')$ for any $w,w'\in W$, which is equivalent to $\ell(w+w')\le p(w-v')+p(w'+v')$. This last inequality follows because $\ell\le p$ and the subadditivity of $p$.
+	For this, we should check that $\ell(w)-p(w-v')\le p(w'+v')-\ell(w')$ for any $w,w'\in W$, which is equivalent to $\ell(w+w')\le p(w-v')+p(w'+v')$. This last inequality follows because $\ell(w)\le p(w)$ and the subadditivity of $p$.
 \end{proof}
-\begin{theorem}[Hahn--Banach]
-	Fix a vector space $V$ over $\RR$, a seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $\ell\le p$ pointwise. Then $\ell$ extends to a linear functional $\ell'$ on $V$ such that $\ell'\le p$.
-\end{theorem}
+\begin{proposition} \label{prop:hahn-banach-real}
+	Fix a vector space $V$ over $\RR$, a half-seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $-p(-v)\le\ell(v)\le p(v)$ for all $v\in W$. Then $\ell$ extends to a linear functional $\ell'$ on $V$ such that $-p(-v)\le \ell'(v)\le p(v)$ for all $v\in V$.
+\end{proposition}
 \begin{proof}
 	After \Cref{lem:hahn-banach-one-step}, the rest of this proof is largely formal nonsense. We use Zorn's lemma on the partially ordered set $\mathcal P$ of pairs $(V',\ell')$, where $V'$ is an intermediate subspace, and $\ell'$ is a functional on $V'$ bounded above by $p$; the ordering is given by $(V',\ell')\le(V'',\ell'')$ if and only if $V'\subseteq V''$ and $\ell''|_{V'}=\ell'$. Our application of Zorn's lemma is in two steps.
 	\begin{itemize}
@@ -345,6 +411,146 @@ Thus, it will be important to be able to extend linear functionals along with an
 		\item Let $(V',\ell')$ be a maximal element of $\mathcal P$. We claim that $V'=V$, which will complete the proof. We already have $V'\subseteq V$, so it remains to show the other inclusion. Well, for any $v\in V$, we see that $(V',\ell')$ can be extended up to $V'+\RR v$ by \Cref{lem:hahn-banach-one-step}, so the maximality of $(V',\ell')$ requires $V'+\RR v=V'$. Thus, $v\in V'$, so $V\subseteq V'$ follows.
 		\qedhere
 	\end{itemize}
+\end{proof}
+In order to work with the base field $\CC$, we use a trick.
+\begin{notation}
+	Fix a vector space $V$ over $\CC$. Given a real linear functional $\ell\colon V\to\RR$, we define $C\ell\colon V\to\CC$ by
+	\[C\ell(x)\coloneqq\ell(x)-i\ell(ix).\]
+	On the other hand, for any complex linear functional $\ell$ on $V$, we define its real part as $\op{Re}\ell\coloneqq\frac12(\ell+\overline\ell)$.
+\end{notation}
+Here are a few basic facts about this construction.
+\begin{lemma} \label{lem:use-complexification}
+	Fix a vector space $V$ over $\CC$.
+	\begin{listalph}
+		\item If $\ell$ is a real linear functional on $V$, then $C\ell\colon V\to\CC$ is a complex linear functional. Furthermore, $\Re C\ell=\ell$.
+		\item If $\ell$ is a complex linear functional on $V$, then $C\Re\ell=\ell$.
+	\end{listalph}
+\end{lemma}
+\begin{proof}
+	We show these separately.
+	\begin{listalph}
+		\item First, we check that $C\ell\colon V\to\CC$ is a (complex) linear functional. Indeed, $C\ell$ is already real linear (it is a sum of real linear functionals), so it is enough to check that $C\ell(ix)=iC\ell(x)$ for any $x\in V$, which is true because quantities equal $\ell(ix)+\ell(x)$.
+
+		Secondly, for any $x\in V$, we see $\Re C\ell(x)=\Re(C\ell(x))=\ell(x)$.
+		
+		\item This is a direct calculation. For any $x\in V$, we see $C\Re\ell(x)=\Re\ell(x)-i\Re\ell(ix)$, which further expands to
+		\[\frac{\ell(x)+\overline{\ell(x)}-i\ell(ix)-i\overline{\ell(ix)}}2,\]
+		which is $\ell(x)$ after the dust settles.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{theorem}[Hahn--Banach existence] \label{thm:hahn-banach-exist}
+	Fix a vector space $V$ over $\FF$, a half-seminorm $p$ on $V$, and a linear functional $\ell$ on a subspace $W\subseteq V$ such that $\ell\le p$. Then $\ell$ extends to a linear functional $\ell'$ on $V$ such that $\left|\ell'\right|\le p$.
+\end{theorem}
+\begin{proof}
+	The case of $\FF=\RR$ follows from \Cref{prop:hahn-banach-real}, so we may take $\FF=\CC$. For this, we freely use \Cref{lem:use-complexification}. Even in this case, \Cref{prop:hahn-banach-real} provides some real functional $\ell'$ on $V$ extending $\Re\ell$ such that $\left|\ell'\right|\le p$. Then $C\ell'$ extends $C\Re\ell=\ell$, so it remains to check that $\left|C\ell'\right|\le p$. Well, for any $x\in V$, there is a unit complex number $\mu$ such that $C\ell'(\mu x)=\left|C\ell'(x)\right|$. But this means $C\ell'(\mu x)$ equals $\Re C\ell'(\mu x)$, which is just $\ell'(\mu x)$, which we now know to be upper-bounded by $p(\mu x)$ by construction. However, $p(\mu x)=p(x)$ because $p$ is a half-seminorm!
+\end{proof}
+We are now ready to give some applications. Let's start with showing that linear functionals separate convex sets.
+\begin{theorem}[Hahn--Banach separation] \label{thm:hahn-banach-separate}
+	Fix a locally convex topological vector space $V$ over $\FF$. Given disjoint convex subsets $X$ and $Y$ of $V$ where $X\subseteq V$ is open, there is a continuous linear functional $\ell$ on $V$ and a constant $c$ so that
+	\[\Re\ell(x)<c\le\Re\ell(y)\]
+	for all $x\in X$ and $y\in Y$.
+\end{theorem}
+\begin{proof}
+	We proceed in steps.
+	\begin{enumerate}
+		\item We quickly reduce to the case of $V=\RR$: given the statement over $\RR$, whatever real functional $\ell$ the statement would produce even with $\FF=\CC$ can be upgraded to a complex linear functional by working with $C\ell$, which then still satisfies the required inequality because $\Re C\ell=\ell$ by \Cref{lem:use-complexification}.
+
+		\item Thus, we may assume that $\FF=\RR$. As another quick reduction, we remark that it is enough to find a continuous linear functional which merely achieves
+		\[\ell(x)\stackrel?<\ell(y)\]
+		for all $x\in X$ and $y\in Y$. Then we note that $\ell$ is surjective, so \Cref{thm:omt} shows that $\ell(X)$ is open! Thus, $\ell(x)$ has a supremum $c$ which it does not achieve, and this constant $c$ suffices for the statement.
+
+		\item It remains to construct such a continuous linear functional $\ell$; equivalently, we want to have $\ell(x-y)<0$ for all $x\in X$ and $y\in Y$. We will construct $\ell$ via \Cref{prop:hahn-banach-real}. By translation, we may assume that $0\in X$, which means that we want $Y$ to take on large values. To this end, we define our starting functional on $\RR y_0$ for some (nonzero!) basepoint $y_0\in Y$ to send $y_0\mapsto1$.
+
+		\item To apply \Cref{prop:hahn-banach-real}, we must still build a half-seminorm, which we do with \Cref{prop:convex-to-seminorm}. Because we want to upper-bound $\ell(X-Y)$, it would make sense to $X-Y$ as our convex set, but we need to have an open neighborhood of $0$. Instead, we take
+		\[U\coloneqq X-(-y_0+Y).\]
+		This is a sum of convex sets and hence convex; similarly, this is a union of open sets and hence an open neighborhood of $0$. Thus, \Cref{prop:convex-to-seminorm} provides us with a half-seminorm $p$ on $V$ such that $p\colon V\to\RR$ has $U=\{v\in V:p(v)<1\}$, and we remark that $p$ is continuous by \Cref{lem:seminorm-continuity-grab-bag}. (Technically, we do not know if $U$ is balanced, but convexity of $U$ along with $0\in U$ shows that $tU\subseteq U$ for all $t\in[0,1)$, which is good enough to show that $p$ is a half-seminorm.)
+
+		\item We are now ready to apply \Cref{prop:hahn-banach-real}. Quickly, we check that $-p(-y_0)\le1\le p(y_0)$, which holds because $y_0\notin U$ (because this would imply $X\cap Y\ne\emp$). Thus, \cref{prop:hahn-banach-real} provides us with a linear functional $\ell$ on $V$ such that $\ell(x_0-y_0)=1$ and $-p(-v)\le\ell(v)\le p(v)$. In particular, $\ell$ is continuous by \Cref{lem:linear-func-cont-grab-bag}.
+
+		\item We complete the proof. It remains to check that $\ell(x)<\ell(y)$ for all $x\in X$ and $y\in Y$. Well, for any $x\in X$ and $y\in Y$, we see that $x-(-y_0+y)\in U$, so $p(y_0+x-y)<1$, but $\ell(y_0)=1$, so $\ell(y_0+x-y)<\ell(y_0)$, so
+		\[\ell(x)<\ell(y),\]
+		as required.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+Here are some applications. If one has a compact convex set, then one can improve the separation result.
+\begin{corollary} \label{cor:separate-compact}
+	Fix a locally convex topological vector space $V$ over $\FF$. Given disjoint convex subsets $K$ and $A$ where $K\subseteq V$ is compact and $A\subseteq V$ is closed, there is a continuous linear functional $\ell$ on $V$ and constants $c$ and $d$ so that
+	\[\Re\ell(k)\le c<d\le\Re\ell(a)\]
+	for $k\in K$ and $a\in A$.
+\end{corollary}
+\begin{proof}
+	We apply \Cref{thm:hahn-banach-separate}. For this, we need to produce an open convex set. Well, because $K$ is compact, the main claim that there is an open neighborhood $U$ of $0$ such that $(K+U)\cap A=\emp$. Let's explain how this completes the proof. To start, note that we may shrink $U$ to be convex so that $K+U$ is open and convex. Then \Cref{thm:hahn-banach-separate} provides us with a continuous linear functional $\ell$ and constant $d$ for which
+	\[\Re\ell(k+u)<d\le\Re\ell(a)\]
+	for all $k+u\in K+U$ and $a\in A$. However, $K$ is compact, so the continuous function $k\mapsto\Re\ell(k)$ must achieve its supremum, which we take to be $c$, and we are done after noting that we must have $c<d$.
+
+	It remains to show the main claim, which is purely topological in nature. Suppose that every open neighborhood $U$ of $0$ has $(K+U)\cap A\ne\emp$; we will show that $K\cap A\ne\emp$. Consider the collection $\{K\cap (A-U)\}$ of nonempty open subsets of $K$, which we note is closed under intersections, so we can extend it to a filter and then an ultrafilter $\mc F$. The compactness of $K$ then shows that $\mc F\to k$ for some $k\in K$; by translation, we may assume $k=0$. Unwinding, this means that $\mc F$ contains every open neighborhood $U$ of $k$, so $K\cap(A-U)$ has nontrivial intersection with $U$, so $A$ has nontrivial intersection with $U+U$, so we see $0\in\overline A$ (by shrinking $U$). But because $A$ is closed, we conclude $0\in A\cap K$!
+	% In other words, each $U$ provides us with points $k_U\in K$ and $u_U\in U$ such that $k_U+u_U\in A$. Because $K$ is compact, the net(!) $\{k_U\}$ admits a limit point $k\in K$; passing to a subnet, we may assume that we have convergence to $k$. But $\{u_U\}\to0$ by definition, so we conclude that the net $\{k_U+u_U\}$ of elements in $A$ still converge to $k$, so $k\in A$!
+\end{proof}
+In the special case where $K$ is a point, we are able to say something about the existence of continuous functionals.
+\begin{corollary} \label{cor:subspace-closure-by-func}
+	Fix a locally convex topological vector space $V$ over $\FF$. Given a vector $v\in V$ and subspace $W\subseteq V$, there is a continuous linear functional $\ell$ on $V$ with $\ell|_W=0$ and $\ell(v)=1$ if and only if $v\notin\overline W$.
+\end{corollary}
+\begin{proof}
+	Of course, if such an $\ell$ exists, then $\overline W\subseteq\ker\ell$, so $v\notin\overline W$.
+
+	In the other direction, we use \Cref{cor:separate-compact} with $K=\{v\}$ and $A=\overline W$ to get a linear functional $\ell$ such that $\Re\ell(v)<\Re\ell(w)$ for all $w\in\overline W$. However, $\Re\ell$ is a (real) linear functional, so it must vanish on $W$ if it is not surjective, so $\Re\ell|_W=0$, so $\ell|_W=0$ by \Cref{lem:use-complexification}. Thus, we see $\Re\ell(v)<0$, so we can complete the proof by dividing $\ell$ by $\ell(v)$.
+\end{proof}
+At long last, we are ready to extend some functionals.
+\begin{corollary}
+	Fix a locally convex topological vector space $V$ over $\FF$. Any continuous linear functional $\ell$ on a subspace $W\subseteq V$ extends to a continuous linear functional on $V$.
+\end{corollary}
+\begin{proof}
+	If $\ell=0$, then there is nothing to do. Otherwise, we use \Cref{cor:subspace-closure-by-func}. Choose a vector $w_0\in W$ such that $\ell(w_0)=1$. Thus, we see that $w_0\notin\overline{\ker\ell}$, so \Cref{cor:subspace-closure-by-func} gives us a continuous linear functional $\ell'$ on the full space $V$ for which $\ell'|_{\ker\ell}=0$ and $\ell'(w_0)=\ell(w_0)=1$. Because $W=\RR w_0+\ker\ell$, we conclude that $\ell'$ does in fact extend $\ell$, so we are done.
+\end{proof}
+\begin{remark}
+	It may appear that we can use \Cref{lem:linear-func-cont-grab-bag} to immediately extend continuity from $W$ up to $V$. However, there is something tricky going on: a priori, $\ell$ on $W$ is only bounded by a continuous seminorm from $W$, and it is not obvious that such a seminorm should also extend to a suitable continuous seminorm on $V$!
+\end{remark}
+
+\section{Examples of Fr\'echet Spaces}
+To gain some experience with our new definition, we provide some examples of Fr\'echet spaces.
+\begin{definition}[Banach]
+	A topological vector space $V$ is \textit{Banach} if and only if its topology is given by a norm, and $V$ is complete.
+\end{definition}
+\begin{example}
+	Any Banach space is Fr\'echet. For example, one can take the countable family of seminorms to just be the single (actual) norm and conclude by \Cref{cor:locally-convex-by-seminorm}.
+\end{example}
+Of course, we are going to be interested in examples of Fr\'echet spaces which are not necessarily Banach spaces.
+\begin{example} \label{ex:c-x-frechet}
+	Fix a Hausdorff topological space $X$.
+	\begin{listalph}
+		\item Then the space $C(X)$ of continuous functions $X\to\CC$ has a topology where $\{f_i\}\to f$ if and only if $f_i\to f$ uniformly on compact sets. Furthermore, $C(X)$ is locally convex.
+		\item If $X$ is compact, then $C(X)$ is a Banach space.
+		\item If $X$ is locally compact and second countable, then $C(X)$ is Fr\'echet.
+	\end{listalph}
+\end{example}
+\begin{proof}
+	Let's begin by explaining how to give $C(X)$ a topology so that it is always locally convex. Consider the collection $\mc K$ of compact subsets of $X$, which we give a partial ordering by inclusion. For each compact set $K$, we define a seminorm $\nu_K\colon C(X)\to\RR$ by
+	\[\nu_K(f)\coloneqq\max_{x\in K}\left|f(x)\right|.\]
+	To see that $\nu_K$ is a seminorm, we note that $\nu_K$ is surely homogeneous, and $\nu_K$ is subadditive because $\left|f(x)+g(x)\right|\le\left|f(x)+g(x)\right|$.
+	
+	We may thus give $C(X)$ the topology given by these seminorms. Quickly, note that $C(X)$ is Hausdorff because $f\ne g$ has some $x\in X$ for which $f(x)\ne g(x)$, and then we have $\nu_{\{x\}}(f-g)>0$. Thus, we see that this topology is locally convex for free! Lastly, observe that $\{f_i\}\to f$ if and only if $\{\nu_K(f_i-f)\}\to0$ for all compact subsets $K\subseteq X$; by translation, we may assume that $f=0$. But of course, having $\{\nu_K(f_i-f)\}\to0$ is equivalent to having uniform convergence on compact sets.
+
+	Next up, let's suppose that $X$ is compact, and we will show that $C(X)$ i Banach. Well, we claim that the topology is actually induced by the single seminorm $\nu_X$, which is actually a norm. To see that the topology is induced by $\nu_X$, note that $\nu_K\le\nu_X$ for all $K$, so having $\{\nu_K(f_i-f)\}\to0$ for all $K\subseteq X$ is equivalent to having $\{\nu_X(f_i-f)\}\to0$. To see that $\nu_X$ is a norm, it remains to check positivity, for which we note that any nonzero continuous function $f$ is nonzero at some $x\in X$, so $\nu_X(f)\ge\left|f(x)\right|$ is positive.
+
+	Lastly, we assume that $X$ is locally compact and second countable. This means that $X$ will admit a countable cover by pre-compact open subsets, so taking the closure shows that $X$ receives a countable cover $\{K_j\}_{j\in\NN}$ by compact sets. By replacing each $K_j$ with $\bigcup_{j'\le j}K_{j'}$, we may assume that
+	\[K_0\subseteq K_1\subseteq\cdots.\]
+	Accordingly, we claim that the topology is generated by the seminorms $\{\nu_{K_j}\}_{j\in\NN}$. Well, for any compact set $K$, we see $\{\nu_K(f_i-f)\}\to0$ is implied by having this convergence for any larger compact set, so it will be implied by $\{\nu_{K_n}(f_i-f)\}\to0$ for some $n$ sufficiently large.
+\end{proof}
+\begin{remark}
+	Suppose $X$ is compact. Then it turns out that $C(X)$ is separable if and only if $X$ is a metric space. Let's sketch the backwards direction: being metrizable implies that $X$ is second countable, so there is a countable dense subset $\{x_i\}_{i\in\NN}$ of $X$. Consider the algebra $\mc A$ over $\CC$ of functions generated by $1$ and $x\mapsto d(x_i,x)$. Note $x\mapsto d(x_i,x)$ is continuous, so $\mc A\subseteq C(X)$; additionally, $\mc A$ separates points by construction. It follows that $\mc A$ is dense in $C(X)$; considering corresponding algebra over $\QQ$ provides us with a countable dense subset of $C(X)$.
+\end{remark}
+Here is an example of the sort of check we can do.
+\begin{example} \label{ex:pushforward-cont}
+	Let $f\colon X\to Y$ be a continuous map. Then the map $(-\circ f)\colon C(Y)\to C(X)$ is well-defined and continuous.
+	% If every compact subset $K\subseteq Y$ has a compact subset $K\subseteq Y$ for which $f(K)=L$, then $(-\circ f)$ is continuous.
+	We may write this operation as $f^*\colon C(Y)\to C(X)$.
+\end{example}
+\begin{proof}
+	The map is well-defined because the composite of continuous maps is continuous. It remains to show continuity. Well, suppose that we have a converging net $\{\ell_i\}\to\ell$ in $C(Y)$. We would like to show that $\{\ell_i\circ f\}\to(\ell\circ f)$ in $C(X)$. Convergence is equivalent to converging uniformly on compacts, so we choose a compact set $K\subseteq X$, and we would like to check that
+	\[\norm{(\ell_i\circ f-\ell\circ f)|_K}_\infty\stackrel?\to0.\]
+	Well, this norm is bounded by $\norm{(\ell_i-\ell)|_{f(K)}}_\infty$, which goes to $0$ because $f(K)$ is compact and $\{\ell_i\}\to\ell$ uniformly on compact sets.
 \end{proof}
 
 \end{document}
