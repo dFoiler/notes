@@ -55,7 +55,7 @@ Here are some adjectives that a functor can have.
 	for any $c,c'\in\mc C$. We say that $F$ is \textit{full} if and only if these maps are always surjective, and we say that $F$ is \textit{faithful} if and only if these maps are always injective.
 \end{defihelper}
 
-\subsection{Natural Transformations}
+\section{Natural Transformations}
 We are shortly going to get a lot of mileage out of the next example, so we spend some time to prove it in detail. We would like to define a category of functors between two given categories,\footnote{For those who are choosing to think about size issues, we remark that we will typically have one of $\mc C$ or $\mc D$ be locally small.} but this requires us to have a notion of morphism between functors.
 \begin{definition}[natural transformation]
 	Given two functors $F,G\colon\mc C\to\mc D$, a \textit{natural transformation} $\eta\colon F\Rightarrow G$ is the data of a morphism $\eta_A\colon FA\to GA$ for each object $A\in\mc C$. We further require that $Gf\circ\eta_A=\eta_{B}\circ Ff$ for any morphism $f\colon A\to B$. A \textit{natural isomorphism} is a natural transformation $\eta$ in which each morphism $\eta_A$ is an isomorphism.
@@ -225,7 +225,7 @@ The above lemma allows us to give some notation for our limits: we may write the
 \begin{remark}
 	\Cref{lem:limit-uniq} also holds for colimits, which we can see by passing to opposite categories.
 \end{remark}
-\begin{example}
+\begin{example} \label{ex:set-limits}
 	The category $\mathrm{Set}$ admits all limits and colimits of functors $F\colon\mc I\to\mc C$, where the category $\mc I$ has at most $\kappa$ many objects and morphisms for some cardinal $\kappa$.
 \end{example}
 \begin{proof}
@@ -329,12 +329,43 @@ The above lemma allows us to give some notation for our limits: we may write the
 \begin{remark}
 	There is an analogous statement if $\mc D$ admits all limits, whose proof is the same. (Indeed, one can recover the limit version by passing from $\mc D$ to $\mc D\opp$.)
 \end{remark}
+In order to use the Yoneda lemma, it will be useful to have the following characterization of limits.
+\begin{lemma} \label{lem:lim-by-yoneda}
+	Fix a category $\mc C$ and a diagram $F\colon\mc I\to\mc C$ for which the colimit $\colim_{i\mc I}Fi$ exists. Then there is a natural isomorphism
+	\[\op{Mor}_{\mc C}\left(\colim_{i\in\mc I}Fi,-\right)\Rightarrow\lim_{i\in\mc I}\op{Mor}_{\mc C}(Fi,-).\]
+\end{lemma}
+\begin{proof}
+	This follows from the construction of limits in $\op{PSh}(\mc C)$ given in \Cref{ex:compute-pointwise} (which are given pointwise) followed by their explicit construction in \Cref{ex:set-limits}, which tells us that
+	\[\lim_{i\in\mc I}\op{Mor}_{\mc C}(Fi,c)=\left\{(f_i)\in\prod_{i\in\mc I}:f_i=f_j\circ Ff\text{ for each }f\in\op{Mor}_{\mc I}(i,j)\right\}.\]
+	On the other hand, the universal property implies that a map $\colim_{i\in\mc I}Fi\to c$ is in unique bijection with collections of maps $f_i\colon Fi\to c$ for which $f_i=f_j\circ Ff$ whenever $f\colon i\to j$, which is exactly the limit given above!
+
+	To check naturality, we need to make our isomorphism more explicit: fix inclusions $g_i\colon Fi\to\colim_{i\in\mc I}Fi$, and then our map is given by
+	\[\arraycolsep=1.4pt\begin{array}{ccc}
+		\displaystyle\op{Mor}_{\mc C}\left(\colim_{i\in\mc I}Fi,c\right) &\to& \displaystyle\lim_{i\in\mc I}\op{Mor}_{\mc C}(Fi,-) \\
+		f &\mapsto& (f\circ g_i)_i
+	\end{array}\]
+	for which naturality follows by noticing that the square
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGRpc3BsYXlzdHlsZVxcb3B7TW9yfV97XFxtYyBDfVxcbGVmdChcXGNvbGltX3tpXFxpblxcbWMgSX1GaSxjXFxyaWdodCkiXSxbMCwxLCJcXGRpc3BsYXlzdHlsZVxcb3B7TW9yfV97XFxtYyBDfVxcbGVmdChcXGNvbGltX3tpXFxpblxcbWMgSX1GaSxjJ1xccmlnaHQpIl0sWzEsMCwiXFxkaXNwbGF5c3R5bGVcXGxpbV97aVxcaW5cXG1jIEl9XFxvcHtNb3J9X3tcXG1jIEN9KEZpLGMpIl0sWzEsMSwiXFxkaXNwbGF5c3R5bGVcXGxpbV97aVxcaW5cXG1jIEl9XFxvcHtNb3J9X3tcXG1jIEN9KEZpLGMnKSJdLFsyLDAsImYiXSxbMiwxLCJoZiJdLFszLDAsIihmZ19pKV9pIl0sWzMsMSwiKGhmZ19pKV9pIl0sWzAsMV0sWzEsM10sWzAsMl0sWzIsM10sWzUsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\displaystyle\op{Mor}_{\mc C}\left(\colim_{i\in\mc I}Fi,c\right)} & {\displaystyle\lim_{i\in\mc I}\op{Mor}_{\mc C}(Fi,c)} & f & {(fg_i)_i} \\
+		{\displaystyle\op{Mor}_{\mc C}\left(\colim_{i\in\mc I}Fi,c'\right)} & {\displaystyle\lim_{i\in\mc I}\op{Mor}_{\mc C}(Fi,c')} & hf & {(hfg_i)_i}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commutes for any morphism $h\colon c\to c'$
+\end{proof}
 Here is an application of the Yoneda lemma.
-\begin{example}
+\begin{lemma} \label{lem:psh-by-colim}
 	Fix a category $\mc C$ and presheaf $A\in\op{PSh}(\mc C)$. Construct a category $\mc I$ of pairs $(c,\eta)$, where $c\in\mc C$, and $\eta\colon\yo(c)\Rightarrow A$. Then the canonical map
 	\[\colim_{(c,\eta)\in\mc I}\yo(c)\to A\]
 	is an isomorphism.
-\end{example}
+\end{lemma}
 \begin{proof}
 	In other words, we would like to show that the given maps $\eta\colon\yo(c)\to A$ for each pair $(c,\eta)$ makes into $A$ a colimit of the functor $F\colon\mc I\to\op{PSh}(\mc C)$. We run many checks.
 	\begin{enumerate}
@@ -409,14 +440,103 @@ Here is the main definition.
 	for all $c\in\mc C$ and $d\in\mc D$ which are functorial in $c$ and $d$. In this situation, we say that $F$ is the \textit{left adjoint} and that $G$ is the \textit{right adjoint}.
 \end{definition}
 Here is the main result on adjoints.
-\begin{proposition}
+\begin{proposition} \label{prop:left-adjoint-colim}
 	Fix adjoint functors $F\colon\mc C\to\mc D$ and $G\colon\mc D\to\mc C$. Then $F$ preserves colimits.
 \end{proposition}
 \begin{proof}
-	
+	We may as well check this directly, though there are more optimal ways. Suppose that $a\in\mc C$ is the colimit of some functor $A\colon\mc I\to\mc C$. Then we would like to check that $Fa\in\mc D$ is the colimit of the composite functor $FA\colon\mc I\to\mc C$. (We will not bother to check that $FA$ is actually a functor.)
+
+	To show that $Fa$ is a candidate colimit, we need to build maps $FAi\to Fa$ for each $i\in\mc I$. Indeed, $a$ being the colimit of $A$ implies that we get maps $\eta_i\colon Ai\to a$ for each $i\in\mc I$ for which any map $f\colon i\to j$ implies $\eta_j\circ Af=\eta_i$. Thus, we have maps $F\eta_i\colon FAi\to Fa$ for each $i\in\mc I$, and we note that any map $f\colon i\to j$ implies $F\eta_j\circ FAf=F\eta_i$ by functoriality.
+
+	It remains to show that $Fa$ is universal, for which we use the adjunction. Suppose that we have $b\in\mc D$ equipped with maps $\varphi_i\colon GAi\to b$ for which any $f\colon i\to j$ yields $\varphi_j\circ GAf=\varphi_i$. We need to show that there is a unique map $\varphi\colon Fa\to b$ commuting with the $\eta_\bullet$s and $\varphi_\bullet$s. To see this, we recall that we have a functorial bijection
+	\[\op{Mor}_{\mc D}(Fa,b)=\op{Mor}_{\mc C}(a,Gb),\]
+	so the functoriality implies that there is a bijection between maps $\varphi\colon Fa\to b$ for which $\varphi_i=\varphi\circ F\eta_i$ for each $i$ and maps $\psi\colon a\to Gb$ for which $\psi_i=\psi\circ \eta_i$ (where $\psi_i\colon Ai\to Gb$ is the map induced from $\varphi_i\colon FAi\to b$ by the adjunction). In a few more words, functoriality implies that the square
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9we01vcn1fe1xcbWMgRH0oRmEsYikiXSxbMSwwLCJcXG9we01vcn1fe1xcbWMgQ30oYSxHYikiXSxbMCwxLCJcXG9we01vcn1fe1xcbWMgRH0oRkFpLGIpIl0sWzEsMSwiXFxvcHtNb3J9X3tcXG1jIEN9KEFpLEdiKSJdLFswLDEsIiIsMCx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsMywiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwyLCIoLVxcY2lyYyBGXFxldGFfaSkiLDJdLFsxLDMsIigtXFxjaXJjXFxldGFfaSkiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\op{Mor}_{\mc D}(Fa,b)} & {\op{Mor}_{\mc C}(a,Gb)} \\
+		{\op{Mor}_{\mc D}(FAi,b)} & {\op{Mor}_{\mc C}(Ai,Gb)}
+		\arrow[equals, from=1-1, to=1-2]
+		\arrow["{(-\circ F\eta_i)}"', from=1-1, to=2-1]
+		\arrow["{(-\circ\eta_i)}", from=1-2, to=2-2]
+		\arrow[equals, from=2-1, to=2-2]
+	\end{tikzcd}\]
+	commutes, so any $\varphi\colon Fa\to b$ on the left satisfies $\varphi_i=\varphi\circ F\eta_i$ (for a given $i\in\mc I$) if and only if $\varphi$ goes to some map $\psi\colon a\to Gb$ for which $\psi\circ\eta_i=\psi_i$ (for a given $i\in\mc I$). We take a moment to remark that the condition $\varphi_j\circ GAf=\varphi_i$ for any map $f\colon i\to j$ now translates to $\psi_j\circ Af=\psi_i$ by the same sort of functoriality argument.
+
+	But we are now basically done: because we have $\psi_j\circ Af=\psi_i$ for any map $f\colon i\to j$, we see that $a$ being the colimit implies that there is a unique map $\psi\colon a\to Gb$ for which $\eta_i\circ\psi=\psi_i$ for all $i\in\mc I$. This completes the proof!
 \end{proof}
 \begin{remark}
-	Similarly, $G$ preserves limits; one can see this by passing to the opposite category everywhere.\todo{}
+	Similarly, $G$ preserves limits; one can see this by passing to the opposite category everywhere.
 \end{remark}
+Here is an application to presheaves.
+\begin{proposition} \label{prop:extend-continuous-functor}
+	Fix a functor $F\colon\mc C\to\mc D$. If $\mc D$ admits all colimits, then there is a unique functor $\widetilde F\colon\op{PSh}(\mc C)\to\mc D$ which preserves colimits and satisfies
+	\[\widetilde F\circ\yo\simeq F.\]
+	In fact, $\widetilde F$ is a left adjoint to the functor $G\colon\mc D\to\op{PSh}(\mc C)$ given by $Gd\coloneqq\op{Mor}_{\mc D}(F(-),d)$.
+\end{proposition}
+\begin{proof}
+	Let's start with the uniqueness of $\widetilde F$. For each presheaf $A\in\op{PSh}(\mc C)$, we define the category $\mc I_A$ of pairs $(c,\eta)$ where $c\in C$ and $\eta\colon\yo(c)\Rightarrow A$; note that $\eta$ has equivalent data to an element of $Ac$. By \Cref{lem:psh-by-colim}, we see that the canonical map
+	\[\colim_{(c,\eta)\in\mc I_A}\yo(c)\to A\]
+	is an isomorphism. Thus, if $\widetilde F$ preserves colimits, we see that we must have
+	\[\colim_{(c,\eta)\in\mc I_A}Fc\stackrel{\sim}\to\widetilde FA.\]
+	Thus, $\widetilde F$ is uniquely defined on objects. On a morphism $f\colon A\to B$, we claim that there is a canonical morphism
+	\[\colim_{(c,\eta)\in\mc I_A}\yo(c)\to\colim_{(c,\eta)\in\mc I_B}\yo(c).\]
+	For this, we note that there is a functor $\mc I_f\colon\mc I_A\to\mc I_B$ given by sending the pair $(c,\eta)\in\mc I_A$ to $(c,f\eta)$; on morphisms, we send a map $(c,\eta)\to(c',\eta')$ to the map $(c,f\eta)\to(c',f\eta')$, which makes sense as the data of the map $c\to c'$ and (the requirement that the induced map $\yo(c)\to\yo(c')\stackrel{f\eta'}\to B$ is the same as $f\eta$). Thus, the above canonical morphism is simply induced by sending the $\yo(c)$ in entry $(c,\eta)$ of the colimit identically back to $\yo(c)$ in entry $(c,f\eta)$ of the colimit. Because this canonical map is just made of identities, we see that the square
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGRpc3BsYXlzdHlsZVxcY29saW1feyhjLFxcZXRhKVxcaW5cXG1jIElfQX1cXHlvKGMpIl0sWzEsMCwiQSJdLFswLDEsIlxcZGlzcGxheXN0eWxlXFxjb2xpbV97KGMsXFxldGEpXFxpblxcbWMgSV9CfVxceW8oYykiXSxbMSwxLCJCIl0sWzIsMCwiXFxpZF9jIl0sWzIsMSwiXFxpZF9jIl0sWzMsMCwiXFxldGEiXSxbMywxLCJmXFxldGEiXSxbMCwxXSxbMSwzLCJmIl0sWzIsM10sWzAsMl0sWzQsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiZiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\displaystyle\colim_{(c,\eta)\in\mc I_A}\yo(c)} & A & {\id_c} & \eta \\
+		{\displaystyle\colim_{(c,\eta)\in\mc I_B}\yo(c)} & B & {\id_c} & {f\eta}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["f", from=1-2, to=2-2]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow["f", maps to, from=1-4, to=2-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[maps to, from=2-3, to=2-4]
+	\end{tikzcd}\]
+	commutes. (Of course, there is a unique map on the left making this commute because the horizontal maps are isomorphisms!) Thus, we may this diagram with $\widetilde F$ to see that
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGRpc3BsYXlzdHlsZVxcY29saW1feyhjLFxcZXRhKVxcaW5cXG1jIElfQX1GYyJdLFsxLDAsIlxcd2lkZXRpbGRlIEZBIl0sWzAsMSwiXFxkaXNwbGF5c3R5bGVcXGNvbGltX3soYyxcXGV0YSlcXGluXFxtYyBJX0J9RmMiXSxbMSwxLCJcXHdpZGV0aWxkZSBGQiJdLFswLDFdLFsxLDMsIkZmIl0sWzIsM10sWzAsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\displaystyle\colim_{(c,\eta)\in\mc I_A}Fc} & {\widetilde FA} \\
+		{\displaystyle\colim_{(c,\eta)\in\mc I_B}Fc} & {\widetilde FB}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["Ff", from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	where the left map continues to be induced by identities. In this way, we see that $\widetilde F$ is uniquely determined up to natural isomorphism because the above diagram witnesses this natural isomorphism!
+
+	The uniqueness check tells us exactly what we should set to be $\widetilde F$ on objects and morphisms. It remains to check that these data actually assemble into a functor preserving colimits. For example, on an identity $\id_A\colon A\to A$, we see that the map $\widetilde FA\to\widetilde FA$ is induced by hitting the canonical map
+	\[\colim_{(c,\eta)\in\mc I_A}\yo(c)\to\colim_{(c,\eta)\in\mc I_A}\yo(c)\]
+	with $F$, but of course this canonical map is just the identity, so $\widetilde F{\id_A}=\id_{\widetilde FA}$ follows. Similarly, given two maps $f\colon A\to B$ and $g\colon B\to C$, we see that the diagram
+	% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXGRpc3BsYXlzdHlsZVxcY29saW1feyhjLFxcZXRhKVxcaW5cXG1jIElfQX1cXHlvKGMpIl0sWzEsMSwiXFxkaXNwbGF5c3R5bGVcXGNvbGltX3soYyxcXGV0YSlcXGluXFxtYyBJX0J9XFx5byhjKSJdLFswLDIsIlxcZGlzcGxheXN0eWxlXFxjb2xpbV97KGMsXFxldGEpXFxpblxcbWMgSV9DfVxceW8oYykiXSxbMiwwLCJBIl0sWzMsMSwiQiJdLFsyLDIsIkMiXSxbMCwxXSxbMSwyXSxbMCwyXSxbMCwzXSxbMyw0LCJmIl0sWzEsNF0sWzIsNV0sWzUsNCwiZyIsMl0sWzMsNSwiZ2YiLDIseyJsYWJlbF9wb3NpdGlvbiI6MzB9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\displaystyle\colim_{(c,\eta)\in\mc I_A}\yo(c)} && A \\
+		& {\displaystyle\colim_{(c,\eta)\in\mc I_B}\yo(c)} && B \\
+		{\displaystyle\colim_{(c,\eta)\in\mc I_C}\yo(c)} && C
+		\arrow[from=1-1, to=1-3]
+		\arrow[from=1-1, to=2-2]
+		\arrow[from=1-1, to=3-1]
+		\arrow["f", from=1-3, to=2-4]
+		\arrow["gf"'{pos=0.3}, from=1-3, to=3-3]
+		\arrow[from=2-2, to=2-4]
+		\arrow[from=2-2, to=3-1]
+		\arrow[from=3-1, to=3-3]
+		\arrow["g"', from=3-3, to=2-4]
+	\end{tikzcd}\]
+	commutes, where the left arrows are the canonical maps; namely, all squares commute as discussed above, and the horizontal maps are isomorphisms, so this enforces the commutativity on the left triangle. Hitting the leftward triangle with $F$ now shows that $\widetilde F(gf)=\widetilde Fg\circ\widetilde Ff$, as required.
+
+	Lastly, we should check that $\widetilde F$ preserves colimits and is a left adjoint to the functor $G$. In light of \Cref{prop:left-adjoint-colim}, it is enough to show that $\widetilde F$ is a left adjoint to $G$. Quickly, let's check that $G$ is a functor: for each $d\in\mc D$, we see that $Gd=\yo(d)\circ F$ is in fact a presheaf, so $G$ is well-defined on objects. On morphisms, we see that a morphism $f\colon d\to d'$ will induce a map $\yo(f)\colon\yo(d)\to\yo(d')$ and therefore a map $\yo(f)\colon Gd\to Gd'$ by composing with $F$. Because $\yo$ is functorial, it follows that $G$ is functorial.
+
+	It remains to check that $\widetilde F$ is a left adjoint to $G$. We will do this check directly. For this, we use \Cref{lem:psh-by-colim} to see that
+	\begin{align*}
+		\op{Mor}_{\op{PSh}(\mc C)}(A,G-) &= \op{Mor}_{\op{PSh}(\mc C)}\left(\colim_{(c,\eta)\in\mc I_A}\yo(c),G-\right) \\
+		&= \lim_{(c,\eta)\in\mc I_A}\op{Mor}_{\op{PSh}(\mc C)}\left(\yo(c),G-\right) \\
+		&= \lim_{(c,\eta)\in\mc I_A}G{-}(c) \\
+		&= \lim_{(c,\eta)\in\mc I_A}\op{Mor}_{\mc D}(Fc,-),
+	\end{align*}
+	which unwinds back to $\op{Mor}_{\mc D}(\widetilde FA,-)$ after plugging in the colimit definition of $\widetilde F$ and using \Cref{lem:lim-by-yoneda}. %To be explicit, fix some $d\in\mc D$ and $c'\in\mc C$, and we see that the above equalities send a presheaf morphism $f\colon A\to Gd$ to the limit of the maps $\yo(c)\stackrel\eta\to A\to Gd$ over each pair $(c,\eta)\in\mc I_A$, which then goes to the limit of $Gd(c)$ still over each pair $(c,\eta)\in\mc I_A$, which of course
+	To show that we have an adjunction, it remains to check that these natural isomorphisms are also natural in $A$. The first equality is natural in $A$ as discussed previously. \Cref{lem:lim-by-yoneda} is natural in $A$ by its definition as just composing morphisms on the right (note the canonical natural maps in $A$ composes on the left, so these operations commute). The remaining equalities displayed are all for fixed limit, so they continue to be natural in $A$, and the unwinding back to $\op{Mor}_{\mc D}(\widetilde FA)$ continues to be natural in $A$ by the aforementioned naturality of \Cref{lem:lim-by-yoneda}.
+\end{proof}
 
 \end{document}
