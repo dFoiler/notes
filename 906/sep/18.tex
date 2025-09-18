@@ -1,0 +1,190 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 18}
+Today we prove Whitehead's theorem. I have moved all discussion of Whitehead's theorem to the present class.
+
+\subsection{Whitehead's theorem}
+For this class, the following explains why we should care about homotopy.
+\begin{theorem}[Whitehead] \label{thm:whitehead}
+	Fix a map $f\colon X\to Y$ of Kan complexes, and choose a basepoint $x\in X$. Then $f$ is a homotopy equivalence if and only if the functorial maps
+	\[\pi_n(f)\colon\pi_n(X,x)\to\pi_n(Y,f(x))\]
+	are bijections for $n=0$ and group isomorphisms for $n\ge1$.
+\end{theorem}
+Let's begin with the first lemma.
+\begin{definition}[pointed Kan complex]
+	A \textit{pointed Kan complex} is a pair $(X,x)$ of a Kan complex $X$ equipped with a point $x\in X_0$.
+\end{definition}
+\begin{remark}
+	Viewing $x$ as a morphism $x\colon\Delta^0\to X$, we are allowed to make sense of the Kan complex
+	\[\underline{\op{Mor}}((X,x),(Y,y))\]
+	where $(X,x)$ and $(Y,y)$ and pointed Kan complexes. An object in this simplicial set is a morphism of pointed Kan complexes; and a morphism in this simplicial set is a pointed homotopy. These notions produce a definition of a pointed homotopy equivalence.
+\end{remark}
+\begin{remark}
+	For each $n\ge0$, we now receive functors $\pi_n$ on the category of pointed Kan complexes. If $n=0$, we output a pointed set, and if $n\ge1$, then we output a group; in fact, if $n\ge2$, then we output an abelian group.
+\end{remark}
+While we're here, we note that there is a pointed version of Whitehead's theorem.
+\begin{theorem}[Whitehead, pointed]
+	Fix a map $f\colon(X,x)\to(Y,y)$ of pointed connected Kan complexes. Then $f$ is an equivalence if and only if the induced map $\pi_n(f)\colon\pi_n(X,x)\to\pi_n(Y,y)$ is an isomorphism for all $n\ge1$.
+\end{theorem}
+Let's start proving some lemmas. We pick up the following definition.
+\begin{definition}[fiber]
+	Fix a map $f\colon(X,x)\to(Y,y)$ of pointed Kan complexes. Further, suppose that $X\to Y$ is a Kan fibration. Then the \textit{fiber} of $f$ is the pullback $F$ fitting into the following diagram.
+	% https://q.uiver.app/#q=WzAsNCxbMCwxLCJcXERlbHRhXjAiXSxbMSwxLCJZIl0sWzEsMCwiWCJdLFswLDAsIkYiXSxbMCwxLCJ5Il0sWzMsMl0sWzIsMSwiZiJdLFszLDBdLFszLDEsIiIsMCx7InN0eWxlIjp7Im5hbWUiOiJjb3JuZXIifX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		F & X \\
+		{\Delta^0} & Y
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+		\arrow["f", from=1-2, to=2-2]
+		\arrow["y", from=2-1, to=2-2]
+	\end{tikzcd}\]
+	Note that the map $x\colon\Delta^0\to X$ extends via pullback to a unique map $x\colon\Delta^0\to F$, so $(F,x)$ is a pointed Kan complex.
+\end{definition}
+\begin{lemma} \label{lem:homotopy-res}
+	Fix a map $f\colon(X,x)\to(Y,y)$ of pointed Kan complexes. Further, suppose that $X\to Y$ is a Kan fibration, and let $(F,x)$ be the fiber of $f$. Then there is an exact sequence
+	\[\pi_1(Y,y)\to\pi_0F\to\pi_0X\to\pi_0Y\]
+	of pointed sets.
+\end{lemma}
+\begin{proof}
+	We will check exactness at $\pi_0F$ and $\pi_0X$ separately. We proceed in steps.
+	\begin{enumerate}
+		\item Exact at $\pi_0X$: for each $e\in X_0$ for which $f(e)$ is in the path component of $y$, we need to show that $e$ is in the same path component of some element in the fiber $F\subseteq X$. For this, we note let $p\colon\Delta^1\to Y$ be a path connecting $y$ and $f(e)$, and we note that we have a diagram
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHsxXFx9Il0sWzEsMCwiWCJdLFswLDEsIlxcRGVsdGFeMSJdLFsxLDEsIlkiXSxbMCwxLCJlIl0sWzEsMywiZiJdLFsyLDNdLFswLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\{1\}} & X \\
+			{\Delta^1} & Y
+			\arrow["e", from=1-1, to=1-2]
+			\arrow[from=1-1, to=2-1]
+			\arrow["f", from=1-2, to=2-2]
+			\arrow[from=2-1, to=2-2]
+		\end{tikzcd}\]
+		which commutes, so the Kan fibration $X\to Y$ admits a lift $\Delta^1\to X$. This path connected $e$ to an element of the fiber, so we are done!
+
+		\item We define the map $\pi_1(Y,y)\to\pi_0F$. Given some loop $[\gamma]\in\pi_1(Y,y)$, we can select a representation $\gamma\colon\Delta^1\to Y$ for which $\gamma(0)=\gamma(1)=y$. We now get a diagram
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHswXFx9Il0sWzEsMCwiWCJdLFswLDEsIlxcRGVsdGFeMSJdLFsxLDEsIlkiXSxbMCwxLCJ4Il0sWzEsMywiZiJdLFsyLDMsIlxcZ2FtbWEiXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\{0\}} & X \\
+			{\Delta^1} & Y
+			\arrow["x", from=1-1, to=1-2]
+			\arrow[from=1-1, to=2-1]
+			\arrow["f", from=1-2, to=2-2]
+			\arrow["\gamma", from=2-1, to=2-2]
+		\end{tikzcd}\]
+		which commutes and therefore induces a map $\Delta^1\to X$. The image of $1$ along the lift $\Delta^1\to X$ still maps down to $y\in Y$ along $f$, so we have produced an element of the fiber $F$.
+
+		\item Exact at $\pi_0F$: suppose that we have some $x'\in F$ which is in the same connected component of $x\in X$. Then we want to find a loop in $Y$ which lifts to a path in $X$ connecting $x$ and $x'$. Well, the path connecting $x$ to $x'$ in $X$ goes down to the desired loop in $Y$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{remark}
+	All the path-lifting we do in this proof shows that we can think of Kan fibrations as covering spaces.
+\end{remark}
+\begin{remark} \label{rem:homotopy-les}
+	In fact, there is a long exact sequence
+	\[\cdots\to\pi_{n+1}(F,x)\to\pi_{n+1}(X,x)\to\pi_{n+1}(Y,y)\to\pi_n(F,x)\to\cdots.\]
+\end{remark}
+We now start moving towards Whitehead's theorem. Here is the first lemma, which provides the forward direction.
+\begin{lemma}
+	Fix a homotopy equivalence $f\colon X\to Y$ of Kan complexes. Then for each $x\in X$, there $f$ induces a pointed homotopy equivalence $f\colon(X,x)\to(Y,f(x))$.
+\end{lemma}
+\begin{proof}
+	Set $y\coloneqq f(x)$ for brevity. We will show that the induced map
+	\[\pi_0\underline{\op{Mor}}((Y,y),(Z,z))\to\pi_0\underline{\op{Mor}}((X,x),(Z,z))\]
+	is surjective for all pointed Kan complexes $(Z,z)$. To see that this is enough, we note that we may plug in $(Z,z)=(X,x)$, and then we are granted a map $g\colon(Y,y)\to(X,x)$ for which $gf\sim1_{(X,x)}$. But because $f$ is a(n unpointed) homotopy equivalence, we conclude that $g$ is as well, so we get a map $h$ for which $hg\sim1_{(Y,y)}$. We are now allowed to control that $f=h$, so $f$ is a pointed map with pointed homotopic inverse $g$, so we are done.
+
+	It remains to show our surjectivity, for which we will use \Cref{lem:homotopy-res}. Observe that the fiber of the map
+	\[\op{ev}_z\colon\underline{\op{Mor}}(X,Z)\to Z\]
+	has fiber over $z$ given by $\underline{\op{Mor}}((X,x),(Z,z))$. Doing the same for $(Y,y)$, we produce a diagram as follows.
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXHBpXzEoWix6KSJdLFswLDEsIlxccGlfMShaLHopIl0sWzEsMCwiXFxwaV8wXFx1bmRlcmxpbmV7XFxvcHtNb3J9fSgoWCx4KSwoWix6KSkiXSxbMSwxLCJcXHBpXzBcXHVuZGVybGluZXtcXG9we01vcn19KChZLHkpLChaLHopKSJdLFsyLDAsIlxccGlfMFxcdW5kZXJsaW5le1xcb3B7TW9yfX0oWCxaKSJdLFsyLDEsIlxccGlfMFxcdW5kZXJsaW5le1xcb3B7TW9yfX0oWSxaKSJdLFszLDAsIlxccGlfMFoiXSxbMywxLCJcXHBpXzBaIl0sWzAsMSwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNiw3LCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDJdLFsyLDRdLFs0LDZdLFsxLDNdLFszLDVdLFs1LDddLFs1LDRdLFszLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\pi_1(Z,z)} & {\pi_0\underline{\op{Mor}}((X,x),(Z,z))} & {\pi_0\underline{\op{Mor}}(X,Z)} & {\pi_0Z} \\
+		{\pi_1(Z,z)} & {\pi_0\underline{\op{Mor}}((Y,y),(Z,z))} & {\pi_0\underline{\op{Mor}}(Y,Z)} & {\pi_0Z}
+		\arrow[from=1-1, to=1-2]
+		\arrow[equals, from=1-1, to=2-1]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[equals, from=1-4, to=2-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=1-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=1-3]
+		\arrow[from=2-3, to=2-4]
+	\end{tikzcd}\]
+	The third map is actually a surjection because $X$ and $Y$ are homotopic, so it follows by a diagram-chase that the second map is surjective, as required.
+\end{proof}
+This completes the proof of the forward direction of \Cref{thm:whitehead}, which requires two lemmas.
+\begin{lemma}
+	Fix a Kan fibration $f\colon X\to Y$ of Kan complexes. If $\pi_0f$ is a bijection, and $\pi_nf$ is an isomorphism for $n\ge1$, then $f$ is a trivial fibration.
+\end{lemma}
+\begin{proof}
+	Let's begin with a special case: if $X$ is a connected Kan complex for which $\pi_n(X,x)=0$ for all $n\ge1$, then we claim that the map $X\to\Delta^0$ is a trivial fibration. (In other words, we will try to show that $X$ is contractible.)
+	
+	For this, we claim that $\pi_n(X,x)$ is isomorphic (as sets) to $\pi_0\underline{\op{Mor}}((\Delta^n,\del\Delta^n),(X,x))$. The novelty here is that we are working with the $n$-simplex instead of the cube. We will only work out the case $n=2$. Let $C$ be the boundary with one $2$-simplex added. Then the quotient $\square^2/C$ is isomorphic to $\Delta^2/\del\Delta^2$ as pointed simplicial sets, so we get a chain
+	\[\underline{\op{Mor}}((\square^2,\del\square^2),(X,x))=\underline{\op{Mor}}((\square^2/\del\square^2,\Delta^0),(X,x))\from\underline{\op{Mor}}((\square^2/C,*),(X,x))=\underline{\op{Mor}}((\Delta^2,\del\Delta^2),(X,x)).\]
+	It remains to check that the map $\from$ is an isomorphism on $\pi_0$, which is true because it is actually an equivalence.
+
+	We now return to the assumption that $\pi_n(X,x)=0$ for all $n\ge1$. We will want another intermediate claim: suppose that we have an inclusion $A\subseteq B$ of simplicial sets, a map $f\colon B\to X$, and a homotopy $\eta\colon\Delta^1\times A\to X$ from $f|_A$ to the constant map $x\colon A\to X$. Then we claim that $\eta$ extends to a homotopy $\Delta^1\times B\to X$ from $f$ to the constant map $x\colon B\to X$. Well, by an induction, we are allowed to merely consider the case $A=\del\Delta^n$ and $B=\Delta^n$. For this, we draw the diagram
+	% https://q.uiver.app/#q=WzAsNCxbMCwxLCJcXERlbHRhXjFcXHRpbWVzXFxEZWx0YV5uIl0sWzEsMSwiXFxEZWx0YV4wIl0sWzEsMCwiWCJdLFswLDAsIlxcZGlzcGxheXN0eWxlKFxcezBcXH1cXHRpbWVzXFxEZWx0YV5uKVxcYmlnc3FjdXBfe1xcezBcXH1cXHRpbWVzXFxkZWxcXERlbHRhXm59KFxcRGVsdGFeMVxcdGltZXNcXGRlbFxcRGVsdGFebikiXSxbMCwxXSxbMiwxXSxbMywyLCIoZixcXGV0YSkiXSxbMywwXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\displaystyle(\{0\}\times\Delta^n)\bigsqcup_{\{0\}\times\del\Delta^n}(\Delta^1\times\del\Delta^n)} & X \\
+		{\Delta^1\times\Delta^n} & {\Delta^0}
+		\arrow["{(f,\eta)}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	from which we note that an extension $\Delta^1\times\Delta^n\to X$ will produce the desired homotopy. It turns out that this extension exists because $\pi_n(X,x)=0$, though the reason is not totally clear to the professor.
+
+	We now finally show that $X$ is a trivial fibration, so choose a map $\del\Delta^n\to X$ which we would like to fill in. The previous paragraph applied to $(A,B)=(\emp,\del\Delta^n)$ grants a homotopy $\eta\colon\Delta^1\times\del\Delta^n\to X$. Well, we basically want to fill in the diagram
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXGRpc3BsYXlzdHlsZShcXERlbHRhXjFcXHRpbWVzXFxkZWxcXERlbHRhXm4pXFxiaWdzcWN1cF97XFx7MVxcfVxcdGltZXNcXGRlbFxcRGVsdGFebn0oXFx7MVxcfVxcdGltZXNcXERlbHRhXm4pIl0sWzEsMCwiWCJdLFswLDEsIlxcRGVsdGFeMVxcdGltZXNcXERlbHRhXm4iXSxbMiwxLCIiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwxXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\displaystyle(\Delta^1\times\del\Delta^n)\bigsqcup_{\{1\}\times\del\Delta^n}(\{1\}\times\Delta^n)} & X \\
+		{\Delta^1\times\Delta^n}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[dashed, from=2-1, to=1-2]
+	\end{tikzcd}\]
+	(to supply a map $\{0\}\times\Delta^n\to\{1\}\times\Delta^n\to X$). But this lifting exists because the left map is anodyne.
+
+	By the long exact sequence for homotopy groups (stated in \Cref{rem:homotopy-les}), one finds that the fiber of $X\to Y$ is contractible by the above special case, which eventually implies that it is enough to consider the case of $Y$ being a point.
+\end{proof}
+Thus, we see that if we can get a Kan fibration, then we will be able to conclude by \Cref{prop:triv-fibration-to-equiv}. Our last lemma explains how to produce this Kan fibration.
+\begin{lemma}[Quillen's small object argument]
+	Every map of simplicial sets is the composite of an anodyne map and a Kan fibration.
+\end{lemma}
+\begin{proof}
+	Fix a map $f\colon X\to Y$ of simplicial sets. If we are given lots of lifting problems
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGJpZ3NxY3VwXFxMYW1iZGFebl9pIl0sWzAsMSwiXFxiaWdzcWN1cFxcRGVsdGFebiJdLFsxLDAsIlgiXSxbMSwxLCJZIl0sWzEsM10sWzAsMV0sWzAsMl0sWzIsM11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\bigsqcup\Lambda^n_i} & X \\
+		{\bigsqcup\Delta^n} & Y
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	that we want to solve; we may as well take the coproduct of all such lifting problems we could ever want to solve. Perhaps we cannot solve them, but we can form the pushout of the upper-left triangle $P_0$, and it follows that the map $X\to P_0$ which is anodyne. It follows that any of our lifting problems $\Lambda^n_i\to P_0$ and $\Delta^n\to Y$ which happen to factor through $X$. Thus, we pick up the remaining lifting problems we want to solve, take a pushout, and we form $P_1$. Continuing this process inductively, we receive a diagram
+	\[X\to P_0\to P_1\to\cdots,\]
+	and we let $P$ be the colimit. We now claim that $P\to Y$ is a Kan fibration, which will complete the proof because the map $X\to P$ continues to be anodyne. Indeed, any lifting problem
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXExhbWJkYV5uX2kiXSxbMSwwLCJQIl0sWzEsMSwiWSJdLFswLDEsIlxcRGVsdGFebiJdLFswLDNdLFszLDJdLFswLDFdLFsxLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\Lambda^n_i} & P \\
+		{\Delta^n} & Y
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	has $\Lambda^n_i$ with only finitely many non-degenerate simplices, so the map $\Lambda^n_i\to P$ will have to factor as $\Lambda^n_i\to P_k$ for some $k$. But then we know that we can product a lift $\Delta^n\to P_{k+1}\to P$.
+\end{proof}
+\begin{remark}
+	This is called the small object argument because it crucially depends on the fact that $\Lambda^n_i$ is a ``small'' object.
+\end{remark}
+We are now able to complete the proof of \Cref{thm:whitehead}: factor $X\to Y$ as $X\to Z\to Y$ of an anodyne map followed by a Kan fibration. Because $Z\to Y$ is a Kan fibration, we conclude that $Z$ is a Kan complex. We are now basically done because anodyne maps are automatically homotopy equivalences.
+
+\end{document}
