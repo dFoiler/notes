@@ -1,0 +1,389 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+\chapter{The Peter--Weyl Theorem}
+
+In this appendix, we give a proof of the Peter--Weyl theorem, which is frequently used in the analytic part of the notes. This is taken verbatim from my notes for Math~261A.
+
+\section{Introduction}
+
+\subsection{The Statement}
+In this appendix, we prove the Peter--Weyl theorem, following \cite[Sections~34--36]{etingof-lie-theory}. The Peter--Weyl theorem is interested in the representation theory of compact real Lie groups. To explain the result, we temporarily pass to finite groups. With the correct perspective, the representation theory of finite groups $G$ can be summarized as providing an isomorphism of $(G\times G)$-representations
+\[\bigoplus_{V\in\op{IrrRep}(G)}V\otimes V^*\cong\CC[G],\]
+where $\op{IrrRep}(G)$ denotes the set of isomorphism classes of finite-dimensional complex irreducible $G$-rep\-resentations. The Peter--Weyl theorem is the analogous statement for compact real Lie groups.
+
+To be precise, we must set up some notation. To begin, the morally correct formulation of $\CC[G]$ is $\op{Ind}_1^G1$, which is functions on $G$ with right translation as the group action. When moving to $G$ compact, we need to add a finiteness condition to our functions on $G$.
+\begin{definition}
+	Fix a compact real Lie group $G$, and let $dg$ be a Haar measure (see \cref{sec:haar} for the definition). Then $L^2(G)$ consists of (equivalence classes of) functions $f\colon G\to\CC$ such that
+	\[\int_G\left|f(g)\right|^2\,dg<\infty.\]
+	Here, two functions $f_1,f_2\colon G\to\CC$ are equivalent if and only if $f_1$ and $f_2$ are the same $dg$-almost everywhere.
+\end{definition}
+\begin{remark}
+	The reason why $L^2(G)$ is desirable is that it is a Hilbert space with positive-definite Hermitian inner product given by
+	\[\langle f_1,f_2\rangle\coloneqq\int_Gf_1(g)\overline{f_2(g)}\,dg.\]
+	% Because this is not a functional analysis class, we will not check that this inner product is finite. We remark that the equivalence of functions is what allows this inner product to be positive-definite.
+\end{remark}
+\begin{remark} \label{rem:g-g-action-on-l2}
+	Note that $L^2(G)$ is a representation of $G\times G$ by suitable translations: given $f\in L^2(G)$ and $(h_1,h_2)\in G\times G$, we may define the action $((h_1,h_2)f)(g)\coloneqq f\left(h_2^{-1}gh_1\right)$. Invariance of the Haar measure ensures $(h_1,h_2)f\in L^2(G)$.
+\end{remark}
+Now that we have an analogue of $\CC[G]$, we would like a candidate map $V\otimes V^*\to L^2(G)$ for each $V$. Well, given a complex finite-dimensional representation $V$, one can check that $\xi_V\colon V\otimes V^*\to L^2(G)$ given by
+\[\xi_V(v\otimes\varphi)\coloneqq(g\mapsto\varphi(gv))\]
+is $(G\times G)$-invariant.
+We are now ready to state our theorem, whose proof is in \Cref{sec:pw}.
+\begin{theorem}[Peter--Weyl] \label{thm:pw}
+	Fix a compact real Lie group $G$. Then the induced map
+	\[\xi_G\colon\bigoplus_{V\in\op{IrrRep}(G)}(V\otimes V^*)\to L^2(G)\]
+	has dense image.
+\end{theorem}
+\begin{remark}
+	We cannot expect the map $\xi_G$ to be an isomorphism of vector spaces. For example, the right-hand side is a Hilbert space, but the left-hand side has no obviously natural metric.
+\end{remark}
+\begin{remark}
+	Aside from the construction of the Haar measure in \cref{subsec:get-haar}, our proof of \Cref{thm:pw} will not require our groups to be anything more than compact Hausdorff topological groups.
+\end{remark}
+
+\subsection{Layout and Notation}
+In \cref{sec:haar}, we discuss Haar measures on real Lie groups, culminating in a proof of complete reducibility of representations via Weyl's unitarian trick. Then in \cref{sec:pw}, we prove the Peter--Weyl theorem. Lastly, in \cref{sec:comp}, we discuss two complements: unimodular groups and characters.
+
+Throughout, $G$ is a real Lie group, frequently but not always compact. Typically, $V$ and $W$ are finite-dimensional complex continuous representations of $G$; for any representation $V$, we let $\rho_V\colon G\to\op{GL}(V)$ be the structure morphism.
+
+\section{The Haar Measure} \label{sec:haar}
+In this section, we discuss the Haar measure for real Lie groups. Throughout, we will assume some basic integration theory on manifolds, such as covered in \cite[Chapter~16]{lee-manifolds}.
+
+\subsection{Review of Integration} \label{subsec:integrate-manifold}
+To review, given an open submanifold $U\subseteq\RR^m$ and a top differential form $\omega\in\Gamma(U,\land^mT^*U)$, one may write $\omega=f(x_1,\ldots,x_m)\,dx_1\land\cdots\land dx_m$ and then define the integral
+\[\int_U\omega\coloneqq\int_Uf(x_1,\ldots,x_m)\,dx_1\land\cdots\land dx_m.\]
+For example, one can check that this definition behaves with respect to diffeomorphisms preserving orientation. As such, given an orientable manifold $M$ of dimension $m$, one may define the integral with respect to a compactly supported top differential form $\omega\in\Gamma(M,\land^mT^*M)$ as follows: choose a smooth atlas $\{(U_\alpha,\varphi_\alpha)\}_{\alpha\in\kappa}$ and a partition of unity $\{\psi_\alpha\}_{\alpha\in\kappa}$ with respect to the open cover $\{U_\alpha\}_{\alpha\in\kappa}$; then one may define the integral
+\[\int_M\omega\coloneqq\sum_{\alpha\in\kappa}\int_{U_\alpha}\psi_\alpha\omega,\]
+where the integral on the right suitably takes place in Euclidean space after pulling back through $\varphi_\alpha\colon U_\alpha\into\RR^m$. We will not check that this construction is well-defined because this is an exercise in differential topology; see \cite[Propositions~16.3--16.5]{lee-manifolds}. We take a moment to remark that one may weaken the hypothesis that $\omega$ is compactly supported provided that the above sum converges absolutely.
+
+\subsection{The Definition} \label{subsec:get-haar}
+One can integrate on orientable manifolds over top differential forms, as described in \cite[Section~16.1]{lee-manifolds}.
+\Cref{subsec:integrate-manifold} explains to us how to integrate on manifolds.
+The Riesz representation theorem explains that integration is essentially the same as measuring by integrating against indicator functions: in particular, a top differential form $\omega$ on $M$ gives rise to the measure $U\mapsto\int_M1_U\left|\omega\right|$, for suitably interpreted indicator $1_U$ and $\left|\omega\right|$. Thus, we will be comfortable passing between top differential forms and the measures they produce with impunity.
+\begin{definition}[Haar measure]
+	Fix a real Lie group $G$ of dimension $m$. Then a \textit{left Haar measure} is the measure $dg$ arising from a nonzero left-invariant top differential form $\omega\in\Gamma(G,\land^mT^*G)$. A \textit{right Haar measure} is defined analogously. If further $G$ is compact, then we say that $\omega$ is \textit{normalized} if and only if
+	\[\int_Gdg=1.\]
+\end{definition}
+\begin{example} \label{ex:haar-rm}
+	In the Lie group $\RR^m$, the top differential form $dx_1\land\cdots\land dx_m$ is invariant under translation and thus produces both a left and a right Haar measure.
+\end{example}
+\begin{example} \label{ex:haar-gl}
+	In the Lie group $\op{GL}_n(\RR)$, the top differential form $dX/\det X$ can be checked (via change-of-variables formulae of multivariable calculus) to produce both a left and a right Haar measure.
+\end{example}
+\begin{remark}
+	Let's quickly explain why we are allowed to normalize $\omega$ when $G$ is compact. By scaling, it is enough to check that $0<\int_Gdg<\infty$. Well, by construction of the measure $dg$ on $G$, one can see that any point is contained in a neighborhood of positive finite volume, and because $G$ is compact, we see that $G$ may be covered in finitely many such neighborhoods.
+\end{remark}
+% \begin{remark} \label{rem:compact-unimodular}
+% 	If $G$ is a compact real Lie group, it turns out that the Haar measure on $G$ is both left- and right-invariant. See \cite[Proposition~34.8]{etingof-lie-theory}.
+% \end{remark}
+Let's check that such measures exist; they are also unique up to scalar.
+\begin{proposition} \label{prop:haar-unique}
+	Fix a real Lie group $G$ of dimension $m$.
+	\begin{listalph}
+		\item There exists a non-vanishing left-invariant top differential form $\omega$.
+		\item If $\omega_1$ and $\omega_2$ are nonzero left-invariant top differential forms, then there exists $c\in\RR^\times$ such that $c\omega_1=\omega_2$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We show the claims separately.
+	\begin{listalph}
+		\item Fixing a basis $\{X_1,\ldots,X_m\}$ of $T_1G$, one finds that we may extend this basis to a full global frame of $TG$ by defining
+		\[X_i(g)\coloneqq d\ell_g(X_i),\]
+		where $\ell_g\colon G\to G$ denotes left multiplication by $g$. (We showed this in class; see \cite[Theorem~8.37]{lee-manifolds} for more details.) In this way, one obtains a global frame $\{X_1^*,\ldots,X_m^*\}$ of $T^*G$, so we see that $X_1^*\land\cdots\land X_m^*$ is a non-vanishing left-invariant global section of $\land^mT^*G$.
+		\item It suffices to show that any left Haar measure $\eta$ is a nonzero multiple of the left Haar measure constructed in (a). Well, for each $g\in G$, we see that $\eta(g)$ is an element of the one-dimensional vector space $\land^mT^*G|_g$, so there exists a scalar $c(g)$ such that $\eta(g)=c(g)\omega(g)$. It remains to check that the constructed function $c\colon G\to\RR$ is constant. Well, for any $g\in G$, we see that $\eta(g)=d\ell_g(\eta(1))$ and $\omega(g)=d\ell_g(\omega(1))$, so it follows that $c(g)=c(1)$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{remark}
+	In fact, Haar measures exist for arbitrary locally compact topological groups. Here, it does not make sense to talk about top differential forms, but one may still talk about left-invariant (Radon) measures. See (for example) \cite[Chapter~1]{de-harmonic-analysis}.
+\end{remark}
+
+\subsection{Weyl's Unitarian Trick}
+As an application of the Haar measure, we show that representations of compact groups are completely reducible by imitating the usual proof for finite groups.
+\begin{proposition} \label{prop:weyl-unitary}
+	Fix a finite-dimensional complex representation $V$ of a compact real Lie group $G$. Then there is a positive-definite $G$-invariant Hermitian inner product $\langle\cdot,\cdot\rangle$ on $V$.
+\end{proposition}
+\begin{proof}
+	We begin by choosing any positive-definite Hermitian inner product $\langle\cdot,\cdot\rangle_0$ on $V$. Then we fix a left Haar measure $dg$ on $G$, and we define the function $\langle\cdot,\cdot\rangle\colon V\times V\to\CC$ by
+	\[\langle v,w\rangle\coloneqq\int_G\langle gv,gw\rangle_0\,dg.\]
+	This integral is finite because $G$ is compact and the function $g\mapsto\langle gv,gw\rangle$ is continuous. The fact that $\langle\cdot,\cdot\rangle$ is bilinear and Hermitian follows from the corresponding facts for $\langle\cdot,\cdot\rangle_0$. The fact that $\langle\cdot,\cdot\rangle$ is $G$-invariant follows from the left-invariance of $dg$. Lastly, for positive-definiteness, we note that the function $g\mapsto\langle gv,gv\rangle$ is continuous, nonnegative, and positive at $g=1$; thus, its integral must be positive.
+\end{proof}
+% \begin{remark}
+% 	The same argument works for Hilbert space representations. Roughly speaking, one merely needs a Hermitian inner product to start off.
+% \end{remark}
+\begin{corollary} \label{cor:compact-semisimple}
+	Fix a compact real Lie group $G$. Then every finite-dimensional complex representation $V$ is completely reducible.
+\end{corollary}
+\begin{proof}
+	We induct on $\dim V$, where the case of $\dim V\le1$ has no content. Given some $V$, if $V$ is already irreducible, then there is nothing to do; otherwise, suppose that we have a nonzero proper subrepresentation $W\subseteq V$. Then we use \Cref{prop:weyl-unitary} to choose a positive-definite $G$-invariant Hermitian inner product $\langle\cdot,\cdot\rangle$ on $V$, and we set
+	\[W^\perp\coloneqq\{v\in V:\langle v,w\rangle=0\text{ for all }w\in W\}.\]
+	Linear algebra implies $W^\perp$ is a subspace such that $W\oplus W^\perp\to V$. Thus, we will be able to apply the inductive hypothesis to $W$ and $W^\perp$ to conclude the proof as soon as we know that $W^\perp$ is a subrepresentation. Well, for any $g\in G$ and $v\in W^\perp$, we note that $\langle gv,w\rangle=\left\langle v,g^{-1}w\right\rangle=0$ for all $w\in W$, so $gv\in W^\perp$.
+\end{proof}
+
+\section{The Proof of the Peter--Weyl Theorem} \label{sec:pw}
+Now that we have some measure theory on $G$, we are able to meaningfully discuss the Peter--Weyl theorem. Throughout, $G$ is a compact real Lie group with normalized Haar measure $dg$. For example, \Cref{cor:compact-semisimple} implies that its finite-dimensional complex representations are completely reducible, and \Cref{ex:compact-unimodular} explains that left and right Haar measures align.
+
+\subsection{A Little Spectral Theory}
+Roughly speaking, we will derive \Cref{thm:pw} via an eigenspace decomposition on the Hilbert space $L^2(G)$. Thus, we need to make sense of such decompositions. For our purposes, it will be enough to work with self-adjoint compact operators. Let's begin by defining ``compact.''
+\begin{definition}[compact]
+	Fix a Hilbert space $X$. A bounded operator $T\colon X\to X$ is \textit{compact} if and only if $T$ is a limit of operators $\{T_n\}_{n\in\NN}$ of finite rank in the norm topology.
+\end{definition}
+Let's explain why this is called ``compact.''
+\begin{lemma} \label{lem:compact-gives-convergence}
+	Fix a compact operator $T$ on a Hilbert space $X$. If the sequence $\{v_m\}_{m\in\NN}$ is bounded, then the sequence $\{Tv_m\}_{m\in\NN}$ has a convergent subsequence.
+\end{lemma}
+\begin{proof}
+	By compactness, we are promised a sequence $\{T_n\}_{n\in\NN}$ of finite-rank operators such that $T_n\to T$; say $\norm{T-T_n}<\frac1n$ for each $n$ for concreteness. Note that the conclusion is certainly true for each $T_n$.
+
+	Now, suppose that $\left\{v_{0,m}\right\}_{m\in\NN}$ is a bounded sequence in $X$; by scaling, we may assume that $\norm{v_{0,m}}\le1$ for all $m$. We construct our subsequence inductively as follows: for each $n\ge1$, let $\left\{v_{n,m}\right\}_{m\in\NN}$ be a subsequence of $\left\{v_{n-1,m}\right\}_{m\in\NN}$ such that the sequence $\{T_nv_{n,m}\}_{m\in\NN}$ converges.
+	
+	We now define $v_m\coloneqq v_{m,m}$, and we claim that $\{Tv_m\}_{m\in\NN}$ is Cauchy, which will complete the proof. This is a rather tedious computation. Because $\{v_m\}_{m\in\NN}$ is subsequence of $\{v_{n,m}\}_{m\in\NN}$ for all $n$, it is enough to check that
+	\[\norm{Tv_{n,m}-Tv_{n,m'}}\stackrel?<\frac3n\]
+	for all sufficiently large $m$ and $m'$. Well, the triangle inequality yields
+	\[\norm{Tv_{n,m}-Tv_{n,m'}}\le\norm{T_nv_{n,m}-T_nv_{n,m'}}+\norm{(T-T_n)(v_{n,m}-v_{n,m'})}.\]
+	The left term can be bounded by $1/n$ for large enough $m$ and $m'$ because the sequence $\{T_nv_{n,m}\}_{m\in\NN}$ is Cauchy. Then the right term can be bounded by $\frac2n$ because $\norm{T-T_n}<\frac1n$ and $\norm{v_{n,m}-v_{n,m'}}\le2$. Summing completes the argument.
+\end{proof}
+We now provide some interesting examples of compact operators.
+\begin{lemma} \label{lem:convolution-is-compact}
+	Fix a compact orientable smooth manifold $M$, and choose a non-vanishing top differential form $\omega$ such that $\int_M\omega=1$. For any continuous kernel $k\colon M\times M\to\CC$, the operator $T$ on $L^2(M)$ defined by
+	\[Tf(y)\coloneqq\int_Mk(x,y)f(x)\,\omega(x)\]
+	is bounded and compact.
+\end{lemma}
+\begin{proof}
+	Quickly, note $T$ is bounded because $k$ is bounded as a continuous function on a compact space. It remains to check compactness. The main idea is to use Riemann sums to construct our finite-rank operators.
+	We have two steps.
+	\begin{enumerate}
+		\item We construct the operators $T_n$. Choose a metric $d$ on $M$, for example induced by a Riemannian metric. Fixing some $n\ge1$ for now, we may tile $M$ by finitely many disjoint open subsets $\{V_{n,i}\}_{i=1}^{N_n}$ whose closures cover $M$, each of diameter at most $\frac1n$; we also go ahead and choose some $p_{n,i}\in V_{n,i}$ for each $i$. Then we define the ``Riemann sum'' operator
+		\[T_nf(y)\coloneqq\sum_{i=1}^{N_n}k(p_{n,i},p_{n,j})\int_{V_{n,i}}f(x)\omega(x),\]
+		where $y\in\overline{V_{n,j}}$ (and if $y$ lives in multiple closures, simply choose one $j$). Note that $T_n$ has finite rank because the output function is uniquely determined by the integrals $\int_{V_{n,i}}f(x)\omega(x)$.
+		\item We complete the proof by checking that $T_n\to T$ as $n\to\infty$. Choose some $f\in L^2(M)$ with $\norm f_2=1$, and we must check that $T_nf\to Tf$ (uniformly in $f$). Well, the triangle inequality yields
+		\[\norm{T_nf-f}_2^2\le\sum_{i,j=1}^{N_n}\int_{V_{j,n}}\int_{V_{i,n}}\left|k(x,y)-k(p_{n,i},p_{n,j})\right|^2\left|f(x)\right|^2\omega(x)\omega(y).\]
+		Because $k$ is uniformly continuous (it is continuous on a compact metric space), we see that there exists a sequence $\{\varepsilon_n\}_{n\in\NN}$ of real numbers converging to $0$ such that $d_{M\times M}((x,y),(x',y'))<\frac1n$ implies $\left|k(x,y)-k(x',y')\right|<\varepsilon_n$. Thus, $\left|k(x,y)-k(p_{n,i},p_{n,j})\right|^2<\varepsilon_n^2$, so the entire integral above is bounded by $\varepsilon_n^2$ and hence converges to $0$ uniformly in $f$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+We are now ready to prove our spectral theorem.
+\begin{theorem}[Hilbert--Schmidt] \label{thm:hs}
+	Fix a compact self-adjoint operator $T\colon X\to X$ on a Hilbert space $X$. Then the eigenvalues $\sigma(T)$ of $T$ form a countable set of $\RR$. Furthermore, each nonzero eigenspace $X[\lambda]$ is finite-dimensional, and the subspace
+	\[\bigoplus_{\lambda\in\sigma(T)}X[\lambda]\]
+	is dense in $X$.
+\end{theorem}
+\begin{proof}
+	The idea is to strip off eigenvectors from $X$ one at a time.
+	
+	We proceed in steps.
+	\begin{enumerate}
+		\item Quickly, observe that if we can achieve the conclusion for $T^2$, then we can achieve the conclusion for $T$ as well: $T$ will preserve the eigenspace decomposition achieved for $T^2$, so we find that it has the same kernel, and each nonzero eigenspace of $T$ can be found inside exactly one nonzero eigenspace of $T^2$. The benefit of working with $T^2$ is that all eigenvalues are now expected to be positive.
+
+		\item We describe how to strip off a single eigenvector. If $\norm T=0$, there is nothing to do, so we assume otherwise. By compactness, we are granted a sequence of finite-rank operators $\{T_n\}_{n\in\NN}$ such that $T_n\to T$; by projecting onto the subspace of self-adjoint operators, we may assume that the $T_n$s are self-adjoint. Let's exhibit $\norm{T}^2$ as an eigenvalue: because $T_n^2$ is finite-rank, the largest eigenvalue of $T_n^2$ has magnitude $\norm{T_n}^2$, but the spectral theorem requires it to be a positive real number; say $v_n\in X$ is this eigenvector with $\norm {v_n}=1$. Then \Cref{lem:compact-gives-convergence} allows us to pass to a convergent subsequence so that $T^2v_n\to v$ for some $v\in X$; thus, $T_n^2v_n\to v$ as well, so $v_n\to\norm{T}^{-2}v$, so we see $T^2v=\norm T^2v$.
+
+		\item We complete the proof. The process in the previous paragraph can be iterated by passing to the orthogonal complement of each discovered eigenvector. In this way, we get a sequence $\left\{\lambda_i^2\right\}$ of decreasing positive real numbers which are eigenvalues of $T^2$. If the iterative process terminates, then there are only finitely many eigenvalues each with finite dimension, and we complete the argument. Otherwise, note that we must have $\lambda_i\to0$ by \Cref{lem:compact-gives-convergence} applied to the corresponding orthonormal eigenvectors $\{w_i\}$.
+
+		In this latter case, it remains to check that the sum of these eigenspaces (together with the kernel) is dense in $X$. For this, we show that any unit vector $v$ orthogonal to all the $w_i$s is in the kernel of $T^2$. Well, using the described iterative process, we find that $\norm{T^2v}$ is bounded above by $\lambda_i^2$ for all $i$, so $T^2v=0$ follows.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\subsection{The Proof}
+In this subsection, we will prove \Cref{thm:pw}. We begin by providing a more group-theoretic formulation of $\im\xi_G$.
+\begin{lemma} \label{lem:better-im-xi}
+	Fix a compact real Lie group $G$. For $f\in L^2(G)$, the following are equivalent.
+	\begin{listroman}
+		\item We have $f\in\im\xi_G$.
+		\item The elements $\{(h_1,1)f:h_1\in G\}$ span a finite-dimensional vector space over $\CC$.
+		\item The elements $\{(1,h_2)f:h_2\in G\}$ span a finite-dimensional vector space over $\CC$.
+		\item The elements $\{(h_1,h_2)f:h_1,h_2\in G\}$ span a finite-dimensional vector space over $\CC$.
+	\end{listroman}
+\end{lemma}
+\begin{proof}
+	Of course (iv) implies (ii) and (iii). To see that (i) implies (iv), it is enough to note that any element in the domain is supported on only finitely many $(V\otimes V^*)$s by definition of the direct sum and thus belongs to a finite-dimensional subrepresentation of the domain.
+
+	It remains to show that (ii) or (iii) implies (i). We will show that (ii) implies (i); the other implication is symmetric. Let $V$ be the irreducible representation spanned by $v\coloneqq f$, where $G$ acts by right translation, which we note is finite-dimensional by hypothesis. (We are implicitly using \Cref{cor:compact-semisimple} to show that $V$ is irreducible.) Now, we use the inclusion $\iota_\bullet\colon V\subseteq L^2(G)$ to define $\varphi\in V^*$ by $\varphi(v)\coloneqq\iota_v(1)$. Then
+	\[\xi_V(v\otimes\varphi)(g)=\varphi(gf)=f(g),\]
+	so $f\in\im\xi_V$, as required.
+\end{proof}
+Before beginning the proof of \Cref{thm:pw}, we need one more notion. We will prove by \Cref{thm:pw} by directly approximating a given $f\in L^2(G)$. Thus, it will be helpful to have well-behaved operators which tell us how to approximate.
+\begin{definition}[approximate identity]
+	Fix a compact real Lie group $G$ with normalized Haar measure $dg$. Then an \textit{approximate identity} is a sequence of nonnegative functions $\{e_n\}_{n\in\NN}$ in $L^2(G)$ satisfying the following: for any open neighborhood $U$ of $1$, all but finitely many of the $e_\bullet$s are supported in $U$, but $\int_Ge_n(g)\,dg=1$.
+\end{definition}
+\begin{remark} \label{rem:approx-id-uniform}
+	To tie this definition with the preceding paragraph, we claim that any continuous $f\in L^2(G)$ has $(e_n*f)\to f$ uniformly as $n\to\infty$. Indeed, because $G$ is compact, $f$ becomes uniformly continuous, so for $\varepsilon>0$, we may choose an open neighborhood of $U\subseteq G$ such that $h_1h_2^{-1}\in U$ implies $\left|f(h_1)-f(h_2)\right|<\varepsilon$. Then choose $N$ such that $n>N$ implies $e_n$ is supported on $U$, so any $h\in G$ has
+	\[\left|(e_n*f)(h)-f(h)\right|=\int_U\left|e_n(g)f\left(g^{-1}h\right)-e_n(g)f(h)\right|\,dg+\int_U\left|e_n(g)f(h)-f(h)\right|\,dg\le\varepsilon+0.\]
+\end{remark}
+We are now ready for the proof.
+\begin{proof}[Proof of \Cref{thm:pw}]
+	In short, the idea is to take an approximate identity and then use the corresponding convolution operators to build a fine decomposition of $L^2(G)$ via our spectral theorem.
+	We proceed in steps.
+	\begin{enumerate}
+		\item We set up some notation. Choose an approximate identity $\{e_n\}_{n\in\NN}$. By replacing each $e_n$ with the function $g\mapsto\frac12\left(e_n(g)+e_n(g^{-1})\right)$, we may assume that $e_n(g)=e_n\left(g^{-1}\right)$. We now use $e_n$ to define the convolution operator $E_n\colon L^2(G)\to L^2(G)$ by $E_nf\coloneqq(e_n*f)$.
+		\item We claim that the closure of $\im\xi_G$ contains the image of $E_n$. For this, we use \Cref{thm:hs}: note $E_n$ is compact by \Cref{lem:convolution-is-compact}, and one can check that $E_n$ is self-adjoint because $e_n\left(g_n^{-1}\right)=e_n(g)$. Thus, we are given a dense subspace of $L^2(G)$ given by the eigenspace decomposition
+		\[\ker E_n\oplus\bigoplus_{\lambda\in\sigma(E_n)\setminus\{0\}}L^2(G)[\lambda],\]
+		where each nonzero eigenspace $L^2(G)[\lambda]$ is finite-dimensional. It now suffices to show that $L^2(G)[\lambda]$ is contained in the closure of $\im\xi_G$, which \Cref{lem:better-im-xi} explains is the same as showing that $L^2(G)[\lambda]$ is stable under some translation action by $G$. This follows because $E_n\colon L^2(G)\to L^2(G)$ is invariant under the right translation action by $G$, so $G$ will preserve the eigenspaces!
+		\item We complete the proof. Fix some $f\in L^2(G)$ which we would like to approximate by $\im\xi_G$; continuous functions are dense in $L^2(G)$, so we may assume that $f$ is continuous. By the previous step, we know that each $B_nf$ has some $f_n\in\im\xi_G$ such that $\norm{E_nf-f_n}_2<\frac1n$. We now check $f_n\to f$:
+		\[\lim_{n\to\infty}\norm{f-f_n}_2\le\lim_{n\to\infty}\norm{f-E_nf}_2+\lim_{n\to\infty}\norm{E_nf-f_n}_2.\]
+		The left limit vanishes by \Cref{rem:approx-id-uniform}, and the right limit vanishes by construction of the $f_n$s.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+% \appendix
+\section{Complements} \label{sec:comp}
+In this section, we write out a few complements to our above discussion which are not immediately relevant to our main theorem.
+
+\subsection{Unimodular Groups}
+We will spend a quick subsection investigating the bizarre phenomenon seen in \Cref{ex:haar-rm,ex:haar-gl} that the left and right Haar measures agree.
+\begin{definition}[unimodular]
+	Fix a real Lie group $G$ of dimension $m$. Then the group $G$ is \textit{unimodular} if and only if every left Haar measure is also right-invariant.
+\end{definition}
+\begin{remark}
+	\Cref{prop:haar-unique} explains that left-invariant and right-invariant top differential forms both form one-dimensional vector spaces, so $G$ is unimodular if and only if these are the same vector subspace of $\Gamma(G,\land^mT^*G)$.
+\end{remark}
+The definition of being unimodular is purely ``measure-theoretic,'' so we seek out a more algebraic definition.
+\begin{lemma} \label{lem:det-adjoint-for-unimodular}
+	Fix a real Lie group $G$ of dimension $m$ with Lie algebra $\mf g$. Then $G$ is unimodular if and only if the representation $\land^m\op{Ad}_\bullet\colon G\to\left|\land^m\mf g^*\right|$ is trivial, where the absolute value signifies the image through $\left|\cdot\right|\colon\RR^\times\to\RR^+$.
+\end{lemma}
+\begin{proof}
+	The group $G$ is unimodular if and only if the left Haar measure given by the left-invariant top differential form $\omega=X_1\land\cdots\land X_m$ constructed in \Cref{prop:haar-unique} is also right-invariant, possibly with a sign. Because $\omega$ is already left-invariant, this is equivalent to $\omega$ being invariant under the conjugation action of $G$ (possibly up to a sign), which is equivalent to the adjoint action of $G$ on $\land^m\mf g^*$ being trivial (again, possibly up to a sign).
+\end{proof}
+\begin{example} \label{ex:compact-unimodular}
+	If $G$ is a compact real Lie group of dimension $m$ with Lie algebra $\mf g$, then we claim that $G$ is unimodular. Indeed, note that the image of the character $G\to\op{GL}\left(\land^m\mf g^*\right)$ must be a compact subgroup of $\RR^\times$. But the only compact subgroups of $\RR^\times$ are subgroups of $\{\pm1\}$, so \Cref{lem:det-adjoint-for-unimodular} explains that these groups are unimodular.
+\end{example}
+With this in mind, we note that one can pass checking unimodularity to the Lie algebra.
+\begin{definition}[unimodular]
+	Fix a real Lie algebra $\mf g$ of dimension $m$. Then we say that $\mf g$ is \textit{unimodular} if and only if the adjoint representation $\land^m\op{ad}_\bullet\colon\mf g\to\mf{gl}\left(\land^m\mf g\right)$ is trivial.
+\end{definition}
+\begin{proposition}
+	Fix a connected real Lie group $G$ of dimension $m$ with Lie algebra $\mf g$. Then $G$ is unimodular if and only if $\mf g$ is unimodular.
+\end{proposition}
+\begin{proof}
+	If $G$ is unimodular, then the adjoint representation $G\to\op{GL}\left(\land^m\mf g^*\right)$ is trivial by \Cref{lem:det-adjoint-for-unimodular} and noting that $G$ is connected. As such, taking the differential representation $\mf g\to\mf{gl}\left(\land^m\mf g^*\right)$ will continue to be trivial, and it will continue to be trivial after taking a dual, so $\mf g$ becomes unimodular.
+
+	Conversely, suppose that $\mf g$ is unimodular so that the differential representation $\mf g\to\mf{gl}\left(\land^m\mf g^*\right)$ is trivial after taking a dual. We would like to show that $G$ acts trivially on $\land^m\mf g^*$, which will complete the proof by \Cref{lem:det-adjoint-for-unimodular}. Well, let $H\subseteq G$ be the closed Lie subgroup of $G$ acting trivially on $\land^m\mf g^*$, and a short computation reveals that the Lie algebra $\mf h$ of $H$ is precisely
+	\[\mf h=\ker\left(\mf g\to\mf{gl}\left(\land^m\mf g^*\right)\right).\]
+	Thus, we see that $\mf h=\mf g$ by hypothesis on $\mf g$, so $H=G$ because $G$ is connected.
+\end{proof}
+We are now ready for some examples.
+\begin{example}
+	If $\mf g$ is abelian, then $\op{ad}_\bullet\colon\mf g\to\mf{gl}(\mf g)$ is already trivial, so $\mf g$ is unimodular. This explains \Cref{ex:haar-rm}.
+\end{example}
+\begin{example} \label{ex:ss-is-unimodular}
+	If $\mf g$ is semisimple of dimension $m$, then $[\mf g,\mf g]=\mf g$: after breaking $\mf g$ into simple Lie algebras, this follows because a simple algebra can have no nonzero proper ideals. Now, we claim that $\mf g$ is unimodular: note that $\land^m\mf g$ is one-dimensional, so upon choosing a basis vector, the representation $\mf g\to\mf{gl}\left(\land^m\mf g\right)$ becomes some representation $\rho\colon\mf g\to\mf{gl}(\RR)$ But now $\mf g=[\mf g,\mf g]$ means that any element of $\mf g$ can be written as $[X,Y]$, whereupon we note
+	\[\rho([X,Y])=\rho(X)\rho(Y)-\rho(Y)\rho(X)=0\]
+	because $\rho(X)$ and $\rho(Y)$ are just some real numbers.
+\end{example}
+\begin{example} \label{ex:unimodular-sums}
+	Suppose that both $\mf g$ and $\mf h$ are unimodular Lie algebras of dimensions $m$ and $n$, respectively. Then we claim that $\mf g\oplus\mf h$ is unimodular. Indeed, by expanding out bases of our exterior powers, we see that $\land^{m+n}(\mf g\oplus\mf h)=\land^m\mf g\oplus\land^n\mf h$, and the adjoint action onto each of those factors is already known to be trivial.
+\end{example}
+\begin{example}
+	Any reductive Lie algebra is the sum of an abelian and a semisimple Lie algebra, so any reductive Lie algebra is unimodular by combining the previous three examples. This explains \Cref{ex:haar-gl}.
+\end{example}
+
+\subsection{Characters}
+In this subsection, we use the Peter--Weyl theorem to understand the characters of a compact group. For brevity, if $V$ is a representation, we will write $\rho_V$ for its structure map.
+\begin{definition}[character]
+	Fix a real Lie group $G$ and a representation $\rho\colon G\to\op{GL}(V)$. Then we define the character $\chi_V\colon G\to\CC$ by $\chi_V(g)\coloneqq\tr\rho(g)$.
+\end{definition}
+\begin{remark} \label{rem:char-sum-tensor}
+	As usual, for representations $V$ and $W$ one can check that $\chi_{V\oplus W}=\chi_V+\chi_W$ and $\chi_{V\otimes W}=\chi_V\cdot\chi_W$.
+\end{remark}
+\begin{remark} \label{rem:char-dual}
+	If $G$ is compact, we claim that $\chi_{V^*}(g)=\chi_V\left(g^{-1}\right)=\overline{\chi_V(g)}$. Use \Cref{prop:weyl-unitary} to give $V$ a $G$-invariant positive-definite Hermitian inner product $\langle\cdot,\cdot\rangle$. Then $\varphi\in V^*$ has $(g\varphi)(v)=\varphi\left(g^{-1}v\right)$, so the first equality follows upon expanding a basis. The second equality will follow upon showing that $g$ has eigenvalues which have absolute value $1$, which follows because the image of $G\to\op{GL}(V)$ must be compact.
+\end{remark}
+The following example explains why the Peter--Weyl theorem may be helpful to us.
+\begin{example} \label{ex:get-char}
+	Note that $V\otimes V^*\cong\op{End}(V)$, so one may ask where $\xi_V$ sends $\id_V$. Well, give $V$ a basis $\{v_1,\ldots,v_n\}$ so that $V^*$ has the dual basis $\{v_1^*,\ldots,v_n^*\}$, and then we see $\xi_V$ sends $\id_V\in\op{End}(V)$ corresponds to $\sum_i(v_i\otimes v_i^*)\in V\otimes V^*$, which goes to $g\mapsto\sum_iv_i^*(gv_i)$, which is the trace!
+\end{example}
+Here is our main result.
+\begin{theorem} \label{thm:char-ortho}
+	Fix a compact real Lie group $G$. Let $L^2(G)^G$ denote the set of functions $f\in L^2(G)$ which are invariant under the action by $\{(g,g):g\in G\}$. Then the collection of characters $\chi_V$ form an orthonormal basis of $L^2(G)$ as $V$ varies over finite-dimensional complex irreducible representations.
+\end{theorem}
+\begin{proof}
+	We begin by remarking that $\chi_V\in L^2(G)^G$ by properties of the trace. We have two checks.
+	\begin{itemize}
+		\item Orthonormal: for representations $V$ and $W$, we use \Cref{rem:char-sum-tensor,rem:char-dual} to compute
+		\[\langle\chi_V,\chi_W\rangle=\int_G\chi_V(g)\overline{\chi_W(g)}\,dg=\int_G\chi_{V\otimes W^*}(g)\,dg.\]
+		If $V\cong W$, then we see that the middle term is $1$ (by \Cref{rem:char-dual}). Otherwise, if $V\not\cong W$, we upgrade it to the endomorphism
+		\[R\coloneqq\int_G\rho_{V\otimes W^*}(g)\,dg,\]
+		which we note lives in $(V\otimes W^*)^G$ by construction so that $\langle\chi_V,\chi_W\rangle$ is the trace of $R$. Now, if $V\not\cong W$ then $(V\otimes W^*)^G$ vanishes by Schur's lemma, so $R=0$.
+		\item Spanning: we use \Cref{thm:pw}. On one hand, we note that $(\im\xi_G)^G$ is precisely the span of the characters because $(V\otimes V^*)^G$ is spanned by the identity, which goes to $\chi_V\in L^2(G)$ via \Cref{ex:get-char}. Thus, we are left with showing that $(\im\xi_G)^G$ is dense in $L^2(G)$. The idea is to consider the projection operator $P\colon L^2(G)\to L^2(G)^G$ given by
+		\[Pf(h)\coloneqq\int_Gf\left(g^{-1}hg\right)\,dg.\]
+		Notably, $P$ is bounded: for any $f\in L^2(G)$, the invariance of the Haar measure shows $\norm{Pf}_2\le\norm f_2$. Additionally, $P$ fixes $L^2(G)^G$. Thus, for any $f\in L^2(G)^G$, we may find a sequence $\{f_n\}_{n\in\NN}\in\im\xi_G$ approaching $f$, and then we see $f_n\to f$ implies $Pf_n\to f$, so $f$ is in the closure of $(\im\xi_G)^G$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{example}[Fourier series]
+	Consider $G=S^1$, which is abelian so that $L^2(G)^G=L^2(G)$. The representations of $S^1$ are one-dimensional, where the map $S^1\to\CC^\times$ are given by $z\mapsto z^n$ for some fixed integer $n\in\ZZ$. Thus, we are asserting that polynomials form an orthonormal basis in the collection of functions on $S^1$. Passing to the cover $\RR\onto S^1$, this shows that the functions $t\mapsto e^{nit}$ form an orthonormal basis of the $2\pi$-periodic functions in $L^2(\RR)$. This recovers Fourier series on $\RR/2\pi\ZZ$.
+\end{example}
+
+\subsection{Matrix Coefficients}
+In this subsection, we explain how the orthogonality of characters can be upgraded to produce orthogonality of matrix coefficients. As an application, we compute the convolution of characters.
+\begin{definition}[matrix coefficient]
+	Fix a finite-dimensional continuous representation $V$ of a compact group $G$. Further, fix an invariant unitary inner product $\langle\cdot,\cdot\rangle$ on $V$, and let $\{v_1,\ldots,v_n\}$ be an ordered orthonormal basis. Then we define the \textit{matrix coefficients} to be the map $G\to\CC$ defined by $\rho(g)_{ij}\coloneqq\langle v_i,\rho(g)v_j\rangle$.
+\end{definition}
+It turns out that these matrix coefficient maps are smooth, which is shown in \Cref{prop:smooth-dense}.
+\begin{example}
+	By definition, we see that
+	\[\chi_\rho(g)=\sum_{i=1}^n\rho(g)_{ii}.\]
+\end{example}
+Here is our main result.
+\begin{proposition} \label{prop:matrix-coef-ortho}
+	Fix a compact Lie group $G$. Further, choose finite-dimensional irreducible representations $V$ and $W$ of $G$, and equip them with invariant unitary inner products and ordered bases $\{v_1,\ldots,v_m\}$ and $\{w_1,\ldots,w_n\}$, respectively.
+	\begin{listalph}
+		\item If $V\not\cong W$, then we always have
+		\[\int_G\rho_V(g)_{ij}\overline{\rho_W(g)_{k\ell}}\,dg=0.\]
+		\item We have
+		\[\int_G\rho_V(g)_{ij}\rho_V(g)_{ij}\overline{\rho_V(g)_{k\ell}}\,dg=\begin{cases}
+			1/\dim V & \text{if }(i,j)=(k,\ell), \\
+			0 & \text{else}.
+		\end{cases}\]
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We argue as in \Cref{thm:char-ortho}. To begin, we see
+	\[\int_G\rho_V(g)_{ij}\overline{\rho_W(g)_{k\ell}}\,dg=\int_G\langle v_i\otimes w_k,(\rho_V(g)\otimes\rho_{\overline W}(g))(v_j\otimes w_\ell)\rangle\,dg\]
+	by considering the coefficients of the tensor product operator. However, $\rho_V\otimes\rho_{\ov W}=\rho_{V\otimes W^*}$ by elaborating on \Cref{rem:char-sum-tensor,rem:char-dual}, so we see that we are trying to compute a matrix coefficient of the operator
+	\[R\coloneqq\int_G\rho_{V\otimes W^*}(g)\,dg.\]
+	By construction, the image of $R$ lives in $(V\otimes W^*)^G$ (it is an average!), so this automatically vanishes when $V\not\cong W$, which gives (a).
+
+	To prove (b), we now assume that $V=W$. Observe that $Rg=gR=R$, so $R$ is a $G$-invariant map and will therefore preserve the isotypic components of $(V\otimes V^*)$. On the other hand, the image must be $G$-invariant, and $\op{Hom}_G(V,V)$ consists only of the scalars, which $R$ certainly preserves, so we see that $R$ projects onto the scalars. For example, by expanding out our bases, we see that the scalars are all scalar multiples of the identity map $v\coloneqq\sum_iv_i\otimes v_i^*$, and because our inner product is invariant, we see that $R$ is must be the orthogonal projection onto $v$. Thus,
+	\[Rv'=\frac{\langle v',v\rangle}{\langle v,v\rangle}v.\]
+	For example, when $(i,j)\ne(k,\ell)$, the fact that we are a projection automatically makes the matrix coefficient vanish. And when $(i,j)=(k,\ell)$, the above evaluates to $1/\langle v,v\rangle=1/\dim V$.
+\end{proof}
+\begin{corollary} \label{cor:character-convolution}
+	Fix a compact Lie group $G$. Further, choose finite-dimensional irreducible representations $V$ and $W$ of $G$. Then
+	\[\chi_V*\chi_W=\langle\chi_V,\chi_W\rangle\chi_V.\]
+\end{corollary}
+\begin{proof}
+	Fix some input $g$, and choose unitary invariant inner products and orthonormal bases for $V$ and $W$ as usual. Then we see that $(\chi_V*\chi_W)(g)$ is
+	\[\int_G\chi_V\left(gh^{-1}\right)\chi_W(h)\,dh=\sum_{i,k=1}^n\int_G\rho_V\left(gh^{-1}\right)_{ii}\rho_W(h)_{kk}\,dh.\]
+	To continue, we should expand out the matrix coefficient for $\rho_V\left(gh^{-1}\right)$ to give
+	\[\sum_{i,j,k=1}^n\rho_V(g)_{ij}\int_G\rho_V\left(h^{-1}\right)_{ji}\rho_W(h)_{kk}\,dh.\]
+	As usual, we note that $\rho_V\left(h^{-1}\right)_{ji}=\overline{\rho_V(h)}_{ij}$, which is seen by expanding a basis. Then the integral vanishes by \Cref{prop:matrix-coef-ortho} unless $V\cong W$, which explains the coefficient $\langle\chi_V,\chi_W\rangle$ in the right-hand side of the statement of the corollary.
+	
+	Otherwise, in the event that $V\cong W$, we may as well identify them and use the same orthonormal bases. Then \Cref{prop:matrix-coef-ortho} tells us that the integral still vanishes unless $(j,i)=(k,k)$, in which case the value is $1/\dim V$. Thus, we are left with the sum
+	\[\sum_{i=1}^n\rho_V(g)_{ii}\cdot\frac1{\dim V}=\chi_V(g),\]
+	as required.
+\end{proof}
+\begin{example} \label{ex:char-avg-proj}
+	Here is a similar calculation. If $V$ is an irreducible representation of the compact Lie group $G$, then we claim that the operator
+	\[\int_G\chi_\rho(g)\rho\left(g^{-1}\right)\,dg\]
+	is $\id_V$. Indeed, a direct calculation with the invariance of the Haar measure shows that this operator is $G$-invariant, so it must be a scalar. To compute that this scalar is the identity, we can check that the trace of this operator equals $\dim V$. Indeed, \Cref{cor:character-convolution} explains the trace is equal to $(\chi_V*\chi_V)(1)=\dim V$.
+\end{example}
+
+% \begin{example}[Weierstrass approximation]
+% 	Consider $G=\op{SU}_2$. A linear algebra exercise shows that an element of $\op{SU}_2$ can be written uniquely as $\begin{bsmallmatrix}
+% 		\alpha & -\overline\beta \\ \beta & \overline\alpha
+% 	\end{bsmallmatrix}$ where $\left|\alpha\right|^2+\left|\beta\right|^2=1$; for example, this shows $\op{SU}_2$ is compact. The Spectral theorem implies that conjugacy classes in $\op{SU}_2$ are uniquely represented by a matrix of the form $\op{diag}\left(e^{i\theta},e^{-i\theta}\right)$ where $\theta\in[0,\pi)$, so it follows that the trace $\tr\colon\op{Conj}({\op{SU}_2})\to[-2,2]$ is a homeomorphism.
+	
+% 	Now, irreducible representations of $\op{SU}_2$ are the symmetric powers $\op{Sym}^n\CC^2$, whose character we can see sends $\op{diag}\left(e^{i\theta},e^{-i\theta}\right)$ to
+% 	\[e^{ni\theta}+e^{(n-2)i\theta}+\cdots+e^{-(n-2)i\theta}+e^{-ni\theta}.\]
+% 	In this way, we see that \Cref{thm:char-ortho} is asserting that the functions given by
+% 	\[2\cos\theta\mapsto2(\cos n\theta+\cos(n-2)\theta+\cdots)\]
+% 	are dense in the set of all functions on $[-2,2]$. Expanding out $\cos n\theta$ as a polynomial in $\cos\theta$ then proves that polynomials are dense in the set of all functions on $[-2,2]$. This recovers the Weierstrass approximation theorem.
+% \end{example}
+
+\end{document}

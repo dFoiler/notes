@@ -5,7 +5,7 @@
 \begin{document}
 
 \section{September 16}
-Welcome to the second class of the semester. The note-taker is furiously eating lunch.
+Welcome to the second class of the semester. The note-taker is furiously eating lunch. For today's class, we will review group cohomology, but we will freely assume standard facts about derived functors in order to not be bogged down in commutative algebra.
 
 \subsection{Construction of Group Cohomology}
 For the next few weeks, we are going to focus on proving \Cref{thm:zywina-koymans-pagano}. This will be done using Selmer groups.
@@ -28,14 +28,17 @@ We begin by recalling the definition of group cohomology.
 	It sends a map $f\colon\ZZ\to M$ to $f(1)$; the inverse sends $m\in M^G$ to the map $f\colon\ZZ\to M$ given by $k\mapsto km$.
 \end{remark}
 \begin{definition}[group cohomology]
-	Fix a group $G$. The \textit{group cohomology groups} $\mathrm H^\bullet(G;-)$ are the right-derived functors for the invariants functor $(\cdot)^G\colon\mathrm{Mod}_{\ZZ[G]}\to\mathrm{Ab}$.
+	Fix a group $G$. The \textit{group cohomology groups} $\mathrm H^\bullet(G;-)$ are the right-derived functors for the invariants functor $(-)^G\colon\mathrm{Mod}_{\ZZ[G]}\to\mathrm{Ab}$.
 \end{definition}
 \begin{remark}
 	In light of the natural isomorphism $(-)^G=\op{Hom}_{\ZZ[G]}(\ZZ,-)$, we see that
 	\[\mathrm H^\bullet(G,-)=\mathrm{Ext}^\bullet_{\ZZ[G]}(\ZZ,-).\]
 \end{remark}
+\begin{remark}
+	It is worthwhile to remember that we actually expect the groups $\mathrm H^\bullet(G;M)$ to exhibit two kinds of functoriality: there is a functoriality in $M$, and if we have a group homomorphism $G'\to G$, then we expect the induced ``forgetful'' functor $\mathrm{Mod}_{G}\to\mathrm{Mod}_{G'}$ to also induce a natural transformation $\mathrm H^\bullet(G';-)\to\mathrm H^\bullet(G;-)$. Such a map will be made explicit shortly in \Cref{rem:compute-group-cohom-funct}.
+\end{remark}
 
-\subsection{Some Calculations}
+\subsection{Tools for Calculations}
 Because we are now dealing with $\mathrm{Ext}$ groups, there are two ways to compute $\mathrm H^\bullet(G,M)$.
 \begin{itemize}
 	\item We can build an injective resolution of $M$, apply $(-)^G$, and take cohomology.
@@ -50,6 +53,11 @@ The second is easier for the purposes of calculation.
 	One can check that this is a free resolution of $\ZZ$. We let $\mc P_\bullet$ be the above complex where we have truncated off $\ZZ$, so we see that $\mathrm H^i(G;M)$ is
 	\[\mathrm{Ext}^i_{\ZZ[G]}(\ZZ,M)=\mathrm H^i(\mathrm{Hom}_G(\mc P_\bullet,M)).\]
 \end{example}
+\begin{remark} \label{rem:compute-group-cohom-funct}
+	This construction of group cohomology even has good functoriality properties: given a group homomorphism $g\colon G'\to G$ and a morphism $f\colon M\to M'$ of abelian groups for which $M$ is a $G$-module and $M'$ has the induced $G'$-module structure, we get an induced map of the associated complexes $\mc P(G')_\bullet\to\mc P(G)_\bullet$ (of \Cref{ex:compute-group-cohom}) and thus of the complexes $\op{Hom}_{G}(\mc P(G)_\bullet,M)\to\op{Hom}_{G'}(\mc P(G')_\bullet,M')$ and thus of cohomology groups
+	\[\mathrm H^i(\mathrm{Hom}_{G'}(\mc P(G')_\bullet,M'))\to\mathrm H^i(\mathrm{Hom}_{G}(\mc P(G)_\bullet,M)).\]
+	On cocycles, we can see that this map sends the class of some cocycle $c\colon\ZZ[G^n]\to M$ to the class of the induced composite $\ZZ[(G')^n]\to\ZZ[G^n]\to M\to M'$.
+\end{remark}
 \begin{remark}
 	If $G$ is finite and $M$ is finite, then a direct calculation of the cohomology via the resolution in \Cref{ex:compute-group-cohom} implies that $\mathrm H^i(G;M)$ is finite in all degrees.
 \end{remark}
@@ -66,14 +74,40 @@ While the combinatorics in \Cref{ex:compute-group-cohom} becomes difficult for l
 	\[(gh-1)m\stackrel?=g(h-1)m+(g-1)m.\]
 	We call such a crossed homomorphism ``principal.''
 \end{example}
-\begin{example}
+\begin{lemma} \label{lem:h1-by-crossed-hom}
+	Fix a group $G$ and a $G$-module $M$. Then $\mathrm H^1(G;M)$ is isomorphic to the group of crossed homomorphisms modulo the subgroup of principal crossed homomorphisms.
+\end{lemma}
+\begin{proof}
+	We use \Cref{ex:compute-group-cohom}, which splits the calculation as follows.
+	\begin{itemize}
+		\item We claim that the group of $1$-cocycles of $M$ is isomorphic to the group of crossed homomorphisms. Indeed, a $1$-cocycle is simply an element in the kernel of the map
+		\[\op{Hom}_G\left(\ZZ\left[G^2\right],M\right)\stackrel{d_3}\to\op{Hom}_G\left(\ZZ\left[G^3\right],M\right).\]
+		In other words, by considering $\ZZ$-linear extensions, we are looking at a map $c\colon G^2\to M$ such that $c(gx_1,gx_2)=gc(x_1,x_2)$ and for which $d_3c(g_0,g_1,g_2)=0$ always, which amounts to the condition
+		\[c(g_1,g_2)-c(g_0,g_2)+c(g_0,g_1)=0\]
+		for all $g_0,g_1,g_2\in G$. Now, the condition $c(gx_1,gx_2)=gc(x_1,x_2)$ implies that $c$ is uniquely determined by its restriction $f\colon G\to M$ given by $f(g)\coloneqq c(e,g)$; indeed, then $c(g_1,g_2)=g_1f\left(g_1^{-1}g_2\right)$. Then the condition that $c$ is a $1$-cocycle is translates into the condition
+		\[g_1f\left(g_1^{-1}g_2\right)+g_0f\left(g_0^{-1}g_1\right)=g_0f\left(g_0^{-1}g_2\right)\]
+		for all $g_0,g_1,g_2\in G$. By dividing out by $g_0$ and setting $g\coloneqq g_0^{-1}g_1$ and $h\coloneqq g_1^{-1}g_2$, this condition becomes equivalent to
+		\[f(gh)=gf(h)+f(g)\]
+		for all $g,h\in G$. Thus, we see that the map taking a $1$-cocyle $c$ of $M$ to the map $f\colon G\to M$ given by $f(g)\coloneqq c(e,g)$ is a bijection, and one can see that is $\ZZ$-linear, so it is an isomorphism.
+		\item We claim that the subgroup of $1$-coboundaries of $M$ is isomorphic to the subgroup of principal crossed homomorphisms. Indeed, a $1$-coboundary is simply an element in the image of the map
+		\[\op{Hom}_G\left(\ZZ\left[G\right],M\right)\stackrel{d_2}\to\op{Hom}_G\left(\ZZ\left[G^2\right],M\right).\]
+		A $G$-linear map $b\colon\ZZ[G]\to M$ amounts to the data of a single element $b(1)\in M$, so we will identify the left group with $M$. Then the corresponding $1$-coboundary is defined by
+		\[d_2b(g_0,g_1)=g_0b-g_1b.\]
+		The algorithm described in the previous point translates this into the crossed homomorphism $f\colon G\to M$ defined by $f(g)=b(e,g)=(1-g)b$, which is a principal crossed homomorphism. This mapping is now seen to be bijective and $\ZZ$-linear, so the result follows.
+		\qedhere
+	\end{itemize}
+\end{proof}
+\begin{remark}
+	This ``restriction'' map taking a $1$-cocycle to a crossed homomorphism has all the functoriality one could ask for: for a homomorphism $g\colon G'\to G$ and a morphism $f\colon M\to M'$ of abelian groups, we can compute that the functoriality map of \Cref{rem:compute-group-cohom-funct} sends a crossed homomorphism $G\to M$ to the composite $G'\to G\to M\to M'$. Indeed, this is just a matter of appropriately restricting everywhere.
+\end{remark}
+\begin{example} \label{ex:trivial-crossed-hom}
 	If the action of $G$ on $M$ is trivial, then a crossed homomorphism is just a group homomorphism. Additionally, all the principal crossed homomorphisms vanish, so we see that
 	\[\mathrm H^1(G;M)=\op{Hom}_\ZZ(G,M).\]
 	For example, $\mathrm H^1(1;\ZZ)=\ZZ$ is infinite.
 \end{example}
 In the case where $G$ is cyclic, there is an easier resolution than the one in \Cref{ex:compute-group-cohom}.
-\begin{proposition}
-	Fix a finite cyclic group $G$. Then for any $G$-module $M$ and index $i>0$, we have
+\begin{proposition} \label{prop:compute-group-cohom-cyclic}
+	Fix a finite cyclic group $G$ generated by $\sigma$. Then for any $G$-module $M$ and index $i>0$, we have
 	\[\mathrm H^i(G;M)=\begin{cases}
 		M^G/\im\op N_G & \text{if }i\text{ is even}, \\
 		\ker{\op N_G}/\im(\sigma-1) & \text{if }i\text{ is odd}.
@@ -81,10 +115,10 @@ In the case where $G$ is cyclic, there is an easier resolution than the one in \
 	In particular, $\left\{\mathrm H^i(G;M)\right\}_{i>0}$ is $2$-periodic.
 \end{proposition}
 \begin{proof}
-	Suppose that $G$ is finite cyclic of order $n$ and generated by some $\sigma$. We will build an explicit resolution for $\ZZ$. We start with the degree map $\ZZ[G]\onto\ZZ$ has kernel generated by $(\sigma-1)$, so we can surject onto its kernel via the map $(\sigma-1)\colon\ZZ[G]\to\ZZ[G]$. On the other hand, the kernel of $(\sigma-1)$ is exactly isomorphic to $\ZZ$, given by the elements of the form $k\sum_{i=0}^{n-1}\sigma^i$ where $k$ is some integer. In other words, the kernel of $(\sigma-1)$ is given by the norm map $\op N_G\colon\ZZ[G]\to\ZZ[G]$, where $\op N_G(x)\coloneqq\sum_{g\in G}gx$. Because we are back at $\ZZ$, we see that we can iterate to produce a resolution
+	Suppose that $G$ is finite cyclic of order $n$ and generated by some $\sigma$. We will build an explicit resolution for $\ZZ$. We start with the degree map $\ZZ[G]\onto\ZZ$ has kernel generated by $(\sigma-1)$, so we can surject onto its kernel via the map $(\sigma-1)\colon\ZZ[G]\to\ZZ[G]$. On the other hand, the kernel of $(\sigma-1)$ is exactly isomorphic to $\ZZ$, given by the elements of the form $k\sum_{i=0}^{n-1}\sigma^i$ where $k$ is some integer. In other words, the kernel of $(\sigma-1)$ is given by the norm map $\op N_G\colon\ZZ[G]\to\ZZ[G]$, where $\op N_G(x)\coloneqq\sum_{g\in G}gx$; equivalently, we can view $\op N_G$ as multiplication by the norm element ${\op N_G}\coloneqq\sum_{g\in G}g$. Because we are back at $\ZZ$, we see that we can iterate to produce a resolution
 	\[\cdots\stackrel{(\sigma-1)}\to\ZZ[G]\stackrel{\op N_G}\to\ZZ[G]\stackrel{(\sigma-1)}\to\ZZ[G]\stackrel{\deg}\to\ZZ\to0.\]
 	We now compute cohomology. After truncating and applying $\op{Hom}_{\ZZ[G]}(-,M)$, we receive the complex
-	\[0\to M\stackrel{\sigma-1}\to M\stackrel{\op N_G}\to M\stackrel{\sigma-1} M\to\cdots,\]
+	\[0\to M\stackrel{\sigma-1}\to M\stackrel{\op N_G}\to M\stackrel{\sigma-1}\to M\to\cdots,\]
 	where the leftmost $M$ lives in degree $0$. For example, we can see that $\mathrm H^0(G;M)$ is $\ker(\sigma-1)$, which is $\{m\in M:\sigma m=m\}$, which is $M^G$. Continuing, for $i>0$, we see that
 	\[\mathrm H^i(G;M)=\begin{cases}
 		M^G/\im\op N_G & \text{if }i\text{ is even}, \\
@@ -92,6 +126,35 @@ In the case where $G$ is cyclic, there is an easier resolution than the one in \
 	\end{cases}\]
 	as desired.
 \end{proof}
+\begin{remark} \label{rem:compute-group-cohom-cyclic-funct}
+	The result \Cref{prop:compute-group-cohom-cyclic} has rather poor functoriality properties. Fix cyclic groups $G=\langle\sigma\rangle$ and $G'=\langle\sigma'\rangle$, and suppose we have a surjection $g\colon G'\to G$, which up to changing generators must be given by $g(\sigma')=\sigma$. Set $m\coloneqq\#G'/\#G$ for brevity. Now, the identities $g(\sigma'-1)=(\sigma-1)$ and $g({\op N_{G'}})=m\op N_G$ produce the morphism
+	% https://q.uiver.app/#q=WzAsMTYsWzYsMCwiXFxaWiJdLFs3LDAsIjAiXSxbNywxLCIwIl0sWzYsMSwiXFxaWiJdLFs1LDAsIlxcWlpbRyddIl0sWzUsMSwiXFxaWltHXSJdLFs0LDAsIlxcWlpbRyddIl0sWzQsMSwiXFxaWltHXSJdLFszLDAsIlxcWlpbRyddIl0sWzMsMSwiXFxaWltHXSJdLFsyLDAsIlxcWlpbRyddIl0sWzEsMCwiXFxaWltHJ10iXSxbMCwwLCJcXGNkb3RzIl0sWzAsMSwiXFxjZG90cyJdLFsxLDEsIlxcWlpbR10iXSxbMiwxLCJcXFpaW0ddIl0sWzQsMCwiXFxkZWciXSxbNSwzLCJcXGRlZyIsMl0sWzMsMl0sWzAsMV0sWzAsMywiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw1LCJnIl0sWzYsNCwiKFxcc2lnbWEnLTEpIl0sWzcsNSwiKFxcc2lnbWEtMSkiLDJdLFs2LDcsImciXSxbOCw2LCJcXG9wIE5fe0cnfSJdLFs5LDcsIlxcb3AgTl9HIiwyXSxbOCw5LCJtZyJdLFsxMywxNF0sWzE0LDE1LCJcXG9wIE5fRyIsMl0sWzE1LDksIihcXHNpZ21hLTEpIiwyXSxbMTIsMTFdLFsxMSwxMCwiXFxvcCBOX3tHJ30iXSxbMTAsOCwiKFxcc2lnbWEnLTEpIl0sWzEwLDE1LCJtZyJdLFsxMSwxNCwibV4yZyJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		\cdots & {\ZZ[G']} & {\ZZ[G']} & {\ZZ[G']} & {\ZZ[G']} & {\ZZ[G']} & \ZZ & 0 \\
+		\cdots & {\ZZ[G]} & {\ZZ[G]} & {\ZZ[G]} & {\ZZ[G]} & {\ZZ[G]} & \ZZ & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow["{\op N_{G'}}", from=1-2, to=1-3]
+		\arrow["{m^2g}", from=1-2, to=2-2]
+		\arrow["{(\sigma'-1)}", from=1-3, to=1-4]
+		\arrow["mg", from=1-3, to=2-3]
+		\arrow["{\op N_{G'}}", from=1-4, to=1-5]
+		\arrow["mg", from=1-4, to=2-4]
+		\arrow["{(\sigma'-1)}", from=1-5, to=1-6]
+		\arrow["g", from=1-5, to=2-5]
+		\arrow["\deg", from=1-6, to=1-7]
+		\arrow["g", from=1-6, to=2-6]
+		\arrow[from=1-7, to=1-8]
+		\arrow[equals, from=1-7, to=2-7]
+		\arrow[from=2-1, to=2-2]
+		\arrow["{\op N_G}"', from=2-2, to=2-3]
+		\arrow["{(\sigma-1)}"', from=2-3, to=2-4]
+		\arrow["{\op N_G}"', from=2-4, to=2-5]
+		\arrow["{(\sigma-1)}"', from=2-5, to=2-6]
+		\arrow["\deg"', from=2-6, to=2-7]
+		\arrow[from=2-7, to=2-8]
+	\end{tikzcd}\]
+	of chain complexes. Now, given a morphism $f\colon M\to M'$ where $M$ is a $G$-module, and $M'$ has the induced $G'$-module structure, we may apply $\op{Hom}_G(-,M)$ and $\op{Hom}_{G'}(-,M')$ to get another morphism of chain complexes induced by $f$ and the above morphism. It follows that the induced map $\mathrm H^i(G;M)\to\mathrm H^i(G';M')$ is given by $m^{\floor{i/2}}f$ by a computation on the corresponding cocycles.
+\end{remark}
 
 \subsection{Change of Group}
 We will get some utility out of having more functors.
@@ -99,21 +162,34 @@ We will get some utility out of having more functors.
 	Fix a subgroup $H\subseteq G$. Then there is an \textit{induction} functor $\op{Ind}_H^G\colon\mathrm{Mod}_H\to\mathrm{Mod}_G$ given on objects by sending any $H$-module $N$ to $\op{Ind}_H^GN$, defined as the module of functions $f\colon G\to N$ for which $f(hx)=hf(x)$ for any $h\in H$. This is a $G$-module with action given by
 	\[(gf)(x)\coloneqq f(xg).\]
 \end{definition}
+\begin{remark}
+	A function $f\colon G\to N$ has equivalent data to a homomorphism $f\colon\ZZ[G]\to N$ of abelian groups by extending $\ZZ$-linearly. The condition that $f(hx)=hf(x)$ then amounts to requiring that the map $\ZZ[G]\to N$ is $\ZZ[H]$-linear. Thus, we see that $\op{Ind}_H^GN$ is bijection with $\op{Hom}_{\ZZ[H]}(\ZZ[G],N)$, and one can see that this bijection is $\ZZ[G]$-linear and natural in $N$.
+\end{remark}
+% \begin{remark}
+% 	Here is another way to think about the induction: if $H\subseteq G$ has finite index, we claim that there is a natural isomorphism $\op{Hom}_{\ZZ[H]}(\ZZ[G],N)\to\ZZ[G]\otimes_{\ZZ[H]}N.$
+% 	\todo{}
+% \end{remark}
 With an induction, we also have a restriction.
 \begin{definition}[restriction]
 	Fix a subgroup $H\subseteq G$. Then there is a \textit{restriction} functor $\op{Res}^G_H\colon\mathrm{Mod}_G\to\mathrm{Mod}_H$ given on objects by sending any $G$-module $M$ to the same abelian group equipped with an $H$-action via the inclusion $H\subseteq G$. This functor is the identity on morphisms.
 \end{definition}
+Here are the results on induction and restriction.
+\begin{proposition}[Frobenius reciprocity]
+	Fix a finite-index subgroup $H$ of a group $G$. Then $\op{Ind}_H^G$ and $\op{Res}^G_H$ are adjoints of each other. In particular, $\mathrm{Ind}_H^G\colon\mathrm{Mod}_H\to\mathrm{Mod}_G$ is an exact functor.
+\end{proposition}
+\begin{proof}[Sketch]
+	This reduces to the $\otimes$-$\op{Hom}$ adjunction, for both claims.
+\end{proof}
 \begin{remark}
 	We can define a map $M\to\op{Ind}_H^G\op{Res}_H^GM$ given by sending $m\in M$ to the map $f\colon G\to M$ defined by $f(g)\coloneqq gm$. This gives part of the adjunction.
 \end{remark}
-Here are the results on induction and restriction.
-\begin{proposition}[Frobenius reciprocity]
-	Fix a subgroup $H$ of a finite group $G$. Then $\op{Ind}_H^G$ and $\op{Res}^G_H$ are adjoints of each other. In particular, $\mathrm{Ind}_H^G\colon\mathrm{Mod}_H\to\mathrm{Mod}_G$ is an exact functor.
-\end{proposition}
 \begin{proposition}[Shapiro's lemma]
 	Fix a subgroup $H$ of a finite group $G$. Then there is a natural isomorphism
 	\[\mathrm H^\bullet\left(G;\op{Ind}_H^G(-)\right)\simeq\mathrm H^i(H;-).\]
 \end{proposition}
+\begin{proof}[Sketch]
+	Fix an $H$-module $N$. Then $\mathrm H^i(H;N)$ is computed by taking $(-)^H$ on an injective resolution of $N$ and then calculating cohomology. Alternatively, one can apply the exact functor $\op{Ind}^G_H$ to this injective resolution to produce an injective resolution of $\op{Ind}^G_HN$ and then take $(-)^G$ to compute the cohomology $\mathrm H^i\big(G;\op{Ind}^G_HN\big)$. One then checks that these produce the same answer.
+\end{proof}
 It turns out that restriction has a sort of dual.
 \begin{definition}[corestriction]
 	Fix a finite-index subgroup $H$ of a group $G$. Then we define the \textit{corestriction} $\op{Cores}\colon\mathrm H^i(H;M)\to\mathrm H^i(G;M)$ map by extending the map $M^H\to M^G$ in degree $0$ defined by
@@ -135,8 +211,11 @@ Here is the result we need on inflation.
 	Fix a $G$-module $M$. Then there is an exact sequence
 	\[0\to\mathrm H^1(G/H;M^H)\stackrel{\op{Inf}}\to\mathrm H^1(G;M)\stackrel{\op{Res}}\to\mathrm H^1(H;M)^{G/H}.\]
 \end{proposition}
+\begin{proof}[Sketch]
+	One can explicitly compute this on the level of $1$-cocycles.
+\end{proof}
 
-\subsection{Galois Cohomology}
+\subsection{Profinite Cohomology}
 We quickly explain how to take cohomology for profinite groups.
 \begin{example}
 	Fix a finite field $k$ with $q$ elements. Then $\op{Gal}(\ov k/k)$ is a profinite group with topological generator given by the Frobenius. Explicitly,
@@ -151,7 +230,7 @@ We quickly explain how to take cohomology for profinite groups.
 \begin{definition}[continuous group cohomology]
 	Fix a profinite group $G$, and write $G=\lim_H G/H$, where the limit varies over open normal subgroups. Then we define
 	\[\mathrm H^i_{\mathrm{cts}}(G;M)\coloneqq\colim_{\text{ open normal }H\subseteq G}\mathrm H^i\left(G/H;M^H\right).\]
-	We will frequently write $\mathrm H^i(G;M)$ for $\mathrm H^i_{\mathrm{cts}}(G;M)$ whenever $G$ is profinite. In particular, we will never use ordinary group cohomology for profinite groups $G$.
+	Here, we are taking the colimit of the maps $\mathrm H^i\left(G/H;M^H\right)\to\mathrm H^i\big(G/H';M^{H'}\big)$ produced whenever $H'\subseteq H$ via \Cref{rem:compute-group-cohom-funct}, in which case we have a surjection $G/H'\onto G/H$ and an inclusion $M^H\into M^{H'}$. We will frequently write $\mathrm H^i(G;M)$ for $\mathrm H^i_{\mathrm{cts}}(G;M)$ whenever $G$ is profinite. In particular, we will never use ordinary group cohomology for profinite groups $G$.
 \end{definition}
 \begin{remark}
 	Equivalently, following \Cref{ex:compute-group-cohom}, we can define $\mathrm H^i_{\mathrm{cts}}(G;M)$ as
@@ -160,13 +239,29 @@ We quickly explain how to take cohomology for profinite groups.
 \end{remark}
 We can now upgrade our calculation for cyclic groups to procyclic groups.
 \begin{proposition} \label{prop:procyclic-cohom}
-	Fix a procyclic group $G$ with generator $\sigma$. Fix a finite discrete $G$-module $M$. Then
+	Fix a procyclic group $G$ isomorphic to $\widehat\ZZ$ with generator $\sigma$. Fix a finite discrete $G$-module $M$. Then
 	\[\mathrm H^i\left(G;M\right) = \begin{cases}
 		M^{G} & \text{if }i=0, \\
 		M/(\sigma-1) & \text{if }i=1, \\
 		0 & \text{if }i\ge2.
 	\end{cases}\]
 \end{proposition}
+\begin{proof}
+	Set $H_m\coloneqq\overline{\langle\sigma^m\rangle}$ for brevity, which we note is the kernel of the map $G\to\ZZ/m\ZZ$ defined by $\sigma\mapsto1$, so $H_m$ is a closed and normal subgroup of finite index, so $H_m$ is also open because $G$ is compact. In fact, every open normal subgroup $H\subseteq G$ takes this form: being open, we see that $H$ is finite index because $G$ is compact, and being normal, we see that $H$ must be then be the kernel of some map $G\to A$ where $A$ is a finite group. Replacing $A$ with the (cyclic!) image of $G$, we may find an $m\ge1$ for which $A=\ZZ/m\ZZ$ where $\sigma\in G$ is sent to $1$, so we see that $H=H_m$.
+	
+	Now, by plugging in the definitions, we see that
+	\[\mathrm H^i(G;M)=\colim_{m\ge1}\mathrm H^i\left(G/H_m;M^{\sigma^m}\right),\]
+	where $M^{\sigma^m}=M^{\overline{\langle\sigma^m\rangle}}$ by continuity. We now see that we have to use \Cref{rem:compute-group-cohom-cyclic-funct} to compute the internal maps. Setting $M_m\coloneqq M^{\sigma^m}$ for brevity, \Cref{rem:compute-group-cohom-cyclic-funct} tells us that the inclusion $H_{m'}\subseteq H_m$ (which exists whenever $m\mid m'$) induces a map
+	\[\mathrm H^i\left(G/H_m;M_m\right)\to\mathrm H^i\left(G/H_{m'};M_{m'}\right)\]
+	given by $(m'/m)^{\floor{i/2}}$ times the natural inclusion. For example, we see that $i\ge2$ allows us to make this map zero simply by making $m'/m$ divisible by $\#M$, so we conclude that the entire colimit $\mathrm H^i(G;M)$ vanishes.
+	
+	However, for $i\in\{0,1\}$, we see that these maps are given by the natural inclusions. Because $M$ is finite and discrete, there is an open normal subgroup $H\subseteq G$ fixing $M$, so as soon as $H_m$ is small enough to be contained in $H$ (say, if $H=H_n$, then this happens as soon as $n\mid m$), we find that
+	\[\mathrm H^i(G/H_m;M_m)=\mathrm H^i(G/H_m;M)=\begin{cases}
+		M^\sigma & \text{if }i=0, \\
+		\ker{{\op N_{G/H_m}}|_M}/(\sigma-1)M & \text{if }i=1,
+	\end{cases}\]
+	where the last equality follows from \Cref{prop:compute-group-cohom-cyclic}. Additionally, once $m$ is sufficiently divisible, the calculations of \Cref{rem:compute-group-cohom-cyclic-funct} show that $\op N_{G/H_m}$ will multiply by a large scalar, so all $M$ will be in the kernel (e.g., this should happen as soon as $n\cdot\#M\mid m$ so that $\op N_{G/H_m}$ has a factor of $\#M$). The natural inclusions in our colimit are now identities on these modules, so it follows that $\mathrm H^i(G;M)$ is given as claimed.
+\end{proof}
 \begin{remark}
 	Equivalently, the cohomology of $M$ is computed via the two-term complex
 	\[0\to M\stackrel{\sigma-1}\to M\to 0.\]
@@ -174,10 +269,31 @@ We can now upgrade our calculation for cyclic groups to procyclic groups.
 This allows us to say something about Galois cohomology.
 \begin{notation}
 	Fix a field $k$ and a commutative group scheme $X$ over $k$. Then we set the notation
-	\[\mathrm H^i(k;X)\coloneqq\mathrm H^i\left(\op{Gal}(\ov k/k);X(\ov k)\right).\]
+	\[\mathrm H^i(k;X)\coloneqq\mathrm H^i\left(\op{Gal}(k^{\mathrm{sep}}/k);X(k^{\mathrm{sep}})\right).\]
+	For any Galois extension $L$ of $k$, we may also write $\mathrm H^i(L/k;X)\coloneqq\mathrm H^i(\op{Gal}(L/k);X(L))$.
 \end{notation}
+\begin{remark} \label{rem:galois-cohom-as-colimit}
+	Open normal subgroups of $\op{Gal}(k^{\mathrm{sep}}/k)$ are in bijection with finite Galois extensions $L$ of $k$ by (infinite) Galois theory, so
+	\[\mathrm H^i(k;X)=\colim_{\text{finite, Galois }L\supseteq k}\mathrm H^i\left(\op{Gal}(L/k);\mathrm H^0(L;X_L\right).\]
+\end{remark}
+\begin{example} \label{ex:galois-invariant-of-scheme}
+	If $X$ is quasiprojective, then we have an embedding $X\into\PP^n_k$ for some $n\ge0$, so we have a Galois-invariant map $X(k^{\mathrm{sep}})\subseteq\PP^n(k^{\mathrm{sep}})$. Taking Galois invariants on the right simply produces $\PP^n(k)$, so we find that $\mathrm H^0(k,X)=X(k)$.
+\end{example}
 \begin{example}
 	Fix a finite field $k$. From \Cref{prop:procyclic-cohom}, we see that $\mathrm H^i(k;M)=0$ for $i\ge2$ for any finite discrete $\op{Gal}(\ov k/k)$-module $M$.
+\end{example}
+\begin{example} \label{ex:profinite-trivial-crossed-hom}
+	If $M$ has the trivial action, then \Cref{ex:trivial-crossed-hom} induces a commutative square
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG1hdGhybSBIXjFcXGxlZnQoRy9ILE1eSFxccmlnaHQpIl0sWzEsMCwiXFxvcHtIb219XFxsZWZ0KEcvSCxNXkhcXHJpZ2h0KSJdLFswLDEsIlxcbWF0aHJtIEheMVxcbGVmdChHL0gnLE1eSFxccmlnaHQpIl0sWzEsMSwiXFxvcHtIb219XFxiaWcoRy9IJyxNXntIJ31cXGJpZykiXSxbMCwyXSxbMiwzXSxbMCwxXSxbMSwzXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\mathrm H^1\left(G/H;M\right)} & {\op{Hom}\left(G/H,M\right)} \\
+		{\mathrm H^1\left(G/H';M\right)} & {\op{Hom}\big(G/H',M\big)}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	for any inclusion $H'\subseteq H$ of open normal subgroups. Taking the colimit reveals that $\mathrm H^1(G;M)=\op{Hom}_{\mathrm{cts}}(G,M)$.
 \end{example}
 
 \end{document}

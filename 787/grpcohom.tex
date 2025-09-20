@@ -1,0 +1,162 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Galois Cohomology}
+
+In this chapter, we run through some recollections of Galois cohomology which did not appear in class.
+
+\section{Hilbert's Theorem 90}
+Hilbert's theorem 90 is a tool frequently used in order to get Kummer theory off of the ground. We will require the following algebraic input.
+\begin{proposition}[Dedekind] \label{prop:dedekind-linear-ind}
+	Fix a group $G$ and a field $k$ and some distinct characters $\chi_1,\ldots,\chi_n\colon G\to k^\times$. Then the characters $\{\chi_1,\ldots,\chi_n\}$ are linearly independent.
+\end{proposition}
+\begin{proof}
+	This proof is tricky. Suppose for the sake of contradiction that there is a nonempty set $\{\chi_1,\ldots,\chi_n\}$ of distinct characters $k^\times\to A$ which fails to be linearly independent. We may as well assume that $n$ is as small as possible; we will derive contradiction by showing that some strict subset of these characters continues to not be linearly independent.
+
+	Now, we are given a relation
+	\[a_1\chi_1+a_2\chi_2+\cdots+a_n\chi_n=0\]
+	for some $a_1,\ldots,a_n\in k$; the minimality of our set of characters implies that all these coefficients are nonzero. The point is that there are two ways to produce a new relation.
+	\begin{itemize}
+		\item On one hand, we can multiply this entire relation by some $a\in k^\times$ to produce the relation
+		\[aa_1\chi_1+aa_2\chi_2+\cdots+aa_n\chi_n=0.\]
+		\item On the other hand, we note that any $g,h\in G$ has
+		\[a_1\chi_1(g)\chi_1(h)+a_2\chi_2(g)\chi_2(h)+\cdots+a_n\chi_n(g)\chi_n(h)=0\]
+		because the $\chi_\bullet$s are multiplicative. Thus, for any $g\in G$, we produce a new relation
+		\[a_1\chi_1(g)\chi_1+a_2\chi_2(g)\chi_2+\cdots+a_n\chi_n(g)\chi_n=0.\]
+	\end{itemize}
+	To complete the proof, we play these two relations against each other. Our characters are all distinct, so we may find some $g\in G$ for which $\chi_1(g)\ne\chi_2(g)$. Now, subtracting the relations
+	\[a_1\chi_1(g)\chi_1+a_2\chi_1(g)\chi_2+\cdots+a_n\chi_1(g)\chi_n=0\]
+	and
+	\[a_1\chi_1(g)\chi_1+a_2\chi_2(g)\chi_2+\cdots+a_n\chi_n(g)\chi_n=0\]
+	produces the relation
+	\[a_1(\chi_1(g)-\chi_2(g))\chi_2+\cdots+a_n(\chi_1(g)-\chi_n(g))\chi_n=0.\]
+	This is a nonzero relation because $a_1(\chi_1(g)-\chi_2(g))\ne0$, so we conclude that the characters $\{\chi_2,\ldots,\chi_n\}$ fail to be linearly independent, which is our desired contradiction.
+\end{proof}
+\begin{theorem}[Hilbert 90] \label{thm:h90}
+	Fix a field $k$.
+	\begin{listalph}
+		\item For any finite Galois extension $L$ of $k$, we have $\mathrm H^1(L/k,\mathbb G_m)=0$.
+		\item We have $\mathrm H^1(k,\mathbb G_m)=0$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	Note that (a) implies (b) by taking the colimit over all $L$ via \Cref{rem:galois-cohom-as-colimit} (where we are silently using \Cref{ex:galois-invariant-of-scheme}). It remains to show (a), for which we use \Cref{lem:h1-by-crossed-hom}.
+	
+	Set $G\coloneqq\op{Gal}(L/k)$, and we fix a crossed homomorphism $f\colon G\to L^\times$, which we want to show is actually principal. Well, we are given that $f(gh)=f(g)\cdot g(f(h))$ for any $g,h\in G$. We are on the hunt for some $b\in L^\times$ for which $f(g)=g(b)/b$ for all $g\in G$; provided that $b$ is nonzero, this is equivalent to $g(b)=f(g)^{-1}b$, so $b$ is more or less an eigenvector for the $G$-action with eigenvalue given by $f^{-1}$. Thus, a natural candidate would be to take some $a\in L$ and produce the ``average'' of the $G$-action defined by
+	\[b\coloneqq\sum_{g\in G}f(g)g(a).\]
+	Indeed, for any $h\in G$, we see that $h(b)$ is
+	\[\sum_{g\in G}hf(g)hg(a)=\frac1{f(h)}\sum_{g\in G}f(hg)hg(a)=\frac1{f(h)}\sum_{g\in G}f(g)g,\]
+	so $h(b)=f\left(h\right)^{-1}b$. It remains to see that we can find some $a\in L$ for which the resulting $b$ is nonzero, which follows from \Cref{prop:dedekind-linear-ind}.
+\end{proof}
+Here are a couple applications.
+\begin{corollary}
+	Fix a cyclic extension $L/k$ where $\op{Gal}(L/k)$ has generator $\sigma$. For $\alpha\in L^\times$, if $\op N_{L/k}(\alpha)=1$, then there is $\beta$ such that $\alpha=\sigma(\beta)/\beta$.
+\end{corollary}
+\begin{proof}
+	By \Cref{prop:compute-group-cohom-cyclic}, we see that
+	\[\mathrm H^1(L/k,L^\times)=\frac{\ker\left(\op N\colon L^\times\to K^\times\right)}{\im\left((\sigma-1)\colon L^\times\to L^\times\right)},\]
+	so the result follows by \Cref{thm:h90}.
+\end{proof}
+\begin{example}
+	Fix a base field $k$ and a positive integer $m$ not divisible by $\op{char}k$. Consider the finite commutative group scheme $\mu_m\subseteq\mathbb G_m$ given by the $m$th roots of unity. Then the long exact sequence of Galois modules
+	\[1\to\mu_m(k^{\mathrm{sep}})\to k^{\mathrm{sep}\times}\stackrel m\to k^{\mathrm{sep}\times}\to1\]
+	induces an exact sequence
+	\[k^\times\stackrel m\to k^\times\to\mathrm H^1(k;\mu_m)\to\mathrm H^1(k;\mathbb G_m).\]
+	But the last term vanishes by \Cref{thm:h90}, so we conclude that $\mathrm H^1(k;\mu_m)\cong k^\times/k^{\times m}$.
+\end{example}
+
+\section{Kummer Theory}
+Kummer theory classifies abelian extensions a given field $k$ of exponent $m$, provided that $\mu_m\subseteq k^\times$ and $\op{char}k\nmid m$. Let's start with the most basic case.
+\begin{lemma} \label{lem:classify-cyclic-kummer}
+	Fix a field $k$ and a positive integer $m$ such that $\mu_m\subseteq k$ and $\op{char}k\nmid m$. For any cyclic extension $K/k$ of degree $m$, there is $\alpha\in K$ such that $K=k(\alpha)$ and $\alpha^m\in k$.
+\end{lemma}
+\begin{proof}
+	Choose a generator $\sigma$ of $\op{Gal}(K/k)$. We use \Cref{thm:h90} to construct the needed $\alpha$. Well, choose a generator $\zeta$ of $\mu_m$, and then $\zeta\in k$ implies that $\op N_{K/k}(\zeta)=\zeta^m=1$. Thus, there is $\alpha\in K$ such that $\zeta=\sigma(\alpha)/\alpha$, so $\sigma(\alpha)=\zeta\alpha$, and a quick induction shows that $\sigma^i(\alpha)=\zeta^i\alpha$ for all $i$. Thus, $\alpha$ has $m$ distinct Galois conjugates, so $k(\alpha)$ is a degree $m$ extension of $k$, so $k(\alpha)=K$ follows for degree reasons. Lastly, we should check that $\alpha^m\in k$, which follows because
+	\[\sigma^i\left(\alpha^m\right)=\zeta^{mi}\alpha^m=\alpha^m\]
+	for all $\sigma^i$.
+\end{proof}
+For our main result, we should define a ``Kummer pairing.''
+\begin{definition}[Kummer pairing]
+	Fix a field $k$ and a positive integer $m$ such that $\op{char}k\nmid m$ and $\mu_m\subseteq k$.
+	Then we define the \textit{Kummer pairing}
+	\[\langle-,-\rangle\colon\op{Gal}(k^{\mathrm{sep}}/k)\times k^\times/k^{\times m}\to\mu_m\]
+	as follows: for any $\sigma\in\op{Gal}(k^{\mathrm{sep}}/k)$ and $a\in k^\times$, select some $\alpha\in k^{\mathrm{sep}}\times$ which is a root of the polynomial $X^m-a$. Then we define $\langle\sigma,a\rangle\coloneqq\sigma(\alpha)/\alpha$.
+\end{definition}
+\begin{remark}
+	Let's check that this pairing is well-defined.
+	\begin{itemize}
+		\item We see that any root of $X^m-a$ is separable because this polynomial is separable: its derivative is $mX^{m-1}$ because $\op{char}k\nmid m$.
+		\item Independent of $\alpha$: the other roots of this polynomial take the form $\zeta\alpha$ for some $\zeta\in\mu_m\subseteq k$, so $\sigma(\zeta\alpha)/(\zeta\alpha)=\sigma(\alpha)/\alpha$, so $\langle\sigma,a\rangle$ does not depend on the choice of $\alpha$.
+		\item Image in $\mu_m$: note $\langle\sigma,a\rangle\in\mu_m$ because $(\sigma(\alpha)/\alpha)^m=\sigma(a)/a=1$.
+		\item Independent of $k^{\times m}$: if we replace $a$ with some $a'\coloneqq ab^m$ where $b\in k^\times$, then we may select $\alpha'\coloneqq\alpha b$, which shows $\sigma(\alpha')/\alpha'=\sigma(\alpha)/\alpha$, so $\langle\sigma,a\rangle=\langle\sigma,ab\rangle$.
+	\end{itemize}
+\end{remark}
+\begin{theorem}[Kummer] \label{thm:kummer}
+	Fix a field $k$ and a positive integer $m$. Suppose that $\op{char}k\nmid m$ and $\mu_m\subseteq k$.
+	\begin{listalph}
+		\item There is a map sending subgroups $B$ between $k^{\times m}$ and $k^\times$ to abelian extensions $K/k$ of exponent $m$. This map sends $B$ to the extension $K_B\coloneqq k(B^{1/m})$ of $k$ generated by the $m$th roots of $B$.
+		\item Given some such $B$, the pairing restricted Kummer pairing
+		\[\op{Gal}(K_B/k)\times B\to\mu_m\]
+		is perfect.
+		% extension $K_B/k$ is finite if and only if the index $\left[B:k^{\times m}\right]$ is finite. In fact, there is an isomorphism
+		% \[\op{Gal}(K_B/k)^\lor\to B/k^{\times m}.\]
+		\item The map in (a) is an inclusion-preserving bijection.
+	\end{listalph}
+\end{theorem}
+% \begin{remark}
+% 	In the event of (c), it turns out that there is a canonical isomorphism
+% 	\[\op{Gal}(K_B/k)^\lor\to B/k^{\times m}.\]
+% \end{remark}
+\begin{proof}
+	% The main input is to define a ``Kummer pairing.'' Motivated by the above discussion, one can describe the pairing $\op{Gal}(K_B/k)\times B\to\mu_m$ by sending a pair $(\sigma,a)$ to the root of unity $\langle\sigma,a\rangle\in\mu_m$ such that
+	% \[\sigma(\alpha)=\langle\sigma,a\rangle\sigma(\alpha),\]
+	% where $\alpha$ is any root of the polynomial $X^m-a$. Namely, $\alpha$ and $\sigma(\alpha)$ are both roots of the equation $X^m-a$, so there is a unique root of unity $\langle\sigma,a\rangle\in\mu_m$ relating the two. Additionally, one can check that $\langle\sigma,a\rangle$ does not depend on the precise choice of $\alpha$: any other root of $X^m-a$ takes the form $\zeta\alpha$ for some $\zeta\in\mu_m$, so the fact that $\mu_m\subseteq k$ implies that
+	% \[\frac{\sigma(\zeta\alpha)}{\zeta\alpha}=\frac{\sigma(\alpha)}{\alpha}.\]
+	% We now show our parts in sequence. Everything is rather formal except for the surjectivity check in (c), for which we must use \Cref{lem:classify-cyclic-kummer}.
+	We use the Kummer pairing to show the parts in sequence. Everything is rather formal except for the surjectivity check in (c), for which we must use \Cref{lem:classify-cyclic-kummer}.
+	\begin{listalph}
+		\item We must check that $K_B/k$ is an abelian Galois extension of exponent $m$.
+		\begin{itemize}
+			\item To see that it is Galois, it is enough to check that it is generated by Galois elements, so it is enough to check that all Galois conjugates of $\alpha\in B^{1/m}$ live in $K_B$. Well, $a\coloneqq\alpha^m$ is an element of $k$ by construction, so $\alpha$ is the root of the polynomial $X^m-a$. Because $\mu_m\subseteq k$, we see that the set
+			\[\{\zeta\alpha:\zeta\in\mu_m\}\]
+			of roots of $X^m-a$ is therefore contained in $K_B$. 
+			\item To see that it is abelian, choose two automorphisms $\sigma,\tau\in\op{Gal}(K_B/k)$. We would like to check that $\sigma\tau=\tau\sigma$. It is enough to check this equality on generating elements of $K_B/k$, so we once again choose some $\alpha\in B^{1/m}$ and set $a\coloneqq\alpha^m$. Then we see that
+			\[\sigma\tau(\alpha)=\langle\sigma,a\rangle\langle\tau,a\rangle=\tau\sigma(\alpha).\]
+		\end{itemize}
+		\item %We will show that $\langle\cdot,\cdot\rangle$ descends to a perfect pairing
+		%\[\op{Gal}(K_B/k)\times B/k^{\times m}\to\mu_m.\]
+		Here are our checks.
+		\begin{itemize}
+			% \item Well-defined: if $a\in B$ and $b\in k$, we must check that $\langle\sigma,a\rangle=\langle\sigma,ab^m\rangle$. Well, this amounts to noting
+			% \[\frac{\sigma\left(\alpha\right)}{\alpha}=\frac{\sigma(\alpha b)}{\alpha b}\]
+			% for a chosen root $\alpha$ of $X^m-a$.
+			\item Injective on $\op{Gal}(K_B/k)$: suppose that $\sigma\in\op{Gal}(K_B/k)$ makes $\langle\sigma,\cdot\rangle$ the trivial function, and we must show that $\sigma$ is trivial. Well, it is enough to show that $\sigma$ is trivial on $B^{1/m}$, so we choose some $\alpha\in B^{1/m}$ and set $a\coloneqq\alpha^m$. Then
+			\[\frac{\sigma(\alpha)}{\alpha}=\langle\sigma,a\rangle=1,\]
+			so $\sigma$ is the identity on $\alpha$.
+			\item Injective on $B/k^{\times m}$: suppose that $a\in B$ makes $\langle\cdot,a\rangle$ is trivial, and we would like to show that $a\in k^{\times m}$. Well, choose a root $\alpha\in K_B$ of $X^m-a$, and we would like to show that $\alpha\in k$. For this, we note that $\langle\sigma,\alpha\rangle=1$ implies that $\sigma(\alpha)=\alpha$ for all $\sigma\in\op{Gal}(K_B/k)$, so the result follows.
+		\end{itemize}
+		\item This will require some effort. Here are our checks.
+		\begin{itemize}
+			\item Inclusion-preserving: if $B_1\subseteq B_2$, then we see $B_1^{1/m}\subseteq B_2^{1/m}$, so $K_{B_1}\subseteq K_{B_2}$.
+
+			\item Injective: in light of the previous check, it's enough to see that $K_{B_1}\subseteq K_{B_2}$ implies that $B_1\subseteq B_2$. For this, we reduce to the finite case. Choose $b\in B_1$, and it is enough to check that $b\in B_2$ given that $K_{\langle b\rangle}\subseteq K_{B_2}$. However, $b\in K_{B_2}$ implies that $b$ can be written as a finite polynomial in terms of finitely many elements in $B_2^{1/m}$, so we may as well replace $B_2$ by this finitely generated subgroup to check that $b\in B_2$. In total, we are reduced to the case where $B_1$ is generated by $b$ and $B_2$ is finitely generated.
+
+			Now, define $B_3\subseteq k^\times$ as being generated by $B_2$ and $b$. Because $b\in K_{B_2}$ already, we know $K_{B_2}=K_{B_3}$, so the duality of (b) implies
+			\[[B_2:k^{\times m}]=[B_3:k^{\times m}].\]
+			Because $B_2/k^{\times m}\subseteq B_3/k^{\times m}$ already, we see that equality must follow, so $b\in B_2$ is forced.
+
+			\item Surjective: Choose an extension $K/k$ which is abelian of exponent $m$. It is enough to check that $K$ can be generated by the $m$th roots of some subset $S\subseteq k^{\times m}$, from which we find $K=K_B$ where $B$ is the multiplicative subgroup generated by $S$. By writing $K$ as a composite of finite extensions of $k$, we note that each of these finite extensions must be abelian, so it is enough to generate such a finite abelian extension by $m$th roots. Well, a finite abelian group can be written as a product of cyclic groups, so we may write a finite abelian extension as a composite of cyclic ones, so it is enough to generate such finite cyclic extensions by $m$th roots. This is possible by \Cref{lem:classify-cyclic-kummer}.
+			\qedhere
+		\end{itemize}
+	\end{listalph}
+\end{proof}
+\begin{remark} \label{rem:kummer-ramified}
+	It will be worthwhile to know something about ramification in the case where $k$ is a number field. Given a finitely generated subgroup $B=\langle b_1,\ldots,b_n\rangle$ of $k^\times/k^{\times m}$, we claim that $K_B/k$ can only be ramified at primes $\mf p$ lying over rational primes dividing
+	\[m\prod_{i=1}^n\op N_{k/\QQ}(b_i).\]
+	Because the composite of unramified extensions is unramified, we may assume that $n=1$ so that $B=\langle b\rangle$. Now, a prime $\mf p$ of $k$ ramifies in $K_B$ if and only if $\mf p$ divides the relative discriminant of $K_B/k$. But this relative discriminant divides the discriminant of the generating polynomial $f(X)\coloneqq X^m-b$, which can be computed (up to sign) to be $\op N_{K_B/k}f'(\beta)$, where $\beta^m=b$. The result follows because $f'(X)=mX^{m-1}$.
+\end{remark}
+
+\end{document}

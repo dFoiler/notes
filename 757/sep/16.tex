@@ -10,18 +10,18 @@ Today, we walk the roads laid by Harish-Chandra.
 \subsection{Admissible Representations}
 For today, $G$ is a connected Lie group, $K\subseteq G$ is a compact Lie subgroup, and $\mf g$ is the Lie algebra of $G$. We will soon take $G$ to be reductive and $K$ to be a maximal compact subgroup, but we will not have to do this for quite a while.
 \begin{notation}
-	Fix a Fr\'echet representation $V$ of a compact Lie subgroup $K$. Given an irreducible representation $\rho$ of $K$, we may write
-	\[V_\rho\coloneqq\op{Hom}_K(\rho,V).\]
+	Fix a Fr\'echet representation $V$ of a compact Lie subgroup $K$. Given an irreducible representation $\rho$ of $K$, we may write $V_\rho$ for the image of the canonical map $\op{Hom}_K(\rho,V)\otimes\rho\to V$.
 \end{notation}
-\begin{lemma}
-	Fix a Fr\'echet representation $V$ of a compact Lie subgroup $K$. Then the image of the canonical map
-	\[\bigoplus_{\rho\in\op{IrRep}(K)}(V_\rho\otimes\rho)\to V\]
+\begin{remark}
+	The canonical map is given by evaluation: we send $\varphi\otimes v\in V_\rho\otimes\rho$ to $\varphi(v)\in V$. Note that this map is $K$-invariant: for any $g\in K$, we have $g(\varphi\otimes v)=\varphi(gv)=g\varphi(v)$.
+\end{remark}
+\begin{lemma} \label{lem:decompose-v-fin-isotypic}
+	Fix a Fr\'echet representation $V$ of a compact Lie group $K$. Then the image of the canonical map
+	\[\bigoplus_{\rho\in\op{IrRep}(K)}V_\rho\to V\]
 	is exactly $V_{\mathrm{fin}}$.
 \end{lemma}
 \begin{proof}
-	The canonical map is given by evaluation: we send $\varphi\otimes v\in V_\rho\otimes\rho$ to $\varphi(v)\in V$. Note that this map is $K$-invariant: for any $g\in K$, we have $g(\varphi\otimes v)=\varphi(gv)=g\varphi(v)$.
-
-	We have two inclusions to show. Quickly, to show that the image of the canonical map is contained in $V_{\mathrm{fin}}$, we note that it is enough to show that $\varphi(v)\in V_{\mathrm{fin}}$ for any $\varphi\in V_\rho$ and $v\in V$. Indeed, for any $g\in K$, we see that $g\varphi(v)=\varphi(gv)$, so
+	We have two inclusions to show. Quickly, to show that the image of the canonical map is contained in $V_{\mathrm{fin}}$, we note that it is enough to show that $\varphi(v)\in V_{\mathrm{fin}}$ for any $\varphi\colon\rho\to V$ and $v\in V$. Indeed, for any $g\in K$, we see that $g\varphi(v)=\varphi(gv)$, so
 	\[\op{span}\{g\varphi(v):g\in K\}\subseteq\im\varphi,\]
 	which is finite-dimensional because the domain of $\varphi$ is finite-dimensional.
 
@@ -43,29 +43,71 @@ For today, $G$ is a connected Lie group, $K\subseteq G$ is a compact Lie subgrou
 % \end{remark}
 Now that we have basically realized the $V_\rho$s as summands of $V$, one may hope to find a projector back down to $V$.
 \begin{lemma}
-	
+	Fix a Fr\'echet representation $V$ of a compact Lie group $K$. For an irreducible representation $\rho$ of $K$, let $\chi_\rho\colon K\to\CC$ denote its character. Then the operator $\overline\chi_\rho\,dg\colon V\to V$ fixes $V_\rho\subseteq V$ and annihilates $V_{\rho'}\subseteq V$ for any other irreducible representation $\rho'$.
 \end{lemma}
+\begin{proof}
+	The main point is to show that $\overline\chi_\rho\,dg$ fixes $V_\rho\subseteq V$. Well, select some $\varphi\in V_\rho$ and $v\in\rho$, and we want to show that $\chi_\rho\,dg$ fixes $\varphi(v)$. Because $\varphi$ is $K$-invariant, we see that $\varphi$ commutes with the action of $\op{Meas}_c^0(K)$ and therefore commutes with $\op{Meas}_c(K)$ by sequential density. Thus,
+	\[\chi_\rho\,dg\cdot\varphi(v)=\varphi(\overline\chi_\rho\,dg\cdot v).\]
+	It remains to show that $\overline\chi_\rho\,dg$ fixes $v\in\rho$. Well, by \Cref{rem:meas-action-on-compact}, we know that $\ov\chi_\rho\,dg$ acts by the operator $\int_G\ov\chi_\rho(g)\rho(g)\,dg$, which is the identity by \Cref{ex:char-avg-proj}.
+
+	Thus, we have shown that $\overline\chi_\rho\,dg$ fixes $V_\rho$. Then for any other distinct irreducible representation $\rho'$ of $K$, we analogously know that $\overline\chi_{\rho'}\,dg$ fixes $V_{\rho'}$, so
+	\[\overline\chi_\rho\,dg|_{V_{\rho'}}=(\overline\chi_\rho\,dg*\overline\chi_{\rho'}\,dg)|_{V_{\rho'}},\]
+	where we have used the associativity of \Cref{rem:meas-action-assoc}. However, a calculation with the definition of $*$ (via \Cref{ex:compute-meas-as-convolution}) shows that
+	\[\overline\chi_\rho\,dg*\overline\chi_{\rho'}\,dg=\overline{\chi_\rho*\chi_{\rho'}}\,dg,\]
+	which vanishes when $\rho\not\cong\rho'$ by \Cref{cor:character-convolution}.
+\end{proof}
+As an application, we refine \Cref{prop:smooth-dense}.
+\begin{proposition} \label{prop:isotypic-smooth-dense}
+	Suppose $K$ is a compact Lie subgroup of a Lie group $G$. For any Fr\'echet representation $V$ of $G$, we claim that $V_\rho\cap V_{\mathrm{sm}}$ is dense in $V_{\rho}$ for each irreducible representation $\rho$ of $V$.
+\end{proposition}
+\begin{proof}
+	Choose some $v\in V_\rho$ to approximate by smooth vectors. Following \Cref{prop:smooth-dense}, we choose an approximate identity $\{\varphi_i\}_i$ so that $\{\varphi_i\,dg\}\to\delta_1$. Thus, because $\ov\chi_\rho\,dg$ fixes $v$ automatically, we see that
+	\[\lim_{i\to\infty}(\varphi_i\,dg*\ov\chi_\rho\,dg)\cdot v=v,\]
+	where we have silently used the associativity of \Cref{rem:meas-action-assoc}. Using the ambient compactness of everything (we may as well pass to the compact subset of $G$ given by the product of the support of $\varphi_i$ and $K$), it now follows that
+	\[\varphi_i\,dg*\ov\chi_\rho\,dg=(\varphi_i*\ov\chi_\rho)\,dg\]
+	by \Cref{ex:compute-meas-as-convolution}. (Note $\ov\chi_\rho$ is technically only in $L^1(G)$, but this convolution result still holds via a continuity argument.) Thus, \Cref{lem:compute-deriv-on-meas-action} allows us to complete the proof as soon as we know that $\varphi_i*\ov\chi_\rho$ is smooth, which follows because $\varphi_i$ is smooth (and differentiation under the integral sign in local coordinates).
+\end{proof}
 \begin{remark}
-	Fixing Haar measures, one finds that $V_\rho\otimes\rho$ can be realized as the image of the idempotent $e_\rho$ given by sending $1_K$ through the composite
-	\[C^\infty(K)\into\op{Meas}_c(K)\subseteq\op{Meas}_c(G).\]
-	By choosing an approximate identity in the usual way, one can show that $V_\rho\otimes\rho\subseteq V_{\mathrm{sm}}$.
+	By summing along \Cref{lem:decompose-v-fin-isotypic}, we see that \Cref{prop:isotypic-smooth-dense} implies that $V_{\mathrm{fin}}\cap V_{\mathrm{sm}}$ is dense in $V_{\mathrm{fin}}$ and hence dense in $V$ by \Cref{prop:finite-is-dense}.
 \end{remark}
-Admissibility is simply a size constraint on the size of the representation.
+% \begin{remark}
+% 	: if $K$ is a compact Lie subgroup of a Lie group $G$, we claim that $V_\rho\cap V_{\mathrm{sm}}$ is dense in $V_{\rho}$ for each irreducible representation $\rho$ of $V$. 
+% \end{remark}
+% \begin{remark}
+% 	Fixing Haar measures, one finds that $V_\rho\otimes\rho$ can be realized as the image of the idempotent $e_\rho$ given by sending $1_K$ through the composite
+% 	\[C^\infty(K)\into\op{Meas}_c(K)\subseteq\op{Meas}_c(G).\]
+% 	By choosing an approximate identity in the usual way, one can show that $V_\rho\otimes\rho\subseteq V_{\mathrm{sm}}$.
+% \end{remark}
+Finite-dimensionality arguments are important above, so we introduce a suitable size constraint.
 \begin{definition}[admissible]
-	Fix a connected Lie group $G$ with compact Lie subgroup $K$. A Fr\'echet representation $V$ is \textit{$K$-admissible} if and only if
+	Fix a Lie group $G$ with compact Lie subgroup $K$. A Fr\'echet representation $V$ is \textit{$K$-admissible} if and only if
 	\[\dim V_\rho<\infty\]
 	for each irreducible representation $\rho$ of $K$. We may just say that $V$ is \textit{admissible} if $K$ is understood from context.
 \end{definition}
 \begin{example}
 	Take $G=\op{SL}(2,\RR)$ and $K=\op O(2)$. Let $L_s$ be the $s$-densities of $\op{SL}(2,\RR)$ acting on $\RP^1$. It turns out that the action of $K$ on $\RP^1$ is transitive, and one can find that $L_s$ is admissible because $\dim\op{Hom}_K(\rho,L_s)\le1$ for all irreducible representations $\rho$ of $K$.
 \end{example}
-It turns out that the admissible representations are the ones that admit passage to algebra.
+We will shortly see that the admissible representations are the ones that admit passage to algebra by using the $K$-finite vectors. In fact, admissibility is essentially the hypothesis that allows us to just use $K$-finite vectors without worrying too much about smoothness.
 \begin{lemma}
-	Fix a connected Lie group $G$ with compact Lie subgroup $K$. For any Fr\'echet representation $V$, we have $V_{\mathrm{fin}}\subseteq V_{\mathrm{sm}}$.
+	Fix a Lie group $G$ with compact Lie subgroup $K$, and fix a Fr\'echet representation $V$ of $G$.
+	\begin{listalph}
+		\item We have $V_{\mathrm{fin}}\subseteq V_{\mathrm{sm}}$.
+		\item The subspace $V_{\mathrm{fin}}$ is invariant under the action of $\mf g$.
+	\end{listalph}
 \end{lemma}
 \begin{proof}
-	Matrix coefficients are smooth.
+	We show (a) and (b) separately.
+	\begin{listalph}
+		\item By \Cref{lem:decompose-v-fin-isotypic}, it is enough to check that $V_\rho\subseteq V_{\mathrm{sm}}$ for each irreducible representation $\rho$ of $V$. Well, \Cref{prop:isotypic-smooth-dense} assures us that $V_\rho\cap V_{\mathrm{sm}}$ is dense in $V_\rho$. But $V$ is admissible, so equality follows because $V_\rho$ is finite-dimensional!
+		\item Fix some $v\in V_{\mathrm{fin}}$, and we want to show that $Xv\in V_{\mathrm{fin}}$ as well for any $X\in\mf g$. Well, for any $g\in K$, \Cref{lem:group-vs-lie-action} tells us that $g(Xv)=(\op{Ad}_gX)(gv)$, so it follows that
+		\[\op{span}\{g(Xv):g\in K\}\subseteq\op{span}\{Y(gv):Y\in\mf g\text{ and }g\in K\}.\]
+		However, the latter space is finite-dimensional because it is the image of the finite-dimensional space $\op{span}\{gv:g\in G\}$ under a finite-dimensional space $\mf g$ of operators. Thus, $Xv\in V_{\mathrm{fin}}$.
+		\qedhere
+	\end{listalph}
 \end{proof}
+\begin{remark}
+	One does not expect $V_{\mathrm{fin}}$ to admit an action by $G$ in general, so it is perhaps remarkable that we managed to retain a $\mf g$-action.
+\end{remark}
 Of course, if we want to understand $V$, it is of course not just enough to restrict to $K$ and look at $V_{\mathrm{fin}}$ on its own. To introduce more data, we note that there is an action of the Lie algebra $\mf g$.
 \begin{notation}
 	Fix a Fr\'echet representation $V$ of a Lie group $G$ with Lie algebra $\mf g$. Then for each $X\in\mf g$, we define an operator on $V_{\mathrm{sm}}$ by
