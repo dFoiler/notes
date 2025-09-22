@@ -88,18 +88,18 @@ Finite-dimensionality arguments are important above, so we introduce a suitable 
 	Take $G=\op{SL}(2,\RR)$ and $K=\op O(2)$. Let $L_s$ be the $s$-densities of $\op{SL}(2,\RR)$ acting on $\RP^1$. It turns out that the action of $K$ on $\RP^1$ is transitive, and one can find that $L_s$ is admissible because $\dim\op{Hom}_K(\rho,L_s)\le1$ for all irreducible representations $\rho$ of $K$.
 \end{example}
 We will shortly see that the admissible representations are the ones that admit passage to algebra by using the $K$-finite vectors. In fact, admissibility is essentially the hypothesis that allows us to just use $K$-finite vectors without worrying too much about smoothness.
-\begin{lemma}
+\begin{lemma} \label{lem:get-g-k-module}
 	Fix a Lie group $G$ with compact Lie subgroup $K$, and fix a Fr\'echet representation $V$ of $G$.
 	\begin{listalph}
-		\item We have $V_{\mathrm{fin}}\subseteq V_{\mathrm{sm}}$.
-		\item The subspace $V_{\mathrm{fin}}$ is invariant under the action of $\mf g$.
+		\item If $V$ is admissible, then $V_{\mathrm{fin}}\subseteq V_{\mathrm{sm}}$.
+		\item The subspace $V_{\mathrm{fin}}\cap V_{\mathrm{sm}}$ is invariant under the action of $\mf g$.
 	\end{listalph}
 \end{lemma}
 \begin{proof}
 	We show (a) and (b) separately.
 	\begin{listalph}
 		\item By \Cref{lem:decompose-v-fin-isotypic}, it is enough to check that $V_\rho\subseteq V_{\mathrm{sm}}$ for each irreducible representation $\rho$ of $V$. Well, \Cref{prop:isotypic-smooth-dense} assures us that $V_\rho\cap V_{\mathrm{sm}}$ is dense in $V_\rho$. But $V$ is admissible, so equality follows because $V_\rho$ is finite-dimensional!
-		\item Fix some $v\in V_{\mathrm{fin}}$, and we want to show that $Xv\in V_{\mathrm{fin}}$ as well for any $X\in\mf g$. Well, for any $g\in K$, \Cref{lem:group-vs-lie-action} tells us that $g(Xv)=(\op{Ad}_gX)(gv)$, so it follows that
+		\item Fix some $v\in V_{\mathrm{fin}}\cap V_{\mathrm{sm}}$, and we want to show that $Xv\in V_{\mathrm{fin}}\cap V_{\mathrm{sm}}$ as well for any $X\in\mf g$. Certainly $Xv\in V_{\mathrm{sm}}$ by definition of smoothness, so the main point is to show that $Xv\in V_{\mathrm{fin}}$. Well, for any $g\in K$, \Cref{lem:group-vs-lie-action} tells us that $g(Xv)=(\op{Ad}_gX)(gv)$, so it follows that
 		\[\op{span}\{g(Xv):g\in K\}\subseteq\op{span}\{Y(gv):Y\in\mf g\text{ and }g\in K\}.\]
 		However, the latter space is finite-dimensional because it is the image of the finite-dimensional space $\op{span}\{gv:g\in G\}$ under a finite-dimensional space $\mf g$ of operators. Thus, $Xv\in V_{\mathrm{fin}}$.
 		\qedhere
@@ -108,33 +108,106 @@ We will shortly see that the admissible representations are the ones that admit 
 \begin{remark}
 	One does not expect $V_{\mathrm{fin}}$ to admit an action by $G$ in general, so it is perhaps remarkable that we managed to retain a $\mf g$-action.
 \end{remark}
-Of course, if we want to understand $V$, it is of course not just enough to restrict to $K$ and look at $V_{\mathrm{fin}}$ on its own. To introduce more data, we note that there is an action of the Lie algebra $\mf g$.
-\begin{notation}
-	Fix a Fr\'echet representation $V$ of a Lie group $G$ with Lie algebra $\mf g$. Then for each $X\in\mf g$, we define an operator on $V_{\mathrm{sm}}$ by
-	\[Xv\coloneqq\lim_{t\to0}\frac{\gamma(y)v-v}t,\]
-	where $\gamma\colon(-1,1)\to G$ is some path with $\gamma(0)=1$ and $\gamma'(0)=X$.
-\end{notation}
-\begin{remark}
-	It turns out that this defines a Lie algebra representation.
-\end{remark}
-\begin{remark}
-	One can check that $V_{\mathrm{fin}}$ is preserved by this $\mf g$-action.
-\end{remark}
-We are now ready to make the following definition.
+
+\subsection{\texorpdfstring{$(\mf g,K)-$}{(g, K)-}Modules}
+Given a Lie group $G$ with compact Lie subgroup $K\subseteq G$, we now see that any Fr\'echet representation $V$ yields an interesting subspace $V_{\mathrm{fin}}\subseteq V$ with both a $K$-action and a $\mf g$-action. We now codify this sort of information into an algebraic object.
+% Of course, if we want to understand $V$, it is of course not just enough to restrict to $K$ and look at $V_{\mathrm{fin}}$ on its own. To introduce more data, we note that there is an action of the Lie algebra $\mf g$.
+% \begin{notation}
+% 	Fix a Fr\'echet representation $V$ of a Lie group $G$ with Lie algebra $\mf g$. Then for each $X\in\mf g$, we define an operator on $V_{\mathrm{sm}}$ by
+% 	\[Xv\coloneqq\lim_{t\to0}\frac{\gamma(y)v-v}t,\]
+% 	where $\gamma\colon(-1,1)\to G$ is some path with $\gamma(0)=1$ and $\gamma'(0)=X$.
+% \end{notation}
+% \begin{remark}
+% 	It turns out that this defines a Lie algebra representation.
+% \end{remark}
+% \begin{remark}
+% 	One can check that $V_{\mathrm{fin}}$ is preserved by this $\mf g$-action.
+% \end{remark}
+% We are now ready to make the following definition.
 \begin{definition}[Harish-Chandra pair]
-	Fix a Lie algebra $\mf g$ and compact Lie group $K$. Suppose that there is a map $\varphi\colon\op{Lie}K\to\mf g$ and an action of $K$ on $\mf g$ for which $\varphi$ preserves the two actions. In this situation, we call $(\mf g,K)$ a \textit{Harish-Chandra pair}.
+	A \textit{Harish-Chandra pair} is a pair $(\mf g,K)$ of a Lie algebra $\mf g$ and a compact Lie group $K$ equipped with a map $\varphi\colon\op{Lie}K\to\mf g$ and an action map $\op{Ad}_\bullet\colon K\to\op{GL}(\mf g)$ such that
+	\[d\op{Ad}_e(X)(Y)=[X,Y]\]
+	for any $X\in\op{Lie}K$ and $Y\in\mf g$.
+	% Fix a Lie algebra $\mf g$ and compact Lie group $K$. Suppose that there is a map $\varphi\colon\op{Lie}K\to\mf g$ and an action of $K$ on $\mf g$ for which $\varphi$ preserves the two actions. In this situation, we call $(\mf g,K)$ a \textit{Harish-Chandra pair}.
 \end{definition}
+\begin{example} \label{ex:prototypical-g-k-pair}
+	If $G$ is a Lie group with compact Lie subgroup $K$, then the embedding $\op{Lie}K\subseteq\op{Lie}G$ makes $(\op{Lie}G,K)$ into a Harish-Chandra pair. Indeed, we can define the action map $\op{Ad}_\bullet K\to\op{GL}(\op{Lie}G)$ as the restriction of the usual adjoint map $\op{Ad}_\bullet\colon G\to\op{GL}(\op{Lie}G)$.
+\end{example}
 \begin{defihelper}[$(\mf g,K)$-module] \nirindex{gK module@$(\mf g,K)$-module}
 	Fix a Lie algebra $\mf g$ and compact Lie group $K$ for which $(\mf g,K)$ is a Harish-Chandra pair.
 	\begin{listalph}
-		\item A \textit{$(\mf g,K)$-module} is a vector space $M$ with actions by $K$ and $\mf g$ for which $M$ is a sum of finite-dimensional continuous representations of $K$ and the two induced actions by $\op{Lie}K$ coincide.
+		\item A \textit{$(\mf g,K)$-module} is a vector space $M$ with actions by $K$ and $\mf g$ such that $M$ is a direct sum of finite-dimensional continuous representations of $K$, and the two induced actions of $\op{Lie}K$ coincide: for any $X\in\op{Lie}K$, we have
+		\[\varphi(X)v=\frac d{dt}\exp(tX)v\bigg|_{t=0}.\]
+		Furthermore, we require that $g(Xv)=(\op{Ad}_gX)(gv)$ for all $g\in K$ and $X\in\mf g$ and $v\in M$.
 		\item A $(\mf g,K)$-module $M$ is \textit{admissible} if and only if $\dim\op{Hom}_K(\rho,M)$ is finite for all irreducible representations $\rho$ of $K$.
-		\item An admissible $(\mf g,K)$-module $M$
+		\item An admissible $(\mf g,K)$-module $M$ is \textit{Harish-Chandra} if and only if it is finitely generated over $U\mf g$.
 	\end{listalph}
 \end{defihelper}
+\begin{example} \label{ex:prototypical-g-k-mod}
+	Fix a Lie group $G$ with Lie algebra $\mf g$ and compact Lie subgroup $K$. Then \Cref{ex:prototypical-g-k-pair} tells us that the embedding $\op{Lie}K\subseteq\mf g$ makes $(\mf g,K)$ into a Harish-Chandra pair. Now, for any Fr\'echet representation $V$ of $G$, we claim
+	\[V_{\mathrm{fin}}\cap V_{\mathrm{sm}}\]
+	is a $(\mf g,K)$-module. Indeed, it has a $\mf g$-action by \Cref{lem:get-g-k-module} and a $K$-action by \Cref{rem:sm-is-g-inv}. The identity $Xv=\frac d{dt}\exp(tX)v\big|_{t=0}$ for $X\in\op{Lie}K$ follows by definition of the $\mf g$-action, and $g(Xv)=(\op{Ad}_gX)(gv)$ follows by \Cref{lem:group-vs-lie-action}.
+\end{example}
+\begin{example}
+	Continuing from the set-up of \Cref{ex:prototypical-g-k-mod}, we note that if $V$ is admissible, then $V_{\mathrm{fin}}\cap V_{\mathrm{sm}}=V_{\mathrm{fin}}$ by \Cref{lem:get-g-k-module}. Furthermore, $V_{\mathrm{fin}}$ has $\dim\op{Hom}_K(\rho,V_{\mathrm{fin}})<\infty$ for all irreducible representations $\rho$ of $K$ because $V$ is admissible, so we conclude that $V_{\mathrm{fin}}$ is an admissible $(\mf g,K)$-module.
+\end{example}
 \begin{remark}
-	Here are some motivational notes. Complex representations of $\mf g$ more or less reduce to representations of $\mf g_\CC$. Furthermore, finite-dimensional representations of $K$ are basically the algebraic ones, which also pass to $K_\CC$. Thus, in our definition of $(\mf g,K)$-module, we may as well make everything complex and require the $K$-action on $M$ to be algebraic.
+	One should really think of a $(\mf g,K)$-module as something algebraic. Complex representations of $\mf g$ more or less reduce to representations of $\mf g_\CC$. Furthermore, finite-dimensional representations of $K$ are basically the algebraic ones, which also pass to $K_\CC$. Thus, in our definition of $(\mf g,K)$-module, we may as well make everything complex and require the $K$-action on $M$ to be algebraic.
 \end{remark}
+As an aside, we note that the inclusion of the hypothesis $g(Xv)=(\op{Ad}_gX)(gv)$ is just a byproduct of us not currently requiring $K$ to be connected.
+\begin{lemma}
+	Fix a Lie algebra $\mf g$ and compact Lie group $K$ for which $(\mf g,K)$ is a Harish-Chandra pair. Suppose that we have a vector space $M$ with actions by $\mf g$ and $K$ such that $M$ is a direct sum of finite-dimensional continuous representations of $K$, and
+	\[\varphi(X)v=\frac d{dt}\exp(tX)v\bigg|_{t=0}\]
+	for any $X\in\mf g$ and $v\in M$. If $K$ is connected, then we have
+	\[g(Xv)=(\op{Ad}_gX)gv\]
+	for any $g\in K$ and $X\in\mf g$ and $v\in M$.
+\end{lemma}
+\begin{proof}
+	Let $H\subseteq K$ be the subset of $g\in K$ for which the identity holds for any $X\in\mf g$ and $v\in M$. We would like to show that $H=K$. Because $K$ is connected, it is enough to show that $H$ is closed under multiplication and contains an open neighborhood of the identity; we will run these checks separately.
+	\begin{enumerate}
+		\item We show that $H$ is closed under multiplication. Well, if $g,h\in H$, then any $X\in\mf g$ and $v\in M$ has
+		\begin{align*}
+			(gh)(Xv) &= g(h(Xv)) \\
+			&= g(\op{Ad}_hX)(hv) \\
+			&= (\op{Ad}_g\op{Ad}_hX)(ghv) \\
+			&= (\op{Ad}_{gh}X)(gh)v,
+		\end{align*}
+		so $gh\in H$.
+
+		\item We show that $H$ contains an open neighborhood of the identity. Because $\exp\colon\op{Lie}K\to K$ is a local diffeomorphism, it is enough to check that $\exp(Y)\in H$ for any $Y\in\op{Lie}K$. For this, we fix some $X\in\mf g$ and $v\in V$ (for now) and define the two paths $\gamma_1,\gamma_2\colon\RR\to V$ by
+		\[\begin{cases}
+			\gamma_1(t) \coloneqq \exp(tY)X\exp(-tY)v, \\
+			\gamma_2(t) \coloneqq (\op{Ad}_{\exp(tY)}X)v.
+		\end{cases}\]
+		We will complete the proof by showing that $\gamma_1=\gamma_2$. For this, we may a few preparatory remarks. By replacing $M$ with $\op{span}K\mf gKv$, we may assume that $M$ is finite-dimensional for this check. Then every finite-dimensional representation of a compact Lie group is real analytic (indeed, this follows by tracking through the representation on the exponential map, which itself is real analytic), so $\gamma_1$ and $\gamma_2$ are real analytic, so we may compare them only using their Taylor expansions.
+
+		It remains to compute some derivatives.
+		\begin{itemize}
+			\item By passing through $\varphi$, we know that the operator $\exp(tY)$ is the same as $\exp(t\varphi(Y))$, so
+			\[\gamma_1(t)=\exp(t\varphi(Y))X\exp(-t\varphi(Y))v,\]
+			which expands to the Taylor series
+			\[\gamma_1(t)=\sum_{i,j=0}^\infty\frac{(-1)^j}{i!j!}t^{i+j}\varphi(Y)^iX\varphi(Y)^jv.\]
+			\item By construction of $\op{Ad}_\bullet$, we know that $\gamma_2'(0)=[\varphi(Y),X]v$. Then the fact that $\op{Ad}_\bullet$ is a group homomorphism implies that $\gamma_2'(t)=\op{Ad}_{\exp(tY)}[\varphi(Y),X]v$, so an induction gives
+			\[\gamma_2^{(n)}(t)=[\cdots[\varphi(Y),[\varphi(Y),X]]\cdots]v,\]
+			where there are $n$ opening braces $[$ and $n$ closing braces $]$.
+		\end{itemize}
+		A term-by-term comparison of the preceding Taylor series completes the proofs. Indeed, in the expansion of the $2^n$ terms of $[\cdots[\varphi(Y),[\varphi(Y),X]]\cdots]$, we see that are basically choosing some number $i$ times to use the $\varphi(Y)X$ term or the $-X\varphi(Y)$ term in the expansion of $[\varphi(Y),X]$, so we receive the term $\varphi(Y)^iX\varphi(Y)^{n-j}$ an absolute total of $\binom ni$ times; this count must then be corrected by the sign $(-1)^{n-i}$.
+		\qedhere
+		% Because $\gamma_1$ and $\gamma_2$ are smooth (because they are the composite of smooth maps), it is enough to note that $\gamma_1(0)=\gamma_2(0)=Xv$ and then verify that $\gamma_1'(t_0)=\gamma_2'(t_0)$ for all $t_0$.
+		% \begin{itemize}
+		% 	\item On one hand, we see that $\gamma_1'(t_0)$ is
+		% 	\[\frac d{dt}\exp(tY)(Xv)\bigg|_{t=t_0}=\exp(t_0Y)\frac d{dt}\exp(tY)(Xv)\bigg|_{t=0},\]
+		% 	which is $\exp(t_0Y)\varphi(Y)(Xv)$ by the compatibility of the $(\mf g,K)$-module. Continuing this calculation shows that the $n$th derivative is $\exp(t_0Y)\varphi(Y)^n(Xv)$.
+		% 	\item On the other hand, we can use the product rule (viewing the outputs as matrices in $\op{End}(V)$!) to compute that $\gamma_2'(t_0)$ is
+		% 	\[\frac d{dt}(\op{Ad}_{\exp(tY)}X)(\exp(tY)v)\bigg|_{t=t_0}=\frac d{dt}\op{Ad}_{\exp(tY)}X\bigg|_{t=t_0}\exp(t_0Y)v+\op{Ad}_{\exp(t_0Y)}X\frac d{dt}\exp(tY)v\bigg|_{t=t_0}.\]
+		% 	As in the previous point, this evaluates to
+		% 	\[[\varphi(Y),\op{Ad}_{\exp(t_0Y)}X]v+(\op{Ad}_{\exp(t_0)Y}X)\varphi(Y)v.\]
+		% 	Notably, because the action of $\mf g$ on $V$ is a Lie algebra representation, this collapses down to $\varphi(Y)(\op{Ad}_{\exp(t_0Y)}X)v$. Continuing this calculation shows that the next derivative is $\varphi(Y)[\varphi(Y),\op{Ad}_{\exp(t_0Y)}X]v$
+		% \end{itemize}
+		% We now compare the results. Because the action of $\mf g$ on $V$ is a Lie algebra homomorphism
+	\end{enumerate}
+\end{proof}
+Here are the typical sources of $(\mf g,K)$-modules.
 \begin{example}
 	Fix a compact connected real Lie group $K$, and we set $G\coloneqq K_\CC$, which we think of as a real Lie group via restriction of scalars. Then we set $\mf g$ to be $\op{Lie}G=\mf k\otimes\CC$, where $\mf k\coloneqq\op{Lie}K$; note $\mf g_\CC$ is isomorphic to $\mf g\oplus\mf g$. Using the diagonal action $\mf g\to\mf g\oplus\mf g$, we receive a Harish-Chandra pair. In this way, we see that a Harish-Chandra module is the same as a $(\mf g,\mf g)$-module which is admissible for the diagonal copy of $\mf g$.
 \end{example}
