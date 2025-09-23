@@ -1,0 +1,194 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 18}
+It turns out that I have basically given up adding in details for this class. \Cref{thm:whitehead} has convinced us to compute some homotopy groups.
+\begin{remark}[Jeremy Hahn]
+	If you compute some homotopy groups, then you end up being a professor here.
+\end{remark}
+
+\subsection{The Simplicial Set \texorpdfstring{$\mathrm{Spaces}$}{ Spaces}}
+We are going to want to be able to talk about the $\infty$-category of spaces. There are three ways to build this $\infty$-category. The first two both boil down to the following idea.
+\begin{idea}[Homotopy coherent mathematics]
+	We never require objects be equal: we only require that there is a specified homotopy between them.
+\end{idea}
+For the first way, we may consider $\mathrm{Kan}$ to be a full subcategory of $\mathrm{sSet}$ whose objects are Kan complexes, and we can take its nerve to produce a simplicial set. Now, to take a quotient by homotopy equivalences, we form the pushout
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGRpc3BsYXlzdHlsZVxcYmlnc3FjdXBfe1xcdGV4dHtob21vdG9weSBlcXVpdn19XFxEZWx0YV4xIl0sWzAsMSwiXFxkaXNwbGF5c3R5bGVcXGJpZ3NxY3VwX3tcXHRleHR7aG9tb3RvcHkgZXF1aXZ9fUoiXSxbMSwwLCJcXG1hdGhybXtLYW59Il0sWzEsMSwiXFxvdmVybGluZXtcXG1hdGhybXtLYW59fSJdLFswLDEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFswLDJdLFsyLDNdLFsxLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	{\displaystyle\bigsqcup_{\text{homotopy equiv}}\Delta^1} & {\mathrm{Kan}} \\
+	{\displaystyle\bigsqcup_{\text{homotopy equiv}}J} & {\overline{\mathrm{Kan}}}
+	\arrow[from=1-1, to=1-2]
+	\arrow[two heads, from=1-1, to=2-1]
+	\arrow[from=1-2, to=2-2]
+	\arrow[from=2-1, to=2-2]
+\end{tikzcd}\]
+to build some $\overline{\mathrm{Kan}}$. Now, the map $\overline{\mathrm{Kan}}\to\Delta^0$ can be expanded into a composite of an inner anodyne map and a Kan fibration, and we let $\mathrm{Spaces}$ fit into the sequence
+\[\overline{\mathrm{Kan}}\to\mathrm{Spaces}\to\Delta^0.\]
+Here is a result apparent from this construction.
+\begin{proposition}
+	Fix some $\infty$-category $\mc C$. Then $\underline{\mathrm{Mor}}(\mathrm{Spaces},\mc C)$ is equivalent to the full subcategory of $\underline{\op{Mor}}(\mathrm{Kan},\mc C)$ such that the homotopy equivalences go to isomorphisms.
+\end{proposition}
+\begin{corollary}
+	The projection $\mathrm{Kan}\onto\mathrm{ho}(\mathrm{Kan})$ factors through $\mathrm{Spaces}$.
+\end{corollary}
+For the second way, we will construct $\mathrm{Spaces}$ as an explicit simplicial set.
+\begin{enumerate}
+	\setcounter{enumi}{-1}
+	\item The set of $0$-simplices consists of all Kan complexes.
+	\item The set of $1$-simplices has all morphisms of Kan complexes. (Thus far, this just looks like the nerve of $\mathrm{Kan}$.)
+	\item The $2$-simplices are given by the data of three complexes $\{X_0,X_1,X_2\}$ and maps $f_{ij}\colon X_i\to X_j$ whenever $0\le i<j\le2$ and the data of a map $\Delta^1\to\mathrm{Mor}(X_0,X_1)$ which witnesses a homotopy from $(f_{12}\circ f_{01})$ to $f_{02}$. (Note $\mathrm{Kan}_2$ requires $f_{12}\circ f_{01}=f_{02}$, which is a requirement instead of a piece of data!)
+	\item The $3$-simplices consist of four complexes $\{X_0,X_1,X_2,X_3\}$ and maps $f_{ij}\colon X_i\to X_j$ whenever $0\le i<j\le2$, homotopies for any non-degenerate $2$-simplex in $\Delta^3$, and a map $\Delta^1\times\Delta^1\to\underline{\mathrm{Mor}}(X_0,X_3)$ satisfying some additional conditions. Namely, this last map should fill in the diagram
+	% https://q.uiver.app/#q=WzAsNCxbMCwxLCJmX3swM30iXSxbMCwwLCJmX3sxM31mX3swMX0iXSxbMSwxLCJmX3syM31mX3swM30iXSxbMSwwLCJmX3syM31mX3sxMn1mX3swMX0iXSxbMCwxXSxbMSwzXSxbMiwzXSxbMCwzXSxbMCwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{f_{13}f_{01}} & {f_{23}f_{12}f_{01}} \\
+		{f_{03}} & {f_{23}f_{03}}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=2-1, to=1-1]
+		\arrow[from=2-1, to=1-2]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=1-2]
+	\end{tikzcd}\]
+	where the edges are given by the $2$-simplices described prior. (This is an approximation of the associativity of composition, but we use a homotopy.)
+	\item The higher simplices are defined similarly. For example, $4$-simplices involves a map from $\Delta^1\times\Delta^1\times\Delta^1$.
+\end{enumerate}
+\begin{remark}
+	A square in $\mathrm{Spaces}$ does not need to actually commute in $\mathrm{Kan}$: it only commutes up to some specified homotopies. Accordingly, one should imagine that the square
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzAsMSwiQiJdLFsxLDAsIkMiXSxbMSwxLCJEIl0sWzAsMl0sWzIsM10sWzAsMV0sWzEsM10sWzAsM11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		A & C \\
+		B & D
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	is ``filled in'' by given homotopies. We will frequently ignore the middle map $A\to D$.
+\end{remark}
+
+\subsection{Homotopy Pullbacks}
+It is worthwhile to note that we can kind of form pullbacks.
+\begin{definition}[homotopy pullback]
+	A square
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJQIl0sWzEsMCwiQyJdLFsxLDEsIkIiXSxbMCwxLCJBIl0sWzAsM10sWzMsMl0sWzAsMV0sWzEsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		P & C \\
+		A & B
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	in $\mathrm{Spaces}$ is a \textit{pullback} if and only if any Kan complex $X$ has
+	\[\pi_0\underline{\mathrm{Mor}}(X,P)\to\pi_0\underline{\op{Mor}}\left((\Delta^1\times\Delta^1,\Delta^0\sqcup\Lambda^2_2),(\mathrm{Spaces},(X,A\to B\from C)\right).\]
+	Sometimes we will call this a \textit{homotopy pullback square} to emphasize that the square is filled in with a homotopy.
+\end{definition}
+In other words, up to homotopy, maps $X\to P$ are the same as squares
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJYIl0sWzEsMCwiQyJdLFswLDEsIkEiXSxbMSwxLCJCIl0sWzAsMV0sWzEsM10sWzAsMl0sWzIsM11d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	X & C \\
+	A & B
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-1, to=2-1]
+	\arrow[from=1-2, to=2-2]
+	\arrow[from=2-1, to=2-2]
+\end{tikzcd}\]
+considered up to specified homotopy.
+\begin{lemma}
+	Given maps $f\colon A\to C$ and $g\colon B\to C$, the homotopy pullback is given by the Kan complex which is the pullback $X$ of
+	% https://q.uiver.app/#q=WzAsNCxbMCwxLCJBXFx0aW1lcyBCIl0sWzEsMSwiQ1xcdGltZXMgQyJdLFsxLDAsIlxcdW5kZXJsaW5le1xcbWF0aHJte01vcn19XFxsZWZ0KFxcRGVsdGFeMSxDXFxyaWdodCkiXSxbMCwwLCJYIl0sWzIsMV0sWzMsMF0sWzAsMV0sWzMsMl0sWzMsMSwiIiwxLHsic3R5bGUiOnsibmFtZSI6ImNvcm5lciJ9fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		X & {\underline{\mathrm{Mor}}\left(\Delta^1,C\right)} \\
+		{A\times B} & {C\times C}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	notably considered in the category $\mathrm{sSet}$.
+\end{lemma}
+\begin{example}
+	We can see that $X_0$ consists of the data of two points in $A$ and $B$ and the specified data of a path between their images in $C$. Something similar is true for the higher simplices.
+\end{example}
+\begin{remark}
+	If $A$, $B$, and $C$ are all pointed, then the homotopy pullback is now seen to be pointed as well by putting the basepoints everywhere.
+\end{remark}
+Here is our application for today.
+\begin{example}[loop space]
+	Fix a pointed Kan complex $X$. Then the \textit{loop space} $\Omega X$ is the homotopy pullback of the basepoint map $\Delta^0\to X$ considered twice. For example, the $0$-simplices are given by the data of two points in $X$ connected by a specified path. Note that the pullback in $\mathrm{sSet}$ is just $\Delta^0$!
+\end{example}
+\begin{remark}
+	One can check on the level of simplices of our explicit representatives that
+	\[\Omega X\simeq\underline{\mathrm{Mor}}\left((\Delta^1,\del\Delta^1),(X,\{x\})\right).\]
+	Thus, $\pi_0\Omega X=\pi_1(X,x)$. In fact, $\pi_n\Omega X=\pi_{n+1}X$ for all $n\ge0$: the data of an $n$-cube $\square^n\to\Omega X$ produces an $(n+1)$-cube $\square^{n+1}\to\Omega X$. 
+\end{remark}
+\begin{example}
+	Fix a group $G$, which we can view as the one-object groupoid $BG$, which in turn is a Kan complex. Then $\Omega BG=G$ by construction of $BG$ (namely, the loops in $BG$ are the elements of $G$), so
+	\[\pi_iBG\cong\begin{cases}
+		0 & \text{if }i\ne1, \\
+		G & \text{if }i=1.
+	\end{cases}\]
+\end{example}
+\begin{remark}
+	It is a little difficult to take a group $G$ and produce a CW complex representing the homotopy type of $BG$. For example, it turns out that $B(\ZZ/2\ZZ)$ is homotopic to $\RP^\infty$.
+\end{remark}
+Here is a special kind of pullback.
+\begin{definition}[homotopy fiber]
+	Fix a map $f\colon A\to B$ of pointed Kan complexes. Then the \textit{homotopy fiber} of $f$ is the homotopy pullback of the diagram $\Delta^0\to B\from A$. We may write this fiber as $\mathrm{hfiber}(f)$.
+\end{definition}
+\begin{remark}
+	We see that the $0$-simplices of $\mathrm{hfiber}(f)$ may be described as given by pairs of points of $A$ and a map from their image along $f$ to the basepoint of $B$.
+\end{remark}
+\begin{lemma}
+	Fix a map $f\colon A\to B$ of pointed Kan complexes. Then the homotopy fiber of the induced map $\mathrm{hfiber}(f)\to A$ is $\Omega B$.
+\end{lemma}
+\begin{proof}
+	Let the induced map be $g\colon \mathrm{hfiber}(f)\to A$. Then we stack our squares as
+	% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXG1hdGhybXtoZmliZXJ9KGcpIl0sWzEsMCwiXFxEZWx0YV4wIl0sWzEsMSwiQSJdLFswLDEsIlxcbWF0aHJte2hmaWJlcn0oZikiXSxbMCwyLCJcXERlbHRhXjAiXSxbMSwyLCJCIl0sWzAsMV0sWzEsMl0sWzMsMiwiZyJdLFswLDNdLFsyLDUsImYiXSxbMyw0XSxbNCw1XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\mathrm{hfiber}(g)} & {\Delta^0} \\
+		{\mathrm{hfiber}(f)} & A \\
+		{\Delta^0} & B
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow["g", from=2-1, to=2-2]
+		\arrow[from=2-1, to=3-1]
+		\arrow["f", from=2-2, to=3-2]
+		\arrow[from=3-1, to=3-2]
+	\end{tikzcd}\]
+	so that the result follows because a stack of (homotopy) pullback squares continues to be a (homotopy) pullback square.
+\end{proof}
+\begin{theorem}
+	If $f\colon A\to B$ is a morphism of pointed Kan complexes with homotopy fiber $F$, then we can take the induced map $\Omega B\to F$ and form a ``long exact sequence''
+	\[\Omega^2B\to\Omega F\to\Omega A\to\Omega B\to F\to A\to B.\]
+	Taking $\pi_0$ produces a sequence of maps
+	\[\pi_2B\to\pi_1F\to\pi_1B\to\pi_1A\to\pi_0F\to\pi_0A\to\pi_0B.\]
+	This is an exact sequence of pointed sets.
+\end{theorem}
+\begin{proof}
+	At the end, the argument can be done by hand as in \Cref{lem:homotopy-res}, and the rest follows from functoriality at every step. For example, exactness at $\pi_1B$ follows because $\Omega B\to F\to A$ is also a homotopy fiber!
+\end{proof}
+\begin{theorem}
+	Fix a Kan fibration $f\colon A\to B$ which is also a morphism of pointed Kan complexes. Then the inclusion of the fiber $F$ into $A$ is an equivalence.
+\end{theorem}
+\begin{proof}
+	By \Cref{thm:whitehead}, it is enough to show that this inclusion induces an isomorphism on $\pi_\bullet$s, which can be checked by hand.
+\end{proof}
+We are now allowed to provide a third construction of $\mathrm{Spaces}$.
+\begin{remark}
+	We expect $\mathrm{Spaces}$ to have (co)limits. In our setting, a diagram is a map $D\to\mathrm{Spaces}$ from a quasicategory $D$. For example, any Kan complex $X$ admits a map to $\mathrm{Spaces}_0$ and thus a map $X\to\Delta^0\to\mathrm{Spaces}$, and it turns out that $X$ is the colimit of this morphism. This is a homotopy-coherent version of the statement that any set $S$ can be viewed as a discrete category and the induced functor $S\to\mathrm{Set}$ has colimit $S$.
+\end{remark}
+This intuition grants a universal property for $\mathrm{Spaces}$.
+\begin{theorem}
+	Let $C$ be a quasicategory with all colimits. Then a functor $F\colon\mathrm{Spaces}\to\mc C$ preserving colimits has the same data as an object of $\mc C$.
+\end{theorem}
+\begin{remark}
+	This is a homotopy-coherent version of the statement that a colimit preserving functor $\mathrm{Set}\to\mc C$ has the same data as an object of $\mc C$. Indeed, this is true because any set is a colimit of points.
+\end{remark}
+
+\end{document}
