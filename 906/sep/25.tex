@@ -1,0 +1,163 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 25}
+Today we build some spaces with homotopy groups which are easy to compute.
+
+\subsection{Simplicial Modules}
+It is useful to know something about limits and colimits in $\mathrm{Spaces}$.
+\begin{remark}
+	The functor $\mathrm{Kan}\to\mathrm{Spaces}$ preserves pullbacks of the form
+	% https://q.uiver.app/#q=WzAsMyxbMSwwLCJBIl0sWzEsMSwiQiJdLFswLDEsIkMiXSxbMCwxXSxbMiwxXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		& A \\
+		C & B
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	where the map $A\to B$ is a Kan fibration.
+\end{remark}
+\begin{remark}
+	The functor $\mathrm{Kan}\to\mathrm{Spaces}$ preserves pushouts of the form
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiQiJdLFswLDEsIkMiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dLFswLDJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		A & B \\
+		C
+		\arrow[hook, from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+	\end{tikzcd}\]
+	where $A\into B$ is monic. For example, we preserve coproducts.
+\end{remark}
+We now say something about 
+\begin{definition}[simplicial module]
+	Fix a commutative ring $R$. Then a \textit{simplicial $R$-module} is a functor $\Delta\opp\to\mathrm{Mod}_R$. The category is denoted $\mathrm{sSet}(R)$.
+\end{definition}
+\begin{remark}
+	A simplicial $R$-module is a simplicial group, which we can see by composing with the forgetful functor $\mathrm{Mod}_R\to\mathrm{Ab}$. Accordingly, it turns out that simplicial $R$-modules are Kan complexes.
+\end{remark}
+\begin{remark}
+	If $X$ is a simplicial $R$-module, then we can form a chain complex $C_\bullet(X)$ with $C_n(X)\coloneqq X_n$, and the differential $\del\colon C_n(X)\to C_{n-1}(X)$ is given by
+	\[\del\sigma\coloneqq\sum_{i=0}^n(-1)^id_i\sigma.\]
+	For example, we can check that $\del^2$ is
+	\[\sum_{i=0}^n\sum_{j=0}^{n-1}(-1)^{i+j}d_jd_i\sigma,\]
+	which vanishes because $d_id_j=-d_jd_i$ when $0\le i<j\le n$ by the simplicial identities.
+\end{remark}
+\begin{definition}[free module]
+	Fix a simplicial set $X$. Then we define $\op{Free}(X)\in\mathrm{sSet}(R)$ to be the simplicial $R$-module which at level $n$ is the free $R$-module with basis $X_n$, and the simplicial maps are induced by functoriality. We will write
+	\[C_\bullet(X;R)\coloneqq C_\bullet(\op{Free}X).\]
+	For a Kan complex $X$, we define $C_n(X;R)\coloneqq C_\bullet(\op{Free}X)$. 
+\end{definition}
+\begin{example}
+	If $X$ is a topological space, then $C_\bullet(\mathrm{Sing}X;R)$ is the usual chain complex for singular homology.
+\end{example}
+\begin{example}
+	We see that $C_\bullet\left(\Delta^0;R\right)$ is
+	\[\cdots\stackrel 1\to R\stackrel1\to R\stackrel0\to R\to0\to0,\]
+	where the rightmost $R$ is in degree $0$.
+\end{example}
+The above example is a little dishonest because we expect $\Delta^0$ to have nothing interesting in positive degrees. To fix this, we need to get rid of the degenerate simplices, which we do by taking a quotient.
+\begin{notation}
+	Fix a simplicial $R$-module $A$. Then we define $D_\bullet(A)\subseteq C_n(A)$ to be the chain complex where $D_n(A)$ is spanned by the degenerate $n$-simplices.
+\end{notation}
+\begin{remark}
+	For this definition to make sense, we need to know that $R$-linear combinations of degenerate simplices in $A_n$ get sent by $\del$ to $R$-linear combinations of degenerate simplices. This amounts to checking that $\sum_i(-1)^id_is_j\sigma$ is degenerate for any $j$. The interesting thing here is that
+	\[(-1)^id_is_i+(-1)^{i+1}d_{i+1}s_i=(-1)^i{\id}+(-1)^{i+1}{\id}=0.\]
+	All other $j$ in the sum make $d_is_j$ manifestly degenerate by the simplicial identities.
+\end{remark}
+\begin{notation}
+	Fix a simplicial $R$-module $A$. Then we define
+	\[N_\bullet(A)\coloneqq\frac{C_\bullet(A)}{D_\bullet(A)}.\]
+	For a Kan complex $X$, we define $N_n(X;R)\coloneqq N_\bullet(\op{Free}X)$. Thus, $N_n(A)$ is spanned by the non-degen\-erate simplices in $A_n$.
+\end{notation}
+\begin{example}
+	We see that $N_\bullet\left(\Delta^0;R\right)$ is supported in degree $0$.
+\end{example}
+\begin{example}
+	We see that $N_\bullet\left(\Delta^2;R\right)$ is
+	\[\cdots\to0\to\ZZ\to\ZZ^3\to\ZZ^3\to0\to\cdots.\]
+\end{example}
+\begin{remark}
+	If $X$ is a pointed Kan complex, then we can further reduce $N_\bullet(X;R)$ to $\widetilde N_\bullet(X;R)$ by taking the cokernel of the embedding
+	\[N_\bullet\left(\Delta^0;R\right)\to N(X;R).\]
+\end{remark}
+
+\subsection{The Dold--Kan Correspondence}
+Perhaps we should check that we did not lose anything by passing to $N_\bullet(A)$.
+\begin{theorem}
+	Fix a simplicial $R$-module $A$. Then there is an explicit chain homotopy equivalence $C_\bullet(A)\to N_\bullet(A)$.
+\end{theorem}
+\begin{theorem}[Dold--Kan correspondence] \label{thm:dold-kan}
+	Consider the functor $N_\bullet$ sending simplicial $R$-modules to chain complexes of $R$-modules supported in nonnegative degrees. Then $N_\bullet$ is an equivalence of categories. One frequently denotes the inverse functor by $K_\bullet$.
+\end{theorem}
+\begin{remark}
+	One should not expect $C_\bullet$ to be an equivalence because it does not need to know anything about the degeneracy maps.
+\end{remark}
+\begin{remark}
+	There are nontrivial enhancements of \Cref{thm:dold-kan} to other categories beyond $\mathrm{Mod}_R$, such as $\mathrm{Grp}$ or $\mathrm{Ring}$.
+\end{remark}
+\begin{example}
+	Let $A$ be a simplicial abelian group. Then $\pi_nA$ is $\pi_0\underline{\op{Mor}}\left(\Delta^n/\del\Delta^n,A\right)$, which via the free--forgetful adjunction is
+	\[\pi_0\underline{\op{Hom}}(\op{Free}\Delta^n/\del\Delta^n,A),\]
+	and then we may pass to chain complexes as
+	\[\pi_0\underline{\op{Hom}}\left(\widetilde N_\bullet(\Delta^n/\del\Delta^n;\ZZ),\widetilde N_\bullet(A)\right),\]
+	where we are using $\widetilde N$ because these things are pointed. Now, $\widetilde N_\bullet(\Delta^n/\del\Delta^n;\ZZ)$ is concentrated in degree $n$, so after unraveling definitions, one finds that $\pi_nA$ is just $n$-cycles modulo $n$-boundaries of $\widetilde N(A)$!
+\end{example}
+Thus, if we are handed a chain complex with known homology, we can go in the reverse direction to produce a Kan complex $A$ (which is in fact a simplicial $R$-module) with exactly the homotopy groups given by that homology!
+\begin{definition}[Eilenberg--Maclane spaces]
+	Fix an abelian group $A$ and a nonnegative integer $n\ge0$, we define the \textit{Eilenberg--MacLane space} $K(A,n)$ to be the simplicial abelian group associated to the chain complex
+	\[\cdots\to 0\to0\to A\to0\to0\to\cdots\]
+	via the Dold--Kan correspondence; here, $A$ sits in degree $n$.
+\end{definition}
+\begin{remark}
+	By construction, we see that
+	\[\pi_iK(A,n)=\begin{cases}
+		A & \text{if }i=n, \\
+		0 & \text{if }i\ne n.
+	\end{cases}\]
+\end{remark}
+\begin{example}
+	We can calculate that $K(A,0)$ has $n$-simplices given by
+	\[\op{Mor}_{\mathrm{sSet}}(\Delta^n,K(A,0))=\op{Hom}_{\mathrm{sSet}(\ZZ)}(\op{Free}\Delta^n,K(A,0)),\]
+	which by the Dold--Kan correspondence consists of the morphisms from the chain complex $N_\bullet(\Delta^n)$ to the chain complex corresponding to $A$ (supported in degree $0$). Because the target is so simple, one can calculate this is just $A$ for all $n\ge0$. Thus, we can see that we should have
+	\[K(A,0)=\bigsqcup_A\Delta^0.\]
+\end{example}
+\begin{example}
+	By construction, we also know that $K(A,n)=\Omega K(A,n+1)$.
+\end{example}
+\begin{example}
+	One can check that $K(A,1)$ has $n$-simplices consisting of elements $g_{ij}$ for $0\le i<j\le n$ satisfying the ``cocycle condition'' $g_{ij}+g_{jk}=g_{ik}$ whenever applicable. It turns out that $K(A,1)=BA$, which is the nerve of the one-object category corresponding to $A$.
+\end{example}
+\begin{example}
+	On the homework, we will show that $K(\ZZ,1)$ is $\op{Sing}S^1$.
+\end{example}
+Let's generalize these constructions.
+\begin{notation}
+	If $X$ is a pointed set, we define $K(X,0)\coloneqq\bigsqcup_X\Delta^0$. If $G$ is a group, define $K(G,1)\coloneqq BG$.
+\end{notation}
+There are a few more spaces one might be familiar with.
+\begin{example}
+	One has that $K(\ZZ/2\ZZ,1)=\op{Sing}\RP^\infty$ and $K(\ZZ,2)=\op{Sing}\CP^\infty$. This explains the prevalence of projective space in algebraic topology courses.
+\end{example}
+\begin{remark}
+	Given a Kan complex $X$ and an abelian group $A$ with nonnegative integer $n\ge0$, the Dold--Kan correspondence tells us that $\underline{\op{Mor}}(X,K(A,n))$ consists of maps $N_*(X)$ to the chain complex of $A$ supported in degree $n$. It turns out that this corresponds to $n$-cocycles valued in $A$, which we denote $N^\bullet(X;A)$. Further, taking $\pi_0$, it turns out that taking $\pi_0$ produces cohomology, so we will write
+	\[\mathrm H^\bullet(X;A)\coloneqq\pi_0\underline{\op{Mor}}(X,K(A,n)).\]
+	Thus, the Yoneda functor given by $K(A,n)$ recovers cohomology! This characterizes $K(A,n)$ up to homotopy equivalence by the Yoneda lemma.
+\end{remark}
+\begin{remark}
+	There is a square
+	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG1hdGhybXtLYW59Il0sWzEsMCwiXFxtYXRocm17c1NldH0oXFxaWikiXSxbMCwxLCJcXG1hdGhybXtTcGFjZXN9Il0sWzEsMSwiRChcXFpaKV97XFxnZTB9Il0sWzAsMSwiXFxvcHtGcmVlfSJdLFswLDJdLFsyLDNdLFsxLDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{\mathrm{Kan}} & {\mathrm{sSet}(\ZZ)} \\
+		{\mathrm{Spaces}} & {D(\ZZ)_{\ge0}}
+		\arrow["{\op{Free}}", from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}\]
+	where the right-hand side formally inverts maps of simplicial abelian groups which are equivalences (as maps of simplicial sets). One can think of the bottom arrow as the unique functor which preserves colimits and sends $\Delta^0$ to the chain complex of $\ZZ$ supported in degree $0$; this functor is basically homology (before taking the actual quotients).
+\end{remark}
+
+\end{document}
