@@ -1,0 +1,139 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{September 30}
+We will discuss spectral sequences today.
+
+\subsection{The Serre Spectral Sequences}
+Today, we do a quick crash course on how to compute the cohomology of some Kan complexes.
+\begin{proposition}
+	Given a short exact sequence
+	\[0\to A_\bullet\to B_\bullet\to C_\bullet\to0\]
+	of chain complexes, there is a long exact sequence
+	\[\cdots\to\mathrm H_i(A_\bullet)\to\mathrm H_i(B_\bullet)\to\mathrm H_i(C_\bullet)\to\mathrm H_{i-1}(A_\bullet)\to\cdots.\]
+\end{proposition}
+\begin{proof}
+	We omit this; it is a standard result in homological algebra.
+\end{proof}
+Intuitively, we may view this as a tool to decompose the homology of $B_\bullet$ via its subspace $A_\bullet$ and the quotient $C_\bullet$.
+
+We may wonder what happens if we have a filtration
+\[0\subseteq (C_1)_\bullet\subseteq(C_2)_\bullet\subseteq\cdots\]
+of chain complexes with union $C_\bullet$. Then one can upgrade the long exact sequence into a spectral sequence, which explains how to compute $H_\bullet(C)$ in terms of $H_\bullet(C_i/C_{i-1})$s.
+
+Let's explain roughly how this works. Morally speaking, a class in $\mathrm H_i(C_\bullet)$ should arise from some class in $(C_j)_\bullet$; letting $j$ be the smallest such $j$, then we expect the class to not vanish in the quotient $C_j/C_{j-1}$ by the minimal of $j$. Thus, we are left to try to take a class in some $H_\bullet(C_i/C_{i-1})$ and ask if we can lift it up to $\mathrm H_\bullet(C_i)$, which is measured by the homology of $C_{i-1}$. Of course, we don't currently have access to the homology of $C_{i-1}$, but we can ask if the obstruction vanishes in $C_{i-1}/C_{i-2}$, and now we can inductively push this process inductively backwards.
+\begin{definition}[spectral sequence]
+	A Serre graded, homological \textit{spectral sequence} is a sequence of bi-graded abelian groups $\left\{E^i_{pq}\right\}_{i\ge1}$ (called ``pages'') equipped with maps $d_r\colon E_{pq}^r\to E_{p-r,q+r-1}^r$ for which $d_r^2=0$ and an identification of $E^{r+1}$ with the homology of $d^r$. In this situation, we define $E^\infty$ as the colimit of $E^r$.
+\end{definition}
+\begin{example}
+	Continue with our filtration
+	\[0\subseteq (C_1)_\bullet\subseteq(C_2)_\bullet\subseteq\cdots\]
+	of chain complexes with union $C_\bullet$. Then the $E_1$ page consists of the homology of the quotients $C_i/C_{i-1}$, and there is a canonical way to extend this into a full spectral sequence.
+\end{example}
+Here is the main spectral sequence we will be using for this course.
+\begin{theorem}[Serre spectral sequence] \label{thm:serre-spectral-seq}
+	Let $F\to E\to B$ be a homotopy fiber sequence of pointed Kan complexes. Suppose further that $B$ is simply connected, meaning that $\pi_0B$ and $\pi_1B$ are trivial. Then there is a spectral sequence $E$ with
+	\[E^2_{pq}=\mathrm H_p(B;\mathrm H_q(F;R)).\]
+	Furthermore, this sequence converges to $\mathrm H_{p+q}(E;R)$, meaning that there is a filtration $F^\bullet$ of $\mathrm H_{p+q}(E;R)$ with
+	\[\frac{F^p\mathrm H_{p+q}(E;R)}{F^{p-1}\mathrm H_{p+q}(E;R)}\cong E^\infty_{pq}.\]
+\end{theorem}
+Here is a quick construction of the spectral sequence. We may filter $\Delta^0\to B$ by the skeletal filtration. Taking homotopy pullbacks produces the diagram
+% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiRiJdLFsxLDAsIkZfMCJdLFsyLDAsIkZfMSJdLFswLDEsIlxcRGVsdGFeMCJdLFsxLDEsIlxcb3B7c2t9XzBCIl0sWzIsMSwiXFxvcHtza31fMUIiXSxbMywwLCJcXGNkb3RzIl0sWzQsMCwiRSJdLFs0LDEsIkIiXSxbMywxLCJcXGNkb3RzIl0sWzMsNF0sWzQsNV0sWzUsOV0sWzksOF0sWzAsM10sWzAsMV0sWzEsNF0sWzEsMl0sWzIsNV0sWzIsNl0sWzYsN10sWzcsOF1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	F & {F_0} & {F_1} & \cdots & E \\
+	{\Delta^0} & {\op{sk}_0B} & {\op{sk}_1B} & \cdots & B
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-1, to=2-1]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-2, to=2-2]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-3, to=2-3]
+	\arrow[from=1-4, to=1-5]
+	\arrow[from=1-5, to=2-5]
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=2-2, to=2-3]
+	\arrow[from=2-3, to=2-4]
+	\arrow[from=2-4, to=2-5]
+\end{tikzcd}\]
+where all squares are pullbacks. Then $C_\bullet(E;R)$ has a filtration by $C_\bullet(F_i;R)$, and this filtered complex produces a spectral sequence. We will give a more complete argument later; for example, it is rather non-obvious why we want $\pi_1B=0$.
+\begin{exe}
+	We compute $\mathrm H_\bullet\left(\Omega S^3;\ZZ\right)$, where we are thinking of $S^3$ as the Kan complex $\op{Sing}_\bullet S^3$.
+\end{exe}
+\begin{proof}
+	There is a homotopy fiber sequence $\Omega S^3\to\Delta^0\to S^3$. One can check that $S^3$ is simply connected by working with loops in $S^3$ directly, so \Cref{thm:serre-spectral-seq} provides us with a spectral sequence $E$ with $E_2=\mathrm H_p\left(S^3;\mathrm H_q(\Omega S^3;\ZZ)\right)$ converging to $\mathrm H_{p+q}(\Delta^0;\ZZ)$. In the sequel, we will omit the coefficients $\ZZ$ as much as possible.
+
+	To use this, we should start by computing the homology of $S^3$, which one can compute to be
+	\[\mathrm H_i\left(S^3;A\right)\cong\begin{cases}
+		A & \text{if }i\in\{0,3\}, \\
+		0 & \text{otherwise}.
+	\end{cases}\]
+	Our spectral sequence $E$ now looks like
+	% https://q.uiver.app/#q=WzAsMjMsWzAsMywiXFxjb2xvcntyZWR9XFxtYXRocm0gSF8wKFxcT21lZ2FfMFNeMykiXSxbMCwyLCJcXG1hdGhybSBIXzEoXFxPbWVnYV8wU14zKSJdLFswLDEsIlxcbWF0aHJtIEhfMihcXE9tZWdhXzBTXjMpIl0sWzAsMCwiXFx2ZG90cyJdLFsxLDAsIlxcdmRvdHMiXSxbMSwxLCIwIl0sWzEsMiwiMCJdLFsxLDMsIjAiXSxbMiwzLCIwIl0sWzIsMiwiMCJdLFsyLDEsIjAiXSxbMiwwLCJcXHZkb3RzIl0sWzMsMSwiXFxtYXRocm0gSF8yKFxcT21lZ2FfMFNeMykiXSxbMywyLCJcXG1hdGhybSBIXzEoXFxPbWVnYV8wU14zKSJdLFszLDMsIlxcbWF0aHJtIEhfMChcXE9tZWdhXzBTXjMpIl0sWzMsMCwiXFx2ZG90cyJdLFs0LDEsIjAiXSxbNCwyLCIwIl0sWzQsMywiMCJdLFs0LDAsIlxcdmRvdHMiXSxbNSwxLCJcXGNkb3RzIl0sWzUsMiwiXFxjZG90cyJdLFs1LDMsIlxcY2RvdHMiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		\vdots & \vdots & \vdots & \vdots & \vdots \\
+		{\mathrm H_2(\Omega_0S^3)} & 0 & 0 & {\mathrm H_2(\Omega_0S^3)} & 0 & \cdots \\
+		{\mathrm H_1(\Omega_0S^3)} & 0 & 0 & {\mathrm H_1(\Omega_0S^3)} & 0 & \cdots \\
+		{\color{red}\mathrm H_0(\Omega_0S^3)} & 0 & 0 & {\mathrm H_0(\Omega_0S^3)} & 0 & \cdots
+	\end{tikzcd}\]
+	in the (first quadrant of the) second page; here the $(0,0)$ point has been colored red. The $d_2$ differential maps up $1$ and left $2$, so all these maps vanish, so $E^2=E^3$. Then the $d_3$ differential maps up $2$ and left $3$, and all differentials afterward are going to have to vanish automatically. Thus, we see that we are going to converge at $E^\infty=E^4$.
+
+	For example, $\mathrm H_0(\Omega^0S^3)=\mathrm H_0(\Delta_0;\ZZ)=\ZZ$ because the relevant $d_3$ maps vanish. Similarly, $\mathrm H_1(\Omega^0S^3)=\mathrm H_1(\Delta_0;\ZZ)=0$. Now, for $i\ge0$, we see that
+	\[d_3\colon\mathrm H_i(\Omega S^3)\to\mathrm H_{i+2}(\Omega S^3)\]
+	must have no kernel or cokernel in order to have convergence to the (trivial!) homology of a point: $\mathrm H^i(\Omega S^3)$ lives at $(3,i)$ and so $\ker d_3$ contributes to $\mathrm H^{i+3}(\Delta^0)=0$, and $\mathrm H^{i+2}(\Omega S_3)$ lives at $(0,i+2)$ and so $\coker d_3$ contributes to $\mathrm H^{i+2}(\Delta^0)=0$. We conclude that $\mathrm H_i(\Omega S^3)$ is $2$-peridioc.
+\end{proof}
+\begin{exe}
+	We compute $\mathrm H_\bullet(K(\ZZ,2);\ZZ)$.
+\end{exe}
+\begin{proof}
+	Set $X\coloneqq K(\ZZ,2)$ for brevity. Because $K(\ZZ,1)=\Omega K(\ZZ,2)$, and $K(\ZZ,1)=S^1$, there is a homotopy fiber sequence $S^1\to\Delta^0\to X$. Note $X$ is simply connected because its homotopy groups vanish away from degree $2$. Thus, \Cref{thm:serre-spectral-seq} grants us a spectral sequence $E$ with
+	\[E^2_{pq}=\mathrm H_p(X;\mathrm H_q(S^1;\ZZ))\Rightarrow\mathrm H_{p+q}(\Delta^0;\ZZ).\]
+	We will once again continue to omit the $\ZZ$s as much as possible.
+	
+	To use this, we recall the homology $\mathrm H^i(S^1;A)$ is concentrated in degrees $i\in\{0,1\}$, where it is $A$. Our first quadrant of $E_2$ thus looks like the following.
+	% https://q.uiver.app/#q=WzAsMTksWzAsMywiXFxjb2xvcntyZWR9XFxtYXRocm0gSF8wKFgpIl0sWzEsMywiXFxtYXRocm0gSF8xKFgpIl0sWzIsMywiXFxtYXRocm0gSF8yKFgpIl0sWzMsMywiXFxtYXRocm0gSF8zKFgpIl0sWzAsMiwiXFxtYXRocm0gSF8wKFgpIl0sWzEsMiwiXFxtYXRocm0gSF8xKFgpIl0sWzIsMiwiXFxtYXRocm0gSF8yKFgpIl0sWzMsMiwiXFxtYXRocm0gSF8zKFgpIl0sWzAsMSwiMCJdLFsxLDEsIjAiXSxbMiwxLCIwIl0sWzAsMCwiXFx2ZG90cyJdLFsxLDAsIlxcdmRvdHMiXSxbMiwwLCJcXHZkb3RzIl0sWzMsMSwiMCJdLFs0LDIsIlxcY2RvdHMiXSxbNCwzLCJcXGNkb3RzIl0sWzQsMSwiXFxjZG90cyJdLFszLDAsIlxcdmRvdHMiXSxbMiw0XSxbNiw4XSxbMyw1XSxbNyw5XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		\vdots & \vdots & \vdots & \vdots \\
+		0 & 0 & 0 & 0 & \cdots \\
+		{\mathrm H_0(X)} & {\mathrm H_1(X)} & {\mathrm H_2(X)} & {\mathrm H_3(X)} & \cdots \\
+		{\color{red}\mathrm H_0(X)} & {\mathrm H_1(X)} & {\mathrm H_2(X)} & {\mathrm H_3(X)} & \cdots
+		\arrow[from=3-3, to=2-1]
+		\arrow[from=3-4, to=2-2]
+		\arrow[from=4-3, to=3-1]
+		\arrow[from=4-4, to=3-2]
+	\end{tikzcd}\]
+	We have once again highlighted $(0,0)$ in red. We have also drawn in the $d_2$s, and we can see that the differentials all vanish for higher degrees, so we will converge at $E^3$. For example, we must have $\mathrm H_0(X)\cong\mathrm H^0(\Delta^0)=\ZZ$, and so $\mathrm H_1(X)\cong0$ because $\mathrm H_1(X)$ contributes directly to $\mathrm H_1(\Delta^0)=0$. Continuing, for $i\ge0$, the second differential
+	\[d_2\colon\mathrm H_{i+2}(X)\to\mathrm H_i(X)\]
+	must have trivial kernel and cokernel, which we know to contribute to $\mathrm H^{i+2}(\Delta^0)$ and $\mathrm H^{i+1}(\Delta^0)$, respectively, which both vanish! Thus, we see that $\mathrm H_i(X)$ is $2$-periodic.
+\end{proof}
+
+\subsection{Another Construction}
+Let's sketch a better construction of the Serre spectral sequence. Recall that we have some $\infty$-category $D(\ZZ)_{\ge0}$, which is the category of chain complexes supported in nonnegative degrees, but we have inverted quasi-isomorphisms. (Formally, we proceed as we did to construct $\mathrm{Spaces}$: pushout along the maps $\Delta^1\to J$ inverting the quasi-isomorphisms to get some $\overline{\op{Ch}(\ZZ)_{\ge0}}$, and then choose $D(\ZZ)_{\ge0}$ to be the Kan complex weakly equivalent to it chosen via \Cref{lem:quillen-small-object}.)
+
+Now, any chain complex $C_\bullet$ admits a filtration
+\[C_\bullet=\tau_{\ge0}C_\bullet\supseteq\tau_{\ge1}C_\bullet\supseteq\tau_{\ge2}C_\bullet\supseteq\cdots,\]
+where $\tau_{\ge p}C_\bullet$ is the chain complex where we force all terms of degree less than $p$ to vanish, and we replace the $p$th degree term by the kernel of $C_p\to C_{p-1}$. For example, we see that
+\[\mathrm H_i(\tau_{\ge p}C_\bullet)=\begin{cases}
+	\mathrm H_i(C_\bullet) & \text{if }p\ge i, \\
+	0 & \text{if }p<i.
+\end{cases}\]
+We now receive a spectral sequence as follows: we take $E^1=\bigoplus_i\mathrm H_i(C_\bullet)$ and all differentials to vanish, causing all pages to be the same.
+\begin{remark}
+	We claim that $\tau_{\ge p}\colon D(\ZZ)_{\ge0}\to D(\ZZ)_{\ge0}$ is a functor. Indeed, it is certainly a functor on the level of chain complexes, and then its construction has ensured that it also sends quasi-isomorphisms to quasi-isomorphisms. In fact, it turns out that they are left adjoints to some suitable forgetful functor from $D(\ZZ)_{\ge p}$.
+\end{remark}
+Now, for our spectral sequence, we suppose that we have a Kan complex $B$ and some functor $G\colon B\to D(\ZZ)_{\ge0}$, and we suppose that we would like to understand $\mathrm H_\bullet(\colim G)$. Well, $\colim G$ gets a filtration by taking $\colim(\tau_{\ge p}\circ G)$, so homological algebra provides us with a spectral sequence
+\[E^1=\mathrm H_p(\colim\tau_{\ge q}G/\colim\tau_{\ge q+1}G)\Rightarrow\mathrm H_\bullet(\colim G).\]
+Now, because left adjoints commute with taking colimits, $\colim\tau_{\ge q}G/\colim\tau_{\ge q+1}G$ can be computed as the colimit of the functor $B\to\mathrm D(\ZZ)_{\ge0}$ which sends $b\mapsto\mathrm H_i(Gb;\ZZ)$, where the target is the chain complex supported in degree $q$.
+
+Note that this functor factors through the classical category $\mathrm{Ab}$ and therefore factors through the classical homotopy category $\op{ho}(B)$, which is $\Delta^0$ because $B$ is simply connected! Thus, the functor $B\to\mathrm D(\ZZ)_{\ge0}$ is constant, so its colimit is particularly easy to compute: one gets
+\[\mathrm H_i(Gb;\ZZ)\otimes\mathrm H_\bullet(B;\ZZ)=\mathrm H_\bullet(B;\mathrm H_i(Gb;\ZZ)),\]
+where the extra $\mathrm H_\bullet(B;\ZZ)$ is present because it is present in the constant functor $B\to D(\ZZ)_{\ge0}$ placing $\ZZ$ in degree $0$.
+\begin{remark}
+	To relate this to the Serre spectral sequence, we note that a homotopy fiber sequence $F\to E\to B$ produces a colimit
+	\[E=\colim_BF,\]
+	so $\mathrm H_*E$ can be computed as the homology of the colimit of a diagram $B\to D(\ZZ)_{\ge0}$ given by $b\mapsto C_\bullet(F;\ZZ)$. (More explicitly, $E=\colim_BF$ implies $C_*(E)=\colim_BC_*(F)$, and then we take homology.) Of course, we have been working with $E^1$, but it turns out that one can shear $E^1$ and compute some differentials to pass to $E^2$, recovering \Cref{thm:serre-spectral-seq}.
+\end{remark}
+
+\end{document}
