@@ -7,12 +7,64 @@
 \section{September 23}
 Today, we compute some Selmer groups of the congruent number of elliptic curve.
 
-\subsection{Selmer Groups of Elliptic Curves}
-Even though we are not going to use many of the results in this subsection in the future, it is useful to give some general facts and conjectures in order to build intuition about Selmer groups of elliptic curves, following \cite{poonen-rains-selmer}.
+\subsection{The Weil Pairing for Selmer Groups}
+Even though we are not going to use many of the results in this subsection in the future, it is useful to give some general facts and conjectures in order to build intuition about Selmer groups of elliptic curves, following \cite{poonen-rains-selmer}. For later use, we begin with a discussion of the Weil pairing, following \cite[Section~III.3]{silverman}, though we remark that one can generalize everything to abelian varieties without too much trouble.
+\begin{definition}[Weil pairing]
+	Fix an elliptic curve $E$ over a field $K$. For each positive integer $m$, we define the Weil pairing
+	\[e_m\colon E[m]\times E[m]\to\mu_m\]
+	defined as follows. Fix $S,T\in E[m]$. Choose functions $f$ and $g$ for which $\op{div}f=m[T]-m[\infty]$ and $f\circ[m]=g^m$. Now, the function $E\to\PP^1$ defined by $X\mapsto g(X+S)/g(X)$ turns out to be constant, so we define $e_m(S,T)$ to be this constant value.
+\end{definition}
+\begin{remark} \label{rem:produce-functions-on-e}
+	Let's explain why the functions $f$ and $g$ exist. The isomorphism $\op{Pic}^0(E)\to E$ of group schemes shows that a divisor $\sum_in_i[P_i]$ in $\op{Pic}^0(E)$ vanishes (i.e., arises from a function unique up to $\ov K^\times$) if and only if the associated sum $\sum_in_iP_i$ is $0$ in $E$. This explains why there is some $f$ for which $\op{div}f=m[T]-m[\infty]$. Furthermore, we can select $g$ for which $\op{div}g=[m]^*[T]-[m]^*[\infty]$, which can be computed as $\sum_{T'\in E[m]}([T+T']-[T'])$. As such, $f\circ[m]$ and $g^m$ have the same divisor, so we can force an equality by multiplying by a suitable scalar.
+\end{remark}
+\begin{remark}
+	Let's explain why $X\mapsto g(X+S)/g(X)$ is constant and outputs to $\mu_m$. For the constancy, we note that this is a function between two connected curves, so it is enough to check that it fails to be surjective. Well, $g(X+S)^m=f(mX+mS)=f(mX)$ is also equal to $g(X)^m=f(mX)$, so $g(X+S)/g(X)$ must output to the finite set of roots of unity (or $\infty$). Thus, this function is indeed not surjective. Lastly, the output is to $\mu_m$ because there must be some $X$ for which $g(X+S)\ne\infty$ and $g(X)\ne0$ (after all, $g$ has only finitely many zeroes and poles).
+\end{remark}
+\begin{remark}
+	When generalizing to abelian varieties, the correct Weil pairing is defined by an abelian variety $A$ and is ``dual'' $\op{Pic}^0A$.
+\end{remark}
+\begin{example} \label{ex:compute-e2}
+	Here is basically the only example that can be done by hand: take $m=2$, and suppose that $E$ is the projective closure of $y^2=(x-a)(x-b)(x-c)=x^3-s_1x^2+s_2x-s_3$. We will compute $f$ and $g$ for the $2$-torsion point $T\coloneqq(a,0)$. Indeed, take $f(x)\coloneqq x-a$; this only can have a root at $T$, and it has a double root there because the tangent line is vertical. Thus, $\op{div}f=2[T]-2[\infty]$. Continuing, with the help of a computer algebra system and the doubling formula for an elliptic curve, one can check that
+	\[f\circ[2]=\left(\frac{x^2-2ax-2a^2+2s_1a-s_2}{2y}\right)^2,\]
+	so we may take $g$ to be the function $\left(x^2-2ax-2a^2+2s_1a-s_2\right)/2y$. We will not bother to compute $g(X+S)/g(X)$ for various points $X$ and $S$.
+\end{example}
+Here are our checks on this pairing.
+\begin{lemma} \label{lem:weil-pairing}
+	Fix an elliptic curve $E$ over a field $K$. For each positive integer $m$, the Weil pairing $e_m$ is bilinear, alternating, non-degenerate, and Galois-invariant. Furthermore, given two positive integers $m$ and $k$, we have that
+	\[e_{mk}=e_m\circ([k],{\id}).\]
+\end{lemma}
+\begin{proof}
+	We run our checks one at a time. Whenever torsion points, we will silently produce $f$ and $g$ as in the Weil pairing.
+	\begin{itemize}
+		\item Linear on the left: given $T\in E[m]$, we produce $f$ and $g$ as usual. Then for $S_1,S_2\in E[m]$, the identity $e_m(S_1+S_2,T)=e_m(S_1,T)e_m(S_2,T)$ can be expanded into the equality
+		\[\frac{g(X+S_1+S_2)}{g(X)}=\frac{g(X+S_1+S_2)}{g(X+S_2)}\cdot\frac{g(X+S_2)}{g(X)}.\]
 
-Fix an elliptic curve $E$ over a field $K$. For any positive integer $m$, recall that there is a Weil pairing
-\[W\colon E[m]\times E[m]\to\mu_m\]
-which is Galois-invariant, alternating, and perfect.
+		\item Linear on the right: given $T_1,T_2\in E[m]$, we produce the functions $f_1$, $f_2$, $f_3$, $g_1$, $g_2$, and $g_3$, where the pair $(f_1,g_1)$ is for the torsion point $T\coloneqq T_1+T_2$. We need a way to relate these functions, so we remark that
+		\[\op{div}\frac{f_3}{f_1f_2}=m([T_1+T_2]-[T_1]-[T_2]+[\infty]),\]
+		so as discussed in \Cref{rem:produce-functions-on-e}, we may produce a function $h$ with $\op{div}h=[T_1+T_2]-[T_1]-[T_2]+[\infty]$. Adjusting $h$ by a scalar, we can achieve the equality $f_3=f_1f_2h^m$, so taking $m$th powers gives $g_3=g_1g_2(h\circ[m])^m$.
+		
+		Now, for any $S\in E[m]$, we see that $e_m(S,T_1+T_2)$ equals $g_3(X+S)/g_3(X)$, which now expands into
+		\[\underbrace{\frac{g_1(X+S)}{g_1(X)}}_{e_m(S,T_1)}\cdot\underbrace{\frac{g_2(X+S)}{g_2(X)}}_{e_m(S,T_2)}\cdot\underbrace{\frac{h(mX+mS)^m}{h(mX)^m}}_{1}.\]
+
+		\item Alternating: we need to check that $e_m(T,T)=1$ for $T\in E[m]$. Producing $f$ and $g$ as usual, we would like to show that $g(X+T)=g(X)$. The trick is to consider the function
+		\[\prod_{i=0}^{m-1}f\circ\tau_{iT},\]
+		where $iT$ is translation by $T$. A direct expansion with $\op{div}f=m[T]-m[\infty]$ shows that the divisor of the above function vanishes (it is $\sum_im([(i+1)T]-m[iT])$, which telescopes), so it is constant. Composing with $[m]$ and taking $m$th roots, we see that
+		\[\prod_{i=0}^{m-1}g\circ\tau_{iT'}\]
+		is also constant, where $T'$ has been chosen so that $mT'=T$. For example, we should get the same value plugging in $X$ and $X+T'$. Taking the quotient causes the terms $0<i<m-1$ to vanish from both products, leaving us with $g(X+T)/g(X)=1$.
+
+		\item Non-degenerate: because the pairing is already alternating, it is enough to show that $e_m(-,T)=1$ implies that $T=\infty$. Well, choose $f$ and $g$ as usual, and we are given that $g(X+S)=g(X)$ for any $S\in E[m]$. Thus, $E$ factors through the elliptic curve $E/E[m]$, so we receive a function $h$ for which $g=h\circ[m]$. But now $h^m=f$, so $\op{div}h=[T]-[\infty]$. Because $E\ne\PP^1$, we are forced to have $T=\infty$.
+
+		\item Galois-invariant: fix $S,T\in E[m]$, and choose $\sigma\in\op{Gal}(K^{\mathrm{sep}}/K)$. Picking up functions $f$ and $g$ as usual, we note that $(\sigma f)\circ[m]=(\sigma g)^m$ and $\op{div}\sigma f=m[\sigma T]-m[\infty]$, so $e_m(\sigma S,\sigma T)$ is
+		\[\frac{\sigma g(\sigma X+\sigma S)}{\sigma g(\sigma X)}=\sigma\left(\frac{g(X+S)}{g(X)}\right),\]
+		which of course is $\sigma e_m(S,T)$.
+
+		\item Lastly, we need to check that $e_{mk}(S,T)=e_m(kS,T)$ for $S\in E[mk]$ and $T\in E[m]$. Well, choose $f$ and $g$ as usual, and then we note that $f^k$ and $g\circ[k]$ work to define $e_{mk}$, so $e_{mk}(S,T)$ equals
+		\[\frac{g(kX+kS)}{g(kX)},\]
+		which is $e_m(kS,T)$.
+		\qedhere
+	\end{itemize}
+\end{proof}
+The Weil pairing now interacts with cohomology as follows.
 \begin{proposition}
 	Fix a local field $K_v$ and a prime $p$. Then the Weil pairing induces a cup-product pairing
 	\[\mathrm H^1(K_v;E[p])\times\mathrm H^1(K_v;E[p])\stackrel\cup\to\ZZ/p\ZZ\]
@@ -22,19 +74,19 @@ which is Galois-invariant, alternating, and perfect.
 % 	Fix a number field $K$. Then we set
 % 	\[\mathrm H^1(\AA_K;E[m])\coloneqq\prod_v\left(\mathrm H^1(K_v;E[m]),\mathrm H^1_{\mathrm{ur}}(K_v;E[m])\right).\]
 % \end{notation}
-\begin{remark}
-	If $p$ is a prime, then it turns out that the map $\mathrm H^1(K;E[p])\to\mathrm H^1(\AA_K;E[p])$ is injective when $p$ is prime. However, this is very special: this fails when replacing $p$ by something which is not a prime or when replacing $E$ by a higher-dimensional abelian variety.
-\end{remark}
+% \begin{remark}
+% 	If $p$ is a prime, then it turns out that the map $\mathrm H^1(K;E[p])\to\mathrm H^1(\AA_K;E[p])$ is injective when $p$ is prime. However, this is very special: this fails when replacing $p$ by something which is not a prime or when replacing $E$ by a higher-dimensional abelian variety.
+% \end{remark}
 Let's apply the Weil pairing to our Selmer groups.
 \begin{remark} \label{rem:e-on-adele}
 	For any local field $K_v$, we note that $E(K_v)=E(\OO_v)$ if $E$ has good reduction at $v$. At a high level, this follows from the valuative criterion of properness or the theory of N\'eron models. More directly, one can see that a point $[X:Y:Z]\in\PP^2(K_v)$ satisfying the equation defining $E$ may have its coordinates adjusted until all coordinates are in $\OO_v$ by homogeneity.
 \end{remark}
-\begin{theorem}
+\begin{theorem} \label{thm:selmer-by-lagrangian}
 	Fix an elliptic curve $E$ over a number field $K$, and choose a positive integer $m$. Then $\op{Sel}_m(E/K)$ sits in the following pullback square.
 	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9we1NlbH1fbShFL0spIl0sWzEsMCwiXFxtYXRocm0gSF4xKEs7RVttXSkiXSxbMSwxLCJcXG1hdGhybSBIXjEoXFxBQV9LO0VbbV0pIl0sWzAsMSwiRShcXEFBX0spL3BFKFxcQUFfSykiXSxbMCwzXSxbMywyXSxbMCwxXSxbMSwyXSxbMCwyLCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
 	\[\begin{tikzcd}[cramped]
 		{\op{Sel}_m(E/K)} & {\mathrm H^1(K;E[m])} \\
-		{E(\AA_K)/pE(\AA_K)} & {\mathrm H^1(\AA_K;E[m])}
+		{E(\AA_K)/mE(\AA_K)} & {\mathrm H^1(\AA_K;E[m])}
 		\arrow[from=1-1, to=1-2]
 		\arrow[from=1-1, to=2-1]
 		\arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
@@ -53,7 +105,7 @@ Let's apply the Weil pairing to our Selmer groups.
 	The moral is that we may view $\op{Sel}_p(E/K)$ may be viewed as an intersection of two maximal isotropic subspaces. Such a ``random'' intersection is expected to be rather transverse, which perhaps explains why $\op{Sel}_p(E/K)$ is finite-dimensional.
 \end{remark}
 \begin{remark}
-	Part (a) is a rather sensitive result because it depends on a certain vanishing of $\Sha$ result \cite[Proposition~3.3(e)]{poonen-rains-selmer}. For example, it is not expected to be true if $E$ is replaced by a different module or if $m$ is no longer prime. For example, on the homework, you may show that the map
+	Part (a) is a rather sensitive result because it depends on a certain vanishing of $\Sha$ result \cite[Proposition~3.3(e)]{poonen-rains-selmer}. It is not expected to be true if $E$ is replaced by a different module or if $m$ is no longer prime. For example, on the homework, you may show that the map
 	\[\mathrm H^1\big(\QQ(\sqrt 7);\mu_8\big)\to\mathrm H^1\big(\AA_{\QQ(\sqrt 7)};\mu_8\big)\]
 	fails to be injective.
 \end{remark}
@@ -172,61 +224,118 @@ By comparing with the Birch and Swinnerton-Dyer conjecture, we can make a parity
 	There is a purely local definition of $\varepsilon(f_E/K)$ which does not require us to know that there is an attached modular form.
 \end{remark}
 \begin{remark}
-	\Cref{conj:root-number} is known if $K=\QQ$ by Nekov\'a\v{r} in many cases and Dokchitser--Dokchitser in the remaining cases. If $E[p](K)$ is nontrivial, it is still known by Dokchitser--Dokchitser again. There are other results by \v{C}esnavi\v{c}ius.
+	\Cref{conj:root-number} is known if $K=\QQ$ by Nekov\'a\v{r} and Dokchitser--Dokchitser. If $E[p](K)$ is nontrivial, it is still known by Dokchitser--Dokchitser again. There are other results by \v{C}esnavi\v{c}ius.
 \end{remark}
 
-% \subsection{\texorpdfstring{$2$}{2}-Descent}
-% In this subsection, we explain how to compute $2$-Selmer groups of elliptic curves $E$ over a number field $K$ for which $E[2](K)=E[2](\ov K)$.
+\subsection{\texorpdfstring{$2$}{2}-Descent} \label{subsec:descent}
+In this subsection, we explain how to compute $2$-Selmer groups of elliptic curves $E$ over a number field $K$ for which $E[2](K)=E[2](\ov K)$.
 
-% To begin, suppose that $K$ is an arbitrary field of characteristic $0$, to be set to be a number field shortly. Writing $E$ into Weierstrass form $y^2=f(x)$ for a cubic $x$, one sees that the roots of $f$ produce the nontrivial $2$-torsion points of $f$. (This follows from the usual group law of $E$.) Thus, $f$ is required to fully factor over $K$, allowing us to write $E$ as the projective closure of the affine curve cut out by
-% \[y^2=(x-a_1)(x-a_2)(x-a_3)\]
-% for some $a_1,a_2,a_3\in K$. In this situation, we see that\todo{}
-% \[E[2]=\{\infty,(a_1,0),(a_2,0),(a_3,0)\}.\]
-% Now, $E[2]$ has trivial Galois action, so we may identify it with the isomorphic Galois module $\mu_2^{\oplus2}$. For symmetry reasons, it will in fact be easier to identify it with the ``trace zero'' hyperplane $H$ of $\mu_2^{\oplus3}$: namely, we embed $E[2]$ into $\mu_2^{\oplus3}$ by
-% \[\begin{cases}
-% 	\infty \mapsto (+1,+1,+1), \\
-% 	(a_1,0) \mapsto (+1,-1,-1), \\
-% 	(a_2,0) \mapsto (-1,+1,-1), \\
-% 	(a_3,0) \mapsto (-1,-1,+1).
-% \end{cases}\]
-% Namely, the image of this embedding is $H=\{(\varepsilon_1,\varepsilon_2,\varepsilon_3)\in\mu_2^{\oplus3}:\varepsilon_1\varepsilon_2\varepsilon_3=1\}$, which is the kernel of the product map $H\to\mu_2$. Thus, we may identify $\mathrm H^1(K;E[2])=\mathrm H^1(K;H)$, which tracking through the functoriality of \Cref{ex:h1-of-mu-n} gives
-% \[\mathrm H^1(K;H)\cong\left\{(\alpha,\beta,\gamma):K^\times/K^{\times2}:\alpha\beta\gamma\in K^{\times2}\right\}.\]
-% In order to compute the $2$-Selmer group, we need to understand the image of the map $E(K)/2E(K)\to\mathrm H^1(K;E[2])=\mathrm H^1(K;H)$.
-% \begin{proposition}
-% 	Fix an elliptic curve $E$ over a field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Identifying $E[2]$ with the trace-zero hyperplane $H\subseteq\mu_2^{\oplus3}$, the map $\delta\colon E(K)/2E(K)\to\mathrm H^1(K;H)$ is the map
-% 	\[\delta\colon\begin{cases}
-% 		(x,y) \mapsto (x-a_1,x-a_2,x-a_3) & \text{if }y\ne0, \\
-% 		\infty \mapsto (1,1,1), \\
-% 		(a_1,0) \mapsto ((a_1-a_2)(a_1-a_3),a_1-a_2,a_1-a_3), \\
-% 		(a_2,0) \mapsto (a_2-a_1,(a_2-a_1)(a_2-a_3),a_2-a_3), \\
-% 		(a_3,0) \mapsto (a_3-a_1,a_3-a_2,(a_3-a_1)(a_3-a_2)).
-% 	\end{cases}\]
-% \end{proposition}
-% \begin{proof}
-% 	This follows from \cite[Theorem~X.1.1]{silverman} and the discussion after it.
-% \end{proof}
-% \begin{corollary}
-% 	Fix an elliptic curve $E$ over a field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Identifying $E[2]$ with the trace-zero hyperplane $H\subseteq\mu_2^{\oplus3}$, a triple $(\alpha,\beta,\gamma)\in\mathrm H^1(K;H)$ is in the image of the boundary map from $E(K)/2E(K)$ if and only if the conic $T_{(\alpha,\beta,\gamma)}\subseteq\PP^4$ cut out by the affine equations
-% 	\[\begin{cases}
-% 		\alpha u^2=x-a_1, \\
-% 		\beta v^2=x-a_2, \\
-% 		\gamma w^2=x-a_3
-% 	\end{cases}\]
-% 	admits a solution.
-% \end{corollary}
-% \begin{proof}
-% 	In projective coordinates $[U:V:W:X:Y]$, the equations are
-% 	\[\begin{cases}
-% 		\alpha U^2=(X-a_1Y)Y, \\
-% 		\beta V^2=(X-a_2Y)Y, \\
-% 		\gamma W^2=(X-a_3Y)Y.
-% 	\end{cases}\]
-% 	The points at infinity occur with $Y=0$
-% 	% which makes it apparent that there are no points at infinity live at $T=0$, and the remaining points are on the affine chart $T=1$.
-% \end{proof}
-% \begin{remark}
-% 	For our application to computing Selmer groups, it is enough to merely understand the image of this map $\delta$. The next term 
-% \end{remark}
+To begin, suppose that $K$ is an arbitrary field of characteristic $0$, to be set to be a number field shortly. Writing $E$ into Weierstrass form $y^2=f(x)$ for a cubic $x$, one sees that the roots of $f$ produce the nontrivial $2$-torsion points of $f$. (This follows from the usual group law of $E$.) Thus, $f$ is required to fully factor over $K$, allowing us to write $E$ as the projective closure of the affine curve cut out by
+\[y^2=(x-a_1)(x-a_2)(x-a_3)\]
+for some $a_1,a_2,a_3\in K$. In this situation, we see that%\todo{}
+\[E[2]=\{\infty,(a_1,0),(a_2,0),(a_3,0)\}.\]
+Now, $E[2]$ has trivial Galois action, so we may identify it with the isomorphic Galois module $\mu_2^{\oplus2}$. For symmetry reasons, it will in fact be easier to identify it with the ``trace zero'' hyperplane $H$ of $\mu_2^{\oplus3}$: namely, we embed $E[2]$ into $\mu_2^{\oplus3}$ by
+\[\begin{cases}
+	\infty \mapsto (+1,+1,+1), \\
+	(a_1,0) \mapsto (+1,-1,-1), \\
+	(a_2,0) \mapsto (-1,+1,-1), \\
+	(a_3,0) \mapsto (-1,-1,+1).
+\end{cases}\]
+Namely, the image of this embedding is $H=\{(\varepsilon_1,\varepsilon_2,\varepsilon_3)\in\mu_2^{\oplus3}:\varepsilon_1\varepsilon_2\varepsilon_3=1\}$, which is the kernel of the product map $H\to\mu_2$.
+\begin{remark} \label{rem:projection-via-weil}
+	This embedding can be explained by the Weil pairing: it is given by
+	\[S\mapsto \big(e_2(S,(a_1,0)),e_2(S,(a_2,0)),e_2(S,(a_3,0))\big).\]
+	Indeed, note that $e_2$ is linear and alternating by \Cref{lem:weil-pairing}, so it must have $e_2(\infty,T)=e_2(T,T)=1$ for each $T\in E[2]$. However, because $E[2]\cong(\ZZ/2\ZZ)^2$, if $e_2(S,T)=1$ for any $S\notin\{\infty,T\}$, then $e_2(-,T)$ is trivial, violating the non-degeneracy of \Cref{lem:weil-pairing}.
+\end{remark}
+Thus, we may identify $\mathrm H^1(K;E[2])=\mathrm H^1(K;H)$, which tracking through the functoriality of \Cref{ex:h1-of-mu-n} gives
+\[\mathrm H^1(K;H)\cong\left\{(\alpha,\beta,\gamma):K^\times/K^{\times2}:\alpha\beta\gamma\in K^{\times2}\right\}.\]
+In order to compute the $2$-Selmer group, we need to understand the image of the map $E(K)/2E(K)\to\mathrm H^1(K;E[2])=\mathrm H^1(K;H)$.
+\begin{proposition} \label{prop:compute-delta-e}
+	Fix an elliptic curve $E$ over a field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Identifying $E[2]$ with the trace-zero hyperplane $H\subseteq\mu_2^{\oplus3}$, the boundary map $\delta\colon E(K)/2E(K)\to\mathrm H^1(K;H)$ is the map
+	\[\delta\colon\begin{cases}
+		(x,y) \mapsto (x-a_1,x-a_2,x-a_3) & \text{if }y\ne0, \\
+		\infty \mapsto (1,1,1), \\
+		(a_1,0) \mapsto ((a_1-a_2)(a_1-a_3),a_1-a_2,a_1-a_3), \\
+		(a_2,0) \mapsto (a_2-a_1,(a_2-a_1)(a_2-a_3),a_2-a_3), \\
+		(a_3,0) \mapsto (a_3-a_1,a_3-a_2,(a_3-a_1)(a_3-a_2)).
+	\end{cases}\]
+\end{proposition}
+\begin{proof}
+	Our exposition is taken from \cite[Theorem~X.1.1]{silverman} and the discussion after it. To be explicit, let $\delta_K$ be the isomorphism identifying $K^\times/K^{\times2}\to\mathrm H^1(K;\mu_2)$; it sends $\alpha\in K^\times/K^{\times2}$ to the $1$-cocycle $\sigma\mapsto\sigma\sqrt\alpha/\sqrt\alpha$.
+
+	The idea is to compute $\delta$ using the Weil pairing, via \Cref{rem:projection-via-weil}. Because $e_2$ is linear and Galois-invariant, we any $T\in E[2]$ produces a map $e_2(-,T)\colon E[2]\to\mu_2$, so any $P\in E(K)/2E(K)$ functorially produces a $1$-cocycle
+	\[\sigma\mapsto e_2(\delta(P)(\sigma),T)\]
+	in $\mathrm H^1(K;\mu_2)$, which must be identified with $\delta_K(b(P,T))$ for some uniquely defined $b(P,T)\in K^\times/K^{\times2}$. In fact, by \Cref{rem:projection-via-weil}, we see that $e_2(-,(a_i,0))\colon E[2]\to\mu_2$ is projection onto the $i$th coordinate of $E[2]\into H$. Thus, $b(P,(a_i,0))$ will continue to be the $i$th coordinate in $\mathrm H^1(K;H)\into\left(K^\times/K^{\times2}\right)^3$.
+
+	We thus see that we will be content with computing $b(P,T)$ for $T\in E[2]\setminus\{\infty\}$; say $T\coloneqq(a_i,0)$. To begin, fix some $Q\in E(K^{\mathrm{sep}})$ with $2Q=P$, and fix some $\beta\in\ov K$ with $\beta^2=b(P,T)$. On one hand, we see that $\delta_K(b(P,T))(\sigma)=\sigma\beta/\beta$. On the other hand, choosing $f$ and $g$ as in \Cref{ex:compute-e2}, we see that
+	\[e_2(\delta(P)(\sigma),T)=\frac{g(X+\sigma Q-Q)}{g(X)}.\]
+	Now, provided that $g(Q)\ne0$, which is equivalent to $g(Q)^2=f(2Q)=f(P)\ne0$, we may plug in $Q$ to see $e_2(\delta(P)(\sigma),T)=g(\sigma Q)/g(Q)$, so
+	\[\frac{\sigma g(Q)}{g(Q)}=\frac{\sigma\beta}{\beta}.\]
+	Thus, $\delta_K(g(Q))=\delta_K(\beta)$, so $g(Q)$ and $\beta$ represent the same class in $K^\times/K^{\times2}$. Accordingly, up to squares, we can compute $b(P,T)$ as $\beta^2=g(Q)^2$, which is $f(2Q)$ by construction of the Weil pairing, which is $f(P)$ (as usual, provided this makes sense).
+
+	We now recall that $f(x)=x-a_i$, so we find that the $i$th coordinate of $\delta(x,y)$ will be $x-a_i$ whenever $a_i\ne0$. To finish up the calculation, we note that $\delta(\infty)=(1,1,1)$ because identities go to identities, and the remaining $i$th coordinate of $\delta(a_i,0)$ can be computed from the other two because all three coordinates must multiply to be a square.
+\end{proof}
+\begin{corollary} \label{cor:test-im-delta-descent}
+	Fix an elliptic curve $E$ over a field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Identifying $E[2]$ with the trace-zero hyperplane $H\subseteq\mu_2^{\oplus3}$, a triple $(\alpha,\beta,\gamma)\in\mathrm H^1(K;H)$ is in the image of the boundary map from $E(K)/2E(K)$ if and only if the conic $T_{(\alpha,\beta,\gamma)}\subseteq\PP(1,1,1,2,1)$ cut out by the affine equations
+	\[\begin{cases}
+		\alpha u^2=x-a_1, \\
+		\beta v^2=x-a_2, \\
+		\gamma w^2=x-a_3
+	\end{cases}\]
+	admits a solution. (Namely, the coordinates $u$, $v$, and $w$ have weight $1$, and $x$ has weight $2$.)
+\end{corollary}
+\begin{proof}
+	Let's begin by showing that admitting a solution implies being in the image of $\delta$. In projective coordinates $[U:V:W:X:Z]$, the equations are
+	\[\begin{cases}
+		\alpha U^2=X-a_1Z^2, \\
+		\beta V^2=X-a_2Z^2, \\
+		\gamma W^2=X-a_3Z^2.
+	\end{cases}\]
+	The points at infinity occur with $Z=0$, where we see that we have a point if and only if $\alpha U^2=\beta V^2=\gamma W^2$, which amounts to requiring that $(\alpha,\beta,\gamma)=(1,1,1)$ in $\left(K^\times/K^{\times2}\right)^3$.
+
+	Otherwise, we are allowed to work in affine coordinates, setting $Z=1$. The idea is to use a solution to construct an explicit pre-image, using the calculation of \Cref{prop:compute-delta-e}. The presence of a solution means that $\alpha(x-a_1)$, $\beta(x-a_2)$, and $\gamma(x-a_3)$ are all squares, which in turn means that we can find $y$ for which
+	\[y^2=(x-a_1)(x-a_2)(x-a_3).\]
+	We now see that $(\alpha,\beta,\gamma)$ is the image of $(x,y)$ along $\delta$: this is immediately apparent if $y\ne0$ (i.e., $x\notin\{a_1,a_2,a_3\}$), but even if (say) $(x,y)=(a_1,0)$, then $\beta(x-a_2)$ and $\gamma(x-a_3)$ are nonzero squares and thus uniquely determine $\alpha\in K^\times/K^{\times2}$, so we still find that $(\alpha,\beta,\gamma)=\delta(a_1,0)$. (A similar argument works for $(x,y)=(a_2,0)$ and $(x,y)=(a_3,0)$---one just has to rearrange the indices.)
+
+	This argument also tells us how to show that being in the image of $\delta$ implies that we admit a solution.
+	\begin{itemize}
+		\item We handled $\delta(\infty)$ in the first paragraph. 
+		\item For $(x,y)\in E(K)$ with $y\ne0$, we see that $\delta(x,y)=(x-a_1,x-a_2,x-a_3)$, so $T_{\delta(x,y)}$ admits the solution $(u,v,w,x)=(1,1,1,x)$.
+		\item For the remaining points $(x,y)$ with $y=0$, it is by symmetry enough to only handle $(x,y)=(a_1,0)$. Then $\delta(x,y)=(\alpha,\beta,\gamma)$ has $\beta=a_1-a_2$ and $\gamma=a_1-a_3$, so $T_{\delta(x,y)}$ admits the solution $(u,v,w,x)=(0,1,1,a_1)$.
+		\qedhere
+	\end{itemize}
+	% which makes it apparent that there are no points at infinity live at $T=0$, and the remaining points are on the affine chart $T=1$.
+\end{proof}
+\begin{remark}
+	Here is a more geometric argument for \Cref{cor:test-im-delta-descent}. To understand the image of this map $\delta$, it is equivalent to understand the kernel of the next map in the long exact sequence, which is
+	\[\mathrm H^1(K;E[2])\to\mathrm H^1(K;E)[2].\]
+	Now, $\mathrm H^1(K;E)$ classifies principal homogeneous spaces \cite[Section~X.3]{silverman}, which are trivial if and only if they admit a $K$-rational point (after all, principal homogeneous spaces for $E$ are twists of $E$). Thus, it is enough to check that the principal homogeneous space associated to the triple $(\alpha,\beta,\gamma)$ admits a $K$-rational point, but one can check that this principal homogeneous space is exactly the conic $T_{(\alpha,\beta,\gamma)}$!
+\end{remark}
+While we're here, we give some general remarks for how big these groups should be.
+\begin{example} \label{ex:size-im-delta-v}
+	Fix an elliptic curve $E$ over a number field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Then
+	\[\dim_{\FF_2}E(K_v)/2E(K_v)=\begin{cases}
+		0 & \text{if }K_v=\CC, \\
+		1 & \text{if }K_v=\RR, \\
+		2 & \text{if }v\text{ is odd}, \\
+		1+\dim_{\FF_2}\mu_{2^\infty}(K_v)+[K_v:\QQ_2] & \text{if }v\text{ is even}.
+	\end{cases}\]
+\end{example}
+\begin{proof}
+	By \Cref{thm:selmer-by-lagrangian}, the image of $E(K_v)/2E(K_v)\to\mathrm H^1(K_v;E[2])$ should have dimension equal to
+	\[\frac12\dim_{\FF_2}\mathrm H^1(K_v;E[2])=\dim_{\FF_2}\mathrm H^1(K_v;\mu_2).\]
+	By \Cref{ex:h1-of-mu-n}, we are left to compute $K_v^\times/K_v^{\times2}$. In the archimedean cases, we directly see that $\CC^\times/\CC^{\times2}=1$ (because $\CC$ is algebraically closed) and $\RR^\times/\RR^{\times2}=\RR^\times/\RR^+=\{\pm1\}$.
+	
+	Otherwise, we suppose that $K$ is a finite extension of $\QQ_p$, and we claim that
+	\[K_v^\times\cong\ZZ\times\FF_v\times\mu_{p^\infty}(K_v)\times\OO_v\]
+	as abelian groups. To begin, note $K_v^\times\cong\ZZ\times\OO_v^\times$ by using the valuation; additionally, by modding out by $\mf p_v$, we find that $\OO_v^\times\cong\FF_v\times(1+\mf p_v)$.
+	
+	Now, recall that the exponential map $\exp\colon\mf p_v\to(1+\mf p_v)$ identifies open neighborhoods of the identity of $K_v$ and $K_v^\times$, so it follows that $\OO_v^\times$ is a finitely generated $\OO_v$-module. Because $\OO_v$ is a principal ideal domain, it follows that $\OO_v^\times$ is isomorphic to its torsion times its free part. The free part of $\OO_v^\times$ has rank $1$ because the exponential map identifies a finite-index open subgroup with $\OO_v$. Lastly, the torsion of $(1+\mf p_v)$ must be $p$-power (because $(1+\varpi)^n\equiv1+n\varpi\pmod{\mf p_v^{2m}}$ for any $\varpi\in\mf p^m$), and conversely, the $p$-power torsion of $K_v^\times$ all lives in $\OO_v^\times$ by looking at the valuation and is in fact $1\pmod{\mf p_v}$ by looking$\pmod{\mf p_v}$. The claim follows.
+
+	To complete the calculation, we write
+	\[\frac{K_v^\times}{K_v^{\times2}}=\frac{\ZZ}{2\ZZ}\times\frac{\FF_v^\times}{\FF_v^{\times2}}\times\frac{\mu_{p^\infty}(K_v)}{\mu_{p^\infty}(K_v)^2}\times\frac{\OO_v}{2\OO_v}.\]
+	If $v$ is odd, then $\FF_v^\times/\FF_v^{\times2}\cong\ZZ/2\ZZ$, the $p$-group $\mu_{p^\infty}(K_v)$ contributes nothing, and the $2$-divisible group $\OO_v$ also contributes nothing; this totals to having dimension $2$. Otherwise, if $v$ is even, then $\FF_v^\times/\FF_v^{\times2}=1$, and $\OO_v/2\OO_v\cong(\ZZ/2\ZZ)^{[K_v:\QQ_2]}$. Totaling these calculations completes.
+\end{proof}
 
 \subsection{Congruent Number Elliptic Curves}
 We now return to the congruent number elliptic curves $E_d\colon y^2=x(x-d)(x+d)$, where $d\in\ZZ$ is some squarefree positive integer. It turns out that $E_d$ is a quadratic twist of $E_1\colon y^2=x^3-x$, and these elliptic curves have complex multiplication by $\ZZ[i]$. Importantly, the $2$-torsion
@@ -246,10 +355,10 @@ is fully defined over $\QQ$. Here is a bit more about what is known.
 \end{remark}
 They proved this using calculations of Selmer groups. We will show the following.
 \begin{theorem} \label{thm:cong-selmer}
-	Suppose that $d$ is an odd prime $p$. Then
+	Fix an odd positive prime integer $d=p$, and let $E_p$ be the projective closure of $y^2=x(x-p)(x+p)$. Then
 	\[S_2(E_p/\QQ)=\begin{cases}
 		2 & \text{if }p\equiv1\pmod8, \\
-		0 & \text{if }p\equiv2,3\pmod8, \\
+		0 & \text{if }p\equiv3\pmod8, \\
 		1 & \text{if }p\equiv5,7\pmod8.
 	\end{cases}\]
 \end{theorem}
@@ -257,58 +366,115 @@ They proved this using calculations of Selmer groups. We will show the following
 	In the first case $p\equiv1\pmod8$, it is possible to get both $0$ and $2$ for the Mordell--Weil rank. Indeed, for many small primes $p$, $\op{rank}E_p(\QQ)=0$, but $\op{rank}E_{41}(\QQ)=2$.
 \end{remark}
 \begin{remark}
-	It has been verified by Heegner--Monsky that $p\equiv5,7\pmod8$ implies that $\op{rank}E_p(\QQ)=1$. This requires the construction of non-torsion points, which uses Heegner points.
+	It has been verified by Heegner--Monsky that $p\equiv5,7\pmod8$ implies $\op{rank}E_p(\QQ)=1$. This requires the construction of non-torsion points, which uses Heegner points.
 \end{remark}
-We are going to do $2$-descent for elliptic curve $E$ over $K$ with $E[2](\ov K)=E[2](K)$. In this case, we may write
-\[E\colon y^2=(x-a_1)(x-a_2)(x-a_3).\]
-Because $E[2]$ is defined over $K$, the Galois action is trivial. Thus, we see $\mathrm H^1(K;E[2])$ is simply $\mathrm H^1(K;\mu_2)^2$, and we can compute this cohomology using the ``Kummer'' exact sequence
-\[1\to\mu_2\to\ov K^\times\stackrel2\to\ov K^\times\to1,\]
-which in Galois cohomology produces an isomorphism $\mathrm H^1(K;\mu_2)\cong K^\times/K^{\times2}$ by Hilbert's theorem 90. We may now identify $\mathrm H^1(K;E[2])$ with
-\[\left\{(\alpha,\beta,\gamma)\in(K^\times/K^{\times2})^3:\alpha\beta\gamma=1\right\}.\]
-It turns out that this map (approximately) sends some point $(x,y)$ of $E(K)/2E(K)$ to the triple $(x-a_1,x-a_2,x-a_3)$ when $E$ has the form $y^2=(x-a_1)(x-a_2)(x-a_3)$. Technically speaking, we should note that we send $\infty$ to the identity $(1,1,1)$, and we send any two-torsion point like $(a_1,0)$ to the triple whose last two coordinates are $a_1-a_2$ and $a_3-a_2$.
-
-Of course, we would like a way to know if an interesting triple $(\alpha,\beta,\gamma)$ is in the image without having to find points in $E(K)$ first. Here is one such test.
-\begin{lemma}
-	Fix an elliptic curve $E\colon y^2=(x-a_1)(x-a_2)(x-a_3)$ over a finite extension $K$ of $\QQ_p$. Then a triple $(\alpha,\beta,\gamma)$ lies in the image of the above map if and only if the system of equations
-	\[\begin{cases}
-		\alpha u^2=x-a_1, \\
-		\beta v^2=x-a_2, \\
-		\gamma w^2=x-a_3
-	\end{cases}\]
-	admits a solution. We will call this conic $T_{(\alpha,\beta,\gamma)}$.
+We are going to use $2$-descent. As in \Cref{subsec:descent}, we identify $\mathrm H^1(K;E_d)$ with $\mathrm H^1(K;H)$. We begin with two technical calculations.
+\begin{lemma} \label{lem:cong-local-condition}
+	Fix an odd positive squarefree integer $d$, and let $E_d$ be the elliptic curve over $\QQ$ which is the projective closure of $y^2=x(x-d)(x+d)$. We will compute the image of $\delta_v\colon E_d(K_v)/2E_d(K_v)\to\mathrm H^1(K_v;H)$ for each place $v$.
+	\begin{listalph}
+		\item If $v\nmid2d\infty$, then the image of $\delta_v$ consists of the triples $(\alpha,\beta,\gamma)$ such that $v(\alpha)=v(\beta)=v(\gamma)=0$.
+		\item The image of $\delta_v$ contains the triples
+		\[S\coloneqq\{(1,1,1),(-1,-d,d),(d,2,2d),(-d,-2d,2)\}.\]
+		\item If $v\mid d\infty$, then the image of $\delta_v$ is $S$.
+		\item If $v=2$, the image of $\delta_v$ is $\op{span}(S\cup\{(1,5,5)\})$.
+	\end{listalph}
 \end{lemma}
-\begin{proof}[Sketch]
-	By cancelling out $x$, we see that we are trying to solve the system of equations
-	\[\begin{cases}
-		\alpha u^2-\beta v^2=-a_1+a_2, \\
-		\alpha u^2-\gamma v^2=-a_1+a_3.
-	\end{cases}\]
-	This cuts out a curve in $\PP^3$, and it turns out that this is precisely the $E$-torsor corresponding to the image of $(\alpha,\beta,\gamma)$ in $\mathrm H^1(K;E)[2]$. Having a rational point is equivalent to the torsor being trivial, so we are done.
+\begin{proof}
+	We show the parts in sequence.
+	\begin{listalph}
+		\item If $v\nmid2d\infty$, then $E_d$ has good reduction at the finite place $v$, so by \Cref{lem:ur-of-elliptic-curve}, the image of $\delta_v$ is $\mathrm H^1_{\mathrm{ur}}(K_v;H)$. The result now follows by looking coordinate-wise via \Cref{ex:unramified-mu-m}.
+		\item The given set $S$ is precisely the image of $E_d[2]$. Indeed,
+		\begin{align*}
+			\delta_v(\infty) &= (1,1,1), \\
+			\delta_v(0,0) &= (-1,-d,d), \\
+			\delta_v(d,0) &= (d,2,2d), \\
+			\delta_v(-d,0) &= (-d,-2d,2).
+		\end{align*}
+		\item If $v=\infty$, then we have a linearly independent set $\{(-1,-1,+1)\}$, which spans the image of $\delta_v$ by \Cref{ex:size-im-delta-v}. Similarly, if $v\mid d$, then we have a linearly independent set $\{(-1,-d,d),(d,2,2d)\}$ (because $d$ is squarefree), which spans the image of $\delta_v$ by \Cref{ex:size-im-delta-v}.
+		\item You may do this for the homework!
+		\qedhere
+	\end{listalph}
 \end{proof}
-In our situation, we now want to compute the image of
-\[E(K_v)/2E(K_v)\to\mathrm H^1(K_v;E[2]).\]
-The image is supposed to be $2$-dimensional because it should be a maximal isotropic subspace. Certainly it is at most $2$-dimensional because it is isotropic.
-\begin{example} \label{ex:delta-v-image-supp-d}
-	In our application to $E_d$ for $d$ odd, we can check this by hand by examining the image of torsion. Namely, the image of $E_d[2]$ maps to the triples given by
-	\[\{(1,1,1),(-1,-d,d),(d,2,2d),(-d,-2d,2)\},\]
-	and these are distinct elements at places $v$ dividing $2d$.
-\end{example}
-We now turn to the end of the calculation. We are looking at a triple $(\alpha,\beta,\gamma)\in\mathrm H^1(K;E[2])$, and we want to check if it satisfies some local conditions as follows.
-\begin{itemize}
-	\item At $v\nmid 2d\infty$, then we are asking for $(\alpha,\beta,\gamma)$ to live in the image of $\mathrm H^1_{\mathrm{ur}}(K_v;E[2])$. This group is being identified with $\OO_v^\times/\OO_v^{\times2}$, so this amounts to requiring that $\alpha$, $\beta$, and $\gamma$ have prime factorizations supported at primes dividing $2d$.
-	\item At $v\mid d\infty$, then we take the image of $\delta_v$ as computed from \Cref{ex:delta-v-image-supp-d}.
-\end{itemize}
-Now, it turns out that we can check that a triple $(\alpha,\beta,\gamma)$ has adelic solutions if and only if it has adelic solutions over just $\AA_\QQ^{(2)}$, so we don't have to give a local condition at $2$.
+We will also need the following technical result.
+\begin{lemma} \label{lem:conic-almost-everywhere}
+	Let $T\subseteq\PP^n_\ZZ$ be a smooth projective conic. If $T$ admits solutions in $\QQ_v$ for all but one place $v_0$, then $T$ admits solutions in $\QQ_{v_0}$ as well.
+\end{lemma}
+\begin{proof}
+	You may show this for the homework!
+\end{proof}
+We now proceed with the proof of \Cref{thm:cong-selmer}.
+\begin{proof}[Proof of \Cref{thm:cong-selmer}]
+	We have identified $\mathrm H^1(K;E_d[2])$ with the trace-zero hyperplane of $\left(K^\times/K^{\times2}\right)^3$. Now, let $\mc L_v\subseteq\left(K^\times/K^{\times2}\right)^3$ be the corresponding local condition of the Selmer group at the place $v$, as computed in \Cref{lem:cong-local-condition}. Thus,
+	\[\op{Sel}_2(E_d/\QQ)\cong\left\{(\alpha,\beta,\gamma):(\alpha,\beta,\gamma)\in\mc L_v\text{ for all }v\right\}.\]
+	The local conditions $v\nmid2d\infty$ show that $\alpha$, $\beta$, and $\gamma$ should (up to squares) be supported on primes dividing $2d$; adjusting these rationals up to squares, we may assume that they are all integers dividing $2d$.
+
+	Now, we are not actually interested in computing the Selmer group on the nose. Instead, we would like to compute the (dimension of the) quotient by $E[2]$. Well, examining the local condition at $\infty$, we see that taking a quotient by the subgroup generated by $\delta(0,0)=(-1,-d,d)$ corresponds exactly to assuming $(\alpha,\beta,\gamma)$ are all positive---a priori, none are negative or exactly $\beta$ and $\gamma$ are negative. Similarly, examining the local condition at $2$, we see that taking a quotient by the subgroup generated by $\delta(d,0)=(d,2,2d)$ corresponds exactly to assuming that $(\alpha,\beta,\gamma)$ are all odd. Thus,
+	\[\frac{\op{Sel}_2(E_d/\QQ)}{E[2]}\subseteq\left\{(\alpha,\beta,\gamma)\in\ZZ_{>0}^3:\alpha,\beta,\gamma\mid d,\alpha\beta\gamma\text{ is square}\right\}.\]
+	By \Cref{lem:cong-local-condition}, all triples $(\alpha,\beta,\gamma)$ in the above set are automatically in the local condition at a place $v\nmid2d$, so there are only finitely many more places to check.
+	
+	Only now do we use the fact that $d=p$ is prime. By \Cref{lem:conic-almost-everywhere} combined with \Cref{cor:test-im-delta-descent}, we are allowed to avoid checking $(\alpha,\beta,\gamma)\in\mc L_{v_0}$ for a single place $v_0$; we choose $v_0=2$, so it only remains to check the place at the prime $p$. In other words, we are interested in which of the triples
+	\[\{(1,1,1),(1,p,p),(p,1,p),(p,p,1)\}\]
+	live in $\mc L_p=\{(1,1,1),(-1,-p,p),(p,2,2p),(-p,-2p,p)\}$. (Note that the elements of $\mc L_p$ are only defined up to squares!) We handle these one at a time.
+	\begin{itemize}
+		\item We see that $(1,1,1)\in\mc L_p$ always.
+		\item By examining valuations (even$\pmod2$), we see that $(1,p,p)\in\mc L_p$ if and only if it is $(-1,-p,p)$ up to squares, which is equivalent to $-1$ being square, which is equivalent to $p\equiv1\pmod4$.
+		\item By examining valuations, we see that $(p,1,p)\in\mc L_p$ if and only if it is $(p,2,2p)$ up to squares, which is equivalent to $2$ being square, which is equivalent to $p\equiv\pm1\pmod8$.
+		\item Lastly, we similarly find that $(p,p,1)\in\mc L_p$ if and only if it is $(-p,-2p,p)$ up to squares, which is equivalent to $-1$ and $2$ being squares, which is equivalent to $p\equiv1\pmod8$.
+	\end{itemize}
+	Totaling the above cases completes the proof.
+\end{proof}
+% We are going to do $2$-descent for elliptic curve $E$ over $K$ with $E[2](\ov K)=E[2](K)$. In this case, we may write
+% \[E\colon y^2=(x-a_1)(x-a_2)(x-a_3).\]
+% Because $E[2]$ is defined over $K$, the Galois action is trivial. Thus, we see $\mathrm H^1(K;E[2])$ is simply $\mathrm H^1(K;\mu_2)^2$, and we can compute this cohomology using the ``Kummer'' exact sequence
+% \[1\to\mu_2\to\ov K^\times\stackrel2\to\ov K^\times\to1,\]
+% which in Galois cohomology produces an isomorphism $\mathrm H^1(K;\mu_2)\cong K^\times/K^{\times2}$ by Hilbert's theorem 90. We may now identify $\mathrm H^1(K;E[2])$ with
+% \[\left\{(\alpha,\beta,\gamma)\in(K^\times/K^{\times2})^3:\alpha\beta\gamma=1\right\}.\]
+% It turns out that this map (approximately) sends some point $(x,y)$ of $E(K)/2E(K)$ to the triple $(x-a_1,x-a_2,x-a_3)$ when $E$ has the form $y^2=(x-a_1)(x-a_2)(x-a_3)$. Technically speaking, we should note that we send $\infty$ to the identity $(1,1,1)$, and we send any two-torsion point like $(a_1,0)$ to the triple whose last two coordinates are $a_1-a_2$ and $a_3-a_2$.
+
+% Of course, we would like a way to know if an interesting triple $(\alpha,\beta,\gamma)$ is in the image without having to find points in $E(K)$ first. Here is one such test.
+% \begin{lemma}
+% 	Fix an elliptic curve $E\colon y^2=(x-a_1)(x-a_2)(x-a_3)$ over a finite extension $K$ of $\QQ_p$. Then a triple $(\alpha,\beta,\gamma)$ lies in the image of the above map if and only if the system of equations
+% 	\[\begin{cases}
+% 		\alpha u^2=x-a_1, \\
+% 		\beta v^2=x-a_2, \\
+% 		\gamma w^2=x-a_3
+% 	\end{cases}\]
+% 	admits a solution. We will call this conic $T_{(\alpha,\beta,\gamma)}$.
+% \end{lemma}
+% \begin{proof}[Sketch]
+% 	By cancelling out $x$, we see that we are trying to solve the system of equations
+% 	\[\begin{cases}
+% 		\alpha u^2-\beta v^2=-a_1+a_2, \\
+% 		\alpha u^2-\gamma v^2=-a_1+a_3.
+% 	\end{cases}\]
+% 	This cuts out a curve in $\PP^3$, and it turns out that this is precisely the $E$-torsor corresponding to the image of $(\alpha,\beta,\gamma)$ in $\mathrm H^1(K;E)[2]$. Having a rational point is equivalent to the torsor being trivial, so we are done.
+% \end{proof}
+% In our situation, we now want to compute the image of
+% \[E(K_v)/2E(K_v)\to\mathrm H^1(K_v;E[2]).\]
+% The image is supposed to be $2$-dimensional because it should be a maximal isotropic subspace. Certainly it is at most $2$-dimensional because it is isotropic.
+% \begin{example} \label{ex:delta-v-image-supp-d}
+% 	In our application to $E_d$ for $d$ odd, we can check this by hand by examining the image of torsion. Namely, the image of $E_d[2]$ maps to the triples given by
+% 	\[\{(1,1,1),(-1,-d,d),(d,2,2d),(-d,-2d,2)\},\]
+% 	and these are distinct elements at places $v$ dividing $2d$.
+% \end{example}
+% We now turn to the end of the calculation. We are looking at a triple $(\alpha,\beta,\gamma)\in\mathrm H^1(K;E[2])$, and we want to check if it satisfies some local conditions as follows.
+% \begin{itemize}
+% 	\item At $v\nmid 2d\infty$, then we are asking for $(\alpha,\beta,\gamma)$ to live in the image of $\mathrm H^1_{\mathrm{ur}}(K_v;E[2])$. This group is being identified with $\OO_v^\times/\OO_v^{\times2}$, so this amounts to requiring that $\alpha$, $\beta$, and $\gamma$ have prime factorizations supported at primes dividing $2d$.
+% 	\item At $v\mid d\infty$, then we take the image of $\delta_v$ as computed from \Cref{ex:delta-v-image-supp-d}.
+% \end{itemize}
+% Now, it turns out that we can check that a triple $(\alpha,\beta,\gamma)$ has adelic solutions if and only if it has adelic solutions over just $\AA_\QQ^{(2)}$, so we don't have to give a local condition at $2$.
 \begin{corollary} \label{cor:selmer-trivial-bound}
-	Fix $d$ odd, and let $n$ be the number of prime factors of $d$. Then
+	Fix an odd positive squarefree integer $d$, and let $E_d$ be the projective closure of $y^2=x(x-d)(x+d)$. Let $\nu$ be the number of positive integers of $d$. Then
 	\[S_2(E_d)\le2\log_2n.\]
 \end{corollary}
 \begin{proof}
-	Up to $E_d[2]$, we may assume that our triples $(\alpha,\beta,\gamma)$ have $\alpha$ and $\beta$ are positive factors of $d$ and $\alpha\beta\gamma=1$. These two degrees of freedom produce the dimension bound.
+	The proof of \Cref{thm:cong-selmer} shows that
+	\[\frac{\op{Sel}_2(E_d/\QQ)}{E[2]}\subseteq\left\{(\alpha,\beta,\gamma)\in\ZZ_{>0}^3:\alpha,\beta,\gamma\mid d,\alpha\beta\gamma\text{ is square}\right\}.\]
+	This has at most $\nu(d)^2$ elements, so the result follows by taking dimensions.
 \end{proof}
-For example, if $p$ is prime, then we find that we are looking at the triples generated by
-\[(\alpha,\beta)\in\{(1,1),(1,p),(p,1),(p,p)\}\]
-satisfy all the local conditions at $p$ are not. One can run all the calculations to prove \Cref{thm:cong-selmer}.
+% For example, if $p$ is prime, then we find that we are looking at the triples generated by
+% \[(\alpha,\beta)\in\{(1,1),(1,p),(p,1),(p,p)\}\]
+% satisfy all the local conditions at $p$ are not. One can run all the calculations to prove \Cref{thm:cong-selmer}.
 
 
 \end{document}
