@@ -7,12 +7,12 @@
 \section{September 23}
 Today, we compute some Selmer groups of the congruent number of elliptic curve.
 
-\subsection{The Weil Pairing for Selmer Groups}
+\subsection{The Weil Pairing}
 Even though we are not going to use many of the results in this subsection in the future, it is useful to give some general facts and conjectures in order to build intuition about Selmer groups of elliptic curves, following \cite{poonen-rains-selmer}. For later use, we begin with a discussion of the Weil pairing, following \cite[Section~III.3]{silverman}, though we remark that one can generalize everything to abelian varieties without too much trouble.
 \begin{definition}[Weil pairing]
-	Fix an elliptic curve $E$ over a field $K$. For each positive integer $m$, we define the Weil pairing
+	Fix an elliptic curve $E$ over a field $K$. For each positive integer $m$, we define the \textit{Weil pairing}
 	\[e_m\colon E[m]\times E[m]\to\mu_m\]
-	defined as follows. Fix $S,T\in E[m]$. Choose functions $f$ and $g$ for which $\op{div}f=m[T]-m[\infty]$ and $f\circ[m]=g^m$. Now, the function $E\to\PP^1$ defined by $X\mapsto g(X+S)/g(X)$ turns out to be constant, so we define $e_m(S,T)$ to be this constant value.
+	as follows. Fix $S,T\in E[m]$. Choose functions $f$ and $g$ in $K(E)$ for which $\op{div}f=m[T]-m[\infty]$ and $f\circ[m]=g^m$. Now, the function $E\to\PP^1$ defined by $X\mapsto g(X+S)/g(X)$ turns out to be constant, so we define $e_m(S,T)$ to be this constant value.
 \end{definition}
 \begin{remark} \label{rem:produce-functions-on-e}
 	Let's explain why the functions $f$ and $g$ exist. The isomorphism $\op{Pic}^0(E)\to E$ of group schemes shows that a divisor $\sum_in_i[P_i]$ in $\op{Pic}^0(E)$ vanishes (i.e., arises from a function unique up to $\ov K^\times$) if and only if the associated sum $\sum_in_iP_i$ is $0$ in $E$. This explains why there is some $f$ for which $\op{div}f=m[T]-m[\infty]$. Furthermore, we can select $g$ for which $\op{div}g=[m]^*[T]-[m]^*[\infty]$, which can be computed as $\sum_{T'\in E[m]}([T+T']-[T'])$. As such, $f\circ[m]$ and $g^m$ have the same divisor, so we can force an equality by multiplying by a suitable scalar.
@@ -21,7 +21,10 @@ Even though we are not going to use many of the results in this subsection in th
 	Let's explain why $X\mapsto g(X+S)/g(X)$ is constant and outputs to $\mu_m$. For the constancy, we note that this is a function between two connected curves, so it is enough to check that it fails to be surjective. Well, $g(X+S)^m=f(mX+mS)=f(mX)$ is also equal to $g(X)^m=f(mX)$, so $g(X+S)/g(X)$ must output to the finite set of roots of unity (or $\infty$). Thus, this function is indeed not surjective. Lastly, the output is to $\mu_m$ because there must be some $X$ for which $g(X+S)\ne\infty$ and $g(X)\ne0$ (after all, $g$ has only finitely many zeroes and poles).
 \end{remark}
 \begin{remark}
-	When generalizing to abelian varieties, the correct Weil pairing is defined by an abelian variety $A$ and is ``dual'' $\op{Pic}^0A$.
+	The value $e_m(S,T)$ does not depend on the choices $f$ and $g$: we know $f$ is unique up to scalar, so $g$ is also unique up to scalar, so the quotient $g(X+S)/g(X)$ is well-defined.
+\end{remark}
+\begin{remark}
+	When generalizing to abelian varieties, the correct Weil pairing is defined between an abelian variety $A$ and its ``dual'' $\op{Pic}^0A$.
 \end{remark}
 \begin{example} \label{ex:compute-e2}
 	Here is basically the only example that can be done by hand: take $m=2$, and suppose that $E$ is the projective closure of $y^2=(x-a)(x-b)(x-c)=x^3-s_1x^2+s_2x-s_3$. We will compute $f$ and $g$ for the $2$-torsion point $T\coloneqq(a,0)$. Indeed, take $f(x)\coloneqq x-a$; this only can have a root at $T$, and it has a double root there because the tangent line is vertical. Thus, $\op{div}f=2[T]-2[\infty]$. Continuing, with the help of a computer algebra system and the doubling formula for an elliptic curve, one can check that
@@ -64,12 +67,142 @@ Here are our checks on this pairing.
 		\qedhere
 	\end{itemize}
 \end{proof}
-The Weil pairing now interacts with cohomology as follows.
-\begin{proposition}
-	Fix a local field $K_v$ and a prime $p$. Then the Weil pairing induces a cup-product pairing
-	\[\mathrm H^1(K_v;E[p])\times\mathrm H^1(K_v;E[p])\stackrel\cup\to\ZZ/p\ZZ\]
-	which is perfect and symmetric.
+In the sequel, it will be helpful to have another presentation of the Weil pairing.
+\begin{notation}
+	Fix a smooth proper curve $C$ over a field $K$. For each function $f\in C(K)$ and divisor $D$ on $K$ such that $\op{supp}D$ and $\op{supp}\op{div}f$ are disjoint, we write $D=\sum_in_i[P_i]$ and define
+	\[f(D)=\prod_if(P_i)^{n_i}.\]
+\end{notation}
+\begin{definition}[Weil pairing]
+	Fix an elliptic curve $E$ over a field $K$. For each positive integer $m$, we define the \textit{Weil pairing}
+	\[\widetilde e_m\colon E[m]\times E[m]\to\mu_m\]
+	as follows. Given $S,T\in E[m]$, choose divisors $D_S$ and $D_T$ of disjoint support such that $D_S\equiv[S]-[\infty]$ and $D_T\equiv[T]-[\infty]$. Then choose functions $f_S$ and $f_T$ for which $\op{div}f_S=mD_S$ and $\op{div}f_T=mD_T$, and we define $\widetilde e_m(S,T)\coloneqq f_S(D_T)/f_T(D_S)$.
+\end{definition}
+\begin{remark}
+	It is possible to find divisors $D_S$ and $D_T$ by (say) taking $D_S\coloneqq[S]-[\infty]$ and $D_T\coloneqq[R+S]-[R]$ for some auxiliary torsion point $R\in E(\ov K)$ of order larger than $m$. Then $f_S$ and $f_T$ are uniquely defined up to scalars (see \Cref{rem:produce-functions-on-e}), and the values $f_S(D_T)$ and $f_T(D_S)$ are well-defined because the supports are disjoint, and $\deg D_T=\deg D_S=0$. Note that we have not yet shown that $\widetilde e$ is independent of the choice of divisors $D_S$ and $D_T$!
+\end{remark}
+To see that this definition is well-defined (and agrees with the one provided earlier), we need the following tool.
+\begin{theorem}[Weil reciprocity] \label{thm:weil-recip}
+	Fix a smooth proper curve $C$ over an algebraically closed field $K$. For any $f,g\in K(C)$ with disjoint supports, we have
+	\[f(\op{div}g)=g(\op{div}f).\]
+\end{theorem}
+\begin{proof}
+	We have two steps.
+	\begin{enumerate}
+		\item We handle the case where $C=\PP^1$. Here, $f$ and $g$ are just some rational functions in the coordinate $x$. By changing coordinates (and using the fact that $\ov K$ is infinite while $\op{supp}f$ and $\op{supp}g$ are finite), we may assume that neither $f$ nor $g$ have neither a root nor pole at $\infty$. After adjusting by scalars (which does not change the validity of the conclusion), we may now set
+		\[f(x)=\prod_{i=1}^M(x-a_i)^{m_i}\qquad\text{and}\qquad g(x)=\prod_{j=1}^N(x-b_j)^{n_j}\]
+		for some $a_1,\ldots,a_M,b_1,\ldots,b_N\in K$ and $m_1,\ldots,m_M,n_1,\ldots,n_N\in\ZZ$. Because $\op{supp}f$ and $\op{supp}g$ avoid $\infty$, we have $\op{div}f=\sum_im_i[a_i]$ and $\op{div}g=\sum_jn_j[b_j]$. Now, on one hand $f(\op{div}g)$ equals
+		\[\prod_{j=1}^Nf(b_j)^{n_j}=\prod_{j=1}^N\prod_{i=1}^M(b_j-a_i)^{m_in_j}.\]
+		Similarly, we find that $g(\op{div}f)$ equals
+		\[\prod_{i=1}^M\prod_{j=1}^N(a_i-b_j)^{m_in_j}.\]
+		Now, these two values differ by $(-1)$ to the power of $\sum_{i,j}m_in_j$, which of course is zero because $\sum_im_i=\sum_jn_j=0$.
+		\item We handle the general case. View $g$ as a rational map $C\to\AA^1$, which can then be extended to a regular map $g\colon C\to\PP^1$ because $C$ is proper. We now formally manipulate divisors. Note that $\op{div}g=g^*\op{div}\id_{\PP^1}$ by definition, so $f(\op{div}g)$ equals
+		\[f(g^*\op{div}{\id_{\PP^1}})=(g_*f)(\op{div}{\id_{\PP^1}}).\]
+		Now, by the first step, this is
+		\[\id_{\PP^1}(\op{div}g_*f)=\id_{\PP^1}(g_*\op{div}f).\]
+		This right-hand side collapses to $g(\op{div}f)$, so we are done.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+We now give a few remarks about our definition of $\widetilde e$.
+\begin{remark}
+	We show that $\widetilde e$ is independent of the choices of $D_S$ and $D_T$. By symmetry, it will be enough to show that it is independent of the choice of $D_S$. Accordingly, suppose we choose another divisor $D_S'$ linearly equivalent to $D_S$, and then we choose another function $f_S'$ with divisor equal to $mD_S'$. Then we want to show that
+	\[\frac{f_S(D_T)}{f_T(D_S)}\stackrel?=\frac{f_S'(D_T)}{f_T(D_S')}.\]
+	Well, $D_S\equiv D_S'$ implies that there is a function $g$ with $\op{div}g=D_S'-D_S$. Then we see $\op{div}f_S'=\op{div}f_Sg^m$, so after adjusting by a scalar, we may assume that $f_S'=f_Sg^m$. The above equality then rearranges into $f_T(\op{div}g)=g(D_T)^m$, which follows from \Cref{thm:weil-recip}.
+\end{remark}
+\begin{remark}
+	We note that we can directly check that $\widetilde e(S,T)^m=1$. Indeed, this quotient is
+	\[\frac{f_S(mD_T)}{f_T(mD_S)}=\frac{f_S(\op{div}f_T)}{f_T(\op{div}f_S)},\]
+	which is $1$ by \Cref{thm:weil-recip}.
+\end{remark}
+\begin{proposition} \label{prop:alternative-weil}
+	Fix an elliptic curve $E$ over a field $K$ and a positive integer $m$. For any $S,T\in E[m]$, we have
+	\[\widetilde e(S,T)=e(T,S).\]
 \end{proposition}
+\begin{proof}
+	We follow \cite[Exercise~3.16]{silverman}; note that an argument for this exercise is provided in the back matter. For $m=1$ or $S=T$, everything is trivial, so there is nothing to do. Otherwise, we proceed in steps.
+	\begin{enumerate}
+		\item We set up notation. Choose points $S'$ and $T'$ with $mS'=S$ and $mT'=T$. Further, by adjusting $T'$ by an element of $E[m]$, we may assume that $S'\ne T'$ (which we do for technical reasons), and we let $R$ be an auxiliary point so that $2R=S'-T'$; note then that the divisors $D_S\coloneqq[S]-[\infty]$ and $D_T\coloneqq[T+mR]-[mR]$ have disjoint support. Then $mD_S$ and $mD_T$ are linearly equivalent to $0$, so we may find functions $f_S$ and $f_T$ with $\op{div}f_S=mD_S$ and $\op{div}f_T=mD_T$, and as in \Cref{rem:produce-functions-on-e}, we may find functions $g_S$ and $g_T$ for which $f_S\circ[m]=g_S^m$ and $f_T\circ[m]=g_T^m$. Before going further, we note that, as in \Cref{rem:produce-functions-on-e}, we have
+		\[\op{div}g_S=\sum_{P\in E[m]}([P+S']-[P])\qquad\text{and}\qquad\op{div}g_T=\sum_{P\in E[m]}([P+T'+R]-[P+R]).\]
+
+		\item By plugging in our various pairings, we see that we are interested in showing
+		\[\frac{f_S(D_T)}{f_T(D_S)}\stackrel?=\frac{g_S(X+S)}{g_S(X)}.\]
+		To start, a direct calculation shows that the left-hand side is
+		\[\frac{f_S(mT'+mR)/f_S(mR)}{f_T(mS')/f_T(\infty)}=\left(\frac{g_S(T'+R)/g_S(R)}{g_T(S')/g_T(\infty)}\right)^m.\]
+		The trick is that the function
+		\[\frac{g_S(X+T'+R)/g_S(X+R)}{g_T(X+S')/g_T(X)}\]
+		is a constant function. This will use the fact that $2R=S'-T'$. Indeed, it is enough to show that the divisor of this function vanishes, so we calculate its divisor to be
+		\begin{align*}
+			&\sum_{P\in E[m]}([P+S'-T'-R]-[P-T'-R])-([P+S'-R]-[P-R]) \\
+			&\qquad-([P+T'-S'+R]-[P-S'+R])+([P+T'+R]-[P+R]).
+		\end{align*}
+		Plugging in $S'=T'+2R$, we get
+		\begin{align*}
+			&\sum_{P\in E[m]}([P+R]-[P-T'-R])-([P+T'+R]-[P-R]) \\
+			&\qquad-([P-R]-[P-T'-R])+([P+T'+R]-[P+R]),
+		\end{align*}
+		which vanishes term-wise.
+
+		\item Continuing, we see that $\widetilde e(S,T)$ is
+		\[\prod_{i=0}^{m-1}\frac{g_S((i+1)T'+R)/g_S(iT'+R)}{g_T(iT'+S')/g_T(iT')}\]
+		by the constancy of the preceding paragraph, which collapses to
+		\[\frac{g_S(T+R)}{g_S(R)}\prod_{i=0}^{m-1}\frac{g_T(iT')}{g_T(iT'+S)}.\]
+		The left-hand term is simply $e(T,S)$ by its construction, so it remains to show that the right-hand product is $1$. For this, we see that we have to show that the function
+		\[\prod_{i=0}^{m-1}g_T(iT'+X)\]
+		is constant, which we achieve with another divisor calculation: the divisor of this function is
+		\[\sum_{P\in E[m]}\Bigg(\sum_{i=0}^{m-1}[P+T'+R-iT']-[P+R-iT']\Bigg),\]
+		which collapses to
+		\[\sum_{P\in E[m]}([P+mT'+R]-[P+R]),\]
+		which now vanishes because $mT'\in E[m]$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+
+\subsection{The Weil Pairing for Selmer Groups}
+The Weil pairing now interacts with cohomology as follows.
+\begin{proposition} \label{prop:local-is-lagrangian}
+	Fix a field $K$ of characteristic $0$ and a positive integer $m$.
+	\begin{listalph}
+		\item The Weil pairing induces a symmetric cup-product pairing
+		\[\mathrm H^1(K;E[m])\times\mathrm H^1(K;E[m])\to\mathrm H^2(E;\mu_m).\]
+		\item If $K$ is local, then the pairing in (a) is perfect.
+		\item The subspace $E(K)/mE(K)$ of $\mathrm H^1(K;E[m])$ is isotropic.
+		\item If $K$ is local and $m$ is prime, then the subspace $E(K)/mE(K)$ of $\mathrm H^1(K;E[m])$ is maximal isotropic.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We show the parts separately.
+	\begin{listalph}
+		\item This pairing is defined by
+		\[(c_1,c_2)\mapsto\mathrm H^2(e_m)(c_1\cup c_2),\]
+		which is symmetric because $\cup$ and $e_m$ are both alternating.
+		\item This follows from local duality. Indeed, the Weil pairing on $E[m]$ is perfect and Galois-invariant, so it induces an isomorphism $E[m]\cong\op{Hom}(E[m],\mu_m)$ of (finite discrete) Galois modules. The cup-product pairing in the statement is now exactly the pairing of \Cref{thm:tate}.
+		\item We will show this directly on the level of cocycles. Fix $P,Q\in E(K)/mE(K)$, and we want to show that the $2$-cocycle $\mathrm H^2(e_m)(\delta_P\cup\delta_Q)$ is a $2$-coboundary. Expanding out the definitions, we see that we should choose $P'$ and $Q'$ with $P=mP'$ and $Q=mQ'$, and then we want to show the map
+		\[(\sigma,\tau)\mapsto e_m(\sigma P'-P',\sigma\tau Q'-\sigma Q')\]
+		is a $2$-coboundary. For this, we will use \Cref{prop:alternative-weil}, which allows us to instead show that the $2$-cocycle
+		\[c\colon(\sigma,\tau)\mapsto\widetilde e_m(\sigma P'-P',\sigma\tau Q'-\sigma Q')^{-1}\]
+		is a $2$-coboundary.
+		
+		Accordingly, we now set up some notation. If $P=Q$, then there is nothing to do, so we omit this case. For each $\sigma\in\op{Gal}(K^{\mathrm{sep}}/K)$, we define the divisors $D_{P,\sigma}\coloneqq[\sigma P']-[P']$ and $D_{Q,\sigma}\coloneqq[\sigma Q']-[Q']$. Note that any $D_{P,\sigma}$ and any $D_{Q,\tau}$ have disjoint support: $P\ne Q$ forces $\sigma P'\ne\tau Q'$ for any $\sigma$ or $\tau$ because $m\sigma P'=P$ and $m\tau Q'=Q$. We also note that $D_{P,\sigma\tau}=\sigma D_{P,\tau}+D_{P,\sigma}$ and similarly for $Q$. Continuing, we select functions $f_{P,\sigma}$ and $f_{Q,\sigma}$ so that $\op{div}f_{P,\sigma}=mD_{p,\sigma}$ and $\op{div}f_{Q,\sigma}=$. By choosing another point $S$ not in the Galois orbit of the previously defined points, we may normalize the functions $f_\bullet$ so that they evaluate to $1$ on $S$. Then we see that
+		\[f_{P,\sigma\tau}=\sigma f_{P,\tau}\cdot f_{P,\sigma}\]
+		because they have the same divisor and the same nonzero value at $S$; a similar statement holds for $Q$.
+
+		We are now ready to calculate. To begin, note $c(\sigma,\tau)$ is
+		\begin{align*}
+			\widetilde e_m(\sigma P'-P',\sigma\tau Q'-Q')\widetilde e_m(\sigma P'-P',\sigma Q'-Q')^{-1}
+			&= \frac{f_{Q,\sigma\tau}(D_{P,\sigma})}{f_{P,\sigma}(D_{Q,\sigma\tau})}\cdot\frac{f_{P,\sigma}(D_{Q,\sigma})}{f_{Q,\sigma}(D_{P,\sigma})}.
+		\end{align*}
+		We now recall $f_{Q,\sigma\tau}=\sigma f_\tau\cdot f_\sigma$ and $D_{Q,\sigma\tau}=\sigma D_\tau+D_\sigma$, so $c(\sigma,\tau)$ equals
+		\[\frac{(\sigma f_{Q,\tau})(D_{P,\sigma})}{f_{P,\sigma}(\sigma D_{Q,\tau})}=\frac{\sigma f_{Q,\tau}(P')}{\sigma f_{Q,\tau}(\sigma^{-1}P')}\cdot\frac{f_{P,\sigma}(\sigma Q)}{f_{P,\sigma}(\sigma\tau Q)}.\]
+		We will complete the proof by showing that each factor of the right-hand side is a $2$-coboundary. For example, the $1$-cochain $\sigma\mapsto f_{Q,\sigma}(P')$ produces the $1$-coboundary sending $(\sigma,\tau)$ to
+		\[\frac{\sigma f_{Q,\tau}(P')\cdot f_{Q,\sigma}(P')}{f_{Q,\sigma\tau}(P')}=\frac{\sigma f_{Q,\tau}(P')}{\sigma f_{Q,\tau}(\sigma^{-1}P')}.\]
+		Similarly, the $1$-cochain $\sigma\mapsto f_{P,\sigma}(\sigma Q')$ produces the $2$-coboundary sending $(\sigma,\tau)$ to
+		\[\frac{\sigma f_{P,\tau}(\tau Q')\cdot f_{P,\sigma}(\sigma Q')}{f_{P,\sigma\tau}(\sigma\tau Q')}=\frac{\sigma f_{P,\tau}(\tau Q')\cdot f_{P,\sigma}(\sigma Q')}{\sigma f_{P,\tau}(\sigma^{-1}\sigma\tau Q)\cdot f_{P,\sigma}(\sigma\tau Q)}.\]
+		Multiplying these two $2$-coboundaries together completes the proof.
+
+		\item You may show this on the homework!
+		\qedhere
+	\end{listalph}
+\end{proof}
 % \begin{notation}
 % 	Fix a number field $K$. Then we set
 % 	\[\mathrm H^1(\AA_K;E[m])\coloneqq\prod_v\left(\mathrm H^1(K_v;E[m]),\mathrm H^1_{\mathrm{ur}}(K_v;E[m])\right).\]
@@ -311,14 +444,14 @@ In order to compute the $2$-Selmer group, we need to understand the image of the
 	\[\mathrm H^1(K;E[2])\to\mathrm H^1(K;E)[2].\]
 	Now, $\mathrm H^1(K;E)$ classifies principal homogeneous spaces \cite[Section~X.3]{silverman}, which are trivial if and only if they admit a $K$-rational point (after all, principal homogeneous spaces for $E$ are twists of $E$). Thus, it is enough to check that the principal homogeneous space associated to the triple $(\alpha,\beta,\gamma)$ admits a $K$-rational point, but one can check that this principal homogeneous space is exactly the conic $T_{(\alpha,\beta,\gamma)}$!
 \end{remark}
-While we're here, we give some general remarks for how big these groups should be.
+While we're here, we give some general remarks for how big these groups should be. In the case of $2$-descent, one can get away with just doing Kummer theory.
 \begin{example} \label{ex:size-im-delta-v}
 	Fix an elliptic curve $E$ over a number field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Then
 	\[\dim_{\FF_2}E(K_v)/2E(K_v)=\begin{cases}
 		0 & \text{if }K_v=\CC, \\
 		1 & \text{if }K_v=\RR, \\
 		2 & \text{if }v\text{ is odd}, \\
-		1+\dim_{\FF_2}\mu_{2^\infty}(K_v)+[K_v:\QQ_2] & \text{if }v\text{ is even}.
+		2+[K_v:\QQ_2] & \text{if }v\text{ is even}.
 	\end{cases}\]
 \end{example}
 \begin{proof}
@@ -333,9 +466,58 @@ While we're here, we give some general remarks for how big these groups should b
 	Now, recall that the exponential map $\exp\colon\mf p_v\to(1+\mf p_v)$ identifies open neighborhoods of the identity of $K_v$ and $K_v^\times$, so it follows that $\OO_v^\times$ is a finitely generated $\OO_v$-module. Because $\OO_v$ is a principal ideal domain, it follows that $\OO_v^\times$ is isomorphic to its torsion times its free part. The free part of $\OO_v^\times$ has rank $1$ because the exponential map identifies a finite-index open subgroup with $\OO_v$. Lastly, the torsion of $(1+\mf p_v)$ must be $p$-power (because $(1+\varpi)^n\equiv1+n\varpi\pmod{\mf p_v^{2m}}$ for any $\varpi\in\mf p^m$), and conversely, the $p$-power torsion of $K_v^\times$ all lives in $\OO_v^\times$ by looking at the valuation and is in fact $1\pmod{\mf p_v}$ by looking$\pmod{\mf p_v}$. The claim follows.
 
 	To complete the calculation, we write
-	\[\frac{K_v^\times}{K_v^{\times2}}=\frac{\ZZ}{2\ZZ}\times\frac{\FF_v^\times}{\FF_v^{\times2}}\times\frac{\mu_{p^\infty}(K_v)}{\mu_{p^\infty}(K_v)^2}\times\frac{\OO_v}{2\OO_v}.\]
-	If $v$ is odd, then $\FF_v^\times/\FF_v^{\times2}\cong\ZZ/2\ZZ$, the $p$-group $\mu_{p^\infty}(K_v)$ contributes nothing, and the $2$-divisible group $\OO_v$ also contributes nothing; this totals to having dimension $2$. Otherwise, if $v$ is even, then $\FF_v^\times/\FF_v^{\times2}=1$, and $\OO_v/2\OO_v\cong(\ZZ/2\ZZ)^{[K_v:\QQ_2]}$. Totaling these calculations completes.
+	\[\frac{K_v^\times}{K_v^{\times2}}\cong\frac{\ZZ}{2\ZZ}\times\frac{\FF_v^\times}{\FF_v^{\times2}}\times\frac{\mu_{p^\infty}(K_v)}{\mu_{p^\infty}(K_v)^2}\times\frac{\OO_v}{2\OO_v}.\]
+	Continuing, we note that the kernel and cokernel of the endomorphisms $2\colon\FF_v^\times\to\FF_v^\times$ and $2\colon\mu_{2^\infty}(K_v)\to\mu_{2^\infty}(K_v)$ have the same size, so we see
+	\[\dim_{\FF_2}\frac{K_v^\times}{K_v^{\times2}}\cong1+\dim_{\FF_2}\FF_v^\times[2]+\dim_{\FF_2}\mu_{p^\infty}(K_v)[2]+\dim_{\FF_2}\frac{\OO_v}{2\OO_v}.\]
+	We now have two cases.
+	\begin{itemize}
+		\item If $v$ is odd, then $\FF_v^\times[2]\cong\ZZ/2\ZZ$ and $\mu_{p^\infty}(K_v)[2]=0$ and $\OO_v/2\OO_v=0$. In total, we get $2$ dimensions.
+		\item If $v$ is even, then $\FF_v^\times[2]=0$ and $\mu_{p^\infty}(K_v)[2]=\mu_2(K_v)=\{\pm1\}$ and $\OO_v/2\OO_v\cong(\ZZ/2\ZZ)^{[K_v:\QQ_2]}$. In total, we get $2+[K_v:\QQ_2]$ dimensions.
+		\qedhere
+	\end{itemize}
+	%  Otherwise, if $v$ is even, then $\FF_v^\times/\FF_v^{\times2}=1$, and $\OO_v/2\OO_v\cong(\ZZ/2\ZZ)^{[K_v:\QQ_2]}$; additionally, the kernel and cokernel of $2\colon\mu_{2^\infty}(K_v)\to\mu_{2^\infty}(K_v)$ have the same size. Totaling these calculations completes.
 \end{proof}
+% \begin{remark}
+% 	For an odd prime $\ell$, we see that $K_v^\times/K_v^{\times\ell}$ is always $\{1\}$ when $K_v\in\{\RR,\CC\}$. When $v$ is finite, we similarly find that
+% 	\[\dim_{\FF_\ell}\frac{K_v^\times}{K_v^{\times\ell}}=1+\dim_{\FF_\ell}\FF_v[\ell]+\dim_{\FF_\ell}\mu_{p^\infty}(K_v)[\ell]+\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}.\]
+% 	Here are our two cases.
+% 	\begin{itemize}
+% 		\item If $v\nmid\ell$, then the dimension is $1+1_{\ell\mid\#\FF_v-1}+0+0$.
+% 		\item If $v\mid\ell$, then the dimension is $1+0+1_{\zeta_p\in K_v}+[K_v:\QQ_p]$.
+% 	\end{itemize}
+% 	% If $v\nmid\ell$, then the dimension is $1+1+0+0=2$ when $\ell\mid\#\FF_v-1$ and $1+0+0+0=1$ otherwise. Otherwise, if $v\mid\ell$, then the dimension is $1+0+\dim_{\FF_\ell}\mu_{\ell^\infty}(K_v)$
+% \end{remark}
+% However, with a little more theory, one can say more.
+% \begin{lemma} \label{lem:e-has-finite-index-o}
+% 	Fix an elliptic curve $E$ over a nonarchimedean local field $K_v$. Then $E(K_v)$ admits a finite-index subgroup isomorphic to $\OO_v$.
+% \end{lemma}
+% \begin{proof}
+% 	The proof of this result is fairly involved, so we will be sketchy; we refer to \cite[Proposition~VII.6.3]{silverman} for more details. Let $E_0(K_v)\subseteq E(K)$ denote the collection of points which reduce to a non-singular point in $E(\FF_v)$, and we let $E_1(K_v)\subseteq E(K)$ denote the collection of points which reduce to the identity of $E(\FF_v)$. 
+	
+% 	The main point is to show that $E(K_v)/E_0(K_v)$ is finite, but for now let's explain why it completes the proof. It turns out that the canonical maps
+% 	\[0\to E_1(K_v)\to E_0(K_v)\to E(\FF_v)\to0\]
+% 	assemble into a short exact sequence \cite[Proposition~VII.2.1]{silverman}. Thus, it is enough to show that $E_1(K_v)$ admits a finite-index subgroup isomorphic to $\OO_v$. Well, $E_1(K_v)$ is isomorphic to $G_E(\mf m_v)$, where $G_E$ is the one-dimensional formal group of $E$ \cite[Proposition~VII.2.2]{silverman}. Then the canonical filtration $G_E(\mf m_v^\bullet)$ shows that $G_E(\mf m_v^i)/G_E\left(\mf m_v^{i+1}\right)$ is finite for all $i$, and for $i$ large enough, there is a logarithm map establishing that $G_E(\mf m_v^i)$ is isomorphic to $\OO_v$. This completes the proof modulo the finiteness of $E(K_v)/E_0(K_v)$.
+
+% 	It remains to show that $E(K_v)/E_0(K_v)$, for which we follow \cite[Exercise~7.6]{silverman}. Because $K_v$ is a topological field, we see that $E(K_v)\subseteq\PP^2(K_v)$ is a topological group. In fact, $E(K_v)\subseteq\PP^2(K_v)$ is a closed subset of the compact space $\PP^2(K_v)$, so $E(K_v)$ is compact. The reduction map $\PP^2(K_v)\to\PP^2(\FF_v)$ is a continuous map to a finite discrete space, so $E_0(K_v)\subseteq E(K_v)$ is an open subgroup. Compactness then forces $E_0(K_v)$ to be finite-index in $E(K_v)$.
+% \end{proof}
+% \begin{proposition}
+% 	Fix an elliptic curve $E$ over field $\QQ_p$. For any prime $\ell$,
+% 	\[\dim_{\FF_\ell}E(\QQ_p)/\ell E(\QQ_p)=\dim_{\FF_\ell}E(\QQ_p)[\ell]+\begin{cases}
+% 		1 & \text{if }p=\ell, \\
+% 		0 & \text{if }p\ne\ell.
+% 	\end{cases}\]
+% \end{proposition}
+% \begin{proof}
+% 	Set $K_v\coloneqq\QQ_\ell$ for brevity. We will use \Cref{lem:e-has-finite-index-o}, which grants us an exact sequence
+% 	\[0\to\OO_v\to E(K_v)\to C\to0,\]
+% 	where $C$ is some finite abelian group. This exact sequence has an endomorphism given by multiplication by $\ell$. Applying the Snake lemma to this endomorphism yields the exact sequence
+% 	\[0\to\OO_v[\ell]\to E(K_v)[\ell]\to C[\ell]\to\frac{\OO_v}{\ell\OO_v}\to\frac{E(K_v)}{\ell E(K_v)}\to\frac C{\ell C}\to0.\]
+% 	The result will follow by taking dimensions of this exact sequence; for example, just the right-exact part of this sequence immediately shows us that $E(K_v)/\ell E(K_v)$ is finite. We thus have
+% 	\[\dim_{\FF_\ell}\frac{E(K_v)}{\ell E(K_v)}-\dim_{\FF_\ell}E(K_v)[\ell]=\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}-\dim_{\FF_\ell}\OO_v[\ell]+\dim_{\FF_\ell}\frac C{\ell C}-\dim_{\FF_\ell}C[\ell].\]
+% 	Now, we note that $\OO_v[\ell]=0$ because $K_v$ has characteristic $0$. Continuing, and $\#C_\ell=\#(C/\ell C)$ because the kernel and cokernel of the endomorphism $\ell\colon C\to C$ should have the same size. We are left with
+% 	\[\dim_{\FF_\ell}\frac{E(K_v)}{\ell E(K_v)}=\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}+\dim_{\FF_\ell}E(K_v)[\ell].\]
+% 	We now note that $\ell=p$ implies that $\OO_v/\ell\OO_v\cong\ZZ/\ell\ZZ$; otherwise, $\OO_v/\ell\OO_v=0$.
+% \end{proof}
 
 \subsection{Congruent Number Elliptic Curves}
 We now return to the congruent number elliptic curves $E_d\colon y^2=x(x-d)(x+d)$, where $d\in\ZZ$ is some squarefree positive integer. It turns out that $E_d$ is a quadratic twist of $E_1\colon y^2=x^3-x$, and these elliptic curves have complex multiplication by $\ZZ[i]$. Importantly, the $2$-torsion
@@ -408,13 +590,13 @@ We now proceed with the proof of \Cref{thm:cong-selmer}.
 	\[\op{Sel}_2(E_d/\QQ)\cong\left\{(\alpha,\beta,\gamma):(\alpha,\beta,\gamma)\in\mc L_v\text{ for all }v\right\}.\]
 	The local conditions $v\nmid2d\infty$ show that $\alpha$, $\beta$, and $\gamma$ should (up to squares) be supported on primes dividing $2d$; adjusting these rationals up to squares, we may assume that they are all integers dividing $2d$.
 
-	Now, we are not actually interested in computing the Selmer group on the nose. Instead, we would like to compute the (dimension of the) quotient by $E[2]$. Well, examining the local condition at $\infty$, we see that taking a quotient by the subgroup generated by $\delta(0,0)=(-1,-d,d)$ corresponds exactly to assuming $(\alpha,\beta,\gamma)$ are all positive---a priori, none are negative or exactly $\beta$ and $\gamma$ are negative. Similarly, examining the local condition at $2$, we see that taking a quotient by the subgroup generated by $\delta(d,0)=(d,2,2d)$ corresponds exactly to assuming that $(\alpha,\beta,\gamma)$ are all odd. Thus,
+	Now, we are not actually interested in computing the Selmer group on the nose. Instead, we would like to compute the (dimension of the) quotient by $E[2]$. Well, examining the local condition at $\infty$, we see that taking a quotient by the subgroup generated by $\delta(0,0)=(-1,-d,d)$ corresponds exactly to assuming $(\alpha,\beta,\gamma)$ are all positive---a priori, none are negative or exactly $\alpha$ and $\beta$ are negative. Similarly, examining the local condition at $2$, we see that taking a quotient by the subgroup generated by $\delta(d,0)=(d,2,2d)$ corresponds exactly to assuming that $(\alpha,\beta,\gamma)$ are all odd. Thus,
 	\[\frac{\op{Sel}_2(E_d/\QQ)}{E[2]}\subseteq\left\{(\alpha,\beta,\gamma)\in\ZZ_{>0}^3:\alpha,\beta,\gamma\mid d,\alpha\beta\gamma\text{ is square}\right\}.\]
 	By \Cref{lem:cong-local-condition}, all triples $(\alpha,\beta,\gamma)$ in the above set are automatically in the local condition at a place $v\nmid2d$, so there are only finitely many more places to check.
 	
 	Only now do we use the fact that $d=p$ is prime. By \Cref{lem:conic-almost-everywhere} combined with \Cref{cor:test-im-delta-descent}, we are allowed to avoid checking $(\alpha,\beta,\gamma)\in\mc L_{v_0}$ for a single place $v_0$; we choose $v_0=2$, so it only remains to check the place at the prime $p$. In other words, we are interested in which of the triples
 	\[\{(1,1,1),(1,p,p),(p,1,p),(p,p,1)\}\]
-	live in $\mc L_p=\{(1,1,1),(-1,-p,p),(p,2,2p),(-p,-2p,p)\}$. (Note that the elements of $\mc L_p$ are only defined up to squares!) We handle these one at a time.
+	live in $\mc L_p=\{(1,1,1),(-1,-p,p),(p,2,2p),(-p,-2p,2)\}$. (Note that the elements of $\mc L_p$ are only defined up to squares!) We handle these one at a time.
 	\begin{itemize}
 		\item We see that $(1,1,1)\in\mc L_p$ always.
 		\item By examining valuations (even$\pmod2$), we see that $(1,p,p)\in\mc L_p$ if and only if it is $(-1,-p,p)$ up to squares, which is equivalent to $-1$ being square, which is equivalent to $p\equiv1\pmod4$.
@@ -464,13 +646,13 @@ We now proceed with the proof of \Cref{thm:cong-selmer}.
 % \end{itemize}
 % Now, it turns out that we can check that a triple $(\alpha,\beta,\gamma)$ has adelic solutions if and only if it has adelic solutions over just $\AA_\QQ^{(2)}$, so we don't have to give a local condition at $2$.
 \begin{corollary} \label{cor:selmer-trivial-bound}
-	Fix an odd positive squarefree integer $d$, and let $E_d$ be the projective closure of $y^2=x(x-d)(x+d)$. Let $\nu$ be the number of positive integers of $d$. Then
-	\[S_2(E_d)\le2\log_2n.\]
+	Fix an odd positive squarefree integer $d$, and let $E_d$ be the projective closure of $y^2=x(x-d)(x+d)$. Let $\nu(d)$ be the number of positive integers of $d$. Then
+	\[S_2(E_d)\le2\nu(d).\]
 \end{corollary}
 \begin{proof}
 	The proof of \Cref{thm:cong-selmer} shows that
 	\[\frac{\op{Sel}_2(E_d/\QQ)}{E[2]}\subseteq\left\{(\alpha,\beta,\gamma)\in\ZZ_{>0}^3:\alpha,\beta,\gamma\mid d,\alpha\beta\gamma\text{ is square}\right\}.\]
-	This has at most $\nu(d)^2$ elements, so the result follows by taking dimensions.
+	The right-hand side has a basis over $\FF_2$ given by $(p,q,pq)$ where $p$ and $q$ are primes dividing $d$, so this space has dimension $2\nu(n)$.
 \end{proof}
 % For example, if $p$ is prime, then we find that we are looking at the triples generated by
 % \[(\alpha,\beta)\in\{(1,1),(1,p),(p,1),(p,p)\}\]
