@@ -156,53 +156,197 @@ We now give a few remarks about our definition of $\widetilde e$.
 		\qedhere
 	\end{enumerate}
 \end{proof}
+This last interpretation of the Weil pairing can also be viewed as a commutator pairing (as in \Cref{prop:commutator-gives-cup}).
+\begin{definition}[Heisenberg group]
+	Fix an elliptic curve $E$ over a field $K$ and an integer $m$. For an extension $L/K$, we define the \textit{Heisenberg group} $\mc H_m(L)$ to consist of pairs $(x,f)$ where $x\in E(L)$ and $f$ is a rational function in $L(E)$ for which $\op{div}f=m[x]-m[\infty]$. The group operation is given by
+	\[(x,f)\cdot(y,g)\coloneqq(x+y,\tau_yf\cdot g),\]
+	where $\tau_y$ denotes the translation action $\tau_yf(t)\coloneqq f(t-y)$.
+\end{definition}
+\begin{remark}
+	Note that $\mc H_m(L)$ is a subgroup of $E(L)\ltimes L(E)^\times$, where $E(L)$ acts on $L(E)^\times$ by translation. Indeed, we just have to check closure under the group operation (and inversion), for which we note that $(x,f),(y,g)\in\mc H_m$ have
+	\[\op{div}(\tau_yf\cdot g)=m[x+y]-m[y]+m[y]-m[\infty].\]
+	Similarly, $(x,f)^{-1}=\left(-x,\tau_{-x}f^{-1}\right)$ has $\op{div}\tau_{-x}f^{-1}=m[-x]-m[\infty]$.
+\end{remark}
+\begin{remark} \label{rem:heisenberg-ses}
+	Note that having some $f$ with $\op{div}f=m[x]-m[\infty]$ implies that $m\cdot x=\infty$ in $E(L)$; conversely, any such $x\in E(L)[m]$ has some $f\in L(E)$ with $\op{div}f=m[x]-m[\infty]$, and this $f$ is unique up to scalar. Thus, there is a short exact sequence
+	\[1\to L^\times\to\mc H_m(L)\to E[m](L)\to0,\]
+	where $L^\times\to\mc H_m(L)$ is given by sending $\alpha\in L^\times$ to the constant function $\alpha$. Note that $L^\times$ embeds into the center of $\mc H_m(L)$!
+\end{remark}
+\begin{lemma} \label{lem:weil-by-commutator}
+	Fix an elliptic curve $E$ over a field $K$. For each positive integer $m$ and $S,T\in E[m]$, we have
+	\[\widetilde e_m(S,T)=\varphi(S,T)^{-1},\]
+	where $\varphi\colon E[m]\otimes E[m]\to\ov K^\times$ is the commutator pairing induced by the short exact sequence of \Cref{rem:heisenberg-ses}.
+\end{lemma}
+\begin{proof}
+	This is a direct calculation. Choose functions $f_S$ and $f_T$ for which $\op{div}f_S=m[S]-m[\infty]$ and $\op{div}f_T=m[T]-m[\infty]$. Then the commutator pairing $\varphi(S,T)$ is simply
+	\begin{align*}
+		(S,f_S)(T,f_T)(S,f_S)^{-1}(T,f_T)^{-1} &= (S+T,\tau_Tf_S\cdot f_T)(S+T,\tau_{S}f_T\cdot f_S)^{-1} \\
+		&= (S+T,\tau_Tf_S\cdot f_T)\left(-S-T,\tau_{-T}f_T^{-1}\cdot\tau_{-S-T}f_S^{-1}\right) \\
+		&= (0,\tau_{-S}f_S\cdot\tau_{-S-T} f_T\cdot\tau_{-T}f_T^{-1}\cdot\tau_{-S-T}f_S^{-1}).
+	\end{align*}
+	Thus, the commutator pairing outputs the value of the constant function
+	\[X\mapsto\frac{f_S(X+S)f_T(X+S+T)}{f_T(X+T)f_S(X+S+T)}.\]
+	In order to make $\widetilde e$ appear, we need to take quotients by rational functions with disjoint support. Choose an auxiliary point $P\in E(\ov K)$ which is not $m$-torsion. We would like to compute the quotient
+	\[\frac{f_T([P+S+T]-[P+T])}{f_S([P+S+T]-[P+S])}.\]
+	Well, the function $\tau_{P+T}f_S$ has $\op{div}\tau_{P+T}f_S=m[P+S+T]-m[P+T]$, so this quotient is
+	\[\frac{f_T([P+S+T]-[P+T]}{\tau_{P+T}f_S([T]-[\infty])}\cdot\frac{f_S([-P]+[-P-T])}{f_S([P+S+T]-[P+S])}.\]
+	The left term is $\widetilde e(T,S)$, so we are left to show that
+	\[\frac{f_S(-P)f_S(P+S)}{f_S(-P-T)f_S(P+T+S)}\stackrel?=1.\]
+	We now claim that the function $X\mapsto f_S(-X)f_S(X+S)$ is constant, which will complete the proof. Indeed, the divisor of this function is $m[-S]-m[\infty]+m[\infty]-m[-S]=0$.
+\end{proof}
 
-\subsection{The Weil Pairing for Selmer Groups}
+\subsection{Some Maximal Isotropic Subspaces}
 The Weil pairing now interacts with cohomology as follows.
-\begin{proposition} \label{prop:local-is-lagrangian}
+\begin{lemma} \label{lem:kummer-is-isotropic}
 	Fix a field $K$ of characteristic $0$ and a positive integer $m$.
 	\begin{listalph}
 		\item The Weil pairing induces a symmetric cup-product pairing
-		\[\mathrm H^1(K;E[m])\times\mathrm H^1(K;E[m])\to\mathrm H^2(E;\mu_m).\]
-		\item If $K$ is local, then the pairing in (a) is perfect.
-		\item The subspace $E(K)/mE(K)$ of $\mathrm H^1(K;E[m])$ is isotropic.
-		\item If $K$ is local and $m$ is prime, then the subspace $E(K)/mE(K)$ of $\mathrm H^1(K;E[m])$ is maximal isotropic.
+		\[\mathrm H^1(K;E[m])\times\mathrm H^1(K;E[m])\to\mathrm H^2(K;\mu_m).\]
+		In fact, this pairing on $\mathrm H^1(K;E[m])$ is induced by a quadratic function $\mathrm H^1(K;E[m])\to\mathrm H^2(K;\mathbb G_m)$.
+		\item The boundary map $\mathrm H^1(K;E[m])\to\mathrm H^2(K;\mathbb G_m)$ vanishes on $E(K)/mE(K)$. Thus, the subspace $E(K)/mE(K)$ of $\mathrm H^1(K;E[m])$ is isotropic.
 	\end{listalph}
-\end{proposition}
+\end{lemma}
 \begin{proof}
-	We show the parts separately.
+	We handle the parts separately.
 	\begin{listalph}
 		\item This pairing is defined by
 		\[(c_1,c_2)\mapsto\mathrm H^2(e_m)(c_1\cup c_2),\]
 		which is symmetric because $\cup$ and $e_m$ are both alternating.
-		\item This follows from local duality. Indeed, the Weil pairing on $E[m]$ is perfect and Galois-invariant, so it induces an isomorphism $E[m]\cong\op{Hom}(E[m],\mu_m)$ of (finite discrete) Galois modules. The cup-product pairing in the statement is now exactly the pairing of \Cref{thm:tate}.
-		\item We will show this directly on the level of cocycles. Fix $P,Q\in E(K)/mE(K)$, and we want to show that the $2$-cocycle $\mathrm H^2(e_m)(\delta_P\cup\delta_Q)$ is a $2$-coboundary. Expanding out the definitions, we see that we should choose $P'$ and $Q'$ with $P=mP'$ and $Q=mQ'$, and then we want to show the map
-		\[(\sigma,\tau)\mapsto e_m(\sigma P'-P',\sigma\tau Q'-\sigma Q')\]
-		is a $2$-coboundary. For this, we will use \Cref{prop:alternative-weil}, which allows us to instead show that the $2$-cocycle
-		\[c\colon(\sigma,\tau)\mapsto\widetilde e_m(\sigma P'-P',\sigma\tau Q'-\sigma Q')^{-1}\]
-		is a $2$-coboundary.
 		
-		Accordingly, we now set up some notation. If $P=Q$, then there is nothing to do, so we omit this case. For each $\sigma\in\op{Gal}(K^{\mathrm{sep}}/K)$, we define the divisors $D_{P,\sigma}\coloneqq[\sigma P']-[P']$ and $D_{Q,\sigma}\coloneqq[\sigma Q']-[Q']$. Note that any $D_{P,\sigma}$ and any $D_{Q,\tau}$ have disjoint support: $P\ne Q$ forces $\sigma P'\ne\tau Q'$ for any $\sigma$ or $\tau$ because $m\sigma P'=P$ and $m\tau Q'=Q$. We also note that $D_{P,\sigma\tau}=\sigma D_{P,\tau}+D_{P,\sigma}$ and similarly for $Q$. Continuing, we select functions $f_{P,\sigma}$ and $f_{Q,\sigma}$ so that $\op{div}f_{P,\sigma}=mD_{p,\sigma}$ and $\op{div}f_{Q,\sigma}=$. By choosing another point $S$ not in the Galois orbit of the previously defined points, we may normalize the functions $f_\bullet$ so that they evaluate to $1$ on $S$. Then we see that
-		\[f_{P,\sigma\tau}=\sigma f_{P,\tau}\cdot f_{P,\sigma}\]
-		because they have the same divisor and the same nonzero value at $S$; a similar statement holds for $Q$.
+		It remains to produce the desired quadratic function. We follow \cite[Corollary~4.7]{poonen-rains-selmer}. To begin, note \Cref{lem:weil-by-commutator} tells us that the Weil pairing $e_m$ is induced by a commutator pairing, so \Cref{prop:commutator-gives-cup} implies that the pairing on $\mathrm H^1(K;E[m])$ is induced by the boundary map $q\colon\mathrm H^1(K;E[m])\to\mathrm H^2(K;\mathbb G_m)$. To show that $q$ is a quadratic function, we note that $\langle m,n\rangle_q=q(m+n)q(m)^{-1}q(n)^{-1}$ is already understood to be symmetric and bilinear, so we only have to check that $q(km)=k^2q(m)$ for all $m$ and $k\in\ZZ$. By the bilinearity we already have, it is enough to just check that $q(-m)=q(m)$ for all $m$. To this end, we note that there is a morphism
+		% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMSJdLFsxLDAsIlxcbWF0aGJiIEdfbSJdLFsyLDAsIlxcbWMgSF9tIl0sWzMsMCwiRVttXSJdLFs0LDAsIjAiXSxbMCwxLCIxIl0sWzEsMSwiXFxtYXRoYmIgR19tIl0sWzIsMSwiXFxtYyBIX3stbX0iXSxbMywxLCJFW21dIl0sWzQsMSwiMCJdLFswLDFdLFsxLDJdLFsyLDNdLFszLDRdLFs1LDZdLFs2LDddLFs3LDhdLFs4LDldLFsxLDYsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsOCwiLTEiXSxbMiw3XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			1 & {\mathbb G_m} & {\mc H_m} & {E[m]} & 0 \\
+			1 & {\mathbb G_m} & {\mc H_{m}} & {E[m]} & 0
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[equals, from=1-2, to=2-2]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-3, to=2-3]
+			\arrow[from=1-4, to=1-5]
+			\arrow["{-1}", from=1-4, to=2-4]
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-3, to=2-4]
+			\arrow[from=2-4, to=2-5]
+		\end{tikzcd}\]
+		of short exact sequence, where the map $\mc H_m\to\mc H_{m}$ is given by $(x,f)\mapsto(-x,\iota f)$; here, $\iota\colon\ov K(E)\to\ov K(E)$ is defined by $\iota g(p)\coloneqq g(-p)$. Certainly this map is well-defined, and it is a group homomorphism because $(x,f)(y,g)=(x+y,\tau_yf\cdot g)$ goes to $(-x,\iota f)(-y,\iota g)=(-x-y,\tau_{-y}\iota f\cdot\iota g)$. Functoriality of the boundary now gives us a commuting square
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG1hdGhybSBIXjEoSztFW21dKSJdLFsxLDAsIlxcbWF0aHJtIEheMihLO1xcbWF0aGJiIEdfbSkiXSxbMSwxLCJcXG1hdGhybSBIXjIoSztcXG1hdGhiYiBHX20pIl0sWzAsMSwiXFxtYXRocm0gSF4xKEs7RVttXSkiXSxbMSwyLCIiLDAseyJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDEsInEiXSxbMCwzLCItMSIsMl0sWzMsMiwicSJdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\mathrm H^1(K;E[m])} & {\mathrm H^2(K;\mathbb G_m)} \\
+			{\mathrm H^1(K;E[m])} & {\mathrm H^2(K;\mathbb G_m)}
+			\arrow["q", from=1-1, to=1-2]
+			\arrow["{-1}"', from=1-1, to=2-1]
+			\arrow[equals, from=1-2, to=2-2]
+			\arrow["q", from=2-1, to=2-2]
+		\end{tikzcd}\]
+		which is exactly what we wanted to show.
 
-		We are now ready to calculate. To begin, note $c(\sigma,\tau)$ is
-		\begin{align*}
-			\widetilde e_m(\sigma P'-P',\sigma\tau Q'-Q')\widetilde e_m(\sigma P'-P',\sigma Q'-Q')^{-1}
-			&= \frac{f_{Q,\sigma\tau}(D_{P,\sigma})}{f_{P,\sigma}(D_{Q,\sigma\tau})}\cdot\frac{f_{P,\sigma}(D_{Q,\sigma})}{f_{Q,\sigma}(D_{P,\sigma})}.
-		\end{align*}
-		We now recall $f_{Q,\sigma\tau}=\sigma f_\tau\cdot f_\sigma$ and $D_{Q,\sigma\tau}=\sigma D_\tau+D_\sigma$, so $c(\sigma,\tau)$ equals
-		\[\frac{(\sigma f_{Q,\tau})(D_{P,\sigma})}{f_{P,\sigma}(\sigma D_{Q,\tau})}=\frac{\sigma f_{Q,\tau}(P')}{\sigma f_{Q,\tau}(\sigma^{-1}P')}\cdot\frac{f_{P,\sigma}(\sigma Q)}{f_{P,\sigma}(\sigma\tau Q)}.\]
-		We will complete the proof by showing that each factor of the right-hand side is a $2$-coboundary. For example, the $1$-cochain $\sigma\mapsto f_{Q,\sigma}(P')$ produces the $1$-coboundary sending $(\sigma,\tau)$ to
-		\[\frac{\sigma f_{Q,\tau}(P')\cdot f_{Q,\sigma}(P')}{f_{Q,\sigma\tau}(P')}=\frac{\sigma f_{Q,\tau}(P')}{\sigma f_{Q,\tau}(\sigma^{-1}P')}.\]
-		Similarly, the $1$-cochain $\sigma\mapsto f_{P,\sigma}(\sigma Q')$ produces the $2$-coboundary sending $(\sigma,\tau)$ to
-		\[\frac{\sigma f_{P,\tau}(\tau Q')\cdot f_{P,\sigma}(\sigma Q')}{f_{P,\sigma\tau}(\sigma\tau Q')}=\frac{\sigma f_{P,\tau}(\tau Q')\cdot f_{P,\sigma}(\sigma Q')}{\sigma f_{P,\tau}(\sigma^{-1}\sigma\tau Q)\cdot f_{P,\sigma}(\sigma\tau Q)}.\]
-		Multiplying these two $2$-coboundaries together completes the proof.
+		\item We will show this directly on the level of cocycles, following \cite[Proposition~4.9]{poonen-rains-selmer}. Note that the first sentence implies the second one: \Cref{prop:commutator-gives-cup} combined with \Cref{lem:weil-by-commutator} tells us that the pairing on $\mathrm H^1(K;E[m])$ is given by the boundary map.
 
-		\item You may show this on the homework!
+		We now show the first sentence. It is enough to show the boundary $\delta\colon\mathrm H^0(K;E)\to\mathrm H^1(K;E[m])$ factors through $\mathrm H^1(K;\mc H_m)$ because then the composite
+		\[\mathrm H^1(K;\mc H_m)\to\mathrm H^1(K;E[m])\to\mathrm H^2(K;\mathbb G_m)\]
+		vanishes by \Cref{lem:h1-to-h2}. We will show this factoring directly on the level of cocycles.
+		
+		Fix some $x\in E(K)$ and choose some $y\in E(\ov K)$ with $y=mx$ so that $\delta(g)\coloneqq gy-y$. We are tasked with finding some $1$-cocycle $c$ of $\mc H_m$ such that $\delta=\op{pr}_1(c)$, where $\op{pr}_1\colon\mc H_m\to E[m]$ is the canonical projection. Thus, we need to find functions $f_g\in\ov K(E)$ such that $\op{div}f_g=m[\delta(g)]-m[\infty]$ so that $c(g)\coloneqq(\delta(g),f_g)$ is a $1$-cocycle of $\mc H_m$. Note that such functions certainly exist because $\delta(g)\in E[m]$, and they are unique up to scalar.
+
+		Now, checking that $c$ is a $1$-cocycle amounts to verifying the equality $c(gh)=gc(h)\cdot c(g)$. This is equivalent to
+		\[(\delta(gh),f_{gh})\stackrel?=\left(g\delta(h)+\delta(g),\tau_{\delta(g)}gf_h\cdot f_g\right).\]
+		The left coordinates are equal because $\delta$ is a $1$-cocycle, so it remains to produce the functions $f_\bullet$ achieving $f_{gh}=\tau_{gy-y}gf_h\cdot f_g$; equivalently, we need to achieve $\tau_yf_{gh}=g\tau_yf_h\cdot\tau_yf_g$. Well, note that the divisors of both sides are
+		\[m[ghy]-m[y]=m[ghy]-m[gy]+m[gy]-m[y],\]
+		so these functions are certainly the same up to a scalar. To fix the scalar, note that we may assume $y\ne\infty$ (otherwise, $x=\infty$, and we can choose all the functions $f_\bullet$ to be constants), so we may normalize all functions so that $\tau_yf_g(\infty)=1$ for all $g$. Then the equality $\tau_yf_{gh}=g\tau_yf_h\cdot\tau_yf_g$ follows from the equality at the point $\infty$.
 		\qedhere
 	\end{listalph}
 \end{proof}
+We now produce some local and global isotropy results. Here is the local one.
+\begin{proposition} \label{prop:local-is-lagrangian}
+	Fix a local field $K$ of characteristic $0$ and a positive integer $m$.
+	\begin{listalph}
+		\item The Weil pairing makes $\mathrm H^1(K;E[m])$ a non-degenerate quadratic space. Explicitly, this is a quad\-ratic space over $\ZZ/m\ZZ$ if $K$ is nonarchimedean and over $\ZZ/\gcd(m,2)\ZZ$ if $K$ is archimedean.
+		\item The submodule $E(K)/mE(K)$ of $\mathrm H^1(K;E[m])$ is maximal isotropic.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	These claims follow from local duality. For (a), note the Weil pairing on $E[m]$ is perfect and Galois-invariant (by \Cref{lem:weil-pairing}), so it induces an isomorphism $E[m]\cong\op{Hom}(E[m],\mu_m)$ of (finite discrete) Galois modules. Thus, we can think of the pairing on $\mathrm H^1(K;E[m])$ as fitting into the commutative diagram
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiXFxtYXRocm0gSF4xKEs7RVttXSkiXSxbMSwwLCJcXG1hdGhybSBIXjEoSztFW21dKSJdLFsxLDEsIlxcbWF0aHJtIEheMShLO0VbbV0pIl0sWzAsMSwiXFxtYXRocm0gSF4xKEs7RVttXV4qKSJdLFsyLDAsIlxcbWF0aHJtIEheMihLO1xcbXVfbSkiXSxbMiwxLCJcXG1hdGhybSBIXjIoSztcXG11X20pIl0sWzMsMCwiKGNfMSxjXzIpIl0sWzQsMCwiZV9tKGNfMVxcY3VwIGNfMikiXSxbMywxLCIoZ1xcbWFwc3RvIGVfbShjXzEoZyksLSksY18yKSJdLFs0LDEsIihnLGgpXFxtYXBzdG8gZV9tKGNfMShnKSxnY18yKGgpKSJdLFswLDEsIlxcdGltZXMiLDMseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMywyLCJcXHRpbWVzIiwzLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwiIiwwLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwzLCJlX20iXSxbMSw0LCJcXGN1cCJdLFsyLDUsIlxcY3VwIl0sWzQsNSwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNiw4LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzYsNywiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs4LDksIiIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNyw5LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped, column sep=small]
+		{\mathrm H^1(K;E[m])} & {\mathrm H^1(K;E[m])} & {\mathrm H^2(K;\mu_m)} & {(c_1,c_2)} & {e_m(c_1\cup c_2)} \\
+		{\mathrm H^1(K;E[m]^*)} & {\mathrm H^1(K;E[m])} & {\mathrm H^2(K;\mu_m)} & {(g\mapsto e_m(c_1(g),-),c_2)} & {(g,h)\mapsto e_m(c_1(g),gc_2(h))}
+		\arrow["\times"{marking, allow upside down}, draw=none, from=1-1, to=1-2]
+		\arrow["{e_m}", from=1-1, to=2-1]
+		\arrow["\cup", from=1-2, to=1-3]
+		\arrow[equals, from=1-2, to=2-2]
+		\arrow[equals, from=1-3, to=2-3]
+		\arrow[maps to, from=1-4, to=1-5]
+		\arrow[maps to, from=1-4, to=2-4]
+		\arrow[maps to, from=1-5, to=2-5]
+		\arrow["\times"{marking, allow upside down}, draw=none, from=2-1, to=2-2]
+		\arrow["\cup", from=2-2, to=2-3]
+		\arrow[maps to, from=2-4, to=2-5]
+	\end{tikzcd}\]
+	where the bottom row is perfect by \Cref{thm:tate}. Thus, the induced pairing is perfect, and we see that we actually have a quadratic space over $\ZZ/m\ZZ$ because the target of the pairing is $\mathrm H^2(K;\mu_m)\cong\ZZ/m\ZZ$ by local class field theory.
+
+	% We omit the proof of (b) because it is on the homework.
+	We now move on to (b), following \cite[Theorem~8.2]{tate-galois-cohomology}. We begin by recalling the Kummer short exact sequence
+	\[0\to\frac{E(K)}{mE(K)}\to\mathrm H^1(K;E[m])\to\mathrm H^1(K;E)[m]\to0\]
+	which is induced by the short exact sequence $0\to E[m]\to E\to E\to0$. Roughly speaking, the result will follow by comparing this short exact sequence with its dual. By \Cref{lem:kummer-is-isotropic}, we see that $E(K)/mE(K)$ is an isotropic subspace of $\mathrm H^1(K;E[m])$, so the Weil pairing descends to a pairing
+	\[\frac{E(K)}{mE(K)}\times\mathrm H^1(K;E)[m]\to\mathrm H^2(K;\mu_m),\]
+	where we are viewing $\mathrm H^1(K;E)[m]$ as the quotient of $\mathrm H^1(K;E[m])$ by $E(K)/mE(K)$.
+	
+	The main claim is that this last Weil pairing is perfect. For now, let's content ourselves with explaining why this completes the proof. We would like to show that a class $c\in\mathrm H^1(K;E[m])$ has $x\cup c=0$ for all $x\in E(K)/mE(K)$ if and only if $c\in E(K)/mE(K)$. In other words, the functional $-\cup c$ on $E(K)/mE(K)$ vanishes if and only if $c$ vanishes in the quotient $\mathrm H^1(K;E)[m]$, which is exactly the main claim.
+	
+	We now show the main claim. Let $(-)^\lor\coloneqq\op{Hom}_\ZZ(-,\QQ/\ZZ)$ denote the Pontryagin dual. Then we note that the Weil pairing induces a morphism
+	% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiMCJdLFsxLDAsIlxcZGlzcGxheXN0eWxlXFxmcmFje0UoSyl9e21FKEspfSJdLFsyLDAsIlxcbWF0aHJtIEheMShLO0VbbV0pIl0sWzMsMCwiXFxtYXRocm0gSF4xKEs7RSlbbV0iXSxbNCwwLCIwIl0sWzAsMSwiMCJdLFsxLDEsIlxcbWF0aHJtIEheMShLO0UpW21dXlxcbG9yIl0sWzIsMSwiXFxtYXRocm0gSF4xKEs7RVttXSleXFxsb3IiXSxbMywxLCJcXGxlZnQoXFxkaXNwbGF5c3R5bGVcXGZyYWN7RShLKX17bUUoSyl9XFxyaWdodCleXFxsb3IiXSxbNCwxLCIwIl0sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzUsNl0sWzYsN10sWzcsOF0sWzgsOV0sWzEsNl0sWzIsN10sWzMsOF1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		0 & {\displaystyle\frac{E(K)}{mE(K)}} & {\mathrm H^1(K;E[m])} & {\mathrm H^1(K;E)[m]} & 0 \\
+		0 & {\mathrm H^1(K;E)[m]^\lor} & {\mathrm H^1(K;E[m])^\lor} & {\left(\displaystyle\frac{E(K)}{mE(K)}\right)^\lor} & 0
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-2, to=2-2]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-3, to=2-3]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-4, to=2-4]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-4, to=2-5]
+	\end{tikzcd}\]
+	of short exact sequences. We showed in (a) that the middle morphism is an isomorphism, so it follows that the left morphism is injective, and the right morphism is surjective. But the size of a finite abelian group and its Pontryagin dual are the same, so it follows that the left and right morphisms are isomorphisms, which is what we wanted to show!
+\end{proof}
+	% \begin{listalph}
+	% 	\item This pairing is defined by
+	% 	\[(c_1,c_2)\mapsto\mathrm H^2(e_m)(c_1\cup c_2),\]
+	% 	which is symmetric because $\cup$ and $e_m$ are both alternating.
+	% 	\item This follows from local duality. Indeed, the Weil pairing on $E[m]$ is perfect and Galois-invariant, so it induces an isomorphism $E[m]\cong\op{Hom}(E[m],\mu_m)$ of (finite discrete) Galois modules. The cup-product pairing in the statement is now exactly the pairing of \Cref{thm:tate}.
+	% 	\item 
+	%
+		% Fix $P,Q\in E(K)/mE(K)$, and we want to show that the $2$-cocycle $\mathrm H^2(e_m)(\delta_P\cup\delta_Q)$ is a $2$-coboundary. Expanding out the definitions, we see that we should choose $P'$ and $Q'$ with $P=mP'$ and $Q=mQ'$, and then we want to show the map
+		% \[(\sigma,\tau)\mapsto e_m(\sigma P'-P',\sigma\tau Q'-\sigma Q')\]
+		% is a $2$-coboundary. For this, we will use \Cref{prop:alternative-weil}, which allows us to instead show that the $2$-cocycle
+		% \[c\colon(\sigma,\tau)\mapsto\widetilde e_m(\sigma P'-P',\sigma\tau Q'-\sigma Q')^{-1}\]
+		% is a $2$-coboundary.
+	%
+		% Accordingly, we now set up some notation. If $P=Q$, then there is nothing to do, so we omit this case. For each $\sigma\in\op{Gal}(K^{\mathrm{sep}}/K)$, we define the divisors $D_{P,\sigma}\coloneqq[\sigma P']-[P']$ and $D_{Q,\sigma}\coloneqq[\sigma Q']-[Q']$. Note that any $D_{P,\sigma}$ and any $D_{Q,\tau}$ have disjoint support: $P\ne Q$ forces $\sigma P'\ne\tau Q'$ for any $\sigma$ or $\tau$ because $m\sigma P'=P$ and $m\tau Q'=Q$. We also note that $D_{P,\sigma\tau}=\sigma D_{P,\tau}+D_{P,\sigma}$ and similarly for $Q$. Continuing, we select functions $f_{P,\sigma}$ and $f_{Q,\sigma}$ so that $\op{div}f_{P,\sigma}=mD_{p,\sigma}$ and $\op{div}f_{Q,\sigma}=$. By choosing another point $S$ not in the Galois orbit of the previously defined points, we may normalize the functions $f_\bullet$ so that they evaluate to $1$ on $S$. Then we see that
+		% \[f_{P,\sigma\tau}=\sigma f_{P,\tau}\cdot f_{P,\sigma}\]
+		% because they have the same divisor and the same nonzero value at $S$; a similar statement holds for $Q$.
+	%
+		% We are now ready to calculate. To begin, note $c(\sigma,\tau)$ is
+		% \begin{align*}
+		% 	\widetilde e_m(\sigma P'-P',\sigma\tau Q'-Q')\widetilde e_m(\sigma P'-P',\sigma Q'-Q')^{-1}
+		% 	&= \frac{f_{Q,\sigma\tau}(D_{P,\sigma})}{f_{P,\sigma}(D_{Q,\sigma\tau})}\cdot\frac{f_{P,\sigma}(D_{Q,\sigma})}{f_{Q,\sigma}(D_{P,\sigma})}.
+		% \end{align*}
+		% We now recall $f_{Q,\sigma\tau}=\sigma f_\tau\cdot f_\sigma$ and $D_{Q,\sigma\tau}=\sigma D_\tau+D_\sigma$, so $c(\sigma,\tau)$ equals
+		% \[\frac{(\sigma f_{Q,\tau})(D_{P,\sigma})}{f_{P,\sigma}(\sigma D_{Q,\tau})}=\frac{\sigma f_{Q,\tau}(P')}{\sigma f_{Q,\tau}(\sigma^{-1}P')}\cdot\frac{f_{P,\sigma}(\sigma Q)}{f_{P,\sigma}(\sigma\tau Q)}.\]
+		% We will complete the proof by showing that each factor of the right-hand side is a $2$-coboundary. For example, the $1$-cochain $\sigma\mapsto f_{Q,\sigma}(P')$ produces the $1$-coboundary sending $(\sigma,\tau)$ to
+		% \[\frac{\sigma f_{Q,\tau}(P')\cdot f_{Q,\sigma}(P')}{f_{Q,\sigma\tau}(P')}=\frac{\sigma f_{Q,\tau}(P')}{\sigma f_{Q,\tau}(\sigma^{-1}P')}.\]
+		% Similarly, the $1$-cochain $\sigma\mapsto f_{P,\sigma}(\sigma Q')$ produces the $2$-coboundary sending $(\sigma,\tau)$ to
+		% \[\frac{\sigma f_{P,\tau}(\tau Q')\cdot f_{P,\sigma}(\sigma Q')}{f_{P,\sigma\tau}(\sigma\tau Q')}=\frac{\sigma f_{P,\tau}(\tau Q')\cdot f_{P,\sigma}(\sigma Q')}{\sigma f_{P,\tau}(\sigma^{-1}\sigma\tau Q)\cdot f_{P,\sigma}(\sigma\tau Q)}.\]
+		% Multiplying these two $2$-coboundaries together completes the proof.
+	%
+	% 	\item You may show this on the homework!
+	% 	\qedhere
+	% \end{listalph}
 % \begin{notation}
 % 	Fix a number field $K$. Then we set
 % 	\[\mathrm H^1(\AA_K;E[m])\coloneqq\prod_v\left(\mathrm H^1(K_v;E[m]),\mathrm H^1_{\mathrm{ur}}(K_v;E[m])\right).\]
@@ -210,10 +354,59 @@ The Weil pairing now interacts with cohomology as follows.
 % \begin{remark}
 % 	If $p$ is a prime, then it turns out that the map $\mathrm H^1(K;E[p])\to\mathrm H^1(\AA_K;E[p])$ is injective when $p$ is prime. However, this is very special: this fails when replacing $p$ by something which is not a prime or when replacing $E$ by a higher-dimensional abelian variety.
 % \end{remark}
-Let's apply the Weil pairing to our Selmer groups.
+Here is the global isotropy result.
 \begin{remark} \label{rem:e-on-adele}
 	For any local field $K_v$, we note that $E(K_v)=E(\OO_v)$ if $E$ has good reduction at $v$. At a high level, this follows from the valuative criterion of properness or the theory of N\'eron models. More directly, one can see that a point $[X:Y:Z]\in\PP^2(K_v)$ satisfying the equation defining $E$ may have its coordinates adjusted until all coordinates are in $\OO_v$ by homogeneity.
 \end{remark}
+\begin{proposition} \label{prop:global-is-lagrangian}
+	Fix a number field $K$ and a positive integer $m$.
+	\begin{listalph}
+		\item The Weil pairing makes $\mathrm H^1(\AA_K;E[m])$ a non-degenerate quadratic space over $\ZZ/m\ZZ$.
+		\item The image of $E(\AA_K)/mE(\AA_K)$ in $\mathrm H^1(\AA_K;E[m])$ is maximal isotropic.
+		\item The image of $\mathrm H^1(K;E[m])$ in $\mathrm H^1(\AA_K;E[m])$ is maximal isotropic.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	Before we do anything, let's describe the pairing on $\mathrm H^1(\AA_K;E[m])$. It is the one induced from \Cref{rem:weil-pairing-on-adele} and the Weil pairing (see also the diagram in \Cref{prop:local-is-lagrangian}). More explicitly, for two classes $c$ and $c'$, the pairing is
+	\[\langle c,c'\rangle\coloneqq\sum_{v}\langle\op{loc}_v c,\op{loc}_vc'\rangle_v,\]
+	where $\langle-,-\rangle_v$ is the (local) Weil pairing on $\mathrm H^1(K_v;E[m])$ of \Cref{prop:local-is-lagrangian} (and \Cref{thm:tate}). In particular, the fact that the Weil pairing is antisymmetric implies that the pairing on $\mathrm H^1(\AA_K;E[m])$ is symmetric. Furthermore, because all the local pairings output to $\mathrm H^2(K_v;\mu_m)\into\ZZ/m\ZZ$, we see that we receive a quadratic space over $\ZZ/m\ZZ$.
+	\begin{listalph}
+		\item This is a local statement; in particular, it is just a ``sum'' of local results. In light of the above remarks, it only remains to show the non-degeneracy.
+		% The pairing on $\mathrm H^1(\AA_K;E[m])$ is the one induced from \Cref{rem:weil-pairing-on-adele} and the Weil pairing (see also the diagram in \Cref{prop:local-is-lagrangian}); in particular, the fact that the Weil pairing is antisymmetric implies that the pairing on $\mathrm H^1(\AA_K;E[m])$ is symmetric. The fact that it is perfect is simply the ``sum'' of the local results.
+		For this, suppose that $c\in\mathrm H^1(\AA_K;E[m])$ has $\langle c,c'\rangle=0$ for all $c'\in\mathrm H^1(\AA_K;E[m])$, so we want to show that $c=0$. By definition of $\mathrm H^1(\AA_K;E[m])$, it is enough to show that $\op{loc}_vc=0$ for all places $v$. Well, for each $v_0$, and class $c'_{v_0}\in\mathrm H^1(K_v;E[m])$, we can define a class $c'\in\mathrm H^1(\AA_K;E[m])$ by
+		\[\op{loc}_{v}c'\coloneqq\begin{cases}
+			c'_{v_0} & \text{if }v=v_0, \\
+			0 & \text{otherwise}.
+		\end{cases}\]
+		Then $c'\in\mathrm H^1(\AA_K;E[m])$ and $\langle c,c'\rangle=\langle\op{loc}_{v_0}c,c'_{v_0}\rangle_{v_0}$ must vanish for all $c'_{v_0}$, so it follows that $\op{loc}_{v_0}c=0$ by \Cref{prop:local-is-lagrangian}.
+
+		\item This is also a local statement. Indeed, given $c\in\mathrm H^1(\AA_K;E[m])$, we have to show $c\in E(\AA_K)/mE(\AA_K)$ if and only if $c$ annihilates $E(\AA_K)/mE(\AA_K)$. Certainly if $c$ is in $E(\AA_K)/mE(\AA_K)$, then summing \Cref{prop:local-is-lagrangian} shows that $c$ annihilates $E(\AA_K)/mE(\AA_K)$.
+		
+		Conversely, suppose $c$ annihilates $E(\AA_K)/mE(\AA_K)$, and we will show $\op{loc}_{v_0}c\in E(K_{v_0})/mE(K_{v_0})$ for all $v_0$. Well, by \Cref{prop:local-is-lagrangian}, it is enough to show that
+		\[\langle\op{loc}_{v_0}c,c'_{v_0}\rangle_{v_0}=0\]
+		for all $c'_{v_0}\in\mathrm H^1(K_{v_0};E[m])$, but this follows by using $c'_{v_0}$ to construct a class $c'\in\mathrm H^1(\AA_K;E[m])$ exactly as in (a).
+
+		\item This is a global statement. Indeed, we will use Pitou--Tate duality in the form of \Cref{thm:pitou-tate}. Let's explain what we can show without global duality: we can show that $\mathrm H^1(K;E[m])$ is isotropic. In fact, the quadratic form $\mathrm H^1(\AA_K;E[m])\to\ZZ/m\ZZ$ vanishes on $\mathrm H^1(K;E[m])$. To see this, note the commutativity of the diagram
+		% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG1hdGhybSBIXjEoSztFW21dKSJdLFswLDEsIlxcbWF0aHJtIEheMShcXEFBX0s7RVttXSkiXSxbMSwxLCJcXG1hdGhybSBIXjIoXFxBQV9LO1xcbWF0aGJiIEdfbSkiXSxbMSwwLCJcXG1hdGhybSBIXjIoSztcXG1hdGhiYiBHX20pIl0sWzAsMV0sWzAsM10sWzEsMl0sWzMsMl1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			{\mathrm H^1(K;E[m])} & {\mathrm H^2(K;\mathbb G_m)} \\
+			{\mathrm H^1(\AA_K;E[m])} & {\mathrm H^2(\AA_K;\mathbb G_m)}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-1, to=2-1]
+			\arrow[from=1-2, to=2-2]
+			\arrow[from=2-1, to=2-2]
+		\end{tikzcd}\]
+		causes the composite $\mathrm H^1(K;E[m])\to\ZZ/m\ZZ$ to factor through
+		\[\mathrm H^2(K;\mathbb G_m)\to\mathrm H^2(\AA_K;\mathbb G_m)\to\QQ/\ZZ.\]
+		This last composite vanishes because it is part of the fundamental exact sequence of global class field theory.
+
+		It remains to show that $\mathrm H^1(K;E[m])$ is maximal isotropic. Well, suppose that we have a class $c\in\mathrm H^1(\AA_K;E[m])$ such that $c\cup c'=0$ for all $c'\in\mathrm H^1(K;E[m])$, and we would like to show that $c\in\mathrm H^1(K;E[m])$. Well, \Cref{thm:pitou-tate} applied with $\Sigma$ equal to the set of all places shows that we have an exact sequence
+		\[\mathrm H^1(K;E[m])\to\mathrm H^1(\AA_K;E[m])\to\mathrm H^1(K;E[m]^*)^\lor.\]
+		Identifying $\mathrm H^1(K;E[m]^*)$ with $\mathrm H^1(K;E[m])$ via the Weil pairing, we see that $c\in\mathrm H^1(\AA_K;E[m])$ vanishes in $\mathrm H^1(K;E[m])^\lor$ by hypothesis! Thus, $c$ must come from a class in $\mathrm H^1(K;E[m])$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+We now summarize our results as follows.
 \begin{theorem} \label{thm:selmer-by-lagrangian}
 	Fix an elliptic curve $E$ over a number field $K$, and choose a positive integer $m$. Then $\op{Sel}_m(E/K)$ sits in the following pullback square.
 	% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9we1NlbH1fbShFL0spIl0sWzEsMCwiXFxtYXRocm0gSF4xKEs7RVttXSkiXSxbMSwxLCJcXG1hdGhybSBIXjEoXFxBQV9LO0VbbV0pIl0sWzAsMSwiRShcXEFBX0spL3BFKFxcQUFfSykiXSxbMCwzXSxbMywyXSxbMCwxXSxbMSwyXSxbMCwyLCIiLDEseyJzdHlsZSI6eyJuYW1lIjoiY29ybmVyIn19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
@@ -226,35 +419,63 @@ Let's apply the Weil pairing to our Selmer groups.
 		\arrow[from=1-2, to=2-2]
 		\arrow[hook, from=2-1, to=2-2]
 	\end{tikzcd}\]
-	\begin{listalph}
-		\item If $m$ is prime, then the right vertical arrow is injective.
-		\item The images of the bottom and right arrows are maximal isotropic subspaces with respect to the pairing induced by the Weil pairing.
-	\end{listalph}
+	The images of the bottom and right arrows are maximal isotropic subspaces with respect to the pairing induced by the Weil pairing.
+	% \begin{listalph}
+	% 	\item The images of the bottom and right arrows are maximal isotropic subspaces with respect to the pairing induced by the Weil pairing.
+	% 	\item If $m$ is prime, then the right vertical arrow is injective.
+	% \end{listalph}
 \end{theorem}
 \begin{proof}
-	The pullback square is exactly the one in the definition of the Selmer group by \Cref{rem:get-adelic-cohom,rem:e-on-adele}. The rest of the statement is \cite[Theorem~4.14]{poonen-rains-selmer}. In particular, see \cite[Example~4.18]{poonen-rains-selmer}.
+	The pullback square is the one in the definition of the Selmer group by \Cref{rem:get-adelic-cohom,rem:e-on-adele}. %The rest of the statement is \cite[Theorem~4.14]{poonen-rains-selmer}. In particular, see \cite[Example~4.18]{poonen-rains-selmer}.
+	The rest of the result is a combination of \Cref{prop:local-is-lagrangian,prop:global-is-lagrangian}.
 \end{proof}
 \begin{remark}
 	The moral is that we may view $\op{Sel}_p(E/K)$ may be viewed as an intersection of two maximal isotropic subspaces. Such a ``random'' intersection is expected to be rather transverse, which perhaps explains why $\op{Sel}_p(E/K)$ is finite-dimensional.
 \end{remark}
 \begin{remark}
-	Part (a) is a rather sensitive result because it depends on a certain vanishing of $\Sha$ result \cite[Proposition~3.3(e)]{poonen-rains-selmer}. It is not expected to be true if $E$ is replaced by a different module or if $m$ is no longer prime. For example, on the homework, you may show that the map
-	\[\mathrm H^1\big(\QQ(\sqrt 7);\mu_8\big)\to\mathrm H^1\big(\AA_{\QQ(\sqrt 7)};\mu_8\big)\]
-	fails to be injective.
+	If $m$ is prime, then the right vertical arrow in \Cref{thm:selmer-by-lagrangian} is injective; see \cite[Theorem~4.14]{poonen-rains-selmer} for a proof. This is a rather sensitive result because it depends on a certain vanishing of $\Sha$ result \cite[Proposition~3.3(e)]{poonen-rains-selmer}. It is not expected to be true if $E[m]$ is replaced by a different module; see \Cref{rem:local-to-global-not-inj} below for an example.
+	% For example, on the homework, you may show that the map
+	% \[\mathrm H^1\big(\QQ(\sqrt 7);\mu_8\big)\to\mathrm H^1\big(\AA_{\QQ(\sqrt 7)};\mu_8\big)\]
+	% fails to be injective.
 \end{remark}
-% Now, $\op{Sel}_m(E)$ still sits in the pullback square as follows.
-% Here, $E(\AA_K)/pE(\AA_K)=\prod_vE(K_v)/pE(K_v)$ because $E(K_v)/pE(K_v)=E(\OO_v)/pE(\OO_v)$ whenever $E$ has good reduction at $v$. (This follows from the theory of N\'eron models. More directly, it follows from smoothness.)
-% E(Kv) = E(Ov) by the Neron model
-% \begin{remark}
-% 	It also turns out that the image of $E(\AA_K)/pE(\AA_K)$ in $\mathrm H^1(\AA_K;E[p])$ is another maximal isotropic subspace.
-% \end{remark}
-% \begin{remark}
-% 	One expects $\prod_v\mc L_v$ and $\mathrm H^1(K;M)$ to be very large, but they tend to be rather transverse in $\prod_v\mathrm H^1(K_v;M)$. For example, in the elliptic curve case, the Weil pairing makes $\prod_v\mathrm H^1(K_v;E[m])$ into a quadratic space, and it turns out that $\prod_v\mc L_v$ is isotropic (by \Cref{thm:tate}), and the image of $\mathrm H^1(K;E[m])$ is isotropic by some global duality.
-% \end{remark}
-% \begin{remark}
-% 	While the map $\prod_v\mc L_v\to\prod_v\mathrm H^1(K_v;M)$ is certainly injective, the vertical map is not always expected to be. In short, it is injective in the case $E[p]$ when $p$ is prime by combining the Chebotarev density theorem and the fact that $p$-Sylow subgroups of $\op{GL}(E[p])$ are cyclic \cite[Theorem~4.16]{poonen-rains-selmer}. However, it will frequently fail to be injective outside this case due to $\Sha$ problems.
-% \end{remark}
-% The moral, is that we can view $\op{Sel}_p(E/K)$ as the intersection of two maximal isotropic subspaces.
+\begin{example}[Counterexamples to Grunwald--Wang] \label{ex:grunwald-wang}
+	We have the following.
+	\begin{listalph}
+		\item The positive integer $16$ is an eighth power in $\QQ_v$ for all places $v$ except $v=2$. However, $16$ is not an eighth power in $\QQ_2$.
+		\item The positive integer $16$ is an eighth power in $\QQ(\sqrt7)_v$ for all places $v$. However, $16$ is not an eighth power in $\QQ(\sqrt7)$.
+	\end{listalph}
+\end{example}
+\begin{proof}
+	Before showing either of the parts, we claim that $16$ is an eighth power in a field $K$ if and only if $\sqrt2\in K$ or $\sqrt{-2}\in K$ or $\sqrt{-1}\in K$. Certainly the reverse direction holds because
+	\[\big(\sqrt2\big)^{8}=\left(\sqrt{-2}\right)^{8}=(1+i)^{8}=16.\]
+	In the forward direction, if $16$ is an eighth power, then we see that one of $4$ or $-4$ is a fourth power. If $-4$ is a fourth power, then $-4$ is a square, so either $2=0$ (in which case $\sqrt2\in K$) or $-1$ is a square. Otherwise, $4$ is a fourth power, so one of $2$ or $-2$ is a square, as desired.
+	\begin{listalph}
+		\item We do this by casework on the place $v$. For example, if $v$ is archimedean, the result follows because $\sqrt2\in\RR$. Additionally, for $v=2$, we see that $v_2(16)=4$ is not divisible by $8$, so $16$ cannot possibly be an eighth power.
+
+		It remains to handle places $v$ given by odd primes $p$. 
+		% To this end, we note that
+		% \[\big(\sqrt2\big)^{8}=\left(\sqrt{-2}\right)^{8}=(1+i)^{8}=16,\]
+		% so for any field $K$, we see that $16$ is an eighth power in any of the extensions $K(\sqrt2)$ or $K(\sqrt{-2})$ or $K(i)$. Thus, 
+		It is enough to show that $\{\sqrt2,\sqrt{-2},i\}\cap\QQ_p\ne\emp$ for each odd prime $p$. In other words, we are asking for one of the quadratics to $x^2-2$ or $x^2+2$ or $x^2-1$ to admit a root. By Hensel's lemma, it is equivalent for one of these quadratics to admit a root over $\FF_p$, which in turn is equivalent to having
+		\[1\stackrel?\in\left\{\left(\frac2p\right),\left(\frac{-2}p\right),\left(\frac{-1}p\right)\right\}.\]
+		To see this, we note that
+		\[\left(\frac2p\right)\left(\frac{-2}p\right)\left(\frac{-1}p\right)=1,\]
+		so it is not possible for all three Legendre symbols to equal $-1$!
+
+		\item Set $K\coloneqq\QQ(\sqrt7)$ for brevity. By (a), to show that $16$ is an eighth power in all $K_v$, we only have to handle places $v$ above $2$. Note that $7$ is not a square in $\QQ_2$ (indeed, it is not a square$\pmod4$), so there is only one place $\QQ_2(\sqrt7)$ above $2$. It remains to show that $16$ is an eighth power
+
+		Lastly, we should show that $16$ is not an eighth power in $K$. It is enough to show that none of $\sqrt{-1}$ or $\sqrt2$ or $\sqrt{-2}$ are in $K$, which holds because $K=\QQ(\sqrt7)$ is a quadratic extension avoiding all those elements. Explicitly, $K$ is totally real, so $-1$ and $-2$ cannot be squares, and we can see that there is no $a,b\in\ZZ$ for which
+		\[\left(a+b\sqrt7\right)^2=a^2+7b^2+14ab\sqrt7\]
+		can equal $2$: this would require $a=0$ or $b=0$, but certainly neither $2$ nor $7/2$ is a square in $\ZZ$.
+		\qedhere
+		% In fact, we will show that any totally real field $L$ in which $16$ is an eighth power has $\sqrt2\in L$, which will complete the proof because $\sqrt2\notin K$. To see this, if $16$ is an eighth power in $L$, then one of $4$ or $-4$ is a fourth power; however, $L$ is totally real, so $-4$ cannot be a square, so we see that $4$ must be a fourth power. Similarly, this means that one of $2$ or $-2$ is a square in $L$, but $-2$ is not a square, so $2$ is a square in $L$. Thus, $\sqrt2\in L$, as required.
+	\end{listalph}
+\end{proof}
+\begin{remark} \label{rem:local-to-global-not-inj}
+	\Cref{ex:h1-of-mu-n} identifies $\mathrm H^1(K;\mu_8)$ with $K^\times/K^{\times8}$, so the second part of \Cref{ex:grunwald-wang} shows that the map
+	\[\mathrm H^1(\QQ(\sqrt7);\mu_8)\to\mathrm H^1\left(\AA_{\QQ(\sqrt7)};\mu_8\right)\]
+	fails to be injective because the nontrivial class $16\in K^\times/K^{\times8}$ vanishes in $\mathrm H^1\big(\AA_{\QQ(\sqrt7)};\mu_8\big)$.
+\end{remark}
 
 \subsection{Conjectures on the Selmer Group}
 While we're here, we acknowledge that now is as good as time as any to recall/give the definition of the Tate--Shafarevich group.
@@ -444,6 +665,18 @@ In order to compute the $2$-Selmer group, we need to understand the image of the
 	\[\mathrm H^1(K;E[2])\to\mathrm H^1(K;E)[2].\]
 	Now, $\mathrm H^1(K;E)$ classifies principal homogeneous spaces \cite[Section~X.3]{silverman}, which are trivial if and only if they admit a $K$-rational point (after all, principal homogeneous spaces for $E$ are twists of $E$). Thus, it is enough to check that the principal homogeneous space associated to the triple $(\alpha,\beta,\gamma)$ admits a $K$-rational point, but one can check that this principal homogeneous space is exactly the conic $T_{(\alpha,\beta,\gamma)}$!
 \end{remark}
+\begin{remark} \label{rem:test-im-delta-descent-hilbert}
+	After rearranging, solving the system in \Cref{cor:test-im-delta-descent} is equivalent to solving the (projective closure of the) system
+	\[\begin{cases}
+		\alpha u^2-\beta v^2=a_2-a_1, \\
+		\alpha u^2-\gamma w^2=a_3-a_1.
+	\end{cases}\]
+\end{remark}
+% \Cref{rem:test-im-delta-descent-hilbert} suggests that we can begin to handle solving these equations using the Hilbert symbol.
+% \begin{definition}[Hilbert symbol]
+%	
+% \end{definition}
+% In our immediate application
 While we're here, we give some general remarks for how big these groups should be. In the case of $2$-descent, one can get away with just doing Kummer theory.
 \begin{example} \label{ex:size-im-delta-v}
 	Fix an elliptic curve $E$ over a number field $K$ which is the projective closure of $y^2=(x-a_1)(x-a_2)(x-a_3)$. Then
@@ -477,47 +710,48 @@ While we're here, we give some general remarks for how big these groups should b
 	\end{itemize}
 	%  Otherwise, if $v$ is even, then $\FF_v^\times/\FF_v^{\times2}=1$, and $\OO_v/2\OO_v\cong(\ZZ/2\ZZ)^{[K_v:\QQ_2]}$; additionally, the kernel and cokernel of $2\colon\mu_{2^\infty}(K_v)\to\mu_{2^\infty}(K_v)$ have the same size. Totaling these calculations completes.
 \end{proof}
-% \begin{remark}
-% 	For an odd prime $\ell$, we see that $K_v^\times/K_v^{\times\ell}$ is always $\{1\}$ when $K_v\in\{\RR,\CC\}$. When $v$ is finite, we similarly find that
-% 	\[\dim_{\FF_\ell}\frac{K_v^\times}{K_v^{\times\ell}}=1+\dim_{\FF_\ell}\FF_v[\ell]+\dim_{\FF_\ell}\mu_{p^\infty}(K_v)[\ell]+\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}.\]
-% 	Here are our two cases.
-% 	\begin{itemize}
-% 		\item If $v\nmid\ell$, then the dimension is $1+1_{\ell\mid\#\FF_v-1}+0+0$.
-% 		\item If $v\mid\ell$, then the dimension is $1+0+1_{\zeta_p\in K_v}+[K_v:\QQ_p]$.
-% 	\end{itemize}
-% 	% If $v\nmid\ell$, then the dimension is $1+1+0+0=2$ when $\ell\mid\#\FF_v-1$ and $1+0+0+0=1$ otherwise. Otherwise, if $v\mid\ell$, then the dimension is $1+0+\dim_{\FF_\ell}\mu_{\ell^\infty}(K_v)$
-% \end{remark}
-% However, with a little more theory, one can say more.
-% \begin{lemma} \label{lem:e-has-finite-index-o}
-% 	Fix an elliptic curve $E$ over a nonarchimedean local field $K_v$. Then $E(K_v)$ admits a finite-index subgroup isomorphic to $\OO_v$.
-% \end{lemma}
-% \begin{proof}
-% 	The proof of this result is fairly involved, so we will be sketchy; we refer to \cite[Proposition~VII.6.3]{silverman} for more details. Let $E_0(K_v)\subseteq E(K)$ denote the collection of points which reduce to a non-singular point in $E(\FF_v)$, and we let $E_1(K_v)\subseteq E(K)$ denote the collection of points which reduce to the identity of $E(\FF_v)$. 
+\begin{remark}
+	For an odd prime $\ell$, we see that $K_v^\times/K_v^{\times\ell}$ is always $\{1\}$ when $K_v\in\{\RR,\CC\}$. When $v$ is finite and $p$-adic, we similarly find that
+	\[\dim_{\FF_\ell}\frac{K_v^\times}{K_v^{\times\ell}}=1+\dim_{\FF_\ell}\FF_v[\ell]+\dim_{\FF_\ell}\mu_{p^\infty}(K_v)[\ell]+\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}.\]
+	Here are our two cases.
+	\begin{itemize}
+		\item If $v\nmid\ell$, then the dimension is $1+1_{\ell\mid\#\FF_v-1}+0+0$.
+		\item If $v\mid\ell$, then the dimension is $1+0+1_{\zeta_p\in K_v}+[K_v:\QQ_p]$.
+	\end{itemize}
+	% If $v\nmid\ell$, then the dimension is $1+1+0+0=2$ when $\ell\mid\#\FF_v-1$ and $1+0+0+0=1$ otherwise. Otherwise, if $v\mid\ell$, then the dimension is $1+0+\dim_{\FF_\ell}\mu_{\ell^\infty}(K_v)$
+\end{remark}
+However, with a little more theory, one can say more.
+\begin{lemma} \label{lem:e-has-finite-index-o}
+	Fix an elliptic curve $E$ over a nonarchimedean local field $K_v$. Then $E(K_v)$ admits a finite-index subgroup isomorphic to $\OO_v$.
+\end{lemma}
+\begin{proof}
+	The proof of this result is fairly involved, so we will be sketchy; we refer to \cite[Proposition~VII.6.3]{silverman} for more details. Let $E_0(K_v)\subseteq E(K)$ denote the collection of points which reduce to a non-singular point in $E(\FF_v)$, and we let $E_1(K_v)\subseteq E(K)$ denote the collection of points which reduce to the identity of $E(\FF_v)$. 
 	
-% 	The main point is to show that $E(K_v)/E_0(K_v)$ is finite, but for now let's explain why it completes the proof. It turns out that the canonical maps
-% 	\[0\to E_1(K_v)\to E_0(K_v)\to E(\FF_v)\to0\]
-% 	assemble into a short exact sequence \cite[Proposition~VII.2.1]{silverman}. Thus, it is enough to show that $E_1(K_v)$ admits a finite-index subgroup isomorphic to $\OO_v$. Well, $E_1(K_v)$ is isomorphic to $G_E(\mf m_v)$, where $G_E$ is the one-dimensional formal group of $E$ \cite[Proposition~VII.2.2]{silverman}. Then the canonical filtration $G_E(\mf m_v^\bullet)$ shows that $G_E(\mf m_v^i)/G_E\left(\mf m_v^{i+1}\right)$ is finite for all $i$, and for $i$ large enough, there is a logarithm map establishing that $G_E(\mf m_v^i)$ is isomorphic to $\OO_v$. This completes the proof modulo the finiteness of $E(K_v)/E_0(K_v)$.
+	The main point is to show that $E(K_v)/E_0(K_v)$ is finite, but for now let's explain why it completes the proof. It turns out that the canonical maps
+	\[0\to E_1(K_v)\to E_0(K_v)\to E(\FF_v)\to0\]
+	assemble into a short exact sequence \cite[Proposition~VII.2.1]{silverman}. Thus, it is enough to show that $E_1(K_v)$ admits a finite-index subgroup isomorphic to $\OO_v$. Well, $E_1(K_v)$ is isomorphic to $G_E(\mf m_v)$, where $G_E$ is the one-dimensional formal group of $E$ \cite[Proposition~VII.2.2]{silverman}. Then the canonical filtration $G_E(\mf m_v^\bullet)$ shows that $G_E(\mf m_v^i)/G_E\left(\mf m_v^{i+1}\right)$ is finite for all $i$, and for $i$ large enough, there is a logarithm map establishing that $G_E(\mf m_v^i)$ is isomorphic to $\OO_v$. This completes the proof modulo the finiteness of $E(K_v)/E_0(K_v)$.
 
-% 	It remains to show that $E(K_v)/E_0(K_v)$, for which we follow \cite[Exercise~7.6]{silverman}. Because $K_v$ is a topological field, we see that $E(K_v)\subseteq\PP^2(K_v)$ is a topological group. In fact, $E(K_v)\subseteq\PP^2(K_v)$ is a closed subset of the compact space $\PP^2(K_v)$, so $E(K_v)$ is compact. The reduction map $\PP^2(K_v)\to\PP^2(\FF_v)$ is a continuous map to a finite discrete space, so $E_0(K_v)\subseteq E(K_v)$ is an open subgroup. Compactness then forces $E_0(K_v)$ to be finite-index in $E(K_v)$.
-% \end{proof}
-% \begin{proposition}
-% 	Fix an elliptic curve $E$ over field $\QQ_p$. For any prime $\ell$,
-% 	\[\dim_{\FF_\ell}E(\QQ_p)/\ell E(\QQ_p)=\dim_{\FF_\ell}E(\QQ_p)[\ell]+\begin{cases}
-% 		1 & \text{if }p=\ell, \\
-% 		0 & \text{if }p\ne\ell.
-% 	\end{cases}\]
-% \end{proposition}
-% \begin{proof}
-% 	Set $K_v\coloneqq\QQ_\ell$ for brevity. We will use \Cref{lem:e-has-finite-index-o}, which grants us an exact sequence
-% 	\[0\to\OO_v\to E(K_v)\to C\to0,\]
-% 	where $C$ is some finite abelian group. This exact sequence has an endomorphism given by multiplication by $\ell$. Applying the Snake lemma to this endomorphism yields the exact sequence
-% 	\[0\to\OO_v[\ell]\to E(K_v)[\ell]\to C[\ell]\to\frac{\OO_v}{\ell\OO_v}\to\frac{E(K_v)}{\ell E(K_v)}\to\frac C{\ell C}\to0.\]
-% 	The result will follow by taking dimensions of this exact sequence; for example, just the right-exact part of this sequence immediately shows us that $E(K_v)/\ell E(K_v)$ is finite. We thus have
-% 	\[\dim_{\FF_\ell}\frac{E(K_v)}{\ell E(K_v)}-\dim_{\FF_\ell}E(K_v)[\ell]=\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}-\dim_{\FF_\ell}\OO_v[\ell]+\dim_{\FF_\ell}\frac C{\ell C}-\dim_{\FF_\ell}C[\ell].\]
-% 	Now, we note that $\OO_v[\ell]=0$ because $K_v$ has characteristic $0$. Continuing, and $\#C_\ell=\#(C/\ell C)$ because the kernel and cokernel of the endomorphism $\ell\colon C\to C$ should have the same size. We are left with
-% 	\[\dim_{\FF_\ell}\frac{E(K_v)}{\ell E(K_v)}=\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}+\dim_{\FF_\ell}E(K_v)[\ell].\]
-% 	We now note that $\ell=p$ implies that $\OO_v/\ell\OO_v\cong\ZZ/\ell\ZZ$; otherwise, $\OO_v/\ell\OO_v=0$.
-% \end{proof}
+	It remains to show that $E(K_v)/E_0(K_v)$, for which we follow \cite[Exercise~7.6]{silverman}. Because $K_v$ is a topological field, we see that $E(K_v)\subseteq\PP^2(K_v)$ is a topological group. In fact, $E(K_v)\subseteq\PP^2(K_v)$ is a closed subset of the compact space $\PP^2(K_v)$, so $E(K_v)$ is compact. The reduction map $\PP^2(K_v)\to\PP^2(\FF_v)$ is a continuous map to a finite discrete space, so $E_0(K_v)\subseteq E(K_v)$ is an open subgroup. Compactness then forces $E_0(K_v)$ to be finite-index in $E(K_v)$.
+\end{proof}
+\begin{proposition}
+	Fix an elliptic curve $E$ over field $\QQ_p$. For any prime $\ell$,
+	\[\dim_{\FF_\ell}E(\QQ_p)/\ell E(\QQ_p)=\dim_{\FF_\ell}E(\QQ_p)[\ell]+\begin{cases}
+		1 & \text{if }p=\ell, \\
+		0 & \text{if }p\ne\ell.
+	\end{cases}\]
+	Thus, $\dim_{\FF_\ell}E(\QQ_p)/\ell E(\QQ_p)\in\{0,1,2,3\}$, where $3$ is only possible when $p=\ell$.
+\end{proposition}
+\begin{proof}
+	Set $K_v\coloneqq\QQ_\ell$ for brevity. We will use \Cref{lem:e-has-finite-index-o}, which grants us an exact sequence
+	\[0\to\OO_v\to E(K_v)\to C\to0,\]
+	where $C$ is some finite abelian group. This exact sequence has an endomorphism given by multiplication by $\ell$. Applying the Snake lemma to this endomorphism yields the exact sequence
+	\[0\to\OO_v[\ell]\to E(K_v)[\ell]\to C[\ell]\to\frac{\OO_v}{\ell\OO_v}\to\frac{E(K_v)}{\ell E(K_v)}\to\frac C{\ell C}\to0.\]
+	The result will follow by taking dimensions of this exact sequence; for example, just the right-exact part of this sequence immediately shows us that $E(K_v)/\ell E(K_v)$ is finite. We thus have
+	\[\dim_{\FF_\ell}\frac{E(K_v)}{\ell E(K_v)}-\dim_{\FF_\ell}E(K_v)[\ell]=\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}-\dim_{\FF_\ell}\OO_v[\ell]+\dim_{\FF_\ell}\frac C{\ell C}-\dim_{\FF_\ell}C[\ell].\]
+	Now, we note that $\OO_v[\ell]=0$ because $K_v$ has characteristic $0$. Continuing, and $\#C_\ell=\#(C/\ell C)$ because the kernel and cokernel of the endomorphism $\ell\colon C\to C$ should have the same size. We are left with
+	\[\dim_{\FF_\ell}\frac{E(K_v)}{\ell E(K_v)}=\dim_{\FF_\ell}\frac{\OO_v}{\ell\OO_v}+\dim_{\FF_\ell}E(K_v)[\ell].\]
+	We now note that $\ell=p$ implies that $\OO_v/\ell\OO_v\cong\ZZ/\ell\ZZ$; otherwise, $\OO_v/\ell\OO_v=0$.
+\end{proof}
 
 \subsection{Congruent Number Elliptic Curves}
 We now return to the congruent number elliptic curves $E_d\colon y^2=x(x-d)(x+d)$, where $d\in\ZZ$ is some squarefree positive integer. It turns out that $E_d$ is a quadratic twist of $E_1\colon y^2=x^3-x$, and these elliptic curves have complex multiplication by $\ZZ[i]$. Importantly, the $2$-torsion
@@ -550,9 +784,9 @@ They proved this using calculations of Selmer groups. We will show the following
 \begin{remark}
 	It has been verified by Heegner--Monsky that $p\equiv5,7\pmod8$ implies $\op{rank}E_p(\QQ)=1$. This requires the construction of non-torsion points, which uses Heegner points.
 \end{remark}
-We are going to use $2$-descent. As in \Cref{subsec:descent}, we identify $\mathrm H^1(K;E_d)$ with $\mathrm H^1(K;H)$. We begin with two technical calculations.
+We are going to use $2$-descent. As in \Cref{subsec:descent}, we identify $\mathrm H^1(\QQ;E_d)$ with $\mathrm H^1(\QQ;H)$. We begin with two technical calculations.
 \begin{lemma} \label{lem:cong-local-condition}
-	Fix an odd positive squarefree integer $d$, and let $E_d$ be the elliptic curve over $\QQ$ which is the projective closure of $y^2=x(x-d)(x+d)$. We will compute the image of $\delta_v\colon E_d(K_v)/2E_d(K_v)\to\mathrm H^1(K_v;H)$ for each place $v$.
+	Fix an odd positive squarefree integer $d$, and let $E_d$ be the elliptic curve over $\QQ$ which is the projective closure of $y^2=x(x-d)(x+d)$. We will compute the image of $\delta_v\colon E_d(\QQ_v)/2E_d(\QQ_v)\to\mathrm H^1(\QQ_v;H)$ for each place $v$.
 	\begin{listalph}
 		\item If $v\nmid2d\infty$, then the image of $\delta_v$ consists of the triples $(\alpha,\beta,\gamma)$ such that $v(\alpha)=v(\beta)=v(\gamma)=0$.
 		\item The image of $\delta_v$ contains the triples
@@ -564,7 +798,7 @@ We are going to use $2$-descent. As in \Cref{subsec:descent}, we identify $\math
 \begin{proof}
 	We show the parts in sequence.
 	\begin{listalph}
-		\item If $v\nmid2d\infty$, then $E_d$ has good reduction at the finite place $v$, so by \Cref{lem:ur-of-elliptic-curve}, the image of $\delta_v$ is $\mathrm H^1_{\mathrm{ur}}(K_v;H)$. The result now follows by looking coordinate-wise via \Cref{ex:unramified-mu-m}.
+		\item If $v\nmid2d\infty$, then $E_d$ has good reduction at the finite place $v$, so by \Cref{lem:ur-of-elliptic-curve}, the image of $\delta_v$ is $\mathrm H^1_{\mathrm{ur}}(\QQ_v;H)$. The result now follows by looking coordinate-wise via \Cref{ex:unramified-mu-m}.
 		\item The given set $S$ is precisely the image of $E_d[2]$. Indeed,
 		\begin{align*}
 			\delta_v(\infty) &= (1,1,1), \\
@@ -573,20 +807,56 @@ We are going to use $2$-descent. As in \Cref{subsec:descent}, we identify $\math
 			\delta_v(-d,0) &= (-d,-2d,2).
 		\end{align*}
 		\item If $v=\infty$, then we have a linearly independent set $\{(-1,-1,+1)\}$, which spans the image of $\delta_v$ by \Cref{ex:size-im-delta-v}. Similarly, if $v\mid d$, then we have a linearly independent set $\{(-1,-d,d),(d,2,2d)\}$ (because $d$ is squarefree), which spans the image of $\delta_v$ by \Cref{ex:size-im-delta-v}.
-		\item You may do this for the homework!
+		\item %You may do this for the homework!
+		%
+		Because $-1$, $2$, and $5$ are linearly independent in $\QQ_2^\times/\QQ_2^{\times2}$, we see that the triples $(1,5,5)$, $(-1,-d,d)$, and $(d,2,2d)$ are linearly independent triples. Thus,
+		\[\dim_{\FF_2}\op{span}(S\cup\{1,5,5\})=3,\]
+		which also equals $\dim_{\FF_2}\im\delta_v$ by \Cref{ex:size-im-delta-v}. Thus, it suffices to show that $\op{span}(S\cup\{1,5,5\})\subseteq\im\delta_v$.
+		
+		By (b), it is enough to check that $(1,5,5)\in\im\delta_v$. For this, we will use \Cref{rem:test-im-delta-descent-hilbert}, which tells us that we need to produce a nonzero solution to the system
+		\[\begin{cases}
+			x^2-5y^2=+dw^2, \\
+			x^2-5z^2=-dw^2,
+		\end{cases}\]
+		in $\QQ_2$. The solubility of this system does not change if we change $d$ by an element of $\QQ_2^{\times2}$, so we may assume $d\in\{\pm1,\pm5\}$. Similarly, by symmetry, we may adjust the sign of $d$, so we may assume that $d\in\{1,5\}$. In these cases, we may set $(x,w)=(1,2)$ so that we need $5y^2\in\{-3,-19\}$ and $5z^2\in\{5,21\}$, both of which are possible.
 		\qedhere
 	\end{listalph}
 \end{proof}
 We will also need the following technical result.
 \begin{lemma} \label{lem:conic-almost-everywhere}
-	Let $T\subseteq\PP^n_\ZZ$ be a smooth projective conic. If $T$ admits solutions in $\QQ_v$ for all but one place $v_0$, then $T$ admits solutions in $\QQ_{v_0}$ as well.
+	Fix an odd positive squarefree integer $d$, and let $E$ be the elliptic curve over $\QQ$ which is the projective closure of $y^2=x(x-d)(x+d)$. Further, fix some triple $(\alpha,\beta,\gamma)\in\mathrm H^1(\QQ;H)$. If $(\alpha,\beta,\gamma)$ is in the image of $\delta_v\colon E_d(\QQ_v)/2E_d(\QQ_v)\to\mathrm H^1(\QQ_v;H)$ for each place $v\ne2$, then it is also in the image of $\delta_2$.% Let $T\subseteq\PP^n_\ZZ$ be a smooth projective conic. If $T$ admits solutions in $\QQ_v$ for all but one place $v_0$, then $T$ admits solutions in $\QQ_{v_0}$ as well.
 \end{lemma}
 \begin{proof}
-	You may show this for the homework!
+	% You may show this for the homework!
+	We use \Cref{cor:test-im-delta-descent}, freely using the calculations of \Cref{lem:cong-local-condition}. Fix a triple $(\alpha,\beta,\gamma)$ which is in the image of $\delta_v$ for each place $v\ne2$; we may as well represent $(\alpha,\beta,\gamma)$ as a triple of squarefree integers. We will show that $(\alpha,\beta,\gamma)\in\im\delta_2$.
+	\begin{enumerate}
+		\item Quickly, note that $\alpha$ is odd (modulo squares). Surely this is the case for $(\alpha,\beta,\gamma)\notin\delta_2(E[2])$. Otherwise, by \Cref{prop:compute-delta-e}, we know $\alpha$ equals the $x$-coordinate of some $(x,y)\in E(\QQ_2)$, meaning
+		\[y^2=x\left(x^2-d^2\right).\]
+		We now compute some valuations to show that $\nu_2(x)$ is even, which means $\alpha$ is odd.
+		\begin{itemize}
+			\item There is nothing to do if $\nu_2(x)=0$.
+			\item If $\nu_2(x)>0$, then the valuations are $2\nu_2(y)=\nu_2(x)$, so $\nu_2(x)$ is even.
+			\item If $\nu_2(x)<0$, then the valuations are $2\nu_2(y)=-3\nu_2(x)$, so $\nu_2(x)$ is still even.
+		\end{itemize}
+	
+		\item We make some reductions. By \Cref{lem:cong-local-condition}, we know that $(\alpha,\beta,\gamma)$ is unramified for $v\nmid2d\infty$, so the prime factorizations of $\alpha$, $\beta$, and $\gamma$ are supported in the prime factors of $2d$.
+	
+		For our next few reductions, we note that multiplying any triple by the image of $\delta(E[2])$ will not change whether it is in the image of $\delta_2$. For example, with $\alpha$ odd, we see that we may multiply by the triple $(d,2,2d)$ to force $\beta$ to be odd, which in turn forces $\gamma$ to be odd too. Multiplying by the triple $(-1,-d,d)$, we may assume that $\alpha\pmod8$ is in $\{1,5\}$. Similarly, multiplying by the triple $(1,5,5)$, we may assume that $\beta\pmod8$ is in $\{1,3\}$.
+	
+		\item We complete the proof using Hilbert symbols. By \Cref{rem:test-im-delta-descent-hilbert}, we know that the equations
+		\[\begin{cases}
+			\alpha x^2-\beta y^2=-dw^2, \\
+			\alpha x^2-\gamma z^2=+dw^2
+		\end{cases}\]
+		has solutions in each $\QQ_v$ for $v\ne2$. Thus, $(-d\alpha,d\beta)_v=(d\alpha,-d\gamma)_v=(2d\beta,-2d\gamma)_v=1$ for each $v\ne2$, so Hilbert reciprocity\footnote{In this case, it is possible to unwind the application of Hilbert reciprocity into merely applications of Quadratic reciprocity, but this language is convenient anyway.} implies that
+		\[(-d\alpha,d\beta)_2=(d\alpha,-d\gamma)_2=(2d\beta,-2d\gamma)_2=1.\]
+		We now show that $(\alpha,\beta,\gamma)\in\im\delta_2$ directly. We may consider this triple up to $\QQ_2^{\times2}$, meaning that we may assume $\alpha\in\{1,5\}$ and $\beta\in\{1,3\}$. For example, because everything is odd and $\alpha\in\{1,5\}$, we see that $(\alpha,d)_2=(\alpha,\beta)_2=(\alpha,\gamma)_2=1$.\footnote{In particular, $(5,-)_2$ vanishes on odds. It is not hard to show $(5,-5)_2=1$ (because $5\cdot1^2-5\cdot1^2=0^2$), and $(5,-1)_2=1$ because $5\cdot1^2-1\cdot1^2=2^2$.} As such, $(-d\alpha,d\beta)_2=(-d,\beta)_2$ and $(d\alpha,-d\gamma)_2=(d,\beta)_2$, so $(-1,\beta)_2=1$. Thus, $\beta\ne3$ is forced,\footnote{We need to show that $(-1,3)_2=-1$, which holds because $3x^2-y^2=z^2$ has no nontrivial solutions by$\pmod8$ considerations.} so $\gamma=1$ follows.
+		\qedhere
+	\end{enumerate}
 \end{proof}
 We now proceed with the proof of \Cref{thm:cong-selmer}.
 \begin{proof}[Proof of \Cref{thm:cong-selmer}]
-	We have identified $\mathrm H^1(K;E_d[2])$ with the trace-zero hyperplane of $\left(K^\times/K^{\times2}\right)^3$. Now, let $\mc L_v\subseteq\left(K^\times/K^{\times2}\right)^3$ be the corresponding local condition of the Selmer group at the place $v$, as computed in \Cref{lem:cong-local-condition}. Thus,
+	We have identified $\mathrm H^1(\QQ;E_d[2])$ with the trace-zero hyperplane of $\left(\QQ^\times/\QQ^{\times2}\right)^3$. Now, let $\mc L_v\subseteq\left(\QQ^\times/\QQ^{\times2}\right)^3$ be the corresponding local condition of the Selmer group at the place $v$, as computed in \Cref{lem:cong-local-condition}. Thus,
 	\[\op{Sel}_2(E_d/\QQ)\cong\left\{(\alpha,\beta,\gamma):(\alpha,\beta,\gamma)\in\mc L_v\text{ for all }v\right\}.\]
 	The local conditions $v\nmid2d\infty$ show that $\alpha$, $\beta$, and $\gamma$ should (up to squares) be supported on primes dividing $2d$; adjusting these rationals up to squares, we may assume that they are all integers dividing $2d$.
 

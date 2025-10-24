@@ -1,0 +1,364 @@
+% !TEX root = notes.tex
+
+\documentclass[notes.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Linear Algebra}
+
+\epigraph{It is my experience that proofs involving matrices can be shortened by 50\% if one throws the matrices out.}{---Emil Artin}
+
+In this short appendix, we do a little linear algebra. Our exposition mostly follows \cite{knus-quad-forms}.
+
+\section{Bilinear Forms}
+We will be interested in bilinear forms. We will largely focus on the case of free modules over rings, but many of the definitions work with general modules, so we will go ahead and statement as such.
+\begin{definition}[bilinear form] \nirindex{symmetric}
+	Fix a module $M$ over a ring $R$. Then a \textit{bilinear form} $\langle-,-\rangle$ on $M$ is a bilinear map $M\times M\to R$. An \textit{isometry} of modules equipped with bilinear forms is an isomorphism of modules preserving the bilinear forms.
+	% We say that $\langle-,-\rangle$ is \textit{symmetric} if and only if
+	% \[\langle v,w\rangle=\langle w,v\rangle\]
+	% for all $v,w\in V$.
+\end{definition}
+\begin{example} \label{ex:diagonal-form}
+	Suppose $M$ is free of finite rank $d$ with basis $\{e_1,\ldots,e_d\}$. Then we define $\langle-,-\rangle$ on $M$ by
+	\[\Bigg\langle\sum_{i=1}^da_ie_i,\sum_{j=1}^db_ie_i\Bigg\rangle=\sum_{i=1}^da_ib_i.\]
+\end{example}
+\begin{remark} \label{rem:bilinear-form-by-matrix}
+	Suppose $M$ is free of finite rank $d$. Given an ordered basis $\{e_i\}$ of $M$, we can represent $\langle-,-\rangle$ by the matrix $A$ whose coefficients are given by
+	\[A_{ij}\coloneqq\langle e_i,e_j\rangle.\]
+	Then $\langle v,w\rangle=v^\intercal Aw$, where we have implicitly used the ordered basis to identify $M$ with $R^{d}$.
+\end{remark}
+\begin{remark}
+	For any bilinear form $\langle-,-\rangle$ on a module $M$, the bilinear form automatically restricts to any submodule of $M$. Similarly, we note that it extends to $M\otimes_RS$ for any ring extension $R\to S$.
+\end{remark}
+\begin{defihelper}[symmetric, alternating]
+	Fix a module $M$ over a ring $R$. Then a bilinear form $\langle-,-\rangle$ is \textit{symmetric} if and only if
+	\[\langle m,n\rangle=\langle n,m\rangle\]
+	for all $m,n\in M$. It is \textit{alternating} if and only if $\langle m,m\rangle=0$ for all $m\in M$.
+\end{defihelper}
+\begin{remark}
+	As in \Cref{rem:bilinear-form-by-matrix}, we see that $\langle-,-\rangle$ is symmetric if and only if the matrix $A$ is symmetric.
+\end{remark}
+\begin{remark}
+	If $\langle-,-\rangle$ is alternating, then for any $m,n\in M$, we see that $\langle m+n,m+n\rangle=0$ implies that
+	\[\langle m,n\rangle=-\langle n,m\rangle.\]
+	However, the converse need not be true in characteristic $2$. Anyway, as in \Cref{rem:bilinear-form-by-matrix}, we see that $\langle-,-\rangle$ is alternating if and only if $A=-A^\intercal$ and the diagonal entries of $A$ vanish.
+\end{remark}
+\begin{definition}[non-degenerate]
+	Fix a module $M$ over a ring $R$. Then a bilinear form $\langle-,-\rangle$ is \textit{perfect} if and only if the following two conditions hold.
+	\begin{listalph}
+		\item For any $m\in M$, the map $M\to M^*$ given by $m\mapsto\langle m,-\rangle$ is an isomorphism.
+		\item For any $n\in M$, the map $M\to M^*$ given by $m\mapsto\langle -,n\rangle$ is an isomorphism.
+		% \item Given $w\in V$, if $\langle v,w\rangle=0$ for all $v$, then $w=0$.
+	\end{listalph}
+\end{definition}
+\begin{remark}
+	Fixing the matrix $A$ as in \Cref{rem:bilinear-form-by-matrix}, we see that $\langle-,-\rangle$ is non-degenerate if and only if $A$ is invertible. In fact, $A$ being invertible is equivalent to either one of (a) or (b).
+\end{remark}
+\begin{remark}
+	Conversely, given an isomorphism $\varphi_\bullet\colon M\to M^*$, we can produce a bilinear pairing $\langle-,-\rangle$ on $M$ given by
+	\[\langle m,n\rangle\coloneqq\varphi_m(n).\]
+\end{remark}
+\begin{example}
+	Fix $M$ and $\langle-,-\rangle$ as in \Cref{ex:diagonal-form}. Then $\langle-,-\rangle$ is symmetric (by definition), and it is perfect because homomorphisms $\varphi\colon M\to R$ are in bijection with $n$-tuples $R^n$ by
+	\[\varphi\mapsto(\varphi(e_1),\ldots,\varphi(e_n)).\]
+	In particular, this defines the isomorphisms $M\to M^*$.
+\end{example}
+\begin{example}[hyperbolic space] \label{ex:hyperbolic-form}
+	Suppose $N$ is free over $R$ of finite rank $d$ with basis $\{e_1,\ldots,e_d\}$. Further, let $\{f_1,\ldots,f_d\}$ be the functionals where $f_i$ is the projection onto the $i$th coordinate. Then set $H(N)\coloneqq N\oplus N^*$, which we call ``hyperbolic space.'' Note $H(N)$ has a canonical bilinear form given by
+	\[\langle(e,f),(e',f')\rangle\coloneqq f(e')+f'(e).\]
+	This pairing is symmetric by construction, and it is perfect: the induced morphism $H(N)\to H(N)^*$ simply swaps the factors of $N\oplus N^*$, where $N$ and $N^*$ are being identified via their ordered bases. For example, $f_i$ is sent to the functional $\langle(e,f),(0,f_i)\rangle=f_i(e)$, and $e_i$ is sent to the functional $\langle(e,f),(e_i,0)\rangle=f(e_i)$.
+\end{example}
+% \begin{remark}
+% 	Suppose $V$ is finite-dimensional. The presence of a non-degenerate bilinear form $\langle-,-\rangle$ on $V$ induces an isomorphism $V\to V^*$ given by sending $v$ to the linear functional $\langle v,-\rangle$. Indeed, because $\dim V=\dim V^\perp$, it is enough to check that this map is injective, which is true because the functional $\langle v,-\rangle$ vanishes if and only if $v=0$.
+% \end{remark}
+% It will also be desirable to consider operators preserving the forms.
+% \begin{definition}[orthogonal group]
+% 	Fix a bilinear form $\langle-,-\rangle$ on a vector space $V$. Then the \textit{orthogonal group} is
+% 	\[\op O(V)\coloneqq\{g\in\op{GL}(V):\langle gv,gw\rangle=\langle v,w\rangle\text{ for all }v,w\in V\}.\]
+% 	If $V$ is finite-dimensional, then we define $\op{SO}(V)\coloneqq\op O(V)\cap\op{SL}(V)$.
+% \end{definition}
+% \begin{example}
+% 	If $\langle-,-\rangle$ always outputs $0$, then $\op O(V)=\op{GL}(V)$.
+% \end{example}
+% \begin{remark}
+% 	Suppose $V$ is finite-dimensional over a field $K$. Setting $A$ as in \Cref{rem:bilinear-form-by-matrix}, we find that
+% 	\[\op O(V)\cong\{g\in\op{GL}_n(K):g^\intercal Ag=A\}.\]
+% \end{remark}
+% \begin{remark}
+% 	Suppose $V$ is finite-dimensional. Then we claim that $\op{SO}(V)\subseteq\op O(V)$ is an index-$2$ subgroup.
+% \end{remark}
+
+\section{Quadratic Forms}
+It will turn out that quadratic forms are ``more fundamental'' than bilinear forms.
+\begin{definition}[quadratic form]
+	Fix module $M$ and $N$ over a ring $R$. Then a \textit{quadratic function} is a function $q\colon M\to N$ satisfying the following.
+	\begin{listalph}
+		\item For any $r\in R$ and $m\in M$, we have $q(rm)=r^2q(m)$.
+		\item The function $\langle-,-\rangle_q\colon M\times M\to N$ defined by $\langle m,n\rangle_q\coloneqq q(m+n)-q(m)-q(n)$ is symmetric and bilinear.
+	\end{listalph}
+	If $N=R$, then we call $q$ a \textit{quadratic form}.
+\end{definition}
+\begin{definition}[quadratic space]
+	A \textit{quadratic space} $(M,q)$ is a pair of a finitely generated projective module $M$ and a quadratic form $q$ on $M$. The quadratic space is \textit{regular} if and only $\langle-,-\rangle_q$ is perfect. A morphism of quadratic spaces is a morphism of the underlying modules preserving the quadratic form. An \textit{isometry} is an isomorphism of quadratic spaces.
+\end{definition}
+\begin{remark}
+	Note that $\langle-,-\rangle_q$ is automatically symmetric.
+\end{remark}
+\begin{remark} \label{rem:quad-form-from-form}
+	If $2\in R^\times$, then we can recover $q$ from the bilinear form $\langle-,-\rangle_q$ as
+	\[q(m)\coloneqq\frac12\langle m,m\rangle_q.\]
+	However, in characteristic $2$, there is a difference between the notions! It is not unreasonable to think that the bilinear form carries ``more'' information.
+\end{remark}
+\begin{example}[diagonal form] \label{ex:diagonal-quad-form}
+	Fix $M$ as in \Cref{ex:diagonal-form} with basis $\{e_1,\ldots,e_d\}$. Then we define the diagonal quadratic form
+	\[q\Bigg(\sum_{i=1}^da_ie_i\Bigg)=\sum_{i=1}^da_i^2.\]
+	Then $q(m+n)-q(m)-q(n)=2\langle m,n\rangle$. In particular, if $\op{char}R=0$, then $\langle-,-\rangle_q$ vanishes!
+\end{example}
+\begin{example}[hyperbolic form] \label{ex:hyperbolic-quad-form}
+	Fix $N$ as in \Cref{ex:hyperbolic-form} with basis $\{e_1,\ldots,e_d\}$ so that $N^*$ has dual basis $\{f_1,\ldots,f_d\}$. Then we define the quadratic form $q$ on $H(N)$ by
+	\[q((e,f))\coloneqq f(e).\]
+	Then $q(m+n)-q(m)-q(n)=\langle m,n\rangle$. In particular, $H(N)$ is regular.
+\end{example}
+\begin{remark}
+	Note that the quadratic form $q$ on $M$ will automatically restrict to a quadratic form on any subspace $N\subseteq M$. Additionally, for any ring extension $R\to S$, there is an extension of $q$ to $M\otimes_RS$ by
+	\[q(m\otimes s)\coloneqq s^2q(m).\]
+\end{remark}
+\begin{remark}
+	There is a notion of direct sum of quadratic spaces: one can define $(M,q)\oplus(M',q')$ as having the underlying $R$-module $M\oplus M'$ with the quadratic form given by $(m,m')\mapsto q(m)+q(m')$.
+\end{remark}
+We will want a few ways to simplify a quadratic form.
+\begin{lemma} \label{lem:diagonalize-form}
+	Fix a quadratic space $(M,q)$ over a ring $R$ such that $2$ is not a zero-divisor. Then there is an \'etale ring extension $R\to S$ and a basis $\{e_1,\ldots,e_d\}$ of $M_S$ for which $q_S$ takes the form
+	\[\Bigg\langle\sum_{i=1}^da_ie_i,\sum_{j=1}^db_je_j\Bigg\rangle=\sum_{i=1}^nc_ia_ib_i\]
+	for some constants $c_1,\ldots,c_d\in S$.
+\end{lemma}
+\begin{proof}
+	Working (Zariski) locally, we may assume that $M$ is free. The point is to use the Gram--Schmidt process, but it is slightly complicated by the fact that we don't have a positive-definiteness hypothesis.
+	
+	We will induct on the rank of $M$, where the case of $M$ having rank $0$ has no content. For the induction, choose a rank $d+1$, and start with any basis $\{e_1,\ldots,e_{d+1}\}$ of $M$. By the inductive hypothesis, we may pass to an \'etale extension of $R$ so that $q$ is diagonal when restricted to $\{e_1,\ldots,e_d\}$. By the Gram--Schmidt process, we may as well assume that $\langle e_i,e_{d+1}\rangle_q=0$ whenever $q(e_i)\ne0$.\footnote{We need to use \'etale ring extensions in order to localize at non-zero-divisors and take square roots of the norms.} We will then not touch such $e_i$ with $q(e_i)\ne0$, so we may as well assume that $q(e_i)=0$ for all $i\le d$.
+
+	Now, if $\langle e_i,e_{d+1}\rangle_q=0$ for any $i\le d$, then it suffices to diagonalize the lower-dimensional subspace $\op{span}\{e_j:j\ne i\}$, so we are done by the induction. Additionally, if $\langle e_{d+1},e_{d+1}\rangle\ne0$, then an \'etale extension allows us to normalize to $\langle e_{d+1},e_{d+1}\rangle_q=1$ and then apply the Gram--Schmidt process to achieve that $\langle e_1,0\rangle_q=0$, allowing us to induct again.
+	
+	As such, we go ahead and assume that $\langle e_1,e_{d+1}\rangle_q\ne0$ and $\langle e_{d+1},e_{d+1}\rangle_q=0$. However, we then see that
+	\[\langle e_1+e_{d+1},e_1+e_{d+1}\rangle_q=2\langle e_1,e_{d+1}\rangle_q\]
+	is nonzero. As such, we may replace $e_1$ with $e_1+e_{d+1}$ and induct as in the previous paragraph.
+\end{proof}
+\begin{lemma} \label{lem:standarize-form}
+	Fix a regular quadratic space $(M,q)$ over a ring $R$ of even rank. Then $(M,q)$ is isomorphic to the hyperbolic space of \Cref{ex:hyperbolic-quad-form} fppf-locally.
+\end{lemma}
+\begin{proof}
+	Working Zariski locally, we may assume that $M$ is free of rank $2d$. An examination of \Cref{ex:hyperbolic-quad-form} shows that our goal is to (fppf-locally) find a basis $\{u_1,\ldots,u_d\}\sqcup\{v_1,\ldots,v_d\}$ where $q(\op{span}\{u_1,\ldots,u_d\})=\{0\}$ and $q(\op{span}\{v_1,\ldots,v_d\})=\{0\}$ and $\langle u_i,v_j\rangle_q=1_{i=j}$. We will induct on $d$, for which we note that the case of $d=0$ has no content.
+	
+	For the induction, we assume that $M$ is free of rank $2d+2$, and we go ahead and choose some direct summand $U\oplus V\subseteq M$ where $U$ and $V$ have bases as in the previous paragraph.
+	\begin{enumerate}
+		\item We claim that we can find $u_{d+1}\in M$ for which $q(\op{span}(U\cup\{u_{d+1}\}))=\{0\}$. Choose any $u,v\in M$ to complete the basis. Ordering the basis as $\{u_1,v_1,u_2,v_2,\ldots,u_d,v_d,u,v\}$, we see that the matrix corresponding to $\langle-,-\rangle_q$ looks like
+		\[\op{diag}\left(1_2,\ldots,1_2,\begin{bmatrix}
+			2q(u) & \langle u,v\rangle_q \\
+			\langle u,v\rangle_q & 2q(v)
+		\end{bmatrix}\right).\]
+		This matrix must be invertible, so its determinant must be a unit, so we see that $q$ continues to provide a non-degenerate bilinear form on $\op{span}\{u,v\}$. But now we are just trying to find a nontrivial root of a quadratic equation. It is enough to do this on fibers points because geometric points spread out to flat neighborhoods, but this is surely solvable in geometric fibers because solving a homogeneous equation in two variables amounts to solving some quadratic.
+
+		% Now, we will find our vector $u_{d+1}$ in the form $u+bv$. Indeed, for $b\in R$, we calculate
+		% \[q(u+bv)=q(u)+b^2q(v)+b\langle u,v\rangle_q.\]
+		% This can be solved fppf-locally: the locus where $q=0$ is smooth by the non-degeneracy, so by valuative criteria, it is enough to be able to either assume that $q(u)q(v)\in R^\times$ or $q(v)=0$. The latter case has nothing to show, and the former case can be solved after an \'etale extension.
+		% If $q(u)$ and $q(v)$ are both units, then we can solve this equation fppf-locally. Otherwise, $\langle u,v\rangle_q$ is a unit
+
+		\item We now apply a Gram--Schmidt process. We now see that $q(u_{d+1})$ and $q(v)$ must both be units, so an additional covering allows us to grant $q(v)=0$; we now call this element $v_{d+1}$. %Repeating the argument of the previous step, we see that we are allowed to assume that $q(v)=0$ as well, and we now call this element $v_{d+1}$.
+		Replacing $v_{d+1}$ with $v_{d+1}-\langle w_i,w_{d+1}\rangle u_i$ allows us to assume that $\langle u_i,v\rangle=0$ for all $i\ne d+1$. Next, replacing $u_{d+1}$ with $u_{d+1}-\langle w_i,u_{d+1}\rangle u_i$ allows us to assume that $\langle u_{d+1},w_i\rangle=0$ for $i\ne d+1$. Lastly, we see that $\langle u_{d+1},v_{d+1}\rangle\ne0$ must be a unit by examining the determinant of the previous step, so we may rescale $u_{d+1}$ so that $\langle u_{d+1},v_{d+1}\rangle=1$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+% \begin{remark} \label{rem:gram-schmidt-to-standardize}
+% 	Working fppf-locally was only required to produce the large direct summand $U\subseteq M$ with $q(U)=\{0\}$. The Gram--Schmidt process in the second step explains that having such a $U$ with $\op{rank}U=\frac12\op{rank}M$ shows that $M\cong H(U)$.
+% \end{remark}
+
+\section{The Clifford Algebra}
+In this section, we pick up exactly as much about the Clifford algebra as we need in order to define the special orthogonal group.
+\begin{definition}[Clifford algebra]
+	Fix a quadratic space $(M,q)$ over a ring $R$. Then we define the \textit{Clifford algebra} $C(M,q)$ as the quotient of the tensor algebra $TM$ by the ideal generated by the elements $x\otimes x-q(x)$. We may abbreviate $C(M,q)$ to $C(M)$ or $C(q)$.
+\end{definition}
+\begin{remark}
+	Note that $TM$ has a natural grading by $\ZZ$, which projects onto a natural grading by $\ZZ/2\ZZ$. With respect to the $\ZZ/2\ZZ$-grading, we see that the elements $x\otimes x-q(x)$ are homogeneous of degree $0$, so the quotient $C(M,q)$ is also $\ZZ/2\ZZ$-graded.
+\end{remark}
+\begin{remark} \label{rem:base-change-clifford}
+	The formation of $C(M,q)$ is compatible with ring extensions $R\to S$: namely, $C(M)_S=C(M_S)$.
+\end{remark}
+\begin{remark}
+	By construction, $C(M,q)$ has the following universal property: for any (possibly non-commutative) $R$-algebra $A$ equipped with a map $\varphi\colon M\to A$ for which $\varphi(x)^2=q(x)$, there is a unique map $C(M,q)\to A$ extending $\varphi$. To see this, note that $\varphi\colon M\to A$ extends to a unique map $TM\to A$, so there is certainly only one quotient map down to $C(M,q)$. And of course, this quotient map extends because $\varphi(x)^2=q(x)$ for all $x\in M$.
+\end{remark}
+\begin{remark} \label{rem:clifford-up}
+	The universal property implies that $C(M,q)$ is functorial in $M$: any morphism $(M,q)\to(M',q')$ of quadratic spaces induces a map $M\to C(M',q')$ sending $x\in M$ to $x\otimes x=q'(x)=q(x)$, so this extends uniquely to a map $C(M,q)\to C(M',q')$. Functoriality follows from the uniqueness of this construction.
+\end{remark}
+\begin{example} \label{ex:one-dim-clifford}
+	Let's compute $C(M,q)$ when $M$ is free of rank $1$, spanned by $\{e\}$. Then $TM=R[e]$, and we are taking the quotient by the principal ideal generated by $e^2-q(e)$, so
+	\[C(M,q)\cong\frac{R[e]}{\left(e^2-q(e)\right)}.\]
+	For example, we see that $C(M,q)$ has a basis given by $\{1,e\}$.
+\end{example}
+\begin{example}
+	If $q=0$, then $C(M)=\land^\bullet M$ because we are just taking the quotient by the tensors $x\otimes x$.
+\end{example}
+\begin{lemma} \label{lem:sum-clifford}
+	Fix quadratic spaces $(M,q)$ and $(M',q')$ over $R$. Then the canonical map
+	\[C(M\oplus M')\to C(M)\otimes C(M')\]
+	is an isomorphism.
+\end{lemma}
+\begin{proof}
+	Let's begin by defining the canonical map: the map $\varphi\colon M\oplus M'\to C(M)\otimes C(M')$ defined by sending $(x,0)\mapsto(x\otimes1)$ and $(0,x')\mapsto(1\otimes x')$ satisfies that $\varphi(x,x')^2$ equals
+	\[\left(x^2\otimes1\right)+\left(1\otimes(x')^2\right)=q(x)+q'(x),\]
+	so we induce a unique map $C(M\oplus M')\to C(M)\otimes C(M')$ extending $\varphi$ by \Cref{rem:clifford-up}. On the other hand, the inclusion $M\to M\oplus M'$ functorially provides a map $C(M)\to C(M\oplus M')$, so we can take the tensor product of these two maps to produce a map $C(M)\otimes C(M')\to C(M\oplus M')$. By construction, this latter map definitionally sends $(x\otimes1)\mapsto(x,0)$ and $(1\otimes x')\mapsto(0,x')$. Thus, we see that the two maps are inverses on generators, so they are inverse morphisms.
+\end{proof}
+\begin{proposition}[Poincar\'e--Birkhoff--Witt] \label{prop:pbw}
+	Fix a quadratic space $(M,q)$ over $R$ with basis $\{e_1,\ldots,e_d\}$. Then $C(M,q)$ is free as an $R$-module with basis given by the monomials
+	\[e_{i_1\ldots i_k}\coloneqq e_{i_1}\cdots e_{i_k},\]
+	where $1\le i_1<\cdots<i_k\le d$.
+\end{proposition}
+\begin{proof}
+	We proceed in steps, following \cite[Theorem~IV.1.5.1]{knus-quad-forms}. We quickly remark that keeping track of various linear actions explains that the conclusion does not depend on the choice of basis.
+	\begin{enumerate}
+		\item If $2\in R^\times$, then we can use \Cref{lem:diagonalize-form} to diagonalize $(M,q)$. This means that $(M,q)$ is a direct sum of one-dimensional quadratic spaces, so \Cref{lem:sum-clifford} allows us to reduce to the case where $M$ is one-dimensional. In this case, the result is just \Cref{ex:one-dim-clifford}.
+		\item If $2$ is not a zero divisor in $R$, then we may check the basis result after passing to the \'etale extension $R\to K(R)$, and now $2\in K(R)^\times$.
+		\item Fixing generators of $R$ as a $\ZZ$-algebra, we may construct a $\ZZ$-algebra $R'$ for which there is a projection $\pi\colon R'\onto R$, but now we may take $R'$ to not have $2$ as a zero divisor. We now lift $(M,q)$ to some quadratic space $(M',q')$ on $R'$: define $M'$ to formally have the basis $\{e_1',\ldots,e_d'\}$, and then we may define $q'$ so that $\pi(q'(e_i'))=q(e_i)$ for all $i$ and $\pi(\langle e_i',e_j'\rangle)=\langle e_i,e_j\rangle$ for all $i$ and $j$. Then the previous step shows that the basis result holds for $(M',q')$, so it descends to $C(M)=C(M')\otimes_{R'}R$ by \Cref{rem:base-change-clifford}.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{example} \label{ex:clifford-easy-hyperbolic}
+	Let's compute $C(H(N))$ when $N$ is free of rank $1$, spanned by $\{e\}$. Let $\{f\}\subseteq N^*$ be the dual basis. Then \Cref{prop:pbw} assures us that $C(H(N))$ has basis $\{1,e,f,ef\}$, and we see that the relations are given by $e^2=f^2=0$ and $ef+fe=1$. On the other hand, we know that $\land^\bullet N$ has basis $\{1,e\}$. Thus, we note that there is a map $C(H(N))\to\op{End}(\land^\bullet N)$ given by
+	\[e\mapsto\begin{bmatrix}
+		0 & 0 \\ 1 & 0
+	\end{bmatrix}\qquad\text{and}\qquad f\mapsto\begin{bmatrix}
+		0 & 1 \\ 0 & 0
+	\end{bmatrix}.\]
+	In particular, we can see that $ef+fe=1$, so this map of algebras is well-defined. In fact, we can see that it is an isomorphism of modules, and the image of $C^+(H(N))$ is given by matrices of the form $\begin{bsmallmatrix}
+		* & 0 \\ 0 & *
+	\end{bsmallmatrix}$ while the image of $C^-(H(N))$ is given by matrices of the form $\begin{bsmallmatrix}
+		0 & * \\ * & 0
+	\end{bsmallmatrix}$. For example, $Z(C^+(H(N)))\cong R\oplus R$.
+\end{example}
+\begin{proposition} \label{prop:hyperbolic-clifford}
+	Fix a finitely generated projective module $N$ of finite rank over $R$. Then there is an isomorphism
+	\[C(H(N))\to\op{End}(\land^\bullet N)\]
+	of $\ZZ/2\ZZ$-graded algebras over $R$. %Furthermore, this isomorphism is additive in $N$.
+\end{proposition}
+\begin{proof}
+	This is \cite[Proposition~IV.2.1.1]{knus-quad-forms}. Let's begin by describing the map, which is produced via \Cref{rem:clifford-up}.
+	\begin{itemize}
+		\item Given $e\in N$, we define $\varphi_e\colon\land^\bullet N\to\land^\bullet N$ by $e\land-$. More precisely, this is the unique quotient of the alternating map $N^k\to\land^\bullet N$ given by $(e_1,\ldots,e_k)\mapsto e\land e_1\land\cdots\land e_k$. While we're here, we note that $e\land e=0$ implies that $\varphi_e^2=0$.
+		\item Given $f\in N^*$, we define $\varphi_f\colon\land^\bullet N\to\land^\bullet N$ on pure tensors by
+		\[\varphi_f(e_1\land\cdots\land e_k)\coloneqq\sum_{i=1}^k(-1)^if(e_i)(e_1\land\cdots\land\widehat e_i\land\cdots\land e_k).\]
+		Indeed, we see that the left-hand side is alternating in $(e_1,\ldots,e_k)$, so this is a well-defined endomorphism. While we're here, we note that $\varphi_f^2=0$: for any $i<j$, we see that the sum $\varphi_f^2(e_1\land\cdots\land e_k)$ contains the pure tensor $e_1\land\cdots\land\widehat e_i\land\cdots\land\widehat e_j\land\cdots\land e_k$ exactly twice with the coefficients $(-1)^if(e_i)\cdot(-1)^jf(e_j)$ and $(-1)^{j-1}f(e_j)\cdot(-1)^if(e_i)$; these exactly cancel out!
+	\end{itemize}
+	In order to extend this to a map from $C(H(N))$, we must check that $\varphi(e,f)^2=q(e,f)\id$. Well, $\varphi_e^2=\varphi_f^2=0$, so we are trying to check that $\varphi_e\varphi_f+\varphi_f\varphi_e=f(e)\id$. We may merely check this on pure tensors: on $(e_1\land\cdots\land e_k)$, we get
+	\begin{align*}
+		& e\land\sum_{i=1}^k(-1)^if(e_i)(e_1\land\cdots\land\widehat e_i\land\cdots\land e_k) \\
+		&\qquad+f(e)(e_1\land\cdots\land e_k)+\sum_{i=1}^k(-1)^{i+1}f(e_i)(e\land e_1\land\cdots\land\widehat e_i\land\cdots\land e_k).
+	\end{align*}
+	The two sums cancel out, so we are indeed left with the scalar operator $f(e)\id(e_1\land\cdots\land e_k)$.
+	
+	We have thus defined our map $\varphi\colon C(H(N))\to\op{End}(\land^\bullet N)$. We quickly go ahead and explain that it preserves the grading: here, $\land^\bullet N$ has a natural $\ZZ$-grading, which can be turned into a $\ZZ/2\ZZ$-grading, which we label by $\land^+N\oplus\land^-N$; namely, $\land^+N$ has the even pure tensors, and $\land^-N$ has the odd pure tensors. Then $\op{End}(\land^\bullet N)$ obtains a natural $\ZZ/2\ZZ$-grading, where the degree-$0$ piece consists of the morphisms preserving the grading $\land^+N\oplus\land^-N$, and the degree-$1$ piece swaps the grading. We thus see that any $(e,f)\in H(N)$ has $\varphi_{(e,f)}=\varphi_e+\varphi_f$ in $\op{End}(\land^\bullet N)_1$, so because these elements generate $C(H(N))$, we conclude that $\varphi$ preserves the grading.
+
+	While we are here, we also remark that this morphism is additive in $N$: given a decomposition $N=N_1\oplus N_2$, the diagram
+	% https://q.uiver.app/#q=WzAsOCxbMCwwLCJDKEgoTl8xXFxvcGx1cyBOXzIpKSJdLFsxLDAsIlxcb3B7RW5kfShcXGxhbmReXFxidWxsZXQoTl8xXFxvcGx1cyBOXzIpKSJdLFswLDEsIkMoSChOXzEpKVxcb3RpbWVzIEMoSChOXzIpKSJdLFsxLDEsIlxcb3B7RW5kfShcXGxhbmReXFxidWxsZXQgTl8xKVxcb3RpbWVzXFxvcHtFbmR9KFxcbGFuZF5cXGJ1bGxldCBOXzIpIl0sWzIsMCwiKChlXzEsZl8xKSwoZV8yLGZfMikpIl0sWzMsMCwiXFxvcHtkaWFnfShcXHZhcnBoaV97KGVfMSxmXzEpfSxcXHZhcnBoaV97KGVfMixmXzIpfSkiXSxbMiwxLCIoZV8xLGZfMSlcXG90aW1lcyhlXzIsZl8yKSJdLFszLDEsIlxcdmFycGhpX3soZV8xLGZfMSl9XFxvdGltZXNcXHZhcnBoaV97KGVfMixmXzIpfSJdLFswLDJdLFsyLDNdLFswLDFdLFszLDFdLFs0LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzcsNSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped, column sep=small]
+		{C(H(N_1\oplus N_2))} & {\op{End}(\land^\bullet(N_1\oplus N_2))} & {((e_1,f_1),(e_2,f_2))} & {\op{diag}(\varphi_{(e_1,f_1)},\varphi_{(e_2,f_2)})} \\
+		{C(H(N_1))\otimes C(H(N_2))} & {\op{End}(\land^\bullet N_1)\otimes\op{End}(\land^\bullet N_2)} & {(e_1,f_1)\otimes(e_2,f_2)} & {\varphi_{(e_1,f_1)}\otimes\varphi_{(e_2,f_2)}}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-1, to=2-1]
+		\arrow[maps to, from=1-3, to=1-4]
+		\arrow[maps to, from=1-3, to=2-3]
+		\arrow[from=2-1, to=2-2]
+		\arrow[from=2-2, to=1-2]
+		\arrow[maps to, from=2-3, to=2-4]
+		\arrow[maps to, from=2-4, to=1-4]
+	\end{tikzcd}\]
+	commutes. In particular, the left vertical arrow is an isomorphism by \Cref{lem:sum-clifford}, and the right arrow can be seen to be an isomorphism because $N_1$ and $N_2$ continue to be finitely generated and locally free, so locally it amounts to the identity $M_{n_1}(R)\otimes M_{n_2}(R)=M_{n_1}(M_{n_2}(R))=M_{n_1n_2}(R)$.
+
+	In light of the previous paragraph, we note that it is enough to show that $\varphi$ is an isomorphism Zariski-locally, so we may assume that $N$ is free, so we may assume that $N$ is free of rank $1$ by taking sums. However, a quick inspection of \Cref{ex:clifford-easy-hyperbolic} shows that the isomorphism $C(H(N))\to\op{End}(\land^\bullet N)$ constructed there is exactly $\varphi$!
+\end{proof}
+\begin{corollary} \label{cor:center-of-even-clifford}
+	Fix a regular quadratic space $(M,q)$ over $R$ of even rank. Then $Z\left(C^+(M)\right)$ is a separable algebra over $R$ of rank $2$.
+\end{corollary}
+\begin{proof}
+	The conclusion may be checked fppf-locally, so we may assume that $M\cong H(N)$ for some free module $N$ by \Cref{lem:standarize-form}. In this case, by \Cref{prop:hyperbolic-clifford}, we see that $C^+(M)$ is identified with
+	\[\op{End}(\land^+N)\oplus\op{End}(\land^-N).\]
+	However, the center of a matrix algebra is given by the scalars, so the center is $R\oplus R$.
+\end{proof}
+
+\section{The Orthogonal Group}
+We are now allowed to define the special orthogonal group.
+\begin{definition}[orthogonal group]
+	Fix a regular quadratic space $(M,q)$ over $R$ of constant rank. Then the \textit{orthogonal group} is
+	\[\op O(M,q)\coloneqq\{g\in\op{Aut}_R(M):q(g(m))=q(m)\text{ for all }m\in M\}.\]
+	We may also write $\op O(M)$ or $\op O(q)$ for $\op O(M,q)$.
+\end{definition}
+\begin{definition}[Dickson invariant]
+	Fix a regular quadratic space $(M,q)$ over $R$ of constant even rank. Then we define the \textit{Dickson invariant} $D$ of $\op O(q)$ as follows: a given $g\in\op O(q)$ induces an automorphism of $C^+(q)$ and thus an automorphism of the center $Z$, but $\op{Aut}_RZ$ has two elements by \Cref{cor:center-of-even-clifford}, so we define $D(g)\in\ZZ/2\ZZ$ to correspond to the trivial or nontrivial element of $\op{Aut}_RZ$.
+\end{definition}
+This definition is surprisingly tricky to ``sit down and compute,'' but we must. Here are a couple tricks.
+\begin{example} \label{ex:direct-dickson}
+	Let $N$ be free of rank $1$ spanned by $\{e\}$, and let $\{f\}\subseteq N^*$ be the dual basis. Then define $g\in\op{Aut}_RH(N)$ by $g(e)=f$ and $g(f)=e$, and we can see that $q((ae,bf))=q((be,af))$, so $g\in\op O(H(N))$. Let's compute $D(q)$. By \Cref{ex:clifford-easy-hyperbolic}, we see that $C^+(H(N))$ is identified with the subset of $\op{End}(\land^\bullet H(N))$ given by the matrices $\begin{bsmallmatrix}
+		* & 0 \\ 0 & *
+	\end{bsmallmatrix}$ for the ordered basis $\{1,e\}$. Notably, $ef$ goes to $\begin{bsmallmatrix}
+		0 & 0 \\ 0 & 1
+	\end{bsmallmatrix}$, and $fe$ goes to $\begin{bsmallmatrix}
+		1 & 0 \\ 0 & 0
+	\end{bsmallmatrix}$, so
+	\[Z\left(C^+(H(N))\right)=Ref\oplus Rfe.\]
+	We now see that $g$ swaps these two factors, so $D(g)=1$.
+\end{example}
+\begin{remark} \label{rem:dickson-sum}
+	Given a decomposition $M=M_1\oplus M_2$ of regular quadratic spaces of even rank, we note that there is a composite
+	\[\op O(M_1)\to\op O(M)\stackrel D\to\ZZ/2\ZZ,\]
+	which we claim is just the Dickson invariant on $\op O(M_1)$. Indeed, functoriality provides a ring homomorphism $C(M_1)\to C(M)$ (which we in fact know to be injective, for example by \Cref{prop:pbw}), which then descends to an embedding
+	\[Z\left(C^+(M_1)\right)\to Z\left(C^+(M)\right)\]
+	of commutative algebras over $R$. Both of these are separable algebras of rank $2$ over $R$, so this embedding must be an isomorphism. We conclude that the action of some $g\in\op O(H(N_1))$ is nontrivial on the left center if and only if it is trivial on the right center, which is what we needed.
+\end{remark}
+\begin{example} \label{ex:dickson-hyperbolic-reflection}
+	Let $N$ be free with basis $\{e_1,\ldots,e_d\}$, and let $\{f_1,\ldots,f_d\}\subseteq N^*$ be the dual basis. Then define $g\in\op{Aut}_RH(N)$ by $g(e_1)=f_1$ and $g(f_1)=e_1$ and $g(e_i)=e_i$ and $g(f_i)=f_i$ for $i>1$. Then $H(N)$ decomposes as in \Cref{rem:dickson-sum} (namely, $g$ is the identity on the large subspace $H(\op{span}\{e_2,\ldots,e_d\})$), so we may compute $D(g)=1$ directly from \Cref{ex:direct-dickson}.
+\end{example}
+We now define the special orthogonal group.
+\begin{definition}[special orthogonal group]
+	Fix a regular quadratic space $(M,q)$ over $R$ of constant rank. We will define the \textit{special orthogonal group} $\op{SO}(M,q)$ depending on the rank.
+	\begin{itemize}
+		\item If $(M,q)$ is of odd rank, then $\op{SO}(M,q)$ is the kernel of the determinant map on $\op O(M,q)$.
+		\item If $(M,q)$ is of even rank, then $\op{SO}(M,q)$ is the kernel of the Dickson invariant on $\op O(M,q)$.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	Let's explain why we use the Dickson invariant instead of the determinant in the even rank case. It is in general true that $\langle gm,gn\rangle=\langle m,n\rangle$ for all $m,n\in M$ and so $g^\intercal g=\id$ (where $(-)^\intercal$ is defined with respect to $\langle-,-\rangle$), so $\det g^2=1$. But if, for example, $\op{char}R=2$, then this directly implies that $\det g=1$, so we do not produce an index-$2$ subgroup!
+\end{remark}
+\begin{remark}
+	In this level of generality, it is not totally obvious that $\op{SO}(M,q)$ has index $2$! When $M\cong H(N)$, this follows from \Cref{ex:dickson-hyperbolic-reflection}. When $M$ has odd rank and diagonalizes as in \Cref{lem:diagonalize-form}, this follows by taking $g=\op{diag}(-1,1,\ldots,1)$, which has determinant $-1$. Luckily, we will never stray outside these controlled cases in applications.
+\end{remark}
+
+\section{Lagrangian Subspaces}
+In the sequel, we will get a lot of utility out of orthogonal complements.
+\begin{definition}[orthogonal complement]
+	Fix a quadratic space $(M,q)$. For a subset $S\subseteq M$, we define the \textit{orthogonal complement}
+	\[S^\perp=\{m\in M:\langle m,s\rangle=0\text{ for all }s\in S\}.\]
+\end{definition}
+\begin{remark}
+	Bilinearity implies that $S^\perp\subseteq M$ is a submodule: it is the intersection of the kernel of the functionals $m\mapsto\langle m,s\rangle$ as $s\in S$ varies.
+\end{remark}
+\begin{remark}
+	Fix a regular quadratic space $(M,q)$. Given a direct summand $U\subseteq M$, we note that the isomorphism $M\to M^*$ given by $q$ restricts to a surjection $M^*\to U^*$ (given by $m\mapsto\langle m,-\rangle|_U$) with kernel $U^\perp$, meaning that we have a short exact sequence
+	\[0\to U^\perp\to M\to U^*\to0.\]
+	Note that $U^*$ is finitely generated and projective because $U$ is, so the short exact sequence splits so $U^\perp$ is also finitely generated and projective. In fact, we can see that $\op{rank}U+\op{rank}U^\perp=\op{rank}U^*+\op{rank}U^\perp=\op{rank}M$ from this short exact sequence.
+\end{remark}
+\begin{definition}[Lagrangian]
+	Fix a regular quadratic space $(M,q)$. Then a submodule $N\subseteq M$ is \textit{Lagrangian} if and only if it is a direct summand and $N^\perp=N$.
+\end{definition}
+\begin{example}
+	Fix $N$ as in \Cref{ex:hyperbolic-quad-form}. Embedding $N$ into $H(N)$, we see that $N^\perp$ consists of the elements $(e,f)\in H(N)$ for which $f=0$. Thus, $N^\perp=N$, so $N$ is Lagrangian.
+\end{example}
+% \begin{remark}
+% 	If a regular quadratic space $(M,q)$ admits a Lagrangian subspace $N$, then 
+% \end{remark}
+The orthogonal groups can be used to parameterize Lagrangian subspaces.
+\begin{proposition}
+	Fix a regular quadratic space $(V,q)$ over a field $K$. Then the natural action of $\op O(V)$ on the collection $G$ of Lagrangians is transitive.
+\end{proposition}
+\begin{remark}
+	One can weaken the hypothesis that $K$ is a field, but one must be careful. We refer to \cite[Section~IV.5]{knus-quad-forms} for some discussion.
+\end{remark}
+
+\end{document}
