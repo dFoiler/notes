@@ -1,0 +1,101 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{November 4}
+Today, we will prove \Cref{thm:kolyvagin-higher}.
+
+\subsection{Higher Linear Algebraic Input}
+To explain why \Cref{thm:kolyvagin-higher} may be possible, we give the higher-rank analog of \Cref{lem:basic-linear-algebra}.
+\begin{proposition} \label{prop:produce-ramified-classes}
+	Fix an elliptic curve $E$ over a number field $K$, and choose a prime $p$. For any admissible prime $\ell$ and finite set $S$ of admissible primes for which $\ell\notin S$, there is a nonzero class $c\in\mathrm H^1(K;E[p])^\pm$ for which
+	\[\op{loc}_vc\in\begin{cases}
+		\mathrm H^1_{\mathrm{ur}}(K_v;E[p])  & \text{if }v\notin S\cup\{\ell\}, \\
+		\mathrm H^1_{\mathrm{tr}}(K_v;E[p]) & \text{if }v\in S.
+	\end{cases}\]
+\end{proposition}
+\begin{proof}
+	We generalize the proof of \Cref{lem:basic-linear-algebra}. Define the local condition $\mc L$ by
+	\[\mc L_v=\begin{cases}
+		\mathrm H^1_{\mathrm{ur}}(K_v;E[p]) & \text{if }v\notin S\cup\{\ell\}, \\
+		\mathrm H^1_{\mathrm{tr}}(K_v;E[p]) & \text{if }v\in S, \\
+		\mathrm H^1(K_v;E[p]) & \text{if }v=\ell.
+	\end{cases}\]
+	Now, \Cref{rem:selmer-les} produces a left exact sequence
+	\[0\to\op{Sel}_{\mc L_{\{\ell\}}}(E[p])^\pm\to\op{Sel}_{\mc L^{\{\ell\}}}(E[p])^\pm\to\mathrm H^1(K_\ell;E[p])^\pm.\]
+	We are hoping to construct a nonzero class in $\op{Sel}_{\mc L^{\{\ell\}}}(E[p])$, which means that we need to show that the rightmost map is nontrivial.\todo{}
+	
+	To do this, consider the ``dual'' sequence
+	\[0\to\op{Sel}_{\mc L_{\{\ell\}}}(E[p])\to\op{Sel}_{\mc L^{\{\ell\}}}(E[p])\to\mathrm H^1(K_\ell;E[p]),\]
+	for which \Cref{thm:global-tate-application} tells us that the last images are orthogonal complements. However, the rightmost map of this sequence vanishes because $\op{Sel}_p(E/K)=0$, so the image of $\op{Sel}_{\mc L^{\{\ell\}}}(E[p])$ in $\mathrm H^1(K_\ell;E[p])/\mc L_\ell$ must be nonzero.
+\end{proof}
+We now prove \Cref{thm:kolyvagin-higher} by proving the following more precise ``triangularization'' result.
+\begin{proposition}[Triangularization] \label{prop:triang-selmer}
+	Fix an elliptic curve $E$ as before. Assume $r\coloneqq\ord\mc K$ is finite. Then there are $(2r+1)$ admissible primes
+	\[\{\ell_1,\ell_2,\ldots,\ell_{2r},\ell_{2r+1}\}\]
+	so that the squarefree products $n_i\coloneqq\ell_i\ell_{i+1}\cdots\ell_{i+r-1}$ for $i\in[1,r+1]$ satisfy the following: for $i,j\in[1,r+1]$, the localizations $\op{loc}_{\ell_{r+j}}c(n_i)$ vanish for $i>j$ and are nonzero for $i=j$.
+\end{proposition}
+\begin{remark}
+	Intuitively, we can imagine placing the localizations in an array
+	\[\begin{array}{c|cccccc}
+		& c(n_1) & c(n_2) & \cdots & c(n_{r+1}) \\\hline
+		{\op{loc}_{\ell_{r+1}}} & * & 0 & \cdots & 0 \\
+		{\op{loc}_{\ell_{r+2}}} & ? & * & \cdots & 0 \\
+		\vdots & \vdots & \vdots & \ddots & \vdots \\
+		{\op{loc}_{\ell_{2r+1}}} & ? & ? & \cdots & *
+	\end{array}\]
+	where $*$ means nonzero, and $?$ means we have no information. This is a triangular matrix!
+\end{remark}
+\begin{proof}
+	Let's first explain the vanishing: for $i>j$, note $\ell_{r+j}$ is contained in the product by \Cref{thm:kolyvagin-system-prop}, we see that $\op{loc}_{\ell_{r+j}}c(\ell_i\cdots\ell_{i+r-1})$ vanishes if and only if
+	\[\op{loc}_{\ell_{r+j}}c(\ell_i\cdots\widehat{\ell_{r+j}}\ell_{i+r-1})\]
+	vanishes, but $c(\ell_i\cdots\widehat{\ell_{r+j}}\ell_{i+r-1})$ vanishes by definition of $r$.
+
+	We now have to work harder to construct the $\ell_\bullet$s. To start, by definition of $r$, there are admissible primes $\{\ell_1,\ldots,\ell_r\}$ for which $n_1\coloneqq\ell_1\cdots\ell_r$ has $c(n_1)\ne0$. Now, for the inductive construction, we may assume that we are given $\{\ell_i,\ldots,\ell_{i+r-1}\}$ for which the product $n_i$ has $c(n_i)\ne0$. We would like to remove the tail $\ell_i$ and add a head $\ell_{i+r}$. Well, \Cref{prop:produce-ramified-classes} grants us a nonzero class $c\in\mathrm H^1(K;E[p])^{(-1)^{r+1}}$ for which
+	\[\op{loc}_v(c)\in\begin{cases}
+		\mathrm H^1_{\mathrm{ur}}(K_v;E[p]) & \text{if }v\notin\{\ell_i,\ldots,\ell_{i+r-1}\}, \\
+		\mathrm H^1_{\mathrm{tr}}(K_v;E[p]) & \text{if }v\in\{\ell_{i+1},\ldots,\ell_{i+r-1}\}.
+	\end{cases}\]
+	This deletes the tail. But now \Cref{prop:strong-hasse} grants us a new admissible prime $\ell_{i+r}$ for which both classes $c$ and $c(n_i)$ don't vanish at $\ell_{i+r}$. We now claim that
+	\[\op{loc}_{\ell_i}c(n_i/\ell_i\cdot\ell_{i+r})\stackrel?\ne0,\]
+	which will then complete the induction constructing the $\ell_\bullet$s. For this, we compute the Tate pairing
+	\begin{align*}
+		\langle c,c(\ell_i\cdots\ell_{i+r})\rangle=0.
+	\end{align*}
+	For all $v\notin\{\ell_i,\ldots,\ell_{i+r}\}$, the local Tate pairing will vanish because both classes are unramified. Further, for $v\in\{\ell_{i+1},\ell_{i+r-1}\}$, both classes are transverse, so the pairing still vanishes. Thus, we are left with
+	\[\langle c,c(\ell_i\cdots\ell_{i+r})\rangle_{\ell_i}=-\langle c,c(\ell_i\cdots\ell_{i+r})\rangle_{\ell_{i+r}}.\]
+	The left-hand side does not vanish because they come from the same eigenspaces, so the right-hand side does not vanish, and the claim follows by \Cref{thm:kolyvagin-system-prop}.\todo{}
+\end{proof}
+\begin{remark}
+	\Cref{prop:triang-selmer} provides us with $r+1$ linearly independent classes $c(n_i)$, and these classes in fact live in $\op{Sel}_p(E/K)^{(-r)^{r+1}}$: by \Cref{thm:kolyvagin-system-prop}, it only remains to check that the classes $c(n_i)$ are unramified at the primes $\ell$ dividing $n_i$, but \Cref{prop:triang-selmer} explains that this localization vanishes.
+\end{remark}
+\begin{remark}
+	The construction has also shown that $\op{loc}_{\ell_i}c(n_{i+1})\ne0$ as well.
+\end{remark}
+\begin{remark}
+	One could continue the construction to define $n_i$ for $i>r+1$, but then the proof that $\op{loc}_{\ell_{r+1}}c(n_i)$ vanishes does not apply.
+\end{remark}
+\begin{proof}[Proof of \Cref{thm:kolyvagin-higher}]
+	We only focus on the first equality; the second one is similar. \Cref{prop:triang-selmer} shows that
+	\[\dim_{\FF_p}\op{Sel}_p(E/K)^{(-1)^{r}}\ge r+1.\]
+	To show the equality, we need to show that the classes given in \Cref{prop:triang-selmer} in fact span. Suppose for the sake of contradiction that we have some $c$ not in the span; by the triangular property, we may assume that $\op{loc}_{\ell_{r+i}}c=0$ for $i\in[1,r+1]$. Then we consider
+	\[c'\coloneqq c(\ell_{r+1}\cdots\ell_{2r+1}),\]
+	which is notably in $\mathrm H^1(K;E[p])^{(-r)^{r+1}}$. Then \Cref{prop:strong-hasse} grants us an admissible prime $\ell_{2r+2}$ for which $c$ and $c'$ do not vanish at $\ell$. We now compute
+	\[\langle c,c(\ell_{r+1}\cdots\ell_{2r+2})\rangle=0.\]
+	As usual, the local pairings vanish away from $\{\ell_{r+1},\ldots,\ell_{2r+2}\}$ because both are unramified, and $c$ already vanishes at $\{\ell_{r+1},\ldots,\ell_{2r+1}\}$ by its construction. Thus,
+	\[\langle c,c(\ell_{r+1}\cdots\ell_{2r+2})\rangle_{\ell_{2r+2}}=0,\]
+	which is a contradiction because $c$ is unramified at $\ell_{2r+2}$ while the other is transverse (and they are in the same eigenspace by construction).
+\end{proof}
+Here is an application.
+\begin{corollary}
+	Fix an elliptic curve $E$ as before. Assume $r\coloneqq\ord\mc K$ is finite. Then every element $d\in\Sha(E/\QQ)[p]$ is solvable. In other words, there is a solvable extension $L/\QQ$ for which $\op{Res}_{L/\QQ}d=0$.
+\end{corollary}
+\begin{proof}
+	Fix the class $d$ of interest, and choose a quadratic field $K$ appropriately so that $d$ lands in the appropriate eigenspace. Recall the exact sequence
+	\[0\to\frac{E(\QQ)}{pE(\QQ)}\to\op{Sel}_p(E/\QQ)\to\Sha(E/\QQ)[p]\to0.\]
+	By \Cref{thm:kolyvagin-higher}, we know that the classes $c(n)$ generate $\op{Sel}_p(E/\QQ)$. By their construction, we know that the classes $c(n)$ trivialize in $\Sha(E/\QQ)$ as soon as we restrict to $K[n]$
+\end{proof}
+
+\end{document}

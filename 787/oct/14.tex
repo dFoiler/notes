@@ -17,7 +17,7 @@ Here is the main idea.
 	A Selmer group is small if and only if there are many ramified classes.
 \end{idea}
 Let's explain each direction of this in the simplest possible case. Because it is easier, we will begin by assuming that $\op{Sel}_p(E/K)=0$.
-\begin{lemma}
+\begin{lemma} \label{lem:basic-linear-algebra}
 	Fix an elliptic curve $E$ over a number field $K$. Further, fix a prime $p$ and a place $\ell$ of $K$ such that $p\ne\ell$ and $E$ has good reduction at $\ell$. If $\op{Sel}_p(E/K)$ vanishes and $\mc L_\ell\ne\mathrm H^1(K_\ell;E[p])$, then there is a class $c(\ell)\in\mathrm H^1(K;E[p])$ such that $\op{loc}_vc(\ell)\in\mc L_v$ if and only if $v\ne\ell$.
 \end{lemma}
 \begin{proof}
@@ -38,7 +38,7 @@ It turns out that the presence of these classes can go backward to produce vanis
 \begin{remark}
 	We know that $\op{type}_p(\ell)\in\{0,1,2\}$.
 \end{remark}
-\begin{lemma}
+\begin{lemma} \label{lem:basic-linear-alg}
 	Fix an elliptic curve $E$ over a number field $K$. Further, fix a prime $p$ and a place $\ell$ of $K$ such that $p\ne\ell$ and $E$ has good reduction at $\ell$. Suppose that the map
 	\[\mathrm H^1(K;E[p])\to\prod_{\op{type}_p(\ell)=1}\mathrm H^1(K_\ell;E[p])\]
 	is injective. If we have classes $\{c(\ell):\op{type}_p(\ell)=1\}$ in $\mathrm H^1(K;E[p])$ such that $\op{loc}_vc(\ell)\in\mc L_v$ for $v\ne\ell$ and $\op{loc}_vcc(\ell)$, then $\op{Sel}_p(E/K)=0$.
@@ -67,27 +67,91 @@ It turns out that the presence of these classes can go backward to produce vanis
 	\[\langle\op{loc}_\ell c,\op{loc}_\ell c(\ell)\rangle=0.\]
 	Thus, if we did have $\op{loc}_\ell c\ne0$, then $\op{type}_p(\ell)=1$ implies that $\op{loc}_\ell c(\ell)\in\mc L_\ell^*$, so $\op{loc}_\ell c(\ell)\in\mc L_\ell$ because this subspace is Lagrangian, which is a contradiction!
 \end{proof}
-The moral is that the presence of ``many'' ramified classes implies that a Selmer group vanishes.
+\Cref{lem:basic-linear-alg} morally explains to us that the presence of (many) ramified classes will be able to bound the size of Selmer groups. As such, we will spend some time trying to construct ramified classes in $\mathrm H^1(K;E[p])$.
+% The moral is that the presence of ``many'' ramified classes implies that a Selmer group vanishes.
 
-\subsection{The Construction of Classes}
-We now turn to the construction of some classes. As usual, fix a modular elliptic curve $E$ defined over a field $\QQ$, so we are given a morphism $\varphi_E\colon X_0(N)\to E$. Then fix an imaginary quadratic field $K$ over $\QQ$ satisfying the Heegner hypothesis.
+\subsection{Admissible Primes}
+In order to construct our classes, we do some preliminary work. Our classes will start their lives over certain abelian extensions of $K$ called ring class fields.
+% \Cref{lem:basic-linear-alg} morally explains to us that the presence of (many) ramified classes will be able to bound the size of Selmer groups. As such, we will spend some time trying to construct ramified classes in $\mathrm H^1(K;E[p])$. As usual, fix a modular elliptic curve $E$ defined over a field $\QQ$, so we are given a morphism $\varphi_E\colon X_0(N)\to E$. Then fix an imaginary quadratic field $K$ over $\QQ$ satisfying the Heegner hypothesis.
+\begin{definition}[ring class field]
+	Fix an imaginary quadratic field $K$. For each positive integer $n$, we let $K[n]$ denote the \textit{ring class field} of $K$ of conductor $n$. Explicitly, let $\mathcal O_{K,n}\subseteq\mathcal O_K$ be the order $\ZZ+\ZZ n\alpha$, where $\mathcal O_K=\ZZ[\alpha]$. Then global class field theory provides a composite
+	\[\op{Gal}(K^{\mathrm{ab}}/K)\from\widehat{K^\times\backslash\AA_K^\times}\onto K^\times\backslash\AA_K^\times/\widehat{\OO}_{K,n}^\times K_\infty^\times,\]
+	where $K_\infty=K\otimes_{\mathbb Q}\mathbb C$ embedded into $\AA_K$. The fixed field of the kernel of this composite is defined to be $K[n]$.
+\end{definition}
+It may appear more natural to use the notation $K_n$, but we are reserving such subscripts for localizations. In particular, we will have occasion to consider the ring class fields $K[\ell]$ where $\ell$ is a rational inert prime, in which case we will want to be able to distinguish them from the localization $K_\ell$ at that prime.
+\begin{example}
+	With $n=1$, we find that $K[1]$ is the Hilbert class field. Namely, the quotient
+	\[K^\times\backslash\AA_K^\times/\widehat{\mathcal O}_K^\times K_\infty^\times=K^\times\backslash\AA_{K,f}^\times/\widehat{\mathcal O}_K^\times\]
+	is the class group. Explicitly, there is a map from $\AA_{K,f}^\times$ to the class group given by sending the (finite) idele $(a_{\mf p})$ to the fractional ideal $\prod_{\mf p}\mf p^{\nu_{\mf p}(a_{\mf p})}$. This mapping is surjective, and we can see that it has kernel exactly given by $K^\times\prod_{\mf p}(K_{\mf p}^\times,\mathcal O_{\mf p}^\times)$.
+\end{example}
+\begin{remark}
+	By construction, we see that $K[n]\subseteq K[m]$ if and only if $n\mid m$.
+\end{remark}
+\begin{remark} \label{rem:easy-galois-k-n}
+	Let's compute $\op{Gal}(K[n]/K[1])$ for squarefree $n$. This is the kernel of the quotient map
+	\[\underbrace{K^\times\backslash\AA_{K,f}^\times/\widehat{\OO}_{K,n}^\times}_{\op{Gal}(K[n]/K)}\onto\underbrace{K^\times\backslash\AA_{K,f}^\times/\widehat{\OO}_{K}^\times}_{\op{Gal}(K[1]/K)},\]
+	which is just $\widehat{\OO}_{K}^\times/\widehat{\OO}_{K,n}^\times$. By the Chinese remainder theorem, this quotient is
+	\[\frac{(\OO_K/n\OO_K)^\times}{(\ZZ/n\ZZ)^\times}\cong\prod_{\text{prime }\ell\mid n}\frac{(\OO_{K}\otimes\ZZ_\ell)^\times}{((\ZZ+n\OO_{K})\otimes\ZZ_\ell)^\times}.\]
+	For example, if $\ell$ is split, then this quotient is $\left(\ZZ_\ell^\times\right)^2/(1+\ell\ZZ_\ell^\times)$, where $(1+\ell\ZZ_\ell^\times)$ is embedded diagonally, so the quotient is $\left(\FF_\ell^{\times}\right)^2/\FF_\ell^\times$. Similarly, if $\ell$ is inert, then this quotient is $\ZZ_{\ell^2}^\times/(1+\ell\ZZ_{\ell^2})^\times$, which is $\FF_{\ell^2}^\times/\FF_\ell^\times$.
+\end{remark}
+\begin{remark}
+	Quickly, we check that $K[n]$ is Galois over $\QQ$. Indeed, upon embedding $\ov\QQ\into\CC$, it is enough to show that the $K[n]=\overline{K[n]}$. For this, we use the Chebotarev density theorem: observe that a prime $\mf p$ of $K$ (lying over a rational prime $p$) splits completely in $K[n]$ if and only if a uniformizer at $\mf p$ in $\AA_{K,f}^\times$ lies in $K^\times\widehat{\OO}_{K,n}^\times$. This last condition is Galois-invariant, so we see that $\mf p$ splits in $K[n]$ if and only if $\overline{\mf p}$ splits in $K[n]$, which is equivalent to $\mf p$ splitting in $\overline{K[n]}$. We conclude that $K[n]=\overline{K[n]}$ because Galois extensions of $K$ can be recognized by the totally split primes.
+\end{remark}
+\begin{remark}
+	The previous remark allows us to write down a short exact sequence
+	\[1\to\op{Gal}(K[n]/K)\to\op{Gal}(K[n]/\QQ)\to\op{Gal}(K/\QQ)\to1.\]
+	In fact, upon choosing an embedding $\ov\QQ\into\CC$, we get a choice of complex conjugation $\tau$ on $K[n]$, which induces a splitting of this short exact sequence. Now, for each $\sigma\in\op{Gal}(K[n]/K)$, we claim that $\tau\sigma\tau=\sigma^{-1}$. It is enough to check this on Frobenius elements by the Chebotarev density theorem. Thus, we have to check that $\mathrm{Frob}_{\overline{\mf p}}\cdot\mathrm{Frob}_{\mf p}=1$. By class field theory, it is enough to note that the norm of a uniformizer at $\mf p$ in $\AA_{K,f}^\times$ lives in $\widehat{\OO}^\times_{K,n}$ for each $\mf p\nmid n$.
+\end{remark}
+Now, \Cref{lem:basic-linear-alg} more or less tells us that we are interested in building classes ramified at only certain primes. (Namely, \Cref{lem:basic-linear-alg} only cares about primes of ``type $1$''.) For our story, we will want a more restrictive class.
+\begin{lemma} \label{lem:admissible-grab-bag}
+	Fix an elliptic curve $E$ defined over $\QQ$, and let $K$ an imaginary quadratic field, and choose an odd prime $p$ of good reduction and unramified in $K$ such that $\ov\rho\colon\op{Gal}(\ov\QQ/\QQ)\to\op{GL}(E[p])$ is surjective. For an odd rational prime $\ell\ne p$ of good reduction for both $E$ and the quadratic twist $E^K$, the following are equivalent.
+	\begin{listroman}
+		\item We have $\ell+1\equiv a_\ell(E)\equiv0\pmod p$, where $a_\ell(E)=(\ell+1)-\#E(\FF_\ell)$.
+		\item We have $\ov\rho(\mathrm{Frob}_\ell)$ is in the conjugacy class of $\op{diag}(1,-1)$ in $\op{GL}(E[p])$.
+		\item The characteristic polynomial of $\ov\rho(\mathrm{Frob}_\ell)$ is $X^2-1$.
+		\item The prime $\ell$ is inert in $K$, and $\dim_{\FF_p}\mathrm H^1_{\mathrm{ur}}(\QQ_\ell;E[p])=\dim_{\FF_p}\mathrm H^1_{\mathrm{ur}}(\QQ_\ell;E^K[p])=1$, where $E^K$ is the quad\-ratic twist.
+	\end{listroman}
+\end{lemma}
+\begin{proof}
+	We start by showing that (i), (ii), and (iii) are equivalent. For example, recall that the characteristic polynomial of $\ov\rho(\mathrm{Frob}_\ell)$ can be determined by its trace and determinant, which reveals that the characteristic polynomial is
+	\[x^2-a_\ell(E)x+\ell,\]
+	which explains the equivalence of (i) and (iii). Further, conjugacy in $\op{GL}_2(\FF_p)$ is uniquely determined by the characteristic polynomial, so the equivalence of (ii) and (iii) follows.
+	
+	We now show that (ii) and (iv) are equivalent. Quickly, we check that (ii) implies that $\ell$ is inert in $K$. We must show that $\mathrm{Frob}_\ell|_K$ is complex conjugation. Well, that complex conjugation acts on $\op{GL}(E[p])$ by $\op{diag}(1,-1)$ because complex conjugation has order $2$ and determinant $-1$ (by considering the Weil pairing). In other words, $\mathrm{Frob}_\ell$ and complex conjugation have the same conjugacy class in
+	\[\op{Gal}(\QQ(E[p])/\QQ)\stackrel{\ov\rho}\cong\op{GL}(E[p]).\]
+	Thus, $\mathrm{Frob}_\ell$ and $\tau$ will continue to be in the same conjugacy class when extended to $\op{Gal}(\ov\QQ/\QQ)$ and then restricted to $\op{Gal}(K/\QQ)$.
+	
+	We now proceed with the main part of the argument. Because $E$ has good reduction at $\ell$, we see that $\mathrm H^1_{\mathrm{ur}}(\QQ_\ell;E[p])$ has the same size as $E(\QQ_\ell)/pE(\QQ_\ell)$. By passing to finite fields (as in \Cref{lem:ur-of-elliptic-curve}) we can see that this quotient has the same size as $E(\FF_\ell)/pE(F_\ell)$, which has the same size as $E(\FF_\ell)[p]$. However, $E(\FF_\ell)[p]=E[p](\FF_\ell)$ is simply the points of $E[p]$ fixed by $\mathrm{Frob}_\ell$, so we have dimension $1$ if and only if $\ov\rho(\mathrm{Frob}_\ell)$ has $+1$ as an eigenvalue.
 
-Now, for each positive integer $n$, let $K[n]$ denote the ring class field of $K$ of conductor $n$, meaning that $K[n]/K$ is the abelian extension corresponding to the quotient
-\[\op{Gal}(K^{\mathrm{ab}}/K)\from\widehat{K^\times\backslash\AA_K^\times}\onto K^\times\backslash\AA_K^\times/\widehat{\OO}_{K,n}^\times K_\infty^\times,\]
-where $\widehat{\OO}_{K,n}$ denotes the profinite completion of the order $\OO_{K,n}=\ZZ+n\OO_K$. For example, $K[1]$ is the usual Hilbert class field.
+	A similar argument handles the twist $E^K$. By definition of $E^K$, we have that the Galois representation $\ov\rho^K$ is $\ov\rho\otimes\chi_K$, where $\chi_K$ is the quadratic field corresponding to $K$. Because $\ell$ is inert in $K$ (in either (ii) or (iv)), we know that $\chi_K(\mathrm{Frob}_\ell)=-1$, so $(\ov\rho\otimes\chi_K)(\mathrm{Frob}_\ell)$ will have $+1$ as an eigenvalue if and only if $\ov\rho(\mathrm{Frob}_\ell)$ has $-1$ as an eigenvalue. The equivalence of (ii) and (iv) follows.
+\end{proof}
+\begin{definition}
+	Fix an elliptic curve $E$ defined over $\QQ$, and let $K$ an imaginary quadratic field, and choose an odd prime $p$ of good reduction and unramified in $K$ such that $\ov\rho\colon\op{Gal}(\ov\QQ/\QQ)\to\op{GL}(E[p])$ is surjective. Then a rational prime $\ell$ is \textit{admissible} if and only if it satisfies one of the equivalent conditions of \Cref{lem:admissible-grab-bag}.
+\end{definition}
 \begin{remark}
-	In general, one expects that $K[n]/K$ to be smaller than the ray class field. Indeed, in general, ray class fields correspond to arbitrary open subgroups of $\AA_K^\times$, but ring class fields require us to have local factors which look like $\ZZ_p+p^\bullet\OO_{K_p}$ for (rational!) primes $p$. Nonetheless, we still know that $K[n]/K$
+	The proof of \Cref{lem:admissible-grab-bag} shows that being admissible (namely, condition (ii)) is equivalent to $\mathrm{Frob}_\ell$ being in the same conjugacy class as complex conjugation in
+	\[\op{Gal}(\QQ(E[p])/\QQ)\stackrel{\ov\rho}\cong\op{GL}(E[p]).\]
+	It follows from the Chebotarev density theorem that a positive proportion of rational primes $\ell$ are admissible.
 \end{remark}
-Now, choose a point $x_n\in X_0(N)(K[n])$ given by the cyclic isogeny
-\[\CC/\OO_{K,n}\to\CC/\mc N^{-1}\OO_{K,n}.\]
-Then we can define $y_n\coloneqq\varphi_E(x_n)$. Under a congruence condition, we will be able to take $y_n$ and produce a class $c(n)\in\mathrm H^1(K;E[p])$.
 \begin{remark}
-	We should not let $c(n)$ be the trace of $y_n$: indeed, this will produce an element of $E(K)$, which we expect to be a multiple of $y_K$ already.
+	It is not actually fully necessary that $\ov\rho$ is surjective. For example, it seems that the same arguments all work if the image is $\op{SL}(E[p])$. The main issue is to show that $\mathrm{Frob}_\ell$ and complex conjugation having the same conjugacy class in $\op{GL}(E[p])$ implies that they are in the same conjugacy class in the (a priori smaller) group $\op{Gal}(\QQ(E[p])/\QQ)$.
 \end{remark}
-Roughly speaking, if $\op{Gal}(K[n]/H)$ were cyclic, then we take the ``derivative'' of $y_n$ as $\sum_ii\sigma^{i-1}(y_n)$. Slightly more precisely, we will attempt to produce a class in
-\[\mathrm H^1(K[n];E[p])^{\op{Gal}(K[n]/K)}\]
-by taking some derivative. Then if $E[p](K[n])$ vanishes, one can show that the map
-\[\mathrm H^1(K;E[p])\to\mathrm H^1(K[n];E[p])^{\op{Gal}(K[n]/K)}\]
-is an isomorphism by the (longer) Inflation--restriction exact sequence: the next term in the exact sequence is $\mathrm H^2(K[n]/K;E[p](K[n]))$.
+\begin{remark}
+	We have assumed that $p$ and $\ell$ are odd for safety, but it is not strictly necessary for now.
+\end{remark}
+% \begin{remark}
+% 	Note that
+% 	\[\bigcup_{n\ge1}K[n]\subsetneq K^{\mathrm{ab}}.\]
+% 	Indeed, using class field theory, the left-hand field has Galois group given by the quotient
+% 	\[\lim_nK^\times\backslash\AA_K^\times/\widehat{\OO}_{K,n}^\times K_\infty^\times\]
+% 	of $\widehat{K^\times\backslash\AA_K^\times}$.
+% 	% Thus, for example, we note that the intersection $\bigcap_{n\ge1}\widehat{\mathcal O}_{K,n}^\times$ is nontrivial: over a rational prime $p$, the completion looks like $(\ZZ_p+p^\bullet\mathcal O_{K_p})^\times$, which is not good enough
+% \end{remark}
+% Now, for each positive integer $n$, let $K[n]$ denote the ring class field of $K$ of conductor $n$, meaning that $K[n]/K$ is the abelian extension corresponding to the quotient
+% \[\op{Gal}(K^{\mathrm{ab}}/K)\from\widehat{K^\times\backslash\AA_K^\times}\onto K^\times\backslash\AA_K^\times/\widehat{\OO}_{K,n}^\times K_\infty^\times,\]
+% where $\widehat{\OO}_{K,n}$ denotes the profinite completion of the order $\OO_{K,n}=\ZZ+n\OO_K$. For example, $K[1]$ is the usual Hilbert class field.
+% \begin{remark}
+% 	In general, one expects that $K[n]/K$ to be smaller than the ray class field. Indeed, in general, ray class fields correspond to arbitrary open subgroups of $\AA_K^\times$, but ring class fields require us to have local factors which look like $\ZZ_p+p^\bullet\OO_{K_p}$ for (rational!) primes $p$. Nonetheless, we still know that $K[n]/K$
+% \end{remark}
 
 \end{document}

@@ -1,0 +1,101 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{October 28}
+These notes were resurrected from handwritten ones. In this lecture, we prove Kolyvagin's theorem modulo certain technicalities.
+
+\subsection{The Action by Complex Conjugation}
+Let's begin by discussing the action of complex conjugation on our Heegner points.
+\begin{definition}[Atkin--Lehner involution]
+	Define the \textit{Atkin--Lehner involution} $\op{AL}$ on $Y_0(N)$ by sending an isogney $\varphi\colon E\to E'$ to its dual $\varphi^\lor\colon E'\to E$.
+\end{definition}
+\begin{remark}
+	It turns out that $\op{AL}$ interchanges $0$ and $\infty$ when extended to $X_0(N)$.
+\end{remark}
+\begin{notation}
+	Let $\op{AL}_E$ denote the sign of the Atkin--Lehner involution acting on the weight $2$ Hecke eigenform $f_E$ attached to $E$.
+\end{notation}
+\begin{remark}
+	One can check that $\op{AL}_N$ acts on modular forms $f$ of level $N$ by
+	\[\op{AL}_Nf(z)=-\frac1{Nz^2}f\left(-\frac1{Nz}\right).\]
+	In short, this operator arises because $\begin{bsmallmatrix}
+		0 & 1 \\ -N & 0
+	\end{bsmallmatrix}$ normalizes the congruence subgroup $\Gamma_0(N)$.
+\end{remark}
+\begin{lemma} \label{lem:atkin-lehner-on-ys}
+	Fix an embedding $\ov\QQ\into\CC$, and let $\tau$ denote complex conjugation. Then there is $\sigma\in\op{Gal}(K[n]/K)$ for which
+	\[\tau(y_n)\equiv\op{AL}(\sigma y_n)\pmod{E(K[n])_{\mathrm{tors}}}.\]
+\end{lemma}
+The content of this lemma is that $\tau\notin\op{Gal}(K[n]/K)$ because it does not fix $K$. However, $\tau$ still normalizes $\op{Gal}(K[n]/K)$, so there is an action of $\tau$ on $y_n$.
+\begin{proof}
+	In fact, $\tau(x_n)=\op{AL}(\sigma x_n)$ for some $\sigma$, which we will show next class in \Cref{lem:atkin-lehner-on-x0}. The result then follows because $\op{AL}(\infty)=0$ and the fact that the divisor $[0]-[\infty]$ is torsion. To see that $[0]-[\infty]$ is torsion, we note that a Hecke operator $T_\ell$ (for $\ell\equiv1\pmod N$) acts on $[0]-[\infty]$ with eigenvalue $(\ell+1)$. On the other hand, $T_\ell$ satisfies some polynomial $P_\ell(t)$ with integer coefficients and roots with magnitude $\sqrt\ell$, so the nonzero integer $P_\ell(\ell+1)$ will annihilate $[0]-[\infty]$.
+\end{proof}
+\begin{proposition} \label{prop:conj-action}
+	Fix an elliptic curve $E$ as before. Then the class $c(n)\in\mathrm H^1(K;E[p])$ is an eigenvector for the action by complex conjugation $\tau$, and the eigenvalue is
+	\[\mathrm{AL}_E\cdot(-1)^{\omega(n)}.\]
+\end{proposition}
+\begin{proof}
+	Recall that $c(n)$ is the trace of $D_ny_n$, where $D_n$ is the differential operator which is the product $\prod_{\ell\mid n}D_\ell$. To start, we claim that
+	\[\tau\cdot D_\ell\stackrel?\equiv-D_\ell\tau\pmod p,\]
+	where the dot denotes the conjugation action. Showing this is a direct calculation: we write
+	\begin{align*}
+		\tau D_\ell\tau^{-1} &= \sum_{i=1}^{\ell}i\tau\sigma_\ell^i\tau^{-1} \\
+		&= \sum_{i=1}^{\ell}i\sigma_\ell^{-i} \\
+		&\equiv -\sum_{i=1}^{\ell}(\ell+1-i)\sigma_\ell^{(\ell+1)-i},
+	\end{align*}
+	where the last congruence follows because $\ell+1\equiv0\pmod p$. Now, sending $i\mapsto(\ell+1-i)$ reveals that $\tau D_\ell\tau^{-1}=-D_\ell$, as required.
+
+	Thus, we see that
+	\[\tau D_ny_n\equiv(-1)^{\omega(n)}D_n\tau y_n\pmod p,\]
+	which is $-\mathrm{AL}_E\cdot D_ny_n$ modulo $p$ and torsion by \Cref{lem:atkin-lehner-on-ys}. The result now follows upon taking a trace and $\delta$; note that being the same modulo $p$ and torsion is okay because $\delta$ factors through modulo $p$, and $E[p](K[n])=0$, so $pE(K[n])_{\mathrm{tors}}=pE(K[n])_{\mathrm{tors}}$.
+\end{proof}
+
+\subsection{The Linear Algebraic Input}
+We are now ready to give the linear algebraic input to prove \Cref{thm:kolyvagin-selmer}. As in \Cref{lem:basic-linear-alg}, we will require some injectivity input. Because we are after a rank-$1$ result, we must deal with two classes at once.
+\begin{proposition}[Hasse principle] \label{prop:strong-hasse}
+	Fix an elliptic curve $E$ as before, and set $V\coloneqq E[p]$. Given two linearly independent classes $c_1,c_2\in\mathrm H^1(K;E[p])$, which we assume to be eigenvectors over complex conjugation. Then there are infinitely many admissible primes $\ell$ such that $\op{loc}_\ell c_1$ and $\op{loc}_\ell c_2$ are both nonzero.
+\end{proposition}
+\begin{proof}
+	Choose a large enough field extension $M$ of $L$ so that $c_1$ and $c_2$ are both elements of
+	\[\mathrm H^1(M;V)=\op{Hom}(\op{Gal}(\ov K/M),V).\]
+	Now, set $L\coloneqq K(E[p])$ so that each $c_i$ in fact is a homomorphism on $H\coloneqq\op{Gal}(M/L)$ (by the usual Inflation--restriction arguments). Now, we may define $c_i^+\coloneqq c_i|_{H^+}$ for each $i$, and we see that $\im c_i^+$ lives in either $V^+$ or $V^-$. Now, the main point is that
+	\[\ker c_1^+\cup\ker c_2^+\ne H^+\]
+	because all groups are finite (using Lagrange's theorem). Both are certainly nonzero because both $V^+$ and $V^-$ are one-dimensional (because $\tau$ acts by $\op{diag}(1,-1)$). We now choose $\ell$ to be any prime for which $\op{Frob}_{M/\QQ}\ell$ is in the conjugacy class of $\tau h$ for any chosen $h\in H^+$. It is admissible by definition (by restricting the Frobenius back down to $K$), so it remains to check that $\op{loc}_\ell c_1$ and $\op{loc}_\ell c_2$ are both nonzero. Well, choose some prime $\lambda_\ell$ over $\ell$ in $L$ has degree $2$ (because $\op{Frob}_{L/\QQ}\ell=\tau$ has order $2$), so $\op{Frob}_{M/L}\lambda_\ell=(\tau h)^2$. Because $h\in H^+$, we see that $(\tau h)^2=h^2$, so the required non-vanishing follows.
+\end{proof}
+And here is the rest of the argument.
+\begin{proof}[Proof of \Cref{thm:kolyvagin-selmer}]
+	\Cref{prop:strong-hasse} only gives us a Hasse principle for eigenvectors, so we will put ourselves in a situation to deal with eigenspaces. Accordingly, we will separately show that $\op{Sel}_p(E/K)^{\op{AL}_E}=\FF_p\cdot c(1)$ and $\op{Sel}_p(E/K)^{-\op{AL}_E}=0$.
+
+	Before doing anything, we make a quick remark about the conjugation action on $\mathrm H^1(K_\ell;E[p])$. For example, $\tau$ should preserve $E(K_\ell)/pE(K_\ell)\cong\mathrm H^1_{\mathrm{unr}}(K_\ell;E[p])$, and each eigenspace will have one dimension due to the induced action on $E(K_\ell)$. Now, by local duality (and passing to $\tau$-eigenspaces using the Galois-invariance), we are granted perfect pairings
+	\[\mathrm H^1_{\mathrm{ur}}(K_\ell;E[p])^\pm\times\mathrm H^1_{\tr}(K_\ell;E[p])^\pm\to\FF_p,\]
+	so we get the same diagonalization statement for $\mathrm H^1_{\tr}(K_\ell;E[p])$.
+
+	We now proceed with the proof.
+	\begin{itemize}
+		\item Because it is easier, we begin with the argument that $\op{Sel}_p(E/K)^{-\op{AL}_E}=0$. Well, choose some $c\in\op{Sel}_p(E/K)^{-\op{AL}_E}$, and we would like to show that it vanishes. By the contrapositive of \Cref{prop:strong-hasse}, it is enough to show that $\op{loc}_\ell c=0$ for all admissible primes $\ell$; in fact, \Cref{prop:strong-hasse} allows us to restrict our attention to those $\ell$ for which $\op{loc}_\ell c(1)\ne0$. In this situation, \Cref{thm:kolyvagin-system-prop} implies that $\op{loc}_\ell c(\ell)\ne0$ as well.
+
+		Now, by the definition of the global pairing, we see that $\langle c,c(\ell)\rangle=0$. On the other hand, we may expand out the definition of this inner product as
+		\[\sum_v\langle c,c(\ell)\rangle_v=0.\]
+		For places $v\ne\ell$, this inner product automatically vanishes because $c(\ell)$ is unramified at $v$, and $c$ is unramified everywhere. Thus, because $\ell$ is inert, we are left with
+		\[\langle c,c(\ell)\rangle_\ell=0.\]
+		Now, $\op{loc}_\ell c(\ell)\in\mathrm H^1_{\mathrm{ur}}(K_\ell;E[p])^{-\op{AL}_E}$, and this space has dimension $1$, so the only way to get this inner product to vanish is for $\op{loc}_\ell c=0$.
+
+		\item We now upgrade the argument of the previous point to show that $\op{Sel}_p(E/K)^{\op{AL}_E}=\FF_p\cdot c(1)$. While it is possible to proceed as in the previous point by contraposition, we will just argue by contradiction. Suppose for the sake of contradiction that we have a class $c\in\op{Sel}_p(E/K)^{\op{AL}_E}$, which we would like to show is in the span of $c(1)$.
+
+		By \Cref{prop:strong-hasse}, we are granted an admissible prime $\ell_1$ for which $\op{loc}_{\ell_1}c(1)\ne0$. Thus, we may modify $c$ by a multiple of $c(1)$ to achieve $\op{loc}_{\ell_1}c=0$. We now claim that
+		\[c\stackrel?=0,\]
+		which will complete the proof. Well, by \Cref{prop:strong-hasse}, it is enough to show that $\op{loc}_{\ell_2}c=0$ for each admissible prime $\ell_2$ satisfying $\op{loc}_{\ell_2}c(\ell_1)\ne0$.
+
+		As in the previous point, we have $\langle c,c(\ell_1\ell_2)\rangle=0$. On the other hand, we may expand this inner product as
+		\[\sum_v\langle c,c(\ell_1\ell_2)\rangle_v=0.\]
+		For $v\nmid\ell_1\ell_2$, both classes are unramified at $v$, so the inner product vanishes. For $v=\ell_1$, we know that $\op{loc}_{\ell_1}c=0$. Thus,
+		\[\langle c,c(\ell_1\ell_2)\rangle_v=0.\]
+		Because $\op{loc}_{\ell_2}c(\ell_1)\ne0$, \Cref{thm:kolyvagin-system-prop} implies that $\op{loc}_{\ell_2}c(\ell_1\ell_2)\ne0$ as well. Additionally, we see that $c$ and $c(\ell_1\ell_2)$ live in the same one-dimensional eigenspace of $\mathrm H^1(K_{\ell_2};E[p])^{\op{AL}_E}$, so the only way to get $0$ out of this inner product is to have $\op{loc}_{\ell_2}c=0$, which is what we wanted.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
