@@ -1,0 +1,230 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 5}
+We continue.
+
+\subsection{Semisimple Modules}
+Last class, we were talking about semisimple modules.
+\begin{definition}[semisimple]
+	Fix a ring $R$. Then a \textit{semisimple module} $M$ is a module which is isomorphic to a direct sum of simple modules.
+\end{definition}
+This is a fairly rigid definition. For example, does the collection of semisimple modules form an abelian category? To add some flexibility, we want the following tool.
+\begin{proposition} \label{prop:improve-semisimple}
+	Fix a ring $R$ and a semisimple module $M=\bigoplus_{i\in I}M_i$. For any $R$-submodule $N\subseteq M$, there is a subset $J\subseteq I$ so that
+	\[M=N\oplus\bigoplus_{j\in J}M_j.\]
+\end{proposition}
+\begin{proof}
+	For brevity, we define $M_J\coloneqq\bigoplus_{j\in J}M_j$ for each subset $J\subseteq I$. The idea is to use Zorn's lemma to construct $J$. We have two steps.
+	\begin{enumerate}
+		\item We use Zorn's lemma. Let $\mc F$ to be the collection of $J$ for which $M_J\cap N=\emp$, which we order by inclusion. We now use Zorn's lemma to find a maximal element of $\mc F$, which we note is nonempty (it has $\emp$) and partially ordered by inclusion. It remains to show that $\mc F$ has upper bounds for all it chains. Well, choose a chain $\{J_\alpha\}_{\alpha\in\Lambda}$, and we consider the set
+		\[J'\coloneqq\bigcup_{\alpha\in\Lambda}J_\alpha.\]
+		Certainly $J'$ is an upper bound for the chain, provided that we check that in fact $M_J\cap N=\emp$. We want to show that any $n\in M_J\cap N$ has $n=0$. Then note that $n\in M$ is only nonzero in finitely many coordinates, so we merely have to find $\alpha\in\Lambda$ large enough so that $J_\alpha$ includes all these coordinates; then $n\in M_{J_\alpha}\cap N$, so $n=0$.
+
+		Thus, Zorn's lemma provides us with a maximal element $J$ of $\mc F$.
+
+		\item We complete the proof. Note $M_J\cap N=0$ by construction, so it remains to check that $M_J+N=M$. It is enough to check that each copy of $M_i$ lives in $M_J+N$. If $i\in J$, there is nothing to do. Otherwise, $i\notin J$, so the maximality of $J$ implies that $M_{J\cup\{i\}}\cap N$ is nonempty. Thus, we can find some $n\in M_{J\cup\{i\}}\cap N$, and we see that it must have nonzero component in $M_i$. By adding in an element from $M_J$, we see that $n+M_J$ includes an element $m_i$ whose only nonzero component is in $M_i$. But $M_i$ is simple, so $Rm_i=M_i$, so $M_i\subseteq N+M_J$.
+		\qedhere
+	\end{enumerate}
+\end{proof}
+\begin{corollary} \label{cor:ss-stability}
+	Submodules, quotients, and sums of semisimple modules are semisimple.
+\end{corollary}
+\begin{proof}
+	Quickly, sums of semisimple modules are just quotients of direct sums, so we only have left to handle submodules and quotients. Note that Let $M=\bigoplus_{i\in I}M_i$ be a semisimple module, and let $N\subseteq M$ be a submodule. Then there is a subset $J\subseteq I$ with
+	\[M=N\oplus\bigoplus_{j\in J}M_j.\]
+	Thus, the quotient $M/N\cong\bigoplus_{j\in J}M_j$ is semisimple. Further, the canonical map $\bigoplus_{i\notin J}M_i\to N$ is an isomorphism because this is a direct sum decomposition, so the submodule $N$ is semisimple.
+\end{proof}
+\begin{example} \label{ex:mat-d-semisimple}
+	Fix a skew field $D$, and consider the ring $R\coloneqq M_n(R)$. Then we note that the left module $D^n$ (with the natural action by $R$) because any nonzero vector in $D^n$ generates $D^n$. Now, $R$ is isomorphic to $n$ copies of $D^n$ as a left module, so it follows that $R$ is semisimple over itself.
+\end{example}
+
+\subsection{The Socle}
+Not all of our modules will be semisimple, but it will be useful to be able to measure how far a module is from being semisimple.
+\begin{definition}[socle]
+	Fix a module $M$ over a ring $R$. Then the \textit{socle}, denoted $\op{soc}M$, is the sum of all semisimple submodules of $M$.
+\end{definition}
+\begin{example}
+	Fix the ring $R\coloneqq\CC[t]$, and consider the $R$-module $M\coloneqq R$. Then $R$ is a principal ideal domain, so all nonzero $R$-submodules of $M$ are isomorphic to $R$, which is not simple because $R$ is not a field. It follows that $\op{soc}M=0$.
+\end{example}
+\begin{example}
+	Fix the ring $R\coloneqq\CC[t]/\left(t^n\right)$ for some $n\ge1$, and consider the $R$-module $M\coloneqq R$. By the classification of finitely generated modules over the principal ideal domain $\CC[t]$, we see that the $R$-modules all take the form $R/(t^\bullet)$. Thus, we see that $M$ admits a unique simple submodule $\CC t^{n-1}/t^n$.
+\end{example}
+\begin{example} \label{ex:socle-kg-bad-p}
+	Fix a finite $p$-group $G$, and let $k$ be a field of characteristic $p$. Then
+	\[\op{soc}k[G]=k\cdot\sum_{g\in G}g.\]
+\end{example}
+\begin{proof}
+	Then main claim is that every simple $k[G]$-module (i.e., every irreducible representation of $G$ over $k$) is one-dimensional. This means that a simple submodule of $k[G]$ amounts to the image of a $k[G]$-linear map $k\to k[G]$. But a $k$-linear map $k\to k[G]$ simply picks out a vector $\sum_ga_gg$, and to be $G$-equivariant, all the coefficients must be the same, so we conclude that the only such map $k\to k[G]$ has image contained in $k\cdot\sum_{g\in G}g$.
+	
+	It remains to prove the claim. For this, it is enough to show that any nontrivial representation $V$ of $G$ over $k$ admits a nonzero fixed vector. Quickly, we note that we can reduce to $k=\FF_p$ by choosing a nonzero vector $v_0$ and passing from $V$ to the finite subspace $V_0\coloneqq\FF_p[G]v_0$. But the class equation implies that
+	\[\#V_0^G\equiv\#V_0\pmod p,\]
+	so $V_0^G$ is some $\FF_p$-subspace with positive dimension. Thus, $\FF_p[G]v_0$ admits a nonzero vector fixed by $G$, and we are done.
+\end{proof}
+Note that the decomposition of a semisimple module into simple components need not be canonical. It is possible to salvage this slightly.
+\begin{definition}
+	Fix a simple module $L$ over a ring $R$. For a module $M$, the $L$-isotypic component $M_L$ is the sum of the images of all maps $L\to M$.
+\end{definition}
+\begin{remark}
+	By \Cref{lem:schur}, any map $L\to M$ either vanishes or has image isomorphic to $L$. Thus, we see that we are basically collecting all copies of $L$ in $M$.
+\end{remark}
+\begin{example}
+	Suppose that $M=\bigoplus_{i\in I}M_i$ is semisimple, where $M_i$ is simple for each $i$. Then $L$ can only map to some $M_i$ if $M_i\cong L$ by \Cref{lem:schur}, so it follows that
+	\[M_L\cong\bigoplus_{\substack{i\in I\\M_i\cong L}}L.\]
+	Thus, when $M$ is semisimple, we see that $M$ is the sum of its isotypic components $M_L$, where $L$ varies isomorphism classes of simple modules.
+\end{example}
+As an application of the socle, we provide another characterization of semisimple modules.
+\begin{proposition} \label{prop:semisimple-by-split}
+	Fix a module $M$ over a ring $R$. Then $M$ is semisimple if and only if any short exact sequence of the form
+	\[0\to M'\to M\to M''\to 0\]
+	splits.
+\end{proposition}
+\begin{remark}
+	Recall that a splitting is the data of a map $M''\to M$ such that the composite $M\to M''\to M$ is the identity. This is equivalent to the data of a map $M\to M'$ such that the composite $M'\to M\to M'$ is the identity.
+\end{remark}
+\begin{proof}
+	If $M$ is semisimple, we use \Cref{prop:improve-semisimple}: we may identify $M'$ with its image in $M$, and then \Cref{prop:improve-semisimple} has realized the quotient $M''=M/M'$ as a direct summand of $M$. The splitting follows.
+
+	The other direction is harder. Suppose that every short exact sequence with $M$ in the middle splits. Well, $\op{soc}M$ embeds into $M$, so the quotient $N\coloneqq M/\op{soc}M$ must also embed into $M$. Thus, $N$ admits no simple submodules, or else we would violate the maximality of $\op{soc}M$. We would like to show that $N=0$.
+
+	Quickly, we claim that any submodule $Q\subseteq N$ is a direct summand. It is enough to show that the short exact sequence
+	\[0\to Q\to N\to N/Q\to N\to0\]
+	splits. Well, consider the short exact sequence
+	\[0\to\op{soc}M\oplus Q\to M\to N/Q\to0.\]
+	This short exact sequence splits, so we receive a splitting map $N/Q\to M$, which then projects back down to a splitting map $N/Q\to N$ of the projection $N\to N/Q$.
+
+	Now, suppose for the sake of contradiction that we have found a nonzero element $a\in N$. By \Cref{rem:fg-has-simple-quotient}, $Ra$ admits a simple quotient $L$. The previous paragraph tells us that $Ra$ is in fact a direct summand of $N$, so there is a projection $N\onto L$. Letting $Q$ be the kernel, the previous paragraph tells us that the short exact sequence
+	\[0\to Q\to N\to L\to0\]
+	splits, so $L$ is a direct summand of $N$ as well. This is our contradiction!
+\end{proof}
+
+\subsection{Semisimple Rings}
+We are now ready to define semisimple rings.
+\begin{definition}
+	Fix a ring $R$. Then $R$ is \textit{semisimple} if and only if $R$ is semisimple as a module over itself.
+\end{definition}
+\begin{example} \label{ex:sum-mat-semisimple}
+	Given skew fields $\{D_i\}_{i=1}^m$ and integers $\{n_i\}_{i=1}^m$, we see that $M_{n_i}(D_i)$ is semisimple by \Cref{ex:mat-d-semisimple}. We can see that a finite product of semisimple rings will be semisimple (because then each of the summand rings is a semisimple module, and the sum of semisimple modules is semisimple by \Cref{cor:ss-stability}), so the ring
+	\[\prod_{i=1}^mM_{n_i}(D_i)\]
+	is semisimple.
+\end{example}
+Here are some nicer conditions.
+\begin{theorem} \label{thm:classify-semisimple}
+	Fix a ring $R$. Then the following are equivalent.
+	\begin{listalph}
+		\item Every $R$-module $M$ is semisimple.
+		\item The ring $R$ is semisimple.
+		\item The ring $R$ is isomorphic to a finite product of matrix algebras over skew fields.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	Note that (a) implies (b) with no content. To show that (b) implies (a), it is enough by \Cref{cor:ss-stability} to show that any module is a quotient of a free one, which is not difficult: for any module $M$, we see that there is a quotient map
+	\[\bigoplus_{m\in M}R\to M\]
+	given by sending the $m$th copy of $R$ to the map $R\to M$ given by $1\mapsto m$.
+
+	We already know that (c) implies (b) by \Cref{ex:sum-mat-semisimple}, so it remains to show that (b) implies (c). Well, by definition, we may write $R$ as a direct sum of simple modules $\bigoplus_{i\in I}M_i$. We begin by claiming that $I$ is finite: there is some finite subset $J\subseteq I$ for which
+	\[1=\sum_{i\in J}m_i,\]
+	where $m_i\in M_i$. But then the $R$-submodule generated by $1$ is exactly $R$, so it follows that $R$ is the submodule $\bigoplus_{i\in J}M_i$, so $I=J$.
+
+	We now pass to isomorphism classes. Enumerate the simple modules appearing in the decomposition of $R$ by $\{L_1,\ldots,L_m\}$, so we have a decomposition
+	\[R=\prod_{j=1}^mL_j^{\oplus n_j}\]
+	for some multiplicities $n_j$. It follows by \Cref{lem:schur} that $R\opp$ is the ring
+	\[\op{End}_RR=\prod_{j=1}^mM_{n_{j}}(D_j),\]
+	where $D_j=\op{End}_R(L_j)$. (Namely, each $L_j$ in $R$ can only map to other copies of $L_j$ in $R$.) Each $D_j$ is a skew field by \Cref{lem:schur}, so we are done upon noting that $M_{n_j}(D_j)\opp$ is isomorphic to $M_{n_j}(D_j\opp)$ by taking the transpose.
+\end{proof}
+\begin{example} \label{ex:classify-semisimple-ring-modules}
+	Let's use these ideas to classify the simple modules of $R\coloneqq\prod_{j=1}^mM_{n_j}(D_j)$. Any simple module $L$ is generated by a single nonzero element, so it is a quotient of $R$. Because $R$ admits a sum decomposition, it follows that $L$ is a quotient of one of the $M_{n_j}(D_j)$s, so $L$ is a simple module of $M_{n_j}(D_j)$. It thus remains to classify the simple modules of a ring of the form $M_n(D)$. Well, $M_n(D)$ is semisimple over itself by \Cref{ex:mat-d-semisimple}, so $L$ is in fact a direct summand of $M_n(D)$. But \Cref{ex:mat-d-semisimple} has shown that $M_n(D)$ is isomorphic to the $R$-module $\left(D^n\right)^n$, so $L\cong D^n$ follows.
+\end{example}
+Here is an application.
+\begin{theorem}[Maschke]
+	Fix a finite group $G$, and let $k$ be a field of characteristic $p$ where $\#G\not\equiv0\pmod p$. Then the ring $k[G]$ is semisimple.
+\end{theorem}
+\begin{proof}
+	By \Cref{thm:classify-semisimple}, it is enough to show that every module is semisimple, so it is enough by \Cref{prop:semisimple-by-split} to show that every short exact sequence
+	\[0\to N\to M\to L\to0\]
+	splits. It is enough to show that the map $\op{Hom}_G(L,L)\to\op{Hom}_G(M,L)$ is surjective, for then we could induce a splitting by looking for the image of $\id_L$. But $\op{Hom}_k(L,L)\to\op{Hom}_k(M,L)$ is surjective, so it is enough to check that it induces a surjection on $G$-invariants.
+
+	In general, given any surjection $V\to W$ of $k[G]$-modules, we will show that there is an induced surjection $V^G\to W^G$ on invariants; this will complete the proof. Well, for any $w\in w^G$, find some $v\in V$ in its pre-image. Then we define
+	\[v_G\coloneqq\frac1{\#G}\sum_{g\in G}gv.\]
+	Then $v_G\in V^G$ by construction, and its image in $W$ is simply $w$, so we are done.
+\end{proof}
+\begin{remark}
+	The condition on the characteristic is necessary: see \Cref{ex:socle-kg-bad-p}.
+\end{remark}
+
+\subsection{Simple Rings}
+With a notion of ``semisimple,'' we should have a notion of ``simple.''
+\begin{definition}[simple]
+	Fix a ring $R$. Then $R$ is \textit{simple} if and only if it is nonzero, and the only two-sided ideals are $0$ and $R$.
+\end{definition}
+\begin{remark}
+	Equivalently, we can say that $R$ is simple as an $R$-bimodule.
+\end{remark}
+\begin{example}
+	If $D$ is a skew field, then $D$ is simple because the only $D$-submodules of $D$ are zero and $D$.
+\end{example}
+\begin{example} \label{ex:simple-mod-over-mat-ring}
+	If $R$ is simple, then we claim that $M_n(R)$ is also simple. Indeed, choose some nonzero sub-bimodule $M\subseteq M_n(R)$, and we want to show that $M=M_n(R)$. Well, let $E_{ij}$ denote the usual elementary matrix which is zero everywhere except for a $1$ in row $i$ and column $j$. We know that $M$ contains a nonzero matrix, say $A$, so there is a nonzero entry $A_{ij}$. By hitting $A$ with $E_{i1}E_{j1}$, we see that we can move the nonzero entry to $A_{11}$. Now, the collection of $r\in R$ generated by $A_{11}$ over $R$ is a nonzero submodule of $R$, so it follows that $M$ contains all matrices of the form $rE_{11}$ and in particular $E_{11}$. Multiplying by other elementary matrices, we see that $E_{ij}\in M$ for each $i$ and $j$, so $M=M_n(R)$ follows by taking linear combinations.
+\end{example}
+\begin{nex}
+	Set $V\coloneqq\CC^{\oplus\NN}$. Then the ring $R\coloneqq\op{End}V$ is not simple: it admits a two-sided ideal $I$ given by those operators with finite-dimensional image. Indeed, composing any operator with one in $I$ stays in $I$.
+\end{nex}
+% \begin{remark}
+% 	Here is an application: the decomposition of a semisimple ring given in \Cref{thm:classify-semisimple} is unique up to permutation. Indeed, if we have two decompositions
+% 	\[\prod_{j=1}^mM_{n_j}(D_j)\cong\prod_{j=1}^{m'}M_{n_j'}(D_j'),\]
+% 	then there is a nonzero ring map from some $M_{n_1}(D_1)$ to (say) $M_{n_1'}(D_1')$. The identity must map to the identity
+% \end{remark}
+\begin{example}
+	Consider the Weyl algebra $A$ generated over $\CC$ by the symbols $x$ and $\del$ with the relation $\del x=1+x\del$. Using this commutativity, we see that we can write any element of $A$ uniquely in the form
+	\[\sum_{i=1}^np_i(x)\del^i,\]
+	where $p_i(x)$ is some polynomial in $x$. One can check that this ring $A$ is simple.
+\end{example}
+\begin{remark}
+	A simple ring does not have to be semisimple. For example, the Weyl algebra $A$ is not semisimple. Indeed, it turns out that the short exact sequence
+	\[0\to\CC[x]\to\CC\left[x,x^{-1}\right]\to\frac{\CC\left[x,x^{-1}\right]}{\CC[x]}\to0\]
+	of $A$-modules is not split.
+\end{remark}
+With a size condition, we can fix the previous remark.
+\begin{definition}[Noetherian]
+	A ring $R$ is \textit{left Noetherian} if and only if every ascending chain of left ideals stabilizes. One can similarly define a notion of \textit{right Noetherian}.
+\end{definition}
+\begin{remark} \label{rem:zorn-noetherian}
+	By Zorn's lemma, it is equivalent to say that any collection of left ideals admits a maximal element.
+\end{remark}
+\begin{remark} \label{rem:simple-two-sided-noetherian}
+	The corresponding notion of ``two-sided Noetherian'' is not very useful: for example, it immediately includes all simple rings.
+\end{remark}
+\begin{remark} \label{rem:pathological-noetherian}
+	There are rings which are left Noetherian but not right Noetherian. Most examples are pathological.
+\end{remark}
+\begin{definition}[Artinian]
+	A ring $R$ is \textit{left Artinian} if and only if every descending chain of left ideals stabilizes. Again, there is an analogous notion of \textit{right Artinian}.
+\end{definition}
+\Cref{rem:zorn-noetherian,rem:simple-two-sided-noetherian} apply.
+\begin{remark}
+	We will show later that Artinian implies Noetherian.
+\end{remark}
+We can classify Artinian simple rings.
+\begin{theorem}[Wedderburn]
+	Fix a ring $R$. Then the following are equivalent.
+	\begin{listalph}
+		\item The ring $R$ is simple and left Artinian or right Artinian.
+		\item Every $R$-module is semisimple, and $R$ admits a unique simple module (up to isomorphism).
+		\item The ring $R$ is isomorphic to $M_n(D)$ for some skew field $D$ and $n\ge1$.
+	\end{listalph}
+\end{theorem}
+\begin{proof}
+	We show our implications in sequence.
+	\begin{itemize}
+		\item We show (c) implies (b): \Cref{ex:mat-d-semisimple} shows that $M_n(D)$ is semisimple, and its only simple module is $D^n$ by \Cref{ex:classify-semisimple-ring-modules}.
+		\item We show (b) implies (c): by \Cref{thm:classify-semisimple}, we see that $R$ takes the form $\prod_{j=1}^mM_{n_j}(D_j)$. But \Cref{ex:classify-semisimple-ring-modules} shows that each factor produces a new simple module, so $m=1$ follows.
+		\item We show (c) implies (a): we know $M_n(D)$ is simple by \cref{ex:simple-mod-over-mat-ring}. Further, $R$ is finite-dimensional over $D$, so any descending chain of ideals is a descending chain of finite-dimensional subspaces, so it must stabilize.
+		\item We show (a) implies (c); we work in the left Artinian case. Let $L\subseteq R$ be a minimal left ideal. Then every element of $L$ generates $L$, so $L$ is simple. Now, $LR$ is a two-sided ideal, and it is nonzero because $L$ is nonzero, so $LR=R$ because $R$ is simple. Thus, $R=\sum_{r\in R}Lr$, so $R$ is a sum of some copies of $L$. It follows that $R$ is semisimple by \Cref{cor:ss-stability}. Thus, $R$ is a direct sum of $L$s, and this sum must be finite because $R$ is Artinian. The argument of \Cref{thm:classify-semisimple} thus shows that $R\opp$ is isomorphic to $M_n(\op{End}L)$, from which (c) follows by \Cref{lem:schur}.
+		\qedhere
+	\end{itemize}
+\end{proof}
+
+\end{document}
