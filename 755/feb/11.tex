@@ -1,0 +1,196 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 11}
+Today we discuss the fundamental theorem of invariant theory.
+
+\subsection{Finding Invariant Polynomials}
+Here is the basic problem: suppose that we have a finite-dimensional complex vector space $V$, and we are given various tensors $T_i\in V^{\otimes m_i}\otimes(V^*)^{\otimes n_i}$. Then we would like to find the invariant polynomial functions of $T_1,\ldots,T_k$, where ``invariant'' means that they are invariant under the ambient action of $\op{GL}(V)$.
+
+Suppose for concreteness that we are hunting for homogeneous polynomial functions $F(T_1,\ldots,T_k)$ which is homogeneous of degree $d_i$ in the variable $T_i$. Here is one method of construction.
+\begin{enumerate}
+	\item Set down some vertices $i$, which we equip with $m_i$ inward arrows and $n_i$ outward arrows, which we number.
+	\item We then draw $d_i$ such vertices of color $i$, and we connect only those vertices which can preserve the numbering. This then gives a graph $\Gamma$, which exists if and only if the number of incoming and outgoing arrows is the same, meaning that
+	\[\sum_id_im_i=\sum_id_in_i.\]
+	(Certainly this condition is necessary by a degree argument. The converse is some graph theory.) If $\Gamma$ does not exist, then notably there is no such polynomial because hitting $F(T_1,\ldots,T_k)$ with the scalar $\lambda$ will not be invariant.
+	\item Now, once we have found the graph $\Gamma$, we construct the desired polynomial by contracting the tensors along the edges.
+\end{enumerate}
+\begin{example}
+	Suppose we are given $T_1\in V^{\otimes2}\otimes V^*$ and $T_2\in V^{*\otimes2}$. This means that we start with the following.
+	% https://q.uiver.app/#q=WzAsOSxbMSwxLCIxIl0sWzAsMCwiPyJdLFswLDIsIj8iXSxbMywxLCIxIl0sWzIsMCwiPyJdLFsyLDIsIj8iXSxbNSwxLCIyIl0sWzQsMCwiPyJdLFs0LDIsIj8iXSxbMSwwLCIxIiwyXSxbMiwwLCIyIl0sWzQsMywiMSIsMl0sWzUsMywiMiJdLFs2LDcsIjEiXSxbNiw4LCIyIiwyXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		{?} && {?} && {?} \\
+		& 1 && 1 && 2 \\
+		{?} && {?} && {?}
+		\arrow["1"', from=1-1, to=2-2]
+		\arrow["1"', from=1-3, to=2-4]
+		\arrow["1", from=2-6, to=1-5]
+		\arrow["2"', from=2-6, to=3-5]
+		\arrow["2", from=3-1, to=2-2]
+		\arrow["2", from=3-3, to=2-4]
+	\end{tikzcd}\]
+	One possible way to connect these arrows is as follows.
+	% https://q.uiver.app/#q=WzAsMyxbMCwwLCIxIl0sWzMsMSwiMiJdLFswLDIsIjEiXSxbMSwwLCIiLDAseyJjdXJ2ZSI6Mn1dLFsxLDAsIiIsMix7ImN1cnZlIjotMn1dLFswLDJdLFsyLDIsIiIsMCx7ImFuZ2xlIjoxODB9XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		1 \\
+		&&& 2 \\
+		1
+		\arrow[from=1-1, to=3-1]
+		\arrow[curve={height=12pt}, from=2-4, to=1-1]
+		\arrow[curve={height=-12pt}, from=2-4, to=1-1]
+		\arrow[from=3-1, to=3-1, loop, in=235, out=305, distance=10mm]
+	\end{tikzcd}\]
+	Accordingly, if we write $T_1=(u^{ij}_k)$ and $T_2=(v_{pq})$, then our polynomial is
+	\[u_{i_1}^{i_1j_1}u_{j_2}^{i_2j_2}u_{j_1j_2}.\]
+\end{example}
+\begin{theorem} \label{thm:invariant}
+	Fix everything as above. Then the constructed polynomials $F_\Gamma$ span the algebra of invariant polynomials.
+\end{theorem}
+\begin{proof}
+	Let $A$ be the full algebra of invariant polynomials, and let $A_d$ be the subset which are homogeneous of degree $d=(d_1,\ldots,d_k)$. By taking a dual, a polynomial $F$ can be viewed as an element of
+	\[\bigotimes_i\left(V^{*\otimes m_i}\otimes V^{\otimes n_i}\right)=V^{\otimes\sum d_in_i}\otimes V^{*\otimes\sum_id_im_i}.\]
+	We are on the hunt for $\op{GL}(V)$-invariants, so the space becomes
+	\[\op{Hom}_{\op{GL}(V)}\left(V^{\otimes\sum d_im_i},V^{\otimes\sum d_in_i}\right).\]
+	Note that this vanishes for weight reasons if $\sum_id_im_i\ne\sum_id_in_i$. On the other hand, if the two sums equal some $N$, then \Cref{thm:schur-weyl} tells us that this space is
+	\[\op{Hom}_{\op{GL}(N)}\left(V^{\otimes N},V^{\otimes N}\right)=\CC[S_N]/I\]
+	for some ideal $I$. Accordingly, $A_{d_1,\ldots,d_k}$ is spanned by some polynomials which correspond to permutations $\sigma\in S_N$. These permutations $\sigma$ amount to the data of a graph $\Gamma$ because we are basically matching where certain edges go. Explicitly, we can number all the ingoing and outgoing edges ``at the vertex'' and then use the permutation $\sigma$ to tell us which ingoing edge should match with which outgoing edge.
+\end{proof}
+\begin{remark}
+	Given $N$, if $\dim V$ is large enough (namely, $\dim V\ge N$), then it turns out that the polynomials $F_\Gamma$ are equal if and only if the graphs $\Gamma$ are isomorphic. (Indeed, the ideal $I$ vanishes when $\dim V\ge N$ by \Cref{thm:schur-weyl}, so different permutations $\sigma$ will give linearly independent polynomials. One then needs to pass to graphs.) Here, a graph isomorphism is required to preserve the bi-numbering of the edges (introduced in the proof) and the labels of the vertices.
+\end{remark}
+\begin{example}
+	Suppose $T_1,\ldots,T_k$ are all in $V\otimes V^*$. Then all vertices look like $\to1\to$, so all the labels do not matter. By tracking the possible graphs, one can see that the algebra of invariant polynomials is generated by traces $T_w$ of cyclic words $w$ in the $T_\bullet$s. For example, the two-cycle $1\to2$ produces a factor of $\tr(T_1T_2)$, and the three-cycle $1\to2\to3$ produces a factor of $\tr(T_1T_2T_3)$. As a further specialization, note with just $k=1$, we recover the fact that the algebra of functions on $V\otimes V^*\cong M_{\dim V}(\CC)$ which are invariant for the $\op{GL}(V)$-action is generated by the trace.
+\end{example}
+\begin{remark} \label{rem:asymptotic-alg-independence}
+	Continuing the above example, it further turns out that these generators are ``asymptotically algebraically independent,'' in the sense that any polynomial $P$ which vanishes on all the $T_w$s for all possible dimensions of $V$ must have $P=0$. Indeed, $P$ has only finitely many terms in the spanning set of \Cref{thm:invariant}, and these terms become linearly independent as $\dim V$ goes to infinity (namely, $\dim V$ larger than the total degree of $P(T_{w_1},\ldots,T_{w_k})$ will suffice). Thus, $P=0$ is forced!
+\end{remark}
+\begin{corollary}
+	There is no polynomial identity $P$ that holds for all matrices of all size. In other words, choose a polynomial $P\in\CC\langle X_1,\ldots,X_r\rangle$ in the free non-commutative polynomial ring. If we have $P(A_1,\ldots,A_r)=0$ for all choices of square matrices $A_1,\ldots,A_r$ of given dimension, then $P=0$.
+\end{corollary}
+\begin{proof}
+	If $P(A_1,\ldots,A_r)=0$, then note that
+	\[\tr P(A_1,\ldots,A_r)A_{r+1}=0\]
+	for any other choice of matrix $A_{r+1}$. \Cref{rem:asymptotic-alg-independence} now implies that $P$ must vanish!
+\end{proof}
+\begin{remark}
+	If one fixes the size of matrices, then there are in fact many polynomial relations. For example, all $1\times1$ matrices satisfy the relation $AB-BA=0$. As another example, for $2\times2$ matrices, $(AB-BA)^2$ is a scalar matrix, so $(AB-BA)^2C-C(AB-BA)^2=0$. In general, for any $n$ and commutative ring $R$, then any $X_1,\ldots,X_{2n}\in M_n(R)$ satisfies
+	\[\sum_{\sigma\in S_{2n}}\op{sgn}(\sigma)X_{\sigma(1)}\cdots X_{\sigma(2n)}=0.\]
+\end{remark}
+
+\subsection{Schur Polynomials}
+We now introduce some Schur polynomials.
+\begin{definition}[Schur polynomial]
+	Let $\lambda$ be a partition of $n$, and let $s_\lambda$ be the trace of $\op{diag}(x_1,\ldots,x_n)\in\op{GL}_n(\CC)$ acting on the irreducible representation $L_\lambda$. Then $s_\lambda$ is a \textit{Schur polynomial}.
+\end{definition}
+\begin{remark}
+	By \Cref{thm:weyl-char}, we find that
+	\[s_\lambda(x_1,\ldots,x_n)=\frac{\displaystyle\sum_{\sigma\in S_n}\op{sgn}(\sigma)x_{\sigma(1)}^{\lambda_1+n-1}\cdots x_{\sigma(n)}^{\lambda_n}}{\displaystyle\prod_{i<j}(x_i-x_j)}.\]
+	(To make the formula look correct, one should multiply the numerator and denominator of \Cref{thm:weyl-char} by $e^\rho$, which makes the denominator into $\prod_{\alpha\in\Phi_+}\left(e^{\alpha/2}-e^{-\alpha/2}\right)$.) Note that the numerator may be written as the Vandermonde determinant $\det\big[x_i^{\lambda_i+n-j}\big]_{ij}$.
+\end{remark}
+\begin{remark}
+	One can consider the Schur polynomials as polynomials in infinitely many variables by imagining that $s_\lambda(x_1,\ldots,x_n)$ is a polynomial $s_\lambda(x_1,\ldots,x_n,0,\ldots,0)$.
+\end{remark}
+\begin{example}
+	The Schur polynomial $s_\lambda$ for $\lambda=(N)$ corresponds to the representation $L_\lambda=S^NV$. Thus, by expanding $\op{diag}(x_1,\ldots,x_n)$ on a basis $e_{i_1}\cdots e_{i_N}$ of $V$, we see that
+	\[s_\lambda(x_1,\ldots,x_n)=\sum_{i_1+\cdots+i_N=n}x_1^{i_1}\cdots x_N^{i_N}.\]
+	This is a complete symmetric function. By rewriting a partition, we can also write this as
+	\[\sum_{1\le j_1\le\cdots\le j_N\le n}x_{j_1}\cdots x_{j_N}.\]
+\end{example}
+\begin{example}
+	The Schur polynomial $s_\lambda$ for $\lambda=(1,\ldots,1)$ corresponds to the representation $L_\lambda=\land^NV$. Computing the trace on a basis $e_{i_1}\land\cdots\land e_{i_N}$ of $V$ recovers the elementary symmetric polynomial
+	\[s_\lambda(x_1,\ldots,x_n)=\sum_{1\le j_1<j_2<\cdots<j_N\le n}x_{j_1}\cdots x_{j_N}.\]
+\end{example}
+We now use these Schur polynomials to compute the characters of $S_N$.
+\begin{proposition} \label{prop:frobenius-formula}
+	Fix a representation $\pi_\lambda$ of $S_N$, where $\lambda$ is a partition of $N$ with at most $n$ parts. Let $\sigma\in S_N$ be a permutation with $m_i$ cycles of length $i$, and set $\chi_\lambda(\sigma)\coloneqq\tr(\sigma;\pi_\lambda)$. Then $\chi_\lambda(\sigma)$ is the coefficient of the monomial $x_1^{\lambda_1+n-1}\cdots x_n^{\lambda_n}$ in the polynomial
+	\[\prod_{i<j}(x_i-x_j)\prod_k\left(x_1^i+\cdots+x_n^i\right)^{m_i}.\]
+\end{proposition}
+\begin{proof}
+	The idea is to compute the trace of the operator $g\otimes\sigma\coloneqq g^{\otimes N}\circ\sigma$ on $V^{\otimes N}$, where $V\coloneqq\CC^n$. We also may as well suppose that $g=\op{diag}(x_1,\ldots,x_n)$. Thus, $\sigma$ permutes the $V$s, and $g$ then acts diagonally on a corresponding basis.
+	\begin{example}
+		The permutation $\sigma=(123)(45)$ will move around the $V$s as in the following diagram.
+		% https://q.uiver.app/#q=WzAsMTAsWzAsMCwiViJdLFsxLDAsIlYiXSxbMiwwLCJWIl0sWzMsMCwiViJdLFs0LDAsIlYiXSxbMCwxLCJWIl0sWzEsMSwiViJdLFsyLDEsIlYiXSxbMywxLCJWIl0sWzQsMSwiViJdLFs2LDBdLFs3LDFdLFs1LDJdLFs4LDRdLFs5LDNdXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+		\[\begin{tikzcd}[cramped]
+			V & V & V & V & V \\
+			V & V & V & V & V
+			\arrow[from=2-1, to=1-3]
+			\arrow[from=2-2, to=1-1]
+			\arrow[from=2-3, to=1-2]
+			\arrow[from=2-4, to=1-5]
+			\arrow[from=2-5, to=1-4]
+		\end{tikzcd}\]
+	\end{example}
+	We now compute our trace two ways.
+	\begin{itemize}
+		\item One way to compute the trace of the action of $g\otimes\sigma$ is to decompose $\sigma$ into cycles via its action on $V^{\otimes N}$. As such, we may assume that $\sigma$ is a single cycle of length $m$ acting on $V^{\otimes m}$. Then $\sigma$ permutes the standard basis of pure tensors $e_{i_1}\otimes\cdots\otimes e_{i_m}$ along cycles (while $g^{\otimes m}$ acts diagonally), so the only way for such a basis vector to produce a nontrivial contribution to the trace would be if $\sigma$ fixes $e_{i_1}\otimes\cdots\otimes e_{i_m}$, which means $i_1=\cdots=i_m$. It follows that the trace of $g\otimes\sigma$ is $x_1^m+\cdots+x_n^m$.
+		
+		Now returning to the case of general $\sigma$, we multiply through the cycle contributions to find
+		\[\tr\left(g\otimes\sigma;V^{\otimes N}\right)=\prod_i\left(x_1^i+\cdots+x_n^i\right)^{m_i}.\]
+
+		\item Alternatively, we use Schur--Weyl duality. \Cref{thm:schur-weyl} tells us that we have a decomposition
+		\[V^{\otimes N}=\bigoplus_{\lambda\vdash N}L_\lambda\otimes\pi_\lambda,\]
+		where $g$ only acts on $L_\lambda$, and $\sigma$ only acts on $\pi_\lambda$. Thus,
+		\[\tr\left(g\otimes\sigma;V^{\otimes N}\right)=\sum_{\lambda\vdash N}s_\lambda(x_1,\ldots,x_n)\chi_\lambda(\sigma).\]
+	\end{itemize}
+	Comparing the two formulae gives
+	\[\prod_i\left(x_1^i+\cdots+x_n^i\right)^{m_i}=\sum_{\lambda\vdash N}s_\lambda(x_1,\ldots,x_n)\chi_\lambda(\sigma).\]
+	We now multiply through by the Weyl denominator, which gives
+	\[\prod_{i<j}(x_i-x_j)\prod_i\left(x_1^i+\cdots+x_n^i\right)^{m_i}=\sum_{\lambda\vdash N}\Bigg(\sum_{\tau\in S_n}\op{sgn}(\tau)x_{\tau(1)}^{\lambda_1+n-1}\cdots x_{\tau(n)}^{\lambda_n}\chi_\lambda(\sigma)\Bigg).\]
+	Taking coefficients completes the proof. In particular, we note that the monomial $x_1^{\lambda_1+n-1}\cdots x_n^{\lambda_n}$ is featured only once on the right-hand side: if one has $x_1^{\lambda_1+n-1}\cdots x_n^{\lambda_n}=x_{\tau(1)}^{\mu_1+n-1}\cdots x_{\tau(n)}^{\mu_n}$, then comparing the highest degrees forces $\lambda_1+n-1=\mu_1+n-1$ and $\tau(1)=1$, so one can remove $x_1$ from both sides and induct.
+\end{proof}
+
+\subsection{Howe Duality}
+Here is another application of Schur--Weyl duality.
+\begin{proposition}[Howe duality] \label{prop:howe-duality}
+	Fix complex vector spaces $V$ and $W$. Then
+	\[S^n(V\otimes W)=\bigoplus_{\lambda\vdash n}S^\lambda V\otimes S^\lambda W.\]
+\end{proposition}
+\begin{proof}
+	Recall that $(V\otimes W)^{\otimes n}=V^{\otimes n}\otimes W^{\otimes n}$. But then \Cref{thm:schur-weyl} tells us that
+	\[(V\otimes W)^{\otimes n}=\Bigg(\bigoplus_{\lambda\vdash n}S^\lambda V\otimes\pi_\lambda\Bigg)\otimes\Bigg(\bigoplus_{\mu\vdash n}S^\mu W\otimes\pi_\mu\Bigg).\]
+	Now, we may take $S_n$-invariants on both sides to see that
+	\[S^n(V\otimes W)=\bigoplus_{\lambda,\mu\vdash n}S^\lambda V\otimes S^\mu W\otimes(\pi_\lambda\otimes\pi_\mu)^{S_n}.\]
+	It remains to get rid of the factor of $(\pi_\lambda\otimes\pi_\mu)^{S_n}$. Well, $\chi_\lambda$ has integral values by \Cref{prop:frobenius-formula}, so it is self-dual, so $(\pi_\lambda\otimes\pi_\mu)^{S_n}=\op{Hom}_{S_n}(\pi_\lambda,\pi_\mu)$, which we see vanishes if $\lambda\ne\mu$ by Schur's lemma (and is $\CC$ otherwise). The result follows.
+\end{proof}
+\begin{corollary}
+	Let $A_V$ and $A_W$ be the subalgebras of $\op{End}_\CC(S^n(V\otimes W))$ generated by $\op{End}(V)$ and $\op{End}(W)$. Then $A_V$ and $A_W$ are centralizers of each other.
+\end{corollary}
+\begin{proof}
+	By \Cref{prop:howe-duality}, we see that $S^n(V\otimes W)$ decomposes into a tensor product of irreducibles $S^\lambda V\otimes S^\lambda W$ for $A_V\times A_W$, so it is enough to check the result for these irreducibles. For example, any endomorphism of $S^\lambda V\otimes S^\lambda W$ which preserves $A_W$ must then be a scalar on $S^\lambda W$ and therefore acts only on $S^\lambda V$, so it comes from $A_V$.
+\end{proof}
+We can give a purely combinatorial application of Howe duality.
+\begin{proposition}[Cauchy identity] \label{prop:cauchy-id}
+	One has
+	\[\sum_{\lambda}s_\lambda(x_1,\ldots,x_n)s_\lambda(y_1,\ldots,y_m)z^{\left|\lambda\right|}=\prod_{i=1}^n\prod_{j=1}^m\frac1{1-zx_iy_j}.\]
+\end{proposition}
+We will want the following lemma.
+\begin{lemma}[Molien] \label{lem:molien}
+	Let $A\colon V\to V$ be an operator on a finite-dimensional vector space. Then
+	\[\sum_{r\ge0}\tr(S^rA;S^rV)T^r=\frac1{\det(1-zA)}.\]
+\end{lemma}
+\begin{proof}
+	It is enough to show this over $\CC$ because we can reduce this to an equality of some polynomials, which can be checked on complex points. Then we are trying to check an equality of two continuous functions on the complex space $\op{GL}(V)$, so it is enough to check it on the dense subset of diagonalizable matrices $A=\op{diag}(x_1,\ldots,x_n)$. Then the trace of $S^rA$ is simply
+	\[\sum_{i_1+\cdots+i_r=n}x_1^{i_1}\cdots x_n^{i_n},\]
+	so our left-hand side is
+	\[\sum_{i_1,\ldots,i_n\ge0}x_1^{i_1}\cdots x_n^{i_n}z^{i_1+\cdots+i_n}.\]
+	However, we can rearrange this to
+	\[\Bigg(\sum_{i_1\ge0}(x_1z)^{i_1}\Bigg)\cdots\Bigg(\sum_{i_n\ge0}(x_nz)^{i_n}\Bigg)=\frac1{1-x_1z}\cdots\frac1{1-x_nz},\]
+	which is exactly $1/\det(1-zA)$.
+\end{proof}
+\begin{proof}[Proof of \Cref{prop:cauchy-id}]
+	We will compute the $\sum_{N\ge0}\tr S^N(x\otimes y)z^N$, where $x\coloneqq\op{diag}(x_1,\ldots,x_n)$ and $y\coloneqq\op{diag}(y_1,\ldots,y_m)$ are in $\op{GL}(V)$ and $\op{GL}(W)$, respectively.
+	\begin{itemize}
+		\item By \Cref{lem:molien}, we see that
+		\[\sum_{N\ge0}\tr S^N(x\otimes y)z^N=\frac1{\det(1-z(x\otimes y)},\]
+		which is
+		\[\prod_{i=1}^n\prod_{j=1}^m\frac1{1-zx_iy_j}.\]
+		\item On the other hand, by \Cref{prop:howe-duality}, we find that
+		\[\tr S^N(x\otimes y)=\sum_{\lambda\vdash N}s_\lambda(x)s_\lambda(y)z^{\left|\lambda\right|}.\]
+	\end{itemize}
+	Setting these equal completes the proof.
+\end{proof}
+
+\end{document}
