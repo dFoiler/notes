@@ -1,0 +1,135 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 17}
+Today we prove Tate's theorem.
+
+\subsection{More General \texorpdfstring{$L$}{ L}-functions}
+To start us off, let's do a local calculation.
+\begin{definition}[local integral]
+	Fix a local field $F$ and a continuous character $\chi\colon F^\times\to\CC^\times$. For $f\in\mc S(\AA_F)$, we define
+	\[Z(\chi,f)\coloneqq\int_{F^\times}\chi(a)f(a)\,d^\times a.\]
+	We may also write $Z(s,\chi,f)\coloneqq Z(\chi\left|\cdot\right|^s,f)$.
+\end{definition}
+\begin{proposition}
+	Fix a nonarchimedean local field $F$, and suppose $\chi$ is unramified, in the sense that $\chi|_{\OO_v^\times}=1$. Then
+	\[Z(s,\chi,1_\OO)=\frac1{\chi(\varpi)q^{-s}}\cdot\op{vol}(\OO^\times;d^\times a).\]
+\end{proposition}
+\begin{proof}
+	Using the translation-invariance of $d^\times a$, we find that
+	\[\int_{\OO^\times}\chi(a)\left|a\right|^s\,d^\times a=\sum_{n\ge0}\chi(\varpi^na)q^{-ns}\int_{\OO^\times}\chi(a)\,d^\times a,\]
+	so the result follows.
+\end{proof}
+Thus, we see that there is a finite set $S$ for which
+\[Z(s,\chi,f)=\prod_{v\notin S}L_v(s,\chi_v)\cdot\prod_{v\in S}Z_v(s,\chi_v,f_v).\]
+Indeed, one can just take $S$ to contain the archimedean places, the places where $\op{vol}(\OO_v^\times;d_v^\times x)\ne1$, and the places where $f_v$ is not $1_{\OO_v}$. Now, the finite product is relatively easy to understand, and an explicit calculation shows that $Z_v(s,\chi_v,f_v)$ admits a meromorphic calculation. For nonarchimedean places, one can argue as above by turning the integral into a geometric series; for archimedean places, one needs to do some analysis with the Schwartz hypothesis.
+
+The point is that meromorphic continuation for $Z(s,\chi,f)$ directly implies meromorphic continuation for the $L$-function $L(s,\chi)$. In fact, one can argue as in \Cref{thm:fe-dedekind-zeta} to see that \Cref{thm:tate} implies that $L(s,\chi)$ admits meromorphic continuation, functional equation, and it has prescribed poles.
+
+\subsection{Proof of the Global Functional Equation}
+We are now ready to prove \Cref{thm:tate}.
+\begin{proof}[Proof of \Cref{thm:tate}]
+	Define
+	\[Z_\pm(s,\chi,f)\coloneqq\int_{\left|a\right|^{\pm1}>1}f(a)\chi(a)\left|a\right|^s\,d^\times a.\]
+	Because $\left|a\right|>1$, we see that $Z_+(s,\chi,f)$ converges everywhere: both $Z_+$ and $Z_-$ already converges for $\Re s>1$, and $Z_+$ will only get smaller as $\Re s$ gets smaller.
+
+	The idea to prove (a) is to relate $Z_-(s,\chi,f)$ with $Z_+(1-s,\chi^{-1},\widehat f)$. Indeed, because $\chi\left|\cdot\right|^s$ factors through $F^\times\backslash\AA_F^\times$, we may ``unfold'' our integral, writing
+	\begin{align*}
+		Z_-(s,\chi,f) &= \int_{\substack{a\in\AA_F^\times\\\left|a\right|<1}}f(a)\chi(a)\left|a\right|^s\,d^\times a \\
+		&= \int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|<1}}\Bigg(\sum_{\gamma\in F^\times}f(\gamma a)\Bigg)\chi(a)\left|a\right|^s\,d^\times a.
+	\end{align*}
+	We would like to apply Poisson summation, but we need to add back in $0\in F$ for this to make sense. To this end, define $f_a\in\mc S(\AA)$ by $f_a(x)\coloneqq f(ax)$. Then
+	\[Z_-(s,\chi,f)=\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|<1}}\Bigg(\sum_{\gamma\in F}f_a(\gamma)\Bigg)\chi(a)\left|a\right|^s\,d^\times a-f(0)\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|<1}}\chi(a)\left|a\right|^s\,d^\times a.\]
+	We now apply \Cref{thm:global-poisson-summation}. Note $\widehat f_a(x)=\left|a\right|^{-1}\widehat f(x/a)$, so we see
+	\[Z_-(s,\chi,f)=\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|<1}}\Bigg(\sum_{\gamma\in F}\widehat f(\gamma/a)\Bigg)\chi(a)\left|a\right|^{s-1}\,d^\times a-f(0)\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|<1}}\chi(a)\left|a\right|^{s}\,d^\times a,\]
+	which by sending $a$ to $a^{-1}$ gives
+	\[Z_-(s,\chi,f)=\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|>1}}\Bigg(\sum_{\gamma\in F}\widehat f(\gamma a)\Bigg)\chi^{-1}(a)\left|a\right|^{1-s}\,d^\times a-f(0)\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|<1}}\chi(a)\left|a\right|^{s}\,d^\times a.\]
+	It may look like we should send $d^\times a$ to $-d^\times a$, but this sign is absorbed into the orientation: we start integrating $(0,1]$ and want to end integrating $[1,\infty)$.
+	
+	Let's spend a moment to simplify the right-hand term. By fixing $\left|a\right|$, this integral is
+	\[\int_0^1\Bigg(\int_{F^\times\backslash\AA_F^{\times,1}}\chi(at_\infty)t^s\,d^\times a\Bigg)d^\times t.\]
+	Here, $t_\infty$ is some id\'ele supported at a single place, chosen so that $\left|t_\infty\right|=t$; it is found basically by splitting the norm map $\left|\cdot\right|\colon\AA_F^\times\to\RR^+$.\footnote{For number fields, we can split by choosing any archimedean place. For function fields, I think something similar is possible.} Now, if $\chi|_{\AA_F^{\times,1}}\ne1$, then the internal integral vanishes; otherwise, if $\chi=\left|\cdot\right|^t$, then the inner integral is $\op{vol}\big(F^\times\backslash\AA_F^{\times,1};d^\times x\big)$, and the outer integral then gives $\int_0^1t^{s+t}\,\frac{dt}t=\frac1{s+t}$. Thus,
+	\[Z_-(s,\chi,f)=\int_{\substack{a\in F^\times\backslash\AA_F^\times\\\left|a\right|>1}}\Bigg(\sum_{\gamma\in F}\widehat f(\gamma a)\Bigg)\chi^{-1}(a)\left|a\right|^{1-s}\,d^\times a-\frac{f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s+t}1_{\chi(\AA_F^{\times,1})=1}.\]
+	We now take out the $\gamma=0$ term from the internal sum and repeat the procedure of the previous paragraph. (There are some nasty sign problems here. The difficulty is that the case of $\chi|_{\AA_F^{\times,1}}=1$ receives an integral of $\int_0^1t^{1-s-t}\,dt/t=-1/(1-s-t)$.) Being careful with our factors, we are left with
+	\[Z_-(s,\chi,f)+\frac{f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s+t}1_{\chi(\AA_F^{\times,1})=1}=Z_+(1-s,\chi^{-1},\widehat f)+\frac{\widehat f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s-1-t}1_{\chi(\AA_F^{\times,1})=1}.\]
+	The right-hand side now has good analytic properties, so we receive our meromorphic continuation, and the location (and type) of the poles follows from the expression as well. Sending $f\mapsto\widehat f$ and $s\mapsto(1-s)$ and $\chi\mapsto\chi^{-1}$ and summing completes the proof of the functional equation. Indeed, we find
+	\[Z_+(s,\chi,f)-\frac{f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s+t}1_{\chi(\AA_F^{\times,1})=1}=Z_-(1-s,\chi^{-1},\widehat f)-\frac{\widehat f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s-1-t}1_{\chi(\AA_F^{\times,1})=1},\]
+	so summing gives functional equation.
+	% shows that
+	% \[Z_+(s,\chi,f)-\frac{f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s+t}1_{\chi(\AA_F^{\times,1})=1}=Z_+(1-s,\chi^{-1},\widehat f)+\frac{\widehat f(0)\op{vol}\big(F^\times\backslash\AA_F^{\times,1}\big)}{s-1-t}1_{\chi(\AA_F^{\times,1})=1}.\]
+\end{proof}
+\begin{remark}
+	Basically the same proof works for function fields as soon as we choose an isomorphism $\AA_F\to\AA_F^*$, which amounts to the data of an isomorphism $\AA_F\to\AA_{\omega_F}$, which is the data of a nonzero meromorphic differential form $\theta$. Even though this identification depends on the choice of $\theta$, it turns out that the self-dual Haar measure does not. One checks this by comparing the self-dual Haar measure for $\theta$ and some $f\theta$, for any $f\in K(X)^\times$. Alternatively, one can show that the volume of $\prod_v\OO_v^\times$ with respect to the self-dual Haar measure only depends on the genus of $X$.
+\end{remark}
+
+\subsection{A Little Geometric Class Field Theory}
+Let's give a few remarks about the argument for function fields.
+\begin{remark}
+	One can show that \Cref{thm:tate} for $\chi=1$ and function fields $\FF_q(X)$ amounts to the functional equation for $\zeta_X$. This is on the homework.
+\end{remark}
+One may be interested in what happens for nontrivial $\chi$. For example, if $\chi$ is unramified, then it factors through $F^\times\backslash\AA_F^\times/\prod_v\OO_v^\times=\op{Pic}X$. To think about such characters geometrically, we need some class field theory. Indeed, class field theory grants a reciprocity map $\op{Art}_F\colon F^\times\backslash\AA_F^\times\to\op{Gal}(F^{\mathrm{sep}}/F)^{\mathrm{ab}}$, which turns out to fit into a pullback square as follows.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGXlxcdGltZXNcXGJhY2tzbGFzaFxcQUFfRl5cXHRpbWVzIl0sWzEsMCwiXFxvcHtHYWx9KEZee1xcbWF0aHJte3NlcH19L0YpXntcXG1hdGhybXthYn19Il0sWzAsMSwiXFxaWiJdLFsxLDEsIlxcb3B7R2FsfShcXG92ZXJsaW5le1xcRkZ9X3EvXFxGRl9xKSJdLFswLDEsIlxcb3B7QXJ0fV9GIl0sWzAsMiwiXFxkZWciLDJdLFsxLDMsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFsyLDMsIlxcbWF0aHJte0Zyb2J9X3EiXV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	{F^\times\backslash\AA_F^\times} & {\op{Gal}(F^{\mathrm{sep}}/F)^{\mathrm{ab}}} \\
+	\ZZ & {\op{Gal}(\overline{\FF}_q/\FF_q)}
+	\arrow["{\op{Art}_F}", from=1-1, to=1-2]
+	\arrow["\deg"', from=1-1, to=2-1]
+	\arrow[two heads, from=1-2, to=2-2]
+	\arrow["{\mathrm{Frob}_q}", from=2-1, to=2-2]
+\end{tikzcd}\]
+Now, note that finite \'etale covers of $X$ correspond to everywhere unramified field extensions of $F$, so we see that $\op{Gal}(F^{\mathrm{sep}}/F)=\pi_1^{\mathrm{\acute et}}(X)$. The quotient on the other side is $F^\times\backslash\AA_F^\times/\prod_v\OO_v^\times=\op{Pic}X$. Taking the kernel with respect to degree, we may track around the following diagram.
+% https://q.uiver.app/#q=WzAsNyxbMCwzLCJcXG9we1BpY31YIl0sWzAsMiwiRl5cXHRpbWVzXFxiYWNrc2xhc2hcXEFBX0ZeXFx0aW1lcy9cXHByb2RfdlxcT09fdl5cXHRpbWVzIl0sWzAsMSwiRl5cXHRpbWVzXFxiYWNrc2xhc2hcXEFBX0Zee1xcdGltZXMsMX0vXFxwcm9kX3ZcXE9PX3ZeXFx0aW1lcyJdLFsxLDAsIlxccGlfMV57XFxtYXRocm17XFxhY3V0ZSBldH19KFhfe1xcb3ZlcmxpbmV7XFxGRn1fcX0pXntcXG1hdGhybXthYn19Il0sWzEsMSwiXFxrZXIiXSxbMSwzLCJcXHdpZGVoYXR7XFxaWn0iXSxbMSwyLCJcXHBpXzFee1xcbWF0aHJte1xcYWN1dGUgZXR9fShYKV57XFxtYXRocm17YWJ9fSJdLFswLDUsIlxcZGVnIl0sWzMsNCwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzIsNF0sWzEsNl0sWzEsMF0sWzYsNV0sWzIsMSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbNCw2LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJob29rIiwic2lkZSI6InRvcCJ9fX1dXQ==&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+\[\begin{tikzcd}[cramped]
+	& {\pi_1^{\mathrm{\acute et}}(X_{\overline{\FF}_q})^{\mathrm{ab}}} \\
+	{F^\times\backslash\AA_F^{\times,1}/\prod_v\OO_v^\times} & \ker \\
+	{F^\times\backslash\AA_F^\times/\prod_v\OO_v^\times} & {\pi_1^{\mathrm{\acute et}}(X)^{\mathrm{ab}}} \\
+	{\op{Pic}X} & {\widehat{\ZZ}}
+	\arrow[two heads, from=1-2, to=2-2]
+	\arrow[from=2-1, to=2-2]
+	\arrow[hook, from=2-1, to=3-1]
+	\arrow[hook, from=2-2, to=3-2]
+	\arrow[from=3-1, to=3-2]
+	\arrow[from=3-1, to=4-1]
+	\arrow[from=3-2, to=4-2]
+	\arrow["\deg", from=4-1, to=4-2]
+\end{tikzcd}\]
+Indeed, we see that $\op{Pic}^0X$ maps to the kernel of $\pi_1^{\mathrm{\acute et}}(X)\to\widehat{\ZZ}$, which at least admits a surjection from $\pi_1^{\mathrm{\acute et}}(X_{\overline{\mathbb F}_q})^{\mathrm{ab}}$.\footnote{It turns out that the kernel is exactly the Frobenius co-invariants of $\pi_1^{\mathrm{\acute et}}(X_{\overline{\FF}_q})$, which is a finite group.} Thus, $\chi$ produces a homomorphism
+\[\pi_1^{\mathrm{\acute et}}(X_{\overline{\mathbb F}_q})\to\CC^\times,\]
+which is the data of a local system $\mc L_\chi$ on $X_{\overline{\FF}_q}$ of rank $1$. (This map even extends to $\pi_1^{\mathrm{\acute et}}(X)$ by the same argument, so we receive a local system on $X$.)\footnote{It is occasionally convenient to pass from $\pi_1^{\mathrm{\acute et}}(X)$ to the Weil group.} It now turns out that
+\[L(s,\chi)=\prod_{i=0}^2\det\left(1-\mathrm{Frob}_qq^{-s};\mathrm H^i(X_{\overline{\FF_q}};\mc L_\chi)\right)^{(-1)^{i+1}},\]
+which basically follows from the Lefschetz trace formula. For example, if $\chi$ vanishes on $\op{Pic}^0X$, then the $i=0$ term is $1-\chi(a)q^{-s}$ (for some $a\in\AA_F^\times$ with $\deg a=1$), and the $i=2$ term is $1-\chi(a)q^{1-s}$. But if $\chi$ is nontrivial on $\op{Pic}^0X$, then $\mathrm H^0(X;\mc L_\chi)$ vanishes, so $\mathrm H^2$ also vanishes by duality, so we only have $\mathrm H^1$. The total degree should remain the same no matter what $\chi$ is (by some Euler characteristic calculation), so we see that
+\[L(s,\chi)=\det\left(1-\mathrm{Frob}_qq^{-s};\mathrm H^1(X_{\overline{\FF}_q};\mc L_\chi)\right)\]
+is some polynomial of degree $2g-2$. Then one can see that \Cref{thm:tate} yields
+\[L(1-s,\chi^{-1})=q^{(2g-2)s}\det\left(\mathrm{Frob}_q;\mathrm H^*(X_{\overline{\FF_q}};\mc L_\chi)\right)L(s,\chi).\]
+
+\subsection{Local Theory}
+Let's say a few sentences about the local theory.
+\begin{definition}[local integral]
+	Fix a local field $F$. For any $f\in\mc S(F)$ and continuous $\chi\colon F^\times\to\CC^\times$, we define
+	\[Z(s,\chi,f)\coloneqq\int_{F^\times}f(a)\chi(a)\left|a\right|^s\,d^\times a.\]
+\end{definition}
+\begin{remark}
+	A direct calculation shows that $Z(s,\chi,f)$ is some Laurent polynomial in $q^{-s}$ (which depends on $f$) with the controlled denominator $L(s,\chi)$, which is the local $L$-factor.
+\end{remark}
+\begin{theorem}
+	Fix a local field $F$ and a nontrivial character $\psi\colon F\to\CC^\times$. Then
+	\[Z\big(1-s,\chi^{-1},\widehat f\big)=\gamma(s,\chi,\psi)Z(s,\chi,f)\]
+	for some function $\gamma(s,\chi,\psi)$ which is independent of $f$.
+\end{theorem}
+\begin{proof}
+	Omitted.
+\end{proof}
+\begin{remark}
+	One can decompose $\gamma$ further into an $\varepsilon$-factor, which is
+	\[\frac{Z\big(1-s,\chi^{-1},\widehat f\big)/L\left(1-s,\chi^{-1}\right)}{Z(s,\chi,f)/L(s,\chi)}.\]
+\end{remark}
+\begin{remark}
+	Combining the local and global functional equations reveals that there is some $\varepsilon(s,\chi)$ for which $L(s,\chi)=\varepsilon(s,\chi)L\left(1-s,\chi^{-1}\right)$, and
+	\[\varepsilon(s,\chi)=\prod_v\varepsilon_v(s,\chi_v,\psi_v).\]
+	This factorization is fairly surprising! For example, in the function field situation, we have factored some determinant of Frobenius action on cohomology into a product of local terms.
+\end{remark}
+
+\end{document}
