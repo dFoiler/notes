@@ -1,0 +1,224 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 18}
+We continue providing some applications of miniscule weights.
+
+\subsection{The Conjugate Partition}
+Partitions come with a duality.
+\begin{definition}[conjugate]
+	Given a partition $\lambda$, we define the \textit{conjugate partition} $\lambda^\dagger$ to have Young diagram which is the transpose of $\lambda$. Explicitly, the $i$th component of $\lambda^\dagger$ is the number of components of $\lambda$ which are greater than or equal to $i$.
+\end{definition}
+\begin{example}
+	We have that $(3,3,2,1)^\dagger=(4,3,2)$, which we can see as follows.
+	% https://q.uiver.app/#q=WzAsMTksWzAsMCwiXFxidWxsZXQiXSxbMSwwLCJcXGJ1bGxldCJdLFsyLDAsIlxcYnVsbGV0Il0sWzAsMSwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFsyLDEsIlxcYnVsbGV0Il0sWzAsMiwiXFxidWxsZXQiXSxbMSwyLCJcXGJ1bGxldCJdLFswLDMsIlxcYnVsbGV0Il0sWzMsMSwiXFxSaWdodGFycm93Il0sWzQsMCwiXFxidWxsZXQiXSxbNSwwLCJcXGJ1bGxldCJdLFs2LDAsIlxcYnVsbGV0Il0sWzcsMCwiXFxidWxsZXQiXSxbNCwxLCJcXGJ1bGxldCJdLFs1LDEsIlxcYnVsbGV0Il0sWzYsMSwiXFxidWxsZXQiXSxbNCwyLCJcXGJ1bGxldCJdLFs1LDIsIlxcYnVsbGV0Il1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped,sep=tiny]
+		\bullet & \bullet & \bullet && \bullet & \bullet & \bullet & \bullet \\
+		\bullet & \bullet & \bullet & \Rightarrow & \bullet & \bullet & \bullet \\
+		\bullet & \bullet &&& \bullet & \bullet \\
+		\bullet
+	\end{tikzcd}\]
+\end{example}
+\begin{proposition}
+	Fix a partition $\lambda\vdash N$. Then
+	\[\pi_\lambda\otimes\CC_{\mathrm{sgn}}=\pi_{\lambda^\dagger}.\]
+\end{proposition}
+\begin{proof}
+	This is fairly tricky due to our construction of $\pi_\lambda$. We induct on $N$. With $N=1$, this has no content because all representations are trivial.
+
+	For the induction, we may suppose that $\nu\vdash(N+1)$, and remove a box of the Young diagram of $\nu$ to obtain some $\lambda\in\nu-\square$. Now, note that
+	\[(\CC[S_{N+1}]\otimes_{\CC[S_N]}\pi_\lambda)\otimes\CC_{\mathrm{sgn}} = \CC[S_{N+1}]\otimes_{\CC[S_N]}(\pi_\lambda\otimes\CC_{\mathrm{sgn}}),\]
+	which by the induction is $\CC[S_{N+1}]\otimes_{\CC[S_N]}\pi_{\lambda}^\dagger$. But \Cref{cor:add-box-pi-lambda} then explains that this representation is
+	\[\bigoplus_{\eta\in\lambda^\dagger+\square}\pi_\eta.\]
+	It follows that $\pi_\nu\otimes\CC_{\mathrm{sgn}}=\pi_{\overline\nu}$ for some $\overline\nu\in\lambda^\dagger+\square$.
+
+	It remains to identify which partition in $\lambda^\dagger+\square$. For this, we recall from the homework that there is a Jucys--Murphy element $c\coloneqq\sum_{i<j}(ij)\in\CC[S_{N+1}]$ which is central and acts on $\pi_\nu$ by the scalar
+	\[c(\nu)\coloneqq\sum_{(i,j)\in\nu}(j-i).\]
+	Accordingly, it acts on $c(\overline\nu)$ by $-c(\nu)$ (because $-\otimes\CC_{\op{sgn}}$ sends $(ij)$ to $-(ij)$). Similarly, $c$ acts on $\pi_{\nu^\dagger}$ by $c(\nu^\dagger)=-c(\nu)$, which we can see by a direct calculation (namely, flipping the Young diagram and thus flipping $(i,j)$ to $(j,i)$). Thus, $c(\overline\nu)=c(\nu^\dagger)$.
+
+	We are thus done because the contents $c(\mu)$ are all different for all $\mu\in\lambda^\dagger+\square$: indeed, each place to add a square to the Young diagram of $\lambda^\dagger$ adds a different amount to the content. To see this, note that the places to add a box go from the top-right to the bottom-left, and any such move downwards or leftwards strictly decreases the content in the box.
+\end{proof}
+\begin{corollary}[Skew Howe duality]
+	Fix finite-dimensional complex representations $V$ and $W$. Then there is a decomposition into $\op{GL}(V)\times\op{GL}(W)$-representations
+	\[\lambda^N(V\otimes W)=\bigoplus_{\lambda\vdash N}S^\lambda V\otimes S^{\lambda^\dagger}W.\]
+\end{corollary}
+\begin{proof}
+	This is on the homework. The idea is to argue as in \Cref{prop:howe-duality}.
+\end{proof}
+
+\subsection{More on Miniscule Weights in Classical Types}
+We continue with a semisimple Lie algebra $\mf g$ with root lattice $Q$ and weight lattice $P$. We also fix a collection $(\alpha_i)$ of simple roots so that we have our Cartan matrix $A=((\alpha_i,\alpha_j^\lor))_{ij}$. Notably,
+\[\alpha_i=\sum_jA_{ij}\omega_j,\]
+so $P=AQ$, so $\left|P/Q\right|=\det A$.
+\begin{proposition}
+	Fix a semisimple Lie algebra $\mf g$. Then every coset in $P/Q$ admits a unique miniscule weight.
+\end{proposition}
+\begin{proof}
+	Let's start with existence. Fix a coset $C\subseteq P/Q$, and choose some $\omega\in C\cap P_+$ (which exists by adding enough fundamental weights to any representative of $C$). We may even minimize $\omega$ so that $(\omega,\rho^\lor)$ is minimal, where we recall $\rho^\lor\coloneqq\frac12\sum_{\alpha\in\Phi_+}\alpha^\lor$.
+
+	We claim that $\omega$ is miniscule. Well, let $\lambda$ be any dominant weight present in the weight decomposition of $L_\omega$. We want to show that $\omega=\lambda$, which completes the proof by \Cref{prop:miniscule-rep}. Because $\lambda$ is a weight in $L_\omega$, it follows that $\lambda-\omega\in Q_+$, so $\lambda\in C\cap P_+$. Thus, $(\lambda,\rho^\lor)\ge(\omega,\rho^\lor)$ by minimality, so
+	\[(\lambda-\omega,\rho^\lor)\ge0.\]
+	On the other hand, $\omega-\lambda\in Q_+$, so we may expand $\omega-\lambda=\sum_im_i\alpha_i$ for nonnegative $m_i$s, so $(\omega-\lambda,\rho^\lor)\le0$. Thus, $(\omega-\lambda,\rho^\lor)$ actually vanishes, and all the $m_i$s are required to vanish, so $\omega=\lambda$.
+
+	We now turn to uniqueness. Suppose we have two distinct miniscule weights $\omega_1$ and $\omega_2$ in our coset $C$. Then $\omega_1-\omega_2\in Q$ is nonzero, so \Cref{lem:miniscule-not-root} grants us a coroot $\beta$ with $(\omega_1-\omega_2,\beta)\ge2$. Thus, $(\omega_1,\beta)=1$ and $(\omega_2,\beta)=-1$ because these weights are miniscule, which imply that $\beta$ is positive and negative, respectively (by dominance). This is a contradiction, so we are done.
+\end{proof}
+\begin{remark}
+	For example, it follows that the number of miniscule weights is $\left|P/Q\right|=\det A$.
+\end{remark}
+
+\subsection{Miniscule Representations}
+Let's write down some fundamental weights for our classical types. We will not write out all the calculations.
+\begin{example}
+	We write down the fundamental weights for type $C_n$.
+\end{example}
+\begin{proof}
+	Here, $\mf g=\mf{sp}_{2n}$. The positive roots are given by
+	\[\{e_i\pm e_j:i<j\}\sqcup\{2e_i\}_i.\]
+	As such, our simple positive roots are given by $\alpha_1=e_1-e_2,\ldots,\alpha_{n-1}=e_{n-1}-e_n$ and $\alpha_n=2e_{2n}$. The coroots are the same, except $\alpha_n^\lor=e_n$. We can thus see that the fundamental weights are
+	\[\omega_i=(\underbrace{1,\ldots,1}_i,0,\ldots,0)\]
+	because $(\omega_i,\alpha_j^\lor)=1_{i=j}$.
+
+	It follows that $P/Q$ has two classes,\footnote{The root lattice consists of the tuples in $\ZZ^n$ with even sum, but the weight lattice has everything in $\ZZ^n$.} so there is a unique nonzero miniscule weight. We can see that $L_{\omega_1}$ is the standard representation of $\mf{sp}_{2n}$, whose weights are given by $\{\pm e_i\}_i$ (indeed, choose the diagonal torus of $\mf{sp}_{2n}$), which is exactly the orbit of the dominant weight $e_1$ under the Weyl group $S_n\ltimes\{\pm1\}^n$. Thus, $\omega_1$ is the unique nonzero miniscule weight by \Cref{prop:miniscule-rep}.
+\end{proof}
+\begin{example}
+	We write down the fundamental weights and miniscule representations for type $B_n$.
+\end{example}
+\begin{proof}
+	Here, $\mf g=\mf{so}_{2n+1}$. The positive roots are given by
+	\[\{e_i\pm e_j:i<j\}\sqcup\{e_i\}_i.\]
+	As such, our simple positive roots are given by $\alpha_1=e_1-e_2,\ldots,\alpha_{n-1}=e_{n-1}-e_n$ and $\alpha_n=e_{2n}$. The coroots are the same, except $\alpha_n^\lor=2e_n$. We can thus see that the fundamental weights are
+	\[\omega_i=\begin{cases}
+		(\underbrace{1,\ldots,1}_i,0,\ldots,0) & \text{if }i<n, \\
+		(1/2,\ldots,1/2) & \text{if }i=n,
+	\end{cases}\]
+	because $(\omega_i,\alpha_j^\lor)=1_{i=j}$.
+
+	It follows that $P/Q$ has two classes (the present situation is dual to type $C_n$), so there is a unique nonzero miniscule weight. This time, the miniscule weight is $\omega_n$, which can be checked directly by computing the inner product with all the coroots (which have already been described). Thus, by \Cref{prop:miniscule-rep} shows finds that $L_{\omega_n}$ has character with weights which are just signs applied to $\omega_n$.
+	
+	This is the ``spin'' representation $S$. We claim that $S$ does not lift to a representation of $\op{SO}_{2n+1}(\CC)$ but instead lifts to a representation of its universal cover $\op{Spin}_{2n+1}(\CC)$. Indeed, weights of all representations of $\op{SO}_{2n+1}(\CC)$ should be integral: using the bilinear form $\sum z_iz_{n+i}+z_{n+1}^2$, we see that any
+	\[g\coloneqq\op{diag}\left(a_1,\ldots,a_n,a_1^{-1},\ldots,a_n^{-1},1\right)\] 
+	acts on a weight space $L[\lambda]$ by $a_1^{\lambda_1}\cdots a_n^{\lambda_n}$. Thus, if $L$ comes from a representation of $\op{SO}_{2n+1}(\CC)$, then the $\lambda_\bullet$s are required to be integers for the representation to be holomorphic.
+\end{proof}
+\begin{example}
+	We write down the fundamental weights for type $D_n$.
+\end{example}
+\begin{proof}
+	Here, $\mf g=\mf{so}_{2n}$. The positive roots are given by
+	\[\{e_i\pm e_j:i<j\}.\]
+	As such, our simple positive roots are given by $\alpha_1=e_1-e_2,\ldots,\alpha_{n-1}=e_{n-1}-e_n$ and $\alpha_n=e_{n-1}+e_n$. The coroots are the same. We can thus see that the fundamental weights are
+	\[\omega_i=\begin{cases}
+		(\underbrace{1,\ldots,1}_i,0,\ldots,0) & \text{if }i\le n-2, \\
+		(1/2,\ldots,1/2,-1/2) & \text{if }i=n, \\
+		(1/2,\ldots,1/2,1/2) & \text{if }i=n,
+	\end{cases}\]
+	because $(\omega_i,\alpha_j^\lor)=1_{i=j}$.
+
+	It turns out that $P/Q$ has up to four elements,\footnote{It may actually be easier to calculate some candidate miniscule weights first, which we do in the following sentence, and then one can check that they represent all cosets.} which can be computed from $\det A$. Thus, there are three nonzero miniscule weights, which are $L_{\omega_1}$ (which is the standard representation) and the two ``spin representations'' $S_+\coloneqq L_{\omega_{n-1}}$ and $S_-\coloneqq L_{\omega_n}$. The fact that these are miniscule can be computed in the usual way by taking inner products with coroots.
+	
+	Now, by taking a Weyl action, one can compute that the weights of $L_{\omega_{n-1}}$ (respectively, $L_{\omega_n}$) are simple tuples of $\pm1/2$ with an odd number (respectively, even number) of negative signs. Indeed, the Weyl group consists is the semidirect product of $S_n$ acting on the kernel of $\det\colon\{\pm1\}^n\to\{\pm1\}$. As before, $S_+$ and $S_-$ do not lift to $\op{SO}_{2n}(\CC)$.
+\end{proof}
+While we're here, let's say something about our exceptional types.
+\begin{example}
+	For $G_2$, $F_4$, and $E_8$, one directly calculates that $\det A=1$, so $P=Q$, so there are no nonzero miniscule weights.
+\end{example}
+\begin{example}
+	For $E_6$, one finds that $\det A=3$, so there are two nonzero miniscule weights. On the Dynkin diagram, they are the weights $\omega_1$ and $\omega_6$ as follows.
+	% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXG9tZWdhXzEiXSxbMSwwLCJcXGJ1bGxldCJdLFsyLDAsIlxcYnVsbGV0Il0sWzMsMCwiXFxidWxsZXQiXSxbNCwwLCJcXG9tZWdhXzYiXSxbMiwxLCJcXGJ1bGxldCJdLFswLDEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwyLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsMywiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFszLDQsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiw1LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped, sep=tiny]
+		{\omega_1} & \bullet & \bullet & \bullet & {\omega_6} \\
+		&& \bullet
+		\arrow[no head, from=1-1, to=1-2]
+		\arrow[no head, from=1-2, to=1-3]
+		\arrow[no head, from=1-3, to=1-4]
+		\arrow[no head, from=1-3, to=2-3]
+		\arrow[no head, from=1-4, to=1-5]
+	\end{tikzcd}\]
+	It turns out that $L_{\omega_1}$ has dimension $27$, which is related to the lines on a cubic surface; it further turns out that $L_{\omega_6}$ is the dual of $L_{\omega_1}$. There are many ways to construct $L_{\omega_1}$.
+\end{example}
+\begin{example}
+	For $E_7$, one finds that $\det A=2$, so there is only one nonzero miniscule weight. It turns out to be the weight $\omega_1$ as follows.
+	% https://q.uiver.app/#q=WzAsNyxbMSwwLCJcXGJ1bGxldCJdLFsyLDAsIlxcYnVsbGV0Il0sWzMsMCwiXFxidWxsZXQiXSxbNCwwLCJcXGJ1bGxldCJdLFs1LDAsIlxcYnVsbGV0Il0sWzMsMSwiXFxidWxsZXQiXSxbMCwwLCJcXG9tZWdhXzEiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDMsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMyw0LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsNSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs2LDAsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped, sep=tiny]
+		{\omega_1} & \bullet & \bullet & \bullet & \bullet & \bullet \\
+		&&& \bullet
+		\arrow[no head, from=1-1, to=1-2]
+		\arrow[no head, from=1-2, to=1-3]
+		\arrow[no head, from=1-3, to=1-4]
+		\arrow[no head, from=1-4, to=1-5]
+		\arrow[no head, from=1-4, to=2-4]
+		\arrow[no head, from=1-5, to=1-6]
+	\end{tikzcd}\]
+	One has $\dim L_{\omega_1}=56$.
+\end{example}
+
+\subsection{Fundamental Representations}
+Let's work out our fundamental representations.
+\begin{example}
+	We work out the fundamental representations for type $C_n$.
+\end{example}
+\begin{proof}
+	Here, $\mf g=\mf{sp}_{2n}$. We already know that $L_{\omega_1}=V$, where $V$ is the standard representation. We also know that $\land^2V$ contains a copy of $L_{\omega_2}$, but $\land^2V$ is not irreducible: note that the bilinear form is in $\land^2V^*$, so there is a copy of $B^{-1}$ in $\land^2V$. It turns out that the embedding
+	\[L_{\omega_2}\to\land^2V\onto\land^2_0V,\]
+	for example by comparing with the dimension formula.
+
+	The general discussion is on the homework. Namely, for any $i\ge2$, there is a contraction $\iota_B\colon\land^iV\to\land^{i-2}V$ given by contracting along $B$. Its kernel is a subrepresentation $\land^i_0V\subseteq\land^iB$, and finds that $\land^i_0B\cong L_{\omega_i}$. In fact, there is more structure: there is another operator $m_B\colon\land^iV\to\land^{i+2}V$ given by taking a wedge product with $B^*$. Suitably normalized, $f\coloneqq\iota_B$ and $e\coloneqq m_B$ produce an $\mathfrak{sl}_2$-triple on the exterior algebra $\land^\bullet V$, so $\land^\bullet V$ receives an action by $\mf{sl}_2\times\mf{sp}_{2n}$. Thus, we may decompose
+	\[\land^\bullet V=\bigoplus_{i=1}^n\land^i_0V\otimes L_i,\]
+	where $L_i$ is an irreducible representation of $\mf{sl}_2$ with highest weight $m-i$. (Accordingly, we have an instance of \Cref{lem:double-centralizer}.)
+\end{proof}
+\begin{remark}
+	For abelian varieties $A$ of dimension $n$, we see that $\mf{sp}_{2n}$ admits a standard action on $V=\mathrm H^1(A;\CC)$. The decomposition $\land^\bullet V$ turns out to agree with the Hodge decomposition.
+\end{remark}
+\begin{remark}
+	It follows from this discussion and \Cref{prob:find-reps-in-tensors} that all finite-dimensional representations of $\mf{sp}_{2n}$ are found in tensor powers of the standard representation.
+\end{remark}
+\begin{example}
+	We work out the fundamental representations for type $B_n$.
+\end{example}
+\begin{proof}
+	Let $V$ be the standard representation of $\mf{so}_{2n+1}$. On the homework, we will show that the representations $\land^iV$ are all irreducible for $i\le n-1$, so $L_{\omega_i}=\land^iV$.
+\end{proof}
+\begin{example}
+	We work out the fundamental representations for type $D_n$.
+\end{example}
+\begin{proof}
+	Let $V$ be the standard representation of $\mf{so}_{2n+1}$. Again, on the homework, one shows that $\land^iV$ all irreducible for $i\le n-2$, so $L_{\omega_i}=\land^iV$.
+\end{proof}
+\begin{remark}
+	In type $D_n$, it also turns out that $\land^{n-1}V$ is irreducible, but it is not fundamental because $(1,\ldots,1,0)$ is not a fundamental weight: it equals $\omega_{n-1}+\omega_n$. It follows that
+	\[\land^{n-1}V\subseteq S_+\otimes S_-.\]
+	(Indeed, recall the construction of \Cref{prob:find-reps-in-tensors}.)
+\end{remark}
+\begin{remark}
+	Note that the spin representations are not found in tensor powers of the standard representation!
+\end{remark}
+
+\subsection{Spin Groups}
+Here is the easiest example of the spin representation.
+\begin{example}
+	By the ``belt trick,'' one has that $\pi_1(\op{SO}_3(\CC))\cong\ZZ/2\ZZ$, and it turns out that its universal cover is $\op{SL}_2(\CC)$. (Indeed, $\mf{sl}_2=\mf{so}_3$.) In particular, the adjoint representation defines a covering $\op{SL}_2(\CC)\to\op{SO}_3(\CC)$, and it turns out that the kernel is $\{\pm1\}$. (We will also show that $\op{SL}_2(\CC)$ is simply connected in \Cref{ex:sl2-simply-connected}.) Thus, $\op{Spin}_3(\CC)=\op{SL}_2(\CC)$, and the spin representation is just the standard representation.
+\end{example}
+It remains to handle $n\ge3$.
+\begin{proposition}
+	For $n\ge3$, we have $\pi_1(\op{SO}_n(\CC))\cong\ZZ/2\ZZ$.
+\end{proposition}
+We will want the following lemma.
+\begin{lemma}
+	Let $X_n\subseteq\CC^n$ be the hypersurface cut out by the equation
+	\[z_1^2+\cdots+z_n^2=1.\]
+	For any $k\in\{1,\ldots,n-2\}$, one has $\pi_k(X_n)=0$.
+\end{lemma}
+\begin{proof}
+	One can retract $X_n(\CC)$ to $X_n(\RR)$, which is $S^{n-1}$, and then the result follows from calculations of lower-dimensional homotopy groups. To do the contraction, define $f_\bullet\colon X_n\times[0,1]\to X_n$ by
+	\[f_t(x+iy)=\frac{x+tiy}{\sqrt{x^2-t^2y^2}}.\]
+	Indeed, note that $x+iy\in X_n$ (where $x,y\in\RR^n$) is equivalent to having $\left|x\right|^2-\left|y\right|^2=1$ and $xy=0$, and we can see that the output continues to have this property. But now $f_1$ is the identity and $f_0$ has real output, so we are done.
+\end{proof}
+\begin{example} \label{ex:sl2-simply-connected}
+	Adjusting basis, one sees that
+	\[\op{SL}_2(\CC)=\{(a,b,c,d):ad-bc=1\}\]
+	is simply connected (by taking $n=4$).
+\end{example}
+
+\end{document}

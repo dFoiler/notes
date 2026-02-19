@@ -1,0 +1,192 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{February 18}
+Today we say something about representation theory.
+
+\subsection{Overview}
+Approximately speaking, given a reductive group $G$ over a global field $F$, we will be interested in ``automorphic representations,'' which are roughly speaking those representations of $G(\AA_F)$ which appear in $L^2(G(F)\backslash G(\AA_F))$. Such representations turn out to have poor categorical properties, so there are some technicalities involved in the definition of ``automorphic.''
+
+Because $G$ is an affine group scheme over $F$, one finds that $G(\AA_F)$ is the restricted direct product
+\[G(\AA_F)=\prod_v(G(F_v),G(\OO_v)),\]
+where we have given $G$ an integral model which extends over all but finitely many places of $F$. Thus, we should start by discussing some ``local'' representation theory. We'll start with $p$-adic groups, whose representations are understood via a Hecke algebra; then we will turn to real groups, whose representations are understood via $(\mf g,K)$-modules.
+
+Once we have control over local representation theory, we can find automorphic representations of $G(\AA_F)$ to be given as a (restricted) tensor product of local representations. Eventually, for $G=\op{GL}_2$, we will be able to relate all this to the classical theory of modular forms.
+
+\subsection{Totally Disconnected Groups}
+For now, $F$ will be a nonarchimedean local field with ring of integers $\OO$ and residue field $k$.
+\begin{definition}
+	An \textit{algebraic group} $G$ over a field $F$ is an affine group scheme of finite type over $F$.
+\end{definition}
+\begin{proof}
+	It turns out that any such $G$ admits a closed embedding into $\op{GL}_n$ for some $n$. This amounts to the statement that $G$ admits a faithful representation, which can be found by taking a suitable regular representation.
+\end{proof}
+When $F$ is a local field (or more generally, a Hausdorff topological ring), one can give $G(F)$ a topology so that closed embeddings of schemes (over $F$) go to closed embeddings of topological spaces, and the topology of $\AA^n(F)=F^n$ is the obvious one.
+\begin{example}
+	The group $\op{GL}_n$ admits a closed embedding into $\AA^{n+1}$ by $g\mapsto\left((g_{ij}),\det g^{-1}\right)$.
+\end{example}
+\begin{example}
+	If $F$ is a nonarchimedean local field, then $\det\colon\op{GL}_n(F)\to F^\times$ is already continuous, so in fact the map
+	\[\op{GL}_n(F)\to M_n(F)\]
+	is an open embedding. Indeed, by construction of the topology, an open neighborhood basis of $\op{GL}_n(F)$ are the set
+	\[K_{a,b}\coloneqq\{A\in\op{GL}_n(F):A-1\in\mf p^aM_n(\OO),\det A\in(1+\mf p^b)\},\]
+	but $\det^{-1}$ is continuous as a map from the subspace of $n\times n$ invertible matrices to $F^\times$ (indeed, $\det^{-1}$ is a rational function), so we may always expand $a$ to satisfy the $b$ condition.
+\end{example}
+\begin{remark}
+	Set
+	\[K_m\coloneqq\{A\in\op{GL}_n(\OO_F):(A-1)\in\mf p^nM_n(\OO)\}.\]
+	These are compact open subgroups of $\op{GL}_n(\OO_F)$. By definition, $K_m$ is the kernel fitting in the exact sequence
+	\[1\to K_m\to\op{GL}_n(\OO_F)\to\op{GL}_n(\OO/\mf p^m).\]
+\end{remark}
+\begin{example}
+	Fix a quadratic space $V$ over a field $F$. One can now describe the topology on a classical group $\op O(V)(F)$ as the closed subspace topology from $\op{GL}(V)$.
+\end{example}
+Having so many compact open subgroups is a remarkable property.
+\begin{definition}[totally disconnected]
+	A topological group $G$ is \textit{totally disconnected} if and only if $G$ is Hausdorff, second countable, and admits an open neighborhood basis of the identity consisting of compact open subgroups.
+\end{definition}
+\begin{example}
+	For any affine algebraic group $G$ over a local field $F$, we can embed $G(F)\subseteq\op{GL}_n(F)$. Then the countable open compact neighborhood basis for $\op{GL}_n(F)$ makes $G(F)$ totally disconnected.
+\end{example}
+
+\subsection{Smooth Representations}
+We will be able to do quite a bit with general totally disconnected groups.
+\begin{definition}[smooth]
+	Fix a totally disconnected group $G$. Then a complex representation $V$ of $G$ is \textit{smooth} if and only if the action map
+	\[G\times V\to V\]
+	is continuous, where $V$ has been given the discrete topology. A \textit{homomorphism} of smooth representations is a morphism of the underlying representations of $G$.
+\end{definition}
+\begin{remark}
+	Equivalently, we are asking for each $v\in V$ to have open pre-image in $G\times V$. Because $V$ has been given the discrete topology, this simply means that $\op{Stab}_G(v)\subseteq G$ is open for all $v\in V$. Note that it is enough for the subgroup to merely contain an open neighborhood $U$ of $1$ because then $\op{Stab}_G(v)$
+\end{remark}
+\begin{example}
+	Fix a nonarchimedean local field $F$. Any continuous homomorphism $F^\times\to\CC^\times$ admits some open subgroup $1+\ker\mf p^\bullet$ in its kernel, by a ``no small subgroups'' argument.
+\end{example}
+Sometimes our representations are not smooth, but we can find smooth representations within.
+\begin{definition}[smooth]
+	Fix a complex representation $V$ of a totally disconnected group $G$. A vector $v\in V$ is \textit{smooth} if and only if $\op{Stab}_G(v)$ is open. We let $V^{\mathrm{sm}}$ denote the collection of smooth vectors.
+\end{definition}
+\begin{remark}
+	By taking intersections of open subgroups, we see that linear combinations of smooth vectors continue to be smooth. It follows that $V^{\mathrm{sm}}$ is a subspace, and we can see that it is even $G$-invaraint.
+\end{remark}
+\begin{example}[smooth functions]
+	Let $V$ be the space of all functions $G\to\CC$, and let $G$ act on $V$ by $(gf)(x)\coloneqq f(xg)$. (One could also restrict to those functions with compact support.) However, functions $f\colon G\to\CC$ are rarely smooth: this amounts to requiring that $f(xg)=f(x)$ for $g$ contained in an open subgroup of $G$, meaning that $f$ descends to a quotient $G/K$ for an open subgroup $K$ of $G$. Equivalently, we may write this representation as
+	\[\bigcup_{m\ge1}\op{Mor}(G/K_m,\CC),\]
+	where $\{K_m\}$ is some countable compact open neighborhood basis of the identity.
+\end{example}
+These smooth functions will be useful to us.
+\begin{notation}
+	Fix a totally disconnected group $G$. We let $C_c^\infty(G)$ denote the collection of locally constant functions on $G$ of compact support.
+\end{notation}
+\begin{remark}
+	It turns out that functions in $f\in C_c^\infty(G)$ admit an open neighborhood $K$ for which
+	\[f(kxk')=f(x)\]
+	for any $k,k'\in K$. Indeed, $f$ can be written as a finite linear combination of indicators of compact open subsets. By translating, we may further reduce to the case where $f$ is the indicator of some compact open subgroup $K'$, for which we can take $K\coloneqq K'$.
+\end{remark}
+\begin{example}[induction]
+	Given a subgroup $H\subseteq G$, we can let $G$ act by right translation on functions $H\backslash G\to\CC$. Then $\op{Mor}(H\backslash G,\CC)$ is the induction of the trivial representation from $H$ to $G$.
+\end{example}
+
+\subsection{Categorical Properties}
+Let's make a few remarks about functoriality.\todo{What is the affine group?}
+\begin{notation}
+	Fix a totally disconnected group $G$. The category of smooth representations of $G$ will be denoted $\op{Rep}_\CC^{\mathrm{sm}}(G)$.
+\end{notation}
+\begin{remark}
+	By definition, $\op{Rep}_\CC^{\mathrm{sm}}(G)$ is a full subcategory of $\op{Rep}_\CC(G)$.
+\end{remark}
+\begin{remark}
+	One can check that the direct sum, subrepresentation, and quotients of smooth representations all continue to be smooth. It follows that $\op{Rep}_\CC^{\mathrm{sm}}(G)$ is an abelian category, and it admits limits and colimits.
+\end{remark}
+There is also a dual, but we must be careful because functionals have no reason to be smooth.
+\begin{definition}[contragredient]
+	Fix a smooth representation $V$ of a totally disconnected group $G$. Then the \textit{contragredient} $V^\lor$ consists of the smooth vectors in $V^*$.
+\end{definition}
+\begin{remark}
+	Explicitly, $V^*$ consists of those functionals $\varphi\colon V\to\CC$ for which there is an open subgroup $K\subseteq G$ for which
+	\[\varphi(kv)=\varphi(v)\]
+	for all $v\in V$ and $k\in K$.
+\end{remark}
+\begin{remark}
+	By construction, we see that $(V^\lor)^K=\op{Mor}(V_K,\CC)$, where $V_K$ denotes the ``coinvariants.''
+\end{remark}
+The category of smooth representations is quite flexible, but smooth representations will occasionally be ``too big'' for our purposes. We don't want to require that our representations are fully finite-dimensional, but it will be nice to have some finiteness.
+\begin{definition}[admissible]
+	Fix a smooth representation $V$ of a totally disconnected group $G$. Then $V$ is \textit{admissible} if and only if
+	\[\dim V^K<\infty\]
+	for any compact open subgroup $K\subseteq G$.
+\end{definition}
+\begin{remark}
+	Note that $V$ being smooth means that $V=\bigcup_{K\subseteq G}V^K$, so admissibility means that $V$ is a union of finite-dimensional vector spaces.
+\end{remark}
+\begin{nex}
+	If $G$ fails to be compact, then the right regular representation $\op{Mor}(G,\CC)^{\mathrm{sm}}$ is not admissible. Indeed, for any open compact subgroup $K\subseteq G$, we see that $\op{Mor}(G,\CC)^K=\op{Mor}(K\backslash G,\CC)$, which is infinite-dimensional because $K\backslash G$ is not compact.
+\end{nex}
+\begin{example}
+	Even if $G$ fails to be compact, we may be able to find a closed subgroup $H\subseteq G$ such that $H\backslash G$ is compact. Then for any compact open subgroup $K\subseteq G$, we see that $H\backslash G/K$ is finite (because $K$ is open), so
+	\[\dim\op{Mor}(H\backslash G,\CC)^K<\infty.\]
+	It follows that the induction $\op{Mor}(H\backslash G,\CC)^{\mathrm{sm}}$ is admissible.
+\end{example}
+\begin{remark}
+	One can check that the natural map $V\to(V^\lor)^\lor$ is an isomorphism if $V$ is admissible. Indeed, because $V=\bigcup_{K\subseteq G}V^K$, it is enough to check that the canonical map is an isomorphism after passing to $K$-invariants, where it is true because everything is finite-dimensional.
+\end{remark}
+
+\subsection{Hecke Algebra}
+Our next task is to realize our category of representations as modules over a convenient algebra.
+\begin{example}
+	For any group $G$, we know that $\op{Rep}_\CC(G)\cong\op{Mod}(\CC[G])$: indeed, a $G$-action on a vector space extends uniquely (linearly) to an action by $\CC[G]$.
+\end{example}
+\begin{remark}
+	It turns out to be more convenient to view $\CC[G]$ (dually) as the functions $G\to\CC$ with finite support. In this case, the multiplication is given by convolution: one has
+	\[(f_1*f_2)(x)\coloneqq\sum_{y\in G}f_1(y)f_2\left(y^{-1}x\right).\]
+	Indeed, we can see that $1_{g_1}*1_{g_2}=1_{g_1g_2}$, so this is the multiplication that we expect.
+\end{remark}
+Motivated by the above remark, we find the following.
+\begin{definition}[Hecke algebra]
+	Fix a totally disconnected group $G$. Then we define the \textit{Hecke algebra} $\mc H$ to be $C_c^\infty(G)$. Upon fixing a left Haar measure $dg$, we may define a convolution operation by
+	\[(f_1*f_2)(x)\coloneqq\int_Gf_1(g)f_2\left(g^{-1}x\right)\,dg.\]
+\end{definition}
+The convolution operation is distributive. To see that it is associative, note that
+\[((f_1*f_2)*f_3)(x)=\int_G\int_Gf_1(h)f_2\left(h^{-1}g\right)f_3\left(g^{-1}x\right)\,dh\,dg,\]
+but
+\[(f_1*(f_2*f_3))(x)=\int_G\int_Gf_1(g)f_2(h)f_3\left(h^{-1}g^{-1}x\right)\,dh\,dg.\]
+These integrals are seen to be the same by sending $h\mapsto g^{-1}h$.
+\begin{remark}
+	There was some concern about if $dg$ should be left- or right-invariant. If $G(F)$ is the $F$-points of a reductive algebraic group, then it turns out that $G(F)$ is unimodular (which one sees by an explicit construction of this measure by choosing a trivialization of $\land^{\dim G}TG$), so this doesn't matter!
+\end{remark}
+However, the algebra is not unital.
+\begin{remark}
+	If $G$ is discrete, then we can normalize $dg$ to be the counting measure. Then $\mc H$ admits a unit $\delta_1$ given by the indicator at the identity: one can directly compute $f*\delta_1=f$. As such, we do not expect $\mc H$ to be unital.
+\end{remark}
+\begin{remark}
+	The algebra $\mc H$ admits many idempotents: for any compact open subgroup $K\subseteq G$, note that $1_K*1_K=\op{vol}(K;dg)1_K$, so $e_K\coloneqq\op{vol}(K;dg)^{-1}1_K$ is an idempotent element! In fact, these elements form an approximate identity: for any function $f$, one can find $K$ small enough so that $e_K*f=f$.
+\end{remark}
+\begin{remark}
+	It is actually more convenient to view $\mc H$ as locally constant, compactly supported measures on $G$, which have an easier time acting on representations. In other words, we are looking at measures of the form $f(g)\,dg$, where $f\in C_c^\infty(G)$. The reason this is convenient is that the multiplication now becomes canonical: given two measures $\mu_1$ and $\mu_2$, note that the product measure $\mu_1\boxtimes\mu_2$, which continues to have compact support and be locally constant. Thus, there is a pushforward measure $m_*(\mu_1\boxtimes\mu_2)$, which is again locally constant of compact support. One can unwind the definitions to see that $m_*(f_1\,dg\boxtimes f_2\,dg)=(f_1*f_2)\,dg$, so this operation agrees with the previous one.
+\end{remark}
+Let's take a moment to explain how $\mc H$ acts on representations.
+\begin{lemma}
+	Fix a totally disconnected group $G$. There is a fully faithful embedding $\op{Rep}_\CC^{\mathrm{sm}}(G)\to\op{Mod}(\mc H)$.
+	% Fix a smooth representation $V$ of a totally disconnected group $G$.
+	% \begin{listalph}
+	% 	\item Then $\mc H$ admits a natural action on $V$.
+	% 	\item For any $v\in V$, there is a compact open subgroup $K\subseteq G$ for which $e_Kv=v$.
+	% \end{listalph}
+\end{lemma}
+\begin{proof}
+	For (a), the action is given by
+	\[\mu\cdot v\coloneqq\int_Ggv\,d\mu(g).\]
+	Note that the integral always converges because $\mu$ has compact support. By an explicit calculation with $f\,dg$s, one can check that this action makes $V$ into an $\mathcal H$-module. This functor is of course faithful (because linear maps are just sent to themselves).
+
+	It remains to check that our functor is full. Fix a linear map $\varphi$ between two smooth representations $V$ and $W$, and suppose that $\varphi$ preserves the $\mc H$-module structure. We would like to show that $g\varphi(v)=\varphi(gv)$ for any $g\in G$ and $v\in V$. Well, for any sufficiently small compact open subgroup $K$ of $g$, we see that $e_Kv=v$, so the given equation is equivalent to $\varphi$ preserving the action by the translated measure $ge_K$.
+\end{proof}
+\begin{remark}
+	Further, by shrinking $K$, we may assume that $v\in V^K$ and that $\mu=f\,dg$ where $f$ is $K$-invariant. It follows that
+	\[\mu\cdot v=\sum_{g\in G/K}f(g)\op{vol}(K;dg)(gv)\]
+	by factoring the integral.
+\end{remark}
+
+\end{document}
