@@ -1,0 +1,254 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 2}
+We'll need to review a little topology.
+
+\subsection{Review of Topology}
+We end our class by saying something about integration.
+\begin{definition}[locally compact]
+	Fix a Hausdorff topological space $X$. Then $X$ is \textit{locally compact} if and only if any $p\in X$ admits an open neighborhood $U$ for which the closure $\overline U$ is compact.
+\end{definition}
+\begin{example}
+	The base of balls in $\RR^n$ shows that $\RR^n$ is locally compact. Because manifolds are locally homeomorphic to $\RR^n$, we see that manifolds are locally compact.
+\end{example}
+\begin{lemma} \label{lem:filter-locally-compact-space}
+	Fix a second countable locally compact space $X$. Then $X$ admits a filtration $\{K_i\}$ of compact sets for which $X=\bigcup_iK_i$, and each $x\in X$ admits an open neighborhood contained in some $K_i$.
+\end{lemma}
+\begin{proof}
+	The idea is that $X$ being second countable means that any open cover can be refined (and shrunken) into a countable one. Indeed, for an open cover $\mc U$, define a function from the base $\mc B$ to $\mc U$ by sending a basic open subset $B$ to one in $\mc U$ which contains it, if one exists. The image of this map is the required subcover.
+	
+	Thus, for each $x\in X$, we find an open neighborhood $U_x$ such that $\overline{U}_x$ is compact. Then $\{U_x\}_{x\in X}$ can be refined to a countable subcover $\{U_i\}_{i=1}^n$, and defining
+	\[K_j\coloneqq\bigcup_{i\le j}\overline{U_i}\]
+	will do the trick.
+\end{proof}
+\begin{definition}[locally finite]
+	An open cover $\mc U$ of a topological space $X$ is \textit{locally finite} if and only if each $x\in X$ admits an open neighborhood $V$ for which
+	\[\{U\in\mc U:U\cap V\ne\emp\}\]
+	is finite for each $x\in U$.
+\end{definition}
+\begin{lemma} \label{lem:locally-finite-subcover}
+	Fix a second countable locally compact topological space $X$. Then every base of $X$ has a countable, locally finite subcover.
+\end{lemma}
+\begin{proof}
+	By \Cref{lem:filter-locally-compact-space}, we may filter $X$ as $X=\bigcup_iK_i$ by compact sets as described.
+
+	Let our base be $\mc B$, and we will build our subcover $\mc U$ by removing elements from $\mc B$, starting with $\mc U=\mc B$. We may immediately assume that it is countable because $X$ is second countable, so we may enumerate $\mc U$ as $\{U_i\}_{i\in\NN}$. We now apply the following inductive process for each $n$, starting with $n=1$.
+	\begin{enumerate}
+		\item Because $K_n$ is compact, we are granted a positive integer $N$ for which $\{U_i\}_{i\le N}$ covers $K_n$, which we keep in $\mc U$.
+		\item We then remove from $\mc U$ all other open subsets which intersect with $K_n$, and go back to the previous step now with $K_{n+1}$. Note that because $\mc B$ was a base, any element $x\notin K_n$ will admit an open neighborhood avoiding $K_n$, so $\mc U$ continues to be a base on $X\setminus K_n$.
+	\end{enumerate}
+	At the end of this process, we see that $\mc U$ is certainly a countable cover of $X$, and it is locally finite because any point $x\in X$ admits an open neighborhood $U$ contained in one of the $K_n$s, and each $K_n$ only has intersection with finitely many open subsets in $\mc U$.
+\end{proof}
+Let's also say something about differential forms.
+\begin{definition}[differential form]
+	Fix a manifold $M$ of dimension $n$. For a positive integer $k\le n$, we define $\Omega^k(M)$ to be the space of \textit{differential forms} of degree $k$. Explicitly, $\Omega^k(M)\coloneqq\land^kT^*M$.
+\end{definition}
+\begin{remark}
+	In local coordinates $(x_1,\ldots,x_n)$ of $M$, a local frame of $T^*M$ is given by $\{dx_1,\ldots,dx_n\}$. Thus, some $\omega\in\Omega^k(M)$ takes the form
+	\[\omega=\sum_{i_1<\cdots<i_k}f_{i_1\ldots i_k}(x)\,dx_{i_1}\land\cdots\land dx_{i_k}.\]
+	If we wanted to change coordinates to some $(y_1,\ldots,y_n)$, where we now think of $x_i$ as a function of the $y$s, then
+	\[\omega=\sum_{\substack{i_1<\cdots<i_k\\j_1<\cdots<j_k}}f_{i_1\ldots i_k}\det\left[\frac{\del(x_{i_1},\ldots,x_{i_k}}{\del(y_{j_1},\ldots,y_{j_k})}\right]dy_{j_1}\land\cdots\land dy_{j_k}.\]
+\end{remark}
+\begin{definition}[de Rham cohomology]
+	Fix a manifold $M$. There is a differential map $d\colon\OO(M)\to\Omega(M)$ given by sending a function $f$ to the covector $df$; this extends to a map $d\colon\Omega^k(M)\to\Omega^{k+1}(M)$. Then the \textit{$k$th de Rham cohomology} of $M$ is given by
+	\[\mathrm H^k_{\mathrm{dR}}(M)=\frac{\ker\left(d\colon\Omega^k(M)\to\Omega^{k+1}(M)\right)}{\im\left(d\colon\Omega^{k-1}(M)\to\Omega^k(M)\right)}.\]
+\end{definition}
+
+\subsection{Partition of Unity}
+It is frequently desirable to pass some result to an open cover, for which one uses partitions of unity.
+\begin{definition}[partition of unity]
+	Fix an open cover $\mc U$ of a manifold $M$. Then a \textit{partition of unity} subordinate to $\mc U$ is a collection of smooth nonnegative functions $\{f_i\}_{i\in I}$ satisfying the following.
+	\begin{itemize}
+		\item For each $i$, we have $\op{supp}f_i\subseteq U_i$ for some $U_i\in\mc U$.
+		\item Each $y\in M$ admits an open neighborhood $V$ such that all but finitely many of the $f_i$s are nonzero on $V$.
+		\item We have $\sum_if_i=1$.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	For each $U\in\mc U$, we may then define a function
+	\[F_U\coloneqq\sum_{\substack{i\in I\\U_i=U}}f_i\]
+	is also a partition of unity, where $\op{supp}F_U\subseteq U$ for each $U$.
+\end{remark}
+\begin{remark}
+	Let $\{f_i\}$ be a partition of unity. Then for each $x\in M$, we see that the sum $\sum_if_i(x)$ is a finite sum by the second point. Furthermore, only countably many of the $f_i$s are allowed to be nonzero because any open cover of $M$ admits a countable subcover, which we apply to the open cover coming from the second point.
+\end{remark}
+\begin{proposition}
+	Every open cover $\mc U$ of a manifold $M$ admits a smooth partition of unity subordinate to $\mc U$.
+\end{proposition}
+\begin{proof}
+	We may as well assume that $M$ is connected. Then set $n\coloneqq\dim M$. The function
+	\[h(t)\coloneqq\begin{cases}
+		e^{1/(t-1)} & \text{if }t\in[0,1), \\
+		0 & text{if }t\ge1,
+	\end{cases}\]
+	is a smooth function $[0,\infty)\to[0,1]$, supported on $[0,1]$, and has $h(0)=1$. We can then define $H(x)\coloneqq h\big(\left|x\right|^2\big)$ to be a smooth function $H\colon\RR^n\to[0,1]$ supported on the unit ball satisfying $H(0)=1$.
+
+	Briefly, for any closed embedding $\overline{B(0,1)}\to M$, we let the image be called a closed ball. The point is that any closed ball $\overline B\subseteq M$ admits a smooth function $H_B\colon M\to[0,1]$ defined by extending the composite
+	\[\overline B\cong\overline{B(0,1)}\stackrel H\to[0,1]\]
+	to all of $M$ by extending by zero. In particular, this continues to be smooth because $H$ and all its derivatives vanish at the boundary.
+
+	Now, for each $x\in M$, one can find an open neighborhood of $x$ contained in some $U_x\in\mc U$ which is homeomorphic to $\RR^n$. Thus, we can find a closed ball $\overline B_x$ around $x$ contained in $U_x$. Then $\{B_x\}_{x\in M}$ is a cover for $M$, which by \Cref{lem:locally-finite-subcover} can be reduced to a locally finite countable subcover $\{\overline B_i\}_{i\in I}$. Then note that the function
+	\[F\coloneqq\sum_{i\in I}H_{B_i}\]
+	is locally a finite sum and thus well-defined. (Namely, by construction, each $x\in M$ admits an open neighborhood $U$ admitting only finitely many of the $B_i$s.) Further, it is smooth by construction (which is checked locally where this is a finite sum), and it is positive everywhere because $H_{B_i}$ is positive on $B_i$. We can now define $f_i\coloneqq H_{B_i}/F$ for each $i$, and we find that $\{f_i\}_{i\in I}$ is our desired partition of unity. For example, note that $H_{B_i}$ is supported inside some $U_i\in\mc U$ by construction of $B_i$!
+\end{proof}
+\begin{remark}
+	Even if $M$ is merely a locally compact topological space, one can find continuous partitions of unity. Of course, a different argument is required.
+\end{remark}
+
+\subsection{Integration on Manifolds}
+We are now ready to define some notion of integration. Recall that one can integrate any continuous nonnegative function $f$ on an open subset $U\subseteq\RR^n$, notated
+\[\int_Uf(x_1,\ldots,x_n)\,dx_1\land\cdots\land dx_n.\]
+(This is explained in a typical calculus class.) Note that changing variables in the integral from some $x_\bullet$s to some $y_\bullet$s introduces a factor of
+\[\left|\det\left[\del x_i/\del y_j\right]\right|,\]
+but $dx_1\land\cdots\land dx_n$ will introduce the same factor without the absolute values. Thus, our integral is only well-defined up to changes of variables with positive Jacobians. This amounts to a choice of orientation on the manifold.
+\begin{definition}[integral]
+	Let $M$ be an oriented manifold of dimension $n$, and choose a continuous $n$-form $\omega$ which is nonnegative on oriented bases of the tangent spaces. Further, fix an orientation-preserving atlas $\{(U_i,\varphi_i)\}$ on $M$, and let $\{f_i\}$ be a partition of unity subordinate to the cover $\{U_i\}$. Then we define
+	\[\int_M\omega\coloneqq\sum_{i\in I}\int_{\varphi(U_i)}\varphi_i^*(f_i\omega).\]
+\end{definition}
+\begin{remark}
+	One can check that this integral does not depend on the choice of atlas and also on the choice of partition of unity. Indeed, if we want to compare the integral to one coming from an atlas $\{(V_j,\psi_j)\}_j$ with partition of unity $\{g_j\}_j$, one has an atlas $\{(U_i\cap V_j)\}_{ij}$ refining both with partition of unity $\{f_ig_j\}_{ij}$. But one can then calculate that refining an atlas and partition of unity will not change the answer of our integral simply by splitting up integrals in $\RR^n$ into various open covers.
+\end{remark}
+\begin{remark}
+	One can even make a definition without the hypothesis on $\omega$. Indeed, for any $\omega$, we can define
+	\[\left|\omega\right|(v_1,\ldots,v_n)\coloneq\left|\omega(v_1,\ldots,v_n)\right|\]
+	for any oriented basis $\{v_1,\ldots,v_n\}$ of a tangent space. Then we may integrate $\left|\omega\right|$.
+\end{remark}
+\begin{remark}
+	If $\omega$ is a complex-valued differential form, then we can still integrate $\omega$ by integrating the real and complex parts separately.
+\end{remark}
+\begin{remark}
+	There is a bundle of ``densities'' on $M$, denoted $\left|\land^nTM\right|$, which is a real line bundle on $M$. The point is that ``things we can integrate'' live in this bundle. Formally, the real line bundle has transition functions given by $\left|g_{ij}\right|$, where the $g_{ij}$s are the transition functions for $\land^nTM$. It turns out that this bundle is always trivial, which one sees by trivializing it locally and then gluing the pieces together via a partition of unity; its positive sections are (smooth) measures on $M$.
+\end{remark}
+It is worthwhile to explain the source of orientations for our purposes.
+\begin{remark} \label{rem:top-form-to-orientation}
+	Any choice of continuous differential top form $\omega\in\Omega^n(M)$ which is non-vanishing everywhere, then we can use $\omega$ to define an orientation simply by saying that a basis $\{v_1,\ldots,v_n\}$ of a tangent space is oriented if and only if $\omega(v_1,\ldots,v_n)>0$. (For example, this implies that nonorientable manifolds have no non-vanishing top forms.) Notably, this choice of $\omega$ then induces a measure $\mu$ on $M$ given by sending $U$ to the integral $\int_U\omega$; note that this measure is finite on small enough open subsets, which we can see by passing to Euclidean space.
+\end{remark}
+\begin{notation}
+	Fix a non-vanishing top differential form $\omega$ of a manifold $M$. Then we let $\mu_\omega$ denote the measure
+	\[\mu_\omega(U)\coloneqq\int_U\omega.\]
+\end{notation}
+The moral is that we may integrate general nonnegative continuous functions on $M$ against the measure $\mu_\omega$, using measure theory.
+\begin{remark} \label{rem:compact-has-finite-vol}
+	If $M$ is compact, then one can check that $\int_M\omega$ is finite. Indeed, compactness allows us to give $M$ a finite cover by closed balls, and integrals over closed balls are known to be compact from calculus (for example, they have maximums and so on).
+\end{remark}
+The last thing we should say about integration is Stokes's theorem.
+\begin{theorem}[Stokes]
+	Let $M$ be an oriented manifold (with boundary) of dimension $n$. If $\omega$ is a smooth $(n-1)$-differential form with compact support, then
+	\[\int_Md\omega=\int_{\del M}\omega.\]
+\end{theorem}
+\begin{example}
+	If $\del M=\emp$, then $\int_Md\omega=0$.
+\end{example}
+\begin{proof}[Sketch]
+	Using a partition of unity, we may reduce to the case where $M$ is a subset of Euclidean space. Namely, for a given partition of unity $\{f_i\}$, one finds that
+	\[\int_{\del M}\omega=\sum_{i\in I}\int_{\del M}f_i\omega,\]
+	and
+	\[\int_{\del M}f_i\omega=\int_M(df_i\land\omega+f_i\,d\omega)\]
+	by a local calculation. (This reduces to the Fundamental theorem of calculus, once one finds a way to pass from arbitrary subsets of Euclidean space to boxes.) Now, summing over each $i$ finds that $\sum_idf_i=d(1)=0$, so the left summand cancels out. Summing over the right summand completes the proof.
+\end{proof}
+
+\subsection{Integration on Lie Groups}
+Here is our construction.
+\begin{lemma}
+	Real lie groups are orientable.
+\end{lemma}
+\begin{proof}
+	Fix a real Lie group $G$ with Lie algebra $\mf g$ of dimension $n$. We can then choose any nonzero $\xi_1\in\land^n\mf g^*$, and then $\xi_1$ extends to a full left-invariant top differential form by
+	\[\xi_g\coloneqq L_g^*\xi_1.\]
+	This continues to be a smooth top differential form, so we receive an orientation by \Cref{rem:top-form-to-orientation}.
+\end{proof}
+\begin{remark}
+	Note that this choice of left-invariant top differential form $\xi$ is unique up to rescaling. Indeed, $\land^n\mf g^*$ is a one-dimensional vector space, so any two $\xi$ and $\xi'$ will differ by a scalar at the identity, which then spreads out.
+\end{remark}
+\begin{definition}[Haar measure]
+	Fix a real Lie group $G$. Then we let $\mu_L$ be the left-invariant Haar measure induced by the left-invariant top differential form, which is unique up to scalar. We define $\mu_R$ similarly.
+\end{definition}
+One may hope that $\mu_L$ and $\mu_R$ agree, but this is not always the case.
+\begin{proposition}
+	Fix a real Lie group $G$. Then $\mu_L=\mu_R$ (up to scalar) if and only if $\left|\land^n\mf g^*\right|$ s a trivial representation of $G$.
+\end{proposition}
+\begin{proof}
+	Note that $\mu_L=\mu_R$ is equivalent to $\mu_R$ being a left Haar measure, which is equivalent to $\mu_R$ being conjugation-invariant. Thus, we would like for the corresponding density $\left|\xi\right|\in\left|\land^n\mf g^*\right|$ to be conjugation-invariant. But $G$ is acting by the adjoint anyway, so having a density be conjugation-invariant implies that the full representation is trivial.
+\end{proof}
+\begin{remark}
+	This representation is simply given by acting by $\det\op{Ad}_g$, so it is equivalent to ask for $\det{\op{Ad}_g}\in\{\pm1\}$ for all $g$.
+\end{remark}
+\begin{example}
+	Let $G$ be the group of real matrices of the form $\begin{bsmallmatrix}
+		a & b \\ 0 & 1
+	\end{bsmallmatrix}$, where $a>0$. Then $\mf g$ consists of matrices of the form $\begin{bsmallmatrix}
+		a & b \\ 0 & 0
+	\end{bsmallmatrix}$, and one can check that toral elements $\op{diag}(t,1)\in G$ have nontrivial determinant adjoint action on $\mf g$: indeed, $\op{diag}(t,1)$ sends $\begin{bsmallmatrix}
+		a & b \\ 0 & 0
+	\end{bsmallmatrix}\mapsto\begin{bsmallmatrix}
+		a & tb \\ 0 & 0
+	\end{bsmallmatrix}$.
+\end{example}
+This test is fairly easy to execute in some cases.
+\begin{definition}[unimodular]
+	A real Lie group $G$ is \textit{unimodular} if and only if $\mu_L=\mu_R$ (up to scalar).
+\end{definition}
+\begin{example} \label{ex:compact-unimodular}
+	If $G$ is compact, then we claim that $G$ is unimodular. Indeed, the representation $g\mapsto\left|\det\op{Ad}_g\right|$ is some character $G\to\RR^+$. But the image is a compact subgroup of $\RR^+$ is $\{1\}$, so we conclude that this character must be trivial.
+\end{example}
+\begin{notation}
+	If $G$ is a compact real Lie group, we let $\mu$ be the Haar measure (which is both left- and right-invariant), normalized so that $\int_G\mu=1$.
+\end{notation}
+Indeed, the Haar measures agree by \Cref{ex:compact-unimodular}, and we may normalize $\int_G\mu$ because this value is finite by \Cref{rem:compact-has-finite-vol}.
+
+\subsection{Applications to Compact Groups}
+Here is the usual application of our integration theory: the unitary trick from finite groups upgrades to compact groups.
+\begin{proposition}[Weyl's unitary trick] \label{prop:weyl-unitary-trick}
+	Let $G$ be a compact real Lie group, and let $V$ be a continuous finite-dimensional complex representation. Then $V$ is unitary.
+\end{proposition}
+\begin{proof}
+	Start with any positive-definite Hermitian form $\langle-,-\rangle_0$. Then we define the Hermitian form $\langle-,-\rangle$ on $V$ by
+	\[\langle v,w\rangle\coloneqq\int_G\langle gv,gw\rangle\,dg.\]
+	One can see directly that this is in fact Hermitian and positive-definite, and it is $G$-invariant by construction. We remark that this integral converges by measure theory (not differential topology): we are computing the integral of some continuous function on the compact space $G$.
+\end{proof}
+\begin{corollary} \label{cor:reps-semisimple}
+	Let $G$ be a compact real Lie group $G$. Then all continuous finite-dimensional complex representations are semisimple.
+\end{corollary}
+\begin{proof}
+	Choose any finite-dimensional complex representation $V$. For any choice of subrepresentation $W\subseteq V$, we need to find a complement. Well, \Cref{prop:weyl-unitary-trick} grants an invariant positive-definite Hermitian form $\langle-,-\rangle$ on $V$, so we may use the orthogonal complement $W^\perp\subseteq V$. The invariance of the form implies that $W^\perp$ is a subrepresentation, and linear algebra can verify that the natural map $W\oplus W^\perp\to V$ is an isomorphism.
+\end{proof}
+\begin{example}
+	Note that the group $\op{SU}_n$ is simply connected: indeed, an argument similar to \Cref{prop:pi1-so-n} can show that the quotient $\mathrm{SU}_n/\mathrm{SU}_{n-1}$ is the sphere $S^{n-1}$. Thus, $\op{Rep}_\CC\op{SU}_n$ is equivalent to the category $\op{Rep}_\CC\mf{su}_n$, which is equivalent to the category $\op{Rep}_\CC(\mf{su}_n)_\CC$. But $(\mf{su}_n)_\CC=\mf{sl}_n(\CC)$. We thus get a new proof that the category $\op{Rep}_\CC\mf{sl}_n(\CC)$ is semisimple by \Cref{cor:reps-semisimple}!
+\end{example}
+\begin{remark}
+	It turns out that the method of the previous example can work for arbitrary reductive Lie algebras.
+\end{remark}
+We can even provide a notion of matrix coefficients.
+\begin{definition}
+	Fix a continuous finite-dimensional representation $V$ of a Lie group $G$. For any $v\in V$ and $\ell\in V^*$, we define the \textit{matrix coefficient} $m_{\ell,v}\colon G\to\CC$ by
+	\[m(g)\coloneqq\ell(gv).\]
+\end{definition}
+Here is a remarkable upgrading result.
+\begin{theorem}
+	Fix a continuous finite-dimensional representation $V$ of a Lie group $G$. Then the matrix coefficients are smooth functions on $G$.
+\end{theorem}
+\begin{proof}
+	Say that a vector $v\in V$ is a smooth vector if and only if the matrix coefficients $m_{\ell,v}$ are smooth for all $\ell\in V^*$. Letting $V^{\mathrm{sm}}$ be the locus of smooth vectors, it is not too hard to check that $V^{\mathrm{sm}}$ is some subrepresentation of $V$. We would like to show that $V^{\mathrm{sm}}=V$. Because $V$ is finite-dimensional it is enough to show that $V^{\mathrm{sm}}$ is merely dense in $V$.
+
+	The difficulty lies in constructing any interesting vectors in $V^{\mathrm{sm}}$. Fix a smooth compactly supported function $\varphi$ on $G$, which can for example be obtained from a partition of unity. Then for each $v\in V$, we define
+	\[v_\varphi\coloneqq\int_G\varphi(g)(gv)\,dg.\]
+	It is not too hard to check that $w$ is smooth: for any $h\in G$ and $\ell\in V^*$, we calculate that
+	\[\ell(hw)=\int_G\varphi(g)\ell(hgw)\,dg.\]
+	But this is $\int_G\varphi\left(h^{-1}g\right)gv\,dg$, which is a smooth function in $h\in G$ because $\varphi$ is smooth.
+
+	Let's show that the vectors we have constructed are in fact dense. We now fix $v\in V$ and let $\varphi$ vary. In particular, choose a sequence $\{\varphi_n\}$ of smooth compactly supported functions on $G$ with the following properties.
+	\begin{itemize}
+		\item For any open neighborhood $U$ of $1$, one has $\op{supp}\varphi_n\subseteq U$ for all but finitely many $n$.
+		\item One has $\int_U\varphi_n=1$ for all $n$.
+	\end{itemize}
+	We then set $w_n\coloneqq v_{\varphi_n}$, and one can check that $w_n\to v$ as $n\to\infty$. (This is a fairly technical point: by the continuity of the representation, one knows that $gv$ is close to $v$ for $g$ in some small open neighborhood $U$ of the identity. Choosing $n$ large enough so that $\op{supp}\varphi_n\subseteq U$, one can then bound the difference $\left|v-w_n\right|$.) The density follows!
+\end{proof}
+\begin{remark}
+	Even if $V$ is infinite-dimensional, this argument successfully shows that $V^{\mathrm{sm}}$ is dense in $V$.
+\end{remark}
+
+\end{document}
