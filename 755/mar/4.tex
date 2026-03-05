@@ -1,0 +1,186 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 2}
+We now move towards the Peter--Weyl theorem.
+
+\subsection{Stating the Peter--Weyl Theorem}
+Last time, we showed that matrix coefficients of continuous representations are smooth.
+\begin{notation}
+	Fix a continuous finite-dimensional irreducible representation $V$ of a compact Lie group $G$, and let $\{v_i\}$ be an orthonormal basis for some choice of invariant unitary form on $V$. Then we define $\psi_{V,ij}$ by
+	\[\psi_{V,ij}(g)\coloneqq v_j^*(gv_i).\]
+\end{notation}
+\begin{remark}
+	The $\psi_{V,ij}$s are independent of the choice of invariant unitary form (which we recall exists from \Cref{prop:weyl-unitary-trick}): indeed, the unitary form is unique up to scalar, and scaling the form merely adjusts the orthonormal basis.
+\end{remark}
+\begin{proposition} \label{prop:matrix-coef-orthogonal}
+	Choose irreducible finite-dimensional continuous representations $V$ and $W$ of a compact Lie group $G$. Then
+	\[\int_G\psi_{V,ij}(g)\overline{\psi_{W,k\ell}(g)}\,dg=\begin{cases}
+		0 & \text{if }V\not\cong W, \\
+		1_{i=k}1_{j=\ell}/\dim V & \text{if }V=W.
+	\end{cases}\]
+\end{proposition}
+\begin{proof}
+	We imitate the proof for finite groups. Let $\rho_V\colon G\to\op{GL}(V)$ and $\rho_W\colon G\to\op{GL}(W)$ be the associated continuous maps. Fix our appropriate orthonormal bases $\{v_i\}$ and $\{w_k\}$, so we see
+	\begin{align*}
+		\int_G\psi_{V,ij}(g)\overline{\psi_{W,k\ell}(g)}\,dg &= \int_G((\rho_V(g)\otimes\rho_{\overline W}(g))(v_i\otimes w_k),v_j\otimes w_\ell)\,dg \\
+		&= \left(\int_G(\rho_V(g)\otimes\rho_{\overline W}(g))\,dg(v_i\otimes w_k),(v_j\otimes w_\ell)\right).
+	\end{align*}
+	Here, the large integral in the last expression is interpreted as taking place in the large finite-dimensional vector space of endomorphisms of $V\otimes\overline W$. Now, because $W$ is unitary, we see that $\overline W\cong W^*$. Thus, $P$ is some endomorphism of $V\otimes W^*$, and we can see by construction that it outputs to $(V\otimes W^*)^G$. For example, if $V\not\cong W$, then $V\otimes W^*=\op{Hom}(W,V)$ admits no $G$-invariants, so $P=0$ follows.
+
+	It remains to handle the case where $V=W$. Then $\op{Hom}_G(V,V)=\CC$ by Schur's lemma, which we can trace back to $(V\otimes W^*)^G$ being one-dimensional and spanned by $u\coloneqq\sum_i(v_i\otimes v_i)$. (Recall that $\{v_i\}$ is an orthonormal basis.) Now, $(u,u)=\dim V$ by a direct calculation. Thus, we see that $P$ is a projector onto $\CC u$, so it must be
+	\[P(x)=\frac{(x,u)}{(u,u)}u=\frac{(x,u)u}{\dim V}.\]
+	We conclude that our original integral is
+	\begin{align*}
+		\int_G\psi_{V,ij}(g)\overline{\psi_{W,k\ell}(g)}\,dg &= \sum_t\left(\frac{(v_i\otimes v_j,u)}{\dim V}(v_t\otimes v_t,v_j\otimes v_\ell\right) \\
+		&= \frac{(v_i\otimes v_j,u)}{\dim V}1_{j=\ell} \\
+		&= \frac1{\dim V}1_{i=k}1_{j=\ell},
+	\end{align*}
+	as required.
+\end{proof}
+We are now ready to state the Peter--Weyl theorem, which is an analog of the fact that matrix coefficients form a basis of $\op{End}\CC[G]$ for finite groups $G$.
+\begin{theorem}[Peter--Weyl] \label{thm:peter-weyl}
+	Fix a compact Lie group $G$. As $V$ varies over continuous irreducible representations, the matrix coefficients $\psi_{V,ij}$ form an orthogonal basis of $L^2(G)$ (as a Hilbert space).
+\end{theorem}
+\Cref{prop:matrix-coef-orthogonal} has already shown that our matrix coefficients are orthogonal, so it only remains to show that we have enough matrix coefficients to span. This will require an analytic input, which is not totally surprising.
+\begin{example}
+	Let $G$ be the circle group $\op U(1)$. Because $G$ is abelian, its continuous representations are all one-dimensional, and one can check that they all look like $\chi_n\colon G\to\CC^\times$ given by $\chi_n(z)\coloneqq z^n$. Then \Cref{thm:peter-weyl} asserts that the functions $\theta\mapsto e^{in\theta}$ form an orthonormal basis of $L^2(\RR/\ZZ)$ (where we have implicitly identified $\RR/\ZZ$ with $S^1$). This is the main theorem on Fourier series!
+\end{example}
+\begin{remark}
+	The previous example explains why one may call \Cref{thm:peter-weyl} the genesis of ``nonabelian'' Fourier analysis. In particular, we see that Fourier analysis is therefore fairly well-understood for compact groups, but the corresponding story for locally compact groups is a subject of ongoing research.
+\end{remark}
+Let's start by reformulating \Cref{thm:peter-weyl}.
+\begin{notation}
+	Let $V$ be an irreducible finite-dimensional continuous representation of a compact Lie group $G$. Then there is a map $\psi_V\colon V\otimes V^*\to L^2(G)$ given by
+	\[\psi_V(v\otimes\ell)(g)\coloneqq\ell(gv).\]
+\end{notation}
+\begin{remark}
+	By \Cref{prop:matrix-coef-orthogonal}, we see that a choice of orthonormal basis for all the irreducible representations $V$ will exhibit an embedding
+	\[\bigoplus{V\in\op{IrRep}G}(V\otimes V^*)\to L^2(G).\]
+	Explicitly, \Cref{prop:matrix-coef-orthogonal} has explained that an orthonormal basis of the source goes to orthogonal (and nonzero) matrix coefficients in the target.
+\end{remark}
+\begin{definition}
+	Let $G$ be a compact Lie group. Then we define $L^2_{\mathrm{alg}}(G)\subseteq L^2(G)$ to be the image of the map
+	\[\bigoplus_{V\in\op{IrRep}G}(V\otimes V^*)\to L^2(G).\]
+\end{definition}
+\begin{remark} \label{rem:better-alg}
+	On the homework, we will show that $\varphi\in L^2(G)$ lives in $L^2_{\mathrm{alg}}(G)$ if and only if $\varphi$ generates a finite-dimensional representation under left translation. In fact, this is equivalent to generating a finite-dimensional representation under just right translation or under both left and right translation.
+\end{remark}
+\begin{remark}
+	In light of \Cref{prop:matrix-coef-orthogonal}, \Cref{thm:peter-weyl} is equivalent to asserting that any function in $L^2(G)$ which is orthogonal to all matrix coefficients must vanish. This is equivalent to being orthogonal to the span of all the matrix coefficients, which is $L^2_{\mathrm{alg}}(G)$ by the above discussion.
+\end{remark}
+\begin{remark}
+	Because $L^2(G)$ is some Hilbert space admitting a countable orthonormal basis, we see that the presence of this embedding implies that there can only be countably many irreducible representations of $G$!
+\end{remark}
+Before we go further, here is an application.
+\begin{corollary}
+	For each continuous finite-dimensional representation $V$ of a compact Lie group $G$, define the character $\chi_V\colon G\to\CC$ by $\chi_V(g)\coloneqq\tr(g;V)$. As $V$ varies over irreducible representations, the characters $\chi_V$ form an orthonormal basis of $L^2(G)^G$.
+\end{corollary}
+\begin{proof}
+	To begin, note that
+	\[\chi_V(g)=\sum_{i}\psi_{V,ii}(g).\]
+	In particular, by summing with \Cref{prop:matrix-coef-orthogonal}, we see that $\langle\chi_V,\chi_W\rangle$ is
+	\[\int_G\chi_V(g)\overline{\chi_W(g)}\,dg=\begin{cases}
+		0 & \text{if }V\not\cong W, \\
+		1 & \text{if }V=W.
+	\end{cases}\]
+	Thus, we do have an orthonormal subset of $L^2(G)$. Additionally, we can see that $\chi_V$ lives in $L^2(G)^G$ because traces are independent of conjugation.
+
+	Now, because $\chi_V$ is exactly the image of $(V\otimes V^*)^G$ in $L^2(G)$ (as calculated above from an orthonormal basis), we see that $L^2_{\mathrm{alg}}(G)^G$ is exactly the span of the $\chi_V$s. Thus, we want to show that $L^2_{\mathrm{alg}}(G)^G$ is dense in $L^2(G)^G$. This will require a trick: choose some $\psi\in L^2(G)^G$, and then \Cref{thm:peter-weyl} grants us a sequence of functions $\{\psi_n\}_n$ in $L^2_{\mathrm{alg}}(G)$ such that $\psi_n\to\psi$ as $n\to\infty$. We would like to push the $\psi_n$s to $L^2_{\mathrm{alg}}(G)^G$, so we define
+	\[\widetilde\psi_n(g)\coloneqq\int_G\psi_n\left(gxg^{-1}\right)\,dg.\]
+	This function now lives in $L^2(G)^G$, and a short calculation with \Cref{rem:better-alg} can verify that it lives in $L^2_{\mathrm{alg}}(G)$ as well. Furthermore, one can calculate that $\norm{\widetilde\psi_n-\psi}\le\norm{\psi_n-\psi}$ (because $\psi$ started out as an invariant), so $\widetilde\psi_n\to\psi$ as $n\to\infty$.
+\end{proof}
+
+\subsection{Compact Operators}
+Let's review a little functional analysis before we get going in earnest. For us, all Hilbert spaces are separable.
+\begin{definition}[bounded]
+	Let $H$ be a Hilbert space. A linear operator $A\colon H\to H$ is \textit{bounded} if and only if there is a constant $C\ge0$ for which
+	\[\norm{Av}\le C\norm v\]
+	for all $v\in H$. We define the \textit{norm} $\norm A$ to be the infimum of $C$ satisfying the above inequality.
+\end{definition}
+\begin{remark}
+	An operator $A$ is bounded if and only if it is continuous.
+\end{remark}
+\begin{remark}
+	By definition, $\norm{Av}\le(\norm A+\varepsilon)\norm v$ for any $\varepsilon>0$ and any vector $v$. But we may take $\varepsilon\to0^+$ to see that $\norm{Av}\le\norm A\cdot\norm v$.
+\end{remark}
+\begin{remark}
+	The norm on bounded linear operators gives the algebra of bounded operators on $H$ the structure of a Banach space.
+\end{remark}
+\begin{definition}[compact]
+	Let $H$ be a Hilbert space. A linear operator $A\colon H\to H$ is \textit{compact} if and only if there is a sequence of operators $\{A_n\}_n$ on $H$ of finite rank such that $\norm{A_n-A}\to0$ as $n\to\infty$.
+\end{definition}
+\begin{remark}
+	The subspace of finite-rank operators in $\op{End}H$ is some open subset, and by definition, we see that the compact operators are the closure of this open subspace.
+\end{remark}
+Here is what we will need about compact operators.
+\begin{definition}[precompact]
+	A subset $U$ of a Hilbert space $H$ is \textit{precompact} if and only if any sequence admits a convergent subsequence.
+\end{definition}
+\begin{lemma} \label{lem:compact-to-precompact}
+	Let $A$ be a compact operator on a Hilbert space $H$. Then $A$ maps bounded sets to precompact sets.
+\end{lemma}
+\begin{proof}
+	Let $\{v_n\}_n$ be a bounded sequence, and we want to show that $\{Av_n\}_n$ admits a convergent subsequence. By scaling, we may assume that $\norm{v_n}\le1$ for all $n$. Using the compactness of $A$ (and by passing to a subsequence), we may find operators $\{A_n\}_n$ of finite rank so that $\norm{A_n-A}<1/n$ for all $n$.
+
+	Now, let $\left\{v_n^1\right\}$ be a subsequence of $\{v_n\}$ for which the sequence $\left\{A_1v^1_n\right\}$ converges, which exists because this sequence is bounded and belongs to a finite-dimensional space. Then let $\left\{v_n^2\right\}$ be a subsequence of $\left\{v_n^1\right\}$ for which $\left\{Av^2_n\right\}$ also converges, and we may continue this process indefinitely to produce subsequences $\left\{v_n^m\right\}$.
+
+	This infinite process looks like it may fail to produce a sequence in the end, but we remedy this by considering the subsequence
+	\[w_n\coloneqq v^n_n.\]
+	We would like to show that the sequence $\{Aw_n\}$ converges. Well, note that
+	\begin{align*}
+		\norm{Av_i^k-Av_j^k} &\le \norm{A_kv_i^k-A_kv_j^k}+\norm{A-A_k}\cdot\norm{v_i^k-v_j^k} \\
+		&\le \norm{A_kv_i^k-A_kv_j^k}+\frac2k-\varepsilon_k,
+	\end{align*}
+	for some $\varepsilon_k>0$ chosen so that $\norm{A-A_j}=\frac2k-\varepsilon_k/2$. Now, $\left\{A_kv^k_i\right\}$ converges, so there is a large $M_k$ for which $i,j>M_k$ will have $\norm{A_kv_i^k-A_kv_j^k}<\varepsilon_k$. Plugging this in, we see that $i,j>M_k$ has
+	\[\norm{Av_i^k-Av_j^k}\le\frac2k.\]
+	Now, note that $w_n$ is a subsequence of $\{v^k_n\}$ starting from the $k$th term, so there is a large $N_k$ (matching up with $M_k$) for which $\norm{Aw_i-Aw_j}\le2/k$ for $i,j>N_k$. We conclude that $\{Aw_i\}$ is Cauchy, so it converges because we are in a Hilbert space.
+\end{proof}
+\begin{nex}
+	If $H$ is infinite-dimensional, then the identity operator is not compact.
+\end{nex}
+\begin{remark}
+	The converse of \Cref{lem:compact-to-precompact} is also true, but we will not need it.
+\end{remark}
+Our next task is to find some compact operators.
+\begin{lemma}
+	Let $M$ be a compact manifold, and let $dx$ be a continuous measure. For a continuous function $K\colon M\times M\to\RR$, define the kernel operator $A$ on $L^2(M;dx)$ by
+	\[A\psi(y)\coloneqq\int_MK(x,y)\psi(x)\,dx.\]
+	Then $A$ is a compact operator.
+\end{lemma}
+\begin{proof}
+	Embed $M$ into a tubular neighborhood of $[0,1]^n$ for some larger $n$, so it suffices to prove the result for $[0,1]^n$; alternatively, one can use a partition of unity argument by covering $M$ with such boxes.\footnote{This reduction is not actually necessary: we just need to have some Riemannian metric on $M$.} Up to rescaling the measure, we may assume that $M$ has volume $1$.
+	
+	Then for each large $N$, tile $[0,1]$ with intervals of length $1/N$, and approximate $K$ by the corresponding Riemann sum: define
+	\[K_N(x,y)\coloneqq\max_{(x',y')}K(x',y'),\]
+	where $(x',y')$ varies over a chosen box around $(x,y)$ with side length $1/N$. Let $A_N$ be the corresponding kernel operator, which we see has finite rank because each $K_N$ is given by its finitely many points. It remains to show that $A_N\to A$. Well,
+	\[\norm{A-A_N}\le\sup_{(x,y)}\left|K(x,y)-K_N(x,y)\right|.\]
+	However, the source $M\times M$ is compact, so $K$'s continuity upgrades to uniform continuity, so the right-hand side goes to $0$ as $N$ becomes large (because the distance between $(x,y)$ and $(x',y')$ in $K_N(x,y)$ is controlled).
+\end{proof}
+Here is our main application, which is a spectral theorem.
+\begin{definition}[adjoint]
+	A bounded operator $A$ on a Hilbert space $H$ admits an \textit{adjoint} $A^\dagger\colon H\to H$ for which
+	\[(A^\dagger v,w)=(v,Aw).\]
+	We say that $A$ is \textit{self-adjoint} if and only if $A^\dagger=A$.
+\end{definition}
+\begin{theorem}[Hibert--Schmidt]
+	Let $A$ be a compact self-adjoint operator on a Hilbert space $H$. Then $H$ admits an orthogonal decomposition
+	\[H=\ker A\oplus\op{\widehat{\bigoplus_\lambda}}H_\lambda,\]
+	where $H_\lambda$ is the eigenspace for the eigenvalues of $\lambda$. In fact, $H_\lambda$ is finite-dimensional, the eigenvalues are real, and the collection of eigenvalues is either finite or admits $0$ as its only limit point.
+\end{theorem}
+\begin{proof}
+	Let's start by proving the result for $A^2$. Let $\beta$ be the norm of $A^2$; if $\beta=0$, there is nothing to do. We will hunt for an eigenvector for $A^2$ with eigenvalue $\beta$. Because $A$ is compact, we have a sequence $\{A_n\}$ of finite-rank operators converging to $A$; by replacing $A_n$ with $\frac12(A_n+A_n^\dagger)$, we may even assume that the $A_n$s are self-adjoint. Now, the norm $\beta_n$ of $\norm{A_n}^2$ is the maximal eigenvalue of $A_n$ (by linear algebra of finite-dimensional spaces), and because taking the norm is continuous, we see that $\beta_n\to\beta$.
+
+	Let's begin our hunt for an eigenvector. We know that each $A_n^2$ admits an eigenvector $v_n$ with eigenvalue $\beta_n$. We may rescale each $v_n$ to have norm $1$, so the sequence $\left\{A^2v_n\right\}$ admits a limit point, which we call $w\in H$. Notably, $A_n^2v_n$ should also approach $w$, so because $A_n^2v_n=\beta_nv_n$, we see that $\beta_nv_n\to w$, so $v_n\to\beta^{-1}w$. We thus see that $Aw=\beta w$, so $A$ has an eigenvector $w$.
+
+	We can now replace $H$ with $\{w\}^\perp$ and redo this process (inductively). If $A$ has finite rank, then this process will terminate, and there is nothing more to do after noting that whatever we are left with is $\ker A$. Otherwise, we have a sequence of eigenvalues $\{\beta_1,\beta_2,\ldots\}$ for $A^2$, which is decreasing. Note that the compactness of $A$ implies that no eigenvalue can be seen infinitely many times because then the restriction of $A$ to this eigenspace is a scalar, which is not a compact operator! A similar argument shows that $\beta_n\to0$ as $n\to\infty$ (otherwise, we have infinitely many eigenvectors with a lower-bounded eigenvalue, and the restriction to this sum of eigenspaces is not compact). We conclude that the eigenspaces $H_{\beta_k}$ are all finite-dimensional. Taking an orthogonal complement, we see that
+	\[H=H'\oplus\widehat{\bigoplus_k}H_{\beta_k}.\]
+	We would like to check that $H'$ is $\ker A$, which is not hard: for any $u\in H'$, we see that $u$ is orthogonal to the eigenvectors with eigenvalues $\{\beta_1,\ldots,\beta_k\}$ by construction, so by definition of $\beta_{k+1}$, we see that $\norm{A^2u}\le\beta_{k+1}\norm u$; sending $k\to\infty$ shows that $A^2u=0$, so $A^2u=0$ follows. Because $A$ is self-adjoint, we see that $A$ cannot have any vector $u$ with $Au\ne0$ while $A^2u=0$, for then the restriction of $A$ to $\op{span}\{u,Au\}$ is not self-adjoint. We conclude that $Au=0$.
+
+	It remains to further refine this decomposition to work for $A$, which is not hard: each $A$ preserves the given decomposition into $H_{\beta_k}$s, and then $A$ restricts as a self-adjoint operator on this finite-dimensional space where $A^2$ is a scalar. Thus, $A$ diagonalizes into eigenspaces with eigenvalues $\sqrt{\beta_k}$ and $-\sqrt{\beta_k}$.
+\end{proof}
+
+\end{document}
