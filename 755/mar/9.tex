@@ -1,0 +1,158 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{March 2}
+Today, we will prove the Peter--Weyl theorem.
+
+\subsection{Proof of the Peter--Weyl Theorem}
+We will prove the following equivalent version of \Cref{thm:peter-weyl} (see \Cref{rem:easier-pw}).
+\begin{theorem}
+	Let $G$ be a compact Lie group. Then $L^2_{\mathrm{alg}}(G)$ is dense in $L^2(G)$.
+\end{theorem}
+\begin{proof}
+	Choose a ``$\delta$-like'' sequence $\{h_N(x)\}$ of real-valued functions $h_N\colon G\to\RR_{\ge0}$ such that $\int_Gh_N(x)\,dx=1$ for all $N$ and such that any open neighborhood $U$ of $1$ has $\op{supp}h_N\subseteq U$ for all $N$ large enough. (Such a sequence can be seen to exist by passing to Euclidean space in a small open neighborhood of $1\in g$.)
+
+	Quickly, we note that we may assume that $h_N(x)$ satisfies $h_N\left(x\right)=h_N\left(x^{-1}\right)$ by replacing each $h_N$ with $h_N'(x)\coloneqq\frac12\left(h_N(x)+h_N\left(x^{-1}\right)\right)$. We now let $B_N$ be the corresponding integral operator, which is compact by \Cref{lem:kernel-is-compact}. By staring at the definition
+	\[B_N\psi(y)\coloneqq\int_Gh_N(x)\psi\left(x^{-1}y\right)\,dx=\int_Gh_N\left(yz^{-1}\right)\psi(z)\,dz,\]
+	and because $h_N$ satisfies $h_N(x)=h_N\left(x^{-1}\right)$, one finds that $B_N$ is self-adjoint. Additionally, $B_N$ commutes with the $G$-action by right translation.
+
+	Now, \Cref{thm:hilbert-schmidt} allows us to decompose $L^2(G)$ into eigenspaces for $B_N$ as
+	\[L^2(G)=\ker B_N\oplus\widehat{\bigoplus_\lambda}H_{N,\lambda}.\]
+	Notably, $H_{N,\lambda}\subseteq L^2(G)$ is finite-dimensional for each $\lambda$, and it is a $G$-invariant subspace (because $B_N$ commutes with the $G$-action), so we conclude that $H_{N,\lambda}\subseteq L^2_{\mathrm{alg}}(G)$. It follows that $\im B_N$ is contained in $\overline{L^2_{\mathrm{alg}}(G)}$.
+
+	We now do a careful limiting process to $N\to\infty$. Well, we for all $\psi\in L^2(G)$, we may find $N$ for which $B_N\psi\in\overline{L^2_{\mathrm{alg}}(G)}$, meaning that there is $\psi_N$ for which $\norm{B_N\psi-\psi_N}_2<1/N$. For example, if $\psi$ is continuous, then one sees that $B_N\psi\to\psi$ uniformly by some arguments with the small supports of the $h_N$s. Thus, for $N$ large enough, we see that $\norm{B_N\psi-\psi}<1/N$, so $\norm{\psi-\psi_N}_2<2/N$, so the $\psi_N$s converge to $\psi$. It follows that $\psi$ is also in the closure of $L^2_{\mathrm{alg}}(G)$!
+
+	The previous paragraph has shown that $C(M)$ is in the closure of $L^2_{\mathrm{alg}}(G)$, which is enough because $C(M)$ is dense in $L^2(M)$. Indeed, one can see this with a partition of unity argument, reducing to the case of a box.
+\end{proof}
+
+\subsection{Faithful Representations}
+Our next goal is to show that any compact group $G$ can be realized in some unitary group; by \Cref{prop:weyl-unitary-trick}, it is enough to show that $G$ merely admits a faithful representation. Notable, one already knows that any finite group $G$ admits a faithful representation $V$ (namely, the regular representation), which can then be made into a unitary representation.
+\begin{lemma} \label{lem:subgroup-chain-stabilize}
+	Fix a compact Lie group $G$, and let $\{G_n\}_{n\ge0}$ be a descending chain of closed Lie subgroups. Then this chain stabilizes.
+\end{lemma}
+\begin{proof}
+	Note that the sequence $\{\dim G_n\}_n$ is decreasing and hence stabilizes, so we may as well assume that it is constant. Because we have a chain of closed Lie subgroups, we also have a chain of closed Lie subalgebras $\{\op{Lie}G_n\}_n$, and they now all have the same dimension, so they are all equal! Set $\mf g\coloneqq\op{Lie}G_0$ to be this Lie algebra.
+
+	Now, let $H$ be the identity component of any $G_n$, which all agree because all the $G_ns$ have the same Lie algebra. Then the sequence of quotients $\{G_n/H\}_n$ is a descending chain of finite sets (these sets are finite because our groups are compact), so it must stabilize. Thus, for $n$ large enough, we see that the canonical inclusion $G_{n+1}\subseteq G_n$ is an isomorphism on the identity component and also on the irreducible components, so this inclusion must be surjective! Thus, our chain has stabilized.
+\end{proof}
+\begin{remark}
+	The analogous statement for algebraic groups follows from the descending chain condition for ideals.
+\end{remark}
+\begin{proposition} \label{prop:compact-has-faithful-rep}
+	Any compact Lie group $G$ admits a faithful representation.
+\end{proposition}
+\begin{proof}
+	By \Cref{thm:peter-weyl}, we know that $G$ admits countably many irreducible representations, which we enumerate by $\{\rho_n\}_n$; say $V_0$ is the trivial representation. Then we let $G_1$ be the kernel of $\rho_1$, we let $G_2$ be $G_1\cap\ker\rho_2$, and so on. In particular, $G_n$ is the kernel of $\rho_1\oplus\cdots\oplus\rho_n$, so it is enough to show that $G_n$ is trivial for $n$ large enough.
+	
+	Well, we have a descending chain $\{G_n\}_n$ of subgroups, which must stabilize to some subgroup $H\subseteq G$ by \Cref{lem:subgroup-chain-stabilize}. By construction, we know that $H$ acts trivially on all irreducible representations of $G$, so $H$ acts trivially on $L^2_{\mathrm{alg}}(G)$ and thus trivially on $L^2(G)$ by \Cref{thm:peter-weyl}. It follows that $H$ is trivial: the only element $g\in G$ which acts trivially on $L^2(G)$ must be trivial, which one can see by choosing inside $L^2(G)$ a sufficiently small bump function. Indeed, any compactly supported function which is $1$ at the identity and $0$ at $g$ will suffice.
+\end{proof}
+\begin{example}
+	\Cref{prop:compact-has-faithful-rep} is false for non-compact connected Lie groups. We will consider the group $\widetilde G$ which is the universal cover of $\op{PSL}_2(\RR)$. Note the action of $\op{PSL}_2(\RR)$ on the upper-half plane realizes $\op{PSL}_2(\RR)/\op{PSO}_2(\RR)$ as the upper-half plane, so $\pi_1(\op{PSL}_2(\RR))=\ZZ$ by using the long exact sequence in homotopy; thus, we see that $\widetilde G$ fits into a central extension
+	\[0\to\ZZ\to\widetilde G\to\op{PSL}_2(\RR)\to1.\]
+	Choose $z\in\widetilde G$ to generate the central copy of $\ZZ$, and we claim that $z^2$ acts by the identity on any complex finite-dimensional continuous representation $\rho\colon G\to\op{GL}(V)$; this will complete the proof. Indeed, $V$ naturally admits an action by the Lie algebra $\op{Lie}\widetilde G_\CC=\mf{sl}_2(\CC)$; but then $V$ admits a weight decomposition for this action, so $\rho$ factors through $\op{SL}_2(\CC)$. But now $z^2$ maps to the identity in $\op{SL}_2(\CC)$ because $\op{SL}_2(\RR)\to\op{PSL}_2(\RR)$ is a double cover.
+\end{example}
+Here is an application of having a faithful representation: we may sharpen our Peter--Weyl theorem.
+\begin{corollary}
+	Fix a compact Lie group $G$. Then $L^2_{\mathrm{alg}}(G)$ is dense in $C(G)$, where $C(G)$ has been given the supremum norm.
+\end{corollary}
+\begin{proof}
+	Let $\mc A$ be the closure of $L^2_{\mathrm{alg}}(G)$ in $C(G)$, where the topology on $C(G)$ is induced by the supremum norm.
+	
+	We would like to show that $\mc A=C(G)$. Well, $\mc A$ is a closed subalgebra, and $\mc A$ is closed under complex conjugation. Thus, by the Stone--Weierstrass theorem tells us that it is enough to check that $\mc A$ separates points. We will actually show that $L^2_{\mathrm{alg}}(G)$ separates points. Note that $L^2_{\mathrm{alg}}(G)$ separates points in $G$ by \Cref{prop:compact-has-faithful-rep}: indeed, matrix coefficients of a faithful representation separate points from the identity (because of the trivial kernel).
+\end{proof}
+\begin{example}
+	With $G=S^1$, we have shown that we can uniformly approximate periodic continuous functions $\RR/\ZZ\to\CC$ by polynomials in the exponentials $t\mapsto e^{2\pi nt}$. Restricting further to the even functions recovers an approximation of continuous functions by polynomials. Indeed, taking a quotient of $\RR/\ZZ$ by the action of $-1$ produces a closed unit interval, and the corresponding characters $t\mapsto e^{2\pi int}$.
+\end{example}
+Here is another result of this flavor.
+\begin{corollary} \label{cor:algebra-to-all-l2}
+	Fix a compact Lie group $G$. Let $A\subseteq L^2_{\mathrm{alg}}(G)$ be a subalgebra. If $A$ is left-invariant, invariant under complex conjugation, and separates points, then $A=^2_{\mathrm{alg}}(G)$.
+\end{corollary}
+\begin{proof}
+	By the Stone--Weierstrass theorem, we know that $A$ is dense in $C(G)$ and hence in $L^2(G)$. Thus, for any irreducible representation $V$ of $G$, we know that $\op{Hom}_G(V,A)$ is dense in
+	\[\op{Hom}_G\left(V,L^2(G)\right),\]
+	but the latter is isomorphic to $V^*$ by \Cref{thm:peter-weyl}. Thus, using semisimplicity of representations of $G$, we see that
+	\[A=\bigoplus_{V\in\op{IrRep}(G)}(V\otimes V^*),\]
+	which is $L^2_{\mathrm{alg}}(G)$.
+\end{proof}
+One can use the above corollary to show that any faithful representation (along with its dual) $\otimes$-generates the category of finite-dimensional representations of $G$.
+\begin{definition}[unimodular]
+	Fix a Lie group $G$. A finite-dimensional representation $V$ of $G$ is \textit{unimodular} if and only if $\land^{\dim V}V$ is isomorphic to the trivial representation.
+\end{definition}
+\begin{remark}
+	It is equivalent to ask for the action of $G$ on $V$ to factor through $\op{SL}(V)$.
+\end{remark}
+\begin{proposition}
+	Let $V$ be a faithful finite-dimensional representation of a compact Lie group $G$.
+	\begin{listalph}
+		\item Let $A$ be the subalgebra of $C(G)$ generated by the matrix coefficients. If $V$ is unimodular, then $A=L^2_{\mathrm{alg}}(G)$.
+		\item If $Y$ is an irreducible representation of $G$, then there exist $m$ and $n$ such that $Y$ is contained in $V^{\otimes n}\otimes V^{*\otimes m}$ for some $n$ and $m$.
+		\item If $Y$ is an irreducible representation of $G$, and $V$ is unimodular, then there exist $n$ such that $Y$ is contained in $V^{\otimes n}$.
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	We show the parts separately. Set $d\coloneqq\dim V$ for brevity.
+	\begin{listalph}
+		\item We use \Cref{cor:algebra-to-all-l2}. Because $V$ is faithful, we automatically know that $A$ separates points, and $A$ is automatically left-invariant (because our matrix coefficients are arbitrary). Thus, it remains to show that $A$ is invariant under complex conjugation. Well, note that $\overline A$ is generated by matrix coefficients of $\overline V$, which by \Cref{prop:weyl-unitary-trick} is isomorphic to $V^*$. But $V$ is unimodular, so $V^*=\land^{d-1}V$ (using the canonical $\land$-pairing). But the matrix coefficients of $\land^{d-1}V$ are polynomials in the matrix coefficients of $V$, so we conclude that $\overline A\subseteq A$.
+		\item By replacing $V$ with $V\oplus V^*$, we may as well assume that $V$ is unimodular, so we reduce to proving (c).
+		\item Because $V$ is unimodular, our argument in (a) has shown that $V^*=\land^{d-1}V$ and that $\op{Sym}(V\otimes V^*)$ surjects onto $A$, which we know is $L^2_{\mathrm{alg}}(G)$. Thus, we know that $Y$ is a subrepresentation of $\op{Sym}(V\otimes V^*)$, so there is $N$ large enough with $Y\subseteq\op{Sym}^N(V\otimes V^*)$. The result follows after replacing $V^*$ with $\land^{d-1}V$.
+		\qedhere
+	\end{listalph}
+\end{proof}
+\begin{example}
+	We work with the group $G=S^1$, and we let $V$ be the tautological representation $S^1\subseteq\CC^\times=\op{GL}_1(\CC)$. Even though $V$ is faithful, it is not unimodular, so its tensor powers do not generate Then the matrix coefficient of $V$ is just $e^{i\theta}$, which generates the subalgebra $\CC\left[e^{i\theta}\right]$ of $L^2_{\mathrm{alg}}(G)=\CC\left[e^{i\theta},e^{-i\theta}\right]$.
+\end{example}
+
+\subsection{Haar Measures for Compact Groups}
+Let's explain how one could generalize our theory to arbitrary compact topological groups, such as $\op{GL}_n(\ZZ_p)$. The main input was the presence of an integration theory. For compact Lie groups, we appealed to differential topology (using the Lie algebra). We will find a Haar measure with our means.
+
+This will require some heavier measure theory.
+\begin{theorem}[Riesz--Markov--Kakutani] \label{thm:functional-to-measure}
+	Fix a compact Hausdorff separable topological space $X$. The collection of finite Borel measures $\mu$ on $X$ is in bijection with the collection of positive continuous linear functionals $I_\mu\colon C(X;\RR)\to\RR$. In particular, for such a finite Borel measure $\mu$, this map is given by
+	\[I_\mu(f)\coloneqq\int_Xf\,d\mu.\]
+\end{theorem}
+Here, a continuous linear functional $I\colon C(X;\RR)\to\RR$ is positive if $I$ is nonnegative when the input function is nonnegative.
+
+Before going further, we remark that we can normalize our measures.
+\begin{definition}[probability]
+	Fix a compact Hausdorff separable topological space $X$. Then a \textit{probability measure} $\mu$ is a finite Borel measure for which $\mu(X)=1$.
+\end{definition}
+\begin{remark}
+	Because $X$ is compact, any finite Borel measure $\mu$ has $\mu(X)<\infty$, so one can always normalize our finite Borel measure to be a probability measure.
+\end{remark}
+Here is our main theorem.
+\begin{theorem}[Haar--von~Neumann]
+	Fix a compact topological group $G$. Then there is a unique left-invariant probability measure $\mu$ on $G$. In fact, $\mu$ is right-invariant.
+\end{theorem}
+\begin{remark}
+	There are also left-invariant measures for locally compact groups. They do not have to be right-invariant.
+\end{remark}
+\begin{proof}
+	Quickly, note that right-invariance follows from the uniqueness: if $\mu$ is a left-invariant probability measure, then for any $g\in G$, the measure $S\mapsto\mu(Sg)$ continues to be left-invariant and probability, so it must equal $\mu$! Right-invariance follows.
+
+	Let's start with the existence of this measure. The idea is to compute the integral of $f$ as an ``average value,'' which we will compute via some iterated Markov chain.
+	\begin{enumerate}
+		\item Because $G$ is separable, it admits a countable dense sequence $\{g_i\}_i$, and we also choose positive real numbers $\{p_i\}$ with $\sum_ip_i=1$. Now, define the averaging operator $A$ on $C(G;\RR)$ by
+		\[Af(x)\coloneqq\sum_ip_if(xg_i).\]
+		(This series converges because $\sum_ip_i=1$, and $f$ is bounded because $G$ is compact.) By construction, $\norm{Af}\le\norm f$, so $\norm A\le1$; further, by plugging in a constant function, we see that $\norm A=1$.
+	\end{enumerate}
+	\begin{remark}
+		Here is how to motivate the operator $A$: one should think about this as coming from a Markov chain on $G$ given by sending $x\in G$. Then $Af(x)$ is the expectation of the function $f$, starting at $x$, of proceeding one step along this Markov chain. In particular, one may hope for stabilization, as one knows for Markov chains with finitely many states.
+	\end{remark}
+	\begin{enumerate}[resume]
+		\item Let's explain some stabilization. Set $\nu(f)\coloneqq\frac12(\max f-\min f)$, which provides some seminorm, and we let $L\subseteq C(G;\RR)$ be the subspace of constant functions. In particular, $\nu(f)$ is the distance between a function $f$ and $L$. Our stabilization claim is that any $f\notin L$ has
+		\[\nu(Af)<\nu(f).\]
+		To show this, we will first show that $\max Af<\max f$; by symmetry (for example, using $-f$), we find that $\min Af>\min f$, so $\nu(Af)<\nu(f)$ follows. It remains now to show that $\max Af<\max f$. Well, for $x\in G$, choose an index $j$ so that $f(xg_i)<\max f$; this exists because $f$ is non-constant. (If $f$ is constant on an orbit of the $g_i$s, then the density of the $g_i$s forces $f$ to be full constant.) We now find
+		\[Af(x)=p_jf(xg_j)+\sum_{i\ne j}f(xg_i)\]
+		is bounded by
+		\[Af(x)\le p_jf(xp_j)+(1-p_j)\max f<\max f,\]
+		so $\max Af<\max f$.
+
+		\item We now iterate $A$ to produce our stabilization. For $f\in C(G;\RR)$, we claim that $\{A^nf\}_n$ converges to some constant function, whose value we define to be $I(f)$. This map $f\mapsto I(f)$ will produce our Haar measure by \Cref{thm:functional-to-measure}.
+	\end{enumerate}
+\end{proof}
+
+
+\end{document}
