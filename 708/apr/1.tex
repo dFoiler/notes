@@ -1,0 +1,182 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 1}
+Here we go.
+
+\subsection{The Local-Global Principle}
+We are interested in finding rational points on varieties. Let's start with some notation for the present subsection. Fix a global field $k$, like $\QQ$ or $\FF_q(t)$, and for each place $v$, we let $k_v$ be the corresponding complete local field. If $v$ is finite, we let $\OO_v$ be its ring of integers; we may as well define $\OO_v=k_v$ when $v$ is archimedean. As usual, we define the ring of adeles $\AA_k$ to be the restricted product
+\[\AA_k\coloneqq\prod_v(F_v,\OO_v),\]
+which we recall is locally compact.
+
+Merely in terms of finding rational points, it turns out that one can reduce to the case where the variety is smooth, projective and geometrically irreducible.
+\begin{definition}[nice]
+	Fix a variety $X$ over a field $k$. Then $X$ is \textit{nice} if and only if $X$ is smooth, projective, and geometrically irreducible.
+\end{definition}
+\begin{remark}
+	Given smoothness, one can weaken ``geometrically irreducible'' to ``connected.''
+\end{remark}
+\begin{remark}
+	It turns out that nice varieties admit $k_v$-rational points for all but finitely many $v$, and this finite set can be made effective.
+\end{remark}
+In general, there is no known algorithm to determine if a variety $X$ over a global field $k$ admits a rational point. However, there are some known cases.
+\begin{theorem}[Hasse--Minkowski] \label{thm:hasse-minkowski}
+	Fix a global field $k$, and let $X$ be a nice quadric hypersurface in $\PP^n_k$. Then $X(k)$ is nonempty if and only if $X(k_v)$ is nonempty for all places $v$.
+\end{theorem}
+\begin{remark}
+	This was proven in the 1890s over $\QQ$ by Minkowski and for general number fields by Hasse in 1924.
+\end{remark}
+The moral is that one can test if $X(k_v)$ is nonempty for each place $v$ fairly explicitly: there is no content over $\CC$, one uses some inequalities over $\RR$, and one can use Hensel's lemma for finite places.
+\begin{remark}
+	It turns out that even in $\PP^2$, being able to find the rational point is at least as hard as integer factorization.
+\end{remark}
+The conclusion of \Cref{thm:hasse-minkowski} is nice enough to be worth a name.
+\begin{definition}[Hasse principle]
+	A variety $X$ over a global field $k$ satisfies the \textit{Hasse principle} or the \textit{local-global principle} if and only if $X(k)$ is nonempty is equivalent to $X(k_v)$ being nonempty for every $v$.
+\end{definition}
+\begin{remark}
+	For projective $X$, one has that $X(\OO_v)=X(k_v)$ by the valuative criterion for properness, so
+	\[X(\AA_k)=\prod_vX(k_v).\]
+	Indeed, one just has to choose a model for $X$ which is projective away from finitely many places. The moral is that the Hasse principle can be stated as having $X(k)\ne\emp$ equivalent to $X(\AA_k)\ne\emp$.
+\end{remark}
+The Hasse principle can fail.
+\begin{example}
+	Hasse showed in 1931 that the variety of norms from $\QQ(\sqrt{-3},\sqrt{13})$ fails the Hasse principle.
+\end{example}
+\begin{example}
+	Lind and Reichardt in the 1940s produced some example of genus-$1$ curves where the Hasse principle fails, such as $3x^3+4y^2+5z^3=0$ (in $\PP^2_\QQ$) and a smooth projective model of $2y^2=1-17x^4$.
+\end{example}
+\begin{remark}
+	For elliptic curves $E$ over a global field $k$, one has that $E$ has a nonzero point over every local field (by some argument with the Implicit function theorem), but there is no reason for $E$ to have a nonzero rational point.
+\end{remark}
+\begin{example}
+	Swinnerton-Dyer constructed some cubic surfaces where the Hasse principle fails, such as $5x^3+9y^3+10z^3+12w^3=0$ in $\PP^3_\QQ$.
+\end{example}
+In 1970, Manin would explain what is going on in all these examples, which is the point of the present course.
+
+\subsection{The Brauer Group, from Algebra}
+Let's start with some algebra. Throughout, when $k$ is a field, we let $k^{\mathrm{sep}}$ be its separable closure, and $\overline k$ is its algebraic closure. For convenience, we also set $G_k\coloneqq\op{Gal}(k^{\mathrm{sep}}/k)$.
+\begin{definition}
+	An \textit{algebra} over a field $k$ is an associative unital ring with $k$-action.
+\end{definition}
+One has the following structure theorem for so-called ``central simple'' algebras.
+\begin{proposition} \label{prop:csa-grab-bag}
+	Fix a finite-dimensional $k$-algebra $A$. Then the following are equivalent.
+	\begin{listroman}
+		\item One has that $A\otimes_kk^{\mathrm{sep}}\cong M_n(k^{\mathrm{sep}})$ for some $n\ge1$.
+		\item One has that $A\otimes_k\overline k\cong M_n(\overline k)$ for some $n\ge1$.
+		\item The algebra $A$ is central (i.e., $Z(A)=k$) and simple (i.e., $A$ admits exactly two ideals).
+		\item One has that $A\cong M_r(D)$ for some $r\ge1$ and some finite-dimensional central division $k$-algebra $D$.
+	\end{listroman}
+\end{proposition}
+\begin{proof}
+	Omitted. This is a standard result in non-commutative algebra.
+\end{proof}
+\begin{remark}
+	In (iv), it turns out that $r$ and $D$ are uniquely determined by $A$.
+\end{remark}
+\begin{example} \label{ex:real-csa}
+	Over $\RR$, the only central division algebras are $\RR$ and $\HH$, so the central simple algebras look like $M_r(\RR)$ and $M_r(\HH)$.
+\end{example}
+\begin{example}[quaternion algebra]
+	For any field $k$ of characteristic not $2$, one can define a quaternion algebra as follows: choose $a,b\in k^\times$, and then
+	\[H_{a,b}\coloneqq\frac{k\langle i,j\rangle}{\left(i^2-a,j^2-b,ij+ji\right)}.\]
+	By reducing words, one sees that $H_{a,b}$ is four-dimensional (spanned by $\{1,i,j,ij\}$), and one can check that this is central simple. Note that this does not have to be a division algebra: for example, if $a$ is a square, then $H_{a,b}$ admits zero-divisors because $(i-\sqrt a)(i+\sqrt a)=0$.
+\end{example}
+\begin{remark}
+	One can check that all four-dimensional central simple algebras $A$ are isomorphic to some quaternion algebra. As a sketch, one finds some $i\in A\setminus k$, which one can check must satisfy some quadratic equation. By completing the square, one may assume that $i^2=a$ for some $a\in k^\times$. Then one can diagonalize the action of $i$ in $A$ (by conjugation), and choose $j$ to be in the $(-1)$-eigenspace.
+\end{remark}
+Our structure theory allows us to partition central simple algebras.
+\begin{definition}
+	Fix a field $k$. Two central simple algebras $A$ and $B$ are \textit{equivalent} if and only if there is a division algebra $D$ and integers $r$ and $s$ such that $A\cong M_r(D)$ and $B\cong M_s(D)$. The \textit{Brauer group} $\op{Br}(k)$ is the collection of central simple $k$-algebras, considered up to equivalence.
+\end{definition}
+\begin{remark} \label{rem:better-equiv}
+	We will not bother to check that equivalence is an actual equivalence relation. One can remove the division algebra $D$ by instead asking for $M_s(A)\cong M_r(B)$. Indeed, the point is that
+	\[M_r(M_s(D))=M_{rs}(D)=M_s(M_r(D)).\]
+\end{remark}
+\begin{remark}
+	The collection $\op{Br}(k)$ is a group under $\otimes$ (which turns out to send central simple algebras to central simple algebras). The unit is $k$, and the inverse of $A$ is $A\opp$; for example, one needs to check that $A\otimes A\opp$ is isomorphic to a matrix algebra over $k$.
+\end{remark}
+\begin{remark}
+	A field extension $k\into\ell$ induces a group homomorphism $\op{Br}(k)\to\op{Br}(\ell)$ given by $-\otimes_k\ell$. Notably, $-\otimes_k\ell$ sends central simple algebras to central simple algebras by \Cref{prop:csa-grab-bag}(b), and it preserves equivalence by the definition given in \Cref{rem:better-equiv}.
+\end{remark}
+
+\subsection{The Brauer Group, from Cohomology}
+There is also a cohomological construction of the Brauer group.
+\begin{proposition} \label{prop:brauer-cohomology}
+	Fix a field $k$. Then $\op{Br}(k)\cong\mathrm H^2(k;k^{\mathrm{sep}\times})$.
+\end{proposition}
+\begin{proof}
+	For each $n$, \Cref{prop:csa-grab-bag} central simple algebras of dimension $n^2$ are Galois twists of $M_n(k^{\mathrm{sep}})$, so they are classified by the pointed set $\mathrm H^1(k;\op{Aut}M_n(k^{\mathrm{sep}}))$. By the Skolem--Noether theorem, all (algebra) automorphisms of $M_n(k^{\mathrm{sep}})$ are inner, so this automorphism group is $\op{PGL}_n(k^{\mathrm{sep}})$. To compute this cohomology group, we note that there is a short exact sequence
+	\[1\to\mathbb G_m\to\mathrm{GL}_n\to\mathrm{PGL}_n\to1\]
+	of group schemes, so taking the long exact sequence in cohomology, we receive an exact sequence
+	\[\mathrm H^1(k;\mathbb G_m)\to\mathrm H^1(k;\mathrm{GL}_n)\to\mathrm H^1(k;\mathrm{PGL}_n)\to\mathrm H^2(k;\mathbb G_m)\]
+	of pointed sets. The left two groups vanish by (a version of) Hilbert's theorem 90. (This is basically the statement that all $\op{GL}_n$-bundles on $\Spec k$ are trivial, which is true because all rank-$n$ modules over $k$ are free.) It turns out that this is enough to produce an injection $\mathrm H^1(k;\mathrm{PGL}_n)\to\mathrm H^2(k;\mathbb G_m)$.
+
+	Now, taking the colimit over $n$, one shows that the collection of all central simple algebras to $\mathrm H^2(k;\mathbb G_m)$. It remains to check that this map descends to equivalence classes and then defines an isomorphism on $\op{Br}(k)$. We will not run any of these checks.
+\end{proof}
+\begin{remark}
+	In characteristic away from $n$, one sees that the map $\op{SL}_n(k^{\mathrm{sep}})\to\op{PGL}_n(k^{\mathrm{sep}})$ is surjective with kernel $\mu_n$. Thus, the image of $\mathrm H^1(k;\mathrm{PGL}_n)$ in $\mathrm H^2(k;\mathbb G_m)$ comes from $\mathrm H^2(k;\mu_n)$, which is $n$-torsion. The same argument works in characteristic dividing $n$ if we use flat cohomology instead of \'etale (Galois) cohomology; namely, this allows us to pass from $k^{\mathrm{sep}}$ to $\overline k$ everywhere. It follows that $\op{Br}(k)$ is a torsion group.
+\end{remark}
+Now that we know that $\op{Br}(k)$ is torsion, we can hope to compute its $n$-torsion. This is a variant of Kummer theory.
+\begin{proposition} \label{prop:kummer}
+	Fix a field $k$ of characteristic not dividing some positive integer $n$. Then $\mathrm H^1(k;\mu_n)=k^\times/k^{\times n}$ and $\mathrm H^2(k;\mu_n)=\op{Br}(k)[n]$.
+\end{proposition}
+\begin{proof}
+	We use the short exact sequence
+	\[1\to\mu_n\to\mathbb G_m\stackrel n\to\mathbb G_m\to1\]
+	of \'etale group schemes on $k$. Taking Galois cohomology, we receive a long exact sequence
+	\[k^\times\stackrel n\to k^\times\to\mathrm H^1(k;\mu_n)\to\mathrm H^1(k;\mathbb G_m).\]
+	The last group vanishes by Hilbert's theorem 90, so $\mathrm H^1(k;\mu_n)\cong k^\times/k^{\times n}$ follows. Similarly, we have a long exact sequence
+	\[\mathrm H^2(k;\mathbb G_m)\to\mathrm H^2(k;\mu_n)\to\mathrm H^2(k;\mathbb G_m)\stackrel n\to\mathrm H^(k;\mathbb G_m),\]
+	and the left group vanishes by Hilbert's theorem 90, so $\mathrm H^2(k;\mu_n)\cong\mathrm{Br}(k)[n]$ follows by \Cref{prop:brauer-cohomology}.
+\end{proof}
+\begin{remark}
+	If we use flat cohomology, then the same proof works even if $\op{char}k\mid n$, so the conclusion is recovered.
+\end{remark}
+Having a cohomological interpretation of the Brauer group allows us to do Galois cohomology things to it. Here is an example calculation.
+\begin{example} \label{ex:quaternion-by-cup}
+	There is a canonical cup product
+	\[\mathrm H^1(k;\mu_2)\times\mathrm H^1(k;\ZZ/2\ZZ)\to\mathrm H^2(k;\mu_2).\]
+	Of course, there is a canonical isomorphism $\mathrm H^1(k;\ZZ/2\ZZ)\cong\mathrm H^1(k;\mu_2)$, so we see that this induces a cup product
+	\[k^\times/k^{\times2}\times k^\times/k^{\times2}\to\op{Br}(k)[2]\]
+	by \Cref{prop:kummer}. One can check that this takes a pair $(a,b)$ to the quaternion algebra $H_{a,b}$, which we can do with some explicit cocycle calculations to $\mathrm H^2(k;\mu_2)$.
+\end{example}
+\begin{remark}
+	For fixed $a\in k^\times$, it turns out that the natural map $k^\times\to\op{Br}(k)$ given by $b\mapsto[H_{a,b}]$ has kernel given by $\op N_{k(\sqrt a)/k}k(\sqrt a)^\times$. Indeed, the idea is to use Tate Galois cohomology: there is an explicit isomorphism
+	\[\mathrm H^0_T(\op{Gal}(k(\sqrt a)/k);\mathbb G_m)\to\mathrm H^2(\op{Gal}(k(\sqrt a)/k);\mathbb G_m)\]
+	given by some cup product, computed in \Cref{ex:quaternion-by-cup}. The source reduces to $k^\times/\op N_{k(\sqrt a)/k}k(\sqrt a)^\times$ by expanding out the Tate cohomology group, and the target can be seen to be the kernel of the natural map $\op{Br}(k)\to\op{Br}(k(\sqrt a))$ by the Inflation--restriction exact sequence.
+\end{remark}
+
+\subsection{Examples of Brauer Groups}
+It is as good a time as any to give some examples of Brauer groups.
+\begin{example}
+	If $k$ is separably closed, then \Cref{prop:csa-grab-bag} shows that $\op{Br}(k)$ is trivial. One can also see this directly from \Cref{prop:brauer-cohomology}.
+\end{example}
+\begin{example}
+	By Wedderburn's theorem, all finite division algebras are fields, so there is only one finite central division algebras over $\FF_q$ (namely, $\FF_q$). Thus, $\op{Br}\FF_q=0$.
+\end{example}
+\begin{example}
+	By Tsen's theorem, one has that $\op{Br}\CC(t)=0$. In fact, the same is true for any field of transcendence degree $1$ over an algebraically closed field.
+\end{example}
+\begin{example}
+	A direct calculation in Galois cohomology, one has that $\op{Br}\RR=\frac12\ZZ/\ZZ$, where $\RR$ goes to $0$, and $\HH$ goes to $\frac12$. This is equivalent to \Cref{ex:real-csa}.
+\end{example}
+\begin{example}
+	For any nonarchimedean local field $k_v$, it turns out that $\op{Br}k_v\cong\QQ/\ZZ$. There is a way to write down these elements explicitly. This assertion is roughly as hard as local class field theory.
+\end{example}
+\begin{example}
+	For any global field $k$, functoriality gives a map $\op{Br}(k)\to\prod_v\op{Br}k_v$. It turns out that the image lands in $\bigoplus_v\op{Br}k_v$, which one sees because a central simple algebra over $k$ uses finitely many denominators, so it can be trivialized at all but finitely many places $v$. By global class field theory, it turns out that this map is injective, and it fits into a short exact sequence
+	\[0\to\op{Br}k\to\bigoplus_v\op{Br}k_v\to\QQ/\ZZ\to0,\]
+	where the last map is given by summing. Similarly, this is roughly as hard as global class field theory.
+\end{example}
+\begin{remark}
+	It turns out that the short exact sequence
+	\[0\to\op{Br}\QQ\to\bigoplus_v\op{Br}\QQ_v\to\QQ/\ZZ\to0\]
+	encodes quadratic reciprocity, if we apply to the quaternion algebra $H_{p,q}$ where $p$ and $q$ are odd primes.
+\end{remark}
+
+\end{document}
