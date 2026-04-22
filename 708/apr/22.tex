@@ -1,0 +1,203 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 22}
+We only have three lectures, so we will have to be fast. We will try to introduce the basic notions, and then we will try to explain their applications to Diophantine equations. Here is a rough plan.
+\begin{enumerate}
+	\item We'll start with some history and introduce some combinatorics which give rise to cluster algebras $\mc A$. The combinatorics arises by studying maps $\mc A\to\ZZ$.
+	\item Then we will introduce the basic notions of cluster algebras.
+	\item We will explain the classification of cluster algebras.
+	\item With cluster algebras in hand, we will define cluster varieties, which look like $\Spec\mc A$.
+	\item From here, we will be able to discuss applications to positive integral points on the affine varieties $\Spec\mc A$.
+	\item Lastly, we will explain applications to arithmetic dynamics (in ``Donaldson--Thomas dynamics'') on the cluster varieties.
+\end{enumerate}
+
+\subsection{Classical Friezes}
+Cluster algebras began their life in the theory of total positivity and representations of quivers. They later found applications in Teichm\"uller theory and symplectic/Poisson geometry.\footnote{Pavel Etingof points out that the cluster algebras found in Poisson geometry are algorithmically quantizable, which provide an interesting source of examples of quantization.} They can also be found in Grassmannians, in quantum field theory, and cosmology. We will say nothing about any of these applications. Instead, we will explain connections to counting (positive) integral points on log Calabi--Yau varieties and arithmetic dynamics, originally discovered through the Markov surface.
+
+Cluster algebras arise from freizes. Here is the definition of a classical frieze.
+\begin{definition}[frieze]
+	A \textit{frieze} is the central section of an entablature above a Greek temple.
+\end{definition}
+\begin{example}
+	The Parthenon featured a frieze, which was some horizontally periodic geometric pattern.
+\end{example}
+This definition is slightly too classical.
+\begin{definition}[frieze]
+	A \textit{frieze pattern} is an array of positive integers with infinitely many columns and some $\op{SL}_2$-unimodular conditions. More explicitly, a frieze pattern with $n$ rows is an array $\{x_{ij}\}_{ij}$ where $i\in\{1,2,\ldots,n\}$ and $j\in\ZZ^+$ satisfying the condition
+	\[x_{ij}x_{i,j+1}-x_{i-1,j+1}x_{i+1,j}=1.\]
+\end{definition}
+\begin{remark}
+	One typically arranges the frieze as follows.
+	\[\begin{array}{cccccccccccccccccccccccc}
+		\cdots & 1 && 1 && 1 && 1 && 1 \cdots \\
+		\cdots && x_{11} && x_{12} && x_{13} && x_{14} && \cdots \\
+		\cdots & x_{2,-1} && x_{21} && x_{22} && x_{23} && x_{24} & \cdots \\
+		\cdots && \ddots && \ddots && \ddots && \ddots && \cdots \\
+		\cdots & 1 && 1 && 1 && 1 && 1 && 1 && \cdots \\
+	\end{array}\]
+	With this convention, we see that $x_{ij}x_{i,j+1}-x_{i-1,j+1}x_{i+1,j}=1$ is asking for each ``diamond'' to have determinant $1$.
+\end{remark}
+\begin{example} \label{ex:frieze-at-two}
+	Here is a Frieze pattern with $2$ rows.
+	\[\begin{array}{cccccccccccccccccccccccc}
+		\cdots & 1 && 1 && 1 && 1 && 1 && 1 && \cdots \\
+		\cdots && 3 && 1 && 2 && 2 && 1 && 3 & \cdots \\
+		\cdots & 1 && 2 && 1 && 3 && 1 && 2 && \cdots \\
+		\cdots && 1 && 1 && 1 && 1 && 1 && 1 && \cdots
+	\end{array}\]
+	(We do not count the row of ones in the number of rows.) We note that there is a ``fundamental domain'' with $(3,1,2)$ in the first row and $(2,1)$ in the bottom row.
+\end{example}
+Gauss (roughly speaking) proved the following classification.
+\begin{theorem}[Gauss~1866]
+	All friezes with two rows is $5$-periodic.
+\end{theorem}
+\begin{remark}
+	This was proven ``posthumously'' as Gauss's theorem on the pentagramma minificum; Gauss proved some purely geometric fact which turns out to imply that any three of the equations
+	\[\begin{cases}
+		1+\alpha=\gamma\delta, \\
+		1+\beta=\delta\varepsilon, \\
+		1+\gamma=\alpha\varepsilon, \\
+		1+\delta=\alpha\beta, \\
+		1+\varepsilon=\beta\gamma
+	\end{cases}\]
+	implies the other two, which Coxeter recognized classifies friezes.
+\end{remark}
+Coxeter would go on to try to classify these friezes.
+\begin{theorem}[Coxeter~1971]
+	All friezes with $n$ rows are periodic with period $n+3$.
+\end{theorem}
+\begin{remark}
+	Periodicity continues to hold, even if we do not require that the entries of the frieze are integers.
+\end{remark}
+\begin{theorem}[Conway--Coxeter~1973]
+	Fix $n$. Then there are exactly $\frac1{n+2}\binom{2n+2}{n+1}$ friezes with $n$ rows.
+\end{theorem}
+\begin{proof}[Sketch]
+	Note that $\frac1{n+2}\binom{2n+2}{n+1}$ is a Catalan number, so in Catalan tradition, we will try to find a bijection with one of the many other ways to count Catalan numbers. It turns out that we can friezes with $n$ rows can be found in bijection with triangulations of $(n+3)$-gons. In particular, given a triangulation of $(n+3)$-gons with labeled vertices $\{1,2,\ldots,n+3\}$, define $\{x_{1j}\}_j$ to be the periodic sequence of the number of triangles which hit vertex $j$. Then one can use the determinant condition to complete the frieze. Injectivity of this map follows because one can recover the triangulation from the sequence, and this turns out to hit all friezes, which one can check by induction on $n$.
+\end{proof}
+\begin{example}
+	For $n=2$, there is only one triangulation of the pentagon (up to rotation), so we find that \Cref{ex:frieze-at-two} gives the only frieze up to translation.
+	\begin{center}
+		\begin{asy}
+			unitsize(1cm);
+			real theta=18;
+			pair AA = dir(theta);
+			pair BB = dir(theta+72);
+			pair CC = dir(theta+72*2);
+			pair DD = dir(theta+72*3);
+			pair EE = dir(theta+72*4);
+			draw(AA -- BB -- CC -- DD -- EE -- cycle);
+			draw(BB--EE);
+			draw(BB--DD);
+			label("$1$", AA, AA);
+			label("$3$", BB, BB);
+			label("$1$", CC, CC);
+			label("$2$", DD, DD);
+			label("$2$", EE, EE);
+		\end{asy}
+	\end{center}
+\end{example}
+\begin{example}
+	There is a triangulation of the nonagon given by the sequence $(4,2,1,4,2,1,4,2,1)$. This provides an example of a frieze with six rows with this sequence as the first row.
+\end{example}
+
+\subsection{General Friezes}
+Here are some more general friezes; this definition is due to Caldero and Chapoton.
+\begin{definition}[frieze]
+	Fix a Dynkin type $\Delta$ with (generalized) Cartan matrix $C=\{c_{ij}\}_{i,j\le n}$. Then a \textit{frieze of type $\Delta$} is an array $\{x_{ij}\}$ with $i\in\{1,2,\ldots,n\}$ and $j\in\NN$, satisfying the condition
+	\[x_{ij}x_{i,j+1}-\prod_{k<i}x_{k,j+1}^{\left|c_{ki}\right|}\prod_{k>i}x_{kj}^{\left|c_{ki}\right|}=1.\]
+\end{definition}
+\begin{example}
+	Take $\Delta=A_n$ recovers a frieze with $n$ rows.
+\end{example}
+\begin{example}
+	Type $E_8$ has the following Dynkin diagram.
+	% https://q.uiver.app/#q=WzAsOCxbMCwxLCJcXGJ1bGxldCJdLFsxLDEsIlxcY29sb3J7b3JhbmdlfVxcYnVsbGV0Il0sWzIsMSwiXFxjb2xvcntyZWR9XFxidWxsZXQiXSxbMywxLCJcXGNvbG9ye3llbGxvd31cXGJ1bGxldCJdLFs0LDEsIlxcYnVsbGV0Il0sWzUsMSwiXFxidWxsZXQiXSxbNiwxLCJcXGJ1bGxldCJdLFsyLDAsIlxcY29sb3J7Ymx1ZX1cXGJ1bGxldCJdLFswLDEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwyLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsMywiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFszLDQsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw1LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsNiwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsyLDcsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+	\[\begin{tikzcd}[cramped]
+		&& {\color{blue}\bullet} &&&& \\
+		\bullet & {\color{orange}\bullet} & {\color{red}\bullet} & {\color{green}\bullet} & \bullet & \bullet & \bullet
+		\arrow[no head, from=2-1, to=2-2]
+		\arrow[no head, from=2-2, to=2-3]
+		\arrow[no head, from=2-3, to=1-3]
+		\arrow[no head, from=2-3, to=2-4]
+		\arrow[no head, from=2-4, to=2-5]
+		\arrow[no head, from=2-5, to=2-6]
+		\arrow[no head, from=2-6, to=2-7]
+	\end{tikzcd}\]
+	This means that the frieze should have seven rows, but the third row will have extra numbers in it (``filling in the diamond''), which must then satisfy the condition $ae-bcd$, where these numbers fit into the following diamond.
+	\[\begin{array}{ccc}
+		& \color{orange}b \\ \color{red}a & \color{blue}c & \color{red}e \\ & \color{green}d
+	\end{array}\]
+	There is a frieze with
+	\[(x_{11},\ldots,x_{18})=(4,{\color{orange}11},{\color{red}29},{\color{blue}5},{\color{green}21},13,5,2),\]
+	where the vertices are colored as above.
+\end{example}
+We now try to prove the same theorems as Coxeter (and Conway).
+\begin{theorem}[Assem--Reataver--Smith]
+	Fix a Dynkin type $\Delta$. Then all friezes of type $\Delta$ are periodic if and only if $\Delta$ is of finite type.
+\end{theorem}
+\begin{remark}
+	The periods are known for all Dynkin types. For example, it is $16$ for type $E_8$.
+\end{remark}
+With some periodicity, we can try to count these things. We have little to say about infinite types.
+\begin{theorem}
+	If $\Delta$ is a Dynkin type of infinite type, then there are infinitely many friezes of type $\Delta$.
+\end{theorem}
+\begin{remark}
+	It turns out that the coefficients of a frieze are unbounded in infinite types.
+\end{remark}
+For finite types, we can count them.
+\begin{theorem}
+	Fix a Dynkin type $\Delta$ of finite type. Then the friezes of type $\Delta$ can be enumerated as follows.
+	\[\begin{array}{c|cccccccccccccccc}
+		\Delta & A_n & B_n & C_n & D_n & E_6 & E_7 & E_8 & F_4 & G_2 \\\hline
+		\# & \frac1{n+2}\binom{2n+2}{n+1} & \sum_{m=1}^{\floor{\sqrt{n+1}}}\binom{2n-m^2+1}{n} & \binom{2n}n & \sum_{m=1}^nd(m)\binom{2n-m-1}{n-m} & 868 & 4400 & 26952 & 112 & 9
+	\end{array}\]
+\end{theorem}
+\begin{remark}
+	We will say basically nothing about the proof, but we do say that many of the arguments here find bijections between these friezes and some kind of polygon triangularizations, perhaps with punctures and so on.
+\end{remark}
+\begin{remark}
+	The enumerations for $E_7$ and $E_8$ are due to Robin Zhang. He used cluster algebras (and Diophantine aspects of cluster varieties).
+\end{remark}
+Of course, we have yet to define a cluster algebra, but we can give some motivation for them via the following counting.
+\begin{proposition}
+	Fix a Dynkin type $\Delta$, and let $\mc A$ be a cluster algebra of type $\Delta$. Then the friezes of type $\Delta$ are in bijection with ring homomorphisms $f\colon\mc A\to\ZZ$ which map the cluster variables in $\mc A$ to positive integers.
+\end{proposition}
+
+\subsection{Cluster Algebras}
+We are now allowed to define cluster algebras. The most general definition is technical, so we will content ourselves with the following notion.
+\begin{definition}
+	A \textit{cluster algebra} $\mc A$ over a field $k$ is a commutative subring of $\QQ(x_1,\ldots,x_n)$ equipped with \textit{cluster variables} which are constructed from some mutation $n\times n$ matrix $B$ as follows (with zeroes along the diagonals).
+	\begin{enumerate}
+		\item Start with $(x_1,\ldots,x_n)$. Then define
+		\[x_1'\coloneqq\frac{\prod_{\substack{1\le i\le n\\b_{i1}<0}}x_i^{\left|b_{i1}\right|}+\prod_{\substack{1\le i\le n\\b_{i1}>0}}x_i^{\left|b_{i1}\right|}}{x_1}.\]
+		In words, in the first column, we take a weighted product of the $x_i$s with positive coefficients, and the weighted product of the $x_i$s with negative coefficients. Lastly, we divide by $x_1$. We then change $B$ by flipping the sign on the first row and first column. This gives a new tuple of rational functions $(x_1',x_2,\ldots,x_n)$.
+		\item We then repeat the process at $x_2$, then $x_3$, and so on. Eventually we go back and repeat.
+	\end{enumerate}
+	At the end, $\mc A$ is generated by the resulting rational functions.
+\end{definition}
+\begin{example}
+	Over the field $\QQ$, we define a cluster algebra $\mc A\subseteq\QQ(x_1,x_2)$ with the mutation matrix $B\coloneqq\begin{bsmallmatrix}
+		0 & 1 \\ -1 & 0
+	\end{bsmallmatrix}$. Then $\mc A$ is defined as follows.
+	\begin{enumerate}
+		\item We take the pair $(x_1,x_2)$ and apply the following process: take $x_1$, and define a numerator to be the product of all variables with a positive coefficient in $B$ (in the first column) plus the product of the variables with a negative coefficient, and then we define out by $x_1$. This gives $x_1'=(x_2+1)/x_1$. Lastly, we adjust $B$ by flipping signs in the second row and second column, giving $B=\begin{bsmallmatrix}
+			0 & -1 \\ 1 & 0
+		\end{bsmallmatrix}$.
+		\item Then we repeat the process with the second column. This gives $x_2'=(x_1'+1)/x_2=(x_1+x_2+1)/(x_1x_2)$ and $B''=\begin{bsmallmatrix}
+			0 & 1 \\ -1 & 0
+		\end{bsmallmatrix}$.
+		\item We now go back to do the process to $x_1$, which gives $x_1''=(x_2'+1)/x_1'=(x_1+1)/x_2$.
+		\item Repeating the process for the second column gives $x_2''=(x_1''+1)/x_2'=x_1$.
+		\item Going back to the first column gives $x_1'''=x_2$.
+	\end{enumerate}
+	Thus, we see that our process is periodic! The resulting cluster algebra is thus generated by five rational functions (which are the cluster variables), each of which is a cluster variable.
+\end{example}
+We will classify cluster algebras next time. The above example will turn out to be type $A_2$; the number of cluster variables turns out to correspond to the period of the frieze.
+
+\end{document}
