@@ -1,0 +1,256 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{April 27}
+Here we go.
+
+\subsection{The Weyl Integration Formula}
+As an application, we note that we can reformulate the Weyl character formula.
+\begin{theorem}[Weyl integration formula] \label{thm:weyl-integration}
+	Fix a connected compact Lie group $K$ with maximal torus $T\subseteq K$. Let $\Phi$ be the root system of $\op{Lie}K_\CC$, and let $dx$ and $dt$ be the probability Haar measures on $K$ and $T$, respectively. Given a conjugation-invariant continuous function $f$ on $K$, we have
+	\[\int_Kf(x)\,dx=\frac1{\left|W\right|}\int_Tf(t)\left|\Delta(t)\right|^2\,dt,\]
+	where
+	\[\Delta(t)=\prod_{\alpha\in\Phi_+}\left(\alpha(t)^{1/2}-\alpha(t)^{-1/2}\right).\]
+\end{theorem}
+\begin{remark}
+	Note that $\Delta(t)$ is defined only up to sign (because of the square roots), but we are taking an absolute value later anyway, so this does not matter.
+\end{remark}
+\begin{proof}
+	By the Peter--Weyl theorem, via its application \Cref{cor:chars-are-dense}, it is enough to check this for characters $\chi_\lambda$, where $\lambda$ is dominant integral. We now compute both sides directly.
+	\begin{itemize}
+		\item On one hand,
+		\[\int_K\chi_\lambda(x)\,dx=\begin{cases}
+			0 & \text{if }\chi\text{ is nontrivial}, \\
+			1 & \text{if }\chi\text{ is trivial}
+		\end{cases}\]
+		by the orthogonality of characters (also proven in \Cref{cor:chars-are-dense}).
+		\item On the other hand, by the Weyl character formula (\Cref{thm:weyl-char}), we have
+		\begin{align*}
+			\frac1{\left|W\right|}\int_T\chi_\lambda(t)\left|\Delta(t)\right|^2\,dt &= \frac1{\left|W\right|}\int_T\Bigg(\sum_{w\in W}(-1)^{\ell(w)}e^{w(\lambda+\rho)}\Bigg)\Bigg(\sum_{y\in W}(-1)^{\ell(y)}e^{-y\rho}\Bigg)\,dt.
+		\end{align*}
+		Here, $e^\alpha$ refers to the character $\alpha\colon T\to\CC^\times$. Now, $\int_Te^\gamma\,dt$ vanishes unless $\gamma=0$, in which case the integral is $1$. Now, the only way to receive characters $e^0$ in this sum is to have $w(\lambda+\rho)=y\rho$, which is only possible when $w=y$ and when $\lambda=0$. Thus, the integral vanishes when $\lambda\ne0$, and when $\lambda=0$, we receive $\frac1{\left|W\right|}\cdot\left|W\right|$, which is $1$.
+	\end{itemize}
+	Comparing our two calculations completes the proof.
+\end{proof}
+\begin{example}
+	For $K=\op U(n)$, we can set $T$ to be the diagonal torus. We can parameterize the torus as $\op U(1)^n$. Then expanding out $\Delta$ reveals that
+	\[\int_{\op U(n)}f(x)\,dx=\frac1{n!}\int_{\op U(1)^n}\left(f(\op{diag}(z_1,\ldots,z_n))\prod_{k<\ell}(z_k-z_\ell)\right)\,dz_1\,\cdots\,dz_n.\]
+	One can write $z_1=e^{i\theta_1}$, which gives
+	\[\int_{\op U(n)}f(x)\,dx=\frac1{(2\pi)^nn!}\int_{(\RR/\ZZ)^n}\left(f(\op{diag}(e^{i\theta_1},\ldots,e^{i\theta_n})\prod_{k<\ell}2\sin(\theta_k-\theta_\ell)\right)\,d\theta_1\,\ldots\,d\theta_n.\]
+	The factor of $2\pi$ in the denominator comes from the probability Haar measure on $S^1$.
+\end{example}
+\begin{remark} \label{rem:ortho-character-integration}
+	By the orthogonality of characters (in \Cref{cor:chars-are-dense}), we see that
+	\[\frac1{\left|W\right|}\int_T\chi_\lambda(t)\overline{\chi_\mu(t)}\left|\Delta(t)\right|^2\,dt=1_{\lambda=\mu}.\]
+\end{remark}
+
+\subsection{Review of de Rham Cohomology}
+Recall the following construction.
+\begin{definition}[de Rham complex]
+	Fix a manifold $M$ of dimension $n$. For each $i$, we define $\Omega^i$ to be the sheaf $\land^i\mathrm T^*M$. Then we define the \textit{de Rham complex} to be the complex
+	\[0\to\Omega^0(M)\to\Omega^1(M)\to\Omega^2(M)\to\cdots\to\Omega^n(M)\to0.\]
+	Here, the maps $d\colon\Omega^i(M)\to\Omega^{i+1}(M)$ are given by the de Rham differential, which can be described on pure tensors as $d(f\,\omega)\coloneqq df\land\omega$.
+\end{definition}
+\begin{remark}
+	One can check that $d^2=0$, which explains why this is a complex.
+\end{remark}
+\begin{remark}
+	The sheaves $\Omega^i(M)$ can be glued into $\Omega^*(M)$, which is a graded commutative ring under the wedge product $\land$.
+\end{remark}
+\begin{remark}
+	One can check that
+	\[d(\alpha\land\beta)=d\alpha\land\beta+(-1)^{\deg\alpha}\alpha\land d\beta\]
+	by passing to local coordinates and doing an explicit calculation. Indeed, this is basically the (Leibniz) product rule after keeping track of ordering. Thus, $d$ is a derivation.
+\end{remark}
+\begin{definition}[de Rham cohomology]
+	Fix a manifold $M$ of dimension $n$. Then we say that $\omega\in\Omega^i(M)$ is \textit{closed} if and only if $d\omega=0$ and is \textit{exact} if and only if $\omega$ is in the image of $d$. We then define $\mathrm H^i(M;\CC)$ to be the space of closed forms modulo the space of exact forms.
+\end{definition}
+\begin{remark} \label{rem:functorial-cohomology}
+	Everything is functorial in the manifold: a smooth map $f\colon M\to N$ produces morphisms $f^*\colon\Omega^i(N)\to\Omega^i(M)$ which commute with the de Rham differential and therefore induce morphisms in de Rham cohomology. We will show on the homework that the induced morphism $f^*$ on cohomology do not depend on the smooth homotopy class of $f$.
+\end{remark}
+\begin{remark}
+	It is a theorem that de Rham cohomology agrees (functorially) with singular cohomology.
+\end{remark}
+
+\subsection{Group Actions on Cohomology}
+We will want the following tool.
+\begin{definition}[Lie derivative]
+	Fix a vector field $v$ on a manifold $M$. Then the \textit{Lie derivative} $L_v$ is the unique degree-zero derivation of $\Omega^*(M)$ for which $[L_v,d]=0$ and $L_vf$ is the directional derivative of $f$ in the direction $v$.
+\end{definition}
+\begin{remark}
+	Note that $L_v$ is uniquely determined by its behavior in degree zero because any differential form is locally exact, so we can always pull a $d$ out of a differential form locally.
+\end{remark}
+\begin{proposition}[Cartan's magic formula] \label{prop:cartan-magic}
+	Fix a vector field $v$ on a manifold $M$, and let $i_v\colon\Omega^i\to\Omega^{i-1}$ denote the contraction by $v$. Then
+	\[L_v=di_v+i_vd.\]
+\end{proposition}
+\begin{proof}
+	One can check that $i_v$ is a derivation of degree $-1$, so both sides are derivations of degree $0$. Additionally, both sides commute with $d$, so they are uniquely determined by their behavior in degree zero. This amounts to checking that $L_vf=i_vdf$, which is basically the definition of $L_v$.
+\end{proof}
+\begin{corollary} \label{cor:vector-field-action-vanishes}
+	Fix a vector field $v$ on a manifold $M$. Then the induced operation $L_v$ on $\mathrm H^i(M;\RR)$ vanishes.
+\end{corollary}
+\begin{proof}
+	Here, the operation $L_v$ on cohomology is well-defined because $L_v$ preserves the complex (and notably commutes with $d$). \Cref{prop:cartan-magic} tells us that $L_v$ sends closed forms to exact forms.
+\end{proof}
+\begin{corollary} \label{cor:group-acts-by-identity}
+	Fix a connected Lie group $G$ acting on a manifold $M$. Then the action of $G$ on $\mathrm H^i(G;M)$ is by the identity.
+\end{corollary}
+\begin{proof}
+	Fix $g\in G$, and we would like to show that the action map $g\colon M\to M$ induces the identity on cohomology. In other words, for any closed differential form $\omega$, we would like to check that $g^*\omega-\omega$ is exact. Well, because $G$ is connected, we may find a path $\gamma\colon[0,1]\to G$ with $\gamma(0)=1$ and $\gamma(1)=g$. Then by Stoke's formula, we have
+	\[g^*\omega-\omega=\int_0^1\frac d{dt}\gamma(t)^*\omega\,dt,\]
+	which could alternatively be checked directly in local coordinates. However, by \Cref{prop:cartan-magic}, this is
+	\[g^*\omega-\omega=-\int_0^1L_{\gamma'(t)\gamma(t)^{-1}}\omega\,dt,\]
+	and the right-hand side vanishes in cohomology by \Cref{cor:vector-field-action-vanishes}. Here, $\gamma'(t)\gamma(t)$ refers to the invariant vector field of $\gamma'(t)$.
+\end{proof}
+\begin{remark}
+	Intuitively, the previous remark is saying that $g\colon M\to M$ is homotopic to the identity, which would then finish the proof by \Cref{rem:functorial-cohomology}. However, this does not really work because the relevant homotopy exists in $\op{Diff}(M)$, which is not actually a manifold.
+\end{remark}
+We can get further mileage from our integration theory in the case where $G$ is compact.
+\begin{notation}
+	Suppose that a compact Lie group $G$ acts on a manifold $M$. Then we define the operator $P$ on $\Omega^i(M)$ by
+	\[P\omega\coloneqq\int_Gg^*\omega\,dg,\]
+	a formula which can be made sense of in local coordinates. (Here, $dg$ is the probability Haar measure.) Lastly, we define $\Omega^i(M)_0$ to be the image of $1-P$.
+\end{notation}
+\begin{remark}
+	By construction, $P^2=P$, and $P$ outputs $G$-invariant forms while acting by identity on $G$-invariant forms, so it follows that $\im P=\Omega^i(M)^G$. Because $P^2=P$, we further receive a decomposition
+	\[\Omega^i(M)=\Omega^i(M)^G\oplus\Omega^i(M)_0.\]
+\end{remark}
+\begin{remark}
+	Furthermore, the action of $G$ commutes with $d$ (because $G$ acts by smooth maps), so $P$ commutes with $d$. Thus, $P$ induces an action on the de Rham complex, and $\Omega^i(M)=\Omega^i(M)^G\oplus\Omega^i(M)_0$ becomes a sum of complexes.
+\end{remark}
+\begin{proposition} \label{prop:compute-cohomology-by-invariants}
+	Suppose that a compact Lie group $G$ acts on a manifold $M$. The complex $\{\Omega^i(M)_0\}_i$ is exact.
+\end{proposition}
+\begin{proof}
+	Choose a closed form $\omega\in\Omega^i(M)_0$. Then \Cref{cor:group-acts-by-identity} shows that $[\omega]=g^*[\omega]$, which then equals $[Pw]$ by integration. But $P\omega=0$, so $[P\omega]=0$, so $[\omega]=0$, so $\omega=d\eta$ for some $\eta$. Further, because $d$ commutes with $P$, we find that
+	\begin{align*}
+		\omega &= (1-P)\omega \\
+		&= (1-P)d\eta \\
+		&= d(1-P)\eta,
+	\end{align*}
+	so $\omega$ is in the image of $d\colon\Omega^i(M)_0\to\Omega^i(M)_0$.
+\end{proof}
+\begin{remark} \label{rem:pass-to-group-invariants}
+	It follows that just the complex $\left\{\Omega^i(M)^G\right\}_G$ computes the cohomology of $M$.
+\end{remark}
+
+\subsection{The Cohomology of a Lie Group}
+By \Cref{rem:pass-to-group-invariants}, we can compute the cohomology of a compact connected Lie group $G$ via left-invariant differential forms on $G$, which are given by $\land^\bullet\mf g^*$.
+
+Next, we would like to compute the differential on $\land^\bullet\mf g$ purely algebraically. We will use another tool from differential geometry.
+\begin{proposition}[Cartan differentiation formula] \label{prop:cartan-diff-formula}
+	Fix a differential form $\omega\in\Omega^m(V)$ and vector fields $v_0,\ldots,v_m$. Then
+	\[d\omega(v_0,\ldots,v_m)=\sum_{i=0}^m(-1)^iL_v\omega(v_0,\ldots,\widehat v_i,\ldots,v_m)+\sum_{0\le i<j\le m}(-1)^{i+j}\omega([v_i,v_j],v_1,\ldots,\widehat v_i,\ldots,\widehat v_j,\ldots,v_m)\]
+\end{proposition}
+\begin{proof}
+	We may pass to local coordinates. Then the right-hand side is linear in functions on $M$, so it suffices to compare both sides when we set $v_i=\del/\del x_i$ for each $i$ and $\omega=f\,dx_{j_1}\land\cdots\land dx_{j_m}$. Then one directly computes both sides and concludes.
+\end{proof}
+\begin{corollary} \label{cor:differential-of-chev-eilenberg}
+	Fix a Lie group $G$ and some $G$-invariant differential form $\omega\in\Omega^m(G)^G$. Then for all left-invariant vector fields $v_1,\ldots,v_m\in\mf g$, we have
+	\[d\omega(v_0,\ldots,v_m)=\sum_{0\le i<j\le m}(-1)^{i+j}\omega([v_i,v_j],v_1,\ldots,\widehat v_i,\ldots,\widehat v_j,\ldots,v_m).\]
+\end{corollary}
+\begin{proof}
+	The functions $\omega(v_0,\ldots,\widehat v_i,\ldots,v_m)$ on $G$ are $G$-invariant and thus constant, so their Lie derivatives vanish. Thus, this follows from \Cref{prop:cartan-diff-formula}.
+\end{proof}
+We are now ready to define cohomology of a Lie algebra.
+\begin{definition}[Chevalley--Eilenberg complex]
+	Fix a Lie algebra $\mf g$ over a field $F$. Then we define the \textit{Chevalley--Eilenberg complex} to be the graded commutative ring $\land^\bullet\mf g^*$, equipped with the differential
+	\[d\omega(v_0,\ldots,v_m)=\sum_{0\le i<j\le m}(-1)^{i+j}\omega([v_i,v_j],v_1,\ldots,\widehat v_i,\ldots,\widehat v_j,\ldots,v_m).\]
+	We define $\mathrm H^i(\mf g;F)$ to be the cohomology spaces associated to this complex.
+\end{definition}
+\begin{remark}
+	One can check directly with the Jacobi identity that this differential $d$ has $d^2=0$. Thus, this is actually a complex.
+\end{remark}
+\begin{example} \label{ex:compact-cohomology}
+	Fix a compact connected Lie group $G$ with Lie algebra $\mf g$. By \Cref{rem:pass-to-group-invariants,cor:differential-of-chev-eilenberg}, we find that $\mathrm H^i(G;\CC)$ is isomorphic to $\mathrm H^i(\mf g;\CC)$: indeed, these are isomorphic on the level of the complexes (before taking cohomology)!
+\end{example}
+\begin{example}
+	Suppose that $G=\RR^m$ so that $\mf g_\CC=\CC^m$. Then the differential vanishes, so $\mathrm H^i(\mf g;\CC)=\land^i\mf g^*$. On the other hand, $\mathrm H^i(G;\CC)$ always vanishes because $G$ is contractible!
+\end{example}
+Let's use some algebra to compute our cohomology.
+\begin{proposition}
+	Fix a compact connected Lie group $G$. Then
+	\[\mathrm H^\bullet(G;\CC)\cong\left(\land^\bullet\mf g^*\right)^{\mf g}.\]
+\end{proposition}
+\begin{proof}
+	Note that $G\times G$ acts on $G$, where the left $G$ acts by left translation, and the right $G$ acts by the adjoint action. By \Cref{rem:pass-to-group-invariants}, we see that we can compute $\mathrm H^\bullet(G;\CC)$ is computed by the complex
+	\[\Omega^\bullet(G)^{G\times G}=(\land^\bullet\mf g^*)^G,\]
+	where this last $G$ acts by the adjoint. Because $G$ is connected, $(\land^\bullet\mf g^*)^G=(\land^\bullet\mf g^*)^{\mf g}$, so it only remains to compute that the differential on this subcomplex vanishes. Well,
+	\[d\omega(v_0,\ldots,v_m)=\sum_{0\le i<j\le m}(-1)^{i+j}\omega([v_i,v_j],v_1,\ldots,\widehat v_i,\ldots,\widehat v_j,\ldots,v_m),\]
+	which can be decomposed into a sum of terms which look like
+	\[S_i=\sum_{j\ne i}\omega(v_1,\ldots,[v_i,v_j],\ldots,\widehat v_i,\ldots,v_m),\]
+	up to some signs and a factor of $\frac12$, where here $[v_i,v_j]$ lives in coordinate $j$. However, $S_i$ vanishes because $\omega$ is $\mf g$-invariant!
+\end{proof}
+While we're here, we give another invariant property.
+\begin{proposition}
+	Fix a connected Lie group $G$, and let $\Gamma\subseteq G$ be a finite subgroup. Then the projection $\pi\colon G\to G/\Gamma$ induces an isomorphism on cohomology.
+\end{proposition}
+\begin{proof}
+	To begin, we claim that $\mathrm H^i(G/\Gamma;\CC)\cong\mathrm H^i(G;\CC)^\Gamma$: indeed, the point is that differential forms on $G/\Gamma$ are the same as $\Gamma$-invariant differential forms on $G$.\footnote{Indeed, this identity remains true whenever $\pi\colon M\to M'$ is a finite covering space where $\Gamma$ is the group of deck transformations.} However, $G$ acts trivially on its own cohomology, so $\Gamma$ acts trivially (for example, by \Cref{rem:pass-to-group-invariants}), so we are done.
+\end{proof}
+\begin{remark}
+	This is not true for torsion coefficients.
+\end{remark}
+
+\subsection{Using Hopf Algebras}
+For motivation, we recall the following piece of differential topology.
+\begin{theorem} \label{thm:kunneth}
+	Fix smooth manifolds $M$ and $N$. Then the projections define an isomorphism
+	\[\mathrm H^*(M\times N;\CC)\to\mathrm H^*(M)\otimes\mathrm H^*(N).\]
+\end{theorem}
+\begin{proof}
+	This is hard, so it is omitted. Unsurprisingly, this is true on the level of complexes.
+\end{proof}
+\begin{remark}
+	Importantly, this is an isomorphism of graded commutative rings, but this is a little twisted on the right-hand side: one has
+	\[(a\otimes b)(c\otimes d)=(-1)^{\deg(b)\deg(c)}(ac\otimes bd).\]
+	Intuitively, this is because we have to swap $b$ and $c$.
+\end{remark}
+\begin{corollary} \label{cor:cohomology-is-hopf}
+	Fix a connected Lie group $G$. Then $\mathrm H^*(G;\CC)$ has the structure of a graded commutative Hopf algebra.
+\end{corollary}
+\begin{proof}
+	The algebra structure comes from the wedge product in cohomology. The augmentation map $\varepsilon$ is the projection onto degree zero (note that $G$ is connected), and the antipode is induced by the inverse map on $G$. Furthermore, the coproduct $\Delta$ is induced by the multiplication $m\colon G\times G\to G$, together with \Cref{thm:kunneth}; explicitly, $\Delta$ is the composite
+	\[\mathrm H^*(G;\CC)\stackrel m\to\mathrm H^*(G\times G;\CC)\simeq\mathrm H^*(G;\CC)\otimes\mathrm H^*(G;\CC).\]
+	Because these maps make $G$ into a group object in the category of manifolds, they induced pullbacks which show that $\mathrm H^*(G;\CC)$ is a group object in the opposite category of algebras, which is exactly a Hopf algebra.
+\end{proof}
+Such Hopf algebras admit a classification.
+\begin{theorem}[Hopf] \label{thm:hopf}
+	Fix a field $k$ of characteristic zero. Suppose that $R$ is a finite-dimensional graded commutative bialgebra over $k$. Then $R$ is free as a $k$-algebra in generators of odd degree. Explicitly, there is an isomorphism
+	\[R\cong\land^\bullet(\xi_1,\ldots,\xi_r),\]
+	where the right-hand side is the exterior algebra in the generators $\xi_i$, which all have odd degrees.
+\end{theorem}
+\begin{proof}
+	This is on the homework!
+\end{proof}
+\begin{remark}
+	The presence of even-degree elements generate polynomial algebras.
+\end{remark}
+Thus, \Cref{thm:hopf} implies that $\mathrm H^*(G;\CC)$ is some exterior algebra. Let's see what we can say about it.
+\begin{proposition}
+	Fix a compact connected Lie group $G$ with Lie algebra $\mf g$. Then $\mathrm H^\bullet(G;\CC)$ is isomorphic (as a $\CC$-algebra) to a free exterior algebra on $\op{rank}(\mf g)$ generators.
+\end{proposition}
+\begin{proof}
+	The fact that $\mathrm H^\bullet(G;\CC)$ is isomorphic to a free exterior algebra follows from \Cref{thm:hopf} (together with \Cref{cor:cohomology-is-hopf}). It remains to compute the number of generators, which we will call $r$ for the time being. Note that
+	\[2^r=\dim\left(\land^\bullet\mf g^*\right)^{\mf g}\]
+	by \Cref{ex:compact-cohomology}, so it remains to show that the right-hand side equals $2^{\op{rank}(\mf g)}$.
+
+	We will do this using the Weyl character formula. To begin, note that we can explicitly compute the character of $\land^\bullet\mf g=\land^\bullet\mf g^*$. Indeed, $\mf g=\mf h\oplus\bigoplus_\alpha\mf g_\alpha$ implies that $\land^*\mf g=\land^*\mf h\otimes\bigotimes_\alpha\land^*\mf g_\alpha$. Then for a maximal torus $T\subseteq G$, we see that $t\in T$ acts on $\land^*\mf h$ by the identity, and $t$ acts on $\land^\bullet\mf g_\alpha$ by $(1+\alpha(t))$, so the trace of the action of $t$ is
+	\[\tr(t;\land^*\mf g)=2^{\dim\mf h}\prod_\alpha(1+\alpha(t)).\]
+	By \Cref{thm:weyl-integration} (via \Cref{rem:ortho-character-integration}), we conclude that
+	\[\dim\left(\land^\bullet\mf g\right)^{\mf g}=\frac{2^{\dim\mf h}}{\left|W\right|}=\int_T\prod_{\alpha\in\Phi}\left(1-e^\alpha\right)\left(1+e^\alpha\right)\,dt.\]
+	This right-hand side can be collapsed into the product over $\left(1-e^{2\alpha}\right)$. Now, all integrals over nontrivial characters will vanish, so we are just asking for the constant term of this integral. But the constant term for the product $\prod_\alpha\left(1-e^{2\alpha}\right)$ will be the same as the constant term for the product $\prod_\alpha\left(1-e^\alpha\right)$, which is the same as the constant term for $\Delta$. By \Cref{thm:weyl-integration} again, we see that this constant term must be $\left|W\right|$, so we are done.
+\end{proof}
+% \begin{example}
+% 	Suppose that $G$ is a compact connected Lie group. We claim that the number of generators of $\mathrm H^*(G;\CC)$ equals the rank. Well, let the number of generators be $r$ so that $2^r=\dim\left(\land^\bullet\mf g^*\right)^{\mf g}$ by \Cref{ex:compact-cohomology}. On the other hand, we can use the Weyl character formula to compute this dimension: let $T\subseteq G$ be a maximal torus, and we note that $\mf g=\mf h\oplus\bigoplus_\alpha\mf g_\alpha$ implies that $\land^*\mf g=\land^*\mf h\otimes\bigotimes_\alpha\land^*\mf g_\alpha$. Now, $t\in T$ acts on $\land^*\mf h$ by the identity, and $t$ acts on $\land^\bullet\mf g_\alpha$ by $(1+\alpha(t))$, so the trace of the action of $t$ is
+% 	\[\tr(t;\land^*\mf g)=2^{\dim\mf h}\prod_\alpha(1+\alpha(t)).\]
+% 	By \Cref{thm:weyl-integration} (via \Cref{rem:ortho-character-integration}), we conclude that
+% 	\[\dim\left(\land^\bullet\mf g\right)^{\mf g}=\frac{2^{\dim\mf h}}{\left|W\right|}=\int_T\prod_{\alpha\in\Phi}\left(1-e^\alpha\right)\left(1+e^\alpha\right)\,dt.\]
+% 	This right-hand side can be collapsed into the product over $\left(1-e^{2\alpha}\right)$. Now, all integrals over nontrivial characters will vanish, so we are just asking for the constant term of this integral. But the constant term for the product $\prod_\alpha\left(1-e^{2\alpha}\right)$ will be the same as the constant term for the product $\prod_\alpha\left(1-e^\alpha\right)$, which is the same as the constant term for $\Delta$. By \Cref{thm:weyl-integration} again, we see that this constant term must be $\left|W\right|$, so we are done.
+% \end{example}
+
+\end{document}
