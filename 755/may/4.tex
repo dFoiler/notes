@@ -1,0 +1,186 @@
+% !TEX root = ../notes.tex
+
+\documentclass[../notes.tex]{subfiles}
+
+\begin{document}
+
+\section{May 4}
+Today, we continue discussing cohomology.
+
+\subsection{Flag Manifolds}
+We will consider the following (full) flag manifold.
+\begin{definition}[flag manifold]
+	Fix a positive integer $n$. We define the \textit{flag manifold} $\mc F_n(\CC)$ to consist of full flags
+	\[0=V_0\subsetneq V_1\subsetneq\cdots\subsetneq V_n=\CC^n.\]
+\end{definition}
+\begin{remark}
+	One can see that $\mc F_n(\CC)=\op{GL}_n(\CC)/B$, where $B$ is the subgroup of upper-triangular matrices. Indeed, $\op{GL}_n(\CC)$ acts transitively on the space of all flags (which we can see by iteratively choosing a basis), and the stabilizer of the standard flag $V_i\coloneqq\op{span}_\CC\{e_1,\ldots,e_i\}$ is exactly $B$.
+\end{remark}
+\begin{remark}
+	Similarly, $\op U(n)$ acts transitively on $\mc F_n(\CC)$ (again, seen by iteratively choosing a unitary basis), and the stabilizer of the standard flag is $B\cap\op U(n)$, which is the diagonal torus $T$.
+\end{remark}
+Let's use Schubert cells to compute the cohomology of these flag manifolds.
+\begin{lemma}
+	Fix a positive integer $n$. Then we construct a cell decomposition $\{C_w\}_{w\in S_n}$ of $\mc F_n(\CC)$.
+\end{lemma}
+\begin{proof}
+	There is a map $\pi\colon\mc F_n(\CC)\to\CP^{n-1}$ given by sending a flag $\{V_i\}$ to the hyperplane $V_{n-1}$. Alternatively, one can view this as taking a quotient of $\op{GL}_n(\CC)$ by a parabolic subgroup. This is a fibration with fiber given by $\mc F_{n-1}(\CC)$, namely the full flags of $V_{n-1}$. Thus, we can inductively produce a cell decomposition of $\mc F_n(\CC)$ by pulling back cells from $\CP^{n-1}$. Indeed, for a hyperplane $E\subseteq\CP^{n-1}$ cut out by the equation
+	\[a_1x_1+\cdots+a_nx_n=0,\]
+	we may define $i(E)$ to be the minimal $j$ for which $a_j\ne0$. Then we define the cell $C_{in}$ to be given by those hyperplanes with $i(E)=i$; note that by normalizing $a_i=1$, we find $C_{in}\cong\CC^{n-i}$. To receive a cell decomposition, we have to trivialize $\pi^{-1}(C_{in})$, which we can do as follows: any $E\in C_{in}$ is cut out by an equation $a_ix_i+\cdots+a_nx_n=0$, so the variables all variables $x_j$ with $j\ne i$ can be chosen arbitrarily, where $x_i$ is then uniquely determined. Thus, we have a canonical identification $E\cong\CC^{n-1}$ given by avoiding the coordinate $x_i$, which gives the trivialization. Notably, this trivialization explains how to define maps from closed cells to $\mc F_n(\CC)$.
+
+	Thus, we will receive a cell decomposition of $\mc F_n(\CC)$ as follows: for $w\in S_{n-1}$ and $i\in\{1,\ldots,n-1\}$, we define
+	\[C_w\times C_{in}=C_{w'},\]
+	where $w'$ is obtained from $w$ by inserting $n$ in the $i$th location. Formally, $w'=w\circ(i,i+1,\ldots,n)$.
+	\begin{example}
+		We find that $C_{312}\times C_{24}=C_{3412}$.
+	\end{example}
+	It is not hard to see that we have given a bijection between permutations and cells.
+\end{proof}
+\begin{remark} \label{rem:compute-dim-schubert}
+	One can check that $\dim_\CC C_w=\ell(w)$ by its construction. Indeed, with $w$ and $w'$ as above given by inserting $n$ at index $i$, one finds $\ell(w')=\ell(w)+(n-i)$ due to adding on the cycle $(i,i+1,\ldots,n)$. Rigorously, we can compute this directly by viewing $\ell(w')$ as the number of inversions.
+\end{remark}
+\begin{proposition}
+	Fix a positive integer $n$ and a coefficient ring $\ZZ$. Then the cohomology of $\mathrm F_n(\CC)$ is free over $\ZZ$, supported in even degrees, and
+	\[\sum_i\op{rank}_\ZZ\mathrm H^{2j}(\mc F_n(\CC);\ZZ)q^j=\sum_{w\in S_n}q^{\ell(w)}.\]
+\end{proposition}
+\begin{proof}
+	Because our cells only are even dimensional (by \Cref{rem:compute-dim-schubert}), the cellular chain complex has vanishing differentials, so we are done.
+\end{proof}
+\begin{remark}
+	Alternatively, one can compute the Poincar\'e polynomial as an inductive product of the Poincar\'e polynomials of the $\CP^{n-1}$s, so we find that
+	\[\sum_{w\in S_n}q^{\ell(w)}=\prod_{j=1}^n\left(1+q+\cdots+q^{j-1}\right).\]
+	The right-hand side is simply $[n]_q!$.
+\end{remark}
+\begin{remark}
+	There is a projection $\mc F_n(\CC)\to\op{Gr}_{n,m}(\CC)$ given by sending the flag $\{V_i\}$ to $V_m$. This gives a fiber bundle (which can be seen by viewing this map group-theoretically), and the fiber is given by a flag inside $V_m$ and a flag inside $\CC^n/V_m$. Thus, we have a fiber bundle sequence
+	\[\mc F_m(\CC)\times\mc F_{n-m}(\CC)\to\mc F_n(\CC)\to\op{Gr}_{n,m}(\CC).\]
+	Again, all cohomology modules are supported in even degrees, so we find that the Poincar\'e polynomial of $\op{Gr}_{n,m}(\CC)$ is the quotient of our two Poincar\'e polynomials, namely $[n]_q!/([m]_q![n-m]_q!)$. For example, one can reverse this discussion of \Cref{rem:q-binomial} to give a geometric proof of the $q$-binomial theorem.
+\end{remark}
+A similar discussion works with partial flag varieties.
+\begin{definition}[flag variety]
+	Fix a subset $S\subseteq\{1,\ldots,n\}$. Then we define the \textit{partial flag variety} $\mc F_S(\CC)$ to consist of flags $\{V_s\}_{s\in S}$ for which $\dim V_s=s$ for each $s$.
+\end{definition}
+\begin{remark}
+	Again, one finds that there is a projection $\pi\colon\mc F_n(\CC)\to\mc F_S(\CC)$. Writing $(n_1,\ldots,n_r)$ to consist of the consecutive differences inside $S$, one finds that the fibers are isomorphic to $\mc F_{n_1}(\CC)\times\cdots\times\mc F_{n_r}(\CC)$, so the Poincar\'e polynomial of $\mc F_n(\CC)$ is found to be
+	\[\frac{[n]_q!}{[n_1]_q!\cdots[n_r]_q!}.\]
+\end{remark}
+
+\subsection{Cohomology with Arbitrary Coefficients}
+We are interested in generalizing our construction of the Chevalley--Eilenberg complex of $\mf g$ to work for general modules.
+\begin{definition}[Chevalley--Eilenberg complex]
+	Fix a Lie algebra $\mf g$, and let $V$ be a $\mf g$-module. Then we define the \textit{Chevalley--Eilenberg complex} to have the modules $\op{CE}^\bullet(\mf g;V)\coloneqq\op{Hom}_k(\land^\bullet\mf g,V)$ with differential
+	\[d\omega(a_0,\ldots,a_n)=\sum_i(-1)^ia_i\omega(a_0,\ldots,\widehat a_i,\ldots,a_n)+\sum_{i<j}(-1)^{i+j}\omega([a_i,a_j],a_0,\ldots,\widehat a_i,\ldots,\widehat a_j,\ldots,a_n).\]
+	We define the cohomology $\mathrm H^i(\mf g;V)$ to be the cohomology of this complex.
+\end{definition}
+\begin{example}
+	With $V=\CC$, one recovers $\op{CE}^\bullet(\mf g)$.
+\end{example}
+\begin{remark}
+	This differential comes from \Cref{prop:cartan-diff-formula}: the first term no longer vanishes in general when $V$ is nontrivial.
+\end{remark}
+\begin{remark}
+	One can check that $d^2=0$, so we actually have a complex.
+\end{remark}
+\begin{example}
+	Suppose that $\mf g$ is the (complexification of the) Lie algebra of a Lie group $G$ and that $V$ is a finite-dimensional representation. By construction,
+	\[\op{CE}^\bullet(\mf g;V)=\left(\Omega^\bullet(G)\otimes V\right)^G,\]
+	where $G$ acts on the left. Namely, even the differentials agree on both sides, where the right-hand side has the usual de Rham differential.
+\end{example}
+The previous example feeds into the following.
+\begin{proposition} \label{prop:cohomology-vanishes}
+	Fix a compact Lie group $G$, and let $\mf g=(\op{Lie}G)_\CC$. If $V$ is a nontrivial irreducible representation of $G$, then $\mathrm H^i(\mf g;V)=0$ for all $i>0$.
+\end{proposition}
+\begin{proof}
+	The idea is that $\op{CE}^\bullet(\mf g;V)$ agrees with
+	\[\left(\Omega^\bullet(G)\otimes V\right)^G=\op{Hom}_G(V^*,\Omega^\bullet(G)).\]
+	Now, $\Omega^\bullet(G)$ splits into its $G$-invariant part and the acyclic part on which $G$ acts by zero by \Cref{prop:compute-cohomology-by-invariants}. Thus, if $V$ is nontrivial, we get to remove the $G$-invariant part, and then we are left with an acyclic complex, so we are done.
+\end{proof}
+\begin{corollary}[Whitehead] \label{cor:semisimple-has-vanishing-cohomology}
+	Fix a complex semisimple Lie algebra $\mf g$. For any finite-dimensional representation $V$, we have
+	\[\mathrm H^1(\mf g;V)=\mathrm H^2(\mf g;V)=0.\]
+\end{corollary}
+\begin{proof}
+	One can find $\mf g$ as the complexification of the Lie algebra of the simply connected compact group $G_{\mathrm{sc}}^c$, so \Cref{prop:cohomology-vanishes} applies. By splitting $V$ into irreducible components, it only remains to check the vanishing for the trivial representation, which is computed as $\mathrm H^i(G_{\mathrm{sc}}^c;\CC)$. This follows from \Cref{prop:number-of-gens-cohomology} and the fact that $G_{\mathrm{sc}}^c$ is simply connected.
+\end{proof}
+\begin{remark}
+	In fact, we proved that $\mathrm H^1(\mf g;V)=0$ last semester, using the Casimir element. Here is another proof of $\mathrm H^1(\mf g;V)=0$: the category of representations separates into semisimple parts by central character, but the Casimir acts by a different eigenvalue on irreducible representations. Thus, the semisimplicity of the category follows, from which $\mathrm H^1(\mf g;V)=0$ follows.
+\end{remark}
+
+\subsection{Cohomology in Small Degrees}
+We will now spend a lot of time explaining the meaning of cohomology in small degrees.
+\begin{example}
+	One has $\mathrm H^0(\mf g;V)=V^{\mf g}$. In particular, one has that $\mathrm H^i(\mf g;V)$ are the derived functors of taking invariants. Indeed, to compute the derived functors of $(-)^{\mf g}$, we note that this functor is $\op{Hom}_{\mf g}(k,-)$, so we can compute the derived functors by resolving $k$ first and then applying invariants. One does this by quantizing the Koszul complex
+	\[\cdots\to U\mf g\otimes\mf g^2\to U\mf g\otimes\mf g\to U\mf g\to k,\]
+	which is checked to be exact (as the Koszul complex) after passing to the associated graded.
+\end{example}
+In degree one, we want cocycles.
+\begin{definition}[cocycle]
+	Fix a representation $V$ of a Lie algebra $\mf g$. Then a \textit{$1$-cocycle} is a map $\omega\colon\mf g\to V$ for which $\omega([x,y])=x\omega(y)-y\omega(x)$, and a \textit{$1$-coboundary} is a map $\omega\colon\mf g\to V$ of the form $\omega(x)=xv$ for some $v\in V$. We let $Z^1(\mf g;V)$ be the space of $1$-cocycles, and we let $B^1(\mf g;V)$ be the space of $1$-coboundaries.
+\end{definition}
+\begin{remark}
+	By definition of our cohomology, we find that
+	\[\mathrm H^1(\mf g;V)=\frac{Z^1(\mf g;V)}{B^1(\mf g;V)}.\]
+\end{remark}
+\begin{proposition}
+	Fix a Lie algebra $\mf g$ and two representations $V$ and $W$.
+	\begin{listalph}
+		\item One has $\op{Ext}^1(V,W)=\mathrm H^1(\mf g;\op{Hom}_k(V,W))$.
+		\item The group $\mathrm H^1(\mf g;V)$ classifies Lie algebra homomorphisms $\varphi\colon\mf g\to\mf g\ltimes V$ up to the action of $V$ on $\mf g\ltimes V$ given by
+		\[v\cdot(x,w)\coloneqq(x,w+xv).\]
+	\end{listalph}
+\end{proposition}
+\begin{proof}
+	This is omitted, but let's sketch (b). The idea is to write $\varphi$ as $\varphi(x)=(x,\omega(x))$. Then $\varphi([x,y])=[\varphi(x),\varphi(y)]$ can be expanded into requiring that $\omega\in Z^1(\mf g;V)$. By construction, we see that adjusting by a coboundary corresponds to adjusting by the action of $V$.
+\end{proof}
+\begin{remark}
+	One can use this to show that $\mathrm H^i(\mf g;V)=0$ for all $i$ and nontrivial irreducible representations $V$ of a semisimple Lie algebra $\mf g$. Indeed, one can identify $\mathrm H^i(\mf g;V)$ with $\mathrm{Ext}^i(\CC,V)$, but the Casimir causes the associated extension groups to vanish.
+\end{remark}
+As an application, we can say something about derivations.
+\begin{example}
+	A derivation of a Lie algebra $\mf g$ is a linear map $d\colon\mf g\to\mf g$ satisfying
+	\[d(ab)=[da,b]+[a,db].\]
+	Equivalently, we find that $d\in Z^1(\mf g;\mf g)$. Note that there are also the inner derivations given by $dx=[a,x]$ for a given $a\in\mf g$, which is a derivation by the Jacobi identity. In fact, $\op{Der}\mf g$ is a Lie algebra (given by composition), and the inner derivations can be seen to be an ideal. Anyway, we see that $\mathrm H^1(\mf g;\mf g)$ is the quotient of deformations by the inner derivations, and it is a Lie algebra. For example, we can recover the fact that all derivations of a semisimple Lie algebra are inner from $\mathrm H^1(\mf g;\mf g)=0$.
+\end{example}
+Let's now talk about $\mathrm H^2$. They are given by deformations.
+\begin{proposition}
+	Fix a module $V$ over a Lie algebra $\mf g$. Then $\mathrm H^2(\mf g;V)$ is in natural bijection with isomorphism classes of extensions
+	\[0\to V\to\widetilde{\mf g}\to\mf g\to0,\]
+	where $V$ embeds into $\widetilde{\mf g}$ as an abelian ideal with the natural action by $\mf g$.
+\end{proposition}
+\begin{proof}[Sketch]
+	The extension is an extension of vector spaces, so there is some splitting $s\colon\mf g\to\widetilde{\mf g}$ of vector spaces. With the identification $\widetilde{\mf g}\cong\mf g\oplus V$, one can compute the commutator looks like
+	\[([x,v],[y,w])=([x,y],xw-yv+\omega(v,w))\]
+	for some $\omega\colon\land^2\mf g\to V$. One can check that $d\omega=0$ is equivalent to the commutator satisfying the Jacobi identity.
+	
+	Furthermore, one finds that isomorphism classes of extensions (which amounts to changing the section $s$) correspond to coboundary classes. Indeed, a different choice of splitting induces an endomorphism of $\mf g\oplus V$ which looks like $\begin{bsmallmatrix}
+		1 & 0 \\ \alpha & 1
+	\end{bsmallmatrix}$ for some linear map $\alpha\colon\mf g\to V$. One can compute that the new $\omega'$ looks like
+	\[\omega'(v,w)=\omega(v,w)-v\alpha(w)+w\alpha(v)-\alpha([v,w]),\]
+	which is exactly the data of adjusting by the $2$-coboundary $d\alpha$.
+\end{proof}
+\begin{remark}
+	The trivial extension $\mf g\ltimes V$ corresponds to the class of $0\in\mathrm H^2(\mf g;V)$.
+\end{remark}
+\begin{example}
+	If $\mf g$ is semisimple, and $V$ is finite-dimensional, then $\mathrm H^2(\mf g;V)=0$, so any abelian extension of $\mf g$ by $V$ is trivial. For example, a deformation of $\mf g$ over a field $k$ to $k[t]/\left(t^2\right)$ corresponds to a choice of $\widetilde{\mf g}$ fitting into the extension exact sequence
+	\[0\to\mf g\to\widetilde{\mf g}\to\mf g\to0,\]
+	which must now be the trivial extension $\mf g_{k[t]/\left(t^2\right)}$.
+\end{example}
+\begin{remark}
+	One can do more with formal deformations. In general, we may want to deform all the way to $k[[t]]$. This means that we would have
+	\[[x,y]_t=[x,y]+tc_1(x,y)+t^2c_2(x,y)+t^3c_3(x,y)+\cdots.\]
+	Then the Jacobi identity amounts to some quadratic equation in these $c_i$s; for example, we found that cutting off at $tc_1(x,y)$ yields the equation $dc_1=0$. In general, the Jacobi identity corresponds to the equation
+	\[[c_0,c_m]+[c_1,c_{m-1}]+\cdots=0.\]
+	The leftmost term $[c_0,c_m]$ is $dc_m$, so for example if we cut off at $t^2c_2(x,y)$, then we are asking for $dc_2=[c_1,c_1]$. Thus, the obstruction to lifting$\pmod{t^2}$ is exactly $[c_1,c_1]$ being a $2$-coboundary, so $\mathrm H^2(\mf g;\mf g)=0$ implies that $\mf g$ lifts uniquely to$\pmod{t^2}$. One can iterate this process to show that all deformations of a semisimple Lie algebra $\mf g$ to $k[[t]]$ are trivial: we start by changing coordinates to get $c_1=0$, then we change coordinates to get $c_2=0$, and so on.
+\end{remark}
+
+% \begin{example}
+% 	Fix a Lie algebra $\mf g$ over a field $k$. Then a deformation of $\mf g$ to $k[t]/\left(t^2\right)$
+% \end{example}
+% \begin{remark}
+% 	$\CP^{n-1}$ admits cells $\{C_{in}\}_i$, where $C_{in}\cong\CP^{n-i}$, by letting $C_{in}$ consist of those hyperplanes cut out by an equation
+% 	\[a_1x_1+\cdots+a_nx_n=0,\]
+% 	where $i$ is the maximal element for which 
+% \end{remark}
+
+\end{document}
